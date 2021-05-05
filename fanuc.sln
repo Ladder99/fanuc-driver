@@ -1,0 +1,19 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fanuc", "fanuc\fanuc.csproj", "{F0AA6B89-208E-4BE9-9164-9BC2EA278D7D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		Debug 32bit|Any CPU = Debug 32bit|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F0AA6B89-208E-4BE9-9164-9BC2EA278D7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0AA6B89-208E-4BE9-9164-9BC2EA278D7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0AA6B89-208E-4BE9-9164-9BC2EA278D7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0AA6B89-208E-4BE9-9164-9BC2EA278D7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0AA6B89-208E-4BE9-9164-9BC2EA278D7D}.Debug 32bit|Any CPU.ActiveCfg = Debug 32bit|Any CPU
+		{F0AA6B89-208E-4BE9-9164-9BC2EA278D7D}.Debug 32bit|Any CPU.Build.0 = Debug 32bit|Any CPU
+	EndGlobalSection
+EndGlobal
