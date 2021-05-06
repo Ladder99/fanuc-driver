@@ -18,6 +18,20 @@ namespace fanuc
             }.ToString();
         }
 
+        public dynamic Info
+        {
+            get
+            {
+                return new
+                {
+                    Id,
+                    IPAddress,
+                    Port,
+                    ConnectionTimeout
+                };
+            }
+        }
+        
         public Platform Platform
         {
             get { return _platform; }
@@ -50,7 +64,12 @@ namespace fanuc
         
         private short _connectionTimeout = 3;
 
-        private Veneers _veneers = new Veneers();
+        public Veneers Veneers
+        {
+            get { return _veneers; }
+        }
+        
+        private Veneers _veneers;
         
         public bool Enabled
         {
@@ -70,6 +89,7 @@ namespace fanuc
             _focasPort = focasPort;
             _connectionTimeout = timeout;
             _platform = new Platform(this);
+            _veneers = new Veneers(this);
         }
         
         public bool VeneersCreated { get; set; }

@@ -1,22 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
+using System.Threading;
 using fanuc.veneers;
+using MQTTnet;
+using MQTTnet.Client;
+using MQTTnet.Client.Options;
 using Newtonsoft.Json.Linq;
 
 namespace fanuc
 {
     class Program
     {
+        private static IMqttClient _mqtt;
         private static fanuc.Machines _machines = new fanuc.Machines();
         
         static void Main(string[] args)
         {
-            _machines.Add(true, "tempco", "172.16.13.100", 8193, 2);
-            _machines.Add(false, "sim", "10.20.30.101", 8193, 2);
+            var factory = new MqttFactory();
+            var options = new MqttClientOptionsBuilder()
+                //.WithTcpServer("172.16.10.3")
+                .WithTcpServer("10.20.30.102")
+                .Build();
+            _mqtt = factory.CreateMqttClient();
+            var r = _mqtt.ConnectAsync(options).Result;
+            
+            Action<Veneers, Veneer> on_data_change = (vv, v) =>
+            {
+                dynamic payload = new
+                {
+                    observationTime = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds(),
+                    timeSinceLastChange = v.ChangeDelta,
+                    machineId = vv.Machine.Id,
+                    method = v.LastInput.method,
+                    marker = v.Marker,
+                    data = v.DataDelta
+                };
+            
+                var msg = new MqttApplicationMessageBuilder()
+                    .WithTopic($"fanuc/{vv.Machine.Id}/{v.LastInput.method}")
+                    .WithPayload(JObject.FromObject(payload).ToString())
+                    .Build();
+                var r = _mqtt.PublishAsync(msg, CancellationToken.None).Result;
+            };
+            
+            var m1 = _machines.Add(false, "naka", "172.16.13.100", 8193, 2);
+            m1.Veneers.OnDataChange = on_data_change;
+            
+            var m2 = _machines.Add(true, "sim", "10.20.30.101", 8193, 2);
+            m2.Veneers.OnDataChange = on_data_change;
             
             createVeneers();
             processVeneers();
@@ -47,7 +79,7 @@ namespace fanuc
                         machine.AddVeneer(typeof(fanuc.veneers.GetPath), "get_path");
 
                         dynamic paths = machine.Platform.GetPath();
-                        writeJsonToConsole(paths);
+                        //writeJsonToConsole(paths);
 
                         IEnumerable<int> slices = Enumerable
                             .Range(paths.response.cnc_getpath.path_no, paths.response.cnc_getpath.maxpath_no);
@@ -135,8 +167,21 @@ namespace fanuc
 
                         dynamic disconnect = machine.Platform.Disconnect();
                     }
+                    
+                    dynamic payload = new
+                    {
+                        observationTime = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds(),
+                        machine = machine.Info,
+                        connection = connect.success ? "OK" : "NOK"
+                    };
+                        
+                    var msg = new MqttApplicationMessageBuilder()
+                        .WithTopic($"fanuc/{machine.Id}/ping")
+                        .WithPayload(JObject.FromObject(payload).ToString())
+                        .Build();
+                    var r = _mqtt.PublishAsync(msg, CancellationToken.None).Result;
                 }
-
+                
                 System.Threading.Thread.Sleep(1000);
             }
         }

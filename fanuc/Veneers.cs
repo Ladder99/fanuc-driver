@@ -2,26 +2,57 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
+using System.Net.Http.Headers;
 using Newtonsoft.Json.Linq;
 
 namespace fanuc.veneers
 {
     public class Veneers
     {
-        Action<Veneer> change_print = (v) =>
+        public Machine Machine
         {
-            Console.WriteLine(DateTime.UtcNow + "::delta=" + v.ChangeDelta + "::method=" + v.LastInput.method + "::note=" + v.Note + "::marker=" + v.Marker + "::data=" + v.DataDelta);
+            get { return _machine; }
+        }
+        
+        private Machine _machine;
+
+        public Action<Veneers, Veneer> OnDataChange = (vv, v) => { };
+        
+        private Action<Veneers, Veneer> change_print = (vv, v) =>
+        {
+            //Console.WriteLine(DateTime.UtcNow + "::delta=" + v.ChangeDelta + "::method=" + v.LastInput.method + "::note=" + v.Note);
+            //Console.WriteLine(new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds() + "|" + v.ChangeDelta + "|" + vv.Machine.Id + "|" + v.LastInput.method + "|" + v.Marker + "|" + v.DataDelta);
+            
+            Console.WriteLine("");
+            dynamic d = new
+            {
+                observationTime = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds(),
+                timeSinceLastChange = v.ChangeDelta,
+                machineId = vv.Machine.Id,
+                method = v.LastInput.method,
+                marker = v.Marker,
+                data = v.DataDelta
+            };
+            
+            Console.WriteLine(JObject.FromObject(d).ToString());
+
+            vv.OnDataChange(vv, v);
         };
 
-        Action<Veneer> error_print = (v) =>
+        private Action<Veneers, Veneer> error_print = (vv, v) =>
         {
             Console.WriteLine(JObject.FromObject(v.LastInput).ToString());
         };
 
         private List<Veneer> _wholeVeneers = new List<Veneer>();
+        
         private Dictionary<dynamic, List<Veneer>> _slicedVeneers = new Dictionary<dynamic, List<Veneer>>();
+        
+        public Veneers(Machine machine)
+        {
+            _machine = machine;
+        }
+        
         public void Slice(dynamic split)
         {
             foreach (var key in split)
@@ -32,9 +63,9 @@ namespace fanuc.veneers
 
         public void Add(Type veneerType, string note)
         {
-            Veneer veneer = (Veneer)Activator.CreateInstance(veneerType, new object[] {note});
-            veneer.OnChange = (v) => change_print(v);
-            veneer.OnError = (v) => error_print(v);
+            Veneer veneer = (Veneer)Activator.CreateInstance(veneerType, new object[] { note});
+            veneer.OnChange = (v) => change_print(this, v);
+            veneer.OnError = (v) => error_print(this, v);
             _wholeVeneers.Add(veneer);
         }
 
@@ -43,8 +74,8 @@ namespace fanuc.veneers
             foreach (var key in _slicedVeneers.Keys)
             {
                 Veneer veneer = (Veneer)Activator.CreateInstance(veneerType, new object[] {note});
-                veneer.OnChange = (v) => change_print(v);
-                veneer.OnError = (v) => error_print(v);
+                veneer.OnChange = (v) => change_print(this, v);
+                veneer.OnError = (v) => error_print(this, v);
                 _slicedVeneers[key].Add(veneer);
             }
         }
