@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using Newtonsoft.Json.Linq;
 
 namespace fanuc.veneers
@@ -131,6 +133,16 @@ namespace fanuc.veneers
 
         public Action<Veneer> OnChange =  (veneer) => { };
 
+        protected void writeJsonObjectToConsole(dynamic d)
+        {
+            Console.WriteLine(JObject.FromObject(d).ToString());
+        }
+        
+        protected void writeJsonArrayToConsole(dynamic d)
+        {
+            Console.WriteLine(JArray.FromObject(d).ToString());
+        }
+        
         public Veneer(string note = "")
         {
             _note = note;
@@ -180,6 +192,67 @@ namespace fanuc.veneers
         }
     }
 
+    public class Alarms : Veneer
+    {
+        public Alarms(string note = "") : base(note)
+        {
+            _lastValue = new List<dynamic>
+            {
+                
+            };
+        }
+        
+        protected override dynamic Any(dynamic input)
+        {
+            var success = true;
+            var current_value = new List<dynamic>() ;
+            
+            foreach (var key in input.response.cnc_rdalmmsg_ALL.Keys)
+            {
+                var type_success = input.response.cnc_rdalmmsg_ALL[key].success;
+
+                if (!type_success)
+                {
+                    success = false;
+                    break;
+                }
+
+                var request_data = input.response.cnc_rdalmmsg_ALL[key].request.cnc_rdalmmsg;
+                var response_data = input.response.cnc_rdalmmsg_ALL[key].response.cnc_rdalmmsg;
+                var alarm_type = request_data.type;
+                var alarm_count = response_data.num;
+
+                if (alarm_count > 0)
+                {
+                    var fields = response_data.almmsg.GetType().GetFields();
+                    for (int x = 0; x <= alarm_count - 1; x++)
+                    {
+                        var alm = fields[x].GetValue(response_data.almmsg);
+                        current_value.Add(new { alm.alm_no, alm.type, alm.axis, alm.alm_msg });
+                    }
+                }
+            }
+            
+            if (success)
+            {
+                var current_hc = current_value.Select(x => x.GetHashCode());
+                var last_hc = ((List<dynamic>)_lastValue).Select(x => x.GetHashCode());
+                
+                if(current_hc.Except(last_hc).Count() + last_hc.Except(current_hc).Count() > 0)
+                {
+                    this.dataChanged(input, current_value);
+                    writeJsonArrayToConsole(current_value);
+                }
+            }
+            else
+            {
+                this.OnError(input);
+            }
+
+            return new { veneer = this };
+        }
+    }
+    
     public class RdParamLData : Veneer
     {
         public RdParamLData(string note = "") : base(note)
@@ -192,7 +265,7 @@ namespace fanuc.veneers
             if (input.success)
             {
                 int pc = input.response.cnc_rdparam.param.ldata;
-                if (pc != this._lastValue)
+                if (pc != _lastValue)
                 {
                     this.dataChanged(input, pc);
                 }
@@ -237,7 +310,7 @@ namespace fanuc.veneers
                     sequence_number = d.seqnum
                 };
                 
-                if (!current_value.Equals(this._lastValue))
+                if (!current_value.Equals(_lastValue))
                 {
                     this.dataChanged(input, current_value);
                 }
@@ -265,7 +338,7 @@ namespace fanuc.veneers
                 string source = string.Join("", input.response.cnc_rdexecprog.data).Trim();
                 string[] source_lines = source.Split('\n');
                 string source_line = source_lines[0].Trim(char.MinValue, ' ');
-                if (source_line != this._lastValue)
+                if (source_line != _lastValue)
                 {
                     this.dataChanged(input, source_line);
                 }
