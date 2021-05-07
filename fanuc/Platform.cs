@@ -445,9 +445,20 @@ namespace fanuc
             };
         }
         
-        public dynamic RdDynamic2(short axis = 1, short length = 44)
+        public dynamic RdDynamic2(short axis = 1, short length = 44, int ODBDY2_type = 2)
         {
-            Focas1.ODBDY2_1 rddynamic = new Focas1.ODBDY2_1();
+            dynamic rddynamic = new object();
+
+            switch (ODBDY2_type)
+            {
+                case 1:
+                    rddynamic = new Focas1.ODBDY2_1();
+                    break;
+                case 2:
+                    rddynamic = new Focas1.ODBDY2_2();
+                    break;
+            }
+
             //length = (short) Marshal.SizeOf(rddynamic);
             Focas1.focas_ret rc = (Focas1.focas_ret)Focas1.cnc_rddynamic2(_handle, axis, length , rddynamic);
 

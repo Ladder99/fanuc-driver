@@ -103,10 +103,20 @@ namespace fanuc
         {
             _veneers.Slice(split);
         }
+        
+        public void SliceVeneer(dynamic sliceKey, dynamic split)
+        {
+            _veneers.Slice(sliceKey, split);
+        }
 
         public void AddVeneerAcrossSlices(Type type, string note)
         {
             _veneers.AddAcrossSlices(type, note);
+        }
+        
+        public void AddVeneerAcrossSlices(dynamic sliceKey, Type type, string note)
+        {
+            _veneers.AddAcrossSlices(sliceKey, type, note);
         }
 
         public dynamic PeelVeneer(string note, dynamic input)
