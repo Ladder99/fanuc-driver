@@ -1,0 +1,20 @@
+broker:
+  net_ip: 10.20.30.102
+  net_port: !!int 1883
+
+machines:
+  - id: sim
+    enabled: !!bool true
+    net_ip: 10.20.30.10
+    net_port: !!int 8193
+    net_timeout_s: !!int 2
+    strategy_type: fanuc.collectors.Basic, fanuc
+    sweep_ms: !!int 1000
+
+  - id: naka
+    enabled: !!bool false
+    net_ip: 172.16.13.100
+    net_port: !!int 8193
+    net_timeout_s: !!int 2
+    strategy_type: fanuc.collectors.Basic, fanuc
+    sweep_ms: !!int 1000

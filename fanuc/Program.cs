@@ -1,44 +1,71 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Loader;
 using System.Threading;
 using fanuc.veneers;
 using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Client.Options;
 using Newtonsoft.Json.Linq;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
+using YamlDotNet.Serialization.TypeResolvers;
 
 namespace fanuc
 {
     class Program
     {
-        private static IMqttClient _mqtt;
-        private static fanuc.Machines _machines = new fanuc.Machines();
-        
         static void Main(string[] args)
         {
-            setupMqtt("10.20.30.102");  // "172.16.10.3"
-            createMachines(new List<dynamic>()
-            {
-                new { enabled = false, id = "naka", ip = "172.16.13.100", port = 8193, timeout = 2, collector = typeof(collectors.Basic), collectorSweepMs = 1000},
-                new { enabled = true, id = "sim", ip = "10.20.30.101", port = 8193, timeout = 2, collector = typeof(collectors.Info_MachineVsVeneer), collectorSweepMs = 1000}
-            });
-            
-            createVeneers();
-            processVeneers();
+            var config_file = "config.yml";
+            dynamic config = readConfig(config_file);
+            dynamic mqtt = setupMqtt(config);
+            dynamic machines = createMachines(config, mqtt);
+            createVeneers(machines);
+            processVeneers(machines, mqtt);
         }
 
-        static void setupMqtt(string ip)
+        static dynamic readConfig(string config_file)
+        {
+            var input = new StreamReader(config_file);
+
+            var deserializer = new DeserializerBuilder()
+                .WithNamingConvention(CamelCaseNamingConvention.Instance)
+                .Build();
+
+            return deserializer.Deserialize(input);
+        }
+        
+        static dynamic setupMqtt(dynamic config)
         {
             var factory = new MqttFactory();
             var options = new MqttClientOptionsBuilder()
-                .WithTcpServer(ip)
+                .WithTcpServer(config["broker"]["net_ip"], config["broker"]["net_port"])
                 .Build();
-            _mqtt = factory.CreateMqttClient();
-            var r = _mqtt.ConnectAsync(options).Result;
+            var client = factory.CreateMqttClient();
+            var r = client.ConnectAsync(options, CancellationToken.None).Result;
+            return client;
         }
 
-        static void createMachines(List<dynamic> machineConfigs)
+        static dynamic createMachines(dynamic config, dynamic mqtt)
         {
+            var machine_confs = new List<dynamic>();
+
+            foreach (dynamic machine_conf in config["machines"])
+            {
+                machine_confs.Add(new
+                {
+                    enabled = machine_conf["enabled"],
+                    id = machine_conf["id"],
+                    ip = machine_conf["net_ip"],
+                    port = machine_conf["net_port"],
+                    timeout = machine_conf["net_timeout_s"],
+                    collector = machine_conf["strategy_type"],
+                    collectorSweepMs = machine_conf["sweep_ms"]
+                });
+            }
+            
             Action<Veneers, Veneer> on_data_change = (vv, v) =>
             {
                 dynamic payload = new
@@ -75,7 +102,7 @@ namespace fanuc
                     .WithPayload(payload_string)
                     .WithRetainFlag()
                     .Build();
-                var r = _mqtt.PublishAsync(msg, CancellationToken.None);
+                var r = mqtt.PublishAsync(msg, CancellationToken.None);
             };
 
             Action<Veneers, Veneer> on_error = (vv, v) =>
@@ -84,30 +111,34 @@ namespace fanuc
                 Console.WriteLine(new { method = v.LastInput.method, rc = v.LastInput.rc });
             };
 
-            foreach (var cfg in machineConfigs)
+            Machines machines = new Machines();
+            
+            foreach (var cfg in machine_confs)
             {
-                var machine = _machines.Add(cfg.enabled, cfg.id, cfg.ip, (ushort)cfg.port, (short)cfg.timeout);
-                machine.AddCollector(cfg.collector, cfg.collectorSweepMs);
+                var machine = machines.Add(cfg.enabled, cfg.id, cfg.ip, (ushort)cfg.port, (short)cfg.timeout);
+                machine.AddCollector(Type.GetType(cfg.collector), cfg.collectorSweepMs);
                 machine.Veneers.OnDataChange = on_data_change;
                 machine.Veneers.OnError = on_error;
             }
+
+            return machines.All;
         }
         
-        static void createVeneers()
+        static void createVeneers(dynamic machines)
         {
-            foreach (var machine in _machines[null])
+            foreach (var machine in machines)
             {
                 machine.InitCollector();
             }
         }
         
-        static void processVeneers()
+        static void processVeneers(dynamic machines, dynamic mqtt)
         {
             while (true)
             {
                 System.Threading.Thread.Sleep(1000);
                 
-                foreach (var machine in _machines[null])
+                foreach (var machine in machines[null])
                 {
                     machine.RunCollector();
                     
@@ -134,7 +165,7 @@ namespace fanuc
                         .WithPayload(JObject.FromObject(payload).ToString())
                         .WithRetainFlag()
                         .Build();
-                    var r = _mqtt.PublishAsync(msg, CancellationToken.None).Result;
+                    var r = mqtt.PublishAsync(msg, CancellationToken.None).Result;
                 }
             }
         }
