@@ -138,7 +138,7 @@ namespace fanuc
             {
                 System.Threading.Thread.Sleep(1000);
                 
-                foreach (var machine in machines[null])
+                foreach (var machine in machines)
                 {
                     machine.RunCollector();
                     
