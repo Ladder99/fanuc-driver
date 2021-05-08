@@ -17,13 +17,16 @@ namespace fanuc
 
         public void StartupProcess(short level = 0, string file = "focas2.log")
         {
+            #if ARMV7
             Focas1.cnc_startupprocess(level, file);
-
+            #endif
         }
 
         public void ExitProcess()
         {
+            #if ARMV7
             Focas1.cnc_exitprocess();
+            #endif
         }
         
         public dynamic Connect()

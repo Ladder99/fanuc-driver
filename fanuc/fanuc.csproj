@@ -11,7 +11,7 @@
       <PlatformTarget>x86</PlatformTarget>
       <Prefer32bit>true</Prefer32bit>
       <DebugType>full</DebugType>
-      <DefineConstants>TRACE;ARMV7</DefineConstants>
+      <DefineConstants>TRACE;</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup>

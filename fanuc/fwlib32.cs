@@ -7976,19 +7976,36 @@ namespace fanuc
 #endif
 
         /* read all dynamic data */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rddynamic2")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rddynamic2")]
+#endif
         public static extern short cnc_rddynamic2(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBDY2_1 c);
+        
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rddynamic2")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rddynamic2")]
+#endif
         public static extern short cnc_rddynamic2(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBDY2_2 c);
 
         /* read actual spindle speed(S) */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_acts")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_acts")]
+#endif
         public static extern short cnc_acts(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBACT a);
 
         /* read actual spindle speed(S) (All or spesified) */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_acts2")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_acts2")]
+#endif
         public static extern short cnc_acts2(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBACT2 b);
 
         /* set origin / preset relative axis position */
@@ -8048,12 +8065,20 @@ namespace fanuc
         public static extern short cnc_rdspeed(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSPEED b);
 
         /* read servo load meter */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdsvmeter")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdsvmeter")]
+#endif
         public static extern short cnc_rdsvmeter(ushort FlibHndl,
             ref short a, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSVLOAD b);
 
         /* read spindle load meter */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdspmeter")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdspmeter")]
+#endif
         public static extern short cnc_rdspmeter(ushort FlibHndl,
             short a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSPLOAD c);
 
@@ -8345,7 +8370,11 @@ namespace fanuc
     } /* In case that the data length is 256 */
 
     /* read program under execution */
+#if ARMV7
+    [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdexecprog")]
+#else
     [DllImport("FWLIB32.dll", EntryPoint="cnc_rdexecprog")]
+#endif
     public static extern short cnc_rdexecprog( ushort FlibHndl, ref ushort a, out short b, [Out,MarshalAs(UnmanagedType.AsAny)] Object c );
 
         /* read program for MDI operation */
@@ -8604,16 +8633,35 @@ namespace fanuc
         public static extern short cnc_wrmsptype(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBMSTP d);
 
         /* read parameter */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdparam")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdparam")]
+#endif
         public static extern short cnc_rdparam(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBPSD_1 d);
+        
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdparam")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdparam")]
+#endif
         public static extern short cnc_rdparam(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBPSD_2 d);
+        
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdparam")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdparam")]
+#endif
         public static extern short cnc_rdparam(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBPSD_3 d);
+        
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdparam")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdparam")]
+#endif
         public static extern short cnc_rdparam(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBPSD_4 d);
 
@@ -8727,7 +8775,11 @@ namespace fanuc
         public static extern short cnc_wrpitchr(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBPI b);
 
         /* read custom macro variable */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdmacro")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdmacro")]
+#endif
         public static extern short cnc_rdmacro(ushort FlibHndl, short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBM c);
 
         /* write custom macro variable */
@@ -9218,7 +9270,11 @@ namespace fanuc
         public static extern short cnc_sysinfo(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSYS a);
 
         /* read CNC status information */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_statinfo")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_statinfo")]
+#endif
         public static extern short cnc_statinfo(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBST a);
 
         /* read alarm status */
@@ -9239,12 +9295,20 @@ namespace fanuc
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] ALMINFO_2 d);
 
         /* read alarm message */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdalmmsg")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdalmmsg")]
+#endif
         public static extern short cnc_rdalmmsg(ushort FlibHndl,
             short a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBALMMSG c);
 
         /* read alarm message(2) */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdalmmsg2")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdalmmsg2")]
+#endif
         public static extern short cnc_rdalmmsg2(ushort FlibHndl,
             short a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBALMMSG2 c);
 
@@ -9253,19 +9317,43 @@ namespace fanuc
         public static extern short cnc_clralm(ushort FlibHndl, short a);
 
         /* read modal data */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_modal")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_modal")]
+#endif
         public static extern short cnc_modal(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBMDL_1 c);
+        
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_modal")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_modal")]
+#endif
         public static extern short cnc_modal(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBMDL_2 c);
+            
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_modal")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_modal")]
+#endif
         public static extern short cnc_modal(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBMDL_3 c);
+        
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_modal")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_modal")]
+#endif
         public static extern short cnc_modal(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBMDL_4 c);
+        
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_modal")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_modal")]
+#endif
         public static extern short cnc_modal(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBMDL_5 c);
 
@@ -9306,7 +9394,11 @@ namespace fanuc
         public static extern short cnc_adcnv(ushort FlibHndl, short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBAD c);
 
         /* read operator's message */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdopmsg")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdopmsg")]
+#endif
         public static extern short cnc_rdopmsg(ushort FlibHndl, short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] OPMSG c);
 
         /* read operator's message */
@@ -9319,11 +9411,19 @@ namespace fanuc
             short a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] OPMSG3 c);
 
         /* set path number(for 4 axes lathes, multi-path) */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_setpath")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_setpath")]
+#endif
         public static extern short cnc_setpath(ushort FlibHndl, short a);
 
         /* get path number(for 4 axes lathes, multi-path) */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_getpath")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_getpath")]
+#endif
         public static extern short cnc_getpath(ushort FlibHndl, out short a, out short b);
 
         /* allocate library handle */
@@ -9681,7 +9781,11 @@ namespace fanuc
         public static extern short cnc_rdsrvspeed(ushort FlibHndl, out int a);
 
         /* read the operation mode */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdopmode")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdopmode")]
+#endif
         public static extern short cnc_rdopmode(ushort FlibHndl, out short a);
 
         /* read the position deviation S */
@@ -10375,12 +10479,20 @@ namespace fanuc
         public static extern short cnc_reset2(ushort FlibHndl);
 
         /* read axis name */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdaxisname")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdaxisname")]
+#endif
         public static extern short cnc_rdaxisname(ushort FlibHndl,
             ref short a, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBAXISNAME b);
 
         /* read spindle name */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdspdlname")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdspdlname")]
+#endif
         public static extern short cnc_rdspdlname(ushort FlibHndl,
             ref short a, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSPDLNAME b);
 
@@ -10817,13 +10929,27 @@ namespace fanuc
         public static extern short pmc_cwrmsg(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* read PMC data(area specified) */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "pmc_rdpmcrng")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "pmc_rdpmcrng")]
+#endif
         public static extern short pmc_rdpmcrng(ushort FlibHndl,
             short a, short b, ushort c, ushort d, ushort e, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBPMC0 f);
+        
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "pmc_rdpmcrng")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "pmc_rdpmcrng")]
+#endif
         public static extern short pmc_rdpmcrng(ushort FlibHndl,
             short a, short b, ushort c, ushort d, ushort e, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBPMC1 f);
+        
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "pmc_rdpmcrng")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "pmc_rdpmcrng")]
+#endif
         public static extern short pmc_rdpmcrng(ushort FlibHndl,
             short a, short b, ushort c, ushort d, ushort e, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBPMC2 f);
 
