@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using fanuc.collectors;
 using fanuc.veneers;
 
 namespace fanuc
@@ -70,6 +71,13 @@ namespace fanuc
         }
         
         private Veneers _veneers;
+
+        public Collector Collector
+        {
+            get { return _collector; }
+        }
+        
+        private Collector _collector;
         
         public bool Enabled
         {
@@ -81,6 +89,11 @@ namespace fanuc
             get { return _id; }
         }
         
+        public bool CollectorSuccess
+        {
+            get { return _collector.LastSuccess;  }
+        }
+        
         public Machine(bool enabled, string id, string focasIpAddress, ushort focasPort = 8193, short timeout = 10)
         {
             _enabled = enabled;
@@ -90,6 +103,21 @@ namespace fanuc
             _connectionTimeout = timeout;
             _platform = new Platform(this);
             _veneers = new Veneers(this);
+        }
+
+        public void AddCollector(Type type)
+        {
+            _collector = (Collector) Activator.CreateInstance(type, new object[] { this });
+        }
+
+        public void InitCollector()
+        {
+            _collector.Initialize();
+        }
+
+        public void RunCollector()
+        {
+            _collector.Collect();
         }
         
         public bool VeneersCreated { get; set; }

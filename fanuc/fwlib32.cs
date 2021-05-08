@@ -9210,7 +9210,11 @@ namespace fanuc
         /*-------------*/
 
         /* read CNC system information */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_sysinfo")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_sysinfo")]
+#endif
         public static extern short cnc_sysinfo(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSYS a);
 
         /* read CNC status information */
@@ -9327,7 +9331,11 @@ namespace fanuc
         public static extern short cnc_allclibhndl(out ushort FlibHndl);
 
         /* free library handle */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_freelibhndl")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_freelibhndl")]
+#endif
         public static extern short cnc_freelibhndl(ushort FlibHndl);
 
         /* get library option */
@@ -11286,7 +11294,11 @@ namespace fanuc
         /*---------------------*/
 
         /* allocate library handle 3 */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_allclibhndl3")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_allclibhndl3")]
+#endif
         public static extern short cnc_allclibhndl3([In, MarshalAs(UnmanagedType.AsAny)] Object ip,
            ushort port, int timeout, out ushort FlibHndl);
 
