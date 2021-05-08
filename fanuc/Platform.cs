@@ -14,6 +14,17 @@ namespace fanuc
         {
             _machine = machine;
         }
+
+        public void StartupProcess(short level = 0, string file = "focas2.log")
+        {
+            Focas1.cnc_startupprocess(level, file);
+
+        }
+
+        public void ExitProcess()
+        {
+            Focas1.cnc_exitprocess();
+        }
         
         public dynamic Connect()
         {
