@@ -46,11 +46,12 @@ namespace fanuc.collectors
 
             if (connect.success)
             {
-                dynamic info = _machine.Platform.SysInfo();
+                dynamic info_machine = _machine.Platform.SysInfo();
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine(JObject.FromObject(info).ToString());
-                _machine.PeelVeneer("sys_info", info);
+                Console.WriteLine(JObject.FromObject(info_machine).ToString());
+                dynamic info_veneer = _machine.PeelVeneer("sys_info", info_machine);
                 Console.ForegroundColor = ConsoleColor.DarkCyan;
+                Console.WriteLine(JObject.FromObject(info_veneer).ToString());
 
                 dynamic disconnect = _machine.Platform.Disconnect();
 
