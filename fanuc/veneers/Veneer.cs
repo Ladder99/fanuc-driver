@@ -99,12 +99,7 @@ namespace fanuc.veneers
         
         protected virtual dynamic First(dynamic input)
         {
-            return new { };
-        }
-
-        protected virtual dynamic Next(dynamic input)
-        {
-            return new { };
+            return Any(input);
         }
 
         protected virtual dynamic Any(dynamic input)
