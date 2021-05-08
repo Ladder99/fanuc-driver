@@ -48,6 +48,11 @@ namespace fanuc.veneers
             get { return _lastValue; }
         }
         
+        public dynamic LastValue
+        {
+            get { return _lastValue; }
+        }
+        
         protected dynamic _lastValue = new { };
 
         protected bool _isFirstCall = true;

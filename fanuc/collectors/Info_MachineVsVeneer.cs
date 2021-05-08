@@ -51,7 +51,7 @@ namespace fanuc.collectors
                 Console.WriteLine(JObject.FromObject(info_machine).ToString());
                 dynamic info_veneer = _machine.PeelVeneer("sys_info", info_machine);
                 Console.ForegroundColor = ConsoleColor.DarkCyan;
-                Console.WriteLine(JObject.FromObject(info_veneer).ToString());
+                Console.WriteLine(JObject.FromObject(info_veneer.LastValue).ToString());
 
                 dynamic disconnect = _machine.Platform.Disconnect();
 
