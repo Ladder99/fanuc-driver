@@ -15,18 +15,58 @@ namespace fanuc
             _machine = machine;
         }
 
-        public void StartupProcess(short level = 0, string file = "focas2.log")
+        public dynamic StartupProcess(short level = 0, string filename = "~/focas2.log")
         {
-            #if ARMV7
-            Focas1.cnc_startupprocess(level, file);
-            #endif
+#if ARMV7 || LINUX64 || LINUX32
+            Focas1.focas_ret rc = (Focas1.focas_ret)Focas1.cnc_startupprocess(level, filename);
+
+            return new
+            {
+                method = "cnc_startupprocess",
+                doc = "",
+                success = rc == Focas1.EW_OK,
+                rc,
+                request = new { cnc_startupprocess = new { level, filename } },
+                response = new { cnc_startupprocess = new { } }
+            };
+#else
+            return new
+            {
+                method = "cnc_startupprocess",
+                doc = "",
+                success = true,
+                Focas1.EW_OK,
+                request = new { cnc_startupprocess = new { level, filename } },
+                response = new { cnc_startupprocess = new { } }
+            };
+#endif
         }
 
-        public void ExitProcess()
+        public dynamic ExitProcess()
         {
-            #if ARMV7
-            Focas1.cnc_exitprocess();
-            #endif
+#if ARMV7 || LINUX64 || LINUX32
+            Focas1.focas_ret rc = (Focas1.focas_ret)Focas1.cnc_exitprocess();
+
+            return new
+            {
+                method = "cnc_exitprocess",
+                doc = "",
+                success = rc == Focas1.EW_OK,
+                rc,
+                request = new { cnc_exitprocess = new {  } },
+                response = new { cnc_exitprocess = new { } }
+            };
+#else
+            return new
+            {
+                method = "cnc_exitprocess",
+                doc = "",
+                success = true,
+                Focas1.EW_OK,
+                request = new { cnc_exitprocess = new { } },
+                response = new { cnc_exitprocess = new { } }
+            };
+#endif
         }
         
         public dynamic Connect()

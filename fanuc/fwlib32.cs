@@ -7978,6 +7978,8 @@ namespace fanuc
         /* read all dynamic data */
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rddynamic2")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rddynamic2")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rddynamic2")]
 #endif
@@ -7986,6 +7988,8 @@ namespace fanuc
         
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rddynamic2")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rddynamic2")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rddynamic2")]
 #endif
@@ -7995,6 +7999,8 @@ namespace fanuc
         /* read actual spindle speed(S) */
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_acts")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_acts")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_acts")]
 #endif
@@ -8003,6 +8009,8 @@ namespace fanuc
         /* read actual spindle speed(S) (All or spesified) */
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_acts2")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_acts2")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_acts2")]
 #endif
@@ -8067,6 +8075,8 @@ namespace fanuc
         /* read servo load meter */
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdsvmeter")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdsvmeter")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdsvmeter")]
 #endif
@@ -8076,6 +8086,8 @@ namespace fanuc
         /* read spindle load meter */
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdspmeter")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdspmeter")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdspmeter")]
 #endif
@@ -8372,6 +8384,8 @@ namespace fanuc
     /* read program under execution */
 #if ARMV7
     [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdexecprog")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdexecprog")]
 #else
     [DllImport("FWLIB32.dll", EntryPoint="cnc_rdexecprog")]
 #endif
@@ -8635,6 +8649,8 @@ namespace fanuc
         /* read parameter */
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdparam")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdparam")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdparam")]
 #endif
@@ -8643,6 +8659,8 @@ namespace fanuc
         
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdparam")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdparam")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdparam")]
 #endif
@@ -8651,6 +8669,8 @@ namespace fanuc
         
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdparam")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdparam")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdparam")]
 #endif
@@ -8659,6 +8679,8 @@ namespace fanuc
         
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdparam")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdparam")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdparam")]
 #endif
@@ -8777,6 +8799,8 @@ namespace fanuc
         /* read custom macro variable */
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdmacro")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdmacro")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdmacro")]
 #endif
@@ -9264,6 +9288,8 @@ namespace fanuc
         /* read CNC system information */
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_sysinfo")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_sysinfo")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_sysinfo")]
 #endif
@@ -9272,6 +9298,8 @@ namespace fanuc
         /* read CNC status information */
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_statinfo")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_statinfo")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_statinfo")]
 #endif
@@ -9297,6 +9325,8 @@ namespace fanuc
         /* read alarm message */
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdalmmsg")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdalmmsg")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdalmmsg")]
 #endif
@@ -9306,6 +9336,8 @@ namespace fanuc
         /* read alarm message(2) */
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdalmmsg2")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdalmmsg2")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdalmmsg2")]
 #endif
@@ -9319,6 +9351,8 @@ namespace fanuc
         /* read modal data */
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_modal")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_modal")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_modal")]
 #endif
@@ -9327,6 +9361,8 @@ namespace fanuc
         
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_modal")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_modal")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_modal")]
 #endif
@@ -9335,6 +9371,8 @@ namespace fanuc
             
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_modal")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_modal")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_modal")]
 #endif
@@ -9343,6 +9381,8 @@ namespace fanuc
         
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_modal")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_modal")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_modal")]
 #endif
@@ -9351,6 +9391,8 @@ namespace fanuc
         
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_modal")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_modal")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_modal")]
 #endif
@@ -9396,6 +9438,8 @@ namespace fanuc
         /* read operator's message */
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdopmsg")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdopmsg")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdopmsg")]
 #endif
@@ -9413,6 +9457,8 @@ namespace fanuc
         /* set path number(for 4 axes lathes, multi-path) */
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_setpath")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_setpath")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_setpath")]
 #endif
@@ -9421,6 +9467,8 @@ namespace fanuc
         /* get path number(for 4 axes lathes, multi-path) */
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_getpath")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_getpath")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_getpath")]
 #endif
@@ -9433,6 +9481,8 @@ namespace fanuc
         /* free library handle */
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_freelibhndl")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_freelibhndl")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_freelibhndl")]
 #endif
@@ -9783,6 +9833,8 @@ namespace fanuc
         /* read the operation mode */
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdopmode")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdopmode")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdopmode")]
 #endif
@@ -10481,6 +10533,8 @@ namespace fanuc
         /* read axis name */
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdaxisname")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdaxisname")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdaxisname")]
 #endif
@@ -10490,6 +10544,8 @@ namespace fanuc
         /* read spindle name */
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdspdlname")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdspdlname")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdspdlname")]
 #endif
@@ -10931,6 +10987,8 @@ namespace fanuc
         /* read PMC data(area specified) */
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "pmc_rdpmcrng")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "pmc_rdpmcrng")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "pmc_rdpmcrng")]
 #endif
@@ -10939,6 +10997,8 @@ namespace fanuc
         
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "pmc_rdpmcrng")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "pmc_rdpmcrng")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "pmc_rdpmcrng")]
 #endif
@@ -10947,6 +11007,8 @@ namespace fanuc
         
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "pmc_rdpmcrng")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "pmc_rdpmcrng")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "pmc_rdpmcrng")]
 #endif
@@ -11422,6 +11484,8 @@ namespace fanuc
         /* allocate library handle 3 */
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_allclibhndl3")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_allclibhndl3")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_allclibhndl3")]
 #endif
@@ -11449,12 +11513,12 @@ namespace fanuc
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdetherinfo")]
         public static extern short cnc_rdetherinfo(ushort FlibHndl, out short a, out short b);
 
-#if ARMV7
+#if ARMV7 || LINUX64 || LINUX32
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_startupprocess")]
-        public static extern void cnc_startupprocess(long level, string filename);
+        public static extern short cnc_startupprocess(long level, string filename);
         
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_exitprocess")]
-        public static extern void cnc_exitprocess();
+        public static extern short cnc_exitprocess();
 #endif
 
     } // End for Focas1 class

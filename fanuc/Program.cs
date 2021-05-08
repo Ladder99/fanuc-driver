@@ -19,8 +19,8 @@ namespace fanuc
             setupMqtt("10.20.30.102");  // "172.16.10.3"
             createMachines(new List<dynamic>()
             {
-                new { enabled = false, id = "naka", ip = "172.16.13.100", port = 8193, timeout = 2, collector = typeof(collectors.Basic)},
-                new { enabled = true, id = "sim", ip = "10.20.30.101", port = 8193, timeout = 2, collector = typeof(collectors.Basic)}
+                new { enabled = false, id = "naka", ip = "172.16.13.100", port = 8193, timeout = 2, collector = typeof(collectors.Basic), collectorSweepMs = 1000},
+                new { enabled = true, id = "sim", ip = "10.20.30.101", port = 8193, timeout = 2, collector = typeof(collectors.Basic), collectorSweepMs = 1000}
             });
             
             createVeneers();
@@ -65,6 +65,7 @@ namespace fanuc
                 var topic = $"fanuc/{vv.Machine.Id}/{v.Name}{(v.SliceKey == null ? string.Empty : "/" + v.SliceKey.ToString())}";
                 var payload_string = JObject.FromObject(payload).ToString();
                 
+                Console.ForegroundColor = ConsoleColor.Gray;
                 Console.WriteLine(topic);
                 Console.WriteLine(payload_string);
                 Console.WriteLine();
@@ -79,13 +80,14 @@ namespace fanuc
 
             Action<Veneers, Veneer> on_error = (vv, v) =>
             {
-                //Console.WriteLine(new { method = v.LastInput.method, rc = v.LastInput.rc });
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine(new { method = v.LastInput.method, rc = v.LastInput.rc });
             };
 
             foreach (var cfg in machineConfigs)
             {
                 var machine = _machines.Add(cfg.enabled, cfg.id, cfg.ip, (ushort)cfg.port, (short)cfg.timeout);
-                machine.AddCollector(cfg.collector);
+                machine.AddCollector(cfg.collector, cfg.collectorSweepMs);
                 machine.Veneers.OnDataChange = on_data_change;
                 machine.Veneers.OnError = on_error;
             }
@@ -103,6 +105,8 @@ namespace fanuc
         {
             while (true)
             {
+                System.Threading.Thread.Sleep(1000);
+                
                 foreach (var machine in _machines[null])
                 {
                     machine.RunCollector();
@@ -132,8 +136,6 @@ namespace fanuc
                         .Build();
                     var r = _mqtt.PublishAsync(msg, CancellationToken.None).Result;
                 }
-                
-                System.Threading.Thread.Sleep(1000);
             }
         }
     }

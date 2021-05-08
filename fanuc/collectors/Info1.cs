@@ -7,12 +7,9 @@ namespace fanuc.collectors
 {
     public class Info1 : Collector
     {
-        public Info1(Machine machine) : base(machine)
+        public Info1(Machine machine, int sweepMs = 1000) : base(machine, sweepMs)
         {
-            #if ARMV7
-            Console.WriteLine("ARMV7 - Focas1.cnc_startupprocess()");
-            machine.Platform.StartupProcess();
-            #endif
+            
         }
         
         public override void Initialize()
@@ -37,7 +34,7 @@ namespace fanuc.collectors
                 else
                 {
                     // not in here
-                    System.Threading.Thread.Sleep(2000);
+                    System.Threading.Thread.Sleep(_sweepMs);
                 }
             }
         }

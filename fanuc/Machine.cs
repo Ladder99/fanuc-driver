@@ -105,9 +105,9 @@ namespace fanuc
             _veneers = new Veneers(this);
         }
 
-        public void AddCollector(Type type)
+        public void AddCollector(Type type, int sweepMs = 1000)
         {
-            _collector = (Collector) Activator.CreateInstance(type, new object[] { this });
+            _collector = (Collector) Activator.CreateInstance(type, new object[] { this, sweepMs });
         }
 
         public void InitCollector()
