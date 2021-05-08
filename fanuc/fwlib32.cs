@@ -1224,10 +1224,10 @@ namespace fanuc
             [FieldOffset(4),
            MarshalAs(UnmanagedType.ByValArray, SizeConst = MAX_AXIS)]
             public byte[] cdatas = new byte[MAX_AXIS];
-            [FieldOffset(8),
+            [FieldOffset(4),
            MarshalAs(UnmanagedType.ByValArray, SizeConst = MAX_AXIS)]
             public short[] idatas = new short[MAX_AXIS];
-            [FieldOffset(12),
+            [FieldOffset(4),
            MarshalAs(UnmanagedType.ByValArray, SizeConst = MAX_AXIS)]
             public int[] ldatas = new int[MAX_AXIS];
         }
