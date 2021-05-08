@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Loader;
 using System.Threading;
 using fanuc.veneers;
@@ -111,7 +112,7 @@ namespace fanuc
                 Console.WriteLine(new { method = v.LastInput.method, rc = v.LastInput.rc });
             };
 
-            Machines machines = new Machines();
+            dynamic machines = new Machines();
             
             foreach (var cfg in machine_confs)
             {
@@ -121,12 +122,12 @@ namespace fanuc
                 machine.Veneers.OnError = on_error;
             }
 
-            return machines.All;
+            return machines;
         }
         
         static void createVeneers(dynamic machines)
         {
-            foreach (var machine in machines)
+            foreach (var machine in machines[null])
             {
                 machine.InitCollector();
             }
@@ -138,7 +139,7 @@ namespace fanuc
             {
                 System.Threading.Thread.Sleep(1000);
                 
-                foreach (var machine in machines)
+                foreach (var machine in machines[null])
                 {
                     machine.RunCollector();
                     
