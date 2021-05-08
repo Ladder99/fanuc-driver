@@ -91,7 +91,7 @@ namespace fanuc
                 };
 
                 var topic = $"fanuc/{vv.Machine.Id}/{v.Name}{(v.SliceKey == null ? string.Empty : "/" + v.SliceKey.ToString())}";
-                var payload_string = JObject.FromObject(payload).ToString();
+                string payload_string = JObject.FromObject(payload).ToString();
                 
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.WriteLine(topic);
@@ -99,9 +99,9 @@ namespace fanuc
                 Console.WriteLine();
                 
                 var msg = new MqttApplicationMessageBuilder()
+                    .WithRetainFlag(true)
                     .WithTopic(topic)
                     .WithPayload(payload_string)
-                    .WithRetainFlag()
                     .Build();
                 var r = mqtt.PublishAsync(msg, CancellationToken.None);
             };
