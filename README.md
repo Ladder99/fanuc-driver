@@ -18,9 +18,94 @@ fanuc/{machine-id}/{observation-name}/{controller-execution-path-number}
 fanuc/{machine-id}/{observation-name}/{controller-execution-path-number}/{machine-axis-name}
 ```
 
+```
+fanuc/{machine-id}/PING
+```
+
 ## MQTT Payload Structure - Suggested
 
+Data deltas are published to MQTT broker as retained messages.  This means that any newly connected client will only receive the latest data for each observation.
 
+`cnc_sysinfo` example.
+
+Native source:
+
+```
+{
+  "addinfo": 1090,
+  "max_axis": 32,
+  "cnc_type": [
+    " ",
+    "0"
+  ],
+  "mt_type": [
+    " ",
+    "M"
+  ],
+  "series": [
+    "D",
+    "4",
+    "F",
+    "1"
+  ],
+  "version": [
+    "3",
+    "0",
+    ".",
+    "0"
+  ],
+  "axes": [
+    "0",
+    "3"
+  ]
+}
+```
+
+After transformation:
+
+```
+{
+  "addinfo": 1090,
+  "max_axis": 32,
+  "cnc_type": " 0",
+  "mt_type": " M",
+  "series": "D4F1",
+  "version": "30.0",
+  "axes": "03"
+}
+```
+
+Full published payload:
+
+```
+fanuc/sim/sys_info
+```
+
+```
+{
+  "observation": {
+    "time": 1620485344410,
+    "machine": "sim",
+    "name": "sys_info",
+    "marker": {}
+  },
+  "source": {
+    "method": "cnc_sysinfo",
+    "data": {}
+  },
+  "delta": {
+    "time": "00:00:01.4453544",
+    "data": {
+      "max_axis": 32,
+      "cnc_type": " 0",
+      "mt_type": " M",
+      "series": "D4F1",
+      "version": "30.0",
+      "axes": "03"
+    }
+  }
+}
+```
 
 ## Building and Running
 

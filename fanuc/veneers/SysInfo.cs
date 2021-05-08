@@ -21,6 +21,7 @@
             {
                 var current_value = new
                 {
+                    input.response.cnc_sysinfo.sysinfo.addinfo,
                     input.response.cnc_sysinfo.sysinfo.max_axis,
                     cnc_type = string.Join("", input.response.cnc_sysinfo.sysinfo.cnc_type),
                     mt_type = string.Join("", input.response.cnc_sysinfo.sysinfo.mt_type),
