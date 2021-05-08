@@ -107,6 +107,25 @@ fanuc/sim/sys_info
 }
 ```
 
+## Concepts
+
+![fanuc-driver_machine](docs/fanuc-driver_machine.png)
+
+A `Machine` instance includes:
+* connectivity information
+* data collection strategy (`Collector`)
+* data collection transformation (`Veneer`)
+* data change and error callbacks
+
+### Collectors
+
+// TODO
+
+### Veneers
+
+// TODO
+
+
 ## Building and Running
 
 ### armv7
