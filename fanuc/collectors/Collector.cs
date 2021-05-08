@@ -10,7 +10,7 @@
         {
             _machine = machine;
             _sweepMs = sweepMs;
-            machine.Platform.StartupProcess(0, "~/focas2.log");
+            machine.Platform.StartupProcess(3, "~/focas2.log");
         }
 
         ~Collector()
