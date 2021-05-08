@@ -146,7 +146,7 @@ namespace fanuc
                     else
                     {
                         // not in here
-                        System.Threading.Thread.Sleep(1000);
+                        System.Threading.Thread.Sleep(2000);
                     }
                 }
             }
