@@ -20,7 +20,7 @@ namespace fanuc
             createMachines(new List<dynamic>()
             {
                 new { enabled = false, id = "naka", ip = "172.16.13.100", port = 8193, timeout = 2, collector = typeof(collectors.Basic), collectorSweepMs = 1000},
-                new { enabled = true, id = "sim", ip = "10.20.30.101", port = 8193, timeout = 2, collector = typeof(collectors.Basic), collectorSweepMs = 1000}
+                new { enabled = true, id = "sim", ip = "10.20.30.101", port = 8193, timeout = 2, collector = typeof(collectors.Info_MachineVsVeneer), collectorSweepMs = 1000}
             });
             
             createVeneers();
