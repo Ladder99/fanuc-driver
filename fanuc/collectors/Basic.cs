@@ -9,7 +9,10 @@ namespace fanuc.collectors
     {
         public Basic(Machine machine) : base(machine)
         {
-            
+            #if ARMV7
+            Console.WriteLine("ARMV7 - Focas1.cnc_startupprocess()");
+            machine.Platform.StartupProcess();
+            #endif
         }
         
         public override void Initialize()
