@@ -167,7 +167,7 @@ machines:
 ## Building and Running
 
 ### armv7
-  
+
 Follow .NET Core SDK installation instructions here: https://sukesh.me/2020/07/07/how-to-install-net-core-on-raspberry-pi/  
   
 Clone the repository, build the project, and run it.  
@@ -207,4 +207,32 @@ dotnet build  /nowarn:CS0618 -p:DefineConstants=LINUX64
 ### linux32
   
 Not tested.  
+
+## Docker
+
+Install Docker and docker-compose.
+
+```
+sudo apt-get update
+sudo apt-install curl
+curl -sSL https://get.docker.com | sh
+sudo usermod -aG docker $(whoami)
+newgrp docker
+sudo systemctl enable docker
+sudo systemctl start docker
+sudo apt install python3-pip
+sudo apt-get -y install libffi-dev libssl-dev python3-dev python3 python3-pip
+sudo pip3 install docker-compose
+sync
+```
+
+### armv7
+
+```
+git clone https://github.com/Ladder99/fanuc-driver.git  
+
+cd fanuc-driver/fanuc  
+
+docker build -f Dockerfile.ARMV7 --tag=ladder99/fanuc-driver:latest .
+```
   
