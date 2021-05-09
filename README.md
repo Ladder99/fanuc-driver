@@ -173,6 +173,8 @@ Follow .NET Core SDK installation instructions here: https://sukesh.me/2020/07/0
 Clone the repository, build the project, and run it.  
   
 ```  
+cd ~
+
 git clone https://github.com/Ladder99/fanuc-driver.git  
 
 cd fanuc-driver/fanuc  
@@ -195,6 +197,8 @@ Follow .NET Core SDK installation instructions here: https://docs.microsoft.com/
 Clone the repository, build the project, and run it.  
   
 ```  
+cd ~
+
 git clone https://github.com/Ladder99/fanuc-driver.git  
 
 cd fanuc-driver/fanuc  
@@ -228,7 +232,7 @@ sync
 
 ### armv7
 
-Config file used: `docker/config.yml`
+Config file used: `~/fanuc-driver/docker/config.yml`
 
 Build container:
 
@@ -237,7 +241,7 @@ cd ~
 
 git clone https://github.com/Ladder99/fanuc-driver.git  
 
-cd ~/fanuc-driver  
+cd fanuc-driver  
 
 docker build -f Dockerfile.ARMV7 --tag=ladder99/fanuc-driver:latest .
 ```
@@ -258,13 +262,12 @@ cd ~
 mkdir -p fanuc-volumes/fanuc-driver
 cp fanuc-driver/docker/config.yml fanuc-volumes/fanuc-driver/config.yml
 
-mkdir -p ~/fanuc-volumes/mosquitto/config
-mkdir -p ~/fanuc-volumes/mosquitto/data
-mkdir -p ~/fanuc-volumes/mosquitto/log
-cp fanuc-driver/docker/mosquitto.conf ~/fanuc-volumes/mosquitto/config/mosquitto.conf
+mkdir -p fanuc-volumes/mosquitto/config
+mkdir -p fanuc-volumes/mosquitto/data
+mkdir -p fanuc-volumes/mosquitto/log
+cp fanuc-driver/docker/mosquitto.conf fanuc-volumes/mosquitto/config/mosquitto.conf
 
-
-cd ~/fanuc-driver/docker
+cd fanuc-driver/docker
 
 docker-compose up -d
 ```
