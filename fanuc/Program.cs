@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using fanuc.veneers;
 using MQTTnet;
@@ -15,7 +16,7 @@ namespace fanuc
     {
         static void Main(string[] args)
         {
-            var config_file = "config.yml";
+            string config_file = getArgument(args, "--config", "config.yml");
             dynamic config = readConfig(config_file);
             dynamic mqtt = setupMqtt(config);
             dynamic machines = createMachines(config, mqtt);
@@ -23,6 +24,12 @@ namespace fanuc
             processVeneers(machines, mqtt);
         }
 
+        static string getArgument(string[] args, string option, string defaultValue)
+        {
+            var value = args.SkipWhile(i => i != option).Skip(1).Take(1).FirstOrDefault();
+            return string.IsNullOrEmpty(value) ? defaultValue : value;
+        }
+        
         static dynamic readConfig(string config_file)
         {
             var input = new StreamReader(config_file);

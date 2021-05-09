@@ -15,4 +15,6 @@ RUN dotnet publish "fanuc.csproj" -c Release -o /app/publish /nowarn:CS0618 -p:D
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "fanuc.dll"]
+RUN mkdir -p /etc/fanuc
+COPY docker/config.yml /etc/fanuc
+ENTRYPOINT ["dotnet", "fanuc.dll", "--config", "/etc/fanuc/config.yml"]
