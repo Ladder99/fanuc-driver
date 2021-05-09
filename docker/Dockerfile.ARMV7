@@ -3,7 +3,7 @@ WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
 WORKDIR /src
-COPY ["../fanuc/fanuc.csproj", "fanuc/"]
+COPY ["fanuc/fanuc.csproj", "fanuc/"]
 RUN dotnet restore "fanuc/fanuc.csproj"
 COPY . .
 WORKDIR "/src/fanuc"
