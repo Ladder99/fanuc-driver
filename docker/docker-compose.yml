@@ -1,0 +1,63 @@
+version: '3.7'
+
+services:
+  mosquitto:
+    container_name: mosquitto
+    image: eclipse-mosquitto
+    restart: always
+    networks:
+      - fanuc
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ~/fanuc-volumes/mosquitto/config:/mosquitto/config:rw
+      - ~/fanuc-volumes/mosquitto/data:/mosquitto/data:rw
+      - ~/fanuc-volumes/mosquitto/log:/mosquitto/log:rw
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "1m"
+  
+  fanuc_driver:
+    container_name: fanuc_driver
+    image: ladder99/fanuc-driver:latest
+    restart: always
+    depends_on:
+      - mosquitto
+    networks:
+      - fanuc
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ~/fanuc-volumes/fanuc-driver:/etc/fanuc
+    logging:
+      options:
+        max-file: "5"
+        max-size: "1m"
+
+  portainer:
+    container_name: portainer
+    image: portainer/portainer-ce
+    restart: always
+    networks:
+      - fanuc
+    ports:
+      - '9000:9000'
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    logging:
+      driver: 'none'
+
+volumes:
+  portainer_data:
+
+networks:
+  fanuc:
+    name: fanuc

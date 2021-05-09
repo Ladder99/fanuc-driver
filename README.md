@@ -228,6 +228,10 @@ sync
 
 ### armv7
 
+Config file used: `docker/config.yml`
+
+Build container:
+
 ```
 git clone https://github.com/Ladder99/fanuc-driver.git  
 
@@ -236,6 +240,16 @@ cd fanuc-driver
 docker build -f Dockerfile.ARMV7 --tag=ladder99/fanuc-driver:latest .
 ```
 
+Run container:
+
 ```
 docker run -it ladder99/fanuc-driver:latest
+```
+
+Run container and MQTT broker:
+
+```
+cd fanuc-driver/docker
+
+docker-compose up -d
 ```
