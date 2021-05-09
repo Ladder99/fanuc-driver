@@ -13,9 +13,9 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
-      - ~/fanuc-volumes/mosquitto/config:/mosquitto/config:rw
-      - ~/fanuc-volumes/mosquitto/data:/mosquitto/data:rw
-      - ~/fanuc-volumes/mosquitto/log:/mosquitto/log:rw
+      - mosquitto_config:/mosquitto/config:ro
+      - mosquitto_data:/mosquitto/data:rw
+      - mosquitto_log:/mosquitto/log:rw
     logging:
       driver: "json-file"
       options:
@@ -57,6 +57,9 @@ services:
 
 volumes:
   portainer_data:
+  mosquitto_config:
+  mosquitto_data:
+  mosquitto_log:
 
 networks:
   fanuc:

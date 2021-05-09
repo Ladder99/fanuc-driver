@@ -233,9 +233,11 @@ Config file used: `docker/config.yml`
 Build container:
 
 ```
+cd ~
+
 git clone https://github.com/Ladder99/fanuc-driver.git  
 
-cd fanuc-driver  
+cd ~/fanuc-driver  
 
 docker build -f Dockerfile.ARMV7 --tag=ladder99/fanuc-driver:latest .
 ```
@@ -248,8 +250,14 @@ docker run -it ladder99/fanuc-driver:latest
 
 Run container and MQTT broker:
 
+Config file used: `~/fanuc-volumes/fanuc-driver/config.yml`
+
 ```
-cd fanuc-driver/docker
+cd ~
+mkdir -p fanuc-volumes/fanuc-driver
+cp fanuc-driver/docker/config.yml fanuc-volumes/fanuc-driver/config.yml
+
+cd ~/fanuc-driver/docker
 
 docker-compose up -d
 ```
