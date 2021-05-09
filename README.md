@@ -15,7 +15,7 @@ fanuc/{machine-id}/{observation-name}/{controller-execution-path-number}
 ```
 
 ```
-fanuc/{machine-id}/{observation-name}/{controller-execution-path-number}/{machine-axis-name}
+fanuc/{machine-id}/{observation-name}/{controller-execution-path-number}/{machine-axis-name / machine-spindle-name}
 ```
 
 ```
@@ -26,9 +26,9 @@ fanuc/{machine-id}/PING
 
 Data deltas are published to MQTT broker as retained messages.  This means that any newly connected client will only receive the latest data for each observation.
 
-`cnc_sysinfo` example.
+Below is an example of native `cnc_sysinfo` invocation response data and the corresponding `sys_info` observation transformed data.
 
-Native source:
+Native data:
 
 ```
 {
@@ -119,12 +119,50 @@ A `Machine` instance includes:
 
 ### Collectors
 
-// TODO
+A `Collector` is a strategy to apply and peel veneers to reveal observations in near real-time.
 
 ### Veneers
 
-// TODO
+A `Veneer` is a thin transformation layer.  When peeled, each veneer reveals an observation.  Veneers can be applied/peeled as a whole.  Veneers can be sliced and applied/peeled across logical boundaries.  Atomic values should be used for slicing veneers as they are used to form the MQTT topic.  Sliced veneers must be marked before peeling in order to understand their logical placement downstream.
 
+### Veneering
+
+The act of applying veneers in a logical manner.
+
+![fanuc-driver_veneering](docs/fanuc-driver_veneering.png)
+
+### Peeling
+
+The act of peeling veneers to reveal observations.
+
+![fanuc-driver_peeling](docs/fanuc-driver_peeling.png)
+
+## Configuration
+
+The `config.yml` file contains runtime information about the MQTT broker and each Focas endpoint.
+
+```
+broker:
+  net_ip: 10.20.30.102
+  net_port: !!int 1883
+
+machines:
+  - id: sim
+    enabled: !!bool true
+    net_ip: 10.20.30.101
+    net_port: !!int 8193
+    net_timeout_s: !!int 2
+    strategy_type: fanuc.collectors.Basic, fanuc
+    sweep_ms: !!int 1000
+
+  - id: naka
+    enabled: !!bool false
+    net_ip: 172.16.13.100
+    net_port: !!int 8193
+    net_timeout_s: !!int 2
+    strategy_type: fanuc.collectors.Basic, fanuc
+    sweep_ms: !!int 1000
+```
 
 ## Building and Running
 

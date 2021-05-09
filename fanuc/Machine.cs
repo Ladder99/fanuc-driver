@@ -120,9 +120,9 @@ namespace fanuc
             _collector.Collect();
         }
         
-        public bool VeneersCreated { get; set; }
+        public bool VeneersApplied { get; set; }
 
-        public void AddVeneer(Type type, string note)
+        public void ApplyVeneer(Type type, string note)
         {
             _veneers.Add(type, note);
         }
@@ -137,12 +137,12 @@ namespace fanuc
             _veneers.Slice(sliceKey, split);
         }
 
-        public void AddVeneerAcrossSlices(Type type, string note)
+        public void ApplyVeneerAcrossSlices(Type type, string note)
         {
             _veneers.AddAcrossSlices(type, note);
         }
         
-        public void AddVeneerAcrossSlices(dynamic sliceKey, Type type, string note)
+        public void ApplyVeneerAcrossSlices(dynamic sliceKey, Type type, string note)
         {
             _veneers.AddAcrossSlices(sliceKey, type, note);
         }

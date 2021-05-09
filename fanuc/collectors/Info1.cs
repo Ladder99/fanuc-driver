@@ -14,7 +14,7 @@ namespace fanuc.collectors
         
         public override void Initialize()
         {
-            while (!_machine.VeneersCreated)
+            while (!_machine.VeneersApplied)
             {
                 Console.WriteLine("fanuc - creating veneers");
 
@@ -23,11 +23,11 @@ namespace fanuc.collectors
 
                 if (connect.success)
                 {
-                    _machine.AddVeneer(typeof(fanuc.veneers.Connect), "connect");
-                    _machine.AddVeneer(typeof(fanuc.veneers.SysInfo), "sys_info");
+                    _machine.ApplyVeneer(typeof(fanuc.veneers.Connect), "connect");
+                    _machine.ApplyVeneer(typeof(fanuc.veneers.SysInfo), "sys_info");
                     
                     dynamic disconnect = _machine.Platform.Disconnect();
-                    _machine.VeneersCreated = true;
+                    _machine.VeneersApplied = true;
 
                     Console.WriteLine("fanuc - created veneers");
                 }

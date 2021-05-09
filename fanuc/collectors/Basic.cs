@@ -14,7 +14,7 @@ namespace fanuc.collectors
         
         public override void Initialize()
         {
-            while (!_machine.VeneersCreated)
+            while (!_machine.VeneersApplied)
             {
                 Console.WriteLine("fanuc - creating veneers");
 
@@ -23,9 +23,9 @@ namespace fanuc.collectors
 
                 if (connect.success)
                 {
-                    _machine.AddVeneer(typeof(fanuc.veneers.Connect), "connect");
-                    _machine.AddVeneer(typeof(fanuc.veneers.SysInfo), "sys_info");
-                    _machine.AddVeneer(typeof(fanuc.veneers.GetPath), "get_path");
+                    _machine.ApplyVeneer(typeof(fanuc.veneers.Connect), "connect");
+                    _machine.ApplyVeneer(typeof(fanuc.veneers.SysInfo), "sys_info");
+                    _machine.ApplyVeneer(typeof(fanuc.veneers.GetPath), "get_path");
 
                     dynamic paths = _machine.Platform.GetPath();
 
@@ -34,12 +34,12 @@ namespace fanuc.collectors
 
                     _machine.SliceVeneer(path_slices.ToArray());
 
-                    _machine.AddVeneerAcrossSlices(typeof(fanuc.veneers.RdAxisname), "axis_name");
-                    _machine.AddVeneerAcrossSlices(typeof(fanuc.veneers.StatInfo), "stat_info");
-                    _machine.AddVeneerAcrossSlices(typeof(fanuc.veneers.Alarms), "alarms");
-                    _machine.AddVeneerAcrossSlices(typeof(fanuc.veneers.OpMsgs), "op_msgs");
-                    _machine.AddVeneerAcrossSlices(typeof(fanuc.veneers.Block), "code_block");
-                    _machine.AddVeneerAcrossSlices(typeof(fanuc.veneers.RdParamLData), "part_count");
+                    _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.RdAxisname), "axis_name");
+                    _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.StatInfo), "stat_info");
+                    _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.Alarms), "alarms");
+                    _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.OpMsgs), "op_msgs");
+                    _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.Block), "code_block");
+                    _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.RdParamLData), "part_count");
 
                     for (short current_path = paths.response.cnc_getpath.path_no;
                         current_path <= paths.response.cnc_getpath.maxpath_no;
@@ -58,11 +58,11 @@ namespace fanuc.collectors
 
                         _machine.SliceVeneer(current_path, axis_slices.ToArray());
 
-                        _machine.AddVeneerAcrossSlices(current_path, typeof(fanuc.veneers.RdDynamic2), "axis_data");
+                        _machine.ApplyVeneerAcrossSlices(current_path, typeof(fanuc.veneers.RdDynamic2), "axis_data");
                     }
 
                     dynamic disconnect = _machine.Platform.Disconnect();
-                    _machine.VeneersCreated = true;
+                    _machine.VeneersApplied = true;
 
                     Console.WriteLine("fanuc - created veneers");
                 }
