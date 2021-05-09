@@ -235,4 +235,8 @@ cd fanuc-driver
 
 docker build -f Dockerfile.ARMV7 --tag=ladder99/fanuc-driver:latest .
 ```
+
+```
+docker run -it ladder99/fanuc-driver:latest
+```
   
