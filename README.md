@@ -254,8 +254,15 @@ Config file used: `~/fanuc-volumes/fanuc-driver/config.yml`
 
 ```
 cd ~
+
 mkdir -p fanuc-volumes/fanuc-driver
 cp fanuc-driver/docker/config.yml fanuc-volumes/fanuc-driver/config.yml
+
+mkdir -p ~/fanuc-volumes/mosquitto/config
+mkdir -p ~/fanuc-volumes/mosquitto/data
+mkdir -p ~/fanuc-volumes/mosquitto/log
+cp fanuc-driver/docker/mosquitto.conf ~/fanuc-volumes/mosquitto/config/mosquitto.conf
+
 
 cd ~/fanuc-driver/docker
 
