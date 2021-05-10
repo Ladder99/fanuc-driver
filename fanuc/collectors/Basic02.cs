@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 
 namespace fanuc.collectors
 {
-    public class Basic01 : Collector
+    public class Basic02 : Collector
     {
-        public Basic01(Machine machine, int sweepMs = 1000) : base(machine, sweepMs)
+        public Basic02(Machine machine, int sweepMs = 1000) : base(machine, sweepMs)
         {
             
         }
@@ -27,6 +29,16 @@ namespace fanuc.collectors
                     _machine.ApplyVeneer(typeof(fanuc.veneers.RdParamLData), "power_on_time_6750");
                     _machine.ApplyVeneer(typeof(fanuc.veneers.SysInfo), "sys_info");
                     _machine.ApplyVeneer(typeof(fanuc.veneers.GetPath), "get_path");
+                    
+                    dynamic paths = _machine.Platform.GetPath();
+
+                    IEnumerable<int> path_slices = Enumerable
+                        .Range(paths.response.cnc_getpath.path_no, paths.response.cnc_getpath.maxpath_no);
+
+                    _machine.SliceVeneer(path_slices.ToArray());
+
+                    _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.RdAxisname), "axis_name");
+                    _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.RdSpindlename), "spindle_name");
                     
                     dynamic disconnect = _machine.Platform.Disconnect();
                     
@@ -63,6 +75,21 @@ namespace fanuc.collectors
                 
                 dynamic paths = _machine.Platform.GetPath();
                 _machine.PeelVeneer("get_path", paths);
+
+                for (short current_path = paths.response.cnc_getpath.path_no;
+                    current_path <= paths.response.cnc_getpath.maxpath_no;
+                    current_path++)
+                {
+                    dynamic path = _machine.Platform.SetPath(current_path);
+                    dynamic path_marker = new {path.request.cnc_setpath.path_no};
+                    _machine.MarkVeneer(current_path, path_marker);
+
+                    dynamic axes = _machine.Platform.RdAxisName();
+                    _machine.PeelAcrossVeneer(current_path, "axis_name", axes);
+
+                    dynamic spindles = _machine.Platform.RdSpdlName();
+                    _machine.PeelAcrossVeneer(current_path, "spindle_name", spindles);
+                }
 
                 dynamic disconnect = _machine.Platform.Disconnect();
 

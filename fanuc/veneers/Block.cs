@@ -14,7 +14,7 @@
                 string source = string.Join("", input.response.cnc_rdexecprog.data).Trim();
                 string[] source_lines = source.Split('\n');
                 string source_line = source_lines[0].Trim(char.MinValue, ' ');
-                var current_value = new {data = source_line};
+                var current_value = new { data = source_line };
                 
                 if (!current_value.Equals(_lastValue))
                 {

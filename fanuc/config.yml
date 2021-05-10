@@ -8,7 +8,7 @@ machines:
     net_ip: 10.20.30.101
     net_port: !!int 8193
     net_timeout_s: !!int 2
-    strategy_type: fanuc.collectors.Basic01, fanuc
+    strategy_type: fanuc.collectors.Basic04, fanuc
     sweep_ms: !!int 1000
 
   - id: naka

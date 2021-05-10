@@ -11531,13 +11531,13 @@ namespace fanuc
         public static extern short cnc_exitprocess();
         
 #endif
-        
+  
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdcncid")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdcncid")]
 #endif
-        public static extern short cnc_rdcncid( ushort FlibHndl, uint [] cncid);
+        public static extern short cnc_rdcncid( ushort FlibHndl, uint[] cncid);
 
     } // End for Focas1 class
 }

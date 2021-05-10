@@ -3,14 +3,13 @@ using System.Linq;
 
 namespace fanuc.veneers
 {
-    public class RdTimer: Veneer
+    public class RdActs2: Veneer
     {
-        public RdTimer(string name = ""): base(name)
+        public RdActs2(string name = ""): base(name)
         {
             _lastValue = new 
             {
-                minute = -1,
-                msec = -1
+                data = -1
             };
         }
         
@@ -18,13 +17,11 @@ namespace fanuc.veneers
         {
             if (input.success)
             {
-                var current_value = new
-                {
-                    input.response.cnc_rdtimer.time.minute,
-                    input.response.cnc_rdtimer.time.msec
-                };
+                var current_value = new { data = input.response.cnc_acts2.actualspindle.data[0] };
                 
-                if (!current_value.Equals(this._lastValue))
+                var fields = input.response.cnc_acts2.actualspindle.GetType().GetFields();
+                
+                if(!current_value.Equals(_lastValue))
                 {
                     this.dataChanged(input, current_value);
                 }
@@ -33,7 +30,7 @@ namespace fanuc.veneers
             {
                 onError(input);
             }
-
+            
             return new { veneer = this };
         }
     }
