@@ -1,4 +1,6 @@
-﻿namespace fanuc.veneers
+﻿using Newtonsoft.Json.Linq;
+
+namespace fanuc.veneers
 {
     public class RdDynamic2 : Veneer
     {
@@ -34,9 +36,11 @@
                 
                 this.onDataArrived(input, current_value);
                 
-                //if (!current_value.Equals(_lastValue))
                 // TODO: equality or hash code do not match on this object (x86)
-                if(!current_value.ToString().Equals(_lastChangedValue.ToString()))
+                //if (!current_value.Equals(_lastValue))
+                // TODO: can't do this because pos does not expand
+                //if(!current_value.ToString().Equals(_lastChangedValue.ToString())) 
+                if(!JObject.FromObject(current_value).ToString().Equals(JObject.FromObject(_lastChangedValue).ToString()))
                 {
                     this.onDataChanged(input, current_value);
                 }
