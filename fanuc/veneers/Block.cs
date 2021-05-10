@@ -4,7 +4,7 @@
     {
         public Block(string name = "") : base(name)
         {
-            _lastValue = string.Empty;
+            _lastChangedValue = new { data = string.Empty };
         }
         
         protected override dynamic Any(dynamic input)
@@ -16,9 +16,11 @@
                 string source_line = source_lines[0].Trim(char.MinValue, ' ');
                 var current_value = new { data = source_line };
                 
-                if (!current_value.Equals(_lastValue))
+                this.onDataArrived(input, current_value);
+                
+                if (!current_value.Equals(_lastChangedValue))
                 {
-                    this.dataChanged(input, current_value);
+                    this.onDataChanged(input, current_value);
                 }
             }
             else

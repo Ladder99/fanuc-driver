@@ -4,7 +4,7 @@
     {
         public SysInfo(string name = "") : base(name)
         {
-            _lastValue = new
+            _lastChangedValue = new
             {
                 max_axis = -1,
                 cnc_type = string.Empty,
@@ -30,9 +30,11 @@
                     axes = string.Join("", input.response.cnc_sysinfo.sysinfo.axes)
                 };
                 
-                if (!current_value.Equals(this._lastValue))
+                this.onDataArrived(input, current_value);
+                
+                if (!current_value.Equals(this._lastChangedValue))
                 {
-                    this.dataChanged(input, current_value);
+                    this.onDataChanged(input, current_value);
                 }
             }
             else

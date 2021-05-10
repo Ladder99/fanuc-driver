@@ -6,7 +6,7 @@ namespace fanuc.veneers
     {
         public CNCId(string name = "") : base(name)
         {
-            _lastValue = new
+            _lastChangedValue = new
             {
                 cncid = string.Empty
             };
@@ -21,9 +21,11 @@ namespace fanuc.veneers
                     cncid = string.Join("-", ((uint[])input.response.cnc_rdcncid.cncid).Select(x => x.ToString("X")).ToArray())
                 };
                 
-                if (!current_value.Equals(this._lastValue))
+                this.onDataArrived(input, current_value);
+                
+                if (!current_value.Equals(this._lastChangedValue))
                 {
-                    this.dataChanged(input, current_value);
+                    this.onDataChanged(input, current_value);
                 }
             }
             else

@@ -15,6 +15,8 @@ namespace fanuc.veneers
         
         private Machine _machine;
 
+        public Action<Veneers, Veneer> OnDataArrival = (vv, v) => { };
+        
         public Action<Veneers, Veneer> OnDataChange = (vv, v) => { };
         
         public Action<Veneers, Veneer> OnError = (vv, v) => { };
@@ -47,6 +49,7 @@ namespace fanuc.veneers
         public void Add(Type veneerType, string name)
         {
             Veneer veneer = (Veneer)Activator.CreateInstance(veneerType, new object[] { name });
+            veneer.OnArrival = (v) => OnDataArrival(this, v);
             veneer.OnChange = (v) => OnDataChange(this, v);
             veneer.OnError = (v) => OnError(this, v);
             _wholeVeneers.Add(veneer);
@@ -58,6 +61,7 @@ namespace fanuc.veneers
             {
                 Veneer veneer = (Veneer)Activator.CreateInstance(veneerType, new object[] { name });
                 veneer.SetSliceKey(key);
+                veneer.OnArrival = (v) => OnDataArrival(this, v);
                 veneer.OnChange = (v) => OnDataChange(this, v);
                 veneer.OnError = (v) => OnError(this, v);
                 _slicedVeneers[key].Add(veneer);
@@ -74,6 +78,7 @@ namespace fanuc.veneers
                 
                 Veneer veneer = (Veneer)Activator.CreateInstance(veneerType, new object[] { name });
                 veneer.SetSliceKey(key);
+                veneer.OnArrival = (v) => OnDataArrival(this, v);
                 veneer.OnChange = (v) => OnDataChange(this, v);
                 veneer.OnError = (v) => OnError(this, v);
                 _slicedVeneers[key].Add(veneer);

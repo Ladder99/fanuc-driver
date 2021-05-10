@@ -4,7 +4,7 @@
     {
         public GetPath(string name = "") : base(name)
         {
-            _lastValue = new
+            _lastChangedValue = new
             {
                 path_no = -1,
                 maxpath_no = -1
@@ -21,9 +21,11 @@
                     input.response.cnc_getpath.maxpath_no
                 };
                 
-                if (!current_value.Equals(this._lastValue))
+                this.onDataArrived(input, current_value);
+                
+                if (!current_value.Equals(this._lastChangedValue))
                 {
-                    this.dataChanged(input, current_value);
+                    this.onDataChanged(input, current_value);
                 }
             }
             else

@@ -4,7 +4,7 @@
     {
         public RdParamLData(string name = "") : base(name)
         {
-            _lastValue = new
+            _lastChangedValue = new
             {
                 ldata = -1
             };
@@ -16,9 +16,11 @@
             {
                 var current_value = new { ldata = input.response.cnc_rdparam.param.ldata };
                 
-                if (!current_value.Equals(_lastValue))
+                this.onDataArrived(input, current_value);
+                
+                if (!current_value.Equals(_lastChangedValue))
                 {
-                    this.dataChanged(input, current_value);
+                    this.onDataChanged(input, current_value);
                 }
             }
             else

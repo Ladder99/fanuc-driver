@@ -4,7 +4,7 @@
     {
         public RdDynamic2(string name = "") : base(name)
         {
-            _lastValue = new
+            _lastChangedValue = new
             {
                 actual_feedrate = -1,
                 actual_spindle_speed = -1,
@@ -32,11 +32,13 @@
                     d.pos
                 };
                 
+                this.onDataArrived(input, current_value);
+                
                 //if (!current_value.Equals(_lastValue))
                 // TODO: equality or hash code do not match on this object (x86)
-                if(!current_value.ToString().Equals(_lastValue.ToString()))
+                if(!current_value.ToString().Equals(_lastChangedValue.ToString()))
                 {
-                    this.dataChanged(input, current_value);
+                    this.onDataChanged(input, current_value);
                 }
             }
             else

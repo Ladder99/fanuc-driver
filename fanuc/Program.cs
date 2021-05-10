@@ -14,6 +14,11 @@ namespace fanuc
 {
     class Program
     {
+        private static bool MQTT_DO_NOT_CONNECT = false;
+        private static bool MQTT_DO_NOT_PUBLISH = false;
+        private static bool PROCESS_ARRIVALS = true;
+        private static bool PROCESS_CHANGES = true;
+        
         static void Main(string[] args)
         {
             string config_file = getArgument(args, "--config", "config.yml");
@@ -48,7 +53,11 @@ namespace fanuc
                 .WithTcpServer(config["broker"]["net_ip"], config["broker"]["net_port"])
                 .Build();
             var client = factory.CreateMqttClient();
-            var r = client.ConnectAsync(options, CancellationToken.None).Result;
+            if (!MQTT_DO_NOT_CONNECT)
+            {
+                var r = client.ConnectAsync(options, CancellationToken.None).Result;
+            }
+
             return client;
         }
 
@@ -69,9 +78,12 @@ namespace fanuc
                     collectorSweepMs = machine_conf["sweep_ms"]
                 });
             }
-            
-            Action<Veneers, Veneer> on_data_change = (vv, v) =>
+
+            Action<Veneers, Veneer> on_data_arrival = (vv, v) =>
             {
+                if (!PROCESS_ARRIVALS)
+                    return;
+                
                 dynamic payload = new
                 {
                     observation = new
@@ -83,13 +95,58 @@ namespace fanuc
                     },
                     source = new
                     {
-                        method = v.LastInput.method,
-                        data = v.LastInput.request.GetType().GetProperty(v.LastInput.method).GetValue(v.LastInput.request, null)
+                        method = v.LastArrivedInput.method,
+                        v.LastArrivedInput.invocationMs,
+                        data = v.LastArrivedInput.request.GetType().GetProperty(v.LastArrivedInput.method).GetValue(v.LastArrivedInput.request, null)
+                    },
+                    delta = new
+                    {
+                        time = v.ArrivalDelta,
+                        data = v.LastArrivedValue
+                    }
+                };
+
+                var topic = $"fanuc/{vv.Machine.Id}-all/{v.Name}{(v.SliceKey == null ? string.Empty : "/" + v.SliceKey.ToString())}";
+                string payload_string = JObject.FromObject(payload).ToString();
+
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine($"{payload_string.Length}b => {topic}");
+                
+                var msg = new MqttApplicationMessageBuilder()
+                    .WithRetainFlag(true)
+                    .WithTopic(topic)
+                    .WithPayload(payload_string)
+                    .Build();
+                if (!MQTT_DO_NOT_PUBLISH)
+                {
+                    var r = mqtt.PublishAsync(msg, CancellationToken.None);
+                }
+            };
+            
+            Action<Veneers, Veneer> on_data_change = (vv, v) =>
+            {
+                if (!PROCESS_CHANGES)
+                    return;
+                
+                dynamic payload = new
+                {
+                    observation = new
+                    {
+                        time =  new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds(),
+                        machine = vv.Machine.Id,
+                        name = v.Name,
+                        marker = v.Marker
+                    },
+                    source = new
+                    {
+                        method = v.LastChangedInput.method,
+                        v.LastChangedInput.invocationMs,
+                        data = v.LastChangedInput.request.GetType().GetProperty(v.LastChangedInput.method).GetValue(v.LastChangedInput.request, null)
                     },
                     delta = new
                     {
                         time = v.ChangeDelta,
-                        data = v.DataDelta
+                        data = v.LastChangedValue
                     }
                 };
 
@@ -106,13 +163,16 @@ namespace fanuc
                     .WithTopic(topic)
                     .WithPayload(payload_string)
                     .Build();
-                var r = mqtt.PublishAsync(msg, CancellationToken.None);
+                if (!MQTT_DO_NOT_PUBLISH)
+                {
+                    var r = mqtt.PublishAsync(msg, CancellationToken.None);
+                }
             };
 
             Action<Veneers, Veneer> on_error = (vv, v) =>
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine(new { method = v.LastInput.method, rc = v.LastInput.rc });
+                Console.WriteLine(new { method = v.LastArrivedInput.method, rc = v.LastArrivedInput.rc });
             };
 
             dynamic machines = new Machines();
@@ -121,6 +181,7 @@ namespace fanuc
             {
                 var machine = machines.Add(cfg.enabled, cfg.id, cfg.ip, (ushort)cfg.port, (short)cfg.timeout);
                 machine.AddCollector(Type.GetType(cfg.collector), cfg.collectorSweepMs);
+                machine.Veneers.OnDataArrival = on_data_arrival;
                 machine.Veneers.OnDataChange = on_data_change;
                 machine.Veneers.OnError = on_error;
             }

@@ -4,7 +4,7 @@
     {
         public StatInfo(string name = "") : base(name)
         {
-            _lastValue = new
+            _lastChangedValue = new
             {
                 aut = -1,
                 run = -1,
@@ -31,9 +31,11 @@
                     input.response.cnc_statinfo.statinfo.alarm
                 };
                 
-                if (!current_value.Equals(this._lastValue))
+                this.onDataArrived(input, current_value);
+                
+                if (!current_value.Equals(this._lastChangedValue))
                 {
-                    this.dataChanged(input, current_value);
+                    this.onDataChanged(input, current_value);
                 }
             }
             else

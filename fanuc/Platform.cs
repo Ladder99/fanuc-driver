@@ -44,6 +44,7 @@ namespace fanuc
             return new
             {
                 method = "cnc_startupprocess",
+                invocationMs = -1,
                 doc = "",
                 success = rc == Focas1.EW_OK,
                 rc,
@@ -54,6 +55,7 @@ namespace fanuc
             return new
             {
                 method = "cnc_startupprocess",
+                invocationMs = -1,
                 doc = "",
                 success = true,
                 Focas1.EW_OK,
@@ -71,6 +73,7 @@ namespace fanuc
             return new
             {
                 method = "cnc_exitprocess",
+                invocationMs = -1,
                 doc = "",
                 success = rc == Focas1.EW_OK,
                 rc,
@@ -81,6 +84,7 @@ namespace fanuc
             return new
             {
                 method = "cnc_exitprocess",
+                invocationMs = -1,
                 doc = "",
                 success = true,
                 Focas1.EW_OK,
@@ -116,6 +120,7 @@ namespace fanuc
             return new
             {
                 method = "cnc_freelibhndl",
+                invocationMs = -1,
                 doc = "https://www.inventcom.net/fanuc-focas-library/handle/cnc_freelibhndl",
                 success = rc == Focas1.EW_OK,
                 rc,
@@ -132,6 +137,7 @@ namespace fanuc
             return new
             {
                 method = "cnc_rdcncid",
+                invocationMs = -1,
                 doc = "https://www.inventcom.net/fanuc-focas-library/misc/cnc_rdcncid",
                 success = rc == Focas1.EW_OK,
                 rc,
@@ -148,6 +154,7 @@ namespace fanuc
             return new
             {
                 method = "cnc_sysinfo",
+                invocationMs = -1,
                 doc = "https://www.inventcom.net/fanuc-focas-library/misc/cnc_sysinfo",
                 success = rc == Focas1.EW_OK,
                 rc,
@@ -164,6 +171,7 @@ namespace fanuc
             return new
             {
                 method = "cnc_getpath",
+                invocationMs = -1,
                 doc = "https://www.inventcom.net/fanuc-focas-library/misc/cnc_getpath",
                 success = rc == Focas1.EW_OK,
                 rc,
@@ -179,6 +187,7 @@ namespace fanuc
             return new
             {
                 method = "cnc_setpath",
+                invocationMs = -1,
                 doc = "https://www.inventcom.net/fanuc-focas-library/misc/cnc_setpath",
                 success = rc == Focas1.EW_OK,
                 rc,
@@ -195,6 +204,7 @@ namespace fanuc
             return new
             {
                 method = "cnc_statinfo",
+                invocationMs = -1,
                 doc = "https://www.inventcom.net/fanuc-focas-library/misc/cnc_statinfo",
                 success = rc == Focas1.EW_OK,
                 rc,
@@ -231,6 +241,7 @@ namespace fanuc
             return new
             {
                 method = "cnc_modal",
+                invocationMs = -1,
                 doc = "https://www.inventcom.net/fanuc-focas-library/misc/cnc_modal",
                 success = rc == Focas1.EW_OK,
                 rc,
@@ -264,6 +275,7 @@ namespace fanuc
             return new
             {
                 method = "cnc_rdexecprog",
+                invocationMs = -1,
                 doc = "https://www.inventcom.net/fanuc-focas-library/program/cnc_rdexecprog",
                 success = rc == Focas1.EW_OK,
                 rc,
@@ -281,6 +293,7 @@ namespace fanuc
             return new
             {
                 method = "cnc_rdalmmsg",
+                invocationMs = -1,
                 doc = "https://www.inventcom.net/fanuc-focas-library/misc/cnc_rdalmmsg",
                 success = rc == Focas1.EW_OK,
                 rc,
@@ -316,6 +329,7 @@ namespace fanuc
             return new
             {
                 method = "cnc_rdalmmsg2",
+                invocationMs = -1,
                 doc = "https://www.inventcom.net/fanuc-focas-library/misc/cnc_rdalmmsg2",
                 success = rc == Focas1.EW_OK,
                 rc,
@@ -350,6 +364,7 @@ namespace fanuc
             return new
             {
                 method = "cnc_rdopmsg",
+                invocationMs = -1,
                 doc = "https://www.inventcom.net/fanuc-focas-library/misc/cnc_rdopmsg",
                 success = rc == Focas1.EW_OK,
                 rc,
@@ -367,6 +382,7 @@ namespace fanuc
             return new
             {
                 method = "cnc_rdaxisname",
+                invocationMs = -1,
                 doc = "https://www.inventcom.net/fanuc-focas-library/position/cnc_rdaxisname",
                 success = rc == Focas1.EW_OK,
                 rc,
@@ -387,6 +403,7 @@ namespace fanuc
             return new
             {
                 method = "cnc_rdsvmeter",
+                invocationMs = -1,
                 doc = "https://www.inventcom.net/fanuc-focas-library/position/cnc_rdsvmeter",
                 success = rc == Focas1.EW_OK,
                 rc,
@@ -404,6 +421,7 @@ namespace fanuc
             return new
             {
                 method = "cnc_rdspdlname",
+                invocationMs = -1,
                 doc = "https://www.inventcom.net/fanuc-focas-library/position/cnc_rdspdlname",
                 success = rc == Focas1.EW_OK,
                 rc,
@@ -421,6 +439,7 @@ namespace fanuc
             return new
             {
                 method = "cnc_rdspmeter",
+                invocationMs = -1,
                 doc = "https://www.inventcom.net/fanuc-focas-library/position/cnc_rdspmeter",
                 success = rc == Focas1.EW_OK,
                 rc,
@@ -437,6 +456,7 @@ namespace fanuc
             return new
             {
                 method = "cnc_rdopmode",
+                invocationMs = -1,
                 doc = "https://www.inventcom.net/fanuc-focas-library/motor/cnc_rdopmode",
                 success = rc == Focas1.EW_OK,
                 rc,
@@ -453,6 +473,7 @@ namespace fanuc
             return new
             {
                 method = "cnc_acts",
+                invocationMs = -1,
                 doc = "https://www.inventcom.net/fanuc-focas-library/position/cnc_acts",
                 success = rc == Focas1.EW_OK,
                 rc,
@@ -469,6 +490,7 @@ namespace fanuc
             return new
             {
                 method = "cnc_acts2",
+                invocationMs = -1,
                 doc = "https://www.inventcom.net/fanuc-focas-library/position/cnc_acts2",
                 success = rc == Focas1.EW_OK,
                 rc,
@@ -499,6 +521,7 @@ namespace fanuc
             return new
             {
                 method = "pmc_rdpmcrng",
+                invocationMs = -1,
                 doc = "https://www.inventcom.net/fanuc-focas-library/pmc/pmc_rdpmcrng",
                 success = rc == Focas1.EW_OK,
                 rc,
@@ -515,6 +538,7 @@ namespace fanuc
             return new
             {
                 method = "cnd_rdmacro",
+                invocationMs = -1,
                 doc = "https://www.inventcom.net/fanuc-focas-library/ncdata/cnc_rdmacro",
                 success = rc == Focas1.EW_OK,
                 rc,
@@ -549,6 +573,7 @@ namespace fanuc
             return new
             {
                 method = "cnc_rdparam",
+                invocationMs = -1,
                 doc = "https://www.inventcom.net/fanuc-focas-library/ncdata/cnc_rdparam",
                 success = rc == Focas1.EW_OK,
                 rc,
@@ -577,6 +602,7 @@ namespace fanuc
             return new
             {
                 method = "cnc_rddynamic2",
+                invocationMs = -1,
                 doc = "https://www.inventcom.net/fanuc-focas-library/position/cnc_rddynamic2",
                 success = rc == Focas1.EW_OK,
                 rc,
@@ -593,6 +619,7 @@ namespace fanuc
             return new
             {
                 method = "cnc_rdtimer",
+                invocationMs = -1,
                 doc = "https://www.inventcom.net/fanuc-focas-library/misc/cnc_rdtimer",
                 success = rc == Focas1.EW_OK,
                 rc,

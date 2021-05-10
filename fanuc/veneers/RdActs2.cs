@@ -7,7 +7,7 @@ namespace fanuc.veneers
     {
         public RdActs2(string name = ""): base(name)
         {
-            _lastValue = new 
+            _lastChangedValue = new 
             {
                 data = -1
             };
@@ -21,9 +21,11 @@ namespace fanuc.veneers
                 
                 var fields = input.response.cnc_acts2.actualspindle.GetType().GetFields();
                 
-                if(!current_value.Equals(_lastValue))
+                this.onDataArrived(input, current_value);
+                
+                if(!current_value.Equals(_lastChangedValue))
                 {
-                    this.dataChanged(input, current_value);
+                    this.onDataChanged(input, current_value);
                 }
             }
             else

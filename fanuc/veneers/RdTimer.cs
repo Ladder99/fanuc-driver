@@ -7,7 +7,7 @@ namespace fanuc.veneers
     {
         public RdTimer(string name = ""): base(name)
         {
-            _lastValue = new 
+            _lastChangedValue = new 
             {
                 minute = -1,
                 msec = -1
@@ -24,9 +24,11 @@ namespace fanuc.veneers
                     input.response.cnc_rdtimer.time.msec
                 };
                 
-                if (!current_value.Equals(this._lastValue))
+                this.onDataArrived(input, current_value);
+                
+                if (!current_value.Equals(this._lastChangedValue))
                 {
-                    this.dataChanged(input, current_value);
+                    this.onDataChanged(input, current_value);
                 }
             }
             else

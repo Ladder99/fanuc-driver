@@ -7,7 +7,7 @@ namespace fanuc.veneers
     {
         public Alarms(string name = ""): base(name)
         {
-            _lastValue = new List<dynamic>
+            _lastChangedValue = new List<dynamic>
             {
                 
             };
@@ -47,11 +47,13 @@ namespace fanuc.veneers
             if (success)
             {
                 var current_hc = current_value.Select(x => x.GetHashCode());
-                var last_hc = ((List<dynamic>)_lastValue).Select(x => x.GetHashCode());
+                var last_hc = ((List<dynamic>)_lastChangedValue).Select(x => x.GetHashCode());
+                
+                this.onDataArrived(input, current_value);
                 
                 if(current_hc.Except(last_hc).Count() + last_hc.Except(current_hc).Count() > 0)
                 {
-                    this.dataChanged(input, current_value);
+                    this.onDataChanged(input, current_value);
                 }
             }
             else

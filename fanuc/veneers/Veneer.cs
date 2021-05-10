@@ -6,13 +6,6 @@ namespace fanuc.veneers
 {
     public class Veneer
     {
-        public TimeSpan ChangeDelta
-        {
-            get { return _stopwatch.Elapsed; }
-        }
-        
-        protected Stopwatch _stopwatch = new Stopwatch();
-
         public string Name
         {
             get { return _name; }
@@ -36,30 +29,55 @@ namespace fanuc.veneers
         
         protected bool _hasMarker = false;
         
-        public dynamic LastInput
+        public TimeSpan ArrivalDelta
         {
-            get { return _lastInput; }
+            get { return _stopwatchDataArrival.Elapsed; }
         }
         
-        protected dynamic _lastInput = new { };
-
-        public dynamic DataDelta
+        public dynamic LastArrivedInput
         {
-            get { return _lastValue; }
+            get { return _lastArrivedInput; }
         }
         
-        public dynamic LastValue
+        protected dynamic _lastArrivedInput = new { };
+        
+        public dynamic LastArrivedValue
         {
-            get { return _lastValue; }
+            get { return _lastArrivedValue; }
         }
         
-        protected dynamic _lastValue = new { };
+        protected dynamic _lastArrivedValue = new { };
+        
+        protected Stopwatch _stopwatchDataArrival = new Stopwatch();
+        
+        public dynamic LastChangedInput
+        {
+            get { return _lastChangedInput; }
+        }
+        
+        protected dynamic _lastChangedInput = new { };
+        
+        public dynamic LastChangedValue
+        {
+            get { return _lastChangedValue; }
+        }
+        
+        protected dynamic _lastChangedValue = new { };
+        
+        public TimeSpan ChangeDelta
+        {
+            get { return _stopwatchDataChange.Elapsed; }
+        }
+        
+        protected Stopwatch _stopwatchDataChange = new Stopwatch();
 
         protected bool _isFirstCall = true;
         
         public Action<Veneer> OnError = (veneer) => { };
 
         public Action<Veneer> OnChange =  (veneer) => { };
+        
+        public Action<Veneer> OnArrival =  (veneer) => { };
 
         protected void writeJsonArrayToConsole(dynamic d)
         {
@@ -69,20 +87,29 @@ namespace fanuc.veneers
         public Veneer(string name = "")
         {
             _name = name;
-            _stopwatch.Start();
+            _stopwatchDataChange.Start();
         }
 
-        protected void dataChanged(dynamic input, dynamic current_value)
+        protected void onDataArrived(dynamic input, dynamic current_value)
         {
-            this._lastInput = input;
-            this._lastValue = current_value;
+            this._lastArrivedInput = input;
+            this._lastArrivedValue = current_value;
+            this.OnArrival(this);
+            _stopwatchDataArrival.Restart();
+        }
+        
+        protected void onDataChanged(dynamic input, dynamic current_value)
+        {
+            this._lastChangedInput = input;
+            this._lastChangedValue = current_value;
             this.OnChange(this);
-            _stopwatch.Restart();
+            _stopwatchDataChange.Restart();
         }
 
         protected void onError(dynamic input)
         {
-            this._lastInput = input;
+            this._lastArrivedInput = input;
+            // TODO: overwrite last arrived value?
             this.OnError(this);
         }
 
