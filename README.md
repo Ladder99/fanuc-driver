@@ -173,6 +173,9 @@ Follow .NET Core SDK installation instructions here: https://sukesh.me/2020/07/0
 Clone the repository, build the project, and run it.  
   
 ```  
+export DOTNET_ROOT=$HOME/dotnet
+export PATH=$PATH:$HOME/dotnet
+
 cd ~
 
 git clone https://github.com/Ladder99/fanuc-driver.git  
