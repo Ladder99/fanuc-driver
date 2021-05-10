@@ -32,7 +32,9 @@
                     d.pos
                 };
                 
-                if (!current_value.Equals(_lastValue))
+                //if (!current_value.Equals(_lastValue))
+                // TODO: equality or hash code do not match on this object (x86)
+                if(!current_value.ToString().Equals(_lastValue.ToString()))
                 {
                     this.dataChanged(input, current_value);
                 }

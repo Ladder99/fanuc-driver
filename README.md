@@ -4,6 +4,8 @@ This solution is built on top of Fanuc Focas libraries for interfacing with Fanu
 
 The primary goal of this solution is to maintain the machine data in its native source format with slight transformations to make it more human readable at the target.  The intention behind this approach is to allow the developer to reference original Focas API documentation further downstream to aid in their transformation and translation efforts.   
 
+![recording1](docs/recording1.gif)
+
 ## MQTT Topic Structure - Suggested
 
 ```
