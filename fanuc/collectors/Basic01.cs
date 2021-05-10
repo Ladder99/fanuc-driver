@@ -65,9 +65,9 @@ namespace fanuc.collectors
                 _machine.PeelVeneer("get_path", paths);
 
                 dynamic disconnect = _machine.Platform.Disconnect();
-
-                LastSuccess = connect.success;
             }
+            
+            LastSuccess = connect.success;
         }
     }
 }

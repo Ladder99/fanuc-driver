@@ -137,6 +137,100 @@ The act of peeling veneers to reveal observations.
 
 ![fanuc-driver_peeling](docs/fanuc-driver_peeling.png)
 
+### Strategy Examples
+
+#### Concept
+
+During collector initialization, each call to `ApplyVeneer` binds a transformation class to an observation name.
+
+```
+public override void Initialize()
+{
+    _machine.ApplyVeneer(typeof(fanuc.veneers.Connect), "connect");
+    _machine.ApplyVeneer(typeof(fanuc.veneers.SysInfo), "sys_info");
+}
+```
+
+The collector is processed at set intervals.
+
+```
+public override void Collect()
+{
+    dynamic connect = _machine.Platform.Connect();
+    _machine.PeelVeneer("connect", connect);
+```
+
+A connection is established to the Fanuc controller and the call to `PeelVeneer` reveals the *connect* observation.  The `Connect` `Veneer` instance is responsible for transforming the native Focas response where appropriate, comparing it to the last value seen, and invoking the `dataChanged` action.  The changed data is then available through the `Machine.Veneers.OnDataChange<Veneers, Veneer>` delegate.  Similarly, errors bubble up to `Machine.Veneers.OnError<Veneers, Veneer>`.
+
+
+```
+    if (connect.success)
+    {
+        dynamic info = _machine.Platform.SysInfo();
+        _machine.PeelVeneer("sys_info", info);
+```        
+
+Next, the *sys_info* observation is revealed.  A call to Focas `cnc_sysinfo` is made via the `Machine.Platform.SysInfo` wrapper method.  The `SysInfo` `Veneer` instance then transforms native character arrays to strings, for easier readability.
+
+```
+        dynamic disconnect = _machine.Platform.Disconnect();
+    }
+        
+    LastSuccess = connect.success;
+
+}
+```
+
+Finally, the connection to the Fanuc controller is broken and the success of the `Collect` iteration captured.
+
+#### Example: Basic01
+
+Initialization of the `Basic01` `Collector` strategy binds several `Veneer` types to named observations.
+
+```
+_machine.ApplyVeneer(typeof(fanuc.veneers.Connect), "connect");
+_machine.ApplyVeneer(typeof(fanuc.veneers.CNCId), "cnc_id");
+_machine.ApplyVeneer(typeof(fanuc.veneers.RdTimer), "power_on_time");
+_machine.ApplyVeneer(typeof(fanuc.veneers.RdParamLData), "power_on_time_6750");
+_machine.ApplyVeneer(typeof(fanuc.veneers.SysInfo), "sys_info");
+_machine.ApplyVeneer(typeof(fanuc.veneers.GetPath), "get_path");
+```
+
+Each data collection iteration retrieves data from the Fanuc controller and reveals individual observations.
+
+```
+dynamic connect = _machine.Platform.Connect();
+_machine.PeelVeneer("connect", connect);
+
+if (connect.success)
+{
+    dynamic cncid = _machine.Platform.CNCId();
+    _machine.PeelVeneer("cnc_id", cncid);
+    
+    dynamic poweron = _machine.Platform.RdTimer(0);
+    _machine.PeelVeneer("power_on_time", poweron);
+    
+    dynamic poweron_6750 = _machine.Platform.RdParam(6750, 0, 8, 1);
+    _machine.PeelVeneer("power_on_time_6750", poweron_6750);
+    
+    dynamic info = _machine.Platform.SysInfo();
+    _machine.PeelVeneer("sys_info", info);
+    
+    dynamic paths = _machine.Platform.GetPath();
+    _machine.PeelVeneer("get_path", paths);
+
+    dynamic disconnect = _machine.Platform.Disconnect();
+}
+
+LastSuccess = connect.success;
+```
+
+#### Example: Basic02
+
+#### Example: Basic03
+
+#### Example: Basic04
+
 ## Configuration
 
 The `config.yml` file contains runtime information about the MQTT broker and each Focas endpoint.
