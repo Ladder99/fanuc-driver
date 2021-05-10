@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace fanuc
@@ -7,9 +8,29 @@ namespace fanuc
     public class Platform
     {
         private Machine _machine;
-        
+
         private ushort _handle;
 
+        private struct NativeDispatchReturn
+        {
+            public Focas1.focas_ret RC;
+            public long ElapsedMilliseconds;
+        }
+        
+        private Func<Func<Focas1.focas_ret>, NativeDispatchReturn> nativeDispatch = (nativeCallWrapper) =>
+        {
+            Focas1.focas_ret rc = Focas1.focas_ret.EW_OK;
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            rc = nativeCallWrapper();
+            sw.Stop();
+            return new NativeDispatchReturn
+            {
+                RC = rc,
+                ElapsedMilliseconds = sw.ElapsedMilliseconds
+            };
+        };
+        
         public Platform(Machine machine)
         {
             _machine = machine;
@@ -36,8 +57,8 @@ namespace fanuc
                 doc = "",
                 success = true,
                 Focas1.EW_OK,
-                request = new { cnc_startupprocess = new { level, filename } },
-                response = new { cnc_startupprocess = new { } }
+                request = new {cnc_startupprocess = new {level, filename}},
+                response = new {cnc_startupprocess = new { }}
             };
 #endif
         }
@@ -63,22 +84,26 @@ namespace fanuc
                 doc = "",
                 success = true,
                 Focas1.EW_OK,
-                request = new { cnc_exitprocess = new { } },
-                response = new { cnc_exitprocess = new { } }
+                request = new {cnc_exitprocess = new { }},
+                response = new {cnc_exitprocess = new { }}
             };
 #endif
         }
-        
+
         public dynamic Connect()
         {
-            Focas1.focas_ret rc = (Focas1.focas_ret)Focas1.cnc_allclibhndl3(_machine.IPAddress, _machine.Port, _machine.ConnectionTimeout, out _handle);
-
+            NativeDispatchReturn ndr = nativeDispatch(() =>
+            {
+                return (Focas1.focas_ret)Focas1.cnc_allclibhndl3(_machine.IPAddress, _machine.Port, _machine.ConnectionTimeout, out _handle);
+            });
+                
             return new
             {
                 method = "cnc_allclibhndl3",
+                invocationMs = ndr.ElapsedMilliseconds,
                 doc = "https://www.inventcom.net/fanuc-focas-library/handle/cnc_allclibhndl3",
-                success = rc == Focas1.EW_OK,
-                rc,
+                success = ndr.RC == Focas1.EW_OK,
+                rc = ndr.RC,
                 request = new { cnc_allclibhndl3 = new { ipaddr = _machine.IPAddress, port = _machine.Port, timeout = _machine.ConnectionTimeout } },
                 response = new { cnc_allclibhndl3 = new { FlibHndl = _handle } }
             };
