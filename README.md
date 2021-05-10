@@ -8,17 +8,25 @@ The primary goal of this solution is to maintain the machine data in its native 
 
 ## MQTT Topic Structure - Suggested
 
+### Machine Level Observations
+
 ```
 fanuc/{machine-id}/{observation-name}
 ```
+
+### Execution Path Level Observations
 
 ```
 fanuc/{machine-id}/{observation-name}/{controller-execution-path-number}
 ```
 
+### Axis or Spindle Level Observations
+
 ```
 fanuc/{machine-id}/{observation-name}/{controller-execution-path-number}/{machine-axis-name / machine-spindle-name}
 ```
+
+### Driver Status
 
 ```
 fanuc/{machine-id}/PING
