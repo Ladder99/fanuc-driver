@@ -45,6 +45,9 @@ namespace fanuc.collectors
                         current_path++)
                     {
                         dynamic path = _machine.Platform.SetPath(current_path);
+                        
+                        _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.StatInfo), "stat_info");
+                        
                         dynamic axes = _machine.Platform.RdAxisName();
                         dynamic spindles = _machine.Platform.RdSpdlName();
                         dynamic axis_spindle_slices = new List<dynamic> { };
@@ -117,6 +120,9 @@ namespace fanuc.collectors
                     dynamic path_marker = new {path.request.cnc_setpath.path_no};
                     _machine.MarkVeneer(current_path, path_marker);
 
+                    dynamic stat = _machine.Platform.StatInfo();
+                    _machine.PeelAcrossVeneer(current_path, "stat_info", stat);
+                    
                     dynamic axes = _machine.Platform.RdAxisName();
                     _machine.PeelAcrossVeneer(current_path, "axis_name", axes);
 

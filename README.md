@@ -6,6 +6,8 @@ The primary goal of this solution is to maintain the machine data in its native 
 
 ![recording1](docs/recording1.gif)
 
+![recording2](docs/recording2.gif)
+
 ## MQTT Topic Structure - Suggested
 
 ### Machine Level Observations
