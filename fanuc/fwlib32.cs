@@ -10312,7 +10312,11 @@ namespace fanuc
         public static extern short cnc_settimer(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IODBTIMER a);
 
         /* read timer data from cnc */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdtimer")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdtimer")]
+#endif
         public static extern short cnc_rdtimer(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBTIME b);
 
         /* write timer data for cnc */
@@ -11527,6 +11531,13 @@ namespace fanuc
         public static extern short cnc_exitprocess();
         
 #endif
+        
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdcncid")]
+#else
+        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdcncid")]
+#endif
+        public static extern short cnc_rdcncid( ushort FlibHndl, uint [] cncid);
 
     } // End for Focas1 class
 }

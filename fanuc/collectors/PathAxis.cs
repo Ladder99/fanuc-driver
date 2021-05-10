@@ -5,9 +5,9 @@ using Newtonsoft.Json.Linq;
 
 namespace fanuc.collectors
 {
-    public class Basic : Collector
+    public class PathAxis : Collector
     {
-        public Basic(Machine machine, int sweepMs = 1000) : base(machine, sweepMs)
+        public PathAxis(Machine machine, int sweepMs = 1000) : base(machine, sweepMs)
         {
             
         }
