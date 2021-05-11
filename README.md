@@ -1,6 +1,6 @@
 # fanuc-driver
   
-This solution is built on top of Fanuc Focas libraries for interfacing with Fanuc controllers and publishing data to an MQTT broker or another target.
+This solution is built on top of Fanuc Focas libraries for interfacing with Fanuc controllers and publishing data to a MQTT broker or another target.
 
 The primary goal of this solution is to maintain the machine data in its native source format with slight transformations to make it more human readable at the target.  The intention behind this approach is to allow the developer to reference original Focas API documentation further downstream to aid in their transformation and translation efforts.   
 
@@ -38,7 +38,7 @@ fanuc/{machine-id}/PING
 
 Data deltas are published to MQTT broker as retained messages.  This means that any newly connected client will only receive the latest data for each observation.
 
-Below is an example of native `cnc_sysinfo` invocation response data and the corresponding `sys_info` observation transformed data.
+Below is an example of native [`cnc_sysinfo`](https://www.inventcom.net/fanuc-focas-library/misc/cnc_sysinfo) invocation response data and the corresponding `sys_info` observation transformed data.
 
 Native data:
 
@@ -103,6 +103,7 @@ fanuc/sim/sys_info
   },
   "source": {
     "method": "cnc_sysinfo",
+    "invocationMs": 25,
     "data": {}
   },
   "delta": {
@@ -249,6 +250,7 @@ The `config.yml` file contains runtime information about the MQTT broker and eac
 
 ```
 broker:
+  enabled: !!bool true
   net_ip: 10.20.30.102
   net_port: !!int 1883
 

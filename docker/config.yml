@@ -1,6 +1,10 @@
 broker:
+  enabled: !!bool true
   net_ip: mosquitto
   net_port: !!int 1883
+  publish_status: !!bool true
+  publish_arrivals: !!bool true
+  publish_changes: !!bool true
 
 machines:
   - id: sim

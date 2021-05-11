@@ -14,11 +14,62 @@ namespace fanuc
 {
     class Program
     {
-        private static bool MQTT_DO_NOT_CONNECT = false;
-        private static bool MQTT_DO_NOT_PUBLISH = false;
-        private static bool PROCESS_ARRIVALS = true;
-        private static bool PROCESS_CHANGES = true;
-        
+        private static bool MQTT_CONNECT = false;
+        private static bool MQTT_PUBLISH_STATUS = false;
+        private static bool MQTT_PUBLISH_ARRIVALS = false;
+        private static bool MQTT_PUBLISH_CHANGES = false;
+
+        private class MQTTDisco
+        {
+            private struct MQTTDiscoItem
+            {
+                public long added;
+                public string machineId;
+                public string arrivalTopic;
+                public string changeTopic;
+            }
+            
+            private Dictionary<string, MQTTDiscoItem> _items = new Dictionary<string, MQTTDiscoItem>();
+
+            private dynamic _mqtt;
+            
+            public MQTTDisco(dynamic mqtt)
+            {
+                _mqtt = mqtt;
+            }
+
+            public void Add(string machineId)
+            {
+                if (!_items.ContainsKey(machineId))
+                {
+                    _items.Add(machineId, new MQTTDiscoItem()
+                    {
+                        machineId = machineId,
+                        added = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds(),
+                        arrivalTopic = $"fanuc/{machineId}-all",
+                        changeTopic = $"fanuc/{machineId}"
+                    });
+
+                    string topic = "fanuc/DISCO";
+                    string payload_string = JObject.FromObject(_items).ToString();
+
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.WriteLine($"{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds()} DISCO {payload_string.Length}b => {topic}");
+                
+                    var msg = new MqttApplicationMessageBuilder()
+                        .WithRetainFlag(true)
+                        .WithTopic(topic)
+                        .WithPayload(payload_string)
+                        .Build();
+                    
+                    if (MQTT_CONNECT && MQTT_PUBLISH_STATUS)
+                    {
+                        var r = _mqtt.PublishAsync(msg, CancellationToken.None).Result;
+                    }
+                }
+            }
+        }
+
         static void Main(string[] args)
         {
             string config_file = getArgument(args, "--config", "config.yml");
@@ -48,12 +99,17 @@ namespace fanuc
         
         static dynamic setupMqtt(dynamic config)
         {
+            MQTT_CONNECT = config["broker"]["enabled"];
+            MQTT_PUBLISH_STATUS = config["broker"]["publish_status"];
+            MQTT_PUBLISH_ARRIVALS = config["broker"]["publish_arrivals"];
+            MQTT_PUBLISH_CHANGES = config["broker"]["publish_changes"];
+            
             var factory = new MqttFactory();
             var options = new MqttClientOptionsBuilder()
                 .WithTcpServer(config["broker"]["net_ip"], config["broker"]["net_port"])
                 .Build();
             var client = factory.CreateMqttClient();
-            if (!MQTT_DO_NOT_CONNECT)
+            if (MQTT_CONNECT)
             {
                 var r = client.ConnectAsync(options, CancellationToken.None).Result;
             }
@@ -81,9 +137,6 @@ namespace fanuc
 
             Action<Veneers, Veneer> on_data_arrival = (vv, v) =>
             {
-                if (!PROCESS_ARRIVALS)
-                    return;
-                
                 dynamic payload = new
                 {
                     observation = new
@@ -110,14 +163,14 @@ namespace fanuc
                 string payload_string = JObject.FromObject(payload).ToString();
 
                 Console.ForegroundColor = ConsoleColor.Gray;
-                Console.WriteLine($"{payload_string.Length}b => {topic}");
+                Console.WriteLine($"{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds()} ARRIVE {payload_string.Length}b => {topic}");
                 
                 var msg = new MqttApplicationMessageBuilder()
                     .WithRetainFlag(true)
                     .WithTopic(topic)
                     .WithPayload(payload_string)
                     .Build();
-                if (!MQTT_DO_NOT_PUBLISH)
+                if (MQTT_CONNECT && MQTT_PUBLISH_ARRIVALS)
                 {
                     var r = mqtt.PublishAsync(msg, CancellationToken.None);
                 }
@@ -125,9 +178,6 @@ namespace fanuc
             
             Action<Veneers, Veneer> on_data_change = (vv, v) =>
             {
-                if (!PROCESS_CHANGES)
-                    return;
-                
                 dynamic payload = new
                 {
                     observation = new
@@ -154,7 +204,7 @@ namespace fanuc
                 string payload_string = JObject.FromObject(payload).ToString();
                 
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine($"{payload_string.Length}b => {topic}");
+                Console.WriteLine($"{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds()} CHANGE {payload_string.Length}b => {topic}");
                 //Console.WriteLine(payload_string);
                 //Console.WriteLine();
                 
@@ -163,7 +213,7 @@ namespace fanuc
                     .WithTopic(topic)
                     .WithPayload(payload_string)
                     .Build();
-                if (!MQTT_DO_NOT_PUBLISH)
+                if (MQTT_CONNECT && MQTT_PUBLISH_CHANGES)
                 {
                     var r = mqtt.PublishAsync(msg, CancellationToken.None);
                 }
@@ -230,7 +280,7 @@ namespace fanuc
                         .WithPayload(JObject.FromObject(payload).ToString())
                         .WithRetainFlag()
                         .Build();
-                    if (!MQTT_DO_NOT_PUBLISH)
+                    if (MQTT_CONNECT && MQTT_PUBLISH_STATUS)
                     {
                         var r = mqtt.PublishAsync(msg, CancellationToken.None).Result;
                     }
