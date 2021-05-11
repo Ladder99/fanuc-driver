@@ -21,6 +21,8 @@ namespace fanuc.veneers
         
         public Action<Veneers, Veneer> OnError = (vv, v) => { };
         
+        private char SPLIT_SEP = '/';
+        
         private List<Veneer> _wholeVeneers = new List<Veneer>();
         
         private Dictionary<dynamic, List<Veneer>> _slicedVeneers = new Dictionary<dynamic, List<Veneer>>();
@@ -42,7 +44,7 @@ namespace fanuc.veneers
         {
             foreach (var key in split)
             {
-                _slicedVeneers[sliceKey+"/"+key] = new List<Veneer>();
+                _slicedVeneers[sliceKey+SPLIT_SEP+key] = new List<Veneer>();
             }
         }
 
@@ -72,7 +74,7 @@ namespace fanuc.veneers
         {
             foreach (var key in _slicedVeneers.Keys)
             {
-                var key_parts = key.ToString().Split('/');
+                var key_parts = key.ToString().Split(SPLIT_SEP);
                 if (key_parts.Length == 1)
                     continue;
                 
@@ -98,7 +100,7 @@ namespace fanuc.veneers
 
                 if (split is Array)
                 {
-                    temp_split = string.Join('/', split);
+                    temp_split = string.Join(SPLIT_SEP, split);
                 }
                 
                 if (key.Equals(temp_split))
@@ -124,7 +126,7 @@ namespace fanuc.veneers
 
                 if (split is Array)
                 {
-                    temp_split = string.Join('/', split);
+                    temp_split = string.Join(SPLIT_SEP, split);
                 }
                 
                 if (key.Equals(temp_split))

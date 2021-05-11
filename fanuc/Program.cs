@@ -109,7 +109,7 @@ namespace fanuc
                 var topic = $"fanuc/{vv.Machine.Id}-all/{v.Name}{(v.SliceKey == null ? string.Empty : "/" + v.SliceKey.ToString())}";
                 string payload_string = JObject.FromObject(payload).ToString();
 
-                Console.ForegroundColor = ConsoleColor.White;
+                Console.ForegroundColor = ConsoleColor.Gray;
                 Console.WriteLine($"{payload_string.Length}b => {topic}");
                 
                 var msg = new MqttApplicationMessageBuilder()
@@ -153,10 +153,10 @@ namespace fanuc
                 var topic = $"fanuc/{vv.Machine.Id}/{v.Name}{(v.SliceKey == null ? string.Empty : "/" + v.SliceKey.ToString())}";
                 string payload_string = JObject.FromObject(payload).ToString();
                 
-                Console.ForegroundColor = ConsoleColor.Gray;
-                Console.WriteLine(topic);
-                Console.WriteLine(payload_string);
-                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine($"{payload_string.Length}b => {topic}");
+                //Console.WriteLine(payload_string);
+                //Console.WriteLine();
                 
                 var msg = new MqttApplicationMessageBuilder()
                     .WithRetainFlag(true)
@@ -201,7 +201,7 @@ namespace fanuc
         {
             while (true)
             {
-                System.Threading.Thread.Sleep(1000);
+                Thread.Sleep(1000);
                 
                 foreach (var machine in machines[null])
                 {
@@ -230,7 +230,10 @@ namespace fanuc
                         .WithPayload(JObject.FromObject(payload).ToString())
                         .WithRetainFlag()
                         .Build();
-                    var r = mqtt.PublishAsync(msg, CancellationToken.None).Result;
+                    if (!MQTT_DO_NOT_PUBLISH)
+                    {
+                        var r = mqtt.PublishAsync(msg, CancellationToken.None).Result;
+                    }
                 }
             }
         }

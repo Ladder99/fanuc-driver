@@ -7,11 +7,6 @@ namespace fanuc
 {
     public class Machines
     {
-        public List<Machine> All
-        {
-            get { return _machines; }
-        }
-        
         private List<Machine> _machines = new List<Machine>();
 
         public Machine Add(bool enabled, string id, string ip, ushort port = 8193, short timeout = 2)

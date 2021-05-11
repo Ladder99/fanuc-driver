@@ -40,10 +40,6 @@ namespace fanuc
         
         private Platform _platform;
         
-        private bool _enabled = false;
-        
-        private string _id = string.Empty;
-        
         public string IPAddress
         {
             get { return _focasIpAddress; }
@@ -84,10 +80,14 @@ namespace fanuc
             get { return _enabled; }
         }
         
+        private bool _enabled = false;
+        
         public string Id
         {
             get { return _id; }
         }
+        
+        private string _id = string.Empty;
         
         public bool CollectorSuccess
         {
@@ -122,9 +122,9 @@ namespace fanuc
         
         public bool VeneersApplied { get; set; }
 
-        public void ApplyVeneer(Type type, string note)
+        public void ApplyVeneer(Type type, string name)
         {
-            _veneers.Add(type, note);
+            _veneers.Add(type, name);
         }
 
         public void SliceVeneer(dynamic split)
@@ -137,24 +137,24 @@ namespace fanuc
             _veneers.Slice(sliceKey, split);
         }
 
-        public void ApplyVeneerAcrossSlices(Type type, string note)
+        public void ApplyVeneerAcrossSlices(Type type, string name)
         {
-            _veneers.AddAcrossSlices(type, note);
+            _veneers.AddAcrossSlices(type, name);
         }
         
-        public void ApplyVeneerAcrossSlices(dynamic sliceKey, Type type, string note)
+        public void ApplyVeneerAcrossSlices(dynamic sliceKey, Type type, string name)
         {
-            _veneers.AddAcrossSlices(sliceKey, type, note);
+            _veneers.AddAcrossSlices(sliceKey, type, name);
         }
 
-        public dynamic PeelVeneer(string note, dynamic input)
+        public dynamic PeelVeneer(string name, dynamic input)
         {
-            return _veneers.Peel(note, input);
+            return _veneers.Peel(name, input);
         }
         
-        public dynamic PeelAcrossVeneer(dynamic split, string note, dynamic input)
+        public dynamic PeelAcrossVeneer(dynamic split, string name, dynamic input)
         {
-            return _veneers.PeelAcross(split, note, input);
+            return _veneers.PeelAcross(split, name, input);
         }
 
         public void MarkVeneer(dynamic split, dynamic marker)

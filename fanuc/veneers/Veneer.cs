@@ -78,11 +78,6 @@ namespace fanuc.veneers
         public Action<Veneer> OnChange =  (veneer) => { };
         
         public Action<Veneer> OnArrival =  (veneer) => { };
-
-        protected void writeJsonArrayToConsole(dynamic d)
-        {
-            Console.WriteLine(JArray.FromObject(d).ToString());
-        }
         
         public Veneer(string name = "")
         {
