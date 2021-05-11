@@ -56,14 +56,14 @@ namespace fanuc
                     Console.ForegroundColor = ConsoleColor.Gray;
                     Console.WriteLine($"{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds()} DISCO {payload_string.Length}b => {topic}");
                 
-                    var msg = new MqttApplicationMessageBuilder()
-                        .WithRetainFlag(true)
-                        .WithTopic(topic)
-                        .WithPayload(payload_string)
-                        .Build();
-                    
                     if (MQTT_CONNECT && MQTT_PUBLISH_STATUS)
                     {
+                        var msg = new MqttApplicationMessageBuilder()
+                            .WithRetainFlag(true)
+                            .WithTopic(topic)
+                            .WithPayload(payload_string)
+                            .Build();
+                    
                         var r = _mqtt.PublishAsync(msg, CancellationToken.None).Result;
                     }
                 }
@@ -168,13 +168,14 @@ namespace fanuc
                 Console.ForegroundColor = ConsoleColor.Gray;
                 Console.WriteLine($"{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds()} ARRIVE {payload_string.Length}b => {topic}");
                 
-                var msg = new MqttApplicationMessageBuilder()
-                    .WithRetainFlag(true)
-                    .WithTopic(topic)
-                    .WithPayload(payload_string)
-                    .Build();
                 if (MQTT_CONNECT && MQTT_PUBLISH_ARRIVALS)
                 {
+                    var msg = new MqttApplicationMessageBuilder()
+                        .WithRetainFlag(true)
+                        .WithTopic(topic)
+                        .WithPayload(payload_string)
+                        .Build();
+                
                     var r = mqtt.PublishAsync(msg, CancellationToken.None);
                 }
             };
@@ -210,16 +211,15 @@ namespace fanuc
                 
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine($"{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds()} CHANGE {payload_string.Length}b => {topic}");
-                //Console.WriteLine(payload_string);
-                //Console.WriteLine();
-                
-                var msg = new MqttApplicationMessageBuilder()
-                    .WithRetainFlag(true)
-                    .WithTopic(topic)
-                    .WithPayload(payload_string)
-                    .Build();
+
                 if (MQTT_CONNECT && MQTT_PUBLISH_CHANGES)
                 {
+                    var msg = new MqttApplicationMessageBuilder()
+                        .WithRetainFlag(true)
+                        .WithTopic(topic)
+                        .WithPayload(payload_string)
+                        .Build();
+                
                     var r = mqtt.PublishAsync(msg, CancellationToken.None);
                 }
             };
@@ -279,15 +279,30 @@ namespace fanuc
                             data = machine.CollectorSuccess ? "OK" : "NOK"
                         }
                     };
-                        
-                    var msg = new MqttApplicationMessageBuilder()
-                        .WithTopic($"fanuc/{machine.Id}/PING")
-                        .WithPayload(JObject.FromObject(payload).ToString())
-                        .WithRetainFlag()
-                        .Build();
+                       
                     if (MQTT_CONNECT && MQTT_PUBLISH_STATUS)
                     {
-                        var r = mqtt.PublishAsync(msg, CancellationToken.None).Result;
+                        if (MQTT_PUBLISH_CHANGES)
+                        {
+                            var msg = new MqttApplicationMessageBuilder()
+                                .WithTopic($"fanuc/{machine.Id}/PING")
+                                .WithPayload(JObject.FromObject(payload).ToString())
+                                .WithRetainFlag()
+                                .Build();
+
+                            var r = mqtt.PublishAsync(msg, CancellationToken.None).Result;
+                        }
+
+                        if (MQTT_PUBLISH_ARRIVALS)
+                        {
+                            var msg = new MqttApplicationMessageBuilder()
+                                .WithTopic($"fanuc/{machine.Id}-all/PING")
+                                .WithPayload(JObject.FromObject(payload).ToString())
+                                .WithRetainFlag()
+                                .Build();
+
+                            var r = mqtt.PublishAsync(msg, CancellationToken.None).Result;
+                        }
                     }
                 }
             }

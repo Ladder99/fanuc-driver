@@ -4,7 +4,11 @@ This solution is built on top of Fanuc Focas libraries for interfacing with Fanu
 
 The primary goal of this solution is to maintain the machine data in its native source format with slight transformations to make it more human readable at the target.  The intention behind this approach is to allow the developer to reference original Focas API documentation further downstream to aid in their transformation and translation efforts.   
 
+Below illustrates [Fanuc NC Guide](https://www.fanucamerica.com/products/cnc/software/cnc-guide-simulation-software) output visualized through [MQTT Explorer](http://mqtt-explorer.com/).
+
 ![recording1](docs/recording1.gif)
+
+Below illustrates [Fanuc 0i-TF](https://www.fanucamerica.com/products/cnc/cnc-systems/series-0if) production output.
 
 ![recording2](docs/recording2.gif)
 
@@ -14,24 +18,35 @@ The primary goal of this solution is to maintain the machine data in its native 
 
 ```
 fanuc/{machine-id}/{observation-name}
+fanuc/{machine-id}-all/{observation-name}
 ```
 
 ### Execution Path Level Observations
 
 ```
 fanuc/{machine-id}/{observation-name}/{controller-execution-path-number}
+fanuc/{machine-id}-all/{observation-name}/{controller-execution-path-number}
 ```
 
 ### Axis or Spindle Level Observations
 
 ```
 fanuc/{machine-id}/{observation-name}/{controller-execution-path-number}/{machine-axis-name / machine-spindle-name}
+fanuc/{machine-id}-all/{observation-name}/{controller-execution-path-number}/{machine-axis-name / machine-spindle-name}
+
 ```
 
 ### Driver Status
 
 ```
 fanuc/{machine-id}/PING
+fanuc/{machine-id}-all/PING
+```
+
+### Machine Discovery
+
+```
+fanuc/DISCO
 ```
 
 ## MQTT Payload Structure - Suggested
@@ -91,6 +106,7 @@ Full published payload:
 
 ```
 fanuc/sim/sys_info
+fanuc/sim-all/sys_info
 ```
 
 ```
@@ -253,6 +269,9 @@ broker:
   enabled: !!bool true
   net_ip: 10.20.30.102
   net_port: !!int 1883
+  publish_status: !!bool true
+  publish_arrivals: !!bool true
+  publish_changes: !!bool true
 
 machines:
   - id: sim
