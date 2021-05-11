@@ -119,6 +119,7 @@ namespace fanuc
 
         static dynamic createMachines(dynamic config, dynamic mqtt)
         {
+            var mqtt_disco = new MQTTDisco(mqtt);
             var machine_confs = new List<dynamic>();
 
             foreach (dynamic machine_conf in config["machines"])
@@ -137,6 +138,8 @@ namespace fanuc
 
             Action<Veneers, Veneer> on_data_arrival = (vv, v) =>
             {
+                mqtt_disco.Add(vv.Machine.Id);
+                
                 dynamic payload = new
                 {
                     observation = new
@@ -178,6 +181,8 @@ namespace fanuc
             
             Action<Veneers, Veneer> on_data_change = (vv, v) =>
             {
+                mqtt_disco.Add(vv.Machine.Id);
+                
                 dynamic payload = new
                 {
                     observation = new
