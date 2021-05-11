@@ -21,7 +21,7 @@ namespace fanuc.veneers
         
         public Action<Veneers, Veneer> OnError = (vv, v) => { };
         
-        private char SPLIT_SEP = '/';
+        private string SPLIT_SEP = "/";
         
         private List<Veneer> _wholeVeneers = new List<Veneer>();
         
