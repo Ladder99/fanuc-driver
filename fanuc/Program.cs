@@ -21,9 +21,10 @@ namespace fanuc
 
         private class MQTTDisco
         {
-            private struct MQTTDiscoItem
+            private class MQTTDiscoItem
             {
                 public long added;
+                public long seen;
                 public string machineId;
                 public string arrivalTopic;
                 public string changeTopic;
@@ -42,30 +43,37 @@ namespace fanuc
             {
                 if (!_items.ContainsKey(machineId))
                 {
+                    var epoch = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
+
                     _items.Add(machineId, new MQTTDiscoItem()
                     {
                         machineId = machineId,
-                        added = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds(),
+                        added = epoch,
+                        seen = epoch,
                         arrivalTopic = $"fanuc/{machineId}-all",
                         changeTopic = $"fanuc/{machineId}"
                     });
+                }
+                else
+                {
+                    _items[machineId].seen = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
+                }
 
-                    string topic = "fanuc/DISCO";
-                    string payload_string = JObject.FromObject(_items).ToString();
+                string topic = "fanuc/DISCO";
+                string payload_string = JObject.FromObject(_items).ToString();
 
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    Console.WriteLine($"{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds()} DISCO {payload_string.Length}b => {topic}");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine($"{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds()} DISCO {payload_string.Length}b => {topic}");
+            
+                if (MQTT_CONNECT && MQTT_PUBLISH_STATUS)
+                {
+                    var msg = new MqttApplicationMessageBuilder()
+                        .WithRetainFlag(true)
+                        .WithTopic(topic)
+                        .WithPayload(payload_string)
+                        .Build();
                 
-                    if (MQTT_CONNECT && MQTT_PUBLISH_STATUS)
-                    {
-                        var msg = new MqttApplicationMessageBuilder()
-                            .WithRetainFlag(true)
-                            .WithTopic(topic)
-                            .WithPayload(payload_string)
-                            .Build();
-                    
-                        var r = _mqtt.PublishAsync(msg, CancellationToken.None).Result;
-                    }
+                    var r = _mqtt.PublishAsync(msg, CancellationToken.None).Result;
                 }
             }
         }
