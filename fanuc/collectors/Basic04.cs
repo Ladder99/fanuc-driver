@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 
@@ -7,6 +8,8 @@ namespace fanuc.collectors
 {
     public class Basic04 : Collector
     {
+        private Stopwatch _sweepWatch = new Stopwatch();
+        
         public Basic04(Machine machine, int sweepMs = 1000) : base(machine, sweepMs)
         {
             
@@ -23,7 +26,7 @@ namespace fanuc.collectors
 
                 if (connect.success)
                 {
-                    _machine.ApplyVeneer(typeof(fanuc.veneers.FocasPerf), "focas_perf");
+                    _machine.ApplyVeneer(typeof(fanuc.veneers.FocasPerf), "focas_perf", true);
                     _machine.ApplyVeneer(typeof(fanuc.veneers.Connect), "connect");
                     _machine.ApplyVeneer(typeof(fanuc.veneers.CNCId), "cnc_id");
                     _machine.ApplyVeneer(typeof(fanuc.veneers.RdTimer), "power_on_time");
@@ -93,11 +96,13 @@ namespace fanuc.collectors
 
         public override void Collect()
         {
-            dynamic focas_perf = new List<dynamic>();
+            _sweepWatch.Restart();
+
+            dynamic focas_invocations = new List<dynamic>();
             
             Action<dynamic> catch_focas_perf = (ret) =>
             {
-                focas_perf.Add(new
+                focas_invocations.Add(new
                 {
                     ret.method,
                     ret.invocationMs,
@@ -203,7 +208,11 @@ namespace fanuc.collectors
                 dynamic disconnect = _machine.Platform.Disconnect();
                 catch_focas_perf(disconnect);
 
-                _machine.PeelVeneer("focas_perf", focas_perf);
+                _machine.PeelVeneer("focas_perf", new
+                {
+                    sweepMs = _sweepWatch.ElapsedMilliseconds,
+                    focas_invocations
+                });
                 
                 LastSuccess = connect.success;
             }

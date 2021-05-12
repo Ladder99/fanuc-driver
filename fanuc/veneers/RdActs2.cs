@@ -5,7 +5,7 @@ namespace fanuc.veneers
 {
     public class RdActs2: Veneer
     {
-        public RdActs2(string name = ""): base(name)
+        public RdActs2(string name = "", bool isInternal = false) : base(name, isInternal)
         {
             _lastChangedValue = new 
             {

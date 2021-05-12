@@ -2,7 +2,7 @@
 {
     public class GetPath : Veneer
     {
-        public GetPath(string name = "") : base(name)
+        public GetPath(string name = "", bool isInternal = false) : base(name, isInternal)
         {
             _lastChangedValue = new
             {

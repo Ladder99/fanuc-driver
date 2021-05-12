@@ -2,7 +2,7 @@
 {
     public class StatInfo : Veneer
     {
-        public StatInfo(string name = "") : base(name)
+        public StatInfo(string name = "", bool isInternal = false) : base(name, isInternal)
         {
             _lastChangedValue = new
             {

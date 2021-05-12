@@ -2,7 +2,7 @@
 {
     public class Connect : Veneer
     {
-        public Connect(string name = "") : base(name)
+        public Connect(string name = "", bool isInternal = false) : base(name, isInternal)
         {
 
         }

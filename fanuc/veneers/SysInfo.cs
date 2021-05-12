@@ -2,7 +2,7 @@
 {
     public class SysInfo : Veneer
     {
-        public SysInfo(string name = "") : base(name)
+        public SysInfo(string name = "", bool isInternal = false) : base(name, isInternal)
         {
             _lastChangedValue = new
             {

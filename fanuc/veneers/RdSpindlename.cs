@@ -5,7 +5,7 @@ namespace fanuc.veneers
 {
     public class RdSpindlename: Veneer
     {
-        public RdSpindlename(string name = ""): base(name)
+        public RdSpindlename(string name = "", bool isInternal = false) : base(name, isInternal)
         {
             _lastChangedValue = new List<dynamic>
             {

@@ -5,7 +5,7 @@ namespace fanuc.veneers
 {
     public class RdTimer: Veneer
     {
-        public RdTimer(string name = ""): base(name)
+        public RdTimer(string name = "", bool isInternal = false) : base(name, isInternal)
         {
             _lastChangedValue = new 
             {

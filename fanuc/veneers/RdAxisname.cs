@@ -5,7 +5,7 @@ namespace fanuc.veneers
 {
     public class RdAxisname: Veneer
     {
-        public RdAxisname(string name = ""): base(name)
+        public RdAxisname(string name = "", bool isInternal = false) : base(name, isInternal)
         {
             _lastChangedValue = new List<dynamic>
             {

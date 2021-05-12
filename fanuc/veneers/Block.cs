@@ -2,7 +2,7 @@
 {
     public class Block : Veneer
     {
-        public Block(string name = "") : base(name)
+        public Block(string name = "", bool isInternal = false) : base(name, isInternal)
         {
             _lastChangedValue = new { data = string.Empty };
         }

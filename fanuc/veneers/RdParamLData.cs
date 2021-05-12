@@ -2,7 +2,7 @@
 {
     public class RdParamLData : Veneer
     {
-        public RdParamLData(string name = "") : base(name)
+        public RdParamLData(string name = "", bool isInternal = false) : base(name, isInternal)
         {
             _lastChangedValue = new
             {

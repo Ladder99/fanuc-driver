@@ -4,7 +4,7 @@ namespace fanuc.veneers
 {
     public class CNCId : Veneer
     {
-        public CNCId(string name = "") : base(name)
+        public CNCId(string name = "", bool isInternal = false) : base(name, isInternal)
         {
             _lastChangedValue = new
             {

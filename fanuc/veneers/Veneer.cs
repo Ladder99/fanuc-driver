@@ -13,6 +13,13 @@ namespace fanuc.veneers
         
         protected string _name = "";
 
+        public bool IsInternal
+        {
+            get { return _isInternal; }
+        }
+        
+        private bool _isInternal = false;
+        
         public dynamic SliceKey
         {
             get { return _sliceKey; }
@@ -79,12 +86,13 @@ namespace fanuc.veneers
         
         public Action<Veneer> OnArrival =  (veneer) => { };
         
-        public Veneer(string name = "")
+        public Veneer(string name = "", bool isInternal = false)
         {
             _name = name;
+            _isInternal = isInternal;
             _stopwatchDataChange.Start();
         }
-
+        
         protected void onDataArrived(dynamic input, dynamic current_value)
         {
             this._lastArrivedInput = input;

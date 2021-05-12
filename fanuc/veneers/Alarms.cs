@@ -5,7 +5,7 @@ namespace fanuc.veneers
 {
     public class Alarms : Veneer
     {
-        public Alarms(string name = ""): base(name)
+        public Alarms(string name = "", bool isInternal = false) : base(name, isInternal)
         {
             _lastChangedValue = new List<dynamic>
             {

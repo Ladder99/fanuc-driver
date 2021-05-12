@@ -147,7 +147,7 @@ namespace fanuc
             Action<Veneers, Veneer> on_data_arrival = (vv, v) =>
             {
                 mqtt_disco.Add(vv.Machine.Id);
-                
+
                 dynamic payload = new
                 {
                     observation = new
@@ -159,9 +159,9 @@ namespace fanuc
                     },
                     source = new
                     {
-                        method = v.LastArrivedInput.method,
-                        v.LastArrivedInput.invocationMs,
-                        data = v.LastArrivedInput.request.GetType().GetProperty(v.LastArrivedInput.method).GetValue(v.LastArrivedInput.request, null)
+                        method = v.IsInternal ? "" : v.LastArrivedInput.method,
+                        invocationMs = v.IsInternal ? -1 : v.LastArrivedInput.invocationMs,
+                        data = v.IsInternal ? new { } : v.LastArrivedInput.request.GetType().GetProperty(v.LastArrivedInput.method).GetValue(v.LastArrivedInput.request, null)
                     },
                     delta = new
                     {
@@ -169,7 +169,7 @@ namespace fanuc
                         data = v.LastArrivedValue
                     }
                 };
-
+                
                 var topic = $"fanuc/{vv.Machine.Id}-all/{v.Name}{(v.SliceKey == null ? string.Empty : "/" + v.SliceKey.ToString())}";
                 string payload_string = JObject.FromObject(payload).ToString();
 

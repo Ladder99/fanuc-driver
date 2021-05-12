@@ -5,7 +5,7 @@ namespace fanuc.veneers
 {
     public class OpMsgs: Veneer
     {
-        public OpMsgs(string name = ""): base(name)
+        public OpMsgs(string name = "", bool isInternal = false) : base(name, isInternal)
         {
             _lastChangedValue = new List<dynamic>
             {

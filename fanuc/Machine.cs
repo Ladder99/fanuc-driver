@@ -122,9 +122,9 @@ namespace fanuc
         
         public bool VeneersApplied { get; set; }
 
-        public void ApplyVeneer(Type type, string name)
+        public void ApplyVeneer(Type type, string name, bool isInternal = false)
         {
-            _veneers.Add(type, name);
+            _veneers.Add(type, name, isInternal);
         }
 
         public void SliceVeneer(dynamic split)
@@ -137,14 +137,14 @@ namespace fanuc
             _veneers.Slice(sliceKey, split);
         }
 
-        public void ApplyVeneerAcrossSlices(Type type, string name)
+        public void ApplyVeneerAcrossSlices(Type type, string name, bool isInternal = false)
         {
-            _veneers.AddAcrossSlices(type, name);
+            _veneers.AddAcrossSlices(type, name, isInternal);
         }
         
-        public void ApplyVeneerAcrossSlices(dynamic sliceKey, Type type, string name)
+        public void ApplyVeneerAcrossSlices(dynamic sliceKey, Type type, string name, bool isInternal = false)
         {
-            _veneers.AddAcrossSlices(sliceKey, type, name);
+            _veneers.AddAcrossSlices(sliceKey, type, name, isInternal);
         }
 
         public dynamic PeelVeneer(string name, dynamic input)

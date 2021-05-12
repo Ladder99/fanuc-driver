@@ -48,20 +48,20 @@ namespace fanuc.veneers
             }
         }
 
-        public void Add(Type veneerType, string name)
+        public void Add(Type veneerType, string name, bool isInternal = false)
         {
-            Veneer veneer = (Veneer)Activator.CreateInstance(veneerType, new object[] { name });
+            Veneer veneer = (Veneer)Activator.CreateInstance(veneerType, new object[] { name, isInternal });
             veneer.OnArrival = (v) => OnDataArrival(this, v);
             veneer.OnChange = (v) => OnDataChange(this, v);
             veneer.OnError = (v) => OnError(this, v);
             _wholeVeneers.Add(veneer);
         }
 
-        public void AddAcrossSlices(Type veneerType, string name)
+        public void AddAcrossSlices(Type veneerType, string name, bool isInternal = false)
         {
             foreach (var key in _slicedVeneers.Keys)
             {
-                Veneer veneer = (Veneer)Activator.CreateInstance(veneerType, new object[] { name });
+                Veneer veneer = (Veneer)Activator.CreateInstance(veneerType, new object[] { name, isInternal });
                 veneer.SetSliceKey(key);
                 veneer.OnArrival = (v) => OnDataArrival(this, v);
                 veneer.OnChange = (v) => OnDataChange(this, v);
@@ -70,7 +70,7 @@ namespace fanuc.veneers
             }
         }
         
-        public void AddAcrossSlices(dynamic sliceKey, Type veneerType, string name)
+        public void AddAcrossSlices(dynamic sliceKey, Type veneerType, string name, bool isInternal = false)
         {
             foreach (var key in _slicedVeneers.Keys)
             {
@@ -78,7 +78,7 @@ namespace fanuc.veneers
                 if (key_parts.Length == 1)
                     continue;
                 
-                Veneer veneer = (Veneer)Activator.CreateInstance(veneerType, new object[] { name });
+                Veneer veneer = (Veneer)Activator.CreateInstance(veneerType, new object[] { name, isInternal });
                 veneer.SetSliceKey(key);
                 veneer.OnArrival = (v) => OnDataArrival(this, v);
                 veneer.OnChange = (v) => OnDataChange(this, v);
