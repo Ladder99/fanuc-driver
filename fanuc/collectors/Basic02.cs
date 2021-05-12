@@ -27,7 +27,6 @@ namespace fanuc.collectors
                     _machine.ApplyVeneer(typeof(fanuc.veneers.CNCId), "cnc_id");
                     _machine.ApplyVeneer(typeof(fanuc.veneers.RdTimer), "power_on_time");
                     _machine.ApplyVeneer(typeof(fanuc.veneers.RdParamLData), "power_on_time_6750");
-                    _machine.ApplyVeneer(typeof(fanuc.veneers.SysInfo), "sys_info");
                     _machine.ApplyVeneer(typeof(fanuc.veneers.GetPath), "get_path");
                     
                     dynamic paths = _machine.Platform.GetPath();
@@ -37,6 +36,7 @@ namespace fanuc.collectors
 
                     _machine.SliceVeneer(path_slices.ToArray());
 
+                    _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.SysInfo), "sys_info");
                     _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.RdAxisname), "axis_name");
                     _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.RdSpindlename), "spindle_name");
                     
@@ -70,9 +70,6 @@ namespace fanuc.collectors
                 dynamic poweron_6750 = _machine.Platform.RdParam(6750, 0, 8, 1);
                 _machine.PeelVeneer("power_on_time_6750", poweron_6750);
                 
-                dynamic info = _machine.Platform.SysInfo();
-                _machine.PeelVeneer("sys_info", info);
-                
                 dynamic paths = _machine.Platform.GetPath();
                 _machine.PeelVeneer("get_path", paths);
 
@@ -84,6 +81,9 @@ namespace fanuc.collectors
                     dynamic path_marker = new {path.request.cnc_setpath.path_no};
                     _machine.MarkVeneer(current_path, path_marker);
 
+                    dynamic info = _machine.Platform.SysInfo();
+                    _machine.PeelAcrossVeneer(current_path, "sys_info", info);
+                    
                     dynamic axes = _machine.Platform.RdAxisName();
                     _machine.PeelAcrossVeneer(current_path, "axis_name", axes);
 
