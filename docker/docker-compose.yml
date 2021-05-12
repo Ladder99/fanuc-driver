@@ -38,7 +38,27 @@ services:
       options:
         max-file: "5"
         max-size: "1m"
-
+        
+  streamsheets:
+    image: cedalo/streamsheets:2-milestone-rpi
+    container_name: streamsheets
+    restart: always
+    depends_on:
+      - mosquitto
+    networks:
+      - fanuc
+    ports:
+      - "10000:27017"
+      - "10001:1883"
+      - "10002:6397"
+      - "10003:8081"
+      - "10004:8080"
+      - "10005:8083"
+    logging:
+      options:
+        max-file: "5"
+        max-size: "1m"
+  
   portainer:
     container_name: portainer
     image: portainer/portainer-ce
