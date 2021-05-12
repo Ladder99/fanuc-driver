@@ -9592,7 +9592,11 @@ namespace fanuc
         public static extern short cnc_rddiagnum(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBDIAGNUM a);
 
         /* get maximum valid figures and number of decimal places */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_getfigure")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_getfigure")]
+#endif
         public static extern short cnc_getfigure(ushort FlibHndl,
             short a, out short b, [Out, MarshalAs(UnmanagedType.AsAny)] Object c, [Out, MarshalAs(UnmanagedType.AsAny)] Object d);
 

@@ -374,6 +374,8 @@ git clone https://github.com/Ladder99/fanuc-driver.git
 cd fanuc-driver  
 
 docker build -f Dockerfile.ARMV7 --tag=ladder99/fanuc-driver:latest .
+
+docker push ladder99/fanuc-driver
 ```
 
 Run container:
