@@ -22,7 +22,7 @@ namespace fanuc.veneers
             };
         }
         
-        protected override dynamic Any(dynamic input)
+        protected override dynamic Any(dynamic input, dynamic? input2)
         {
             var max = ((List<dynamic>)input.focas_invocations).MaxBy(o => o.invocationMs).First();
             var min = ((List<dynamic>)input.focas_invocations).MinBy(o => o.invocationMs).First();

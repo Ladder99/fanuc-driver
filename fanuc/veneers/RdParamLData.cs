@@ -10,7 +10,7 @@
             };
         }
         
-        protected override dynamic Any(dynamic input)
+        protected override dynamic Any(dynamic input, dynamic? input2)
         {
             if (input.success)
             {

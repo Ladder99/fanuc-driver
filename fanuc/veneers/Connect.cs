@@ -7,7 +7,7 @@
 
         }
 
-        protected override dynamic First(dynamic input)
+        protected override dynamic First(dynamic input, dynamic? input2)
         {
             var current_value = new {input.success};
             
@@ -17,7 +17,7 @@
             return new { veneer = this };
         }
 
-        protected override dynamic Any(dynamic input)
+        protected override dynamic Any(dynamic input, dynamic? input2)
         {
             var current_value = new {input.success };
             

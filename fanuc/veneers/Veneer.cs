@@ -127,26 +127,26 @@ namespace fanuc.veneers
             _hasMarker = true;
         }
         
-        protected virtual dynamic First(dynamic input)
+        protected virtual dynamic First(dynamic input, dynamic? input2)
         {
-            return Any(input);
+            return Any(input, input2);
         }
 
-        protected virtual dynamic Any(dynamic input)
+        protected virtual dynamic Any(dynamic input, dynamic? input2)
         {
             return new { };
         }
 
-        public dynamic Peel(dynamic input)
+        public dynamic Peel(dynamic input, dynamic? input2)
         {
             if(_isFirstCall)
             {
                 _isFirstCall = false;
-                return this.First(input);
+                return this.First(input, input2);
             }
             else
             {
-                return this.Any(input);
+                return this.Any(input, input2);
             }
         }
     }

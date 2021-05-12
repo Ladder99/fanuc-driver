@@ -13,7 +13,7 @@ namespace fanuc.veneers
             };
         }
         
-        protected override dynamic Any(dynamic input)
+        protected override dynamic Any(dynamic input, dynamic? input2)
         {
             var success = true;
             var current_value = new List<dynamic>() ;

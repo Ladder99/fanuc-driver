@@ -178,9 +178,8 @@ namespace fanuc.collectors
                         _machine.MarkVeneer(new[] { current_path, axis_name }, new[] { path_marker, axis_marker });
                         
                         dynamic axis_data = _machine.Platform.RdDynamic2(current_axis, 44, 2);
-                        _machine.PeelAcrossVeneer(new[] { current_path, axis_name }, "axis_data", new
+                        _machine.PeelAcrossVeneer(new[] { current_path, axis_name }, "axis_data", axis_data,new
                         {
-                            axis_data, 
                             figures, 
                             axis_index = current_axis - 1
                         });

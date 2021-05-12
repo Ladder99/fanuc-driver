@@ -87,12 +87,12 @@ namespace fanuc.veneers
             }
         }
 
-        public dynamic Peel(string name, dynamic input)
+        public dynamic Peel(string name, dynamic input, dynamic? input2)
         {
-            return _wholeVeneers.FirstOrDefault(v => v.Name == name).Peel(input);
+            return _wholeVeneers.FirstOrDefault(v => v.Name == name).Peel(input, input2);
         }
         
-        public dynamic PeelAcross(dynamic split, string name, dynamic input)
+        public dynamic PeelAcross(dynamic split, string name, dynamic input, dynamic? input2)
         {
             foreach (var key in _slicedVeneers.Keys)
             {
@@ -109,7 +109,7 @@ namespace fanuc.veneers
                     {
                         if (veneer.Name == name)
                         {
-                            return veneer.Peel(input);
+                            return veneer.Peel(input, input2);
                         }
                     }
                 }

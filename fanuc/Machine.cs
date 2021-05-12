@@ -147,14 +147,14 @@ namespace fanuc
             _veneers.AddAcrossSlices(sliceKey, type, name, isInternal);
         }
 
-        public dynamic PeelVeneer(string name, dynamic input)
+        public dynamic PeelVeneer(string name, dynamic input, dynamic? input2 = null)
         {
-            return _veneers.Peel(name, input);
+            return _veneers.Peel(name, input, input2);
         }
         
-        public dynamic PeelAcrossVeneer(dynamic split, string name, dynamic input)
+        public dynamic PeelAcrossVeneer(dynamic split, string name, dynamic input, dynamic? input2 = null)
         {
-            return _veneers.PeelAcross(split, name, input);
+            return _veneers.PeelAcross(split, name, input, input2);
         }
 
         public void MarkVeneer(dynamic split, dynamic marker)

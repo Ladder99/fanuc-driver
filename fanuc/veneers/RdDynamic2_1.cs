@@ -18,12 +18,12 @@ namespace fanuc.veneers
             };
         }
         
-        protected override dynamic Any(dynamic input)
+        protected override dynamic Any(dynamic input, dynamic? input2)
         {
-            if (input.axis_data.success && input.figures.success)
+            if (input.success && input2.figures.success)
             {
-                dynamic ad = input.axis_data.response.cnc_rddynamic2.rddynamic;
-                dynamic fig_in = input.figures.response.cnc_getfigure.dec_fig_in;
+                dynamic ad = input.response.cnc_rddynamic2.rddynamic;
+                dynamic fig_in = input2.figures.response.cnc_getfigure.dec_fig_in;
                 
                 var current_value = new
                 {
@@ -35,15 +35,13 @@ namespace fanuc.veneers
                     ad.seqnum,
                     pos = new
                     {
-                        absolute = ad.pos.absolute / Math.Pow(10.0, fig_in[input.axis_index]),
-                        machine = ad.pos.machine / Math.Pow(10.0, fig_in[input.axis_index]),
-                        relative = ad.pos.relative / Math.Pow(10.0, fig_in[input.axis_index]),
-                        distance = ad.pos.distance / Math.Pow(10.0, fig_in[input.axis_index])
+                        absolute = ad.pos.absolute / Math.Pow(10.0, fig_in[input2.axis_index]),
+                        machine = ad.pos.machine / Math.Pow(10.0, fig_in[input2.axis_index]),
+                        relative = ad.pos.relative / Math.Pow(10.0, fig_in[input2.axis_index]),
+                        distance = ad.pos.distance / Math.Pow(10.0, fig_in[input2.axis_index])
                     }
                 };
 
-                input = input.axis_data;
-                
                 this.onDataArrived(input, current_value);
                 
                 // TODO: equality or hash code do not match on this object (x86)
