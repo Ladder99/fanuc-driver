@@ -49,8 +49,7 @@ services:
       - fanuc
     ports:
       - "11883:1883"
-      - "11081:8081"
-      - "11083:8083"
+      - "8081:8081"
     links:
       - streamsheets-internal-mongodb
     environment:
@@ -66,6 +65,7 @@ services:
   streamsheets-internal-mongodb:
     image: andresvidal/rpi3-mongodb3
     container_name: streamsheets-internal-mongodb
+    restart: always
     volumes:
       - ~/fanuc-volumes/mongo/data/db:/data/db:rw
     networks:

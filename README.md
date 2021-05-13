@@ -404,3 +404,6 @@ cd fanuc-driver/docker
 docker-compose up -d
 ```
 
+Naviagate to [http://raspberrypi.local:8081](http://raspberrypi.local:8081) for the Streamsheets interface.  After getting to know Streamsheets, you will be able to create all kinds of Fanuc spreadsheets!
+
+![recording1](docs/recording3.gif)
