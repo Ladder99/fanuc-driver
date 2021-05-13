@@ -60,6 +60,8 @@ namespace fanuc.collectors
                                                     ((char) axis.suff).ToString().Trim('\0'));
                         }
                         
+                        // similar to Basic03 example, we use the axis logic to configure spindle specific data
+                        //  axis specific data is at the same level as spindle specific data... children of the path
                         var fields_spindles = spindles.response.cnc_rdspdlname.spdlname.GetType().GetFields();
                         for (int x = 0; x <= spindles.response.cnc_rdspdlname.data_num - 1; x++)
                         {
@@ -151,6 +153,13 @@ namespace fanuc.collectors
                     
                     var fields_spindles = spindles.response.cnc_rdspdlname.spdlname.GetType().GetFields();
                     
+                    // again, similar concept as the axes
+                    //  walk each spindle,
+                    //      get its name (e.g. S1,S2,...),
+                    //      create a descriptive marker,
+                    //      mark the veneer,
+                    //      retrieve spindle specific data,
+                    //      reveal spindle specific observation
                     for (short current_spindle = 1;
                         current_spindle <= spindles.response.cnc_rdspdlname.data_num;
                         current_spindle++)

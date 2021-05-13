@@ -76,6 +76,9 @@ namespace fanuc.collectors
 
                         _machine.SliceVeneer(current_path, axis_spindle_slices.ToArray());
 
+                        // the RdDynamic2_1 veneer is an extension of RdDynamic2 veneer
+                        //  the difference is that RdDynamic2_1 will use output from the Figures veneer
+                        //  to determine the correct decimal position for axis position data
                         _machine.ApplyVeneerAcrossSlices(current_path, typeof(fanuc.veneers.RdDynamic2_1), "axis_data");
                         _machine.ApplyVeneerAcrossSlices(current_path, typeof(fanuc.veneers.RdActs2), "spindle_data");
                     }
@@ -149,6 +152,7 @@ namespace fanuc.collectors
                     _machine.PeelAcrossVeneer(current_path, "stat_info", stat);
                     catch_focas_perf(path);
                     
+                    // in order to return the corre
                     dynamic figures = _machine.Platform.GetFigure(0, 32);
                     _machine.PeelAcrossVeneer(current_path,"figures", figures);
                     catch_focas_perf(figures);
@@ -177,6 +181,9 @@ namespace fanuc.collectors
                         
                         _machine.MarkVeneer(new[] { current_path, axis_name }, new[] { path_marker, axis_marker });
                         
+                        // the figures observation determines where the decimal point goes in axis positional data
+                        //  we pass it as input2 to reveal the 'axis_data' observation, along with the axis index
+                        //  and do the math inside RdDynamic2_1 veneer
                         dynamic axis_data = _machine.Platform.RdDynamic2(current_axis, 44, 2);
                         _machine.PeelAcrossVeneer(new[] { current_path, axis_name }, "axis_data", axis_data,new
                         {

@@ -26,6 +26,7 @@ namespace fanuc.collectors
 
                 if (connect.success)
                 {
+                    // let's add a custom internal veneer used to measure the health of our controller connection
                     _machine.ApplyVeneer(typeof(fanuc.veneers.FocasPerf), "focas_perf", true);
                     _machine.ApplyVeneer(typeof(fanuc.veneers.Connect), "connect");
                     _machine.ApplyVeneer(typeof(fanuc.veneers.CNCId), "cnc_id");
@@ -95,6 +96,7 @@ namespace fanuc.collectors
 
         public override void Collect()
         {
+            // add code to trap each Focas API invocation method name, its round trip time, and result code
             _sweepWatch.Restart();
 
             dynamic focas_invocations = new List<dynamic>();
@@ -111,6 +113,7 @@ namespace fanuc.collectors
             
             dynamic connect = _machine.Platform.Connect();
             _machine.PeelVeneer("connect", connect);
+            // now for every Focas API call we make, add its metrics to our list which we process at the end of the sweep
             catch_focas_perf(connect);
 
             if (connect.success)
@@ -206,7 +209,9 @@ namespace fanuc.collectors
 
                 dynamic disconnect = _machine.Platform.Disconnect();
                 catch_focas_perf(disconnect);
-
+                // reveal the internal 'focas_perf' observation
+                // internal veneers and observations do not carry Focas API metadata and should be treated as such
+                //  that's what the IsInternal field is for
                 _machine.PeelVeneer("focas_perf", new
                 {
                     sweepMs = _sweepWatch.ElapsedMilliseconds,

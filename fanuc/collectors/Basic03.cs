@@ -40,24 +40,32 @@ namespace fanuc.collectors
                     _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.RdAxisname), "axis_name");
                     _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.RdSpindlename), "spindle_name");
                     
+                    // below we will be adding axis specific observations
+                    // axes are children of a path
                     for (short current_path = paths.response.cnc_getpath.path_no;
                         current_path <= paths.response.cnc_getpath.maxpath_no;
                         current_path++)
                     {
+                        // set the current path
                         dynamic path = _machine.Platform.SetPath(current_path);
+                        // so that we can retrieve the axis names on that path
                         dynamic axes = _machine.Platform.RdAxisName();
+                        // Focas API returns a struct of axis names (e.g. data1,data2,data3,...)
                         dynamic axis_slices = new List<dynamic> { };
-
+                        // use reflection to walk all available axes
                         var fields = axes.response.cnc_rdaxisname.axisname.GetType().GetFields();
                         for (int x = 0; x <= axes.response.cnc_rdaxisname.data_num - 1; x++)
                         {
                             var axis = fields[x].GetValue(axes.response.cnc_rdaxisname.axisname);
+                            // capture each axis name so we can use it to slice each path
+                            //  e.g. X1,Y1,Z1,A1
                             axis_slices.Add(((char) axis.name).ToString().Trim('\0') +
                                             ((char) axis.suff).ToString().Trim('\0'));
                         }
-
+                        
+                        // now slice the current path's veneers using the axis names
                         _machine.SliceVeneer(current_path, axis_slices.ToArray());
-
+                        // apply the 'axis_data' observation to the current path and its axes
                         _machine.ApplyVeneerAcrossSlices(current_path, typeof(fanuc.veneers.RdDynamic2), "axis_data");
                     }
                     
@@ -122,12 +130,20 @@ namespace fanuc.collectors
                         dynamic axis_marker = new
                         {
                             name = ((char)axis.name).ToString().Trim('\0'), 
-                            suff =  ((char)axis.suff).ToString().Trim('\0')
+                            suff = ((char)axis.suff).ToString().Trim('\0')
                         };
                         
+                        // mark the current path and axis
+                        //  path 1      1, X1;  1, Y1;  1, Z1;  1, A1;
+                        //  path 2      2, B1;
+                        // with a descriptive marker
+                        //  { path_no = 1}, { name = X, suff = 1 }
+                        //  ...
+                        //  { path_no = 2}, { name = B, suff = 1 }
                         _machine.MarkVeneer(new[] { current_path, axis_name }, new[] { path_marker, axis_marker });
-                        
+                        // retrieve axis position data for the current path and current axis
                         dynamic axis_data = _machine.Platform.RdDynamic2(current_axis, 44, 2);
+                        // reveal the 'axis_data' observation for the current path and current axis
                         _machine.PeelAcrossVeneer(new[] { current_path, axis_name }, "axis_data", axis_data);
                     }
                 }

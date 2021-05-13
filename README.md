@@ -254,11 +254,15 @@ if (connect.success)
 LastSuccess = connect.success;
 ```
 
-#### Example: Basic02
+#### Example: [Basic02](fanuc/collectors/Basic02.cs)
 
-#### Example: Basic03
+#### Example: [Basic03](fanuc/collectors/Basic03.cs)
 
-#### Example: Basic04
+#### Example: [Basic04](fanuc/collectors/Basic04.cs)
+
+#### Example: [Basic05](fanuc/collectors/Basic05.cs)
+
+#### Example: [Basic06](fanuc/collectors/Basic06.cs)
 
 ## Configuration
 
