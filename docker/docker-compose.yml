@@ -1,6 +1,23 @@
 version: '3.7'
 
 services:
+  fanuc_driver:
+    container_name: fanuc_driver
+    image: ladder99/fanuc-driver:latest
+    restart: always
+    depends_on:
+      - mosquitto
+    networks:
+      - fanuc
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ~/fanuc-volumes/fanuc-driver:/etc/fanuc
+    logging:
+      options:
+        max-file: "5"
+        max-size: "1m"
+  
   mosquitto:
     container_name: mosquitto
     image: eclipse-mosquitto
@@ -21,39 +38,38 @@ services:
       options:
         max-file: "5"
         max-size: "1m"
-  
-  fanuc_driver:
-    container_name: fanuc_driver
-    image: ladder99/fanuc-driver:latest
-    restart: always
-    depends_on:
-      - mosquitto
-    networks:
-      - fanuc
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
-      - ~/fanuc-volumes/fanuc-driver:/etc/fanuc
-    logging:
-      options:
-        max-file: "5"
-        max-size: "1m"
-        
+    
   streamsheets:
     image: cedalo/streamsheets:2-milestone-rpi
     container_name: streamsheets
     restart: always
     depends_on:
-      - mosquitto
+      - streamsheets-internal-mongodb
     networks:
       - fanuc
     ports:
-      - "10000:27017"
-      - "10001:1883"
-      - "10002:6397"
-      - "10003:8081"
-      - "10004:8080"
-      - "10005:8083"
+      - "11883:1883"
+      - "11081:8081"
+      - "11083:8083"
+    links:
+      - streamsheets-internal-mongodb
+    environment:
+      MONGO_DATABASE: streamsheets
+      MONGO_HOST: streamsheets-internal-mongodb
+      MONGO_PORT: 27017
+      MONGO_USER_DB_URI: mongodb://streamsheets-internal-mongodb:27017/userDB
+    logging:
+      options:
+        max-file: "5"
+        max-size: "1m"
+
+  streamsheets-internal-mongodb:
+    image: andresvidal/rpi3-mongodb3
+    container_name: streamsheets-internal-mongodb
+    volumes:
+      - ~/fanuc-volumes/mongo/data/db:/data/db:rw
+    networks:
+      - fanuc
     logging:
       options:
         max-file: "5"

@@ -384,7 +384,7 @@ Run container:
 docker run -it ladder99/fanuc-driver:latest
 ```
 
-Run container and MQTT broker:
+Run fanuc-driver, [Mosquitto](https://docs.cedalo.com/latest/docs/mosquitto/broker-overview) MQTT broker, and [Streamsheets](https://docs.cedalo.com/latest/docs/streamsheets/sheets):
 
 Config file used: `~/fanuc-volumes/fanuc-driver/config.yml`
 
@@ -403,3 +403,4 @@ cd fanuc-driver/docker
 
 docker-compose up -d
 ```
+
