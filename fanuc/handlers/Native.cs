@@ -5,7 +5,14 @@ namespace fanuc.handlers
 {
     public class Native: Handler
     {
-        public Native(Machine machine): base(machine)
+        public Native(Machine machine,
+            Func<Veneers, Veneer, dynamic?> beforeArrival = null,
+            Action<Veneers, Veneer, dynamic?> afterArrival = null,
+            Func<Veneers, Veneer, dynamic?> beforeChange = null,
+            Action<Veneers, Veneer, dynamic?> afterChange = null,
+            Func<Veneers, Veneer, dynamic?> beforeError = null,
+            Action<Veneers, Veneer, dynamic?> afterError = null) : base(machine, beforeArrival, afterArrival,
+            beforeChange, afterChange, beforeError, afterError)
         {
             
         }
