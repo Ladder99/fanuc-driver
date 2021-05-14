@@ -364,7 +364,7 @@ sudo pip3 install docker-compose
 sync
 ```
 
-### Architecture: aarch64
+### Architecture: armv7 and aarch64
 
 Config file used: `~/fanuc-driver/docker/config.yml`
 
@@ -377,25 +377,7 @@ git clone https://github.com/Ladder99/fanuc-driver.git
 
 cd fanuc-driver  
 
-docker build -f Dockerfile.ARM64 --tag=ladder99/fanuc-driver:latest .
-
-# docker push ladder99/fanuc-driver
-```
-
-### Architecture: armv7
-
-Config file used: `~/fanuc-driver/docker/config.yml`
-
-Build container:
-
-```
-cd ~
-
-git clone https://github.com/Ladder99/fanuc-driver.git  
-
-cd fanuc-driver  
-
-docker build -f Dockerfile.ARMV7 --tag=ladder99/fanuc-driver:latest .
+docker build -f Dockerfile.ARM --tag=ladder99/fanuc-driver:latest .
 
 # docker push ladder99/fanuc-driver
 ```
@@ -404,25 +386,6 @@ docker build -f Dockerfile.ARMV7 --tag=ladder99/fanuc-driver:latest .
 
 ```
 docker run -it ladder99/fanuc-driver:latest
-```
-
-### Run Containers on OpenWRT:
-
-```
-cd ~
-
-git clone https://github.com/Ladder99/fanuc-driver.git 
-
-mkdir -p fanuc-volumes/fanuc-driver
-cp fanuc-driver/docker/config.yml fanuc-volumes/fanuc-driver/config.yml
-
-mkdir -p fanuc-volumes/mosquitto/config
-cp fanuc-driver/docker/mosquitto.conf fanuc-volumes/mosquitto/config/mosquitto.conf
-
-docker network create --driver bridge fanuc
-docker run -dit --restart=always --name="portainer" --network fanuc -p 9999:9000 -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce
-docker run -dit --restart=always --name="mosquitto" --network fanuc -p 1883:1883 -v /root/fanuc-volumes/mosquitto/config:/mosquitto/config:rw eclipse-mosquitto
-docker run -dit --restart=always --name="fanuc_driver" --network fanuc -v /root/fanuc-volumes/fanuc-driver:/etc/fanuc ladder99/fanuc-driver:latest
 ```
 
 ### Run Containers using Docker Compose:
