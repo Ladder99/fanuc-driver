@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using fanuc.collectors;
+using fanuc.handlers;
 using fanuc.veneers;
 
 namespace fanuc
@@ -68,6 +69,13 @@ namespace fanuc
         
         private Veneers _veneers;
 
+        public Handler Handler
+        {
+            get { return _handler; }
+        }
+        
+        private Handler _handler;
+        
         public Collector Collector
         {
             get { return _collector; }
@@ -105,6 +113,29 @@ namespace fanuc
             _veneers = new Veneers(this);
         }
 
+        public void AddHandler(Type type, 
+            Func<Veneers, Veneer, dynamic?> beforeArrival = null, 
+            Action<Veneers, Veneer, dynamic?> afterArrival = null,
+            Func<Veneers, Veneer, dynamic?> beforeChange = null, 
+            Action<Veneers, Veneer, dynamic?> afterChange = null,
+            Func<Veneers, Veneer, dynamic?> beforeError = null, 
+            Action<Veneers, Veneer, dynamic?> afterError = null)
+        {
+            _handler = (Handler) Activator.CreateInstance(type, new object[]
+            {
+                this, 
+                beforeArrival,
+                afterArrival,
+                beforeChange,
+                afterChange,
+                beforeError,
+                afterError
+            });
+            this.Veneers.OnDataArrival = _handler.OnDataArrivalInternal;
+            this.Veneers.OnDataChange = _handler.OnDataChangeInternal;
+            this.Veneers.OnError = _handler.OnErrorInternal;
+        }
+        
         public void AddCollector(Type type, int sweepMs = 1000)
         {
             _collector = (Collector) Activator.CreateInstance(type, new object[] { this, sweepMs });

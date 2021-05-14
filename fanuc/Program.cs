@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using fanuc.utils;
 using fanuc.veneers;
 using MQTTnet;
 using MQTTnet.Client.Options;
@@ -12,71 +13,12 @@ using YamlDotNet.Serialization.NamingConventions;
 
 namespace fanuc
 {
-    class Program
+    partial class Program
     {
         private static bool MQTT_CONNECT = false;
         private static bool MQTT_PUBLISH_STATUS = false;
         private static bool MQTT_PUBLISH_ARRIVALS = false;
         private static bool MQTT_PUBLISH_CHANGES = false;
-
-        private class MQTTDisco
-        {
-            private class MQTTDiscoItem
-            {
-                public long added;
-                public long seen;
-                public string machineId;
-                public string arrivalTopic;
-                public string changeTopic;
-            }
-            
-            private Dictionary<string, MQTTDiscoItem> _items = new Dictionary<string, MQTTDiscoItem>();
-
-            private dynamic _mqtt;
-            
-            public MQTTDisco(dynamic mqtt)
-            {
-                _mqtt = mqtt;
-            }
-
-            public void Add(string machineId)
-            {
-                if (!_items.ContainsKey(machineId))
-                {
-                    var epoch = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
-
-                    _items.Add(machineId, new MQTTDiscoItem()
-                    {
-                        machineId = machineId,
-                        added = epoch,
-                        seen = epoch,
-                        arrivalTopic = $"fanuc/{machineId}-all",
-                        changeTopic = $"fanuc/{machineId}"
-                    });
-                }
-                else
-                {
-                    _items[machineId].seen = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
-                }
-
-                string topic = "fanuc/DISCO";
-                string payload_string = JObject.FromObject(_items).ToString();
-
-                Console.ForegroundColor = ConsoleColor.Gray;
-                Console.WriteLine($"{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds()} DISCO {payload_string.Length}b => {topic}");
-            
-                if (MQTT_CONNECT && MQTT_PUBLISH_STATUS)
-                {
-                    var msg = new MqttApplicationMessageBuilder()
-                        .WithRetainFlag(true)
-                        .WithTopic(topic)
-                        .WithPayload(payload_string)
-                        .Build();
-                
-                    var r = _mqtt.PublishAsync(msg, CancellationToken.None).Result;
-                }
-            }
-        }
 
         static void Main(string[] args)
         {
@@ -127,7 +69,7 @@ namespace fanuc
 
         static dynamic createMachines(dynamic config, dynamic mqtt)
         {
-            var mqtt_disco = new MQTTDisco(mqtt);
+            var mqtt_disco = new MQTTDisco(mqtt, config["broker"]);
             var machine_confs = new List<dynamic>();
 
             foreach (dynamic machine_conf in config["machines"])
@@ -140,113 +82,78 @@ namespace fanuc
                     port = machine_conf["net_port"],
                     timeout = machine_conf["net_timeout_s"],
                     collector = machine_conf["strategy_type"],
-                    collectorSweepMs = machine_conf["sweep_ms"]
+                    collectorSweepMs = machine_conf["sweep_ms"],
+                    handler = machine_conf["handler_type"]
                 });
             }
 
-            Action<Veneers, Veneer> on_data_arrival = (vv, v) =>
-            {
-                mqtt_disco.Add(vv.Machine.Id);
-
-                dynamic payload = new
-                {
-                    observation = new
-                    {
-                        time =  new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds(),
-                        machine = vv.Machine.Id,
-                        name = v.Name,
-                        marker = v.Marker
-                    },
-                    source = new
-                    {
-                        method = v.IsInternal ? "" : v.LastArrivedInput.method,
-                        invocationMs = v.IsInternal ? -1 : v.LastArrivedInput.invocationMs,
-                        data = v.IsInternal ? new { } : v.LastArrivedInput.request.GetType().GetProperty(v.LastArrivedInput.method).GetValue(v.LastArrivedInput.request, null)
-                    },
-                    delta = new
-                    {
-                        time = v.ArrivalDelta,
-                        data = v.LastArrivedValue
-                    }
-                };
-                
-                var topic = $"fanuc/{vv.Machine.Id}-all/{v.Name}{(v.SliceKey == null ? string.Empty : "/" + v.SliceKey.ToString())}";
-                string payload_string = JObject.FromObject(payload).ToString();
-
-                Console.ForegroundColor = ConsoleColor.Gray;
-                Console.WriteLine($"{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds()} ARRIVE {payload_string.Length}b => {topic}");
-                
-                if (MQTT_CONNECT && MQTT_PUBLISH_ARRIVALS)
-                {
-                    var msg = new MqttApplicationMessageBuilder()
-                        .WithRetainFlag(true)
-                        .WithTopic(topic)
-                        .WithPayload(payload_string)
-                        .Build();
-                
-                    var r = mqtt.PublishAsync(msg, CancellationToken.None);
-                }
-            };
-            
-            Action<Veneers, Veneer> on_data_change = (vv, v) =>
-            {
-                mqtt_disco.Add(vv.Machine.Id);
-                
-                dynamic payload = new
-                {
-                    observation = new
-                    {
-                        time =  new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds(),
-                        machine = vv.Machine.Id,
-                        name = v.Name,
-                        marker = v.Marker
-                    },
-                    source = new
-                    {
-                        method = v.LastChangedInput.method,
-                        v.LastChangedInput.invocationMs,
-                        data = v.LastChangedInput.request.GetType().GetProperty(v.LastChangedInput.method).GetValue(v.LastChangedInput.request, null)
-                    },
-                    delta = new
-                    {
-                        time = v.ChangeDelta,
-                        data = v.LastChangedValue
-                    }
-                };
-
-                var topic = $"fanuc/{vv.Machine.Id}/{v.Name}{(v.SliceKey == null ? string.Empty : "/" + v.SliceKey.ToString())}";
-                string payload_string = JObject.FromObject(payload).ToString();
-                
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine($"{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds()} CHANGE {payload_string.Length}b => {topic}");
-
-                if (MQTT_CONNECT && MQTT_PUBLISH_CHANGES)
-                {
-                    var msg = new MqttApplicationMessageBuilder()
-                        .WithRetainFlag(true)
-                        .WithTopic(topic)
-                        .WithPayload(payload_string)
-                        .Build();
-                
-                    var r = mqtt.PublishAsync(msg, CancellationToken.None);
-                }
-            };
-
-            Action<Veneers, Veneer> on_error = (vv, v) =>
-            {
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine(new { method = v.LastArrivedInput.method, rc = v.LastArrivedInput.rc });
-            };
-
-            dynamic machines = new Machines();
+            Machines machines = new Machines();
             
             foreach (var cfg in machine_confs)
             {
-                var machine = machines.Add(cfg.enabled, cfg.id, cfg.ip, (ushort)cfg.port, (short)cfg.timeout);
+                Machine machine = machines.Add(cfg.enabled, cfg.id, cfg.ip, (ushort)cfg.port, (short)cfg.timeout);
                 machine.AddCollector(Type.GetType(cfg.collector), cfg.collectorSweepMs);
-                machine.Veneers.OnDataArrival = on_data_arrival;
-                machine.Veneers.OnDataChange = on_data_change;
-                machine.Veneers.OnError = on_error;
+                machine.AddHandler(Type.GetType(cfg.handler),
+                    (Func<Veneers,Veneer,dynamic?>)((vv,v) =>
+                    {
+                        mqtt_disco.Add(vv.Machine.Id);
+                        return null;
+                    }),
+                    (Action<Veneers,Veneer,dynamic?>)((vv,v,x) =>
+                    {
+                        var topic = $"fanuc/{vv.Machine.Id}-all/{v.Name}{(v.SliceKey == null ? string.Empty : "/" + v.SliceKey.ToString())}";
+                        string payload_string = JObject.FromObject(x).ToString();
+
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.WriteLine($"{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds()} ARRIVE {payload_string.Length}b => {topic}");
+                
+                        if (MQTT_CONNECT && MQTT_PUBLISH_ARRIVALS)
+                        {
+                            var msg = new MqttApplicationMessageBuilder()
+                                .WithRetainFlag(true)
+                                .WithTopic(topic)
+                                .WithPayload(payload_string)
+                                .Build();
+                
+                            var r = mqtt.PublishAsync(msg, CancellationToken.None);
+                        }
+                    }),
+                    (Func<Veneers,Veneer,dynamic?>)((vv,v) =>
+                    {
+                        mqtt_disco.Add(vv.Machine.Id);
+                        return null;
+                    }),
+                    (Action<Veneers,Veneer,dynamic?>)((vv,v,x) =>
+                    {
+                        var topic = $"fanuc/{vv.Machine.Id}/{v.Name}{(v.SliceKey == null ? string.Empty : "/" + v.SliceKey.ToString())}";
+                        string payload_string = JObject.FromObject(x).ToString();
+                
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.WriteLine($"{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds()} CHANGE {payload_string.Length}b => {topic}");
+
+                        if (MQTT_CONNECT && MQTT_PUBLISH_CHANGES)
+                        {
+                            var msg = new MqttApplicationMessageBuilder()
+                                .WithRetainFlag(true)
+                                .WithTopic(topic)
+                                .WithPayload(payload_string)
+                                .Build();
+                
+                            var r = mqtt.PublishAsync(msg, CancellationToken.None);
+                        }
+                    }),
+                    (Func<Veneers,Veneer,dynamic?>)((vv,v) =>
+                    {
+                        return null;
+                    }),
+                    (Action<Veneers,Veneer,dynamic?>)((vv,v,x) =>
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine(new
+                        {
+                            method = v.LastArrivedInput.method, rc = v.LastArrivedInput.rc
+                        });
+                    }));
             }
 
             return machines;
