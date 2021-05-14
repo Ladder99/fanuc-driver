@@ -270,7 +270,17 @@ LastSuccess = connect.success;
 
 ### Post-Processing Examples
 
-// TODO
+#### Splunk Metric
+
+`handler_type: fanuc.handlers.SplunkMetric, fanuc`
+
+![recording4](docs/recording5.gif)
+
+#### Influx Line
+
+handler_type: fanuc.handlers.InfluxLine, fanuc
+
+![recording4](docs/recording4.gif)
 
 ## Configuration
 

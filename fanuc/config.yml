@@ -6,7 +6,7 @@ machines:
     net_timeout_s: !!int 2
     strategy_type: fanuc.collectors.Basic06, fanuc
     sweep_ms: !!int 1000
-    handler_type: fanuc.handlers.Native, fanuc
+    handler_type: fanuc.handlers.SplunkMetric, fanuc
     broker:
       enabled: !!bool true
       net_ip: 10.20.30.102
