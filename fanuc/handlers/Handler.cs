@@ -6,40 +6,27 @@ namespace fanuc.handlers
     public class Handler
     {
         protected Machine machine;
-        protected Func<Veneers, Veneer, dynamic?> beforeArrival;
-        protected Action<Veneers, Veneer, dynamic?> afterArrival;
-        protected Func<Veneers, Veneer, dynamic?> beforeChange;
-        protected Action<Veneers, Veneer, dynamic?> afterChange;
-        protected Func<Veneers, Veneer, dynamic?> beforeError;
-        protected Action<Veneers, Veneer, dynamic?> afterError;
         
-        public Handler(Machine machine, 
-            Func<Veneers, Veneer, dynamic?> beforeArrival = null, 
-            Action<Veneers, Veneer, dynamic?> afterArrival = null,
-            Func<Veneers, Veneer, dynamic?> beforeChange = null, 
-            Action<Veneers, Veneer, dynamic?> afterChange = null,
-            Func<Veneers, Veneer, dynamic?> beforeError = null, 
-            Action<Veneers, Veneer, dynamic?> afterError = null)
+        public Handler(Machine machine)
         {
             this.machine = machine;
-            this.beforeArrival = beforeArrival;
-            this.afterArrival = afterArrival;
-            this.beforeChange = beforeChange;
-            this.afterChange = afterChange;
-            this.beforeError = beforeError;
-            this.afterError = afterError;
+        }
+        
+        public virtual void Initialize(dynamic config)
+        {
+            
         }
         
         public void OnDataArrivalInternal(Veneers veneers, Veneer veneer)
         {
-            dynamic? beforeRet = null;
-            if (beforeArrival != null)
-                beforeRet = beforeArrival(veneers, veneer);
-            
+            dynamic? beforeRet = beforeDataArrival(veneers, veneer);
             dynamic? onRet = OnDataArrival(veneers, veneer, beforeRet);
+            afterDataArrival(veneers, veneer, onRet);
+        }
 
-            if (afterArrival != null)
-                afterArrival(veneers, veneer, onRet);
+        protected virtual dynamic? beforeDataArrival(Veneers veneers, Veneer veneer)
+        {
+            return null;
         }
         
         public virtual dynamic? OnDataArrival(Veneers veneers, Veneer veneer, dynamic? beforeArrival)
@@ -47,16 +34,21 @@ namespace fanuc.handlers
             return null;
         }
         
+        protected virtual void afterDataArrival(Veneers veneers, Veneer veneer, dynamic? onArrival)
+        {
+            
+        }
+        
         public virtual void OnDataChangeInternal(Veneers veneers, Veneer veneer)
         {
-            dynamic? beforeRet = null;
-            if (beforeChange != null)
-                beforeRet = beforeChange(veneers, veneer);
-            
+            dynamic? beforeRet = beforeDataChange(veneers, veneer);
             dynamic? onRet = OnDataChange(veneers, veneer, beforeRet);
-
-            if (afterChange != null)
-                afterChange(veneers, veneer, onRet);
+            afterDataChange(veneers, veneer, onRet);
+        }
+        
+        protected virtual dynamic? beforeDataChange(Veneers veneers, Veneer veneer)
+        {
+            return null;
         }
         
         public virtual dynamic? OnDataChange(Veneers veneers, Veneer veneer, dynamic? beforeChange)
@@ -64,21 +56,53 @@ namespace fanuc.handlers
             return null;
         }
         
+        protected virtual void afterDataChange(Veneers veneers, Veneer veneer, dynamic? onChange)
+        {
+            
+        }
+        
         public virtual void OnErrorInternal(Veneers veneers, Veneer veneer)
         {
-            dynamic? beforeRet = null;
-            if (beforeError != null)
-                beforeRet = beforeError(veneers, veneer);
-            
+            dynamic? beforeRet = beforeDataError(veneers, veneer);
             dynamic? onRet = OnError(veneers, veneer, beforeRet);
-
-            if (afterError != null)
-                afterError(veneers, veneer, onRet);
+            afterDataError(veneers, veneer, onRet);
+        }
+        
+        protected virtual dynamic? beforeDataError(Veneers veneers, Veneer veneer)
+        {
+            return null;
         }
         
         public virtual dynamic? OnError(Veneers veneers, Veneer veneer, dynamic? beforeError)
         {
             return null;
+        }
+        
+        protected virtual void afterDataError(Veneers veneers, Veneer veneer, dynamic? onError)
+        {
+            
+        }
+
+        public virtual void OnCollectorSweepCompleteInternal()
+        { 
+            dynamic? beforeRet = beforeSweepComplete(machine);
+            dynamic? onRet = OnCollectorSweepComplete(machine, beforeRet);
+            afterSweepComplete(machine, onRet);
+        }
+
+        protected virtual dynamic? beforeSweepComplete(Machine machine)
+        {
+            return null;
+        }
+        
+        public virtual dynamic? OnCollectorSweepComplete(Machine machine, dynamic? beforeSweepComplete)
+        {
+            return null;
+        }
+
+        protected virtual void afterSweepComplete(Machine machine, dynamic? onSweepComplete)
+        {
+            
         }
     }
 }

@@ -14,9 +14,9 @@ namespace fanuc
             return new
             {
                 Id,
-                IPAddress,
-                Port,
-                ConnectionTimeout
+                _focasEndpoint.IPAddress,
+                _focasEndpoint.Port,
+                _focasEndpoint.ConnectionTimeout
             }.ToString();
         }
 
@@ -27,12 +27,19 @@ namespace fanuc
                 return new
                 {
                     Id,
-                    IPAddress,
-                    Port,
-                    ConnectionTimeout
+                    _focasEndpoint.IPAddress,
+                    _focasEndpoint.Port,
+                    _focasEndpoint.ConnectionTimeout
                 };
             }
         }
+        
+        public FocasEndpoint FocasEndpoint
+        {
+            get { return _focasEndpoint; }
+        }
+        
+        private FocasEndpoint _focasEndpoint;
         
         public Platform Platform
         {
@@ -41,27 +48,6 @@ namespace fanuc
         
         private Platform _platform;
         
-        public string IPAddress
-        {
-            get { return _focasIpAddress; }
-        }
-        
-        private string _focasIpAddress = "127.0.0.1";
-        
-        public ushort Port
-        {
-            get { return _focasPort; }
-        }
-        
-        private ushort _focasPort = 8193;
-        
-        public short ConnectionTimeout
-        {
-            get { return _connectionTimeout; }
-        }
-        
-        private short _connectionTimeout = 3;
-
         public Veneers Veneers
         {
             get { return _veneers; }
@@ -106,34 +92,18 @@ namespace fanuc
         {
             _enabled = enabled;
             _id = id;
-            _focasIpAddress = focasIpAddress;
-            _focasPort = focasPort;
-            _connectionTimeout = timeout;
+            _focasEndpoint = new FocasEndpoint(focasIpAddress, focasPort, timeout);
             _platform = new Platform(this);
             _veneers = new Veneers(this);
         }
 
-        public void AddHandler(Type type, 
-            Func<Veneers, Veneer, dynamic?> beforeArrival = null, 
-            Action<Veneers, Veneer, dynamic?> afterArrival = null,
-            Func<Veneers, Veneer, dynamic?> beforeChange = null, 
-            Action<Veneers, Veneer, dynamic?> afterChange = null,
-            Func<Veneers, Veneer, dynamic?> beforeError = null, 
-            Action<Veneers, Veneer, dynamic?> afterError = null)
+        public void AddHandler(Type type, dynamic config)
         {
-            _handler = (Handler) Activator.CreateInstance(type, new object[]
-            {
-                this, 
-                beforeArrival,
-                afterArrival,
-                beforeChange,
-                afterChange,
-                beforeError,
-                afterError
-            });
-            this.Veneers.OnDataArrival = _handler.OnDataArrivalInternal;
-            this.Veneers.OnDataChange = _handler.OnDataChangeInternal;
-            this.Veneers.OnError = _handler.OnErrorInternal;
+            _handler = (Handler) Activator.CreateInstance(type, new object[] { this });
+            _handler.Initialize(config);
+            _veneers.OnDataArrival = _handler.OnDataArrivalInternal;
+            _veneers.OnDataChange = _handler.OnDataChangeInternal;
+            _veneers.OnError = _handler.OnErrorInternal;
         }
         
         public void AddCollector(Type type, int sweepMs = 1000)

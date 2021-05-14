@@ -313,7 +313,7 @@ git clone https://github.com/Ladder99/fanuc-driver.git
 
 cd fanuc-driver/fanuc  
 
-dotnet build  /nowarn:CS0618 -p:DefineConstants=ARMV7  
+dotnet build  /nowarn:CS0618;CS8632 -p:DefineConstants=ARMV7  
 
 ./bin/Debug/netcoreapp3.1/fanuc  
 ```
@@ -337,7 +337,7 @@ git clone https://github.com/Ladder99/fanuc-driver.git
 
 cd fanuc-driver/fanuc  
 
-dotnet build  /nowarn:CS0618 -p:DefineConstants=LINUX64 
+dotnet build  /nowarn:CS0618;CS8632 -p:DefineConstants=LINUX64 
 
 ./bin/Debug/netcoreapp3.1/fanuc  
 ```

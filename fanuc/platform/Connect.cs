@@ -6,8 +6,11 @@ namespace fanuc
         {
             NativeDispatchReturn ndr = nativeDispatch(() =>
             {
-                return (Focas1.focas_ret) Focas1.cnc_allclibhndl3(_machine.IPAddress, _machine.Port,
-                    _machine.ConnectionTimeout, out _handle);
+                return (Focas1.focas_ret) Focas1.cnc_allclibhndl3(
+                    _machine.FocasEndpoint.IPAddress, 
+                    _machine.FocasEndpoint.Port,
+                    _machine.FocasEndpoint.ConnectionTimeout, 
+                    out _handle);
             });
 
             return new
@@ -20,7 +23,11 @@ namespace fanuc
                 request = new
                 {
                     cnc_allclibhndl3 = new
-                        {ipaddr = _machine.IPAddress, port = _machine.Port, timeout = _machine.ConnectionTimeout}
+                        {
+                            ipaddr = _machine.FocasEndpoint.IPAddress, 
+                            port = _machine.FocasEndpoint.Port, 
+                            timeout = _machine.FocasEndpoint.ConnectionTimeout
+                        }
                 },
                 response = new {cnc_allclibhndl3 = new {FlibHndl = _handle}}
             };
