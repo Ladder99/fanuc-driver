@@ -24,7 +24,7 @@ machines:
     sweep_ms: !!int 1000
     handler_type: fanuc.handlers.Native, fanuc
     broker:
-      enabled: !!bool true
+      enabled: !!bool false
       net_ip: 172.16.10.3
       net_port: !!int 1883
       publish_status: !!bool true

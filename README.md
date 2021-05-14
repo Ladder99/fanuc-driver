@@ -141,18 +141,22 @@ fanuc/sim-all/sys_info
 ![fanuc-driver_machine](docs/fanuc-driver_machine.png)
 
 A `Machine` instance includes:
-* connectivity information
+* native connectivity information
+* data output post-processor (`Handler`)
 * data collection strategy (`Collector`)
 * data collection transformation (`Veneer`)
-* data change and error callbacks
+
+### Handlers
+
+A `Handler` is an observation post-processor and interface to target systems.
 
 ### Collectors
 
-A `Collector` is a strategy to apply and peel veneers to reveal observations in near real-time.
+A `Collector` is a strategy to apply and peel veneers to reveal observations from native data in near real-time.
 
 ### Veneers
 
-A `Veneer` is a thin transformation layer.  When peeled, each veneer reveals an observation.  Veneers can be applied/peeled as a whole.  Veneers can be sliced and applied/peeled across logical boundaries.  Atomic values should be used for slicing veneers as they are used to form the MQTT topic.  Sliced veneers must be marked before peeling in order to understand their logical placement downstream.
+A `Veneer` is a thin transformation layer.  When peeled, each veneer reveals an observation.  Veneers can be applied/peeled as a whole.  Veneers can be sliced and applied/peeled across logical boundaries.  Atomic values should be used for slicing veneers.  Sliced veneers must be marked before peeling in order to understand their logical placement downstream.
 
 ### Veneering
 
@@ -263,6 +267,10 @@ LastSuccess = connect.success;
 #### Example: [Basic05](fanuc/collectors/Basic05.cs)
 
 #### Example: [Basic06](fanuc/collectors/Basic06.cs)
+
+### Post-Processing Examples
+
+// TODO
 
 ## Configuration
 
