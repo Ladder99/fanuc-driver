@@ -1,11 +1,3 @@
-broker:
-  enabled: !!bool true
-  net_ip: mosquitto
-  net_port: !!int 1883
-  publish_status: !!bool true
-  publish_arrivals: !!bool true
-  publish_changes: !!bool true
-
 machines:
   - id: sim
     enabled: !!bool true
@@ -15,3 +7,10 @@ machines:
     strategy_type: fanuc.collectors.Basic06, fanuc
     sweep_ms: !!int 1000
     handler_type: fanuc.handlers.Native, fanuc
+    broker:
+      enabled: !!bool true
+      net_ip: mosquitto
+      net_port: !!int 1883
+      publish_status: !!bool true
+      publish_arrivals: !!bool true
+      publish_changes: !!bool true

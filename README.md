@@ -266,33 +266,41 @@ LastSuccess = connect.success;
 
 ## Configuration
 
-The `config.yml` file contains runtime information about the MQTT broker and each Focas endpoint.
+The `config.yml` file contains runtime information about each Focas endpoint and it target MQTT broker.
 
 ```
-broker:
-  enabled: !!bool true
-  net_ip: 10.20.30.102
-  net_port: !!int 1883
-  publish_status: !!bool true
-  publish_arrivals: !!bool true
-  publish_changes: !!bool true
-
 machines:
   - id: sim
     enabled: !!bool true
     net_ip: 10.20.30.101
     net_port: !!int 8193
     net_timeout_s: !!int 2
-    strategy_type: fanuc.collectors.Basic01, fanuc
+    strategy_type: fanuc.collectors.Basic06, fanuc
     sweep_ms: !!int 1000
+    handler_type: fanuc.handlers.Native, fanuc
+    broker:
+      enabled: !!bool true
+      net_ip: 172.16.10.3
+      net_port: !!int 1883
+      publish_status: !!bool true
+      publish_arrivals: !!bool true
+      publish_changes: !!bool true
 
   - id: naka
     enabled: !!bool false
     net_ip: 172.16.13.100
     net_port: !!int 8193
-    net_timeout_s: !!int 2
-    strategy_type: fanuc.collectors.Basic01, fanuc
+    net_timeout_s: !!int 5
+    strategy_type: fanuc.collectors.Basic06, fanuc
     sweep_ms: !!int 1000
+    handler_type: fanuc.handlers.Native, fanuc
+    broker:
+      enabled: !!bool true
+      net_ip: 172.16.10.3
+      net_port: !!int 1883
+      publish_status: !!bool true
+      publish_arrivals: !!bool true
+      publish_changes: !!bool true
 ```
 
 ## Building and Running
@@ -313,7 +321,7 @@ git clone https://github.com/Ladder99/fanuc-driver.git
 
 cd fanuc-driver/fanuc  
 
-dotnet build  /nowarn:CS0618;CS8632 -p:DefineConstants=ARMV7  
+dotnet build  /nowarn:CS0618 /nowarn:CS8632 -p:DefineConstants=ARMV7  
 
 ./bin/Debug/netcoreapp3.1/fanuc  
 ```
@@ -337,7 +345,7 @@ git clone https://github.com/Ladder99/fanuc-driver.git
 
 cd fanuc-driver/fanuc  
 
-dotnet build  /nowarn:CS0618;CS8632 -p:DefineConstants=LINUX64 
+dotnet build  /nowarn:CS0618 /nowarn:CS8632 -p:DefineConstants=LINUX64 
 
 ./bin/Debug/netcoreapp3.1/fanuc  
 ```

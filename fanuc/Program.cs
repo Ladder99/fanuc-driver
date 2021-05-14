@@ -51,12 +51,12 @@ namespace fanuc
                     collectorSweepMs = machine_conf["sweep_ms"],
                     handler = machine_conf["handler_type"],
                     
-                    mqtt_enabled = config["broker"]["enabled"],
-                    mqtt_pub_status = config["broker"]["publish_status"],
-                    mqtt_pub_arrivals = config["broker"]["publish_arrivals"],
-                    mqtt_pub_changes = config["broker"]["publish_changes"],
-                    mqtt_ip = config["broker"]["net_ip"], 
-                    mqtt_port = config["broker"]["net_port"]
+                    mqtt_enabled = machine_conf["broker"]["enabled"],
+                    mqtt_pub_status = machine_conf["broker"]["publish_status"],
+                    mqtt_pub_arrivals = machine_conf["broker"]["publish_arrivals"],
+                    mqtt_pub_changes = machine_conf["broker"]["publish_changes"],
+                    mqtt_ip = machine_conf["broker"]["net_ip"], 
+                    mqtt_port = machine_conf["broker"]["net_port"]
                 });
             }
 
