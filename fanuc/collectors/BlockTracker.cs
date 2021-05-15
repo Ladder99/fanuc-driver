@@ -6,11 +6,12 @@ using Newtonsoft.Json.Linq;
 
 namespace fanuc.collectors
 {
-    public class ProgExec1 : Collector
+    public class BlockTracker : Collector
     {
         private Blocks _blocks = new Blocks();
+        private short _readAheadBytes = 128;
     
-        public ProgExec1(Machine machine, int sweepMs = 1000) : base(machine, sweepMs)
+        public BlockTracker(Machine machine, int sweepMs = 1000) : base(machine, sweepMs)
         {
             
         }
@@ -58,7 +59,7 @@ namespace fanuc.collectors
                 dynamic actpt = _machine.Platform.RdActPt();
                 //Console.WriteLine($"RdActPt({actpt.rc})::prog_no = {actpt.response.cnc_rdactpt.prog_no}, blk_no = {actpt.response.cnc_rdactpt.blk_no}");
     
-                dynamic execprog = _machine.Platform.RdExecProg(128);
+                dynamic execprog = _machine.Platform.RdExecProg(_readAheadBytes);
                 /*
                 var execlines = string.Join("", execprog.response.cnc_rdexecprog.data).Trim().Split('\n');
                 Console.WriteLine($"RdExecProg({execprog.rc})::length = {execprog.response.cnc_rdexecprog.length}, blknum = {execprog.response.cnc_rdexecprog.blknum}");

@@ -2,7 +2,7 @@
   
 This solution is built on top of Fanuc Focas libraries for interfacing with Fanuc controllers and publishing data to a MQTT broker or another target.
 
-The primary goal of this solution is to maintain the machine data in its native source format with slight transformations to make it more human readable at the target.  The intention behind this approach is to allow the developer to reference original Focas API documentation further downstream to aid in their transformation and translation efforts.   
+The primary goal of this solution is to maintain the machine data in its native source format with slight transformations to make it more human readable at the target.  The intention behind this approach is to allow the developer to reference original [Focas API documentation](docs/FOCAS2_Linux.pdf) further downstream to aid in their transformation and translation efforts.   
 
 Below illustrates [Fanuc NC Guide](https://www.fanucamerica.com/products/cnc/software/cnc-guide-simulation-software) output visualized through [MQTT Explorer](http://mqtt-explorer.com/).
 
@@ -352,31 +352,7 @@ dotnet build  /nowarn:CS0618 /nowarn:CS8632 -p:DefineConstants=ARMV7
   
 ### win32
   
-Install JetBrains Rider and build for 32-bit CPU.  
-  
-### linux64
-
-#### DOES NOT WORK: assuming interop field sizes do not match architecture.
-
-Follow .NET Core SDK installation instructions here: https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu  
-  
-Clone the repository, build the project, and run it.  
-  
-```  
-cd ~
-
-git clone https://github.com/Ladder99/fanuc-driver.git  
-
-cd fanuc-driver/fanuc  
-
-dotnet build  /nowarn:CS0618 /nowarn:CS8632 -p:DefineConstants=LINUX64 
-
-./bin/Debug/netcoreapp3.1/fanuc  
-```
-  
-### linux32
-  
-Not tested.  
+Install [JetBrains Rider](https://www.jetbrains.com/rider/) and build for 32-bit CPU.  
 
 ## Docker
 
