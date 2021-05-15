@@ -11543,5 +11543,9 @@ namespace fanuc
 #endif
         public static extern short cnc_rdcncid( ushort FlibHndl, uint[] cncid);
 
+        /* read program name under execution */
+        [DllImport("FWLIB32.dll", EntryPoint = "cnc_exeprgname2")]
+        public static extern short cnc_exeprgname2(ushort FlibHndl, ref char[] path_name);
+        
     } // End for Focas1 class
 }

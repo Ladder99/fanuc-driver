@@ -13,7 +13,7 @@ namespace fanuc
 
             return new
             {
-                method = "cnd_rdmacro",
+                method = "cnc_rdmacro",
                 invocationMs = ndr.ElapsedMilliseconds,
                 doc = "https://www.inventcom.net/fanuc-focas-library/ncdata/cnc_rdmacro",
                 success = ndr.RC == Focas1.EW_OK,
