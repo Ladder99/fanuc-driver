@@ -15,8 +15,8 @@ namespace fanuc
                 return (Focas1.focas_ret) Focas1.cnc_rdexecprog(_handle, ref length_out, out blknum, (object) data);
             });
 
-            string source = string.Join("", data).Trim();
-            string[] source_lines = source.Split('\n');
+            //string source = string.Join("", data).Trim();
+            //string[] source_lines = source.Split('\n');
 
             /*
             int lc = 0;

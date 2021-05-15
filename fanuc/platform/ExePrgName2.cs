@@ -8,7 +8,7 @@ namespace fanuc
 
             NativeDispatchReturn ndr = nativeDispatch(() =>
             {
-                return (Focas1.focas_ret) Focas1.cnc_exeprgname2(_handle, ref path_name);
+                return (Focas1.focas_ret) Focas1.cnc_exeprgname2(_handle, path_name);
             });
 
             return new
