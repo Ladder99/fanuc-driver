@@ -278,9 +278,15 @@ LastSuccess = connect.success;
 
 #### Influx Line
 
-handler_type: fanuc.handlers.InfluxLine, fanuc
+`handler_type: fanuc.handlers.InfluxLine, fanuc`
 
 ![recording4](docs/recording4.gif)
+
+#### Sparkplug-B
+
+`handler_type: fanuc.handlers.SparkplugB, fanuc`
+
+![recording6](docs/recording6.gif)
 
 ## Configuration
 

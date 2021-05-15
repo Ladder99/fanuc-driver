@@ -22,7 +22,7 @@ namespace fanuc.collectors
                 Console.WriteLine("fanuc - creating veneers");
 
                 dynamic connect = _machine.Platform.Connect();
-                Console.WriteLine(JObject.FromObject(connect).ToString());
+                //Console.WriteLine(JObject.FromObject(connect).ToString());
 
                 if (connect.success)
                 {
