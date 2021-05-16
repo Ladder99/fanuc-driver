@@ -20,16 +20,12 @@ namespace fanuc.mqtt
         
         private Dictionary<string, MQTTDiscoItem> _items = new Dictionary<string, MQTTDiscoItem>();
 
-        private IMqttClient _mqtt;
-        private dynamic _mqttConfig;
-        
-        public Disco(dynamic mqtt, dynamic mqttConfig)
+        public Disco()
         {
-            _mqtt = mqtt;
-            _mqttConfig = mqttConfig;
+            
         }
 
-        public void Add(string machineId)
+        public void Add(string machineId, Broker broker)
         {
             if (!_items.ContainsKey(machineId))
             {
@@ -50,21 +46,8 @@ namespace fanuc.mqtt
             }
 
             string topic = "fanuc/DISCO";
-            string payload_string = JObject.FromObject(_items).ToString();
-
-            Console.ForegroundColor = ConsoleColor.Gray;
-            Console.WriteLine($"{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds()} DISCO {payload_string.Length}b => {topic}");
-        
-            if (_mqttConfig["enabled"] && _mqttConfig["publish_status"])
-            {
-                var msg = new MqttApplicationMessageBuilder()
-                    .WithRetainFlag(true)
-                    .WithTopic(topic)
-                    .WithPayload(payload_string)
-                    .Build();
-            
-                var r = _mqtt.PublishAsync(msg, CancellationToken.None).Result;
-            }
+            string payload = JObject.FromObject(_items).ToString();
+            broker.Publish(topic, payload);
         }
     }
 }

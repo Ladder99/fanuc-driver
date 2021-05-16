@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using MQTTnet;
 using MQTTnet.Client;
@@ -44,6 +45,23 @@ namespace fanuc.mqtt
             }
         }
 
+        public void Publish(string topic, string payload, bool retained = true)
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine($"{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds()} PUB {payload.Length}b => {topic}");
+
+            if (MQTT_CONNECT)
+            {
+                var msg = new MqttApplicationMessageBuilder()
+                    .WithRetainFlag(retained)
+                    .WithTopic(topic)
+                    .WithPayload(payload)
+                    .Build();
+                
+                var r = _client.PublishAsync(msg, CancellationToken.None);
+            }
+        }
+        
         public void PublishArrivalStatus(string topic, string payload, bool retained = true)
         {
             if (MQTT_CONNECT && MQTT_PUBLISH_STATUS)
@@ -91,6 +109,35 @@ namespace fanuc.mqtt
                     .Build();
                 
                 var r = _client.PublishAsync(msg, CancellationToken.None);
+            }
+        }
+        
+        private Dictionary<string, dynamic> _propertyBag;
+        
+        public dynamic? this[string propertyBagKey]
+        {
+            get
+            {
+                if (_propertyBag.ContainsKey(propertyBagKey))
+                {
+                    return _propertyBag[propertyBagKey];
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            set
+            {
+                if (_propertyBag.ContainsKey(propertyBagKey))
+                {
+                    _propertyBag[propertyBagKey] = value;
+                }
+                else
+                {
+                    _propertyBag.Add(propertyBagKey, value);
+                }
             }
         }
     }

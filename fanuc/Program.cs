@@ -68,18 +68,10 @@ namespace fanuc
             Brokers brokers = new Brokers();
             Machines machines = new Machines();
             
-            // init
-            // var mqtt_disco = new MQTTDisco(mqtt, config["broker"]);
-            
-            // before arrival
-            // mqtt_disco.Add(vv.Machine.Id);
-            
-            // before change
-            // mqtt_disco.Add(vv.Machine.Id);
-            
             foreach (var cfg in machine_confs)
             {
                 Broker broker = brokers.Add(cfg.broker);
+                broker["disco"] = new Disco();
                 Machine machine = machines.Add(cfg.machine);
                 machine["broker"] = broker;
                 machine.AddCollector(Type.GetType(cfg.machine.collector), cfg.machine.collectorSweepMs);

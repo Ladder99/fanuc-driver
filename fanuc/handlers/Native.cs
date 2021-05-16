@@ -18,6 +18,8 @@ namespace fanuc.handlers
         
         protected override dynamic? beforeDataArrival(Veneers veneers, Veneer veneer)
         {
+            veneers.Machine["broker"]["disco"].Add(veneers.Machine.Id, veneers.Machine["broker"]);
+            
             return null;
         }
         
@@ -57,6 +59,8 @@ namespace fanuc.handlers
         
         protected override dynamic? beforeDataChange(Veneers veneers, Veneer veneer)
         {
+            veneers.Machine["broker"]["disco"].Add(veneers.Machine.Id, veneers.Machine["broker"]);
+            
             return null;
         }
         
