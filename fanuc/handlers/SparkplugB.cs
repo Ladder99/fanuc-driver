@@ -38,7 +38,7 @@ namespace fanuc.handlers
             return _sequence - 1;
         }
         
-        public override void Initialize(dynamic config)
+        public override void Initialize()
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine(nextSequence() + " > " + string.Format(_topicFormat, "NBIRTH"));
@@ -69,8 +69,6 @@ namespace fanuc.handlers
         
         public override dynamic? OnDataChange(Veneers veneers, Veneer veneer, dynamic? beforeChange)
         {
-            
-            
             if (veneer.Name == "connect")
             {
                 if (veneer.LastChangedValue.success == true)

@@ -1,45 +1,62 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 namespace fanuc
 {
     public class Machines
     {
-        private List<Machine> _machines = new List<Machine>();
+        private List<Machine> _machines;
+        
+        private Dictionary<string, dynamic> _propertyBag;
 
         private int _collectionInterval;
-        
+
         public Machines(int collectionInterval = 1000)
         {
             _collectionInterval = collectionInterval;
+            _machines = new List<Machine>();
+            _propertyBag = new Dictionary<string, dynamic>();
         }
         
-        public Machine Add(bool enabled, string id, string ip, ushort port = 8193, short timeout = 2)
+        public dynamic? this[string propertyBagKey]
         {
-            var machine = new Machine(enabled, id, ip, port, timeout);
+            get
+            {
+                if (_propertyBag.ContainsKey(propertyBagKey))
+                {
+                    return _propertyBag[propertyBagKey];
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            set
+            {
+                if (_propertyBag.ContainsKey(propertyBagKey))
+                {
+                    _propertyBag[propertyBagKey] = value;
+                }
+                else
+                {
+                    _propertyBag.Add(propertyBagKey, value);
+                }
+            }
+        }
+        
+        public Machine Add(dynamic cfg)
+        {
+            var machine = new Machine(this, cfg.enabled, cfg.id, cfg.ip, (ushort)cfg.port, (short)cfg.timeout);
             _machines.Add(machine);
             return machine;
         }
 
-        public IEnumerable<Machine> this[string id]
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(id))
-                {
-                    return _machines.FindAll(x => x.Enabled);
-                }
-                else
-                {
-                    return _machines.FindAll(x => x.Id == id && x.Enabled);
-                }
-            }
-        }
-
         public void Run()
         {
-            foreach (var machine in this[null])
+            foreach (var machine in _machines.Where(x => x.Enabled))
             {
                 machine.InitCollector();
             }
@@ -48,7 +65,7 @@ namespace fanuc
             {
                 Thread.Sleep(_collectionInterval);
                 
-                foreach (var machine in this[null])
+                foreach (var machine in _machines.Where(x => x.Enabled))
                 {
                     machine.RunCollector();
                     machine.Handler.OnCollectorSweepCompleteInternal();

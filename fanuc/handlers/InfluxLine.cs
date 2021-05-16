@@ -1,17 +1,12 @@
 using System;
-using System.Threading;
 using fanuc.veneers;
 using InfluxDB.LineProtocol;
-using MQTTnet;
-using MQTTnet.Client;
-using MQTTnet.Client.Options;
+using Newtonsoft.Json.Linq;
 
 namespace fanuc.handlers
 {
     public class InfluxLine: Handler
     {
-        private IMqttClient _mqtt;
-        
         private int _counter = 0;
         
         public InfluxLine(Machine machine) : base(machine)
@@ -19,14 +14,9 @@ namespace fanuc.handlers
             
         }
 
-        public override void Initialize(dynamic config)
+        public override void Initialize()
         {
-            var factory = new MqttFactory();
-            var options = new MqttClientOptionsBuilder()
-                .WithTcpServer(config.mqtt_ip, config.mqtt_port)
-                .Build();
-            _mqtt = factory.CreateMqttClient();
-            var r = _mqtt.ConnectAsync(options, CancellationToken.None).Result;
+            
         }
         
         protected override dynamic? beforeDataArrival(Veneers veneers, Veneer veneer)
@@ -94,14 +84,8 @@ namespace fanuc.handlers
                 return;
             
             var topic = $"fanuc/{veneers.Machine.Id}/influx";
-            
-            var msg = new MqttApplicationMessageBuilder()
-                .WithRetainFlag(true)
-                .WithTopic(topic)
-                .WithPayload(onChange.ToString())
-                .Build();
-            
-            var r = _mqtt.PublishAsync(msg, CancellationToken.None);
+            string payload = JObject.FromObject(onChange).ToString();
+            veneers.Machine["broker"].PublishChange(topic, payload);
         }
         
         protected override dynamic? beforeDataError(Veneers veneers, Veneer veneer)

@@ -5,9 +5,9 @@ using MQTTnet;
 using MQTTnet.Client;
 using Newtonsoft.Json.Linq;
 
-namespace fanuc.utils
+namespace fanuc.mqtt
 {
-    public class MQTTDisco
+    public class Disco
     {
         private class MQTTDiscoItem
         {
@@ -23,7 +23,7 @@ namespace fanuc.utils
         private IMqttClient _mqtt;
         private dynamic _mqttConfig;
         
-        public MQTTDisco(dynamic mqtt, dynamic mqttConfig)
+        public Disco(dynamic mqtt, dynamic mqttConfig)
         {
             _mqtt = mqtt;
             _mqttConfig = mqttConfig;

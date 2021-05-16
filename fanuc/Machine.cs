@@ -26,85 +26,126 @@ namespace fanuc
             {
                 return new
                 {
-                    Id,
+                    _id,
                     _focasEndpoint.IPAddress,
                     _focasEndpoint.Port,
                     _focasEndpoint.ConnectionTimeout
                 };
             }
         }
+
+        public Machines Machines
+        {
+            get => _machines;
+        }
+        
+        private Machines _machines;
         
         public FocasEndpoint FocasEndpoint
         {
-            get { return _focasEndpoint; }
+            get => _focasEndpoint;
         }
         
         private FocasEndpoint _focasEndpoint;
         
         public Platform Platform
         {
-            get { return _platform; }
+            get => _platform;
         }
         
         private Platform _platform;
         
-        public Veneers Veneers
-        {
-            get { return _veneers; }
-        }
-        
-        private Veneers _veneers;
-
-        public Handler Handler
-        {
-            get { return _handler; }
-        }
-        
-        private Handler _handler;
-        
-        public Collector Collector
-        {
-            get { return _collector; }
-        }
-        
-        private Collector _collector;
-        
         public bool Enabled
         {
-            get { return _enabled; }
+            get => _enabled;
         }
         
         private bool _enabled = false;
         
         public string Id
         {
-            get { return _id; }
+            get => _id;
         }
         
         private string _id = string.Empty;
         
-        public bool CollectorSuccess
+        public Machine(Machines machines, bool enabled, string id, string focasIpAddress, ushort focasPort = 8193, short timeout = 10)
         {
-            get { return _collector.LastSuccess;  }
-        }
-        
-        public Machine(bool enabled, string id, string focasIpAddress, ushort focasPort = 8193, short timeout = 10)
-        {
+            _machines = machines;
             _enabled = enabled;
             _id = id;
             _focasEndpoint = new FocasEndpoint(focasIpAddress, focasPort, timeout);
             _platform = new Platform(this);
             _veneers = new Veneers(this);
+            _propertyBag = new Dictionary<string, dynamic>();
         }
 
-        public void AddHandler(Type type, dynamic config)
+        #region property-bag
+        
+        private Dictionary<string, dynamic> _propertyBag;
+        
+        public dynamic? this[string propertyBagKey]
+        {
+            get
+            {
+                if (_propertyBag.ContainsKey(propertyBagKey))
+                {
+                    return _propertyBag[propertyBagKey];
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            set
+            {
+                if (_propertyBag.ContainsKey(propertyBagKey))
+                {
+                    _propertyBag[propertyBagKey] = value;
+                }
+                else
+                {
+                    _propertyBag.Add(propertyBagKey, value);
+                }
+            }
+        }
+        
+        #endregion
+        
+        #region handler
+        
+        public Handler Handler
+        {
+            get => _handler;
+        }
+        
+        private Handler _handler;
+        
+        public void AddHandler(Type type)
         {
             _handler = (Handler) Activator.CreateInstance(type, new object[] { this });
-            _handler.Initialize(config);
+            _handler.Initialize();
             _veneers.OnDataArrival = _handler.OnDataArrivalInternal;
             _veneers.OnDataChange = _handler.OnDataChangeInternal;
             _veneers.OnError = _handler.OnErrorInternal;
         }
+        
+        #endregion
+        
+        #region collector
+        
+        public bool CollectorSuccess
+        {
+            get => _collector.LastSuccess;
+        }
+        
+        public Collector Collector
+        {
+            get => _collector;
+        }
+        
+        private Collector _collector;
         
         public void AddCollector(Type type, int sweepMs = 1000)
         {
@@ -121,7 +162,22 @@ namespace fanuc
             _collector.Collect();
         }
         
-        public bool VeneersApplied { get; set; }
+        #endregion
+        
+        #region veneeers
+        
+        public Veneers Veneers
+        {
+            get => _veneers;
+        }
+        
+        private Veneers _veneers;
+
+        public bool VeneersApplied
+        {
+            get; 
+            set;
+        }
 
         public void ApplyVeneer(Type type, string name, bool isInternal = false)
         {
@@ -162,5 +218,7 @@ namespace fanuc
         {
             _veneers.Mark(split, marker);
         }
+        
+        #endregion
     }
 }

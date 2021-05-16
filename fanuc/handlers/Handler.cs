@@ -12,7 +12,7 @@ namespace fanuc.handlers
             this.machine = machine;
         }
         
-        public virtual void Initialize(dynamic config)
+        public virtual void Initialize()
         {
             
         }

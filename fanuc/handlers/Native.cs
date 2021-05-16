@@ -1,43 +1,19 @@
 using System;
-using System.Threading;
 using fanuc.veneers;
-using MQTTnet;
-using MQTTnet.Client;
-using MQTTnet.Client.Options;
 using Newtonsoft.Json.Linq;
 
 namespace fanuc.handlers
 {
     public class Native: Handler
     {
-        private bool MQTT_CONNECT = false;
-        private bool MQTT_PUBLISH_STATUS = false;
-        private bool MQTT_PUBLISH_ARRIVALS = false;
-        private bool MQTT_PUBLISH_CHANGES = false;
-
-        private IMqttClient _mqtt;
-        
         public Native(Machine machine) : base(machine)
         {
             
         }
 
-        public override void Initialize(dynamic config)
+        public override void Initialize()
         {
-            MQTT_CONNECT = config.mqtt_enabled;
-            MQTT_PUBLISH_STATUS = config.mqtt_pub_status;
-            MQTT_PUBLISH_ARRIVALS = config.mqtt_pub_arrivals;
-            MQTT_PUBLISH_CHANGES = config.mqtt_pub_changes;
             
-            var factory = new MqttFactory();
-            var options = new MqttClientOptionsBuilder()
-                .WithTcpServer(config.mqtt_ip, config.mqtt_port)
-                .Build();
-            _mqtt = factory.CreateMqttClient();
-            if (MQTT_CONNECT)
-            {
-                var r = _mqtt.ConnectAsync(options, CancellationToken.None).Result;
-            }
         }
         
         protected override dynamic? beforeDataArrival(Veneers veneers, Veneer veneer)
@@ -75,21 +51,8 @@ namespace fanuc.handlers
         protected override void afterDataArrival(Veneers veneers, Veneer veneer, dynamic? onArrival)
         {
             var topic = $"fanuc/{veneers.Machine.Id}-all/{veneer.Name}{(veneer.SliceKey == null ? string.Empty : "/" + veneer.SliceKey.ToString())}";
-            string payload_string = JObject.FromObject(onArrival).ToString();
-
-            Console.ForegroundColor = ConsoleColor.Gray;
-            Console.WriteLine($"{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds()} ARRIVE {payload_string.Length}b => {topic}");
-                
-            if (MQTT_CONNECT && MQTT_PUBLISH_ARRIVALS)
-            {
-                var msg = new MqttApplicationMessageBuilder()
-                    .WithRetainFlag(true)
-                    .WithTopic(topic)
-                    .WithPayload(payload_string)
-                    .Build();
-                
-                var r = _mqtt.PublishAsync(msg, CancellationToken.None);
-            }
+            string payload = JObject.FromObject(onArrival).ToString();
+            veneers.Machine["broker"].PublishArrival(topic, payload);
         }
         
         protected override dynamic? beforeDataChange(Veneers veneers, Veneer veneer)
@@ -127,21 +90,8 @@ namespace fanuc.handlers
         protected override void afterDataChange(Veneers veneers, Veneer veneer, dynamic? onChange)
         {
             var topic = $"fanuc/{veneers.Machine.Id}/{veneer.Name}{(veneer.SliceKey == null ? string.Empty : "/" + veneer.SliceKey.ToString())}";
-            string payload_string = JObject.FromObject(onChange).ToString();
-                
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine($"{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds()} CHANGE {payload_string.Length}b => {topic}");
-
-            if (MQTT_CONNECT && MQTT_PUBLISH_CHANGES)
-            {
-                var msg = new MqttApplicationMessageBuilder()
-                    .WithRetainFlag(true)
-                    .WithTopic(topic)
-                    .WithPayload(payload_string)
-                    .Build();
-                
-                var r = _mqtt.PublishAsync(msg, CancellationToken.None);
-            }
+            string payload = JObject.FromObject(onChange).ToString();
+            veneers.Machine["broker"].PublishChange(topic, payload);
         }
         
         protected override dynamic? beforeDataError(Veneers veneers, Veneer veneer)
@@ -193,30 +143,12 @@ namespace fanuc.handlers
         
         protected override void afterSweepComplete(Machine machine, dynamic? onSweepComplete)
         {
-            if (MQTT_CONNECT && MQTT_PUBLISH_STATUS)
-            {
-                if (MQTT_PUBLISH_CHANGES)
-                {
-                    var msg = new MqttApplicationMessageBuilder()
-                        .WithTopic($"fanuc/{machine.Id}/PING")
-                        .WithPayload(JObject.FromObject(onSweepComplete).ToString())
-                        .WithRetainFlag()
-                        .Build();
-
-                    var r = _mqtt.PublishAsync(msg, CancellationToken.None).Result;
-                }
-
-                if (MQTT_PUBLISH_ARRIVALS)
-                {
-                    var msg = new MqttApplicationMessageBuilder()
-                        .WithTopic($"fanuc/{machine.Id}-all/PING")
-                        .WithPayload(JObject.FromObject(onSweepComplete).ToString())
-                        .WithRetainFlag()
-                        .Build();
-
-                    var r = _mqtt.PublishAsync(msg, CancellationToken.None).Result;
-                }
-            }
+            string topic_all = $"fanuc/{machine.Id}-all/PING";
+            string topic = $"fanuc/{machine.Id}/PING";
+            string payload = JObject.FromObject(onSweepComplete).ToString();
+            
+            machine["broker"].PublishArrivalStatus(topic_all, payload);
+            machine["broker"].PublishChangeStatus(topic, payload);
         }
     }
 }
