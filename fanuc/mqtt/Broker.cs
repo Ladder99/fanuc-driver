@@ -25,6 +25,8 @@ namespace fanuc.mqtt
 
         public Broker(dynamic cfg)
         {
+            _propertyBag = new Dictionary<string, dynamic>();
+            
             MQTT_CONNECT = cfg.enabled;
             MQTT_PUBLISH_STATUS = cfg.pub_status;
             MQTT_PUBLISH_ARRIVALS = cfg.pub_arrivals;
