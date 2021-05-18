@@ -272,19 +272,19 @@ LastSuccess = connect.success;
 
 #### Splunk Metric
 
-`handler_type: fanuc.handlers.SplunkMetric, fanuc`
+`handler_type: l99.driver.fanuc.handlers.SplunkMetric, fanuc`
 
 ![recording4](docs/recording5.gif)
 
 #### Influx Line
 
-`handler_type: fanuc.handlers.InfluxLine, fanuc`
+`handler_type: l99.driver.fanuc.handlers.InfluxLine, fanuc`
 
 ![recording4](docs/recording4.gif)
 
 #### Sparkplug-B
 
-`handler_type: fanuc.handlers.SparkplugB, fanuc`
+`handler_type: l99.driver.fanuc.handlers.SparkplugB, fanuc`
 
 ![recording6](docs/recording6.gif)
 
@@ -299,9 +299,9 @@ machines:
     net_ip: 10.20.30.101
     net_port: !!int 8193
     net_timeout_s: !!int 2
-    strategy_type: fanuc.collectors.Basic06, fanuc
+    strategy_type: l99.driver.fanuc.collectors.Basic06, fanuc
     sweep_ms: !!int 1000
-    handler_type: fanuc.handlers.Native, fanuc
+    handler_type: l99.driver.fanuc.handlers.Native, fanuc
     broker:
       enabled: !!bool true
       net_ip: 172.16.10.3
@@ -315,9 +315,9 @@ machines:
     net_ip: 172.16.13.100
     net_port: !!int 8193
     net_timeout_s: !!int 5
-    strategy_type: fanuc.collectors.Basic06, fanuc
+    strategy_type: l99.driver.fanuc.collectors.Basic06, fanuc
     sweep_ms: !!int 1000
-    handler_type: fanuc.handlers.Native, fanuc
+    handler_type: l99.driver.fanuc.handlers.Native, fanuc
     broker:
       enabled: !!bool true
       net_ip: 172.16.10.3
