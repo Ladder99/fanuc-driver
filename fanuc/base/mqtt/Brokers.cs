@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace fanuc.mqtt
+namespace l99.driver.@base.mqtt
 {
     public class Brokers
     {

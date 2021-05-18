@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using l99.driver.@base;
 using MoreLinq;
 
-namespace fanuc.veneers
+namespace l99.driver.fanuc.veneers
 {
     public class FocasPerf : Veneer
     {

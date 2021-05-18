@@ -1,9 +1,10 @@
 ﻿using System;
+using l99.driver.@base;
 using Newtonsoft.Json.Linq;
 
-namespace fanuc.collectors
+namespace l99.driver.fanuc.collectors
 {
-    public class Basic01 : Collector
+    public class Basic01 : FanucCollector
     {
         public Basic01(Machine machine, int sweepMs = 1000) : base(machine, sweepMs)
         {
@@ -16,7 +17,7 @@ namespace fanuc.collectors
             {
                 Console.WriteLine("fanuc - creating veneers");
 
-                dynamic connect = _machine.Platform.Connect();
+                dynamic connect = ((FanucMachine)_machine).Platform.Connect();
                 Console.WriteLine(JObject.FromObject(connect).ToString());
 
                 if (connect.success)
@@ -28,7 +29,7 @@ namespace fanuc.collectors
                     _machine.ApplyVeneer(typeof(fanuc.veneers.SysInfo), "sys_info");
                     _machine.ApplyVeneer(typeof(fanuc.veneers.GetPath), "get_path");
                     
-                    dynamic disconnect = _machine.Platform.Disconnect();
+                    dynamic disconnect = ((FanucMachine)_machine).Platform.Disconnect();
                     
                     _machine.VeneersApplied = true;
 
@@ -44,27 +45,27 @@ namespace fanuc.collectors
 
         public override void Collect()
         {
-            dynamic connect = _machine.Platform.Connect();
+            dynamic connect = ((FanucMachine)_machine).Platform.Connect();
             _machine.PeelVeneer("connect", connect);
 
             if (connect.success)
             {
-                dynamic cncid = _machine.Platform.CNCId();
+                dynamic cncid = ((FanucMachine)_machine).Platform.CNCId();
                 _machine.PeelVeneer("cnc_id", cncid);
                 
-                dynamic poweron = _machine.Platform.RdTimer(0);
+                dynamic poweron = ((FanucMachine)_machine).Platform.RdTimer(0);
                 _machine.PeelVeneer("power_on_time", poweron);
                 
-                dynamic poweron_6750 = _machine.Platform.RdParam(6750, 0, 8, 1);
+                dynamic poweron_6750 = ((FanucMachine)_machine).Platform.RdParam(6750, 0, 8, 1);
                 _machine.PeelVeneer("power_on_time_6750", poweron_6750);
                 
-                dynamic info = _machine.Platform.SysInfo();
+                dynamic info = ((FanucMachine)_machine).Platform.SysInfo();
                 _machine.PeelVeneer("sys_info", info);
                 
-                dynamic paths = _machine.Platform.GetPath();
+                dynamic paths = ((FanucMachine)_machine).Platform.GetPath();
                 _machine.PeelVeneer("get_path", paths);
 
-                dynamic disconnect = _machine.Platform.Disconnect();
+                dynamic disconnect = ((FanucMachine)_machine).Platform.Disconnect();
             }
             
             LastSuccess = connect.success;

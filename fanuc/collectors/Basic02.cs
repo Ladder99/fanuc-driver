@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using l99.driver.@base;
 using Newtonsoft.Json.Linq;
 
-namespace fanuc.collectors
+namespace l99.driver.fanuc.collectors
 {
-    public class Basic02 : Collector
+    public class Basic02 : FanucCollector
     {
         public Basic02(Machine machine, int sweepMs = 1000) : base(machine, sweepMs)
         {
@@ -20,7 +21,7 @@ namespace fanuc.collectors
                 Console.WriteLine("fanuc - creating veneers");
 
                 // connect to the controller, we will interrogate its execution paths later
-                dynamic connect = _machine.Platform.Connect();
+                dynamic connect = ((FanucMachine)_machine).Platform.Connect();
                 Console.WriteLine(JObject.FromObject(connect).ToString());
 
                 if (connect.success)
@@ -33,7 +34,7 @@ namespace fanuc.collectors
                     _machine.ApplyVeneer(typeof(fanuc.veneers.GetPath), "get_path");
                     
                     // get a list of available execution paths from the controller
-                    dynamic paths = _machine.Platform.GetPath();
+                    dynamic paths = ((FanucMachine)_machine).Platform.GetPath();
 
                     // turn the available paths into an array, e.g. [1,2,3]
                     IEnumerable<int> path_slices = Enumerable
@@ -50,7 +51,7 @@ namespace fanuc.collectors
                     _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.RdSpindlename), "spindle_name");
                     
                     // disconnect from controller
-                    dynamic disconnect = _machine.Platform.Disconnect();
+                    dynamic disconnect = ((FanucMachine)_machine).Platform.Disconnect();
                     
                     // initialization successful
                     _machine.VeneersApplied = true;
@@ -70,26 +71,26 @@ namespace fanuc.collectors
             // on each sweep of the collector...
             
             // connect to the machine
-            dynamic connect = _machine.Platform.Connect();
+            dynamic connect = ((FanucMachine)_machine).Platform.Connect();
             // reveal the "connect" observation by peeling the veneer associated with it
             _machine.PeelVeneer("connect", connect);
 
             if (connect.success)
             {
                 // similarly, reveal below observations from the values returned by Focas API
-                dynamic cncid = _machine.Platform.CNCId();
+                dynamic cncid = ((FanucMachine)_machine).Platform.CNCId();
                 _machine.PeelVeneer("cnc_id", cncid);
                 
-                dynamic poweron = _machine.Platform.RdTimer(0);
+                dynamic poweron = ((FanucMachine)_machine).Platform.RdTimer(0);
                 _machine.PeelVeneer("power_on_time", poweron);
                 
                 // here is an example where the RdParamLData veneer is generic based on the input parameters
                 //  and can be applied to multiple observations
-                dynamic poweron_6750 = _machine.Platform.RdParam(6750, 0, 8, 1);
+                dynamic poweron_6750 = ((FanucMachine)_machine).Platform.RdParam(6750, 0, 8, 1);
                 _machine.PeelVeneer("power_on_time_6750", poweron_6750);
                 
                 // retrieve the number of paths to walk each one
-                dynamic paths = _machine.Platform.GetPath();
+                dynamic paths = ((FanucMachine)_machine).Platform.GetPath();
                 _machine.PeelVeneer("get_path", paths);
 
                 // walk each path and retrieve values relevant to it
@@ -98,7 +99,7 @@ namespace fanuc.collectors
                     current_path++)
                 {
                     // when the path is set using Focas API, consecutive calls will retrieve that path's data
-                    dynamic path = _machine.Platform.SetPath(current_path);
+                    dynamic path = ((FanucMachine)_machine).Platform.SetPath(current_path);
                     // create a marker for the path, this marker will become part of the output
                     //  to help identify the exact source of the observation
                     dynamic path_marker = new {path.request.cnc_setpath.path_no};
@@ -112,20 +113,20 @@ namespace fanuc.collectors
                     //  next iteration of the loop will reveal observations for that path ...
                     
                     // 'sys_info' observation contains the number of axes for this path
-                    dynamic info = _machine.Platform.SysInfo();
+                    dynamic info = ((FanucMachine)_machine).Platform.SysInfo();
                     _machine.PeelAcrossVeneer(current_path, "sys_info", info);
                     
                     // 'axis_name' observation contains the axis names for this path
-                    dynamic axes = _machine.Platform.RdAxisName();
+                    dynamic axes = ((FanucMachine)_machine).Platform.RdAxisName();
                     _machine.PeelAcrossVeneer(current_path, "axis_name", axes);
 
                     // 'spindle_name' observation contains the spindle names for this path
-                    dynamic spindles = _machine.Platform.RdSpdlName();
+                    dynamic spindles = ((FanucMachine)_machine).Platform.RdSpdlName();
                     _machine.PeelAcrossVeneer(current_path, "spindle_name", spindles);
                 }
 
                 // finally, disconnect
-                dynamic disconnect = _machine.Platform.Disconnect();
+                dynamic disconnect = ((FanucMachine)_machine).Platform.Disconnect();
 
                 // this sweep has been successful
                 LastSuccess = connect.success;

@@ -1,7 +1,6 @@
 using System;
-using fanuc.veneers;
 
-namespace fanuc.handlers
+namespace l99.driver.@base
 {
     public class Handler
     {

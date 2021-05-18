@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace fanuc
+namespace l99.driver.fanuc
 {
     public partial class Platform
     {
-        private Machine _machine;
+        private FanucMachine _machine;
 
         private ushort _handle;
 
@@ -29,7 +29,7 @@ namespace fanuc
             };
         };
         
-        public Platform(Machine machine)
+        public Platform(FanucMachine machine)
         {
             _machine = machine;
         }

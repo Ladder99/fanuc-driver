@@ -1,7 +1,8 @@
 ﻿using System;
+using l99.driver.@base;
 using Newtonsoft.Json.Linq;
 
-namespace fanuc.veneers
+namespace l99.driver.fanuc.veneers
 {
     public class Figures : Veneer
     {

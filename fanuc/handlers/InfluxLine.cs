@@ -1,9 +1,9 @@
 using System;
-using fanuc.veneers;
 using InfluxDB.LineProtocol;
+using l99.driver.@base;
 using Newtonsoft.Json.Linq;
 
-namespace fanuc.handlers
+namespace l99.driver.fanuc.handlers
 {
     public class InfluxLine: Handler
     {

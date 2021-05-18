@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace fanuc
+namespace l99.driver.@base
 {
     public class Machines
     {
@@ -50,7 +50,7 @@ namespace fanuc
         
         public Machine Add(dynamic cfg)
         {
-            var machine = new Machine(this, cfg.enabled, cfg.id, cfg.ip, (ushort)cfg.port, (short)cfg.timeout);
+            var machine = new Machine(this, cfg.enabled, cfg.id, cfg);
             _machines.Add(machine);
             return machine;
         }

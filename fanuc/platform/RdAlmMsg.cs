@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace fanuc
+namespace l99.driver.fanuc
 {
     public partial class Platform
     {

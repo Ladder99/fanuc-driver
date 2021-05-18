@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using fanuc.mqtt;
+using l99.driver.@base;
+using l99.driver.@base.mqtt;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
-namespace fanuc
+namespace l99.driver.fanuc
 {
     partial class Program
     {

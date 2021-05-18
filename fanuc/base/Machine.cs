@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using fanuc.collectors;
-using fanuc.handlers;
-using fanuc.veneers;
 
-namespace fanuc
+namespace l99.driver.@base
 {
     public class Machine
     {
@@ -13,23 +9,17 @@ namespace fanuc
         {
             return new
             {
-                Id,
-                _focasEndpoint.IPAddress,
-                _focasEndpoint.Port,
-                _focasEndpoint.ConnectionTimeout
+                Id
             }.ToString();
         }
 
-        public dynamic Info
+        public virtual dynamic Info
         {
             get
             {
                 return new
                 {
-                    _id,
-                    _focasEndpoint.IPAddress,
-                    _focasEndpoint.Port,
-                    _focasEndpoint.ConnectionTimeout
+                    _id
                 };
             }
         }
@@ -39,43 +29,27 @@ namespace fanuc
             get => _machines;
         }
         
-        private Machines _machines;
-        
-        public FocasEndpoint FocasEndpoint
-        {
-            get => _focasEndpoint;
-        }
-        
-        private FocasEndpoint _focasEndpoint;
-        
-        public Platform Platform
-        {
-            get => _platform;
-        }
-        
-        private Platform _platform;
+        protected Machines _machines;
         
         public bool Enabled
         {
             get => _enabled;
         }
         
-        private bool _enabled = false;
+        protected bool _enabled = false;
         
         public string Id
         {
             get => _id;
         }
         
-        private string _id = string.Empty;
+        protected string _id = string.Empty;
         
-        public Machine(Machines machines, bool enabled, string id, string focasIpAddress, ushort focasPort = 8193, short timeout = 10)
+        public Machine(Machines machines, bool enabled, string id, dynamic config)
         {
             _machines = machines;
             _enabled = enabled;
             _id = id;
-            _focasEndpoint = new FocasEndpoint(focasIpAddress, focasPort, timeout);
-            _platform = new Platform(this);
             _veneers = new Veneers(this);
             _propertyBag = new Dictionary<string, dynamic>();
         }
@@ -120,7 +94,7 @@ namespace fanuc
             get => _handler;
         }
         
-        private Handler _handler;
+        protected Handler _handler;
         
         public void AddHandler(Type type)
         {
@@ -145,7 +119,7 @@ namespace fanuc
             get => _collector;
         }
         
-        private Collector _collector;
+        protected Collector _collector;
         
         public void AddCollector(Type type, int sweepMs = 1000)
         {
@@ -171,7 +145,7 @@ namespace fanuc
             get => _veneers;
         }
         
-        private Veneers _veneers;
+        protected Veneers _veneers;
 
         public bool VeneersApplied
         {

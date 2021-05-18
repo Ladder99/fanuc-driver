@@ -1,4 +1,6 @@
-﻿namespace fanuc.veneers
+﻿using l99.driver.@base;
+
+namespace l99.driver.fanuc.veneers
 {
     public class Block : Veneer
     {

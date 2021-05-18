@@ -5,7 +5,7 @@ using MQTTnet;
 using MQTTnet.Client;
 using Newtonsoft.Json.Linq;
 
-namespace fanuc.mqtt
+namespace l99.driver.@base.mqtt
 {
     public class Disco
     {

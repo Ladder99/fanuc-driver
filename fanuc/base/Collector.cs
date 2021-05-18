@@ -1,4 +1,4 @@
-﻿namespace fanuc.collectors
+﻿namespace l99.driver.@base
 {
     public class Collector
     {
@@ -10,15 +10,8 @@
         {
             _machine = machine;
             _sweepMs = sweepMs;
-            machine.Platform.StartupProcess(3, "~/focas2.log");
         }
 
-        ~Collector()
-        {
-            // TODO: verify inocation
-            _machine.Platform.ExitProcess();
-        }
-        
         public virtual void Initialize()
         {
             

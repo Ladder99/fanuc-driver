@@ -5,7 +5,7 @@ using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Client.Options;
 
-namespace fanuc.mqtt
+namespace l99.driver.@base.mqtt
 {
     public class Broker
     {

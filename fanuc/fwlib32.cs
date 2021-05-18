@@ -9,7 +9,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace fanuc
+namespace l99.driver.fanuc
 {
     public class Focas1
     {
