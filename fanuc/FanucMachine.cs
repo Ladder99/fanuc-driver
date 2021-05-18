@@ -39,18 +39,11 @@ namespace l99.driver.fanuc
         
         private FocasEndpoint _focasEndpoint;
         
-        public Platform Platform
-        {
-            get => _platform;
-        }
-        
-        private Platform _platform;
-        
         public FanucMachine(Machines machines, bool enabled, string id, object config) : base(machines, enabled, id, config)
         {
             dynamic cfg = (dynamic) config;
-            _focasEndpoint = new FocasEndpoint(cfg.focasIpAddress, cfg.focasPort, cfg.timeout);
-            _platform = new Platform(this);
+            _focasEndpoint = new FocasEndpoint(cfg.ip, (ushort)cfg.port, (short)cfg.timeout);
+            this["platform"] = new Platform(this);
         }
     }
 }

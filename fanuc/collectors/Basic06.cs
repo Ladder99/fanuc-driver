@@ -22,7 +22,7 @@ namespace l99.driver.fanuc.collectors
             {
                 Console.WriteLine("fanuc - creating veneers");
 
-                dynamic connect = ((FanucMachine)_machine).Platform.Connect();
+                dynamic connect = _machine["platform"].Connect();
                 //Console.WriteLine(JObject.FromObject(connect).ToString());
 
                 if (connect.success)
@@ -34,7 +34,7 @@ namespace l99.driver.fanuc.collectors
                     _machine.ApplyVeneer(typeof(fanuc.veneers.RdParamLData), "power_on_time_6750");
                     _machine.ApplyVeneer(typeof(fanuc.veneers.GetPath), "get_path");
                     
-                    dynamic paths = ((FanucMachine)_machine).Platform.GetPath();
+                    dynamic paths = _machine["platform"].GetPath();
 
                     IEnumerable<int> path_slices = Enumerable
                         .Range(paths.response.cnc_getpath.path_no, paths.response.cnc_getpath.maxpath_no);
@@ -51,10 +51,10 @@ namespace l99.driver.fanuc.collectors
                         current_path <= paths.response.cnc_getpath.maxpath_no;
                         current_path++)
                     {
-                        dynamic path = ((FanucMachine)_machine).Platform.SetPath(current_path);
+                        dynamic path = _machine["platform"].SetPath(current_path);
                         
-                        dynamic axes = ((FanucMachine)_machine).Platform.RdAxisName();
-                        dynamic spindles = ((FanucMachine)_machine).Platform.RdSpdlName();
+                        dynamic axes = _machine["platform"].RdAxisName();
+                        dynamic spindles = _machine["platform"].RdSpdlName();
                         dynamic axis_spindle_slices = new List<dynamic> { };
 
                         var fields_axes = axes.response.cnc_rdaxisname.axisname.GetType().GetFields();
@@ -84,7 +84,7 @@ namespace l99.driver.fanuc.collectors
                         _machine.ApplyVeneerAcrossSlices(current_path, typeof(fanuc.veneers.RdActs2), "spindle_data");
                     }
                     
-                    dynamic disconnect = ((FanucMachine)_machine).Platform.Disconnect();
+                    dynamic disconnect = _machine["platform"].Disconnect();
                     
                     _machine.VeneersApplied = true;
 
@@ -114,25 +114,25 @@ namespace l99.driver.fanuc.collectors
                 });
             };
             
-            dynamic connect = ((FanucMachine)_machine).Platform.Connect();
+            dynamic connect = _machine["platform"].Connect();
             _machine.PeelVeneer("connect", connect);
             catch_focas_perf(connect);
 
             if (connect.success)
             {
-                dynamic cncid = ((FanucMachine)_machine).Platform.CNCId();
+                dynamic cncid = _machine["platform"].CNCId();
                 _machine.PeelVeneer("cnc_id", cncid);
                 catch_focas_perf(cncid);
                 
-                dynamic poweron = ((FanucMachine)_machine).Platform.RdTimer(0);
+                dynamic poweron = _machine["platform"].RdTimer(0);
                 _machine.PeelVeneer("power_on_time", poweron);
                 catch_focas_perf(poweron);
                 
-                dynamic poweron_6750 = ((FanucMachine)_machine).Platform.RdParam(6750, 0, 8, 1);
+                dynamic poweron_6750 = _machine["platform"].RdParam(6750, 0, 8, 1);
                 _machine.PeelVeneer("power_on_time_6750", poweron_6750);
                 catch_focas_perf(poweron_6750);
                 
-                dynamic paths = ((FanucMachine)_machine).Platform.GetPath();
+                dynamic paths = _machine["platform"].GetPath();
                 _machine.PeelVeneer("get_path", paths);
                 catch_focas_perf(paths);
 
@@ -140,29 +140,29 @@ namespace l99.driver.fanuc.collectors
                     current_path <= paths.response.cnc_getpath.maxpath_no;
                     current_path++)
                 {
-                    dynamic path = ((FanucMachine)_machine).Platform.SetPath(current_path);
+                    dynamic path = _machine["platform"].SetPath(current_path);
                     dynamic path_marker = new {path.request.cnc_setpath.path_no};
                     _machine.MarkVeneer(current_path, path_marker);
                     catch_focas_perf(path);
                     
-                    dynamic info = ((FanucMachine)_machine).Platform.SysInfo();
+                    dynamic info = _machine["platform"].SysInfo();
                     _machine.PeelAcrossVeneer(current_path,"sys_info", info);
                     catch_focas_perf(info);
                     
-                    dynamic stat = ((FanucMachine)_machine).Platform.StatInfo();
+                    dynamic stat = _machine["platform"].StatInfo();
                     _machine.PeelAcrossVeneer(current_path, "stat_info", stat);
                     catch_focas_perf(path);
                     
                     // in order to return the corre
-                    dynamic figures = ((FanucMachine)_machine).Platform.GetFigure(0, 32);
+                    dynamic figures = _machine["platform"].GetFigure(0, 32);
                     _machine.PeelAcrossVeneer(current_path,"figures", figures);
                     catch_focas_perf(figures);
                     
-                    dynamic axes = ((FanucMachine)_machine).Platform.RdAxisName();
+                    dynamic axes = _machine["platform"].RdAxisName();
                     _machine.PeelAcrossVeneer(current_path, "axis_name", axes);
                     catch_focas_perf(axes);
 
-                    dynamic spindles = ((FanucMachine)_machine).Platform.RdSpdlName();
+                    dynamic spindles = _machine["platform"].RdSpdlName();
                     _machine.PeelAcrossVeneer(current_path, "spindle_name", spindles);
                     catch_focas_perf(spindles);
                     
@@ -185,7 +185,7 @@ namespace l99.driver.fanuc.collectors
                         // the figures observation determines where the decimal point goes in axis positional data
                         //  we pass it as input2 to reveal the 'axis_data' observation, along with the axis index
                         //  and do the math inside RdDynamic2_1 veneer
-                        dynamic axis_data = ((FanucMachine)_machine).Platform.RdDynamic2(current_axis, 44, 2);
+                        dynamic axis_data = _machine["platform"].RdDynamic2(current_axis, 44, 2);
                         _machine.PeelAcrossVeneer(new[] { current_path, axis_name }, "axis_data", axis_data,new
                         {
                             figures, 
@@ -215,13 +215,13 @@ namespace l99.driver.fanuc.collectors
                         
                         _machine.MarkVeneer(new[] { current_path, spindle_name }, new[] { path_marker, spindle_marker });
                         
-                        dynamic spindle_data = ((FanucMachine)_machine).Platform.Acts2(current_spindle);
+                        dynamic spindle_data = _machine["platform"].Acts2(current_spindle);
                         _machine.PeelAcrossVeneer(new[] { current_path, spindle_name }, "spindle_data", spindle_data);
                         catch_focas_perf(spindle_data);
                     };
                 }
 
-                dynamic disconnect = ((FanucMachine)_machine).Platform.Disconnect();
+                dynamic disconnect = _machine["platform"].Disconnect();
                 catch_focas_perf(disconnect);
 
                 _machine.PeelVeneer("focas_perf", new

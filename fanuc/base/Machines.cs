@@ -50,7 +50,8 @@ namespace l99.driver.@base
         
         public Machine Add(dynamic cfg)
         {
-            var machine = new Machine(this, cfg.enabled, cfg.id, cfg);
+            //var machine = new Machine(this, cfg.enabled, cfg.id, cfg);
+            var machine = (Machine) Activator.CreateInstance(Type.GetType(cfg.type), new object[] { this, cfg.enabled, cfg.id, cfg });
             _machines.Add(machine);
             return machine;
         }

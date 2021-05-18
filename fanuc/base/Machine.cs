@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace l99.driver.@base
 {
-    public class Machine
+    public abstract class Machine
     {
         public override string ToString()
         {
@@ -98,6 +98,7 @@ namespace l99.driver.@base
         
         public void AddHandler(Type type)
         {
+            Console.WriteLine($"creating handler: {type.FullName}");
             _handler = (Handler) Activator.CreateInstance(type, new object[] { this });
             _handler.Initialize();
             _veneers.OnDataArrival = _handler.OnDataArrivalInternal;
@@ -123,6 +124,7 @@ namespace l99.driver.@base
         
         public void AddCollector(Type type, int sweepMs = 1000)
         {
+            Console.WriteLine($"creating collector: {type.FullName}");
             _collector = (Collector) Activator.CreateInstance(type, new object[] { this, sweepMs });
         }
 
@@ -155,6 +157,7 @@ namespace l99.driver.@base
 
         public void ApplyVeneer(Type type, string name, bool isInternal = false)
         {
+            Console.WriteLine($"applying veneer: {type.FullName}");
             _veneers.Add(type, name, isInternal);
         }
 
@@ -170,11 +173,13 @@ namespace l99.driver.@base
 
         public void ApplyVeneerAcrossSlices(Type type, string name, bool isInternal = false)
         {
+            Console.WriteLine($"applying veneer: {type.FullName}");
             _veneers.AddAcrossSlices(type, name, isInternal);
         }
         
         public void ApplyVeneerAcrossSlices(dynamic sliceKey, Type type, string name, bool isInternal = false)
         {
+            Console.WriteLine($"applying veneer: {type.FullName}");
             _veneers.AddAcrossSlices(sliceKey, type, name, isInternal);
         }
 

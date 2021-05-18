@@ -23,7 +23,7 @@ namespace l99.driver.fanuc.collectors
             {
                 Console.WriteLine("fanuc - creating veneers");
 
-                dynamic connect = ((FanucMachine)_machine).Platform.Connect();
+                dynamic connect = _machine["platform"].Connect();
                 Console.WriteLine(JObject.FromObject(connect).ToString());
 
                 if (connect.success)
@@ -31,7 +31,7 @@ namespace l99.driver.fanuc.collectors
                     _machine.ApplyVeneer(typeof(fanuc.veneers.Connect), "connect");
                     _machine.ApplyVeneer(typeof(fanuc.veneers.SysInfo), "sys_info");
                     
-                    dynamic disconnect = ((FanucMachine)_machine).Platform.Disconnect();
+                    dynamic disconnect = _machine["platform"].Disconnect();
                     _machine.VeneersApplied = true;
 
                     Console.WriteLine("fanuc - created veneers");
@@ -46,21 +46,21 @@ namespace l99.driver.fanuc.collectors
 
         public override void Collect()
         {
-            dynamic connect = ((FanucMachine)_machine).Platform.Connect();
+            dynamic connect = _machine["platform"].Connect();
             //_machine.PeelVeneer("connect", connect);
 
             if (connect.success)
             {
-                //dynamic info = ((FanucMachine)_machine).Platform.SysInfo();
+                //dynamic info = _machine["platform"].SysInfo();
                 //_machine.PeelVeneer("sys_info", info);
     
-                dynamic blkcount = ((FanucMachine)_machine).Platform.RdBlkCount();
+                dynamic blkcount = _machine["platform"].RdBlkCount();
                 //Console.WriteLine($"RdBlkCount({blkcount.rc})::prog_bc = {blkcount.response.cnc_rdblkcount.prog_bc}");
                     
-                dynamic actpt = ((FanucMachine)_machine).Platform.RdActPt();
+                dynamic actpt = _machine["platform"].RdActPt();
                 //Console.WriteLine($"RdActPt({actpt.rc})::prog_no = {actpt.response.cnc_rdactpt.prog_no}, blk_no = {actpt.response.cnc_rdactpt.blk_no}");
     
-                dynamic execprog = ((FanucMachine)_machine).Platform.RdExecProg(_readAheadBytes);
+                dynamic execprog = _machine["platform"].RdExecProg(_readAheadBytes);
                 /*
                 var execlines = string.Join("", execprog.response.cnc_rdexecprog.data).Trim().Split('\n');
                 Console.WriteLine($"RdExecProg({execprog.rc})::length = {execprog.response.cnc_rdexecprog.length}, blknum = {execprog.response.cnc_rdexecprog.blknum}");
@@ -77,33 +77,33 @@ namespace l99.driver.fanuc.collectors
                 Console.WriteLine();
                 
                 /*
-                dynamic prgnum = ((FanucMachine)_machine).Platform.RdPrgNum();
+                dynamic prgnum = _machine["platform"].RdPrgNum();
                 Console.WriteLine($"RdPrgNum({prgnum.rc})::data = {prgnum.response.cnc_rdprgnum.prgnum.data}, mdata = {prgnum.response.cnc_rdprgnum.prgnum.mdata}");
                 */
                 
                 /*
-                dynamic prgname = ((FanucMachine)_machine).Platform.ExePrgName();
+                dynamic prgname = _machine["platform"].ExePrgName();
                 Console.WriteLine($"ExePrgName({prgname.rc})::o_num = {prgname.response.cnc_exeprgname.exeprg.o_num}, name = {string.Join("",prgname.response.cnc_exeprgname.exeprg.name).Trim('\0')}");
                 */
                 
                 /*
-                dynamic prgname2 = ((FanucMachine)_machine).Platform.ExePrgName2();
+                dynamic prgname2 = _machine["platform"].ExePrgName2();
                 Console.WriteLine($"ExePrgName2({prgname2.rc})::path_name = {string.Join("",prgname2.response.cnc_exeprgname2.path_name).Trim('\0')}");
                 */
                 
                 /*
-                dynamic seqnum = ((FanucMachine)_machine).Platform.RdSeqNum();
+                dynamic seqnum = _machine["platform"].RdSeqNum();
                 Console.WriteLine($"RdSeqNum({seqnum.rc})::seqnum = {seqnum.response.cnc_rdseqnum.seqnum.data}");
                 */
                 
                 /*
-                dynamic execpt = ((FanucMachine)_machine).Platform.RdExecPt();
+                dynamic execpt = _machine["platform"].RdExecPt();
                 Console.WriteLine($"RdExecPt({execpt.rc})::pact.prog_no = {execpt.response.cnc_rdexecpt.pact.prog_no}, pact.blk_no = {execpt.response.cnc_rdexecpt.pact.blk_no}");
                 Console.WriteLine($"RdExecPt({execpt.rc})::pnext.prog_no = {execpt.response.cnc_rdexecpt.pnext.prog_no}, pnext.blk_no = {execpt.response.cnc_rdexecpt.pnext.blk_no}");
                 */
                 
                 /*
-                dynamic progline = ((FanucMachine)_machine).Platform.RdProgLine(-1, 0, 128);
+                dynamic progline = _machine["platform"].RdProgLine(-1, 0, 128);
                 var lines = string.Join("", progline.response.cnc_rdprogline.prog_data).Trim().Split('\n');
                 Console.WriteLine($"RdProgLine({progline.rc})::line_len = {progline.response.cnc_rdprogline.line_len}, data_len = {progline.response.cnc_rdprogline.data_len}");
                 Console.WriteLine($"RdProgLine({progline.rc})::prog_data = ");
@@ -113,7 +113,7 @@ namespace l99.driver.fanuc.collectors
                 }
                 */
                 
-                dynamic disconnect = ((FanucMachine)_machine).Platform.Disconnect();
+                dynamic disconnect = _machine["platform"].Disconnect();
 
                 LastSuccess = connect.success;
             }

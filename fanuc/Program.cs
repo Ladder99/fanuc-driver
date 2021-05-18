@@ -46,6 +46,7 @@ namespace l99.driver.fanuc
                 {
                     machine = new {
                         enabled = machine_conf["enabled"],
+                        type = machine_conf["type"],
                         id = machine_conf["id"],
                         ip = machine_conf["net_ip"],
                         port = machine_conf["net_port"],

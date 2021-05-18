@@ -17,7 +17,7 @@ namespace l99.driver.fanuc.collectors
             {
                 Console.WriteLine("fanuc - creating veneers");
 
-                dynamic connect = ((FanucMachine)_machine).Platform.Connect();
+                dynamic connect = _machine["platform"].Connect();
                 Console.WriteLine(JObject.FromObject(connect).ToString());
 
                 if (connect.success)
@@ -29,7 +29,7 @@ namespace l99.driver.fanuc.collectors
                     _machine.ApplyVeneer(typeof(fanuc.veneers.SysInfo), "sys_info");
                     _machine.ApplyVeneer(typeof(fanuc.veneers.GetPath), "get_path");
                     
-                    dynamic disconnect = ((FanucMachine)_machine).Platform.Disconnect();
+                    dynamic disconnect = _machine["platform"].Disconnect();
                     
                     _machine.VeneersApplied = true;
 
@@ -45,27 +45,27 @@ namespace l99.driver.fanuc.collectors
 
         public override void Collect()
         {
-            dynamic connect = ((FanucMachine)_machine).Platform.Connect();
+            dynamic connect = _machine["platform"].Connect();
             _machine.PeelVeneer("connect", connect);
 
             if (connect.success)
             {
-                dynamic cncid = ((FanucMachine)_machine).Platform.CNCId();
+                dynamic cncid = _machine["platform"].CNCId();
                 _machine.PeelVeneer("cnc_id", cncid);
                 
-                dynamic poweron = ((FanucMachine)_machine).Platform.RdTimer(0);
+                dynamic poweron = _machine["platform"].RdTimer(0);
                 _machine.PeelVeneer("power_on_time", poweron);
                 
-                dynamic poweron_6750 = ((FanucMachine)_machine).Platform.RdParam(6750, 0, 8, 1);
+                dynamic poweron_6750 = _machine["platform"].RdParam(6750, 0, 8, 1);
                 _machine.PeelVeneer("power_on_time_6750", poweron_6750);
                 
-                dynamic info = ((FanucMachine)_machine).Platform.SysInfo();
+                dynamic info = _machine["platform"].SysInfo();
                 _machine.PeelVeneer("sys_info", info);
                 
-                dynamic paths = ((FanucMachine)_machine).Platform.GetPath();
+                dynamic paths = _machine["platform"].GetPath();
                 _machine.PeelVeneer("get_path", paths);
 
-                dynamic disconnect = ((FanucMachine)_machine).Platform.Disconnect();
+                dynamic disconnect = _machine["platform"].Disconnect();
             }
             
             LastSuccess = connect.success;

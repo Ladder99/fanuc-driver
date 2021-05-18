@@ -1,6 +1,7 @@
 machines:
   - id: sim
     enabled: !!bool true
+    type: l99.driver.fanuc.FanucMachine, fanuc
     net_ip: 10.20.30.101
     net_port: !!int 8193
     net_timeout_s: !!int 2
@@ -8,7 +9,7 @@ machines:
     sweep_ms: !!int 1000
     handler_type: l99.driver.fanuc.handlers.Native, fanuc
     broker:
-      enabled: !!bool true
+      enabled: !!bool false
       net_ip: 10.20.30.102
       net_port: !!int 1883
       publish_status: !!bool true
@@ -17,6 +18,7 @@ machines:
 
   - id: naka
     enabled: !!bool false
+    type: l99.driver.fanuc.FanucMachine, fanuc
     net_ip: 172.16.13.100
     net_port: !!int 8193
     net_timeout_s: !!int 5
