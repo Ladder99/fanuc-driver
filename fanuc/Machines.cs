@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace fanuc
 {
@@ -60,11 +61,11 @@ namespace fanuc
             {
                 machine.InitCollector();
             }
-            
+
             while (true)
             {
                 Thread.Sleep(_collectionInterval);
-                
+
                 foreach (var machine in _machines.Where(x => x.Enabled))
                 {
                     machine.RunCollector();
@@ -72,5 +73,7 @@ namespace fanuc
                 }
             }
         }
+        
+        
     }
 }
