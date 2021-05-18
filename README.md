@@ -296,15 +296,16 @@ The `config.yml` file contains runtime information about each Focas endpoint and
 machines:
   - id: sim
     enabled: !!bool true
+    type: l99.driver.fanuc.FanucMachine, fanuc
+    strategy_type: l99.driver.fanuc.collectors.Basic06, fanuc
+    handler_type: l99.driver.fanuc.handlers.Native, fanuc
+    sweep_ms: !!int 1000
     net_ip: 10.20.30.101
     net_port: !!int 8193
     net_timeout_s: !!int 2
-    strategy_type: l99.driver.fanuc.collectors.Basic06, fanuc
-    sweep_ms: !!int 1000
-    handler_type: l99.driver.fanuc.handlers.Native, fanuc
     broker:
-      enabled: !!bool true
-      net_ip: 172.16.10.3
+      enabled: !!bool false
+      net_ip: 10.20.30.102
       net_port: !!int 1883
       publish_status: !!bool true
       publish_arrivals: !!bool true
@@ -312,14 +313,15 @@ machines:
 
   - id: naka
     enabled: !!bool false
+    type: l99.driver.fanuc.FanucMachine, fanuc
+    strategy_type: l99.driver.fanuc.collectors.Basic06, fanuc
+    handler_type: l99.driver.fanuc.handlers.Native, fanuc
+    sweep_ms: !!int 1000
     net_ip: 172.16.13.100
     net_port: !!int 8193
     net_timeout_s: !!int 5
-    strategy_type: l99.driver.fanuc.collectors.Basic06, fanuc
-    sweep_ms: !!int 1000
-    handler_type: l99.driver.fanuc.handlers.Native, fanuc
     broker:
-      enabled: !!bool true
+      enabled: !!bool false
       net_ip: 172.16.10.3
       net_port: !!int 1883
       publish_status: !!bool true
