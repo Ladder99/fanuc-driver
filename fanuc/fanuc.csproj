@@ -53,4 +53,34 @@
       </None>
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Include="..\base-driver\base\Collector.cs">
+        <Link>base\Collector.cs</Link>
+      </Compile>
+      <Compile Include="..\base-driver\base\Handler.cs">
+        <Link>base\Handler.cs</Link>
+      </Compile>
+      <Compile Include="..\base-driver\base\Machine.cs">
+        <Link>base\Machine.cs</Link>
+      </Compile>
+      <Compile Include="..\base-driver\base\Machines.cs">
+        <Link>base\Machines.cs</Link>
+      </Compile>
+      <Compile Include="..\base-driver\base\mqtt\Broker.cs">
+        <Link>base\mqtt\Broker.cs</Link>
+      </Compile>
+      <Compile Include="..\base-driver\base\mqtt\Brokers.cs">
+        <Link>base\mqtt\Brokers.cs</Link>
+      </Compile>
+      <Compile Include="..\base-driver\base\mqtt\Disco.cs">
+        <Link>base\mqtt\Disco.cs</Link>
+      </Compile>
+      <Compile Include="..\base-driver\base\Veneer.cs">
+        <Link>base\Veneer.cs</Link>
+      </Compile>
+      <Compile Include="..\base-driver\base\Veneers.cs">
+        <Link>base\Veneers.cs</Link>
+      </Compile>
+    </ItemGroup>
+
 </Project>
