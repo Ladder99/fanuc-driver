@@ -343,7 +343,7 @@ export PATH=$PATH:$HOME/dotnet
 
 cd ~
 
-git clone https://github.com/Ladder99/fanuc-driver.git  
+git clone --recurse-submodules -j8 https://github.com/Ladder99/fanuc-driver.git  
 
 cd fanuc-driver/fanuc  
 
@@ -383,7 +383,7 @@ Build container:
 ```
 cd ~
 
-git clone https://github.com/Ladder99/fanuc-driver.git  
+git clone --recurse-submodules -j8 https://github.com/Ladder99/fanuc-driver.git  
 
 cd fanuc-driver  
 
@@ -407,7 +407,7 @@ Config file used: `~/fanuc-volumes/fanuc-driver/config.yml`
 ```
 cd ~
 
-git clone https://github.com/Ladder99/fanuc-driver.git 
+git clone --recurse-submodules -j8 https://github.com/Ladder99/fanuc-driver.git 
 
 mkdir -p fanuc-volumes/fanuc-driver
 cp fanuc-driver/docker/config.yml fanuc-volumes/fanuc-driver/config.yml
