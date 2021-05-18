@@ -1,7 +1,14 @@
+using System.Threading.Tasks;
+
 namespace l99.driver.fanuc
 {
     public partial class Platform
     {
+        public async Task<dynamic> ConnectAsync()
+        {
+            return Task.FromResult(Connect());
+        }
+        
         public dynamic Connect()
         {
             NativeDispatchReturn ndr = nativeDispatch(() =>

@@ -1,9 +1,15 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace l99.driver.fanuc
 {
     public partial class Platform
     {
+        public async Task<dynamic> RdAlmMsg2Async(short type = 0, short num = 10)
+        {
+            return Task.FromResult(RdAlmMsg2(type, num));
+        }
+        
         public dynamic RdAlmMsg2(short type = 0, short num = 10)
         {
             short num_out = num;
@@ -23,6 +29,24 @@ namespace l99.driver.fanuc
                 rc = ndr.RC,
                 request = new {cnc_rdalmmsg2 = new {type, num}},
                 response = new {cnc_rdalmmsg2 = new {num = num_out, almmsg}}
+            };
+        }
+        
+        public async Task<dynamic> RdAlmMsg2AllAsync(short count = 10, short maxType = 20)
+        {
+            var alms = new Dictionary<short, dynamic>();
+
+            for (short type = 0; type <= maxType; type++)
+            {
+                short countRead = 10;
+                alms.Add(type, await RdAlmMsg2Async(type, countRead));
+            }
+
+            return new
+            {
+                method = "cnc_rdalmmsg2_ALL",
+                request = new { cnc_rdalmmsg2_ALL = new { minType = 0, maxType, count } },
+                response = new { cnc_rdalmmsg2_ALL = alms }
             };
         }
         

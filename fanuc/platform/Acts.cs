@@ -1,7 +1,14 @@
+using System.Threading.Tasks;
+
 namespace l99.driver.fanuc
 {
     public partial class Platform
     {
+        public async Task<dynamic> ActsAsync()
+        {
+            return Task.FromResult(Acts());
+        }
+        
         public dynamic Acts()
         {
             Focas1.ODBACT actualfeed = new Focas1.ODBACT();

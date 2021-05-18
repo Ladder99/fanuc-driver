@@ -1,7 +1,14 @@
+using System.Threading.Tasks;
+
 namespace l99.driver.fanuc
 {
     public partial class Platform
     {
+        public async Task<dynamic> ExePrgNameAsync()
+        {
+            return Task.FromResult(ExePrgName());
+        }
+        
         public dynamic ExePrgName()
         {
             Focas1.ODBEXEPRG exeprg = new Focas1.ODBEXEPRG();

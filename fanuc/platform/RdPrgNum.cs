@@ -1,7 +1,14 @@
+using System.Threading.Tasks;
+
 namespace l99.driver.fanuc
 {
     public partial class Platform
     {
+        public async Task<dynamic> RdPrgNumAsync()
+        {
+            return Task.FromResult(RdPrgNum());
+        }
+        
         public dynamic RdPrgNum()
         {
             Focas1.ODBPRO prgnum = new Focas1.ODBPRO();

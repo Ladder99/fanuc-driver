@@ -1,7 +1,14 @@
+using System.Threading.Tasks;
+
 namespace l99.driver.fanuc
 {
     public partial class Platform
     {
+        public async Task<dynamic> StatInfoAsync()
+        {
+            return Task.FromResult(StatInfo());
+        }
+        
         public dynamic StatInfo()
         {
             Focas1.ODBST statinfo = new Focas1.ODBST();

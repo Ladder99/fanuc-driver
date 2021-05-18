@@ -1,7 +1,14 @@
+using System.Threading.Tasks;
+
 namespace l99.driver.fanuc
 {
     public partial class Platform
     {
+        public async Task<dynamic> DisconnectAsync()
+        {
+            return Task.FromResult(Disconnect());
+        }
+        
         public dynamic Disconnect()
         {
             NativeDispatchReturn ndr = nativeDispatch(() =>

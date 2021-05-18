@@ -1,7 +1,14 @@
+using System.Threading.Tasks;
+
 namespace l99.driver.fanuc
 {
     public partial class Platform
     {
+        public async Task<dynamic> ExitProcessAsync()
+        {
+            return Task.FromResult(ExitProcess());
+        }
+        
         public dynamic ExitProcess()
         {
 #if ARMV7 || LINUX64 || LINUX32

@@ -1,7 +1,14 @@
+using System.Threading.Tasks;
+
 namespace l99.driver.fanuc
 {
     public partial class Platform
     {
+        public async Task<dynamic> StartupProcessAsync(short level = 0, string filename = "~/focas2.log")
+        {
+            return Task.FromResult(StartupProcess(level, filename));
+        }
+        
         public dynamic StartupProcess(short level = 0, string filename = "~/focas2.log")
         {
 #if ARMV7 || LINUX64 || LINUX32

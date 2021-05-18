@@ -1,7 +1,14 @@
+using System.Threading.Tasks;
+
 namespace l99.driver.fanuc
 {
     public partial class Platform
     {
+        public async Task<dynamic> RdExecPtAsync()
+        {
+            return Task.FromResult(RdExecPt());
+        }
+        
         public dynamic RdExecPt()
         {
             Focas1.PRGPNT pact = new Focas1.PRGPNT();

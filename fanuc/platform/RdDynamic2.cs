@@ -1,7 +1,14 @@
+using System.Threading.Tasks;
+
 namespace l99.driver.fanuc
 {
     public partial class Platform
     {
+        public async Task<dynamic> RdDynamic2Async(short axis = 1, short length = 44, int ODBDY2_type = 2)
+        {
+            return Task.FromResult(RdDynamic2(axis, length, ODBDY2_type));
+        }
+        
         public dynamic RdDynamic2(short axis = 1, short length = 44, int ODBDY2_type = 2)
         {
             dynamic rddynamic = new object();

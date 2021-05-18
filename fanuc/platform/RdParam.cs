@@ -1,7 +1,14 @@
+using System.Threading.Tasks;
+
 namespace l99.driver.fanuc
 {
     public partial class Platform
     {
+        public async Task<dynamic> RdParamAsync(short number, short axis, short length, int IODBPSD_type)
+        {
+            return Task.FromResult(RdParam(number, axis, length, IODBPSD_type));
+        }
+        
         public dynamic RdParam(short number, short axis, short length, int IODBPSD_type)
         {
             dynamic param = new object();

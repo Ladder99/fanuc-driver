@@ -1,7 +1,14 @@
+using System.Threading.Tasks;
+
 namespace l99.driver.fanuc
 {
     public partial class Platform
     {
+        public async Task<dynamic> RdActPtAsync()
+        {
+            return Task.FromResult(RdActPt());
+        }
+        
         public dynamic RdActPt()
         {
             int prog_no = 0;

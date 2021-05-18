@@ -1,7 +1,14 @@
+using System.Threading.Tasks;
+
 namespace l99.driver.fanuc
 {
     public partial class Platform
     {
+        public async Task<dynamic> RdSpdlNameAsync(short data_num = 4)
+        {
+            return Task.FromResult(RdSpdlName(data_num));
+        }
+        
         public dynamic RdSpdlName(short data_num = 4)
         {
             short data_num_out = data_num;

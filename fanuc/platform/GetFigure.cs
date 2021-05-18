@@ -1,7 +1,14 @@
+using System.Threading.Tasks;
+
 namespace l99.driver.fanuc
 {
     public partial class Platform
     {
+        public async Task<dynamic> GetFigureAsync(short data_type = 0, short axis = 8)
+        {
+            return Task.FromResult(GetFigure(data_type, axis));
+        }
+        
         public dynamic GetFigure(short data_type = 0, short axis = 8)
         {
             short valid_fig = 0; short[] dec_fig_in = new short[axis]; short[] dec_fig_out = new short[axis];

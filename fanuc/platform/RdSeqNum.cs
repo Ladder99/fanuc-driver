@@ -1,7 +1,14 @@
+using System.Threading.Tasks;
+
 namespace l99.driver.fanuc
 {
     public partial class Platform
     {
+        public async Task<dynamic> RdSeqNumAsync()
+        {
+            return Task.FromResult(RdSeqNum());
+        }
+        
         public dynamic RdSeqNum()
         {
             Focas1.ODBSEQ seqnum = new Focas1.ODBSEQ();

@@ -1,7 +1,14 @@
+using System.Threading.Tasks;
+
 namespace l99.driver.fanuc
 {
     public partial class Platform
     {
+        public async Task<dynamic> RdOpMsgAsync(short type = 0, short length = 262)
+        {
+            return Task.FromResult(RdOpMsg(type, length));
+        }
+        
         public dynamic RdOpMsg(short type = 0, short length = 262)
         {
             Focas1.OPMSG opmsg = new Focas1.OPMSG();

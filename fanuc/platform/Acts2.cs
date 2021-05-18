@@ -1,7 +1,14 @@
+using System.Threading.Tasks;
+
 namespace l99.driver.fanuc
 {
     public partial class Platform
     {
+        public async Task<dynamic> Acts2Async()
+        {
+            return Task.FromResult(Acts2());
+        }
+        
         public dynamic Acts2(short sp_no = -1)
         {
             Focas1.ODBACT2 actualspindle = new Focas1.ODBACT2();

@@ -1,7 +1,14 @@
+using System.Threading.Tasks;
+
 namespace l99.driver.fanuc
 {
     public partial class Platform
     {
+        public async Task<dynamic> RdOpModeAsync()
+        {
+            return Task.FromResult(RdOpMode());
+        }
+        
         public dynamic RdOpMode()
         {
             short mode = 0; // array?

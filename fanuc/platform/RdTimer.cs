@@ -1,7 +1,14 @@
+using System.Threading.Tasks;
+
 namespace l99.driver.fanuc
 {
     public partial class Platform
     {
+        public async Task<dynamic> RdTimerAsync(short type = 0)
+        {
+            return Task.FromResult(RdTimer(type));
+        }
+        
         public dynamic RdTimer(short type = 0)
         {
             Focas1.IODBTIME time = new Focas1.IODBTIME();

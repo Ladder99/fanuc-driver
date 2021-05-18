@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using l99.driver.@base;
 using l99.driver.@base.mqtt;
 using YamlDotNet.Serialization;
@@ -11,12 +12,13 @@ namespace l99.driver.fanuc
 {
     partial class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             string config_file = getArgument(args, "--config", "config.yml");
             dynamic config = readConfig(config_file);
             Machines machines = createMachines(config);
-            machines.Run();
+            Task task = machines.RunAsync();
+            task.Wait();
         }
 
         static string getArgument(string[] args, string option, string defaultValue)

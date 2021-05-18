@@ -1,7 +1,14 @@
+using System.Threading.Tasks;
+
 namespace l99.driver.fanuc
 {
     public partial class Platform
     {
+        public async Task<dynamic> GetPathAsync(short path_no = 0)
+        {
+            return Task.FromResult(GetPath(path_no));
+        }
+        
         public dynamic GetPath(short path_no = 0)
         {
             short maxpath_no = 0, path_no_out = path_no;

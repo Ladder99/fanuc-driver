@@ -1,7 +1,14 @@
+using System.Threading.Tasks;
+
 namespace l99.driver.fanuc
 {
     public partial class Platform
     {
+        public async Task<dynamic> RdBlkCountAsync()
+        {
+            return Task.FromResult(RdBlkCount());
+        }
+        
         public dynamic RdBlkCount()
         {
             int prog_bc = 0;

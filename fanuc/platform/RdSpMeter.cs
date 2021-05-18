@@ -1,7 +1,14 @@
+using System.Threading.Tasks;
+
 namespace l99.driver.fanuc
 {
     public partial class Platform
     {
+        public async Task<dynamic> RdSpMeterAsync(short type = 0, short data_num = 4)
+        {
+            return Task.FromResult(RdSpMeter(type, data_num));
+        }
+        
         public dynamic RdSpMeter(short type = 0, short data_num = 4)
         {
             short data_num_out = data_num;

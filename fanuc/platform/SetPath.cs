@@ -1,7 +1,14 @@
+using System.Threading.Tasks;
+
 namespace l99.driver.fanuc
 {
     public partial class Platform
     {
+        public async Task<dynamic> SetPathAsync(short path_no)
+        {
+            return Task.FromResult(SetPath(path_no));
+        }
+        
         public dynamic SetPath(short path_no)
         {
             NativeDispatchReturn ndr = nativeDispatch(() =>

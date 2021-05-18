@@ -1,7 +1,14 @@
+using System.Threading.Tasks;
+
 namespace l99.driver.fanuc
 {
     public partial class Platform
     {
+        public async Task<dynamic> RdExecProgAsync(short length = 1024)
+        {
+            return Task.FromResult(RdExecProg(length));
+        }
+        
         public dynamic RdExecProg(short length = 1024)
         {
             //length = 96;
