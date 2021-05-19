@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using l99.driver.@base;
 using l99.driver.@base.mqtt;
+using Newtonsoft.Json.Linq;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
@@ -73,6 +74,7 @@ namespace l99.driver.fanuc
             
             foreach (var cfg in machine_confs)
             {
+                Console.WriteLine(JObject.FromObject(cfg).ToString());
                 Broker broker = brokers.Add(cfg.broker);
                 broker["disco"] = new Disco();
                 Machine machine = machines.Add(cfg.machine);
