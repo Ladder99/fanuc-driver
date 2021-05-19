@@ -6,7 +6,7 @@ namespace l99.driver.fanuc
     {
         public async Task<dynamic> RdParamAsync(short number, short axis, short length, int IODBPSD_type)
         {
-            return Task.FromResult(RdParam(number, axis, length, IODBPSD_type));
+            return await Task.FromResult(RdParam(number, axis, length, IODBPSD_type));
         }
         
         public dynamic RdParam(short number, short axis, short length, int IODBPSD_type)

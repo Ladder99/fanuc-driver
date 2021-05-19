@@ -6,7 +6,7 @@ namespace l99.driver.fanuc
     {
         public async Task<dynamic> CNCIdAsync()
         {
-            return Task.FromResult(CNCId());
+            return await Task.FromResult(CNCId());
         }
         
         public dynamic CNCId()

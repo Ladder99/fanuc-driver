@@ -6,7 +6,7 @@ namespace l99.driver.fanuc
     {
         public async Task<dynamic> SysInfoAsync()
         {
-            return Task.FromResult(SysInfo());
+            return await Task.FromResult(SysInfo());
         }
         
         public dynamic SysInfo()

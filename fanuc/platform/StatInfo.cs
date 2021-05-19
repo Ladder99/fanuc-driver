@@ -6,7 +6,7 @@ namespace l99.driver.fanuc
     {
         public async Task<dynamic> StatInfoAsync()
         {
-            return Task.FromResult(StatInfo());
+            return await Task.FromResult(StatInfo());
         }
         
         public dynamic StatInfo()

@@ -6,7 +6,7 @@ namespace l99.driver.fanuc
     {
         public async Task<dynamic> ExitProcessAsync()
         {
-            return Task.FromResult(ExitProcess());
+            return await Task.FromResult(ExitProcess());
         }
         
         public dynamic ExitProcess()

@@ -6,7 +6,7 @@ namespace l99.driver.fanuc
     {
         public async Task<dynamic> RdSpMeterAsync(short type = 0, short data_num = 4)
         {
-            return Task.FromResult(RdSpMeter(type, data_num));
+            return await Task.FromResult(RdSpMeter(type, data_num));
         }
         
         public dynamic RdSpMeter(short type = 0, short data_num = 4)

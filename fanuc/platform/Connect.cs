@@ -6,7 +6,7 @@ namespace l99.driver.fanuc
     {
         public async Task<dynamic> ConnectAsync()
         {
-            return Task.FromResult(Connect());
+            return await Task.FromResult(Connect());
         }
         
         public dynamic Connect()

@@ -106,27 +106,27 @@ namespace l99.driver.fanuc.collectors
         
         public override async Task CollectAsync()
         {
-            dynamic connect = await _machine["platform"].Connect();
+            dynamic connect = await _machine["platform"].ConnectAsync();
             _machine.PeelVeneer("connect", connect);
 
             if (connect.success)
             {
-                dynamic cncid = await _machine["platform"].CNCId();
+                dynamic cncid = await _machine["platform"].CNCIdAsync();
                 _machine.PeelVeneer("cnc_id", cncid);
                 
-                dynamic poweron = await _machine["platform"].RdTimer(0);
+                dynamic poweron = await _machine["platform"].RdTimerAsync(0);
                 _machine.PeelVeneer("power_on_time", poweron);
                 
-                dynamic poweron_6750 = await _machine["platform"].RdParam(6750, 0, 8, 1);
+                dynamic poweron_6750 = await _machine["platform"].RdParamAsync(6750, 0, 8, 1);
                 _machine.PeelVeneer("power_on_time_6750", poweron_6750);
                 
-                dynamic info = await _machine["platform"].SysInfo();
+                dynamic info = await _machine["platform"].SysInfoAsync();
                 _machine.PeelVeneer("sys_info", info);
                 
-                dynamic paths = await _machine["platform"].GetPath();
+                dynamic paths = await _machine["platform"].GetPathAsync();
                 _machine.PeelVeneer("get_path", paths);
 
-                dynamic disconnect = await _machine["platform"].Disconnect();
+                dynamic disconnect = await _machine["platform"].DisconnectAsync();
             }
             
             LastSuccess = connect.success;

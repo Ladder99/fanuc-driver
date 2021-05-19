@@ -6,7 +6,7 @@ namespace l99.driver.fanuc
     {
         public async Task<dynamic> GetPathAsync(short path_no = 0)
         {
-            return Task.FromResult(GetPath(path_no));
+            return await Task.FromResult(GetPath(path_no));
         }
         
         public dynamic GetPath(short path_no = 0)

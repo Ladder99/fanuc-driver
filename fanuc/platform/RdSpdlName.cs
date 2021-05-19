@@ -6,7 +6,7 @@ namespace l99.driver.fanuc
     {
         public async Task<dynamic> RdSpdlNameAsync(short data_num = 4)
         {
-            return Task.FromResult(RdSpdlName(data_num));
+            return await Task.FromResult(RdSpdlName(data_num));
         }
         
         public dynamic RdSpdlName(short data_num = 4)

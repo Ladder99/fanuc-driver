@@ -6,7 +6,7 @@ namespace l99.driver.fanuc
     {
         public async Task<dynamic> SetPathAsync(short path_no)
         {
-            return Task.FromResult(SetPath(path_no));
+            return await Task.FromResult(SetPath(path_no));
         }
         
         public dynamic SetPath(short path_no)

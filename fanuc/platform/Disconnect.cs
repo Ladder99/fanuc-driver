@@ -6,7 +6,7 @@ namespace l99.driver.fanuc
     {
         public async Task<dynamic> DisconnectAsync()
         {
-            return Task.FromResult(Disconnect());
+            return await Task.FromResult(Disconnect());
         }
         
         public dynamic Disconnect()

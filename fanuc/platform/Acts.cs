@@ -6,7 +6,7 @@ namespace l99.driver.fanuc
     {
         public async Task<dynamic> ActsAsync()
         {
-            return Task.FromResult(Acts());
+            return await Task.FromResult(Acts());
         }
         
         public dynamic Acts()

@@ -6,7 +6,7 @@ namespace l99.driver.fanuc
     {
         public async Task<dynamic> RdSeqNumAsync()
         {
-            return Task.FromResult(RdSeqNum());
+            return await Task.FromResult(RdSeqNum());
         }
         
         public dynamic RdSeqNum()

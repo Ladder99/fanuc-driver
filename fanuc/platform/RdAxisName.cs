@@ -6,7 +6,7 @@ namespace l99.driver.fanuc
     {
         public async Task<dynamic> RdAxisNameAsync(short data_num = 8)
         {
-            return Task.FromResult(RdAxisName(data_num));
+            return await Task.FromResult(RdAxisName(data_num));
         }
         
         public dynamic RdAxisName(short data_num = 8)

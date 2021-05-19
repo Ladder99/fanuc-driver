@@ -6,7 +6,7 @@ namespace l99.driver.fanuc
     {
         public async Task<dynamic> RdMacroAsync(short number = 1, short length = 10)
         {
-            return Task.FromResult(RdMacro(number, length));
+            return await Task.FromResult(RdMacro(number, length));
         }
         
         public dynamic RdMacro(short number = 1, short length = 10)

@@ -6,7 +6,7 @@ namespace l99.driver.fanuc
     {
         public async Task<dynamic> RdTimerAsync(short type = 0)
         {
-            return Task.FromResult(RdTimer(type));
+            return await Task.FromResult(RdTimer(type));
         }
         
         public dynamic RdTimer(short type = 0)

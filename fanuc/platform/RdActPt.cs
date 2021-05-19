@@ -6,7 +6,7 @@ namespace l99.driver.fanuc
     {
         public async Task<dynamic> RdActPtAsync()
         {
-            return Task.FromResult(RdActPt());
+            return await Task.FromResult(RdActPt());
         }
         
         public dynamic RdActPt()

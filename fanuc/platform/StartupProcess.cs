@@ -6,7 +6,7 @@ namespace l99.driver.fanuc
     {
         public async Task<dynamic> StartupProcessAsync(short level = 0, string filename = "~/focas2.log")
         {
-            return Task.FromResult(StartupProcess(level, filename));
+            return await Task.FromResult(StartupProcess(level, filename));
         }
         
         public dynamic StartupProcess(short level = 0, string filename = "~/focas2.log")

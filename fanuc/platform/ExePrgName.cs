@@ -6,7 +6,7 @@ namespace l99.driver.fanuc
     {
         public async Task<dynamic> ExePrgNameAsync()
         {
-            return Task.FromResult(ExePrgName());
+            return await Task.FromResult(ExePrgName());
         }
         
         public dynamic ExePrgName()

@@ -7,7 +7,7 @@ namespace l99.driver.fanuc
     {
         public async Task<dynamic> RdAlmMsgAsync(short type = 0, short num = 10)
         {
-            return Task.FromResult(RdAlmMsg(type, num));
+            return await Task.FromResult(RdAlmMsg(type, num));
         }
         
         public dynamic RdAlmMsg(short type = 0, short num = 10)

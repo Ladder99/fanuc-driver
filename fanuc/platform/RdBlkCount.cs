@@ -6,7 +6,7 @@ namespace l99.driver.fanuc
     {
         public async Task<dynamic> RdBlkCountAsync()
         {
-            return Task.FromResult(RdBlkCount());
+            return await Task.FromResult(RdBlkCount());
         }
         
         public dynamic RdBlkCount()

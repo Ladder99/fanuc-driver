@@ -6,7 +6,7 @@ namespace l99.driver.fanuc
     {
         public async Task<dynamic> Async(int prog_no = -1, uint line_no = 0, uint line_len = 1, uint data_len = 128)
         {
-            return Task.FromResult(RdProgLine(prog_no, line_no, line_len, data_len));
+            return await Task.FromResult(RdProgLine(prog_no, line_no, line_len, data_len));
         }
         
         public dynamic RdProgLine(int prog_no = -1, uint line_no = 0, uint line_len = 1, uint data_len = 128)

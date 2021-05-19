@@ -6,7 +6,7 @@ namespace l99.driver.fanuc
     {
         public async Task<dynamic> RdOpMsgAsync(short type = 0, short length = 262)
         {
-            return Task.FromResult(RdOpMsg(type, length));
+            return await Task.FromResult(RdOpMsg(type, length));
         }
         
         public dynamic RdOpMsg(short type = 0, short length = 262)

@@ -6,7 +6,7 @@ namespace l99.driver.fanuc
     {
         public async Task<dynamic> RdExecPtAsync()
         {
-            return Task.FromResult(RdExecPt());
+            return await Task.FromResult(RdExecPt());
         }
         
         public dynamic RdExecPt()

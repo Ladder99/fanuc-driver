@@ -6,7 +6,7 @@ namespace l99.driver.fanuc
     {
         public async Task<dynamic> RdOpModeAsync()
         {
-            return Task.FromResult(RdOpMode());
+            return await Task.FromResult(RdOpMode());
         }
         
         public dynamic RdOpMode()

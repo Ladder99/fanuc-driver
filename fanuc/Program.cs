@@ -17,8 +17,7 @@ namespace l99.driver.fanuc
             string config_file = getArgument(args, "--config", "config.yml");
             dynamic config = readConfig(config_file);
             Machines machines = createMachines(config);
-            Task task = machines.RunAsync();
-            task.Wait();
+            await machines.RunAsync();
         }
 
         static string getArgument(string[] args, string option, string defaultValue)

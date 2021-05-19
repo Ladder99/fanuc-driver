@@ -7,7 +7,7 @@ namespace l99.driver.fanuc
         public async Task<dynamic> RdPmcRngAsync(short adr_type, short data_type, ushort s_number, ushort e_number, ushort length,
             int IODBPMC_type)
         {
-            return Task.FromResult(RdPmcRng(adr_type, data_type, s_number, e_number, length, IODBPMC_type));
+            return await Task.FromResult(RdPmcRng(adr_type, data_type, s_number, e_number, length, IODBPMC_type));
         }
         
         public dynamic RdPmcRng(short adr_type, short data_type, ushort s_number, ushort e_number, ushort length,
