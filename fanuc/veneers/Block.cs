@@ -1,4 +1,5 @@
-﻿using l99.driver.@base;
+﻿using System.Threading.Tasks;
+using l99.driver.@base;
 
 namespace l99.driver.fanuc.veneers
 {
@@ -9,7 +10,7 @@ namespace l99.driver.fanuc.veneers
             _lastChangedValue = new { data = string.Empty };
         }
         
-        protected override dynamic Any(dynamic input, dynamic? input2)
+        protected override async Task<dynamic> AnyAsync(dynamic input, dynamic? input2)
         {
             if (input.success)
             {
@@ -18,16 +19,16 @@ namespace l99.driver.fanuc.veneers
                 string source_line = source_lines[0].Trim(char.MinValue, ' ');
                 var current_value = new { data = source_line };
                 
-                this.onDataArrived(input, current_value);
+                await onDataArrivedAsync(input, current_value);
                 
                 if (!current_value.Equals(_lastChangedValue))
                 {
-                    this.onDataChanged(input, current_value);
+                    await onDataChangedAsync(input, current_value);
                 }
             }
             else
             {
-                onError(input);
+                await onErrorAsync(input);
             }
 
             return new { veneer = this };

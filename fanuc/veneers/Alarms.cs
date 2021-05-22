@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using l99.driver.@base;
 
 namespace l99.driver.fanuc.veneers
@@ -14,7 +15,7 @@ namespace l99.driver.fanuc.veneers
             };
         }
         
-        protected override dynamic Any(dynamic input, dynamic? input2)
+        protected override async Task<dynamic> AnyAsync(dynamic input, dynamic? input2)
         {
             var success = true;
             var current_value = new List<dynamic>() ;
@@ -50,16 +51,16 @@ namespace l99.driver.fanuc.veneers
                 var current_hc = current_value.Select(x => x.GetHashCode());
                 var last_hc = ((List<dynamic>)_lastChangedValue).Select(x => x.GetHashCode());
                 
-                this.onDataArrived(input, current_value);
+                await onDataArrivedAsync(input, current_value);
                 
                 if(current_hc.Except(last_hc).Count() + last_hc.Except(current_hc).Count() > 0)
                 {
-                    this.onDataChanged(input, current_value);
+                    await onDataChangedAsync(input, current_value);
                 }
             }
             else
             {
-                onError(input);
+                await onErrorAsync(input);
             }
 
             return new { veneer = this };

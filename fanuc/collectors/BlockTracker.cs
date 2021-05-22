@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using l99.driver.@base;
 using Newtonsoft.Json.Linq;
 
@@ -17,13 +18,13 @@ namespace l99.driver.fanuc.collectors
             
         }
         
-        public override void Initialize()
+        public override async Task InitializeAsync()
         {
             while (!_machine.VeneersApplied)
             {
                 Console.WriteLine("fanuc - creating veneers");
 
-                dynamic connect = _machine["platform"].Connect();
+                dynamic connect = await _machine["platform"].ConnectAsync();
                 Console.WriteLine(JObject.FromObject(connect).ToString());
 
                 if (connect.success)
@@ -31,22 +32,21 @@ namespace l99.driver.fanuc.collectors
                     _machine.ApplyVeneer(typeof(fanuc.veneers.Connect), "connect");
                     _machine.ApplyVeneer(typeof(fanuc.veneers.SysInfo), "sys_info");
                     
-                    dynamic disconnect = _machine["platform"].Disconnect();
+                    dynamic disconnect = await _machine["platform"].DisconnectAsync();
                     _machine.VeneersApplied = true;
 
                     Console.WriteLine("fanuc - created veneers");
                 }
                 else
                 {
-                    // not in here
-                    System.Threading.Thread.Sleep(_sweepMs);
+                    await Task.Delay(_sweepMs);
                 }
             }
         }
 
-        public override void Collect()
+        public override async Task CollectAsync()
         {
-            dynamic connect = _machine["platform"].Connect();
+            dynamic connect = await _machine["platform"].ConnectAsync();
             //_machine.PeelVeneer("connect", connect);
 
             if (connect.success)
@@ -54,13 +54,13 @@ namespace l99.driver.fanuc.collectors
                 //dynamic info = _machine["platform"].SysInfo();
                 //_machine.PeelVeneer("sys_info", info);
     
-                dynamic blkcount = _machine["platform"].RdBlkCount();
+                dynamic blkcount = await _machine["platform"].RdBlkCountAsync();
                 //Console.WriteLine($"RdBlkCount({blkcount.rc})::prog_bc = {blkcount.response.cnc_rdblkcount.prog_bc}");
                     
-                dynamic actpt = _machine["platform"].RdActPt();
+                dynamic actpt = await _machine["platform"].RdActPtAsync();
                 //Console.WriteLine($"RdActPt({actpt.rc})::prog_no = {actpt.response.cnc_rdactpt.prog_no}, blk_no = {actpt.response.cnc_rdactpt.blk_no}");
     
-                dynamic execprog = _machine["platform"].RdExecProg(_readAheadBytes);
+                dynamic execprog = await _machine["platform"].RdExecProgAsync(_readAheadBytes);
                 /*
                 var execlines = string.Join("", execprog.response.cnc_rdexecprog.data).Trim().Split('\n');
                 Console.WriteLine($"RdExecProg({execprog.rc})::length = {execprog.response.cnc_rdexecprog.length}, blknum = {execprog.response.cnc_rdexecprog.blknum}");
@@ -113,7 +113,7 @@ namespace l99.driver.fanuc.collectors
                 }
                 */
                 
-                dynamic disconnect = _machine["platform"].Disconnect();
+                dynamic disconnect = await _machine["platform"].DisconnectAsync();
 
                 LastSuccess = connect.success;
             }

@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using l99.driver.@base;
 
 namespace l99.driver.fanuc.veneers
@@ -13,7 +14,7 @@ namespace l99.driver.fanuc.veneers
             };
         }
         
-        protected override dynamic Any(dynamic input, dynamic? input2)
+        protected override async Task<dynamic> AnyAsync(dynamic input, dynamic? input2)
         {
             if (input.success)
             {;
@@ -22,16 +23,16 @@ namespace l99.driver.fanuc.veneers
                     cncid = string.Join("-", ((uint[])input.response.cnc_rdcncid.cncid).Select(x => x.ToString("X")).ToArray())
                 };
                 
-                this.onDataArrived(input, current_value);
+                await onDataArrivedAsync(input, current_value);
                 
                 if (!current_value.Equals(this._lastChangedValue))
                 {
-                    this.onDataChanged(input, current_value);
+                    await onDataChangedAsync(input, current_value);
                 }
             }
             else
             {
-                onError(input);
+                await onErrorAsync(input);
             }
 
             return new { veneer = this };

@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using l99.driver.@base;
 using Newtonsoft.Json.Linq;
 
@@ -11,19 +12,14 @@ namespace l99.driver.fanuc.handlers
             
         }
 
-        public override void Initialize()
+        protected override async Task<dynamic?> beforeDataArrivalAsync(Veneers veneers, Veneer veneer)
         {
-            
-        }
-        
-        protected override dynamic? beforeDataArrival(Veneers veneers, Veneer veneer)
-        {
-            veneers.Machine["broker"]["disco"].Add(veneers.Machine.Id, veneers.Machine["broker"]);
+            await veneers.Machine["broker"]["disco"].AddAsync(veneers.Machine.Id, veneers.Machine["broker"]);
             
             return null;
         }
         
-        public override dynamic? OnDataArrival(Veneers veneers, Veneer veneer, dynamic? beforeArrival)
+        public override async Task<dynamic?> OnDataArrivalAsync(Veneers veneers, Veneer veneer, dynamic? beforeArrival)
         {
             dynamic payload = new
             {
@@ -47,24 +43,25 @@ namespace l99.driver.fanuc.handlers
                 }
             };
 
+            await Task.Yield();
             return payload;
         }
         
-        protected override void afterDataArrival(Veneers veneers, Veneer veneer, dynamic? onArrival)
+        protected override async Task afterDataArrivalAsync(Veneers veneers, Veneer veneer, dynamic? onArrival)
         {
             var topic = $"fanuc/{veneers.Machine.Id}-all/{veneer.Name}{(veneer.SliceKey == null ? string.Empty : "/" + veneer.SliceKey.ToString())}";
             string payload = JObject.FromObject(onArrival).ToString();
-            veneers.Machine["broker"].PublishArrival(topic, payload);
+            await veneers.Machine["broker"].PublishArrivalAsync(topic, payload);
         }
         
-        protected override dynamic? beforeDataChange(Veneers veneers, Veneer veneer)
+        protected override async Task<dynamic?> beforeDataChangeAsync(Veneers veneers, Veneer veneer)
         {
-            veneers.Machine["broker"]["disco"].Add(veneers.Machine.Id, veneers.Machine["broker"]);
+            await veneers.Machine["broker"]["disco"].AddAsync(veneers.Machine.Id, veneers.Machine["broker"]);
             
             return null;
         }
         
-        public override dynamic? OnDataChange(Veneers veneers, Veneer veneer, dynamic? beforeChange)
+        public override async Task<dynamic?> OnDataChangeAsync(Veneers veneers, Veneer veneer, dynamic? beforeChange)
         {
             dynamic payload = new
             {
@@ -88,41 +85,29 @@ namespace l99.driver.fanuc.handlers
                 }
             };
 
+            await Task.Yield();
             return payload;
         }
         
-        protected override void afterDataChange(Veneers veneers, Veneer veneer, dynamic? onChange)
+        protected override async Task afterDataChangeAsync(Veneers veneers, Veneer veneer, dynamic? onChange)
         {
             var topic = $"fanuc/{veneers.Machine.Id}/{veneer.Name}{(veneer.SliceKey == null ? string.Empty : "/" + veneer.SliceKey.ToString())}";
             string payload = JObject.FromObject(onChange).ToString();
-            veneers.Machine["broker"].PublishChange(topic, payload);
+            await veneers.Machine["broker"].PublishChangeAsync(topic, payload);
         }
         
-        protected override dynamic? beforeDataError(Veneers veneers, Veneer veneer)
-        {
-            return null;
-        }
-        
-        public override dynamic? OnError(Veneers veneers, Veneer veneer, dynamic? beforeError)
-        {
-            return null;
-        }
-        
-        protected override void afterDataError(Veneers veneers, Veneer veneer, dynamic? onError)
+        protected override async Task afterDataErrorAsync(Veneers veneers, Veneer veneer, dynamic? onError)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine(new
             {
                 method = veneer.LastArrivedInput.method, rc = veneer.LastArrivedInput.rc
             });
+            
+            await Task.Yield();
         }
         
-        protected override dynamic? beforeSweepComplete(Machine machine)
-        {
-            return null;
-        }
-        
-        public override dynamic? OnCollectorSweepComplete(Machine machine, dynamic? beforeSweepComplete)
+        public override async Task<dynamic?> OnCollectorSweepCompleteAsync(Machine machine, dynamic? beforeSweepComplete)
         {
             dynamic payload = new
             {
@@ -141,18 +126,19 @@ namespace l99.driver.fanuc.handlers
                     data = machine.CollectorSuccess ? "OK" : "NOK"
                 }
             };
-
+            
+            await Task.Yield();
             return payload;
         }
         
-        protected override void afterSweepComplete(Machine machine, dynamic? onSweepComplete)
+        protected override async Task afterSweepCompleteAsync(Machine machine, dynamic? onSweepComplete)
         {
             string topic_all = $"fanuc/{machine.Id}-all/PING";
             string topic = $"fanuc/{machine.Id}/PING";
             string payload = JObject.FromObject(onSweepComplete).ToString();
             
-            machine["broker"].PublishArrivalStatus(topic_all, payload);
-            machine["broker"].PublishChangeStatus(topic, payload);
+            await machine["broker"].PublishArrivalStatus(topic_all, payload);
+            await machine["broker"].PublishChangeStatus(topic, payload);
         }
     }
 }

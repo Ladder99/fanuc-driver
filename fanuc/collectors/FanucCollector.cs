@@ -13,7 +13,7 @@ namespace l99.driver.fanuc.collectors
         
         ~FanucCollector()
         {
-            // TODO: verify inocation
+            // TODO: verify invocation
             _machine["platform"].ExitProcess();
         }
     }

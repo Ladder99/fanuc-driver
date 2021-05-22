@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using InfluxDB.LineProtocol;
 using l99.driver.@base;
 using Newtonsoft.Json.Linq;
@@ -14,32 +15,7 @@ namespace l99.driver.fanuc.handlers
             
         }
 
-        public override void Initialize()
-        {
-            
-        }
-        
-        protected override dynamic? beforeDataArrival(Veneers veneers, Veneer veneer)
-        {
-            return null;
-        }
-        
-        public override dynamic? OnDataArrival(Veneers veneers, Veneer veneer, dynamic? beforeArrival)
-        {
-            return null;
-        }
-        
-        protected override void afterDataArrival(Veneers veneers, Veneer veneer, dynamic? onArrival)
-        {
-            
-        }
-        
-        protected override dynamic? beforeDataChange(Veneers veneers, Veneer veneer)
-        {
-            return null;
-        }
-        
-        public override dynamic? OnDataChange(Veneers veneers, Veneer veneer, dynamic? beforeChange)
+        public override async Task<dynamic?> OnDataChangeAsync(Veneers veneers, Veneer veneer, dynamic? beforeChange)
         {
             if (veneer.Name == "axis_data")
             {
@@ -75,30 +51,24 @@ namespace l99.driver.fanuc.handlers
                 return payload;
             }
 
+            await Task.Yield();
             return null;
         }
         
-        protected override void afterDataChange(Veneers veneers, Veneer veneer, dynamic? onChange)
+        protected override async Task afterDataChangeAsync(Veneers veneers, Veneer veneer, dynamic? onChange)
         {
             if (onChange == null)
+            {
+                await Task.Yield();
                 return;
-            
+            }
+                
             var topic = $"fanuc/{veneers.Machine.Id}/influx";
             string payload = JObject.FromObject(onChange).ToString();
-            veneers.Machine["broker"].PublishChange(topic, payload);
+            await veneers.Machine["broker"].PublishChangeAsync(topic, payload);
         }
         
-        protected override dynamic? beforeDataError(Veneers veneers, Veneer veneer)
-        {
-            return null;
-        }
-        
-        public override dynamic? OnError(Veneers veneers, Veneer veneer, dynamic? beforeError)
-        {
-            return null;
-        }
-        
-        protected override void afterDataError(Veneers veneers, Veneer veneer, dynamic? onError)
+        protected override async Task afterDataErrorAsync(Veneers veneers, Veneer veneer, dynamic? onError)
         {
             /*
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -107,21 +77,8 @@ namespace l99.driver.fanuc.handlers
                 method = veneer.LastArrivedInput.method, rc = veneer.LastArrivedInput.rc
             });
             */
-        }
-        
-        protected override dynamic? beforeSweepComplete(Machine machine)
-        {
-            return null;
-        }
-        
-        public override dynamic? OnCollectorSweepComplete(Machine machine, dynamic? beforeSweepComplete)
-        {
-            return null;
-        }
-        
-        protected override void afterSweepComplete(Machine machine, dynamic? onSweepComplete)
-        {
             
+            await Task.Yield();
         }
     }
 }

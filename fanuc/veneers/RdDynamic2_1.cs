@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using l99.driver.@base;
 using Newtonsoft.Json.Linq;
 
@@ -19,7 +20,7 @@ namespace l99.driver.fanuc.veneers
             };
         }
         
-        protected override dynamic Any(dynamic input, dynamic? input2)
+        protected override async Task<dynamic> AnyAsync(dynamic input, dynamic? input2)
         {
             if (input.success && input2.figures.success)
             {
@@ -43,7 +44,7 @@ namespace l99.driver.fanuc.veneers
                     }
                 };
 
-                this.onDataArrived(input, current_value);
+                await onDataArrivedAsync(input, current_value);
                 
                 // TODO: equality or hash code do not match on this object (x86)
                 //if (!current_value.Equals(_lastValue))
@@ -51,12 +52,12 @@ namespace l99.driver.fanuc.veneers
                 //if(!current_value.ToString().Equals(_lastChangedValue.ToString())) 
                 if(!JObject.FromObject(current_value).ToString().Equals(JObject.FromObject(_lastChangedValue).ToString()))
                 {
-                    this.onDataChanged(input, current_value);
+                    await onDataChangedAsync(input, current_value);
                 }
             }
             else
             {
-                onError(input);
+                await onErrorAsync(input);
             }
 
             return new { veneer = this };

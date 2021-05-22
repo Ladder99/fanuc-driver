@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using l99.driver.@base;
 using MoreLinq;
 
@@ -23,7 +24,7 @@ namespace l99.driver.fanuc.veneers
             };
         }
         
-        protected override dynamic Any(dynamic input, dynamic? input2)
+        protected override async Task<dynamic> AnyAsync(dynamic input, dynamic? input2)
         {
             var max = ((List<dynamic>)input.focas_invocations).MaxBy(o => o.invocationMs).First();
             var min = ((List<dynamic>)input.focas_invocations).MinBy(o => o.invocationMs).First();
@@ -47,7 +48,7 @@ namespace l99.driver.fanuc.veneers
                 }
             };;
                 
-            this.onDataArrived(input, current_value);
+            await onDataArrivedAsync(input, current_value);
                 
             return new { veneer = this };
         }

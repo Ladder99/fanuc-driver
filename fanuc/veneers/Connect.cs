@@ -1,4 +1,5 @@
-﻿using l99.driver.@base;
+﻿using System.Threading.Tasks;
+using l99.driver.@base;
 
 namespace l99.driver.fanuc.veneers
 {
@@ -9,25 +10,25 @@ namespace l99.driver.fanuc.veneers
 
         }
 
-        protected override dynamic First(dynamic input, dynamic? input2)
+        protected override async Task<dynamic> FirstAsync(dynamic input, dynamic? input2)
         {
             var current_value = new {input.success};
             
-            this.onDataArrived(input, current_value);
-            this.onDataChanged(input, current_value);
+            await onDataArrivedAsync(input, current_value);
+            await onDataChangedAsync(input, current_value);
 
             return new { veneer = this };
         }
 
-        protected override dynamic Any(dynamic input, dynamic? input2)
+        protected override async Task<dynamic> AnyAsync(dynamic input, dynamic? input2)
         {
             var current_value = new {input.success };
             
-            this.onDataArrived(input, current_value);
+            await onDataArrivedAsync(input, current_value);
             
             if (!current_value.Equals(_lastChangedValue))
             {
-                this.onDataChanged(input, current_value);
+                await onDataChangedAsync(input, current_value);
             }
             
             return new { veneer = this };

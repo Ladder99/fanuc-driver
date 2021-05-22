@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using l99.driver.@base;
 using Newtonsoft.Json.Linq;
 
@@ -16,13 +17,13 @@ namespace l99.driver.fanuc.collectors
             
         }
         
-        public override void Initialize()
+        public override async Task InitializeAsync()
         {
             while (!_machine.VeneersApplied)
             {
                 Console.WriteLine("fanuc - creating veneers");
 
-                dynamic connect = _machine["platform"].Connect();
+                dynamic connect = await _machine["platform"].Connect();
                 //Console.WriteLine(JObject.FromObject(connect).ToString());
 
                 if (connect.success)
@@ -34,7 +35,7 @@ namespace l99.driver.fanuc.collectors
                     _machine.ApplyVeneer(typeof(fanuc.veneers.RdParamLData), "power_on_time_6750");
                     _machine.ApplyVeneer(typeof(fanuc.veneers.GetPath), "get_path");
                     
-                    dynamic paths = _machine["platform"].GetPath();
+                    dynamic paths = await _machine["platform"].GetPath();
 
                     IEnumerable<int> path_slices = Enumerable
                         .Range(paths.response.cnc_getpath.path_no, paths.response.cnc_getpath.maxpath_no);
@@ -51,10 +52,10 @@ namespace l99.driver.fanuc.collectors
                         current_path <= paths.response.cnc_getpath.maxpath_no;
                         current_path++)
                     {
-                        dynamic path = _machine["platform"].SetPath(current_path);
+                        dynamic path = await _machine["platform"].SetPath(current_path);
                         
-                        dynamic axes = _machine["platform"].RdAxisName();
-                        dynamic spindles = _machine["platform"].RdSpdlName();
+                        dynamic axes = await _machine["platform"].RdAxisName();
+                        dynamic spindles = await _machine["platform"].RdSpdlName();
                         dynamic axis_spindle_slices = new List<dynamic> { };
 
                         var fields_axes = axes.response.cnc_rdaxisname.axisname.GetType().GetFields();
@@ -84,7 +85,7 @@ namespace l99.driver.fanuc.collectors
                         _machine.ApplyVeneerAcrossSlices(current_path, typeof(fanuc.veneers.RdActs2), "spindle_data");
                     }
                     
-                    dynamic disconnect = _machine["platform"].Disconnect();
+                    dynamic disconnect = await _machine["platform"].Disconnect();
                     
                     _machine.VeneersApplied = true;
 
@@ -92,13 +93,12 @@ namespace l99.driver.fanuc.collectors
                 }
                 else
                 {
-                    // not in here
-                    System.Threading.Thread.Sleep(_sweepMs);
+                    await Task.Delay(_sweepMs);
                 }
             }
         }
 
-        public override void Collect()
+        public override async Task CollectAsync()
         {
             _sweepWatch.Restart();
 
@@ -114,25 +114,25 @@ namespace l99.driver.fanuc.collectors
                 });
             };
             
-            dynamic connect = _machine["platform"].Connect();
+            dynamic connect = await _machine["platform"].ConnectAsync();
             _machine.PeelVeneer("connect", connect);
             catch_focas_perf(connect);
 
             if (connect.success)
             {
-                dynamic cncid = _machine["platform"].CNCId();
+                dynamic cncid = await _machine["platform"].CNCIdAsync();
                 _machine.PeelVeneer("cnc_id", cncid);
                 catch_focas_perf(cncid);
                 
-                dynamic poweron = _machine["platform"].RdTimer(0);
+                dynamic poweron = await _machine["platform"].RdTimerAsync(0);
                 _machine.PeelVeneer("power_on_time", poweron);
                 catch_focas_perf(poweron);
                 
-                dynamic poweron_6750 = _machine["platform"].RdParam(6750, 0, 8, 1);
+                dynamic poweron_6750 = await _machine["platform"].RdParamAsync(6750, 0, 8, 1);
                 _machine.PeelVeneer("power_on_time_6750", poweron_6750);
                 catch_focas_perf(poweron_6750);
                 
-                dynamic paths = _machine["platform"].GetPath();
+                dynamic paths = await _machine["platform"].GetPathAsync();
                 _machine.PeelVeneer("get_path", paths);
                 catch_focas_perf(paths);
 
@@ -140,29 +140,29 @@ namespace l99.driver.fanuc.collectors
                     current_path <= paths.response.cnc_getpath.maxpath_no;
                     current_path++)
                 {
-                    dynamic path = _machine["platform"].SetPath(current_path);
+                    dynamic path = await _machine["platform"].SetPathAsync(current_path);
                     dynamic path_marker = new {path.request.cnc_setpath.path_no};
                     _machine.MarkVeneer(current_path, path_marker);
                     catch_focas_perf(path);
                     
-                    dynamic info = _machine["platform"].SysInfo();
+                    dynamic info = await _machine["platform"].SysInfoAsync();
                     _machine.PeelAcrossVeneer(current_path,"sys_info", info);
                     catch_focas_perf(info);
                     
-                    dynamic stat = _machine["platform"].StatInfo();
+                    dynamic stat = await _machine["platform"].StatInfoAsync();
                     _machine.PeelAcrossVeneer(current_path, "stat_info", stat);
                     catch_focas_perf(path);
                     
                     // in order to return the corre
-                    dynamic figures = _machine["platform"].GetFigure(0, 32);
+                    dynamic figures = await _machine["platform"].GetFigureAsync(0, 32);
                     _machine.PeelAcrossVeneer(current_path,"figures", figures);
                     catch_focas_perf(figures);
                     
-                    dynamic axes = _machine["platform"].RdAxisName();
+                    dynamic axes = await _machine["platform"].RdAxisNameAsync();
                     _machine.PeelAcrossVeneer(current_path, "axis_name", axes);
                     catch_focas_perf(axes);
 
-                    dynamic spindles = _machine["platform"].RdSpdlName();
+                    dynamic spindles = await _machine["platform"].RdSpdlNameAsync();
                     _machine.PeelAcrossVeneer(current_path, "spindle_name", spindles);
                     catch_focas_perf(spindles);
                     
@@ -172,7 +172,7 @@ namespace l99.driver.fanuc.collectors
                         current_axis <= axes.response.cnc_rdaxisname.data_num;
                         current_axis++)
                     {
-                        dynamic axis = fields_axes[current_axis-1].GetValue(axes.response.cnc_rdaxisname.axisname);
+                        dynamic axis = fields_axes[current_axis-1].GetValueAsync(axes.response.cnc_rdaxisname.axisname);
                         dynamic axis_name = ((char) axis.name).ToString().Trim('\0') + ((char) axis.suff).ToString().Trim('\0');
                         dynamic axis_marker = new
                         {
@@ -185,7 +185,7 @@ namespace l99.driver.fanuc.collectors
                         // the figures observation determines where the decimal point goes in axis positional data
                         //  we pass it as input2 to reveal the 'axis_data' observation, along with the axis index
                         //  and do the math inside RdDynamic2_1 veneer
-                        dynamic axis_data = _machine["platform"].RdDynamic2(current_axis, 44, 2);
+                        dynamic axis_data = await _machine["platform"].RdDynamic2Async(current_axis, 44, 2);
                         _machine.PeelAcrossVeneer(new[] { current_path, axis_name }, "axis_data", axis_data,new
                         {
                             figures, 
@@ -215,13 +215,13 @@ namespace l99.driver.fanuc.collectors
                         
                         _machine.MarkVeneer(new[] { current_path, spindle_name }, new[] { path_marker, spindle_marker });
                         
-                        dynamic spindle_data = _machine["platform"].Acts2(current_spindle);
+                        dynamic spindle_data = await _machine["platform"].Acts2Async(current_spindle);
                         _machine.PeelAcrossVeneer(new[] { current_path, spindle_name }, "spindle_data", spindle_data);
                         catch_focas_perf(spindle_data);
                     };
                 }
 
-                dynamic disconnect = _machine["platform"].Disconnect();
+                dynamic disconnect = await _machine["platform"].DisconnectAsync();
                 catch_focas_perf(disconnect);
 
                 _machine.PeelVeneer("focas_perf", new

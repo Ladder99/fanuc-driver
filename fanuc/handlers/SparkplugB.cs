@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
+using System.Threading.Tasks;
 using l99.driver.@base;
 using Newtonsoft.Json.Linq;
 
@@ -33,36 +34,16 @@ namespace l99.driver.fanuc.handlers
             return _sequence - 1;
         }
         
-        public override void Initialize()
+        public override async Task InitializeAsync()
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine(nextSequence() + " > " + string.Format(_topicFormat, "NBIRTH"));
             // MQTT LWT NDEATH
-        }
-        
-        protected override dynamic? beforeDataArrival(Veneers veneers, Veneer veneer)
-        {
-            return null;
-        }
-        
-        public override dynamic? OnDataArrival(Veneers veneers, Veneer veneer, dynamic? beforeArrival)
-        {
-            return null;
-        }
-        
-        protected override void afterDataArrival(Veneers veneers, Veneer veneer, dynamic? onArrival)
-        {
             
+            await Task.Yield();
         }
         
-        protected override dynamic? beforeDataChange(Veneers veneers, Veneer veneer)
-        {
-            return null;
-        }
-
-        
-        
-        public override dynamic? OnDataChange(Veneers veneers, Veneer veneer, dynamic? beforeChange)
+        public override async Task<dynamic?> OnDataChangeAsync(Veneers veneers, Veneer veneer, dynamic? beforeChange)
         {
             if (veneer.Name == "connect")
             {
@@ -91,37 +72,20 @@ namespace l99.driver.fanuc.handlers
                 });
             }
             
+            await Task.Yield();
             return null;
         }
         
-        protected override void afterDataChange(Veneers veneers, Veneer veneer, dynamic? onChange)
-        {
-            
-        }
-        
-        protected override dynamic? beforeDataError(Veneers veneers, Veneer veneer)
-        {
-            return null;
-        }
-        
-        public override dynamic? OnError(Veneers veneers, Veneer veneer, dynamic? beforeError)
-        {
-            return null;
-        }
-        
-        protected override void afterDataError(Veneers veneers, Veneer veneer, dynamic? onError)
+        protected override async Task afterDataErrorAsync(Veneers veneers, Veneer veneer, dynamic? onError)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine(nextSequence() + " > " + string.Format(_topicFormat, "NDATA"));
             // veneer.LastArrivedInput.method, rc = veneer.LastArrivedInput.rc
+            
+            await Task.Yield();
         }
         
-        protected override dynamic? beforeSweepComplete(Machine machine)
-        {
-            return null;
-        }
-        
-        public override dynamic? OnCollectorSweepComplete(Machine machine, dynamic? beforeSweepComplete)
+        public override async Task<dynamic?> OnCollectorSweepCompleteAsync(Machine machine, dynamic? beforeSweepComplete)
         {
             if (_ddata.Count > 0)
             {
@@ -140,12 +104,8 @@ namespace l99.driver.fanuc.handlers
                 _ddata.Clear();
             }
 
+            await Task.Yield();
             return null;
-        }
-        
-        protected override void afterSweepComplete(Machine machine, dynamic? onSweepComplete)
-        {
-            
         }
     }
 }

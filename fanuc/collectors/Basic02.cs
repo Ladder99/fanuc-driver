@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using l99.driver.@base;
 using Newtonsoft.Json.Linq;
 
@@ -13,7 +14,7 @@ namespace l99.driver.fanuc.collectors
             
         }
         
-        public override void Initialize()
+        public override async Task InitializeAsync()
         {
             // repeat the initialization loop until we have success
             while (!_machine.VeneersApplied)
@@ -21,7 +22,7 @@ namespace l99.driver.fanuc.collectors
                 Console.WriteLine("fanuc - creating veneers");
 
                 // connect to the controller, we will interrogate its execution paths later
-                dynamic connect = _machine["platform"].Connect();
+                dynamic connect = await _machine["platform"].ConnectAsync();
                 Console.WriteLine(JObject.FromObject(connect).ToString());
 
                 if (connect.success)
@@ -34,7 +35,7 @@ namespace l99.driver.fanuc.collectors
                     _machine.ApplyVeneer(typeof(fanuc.veneers.GetPath), "get_path");
                     
                     // get a list of available execution paths from the controller
-                    dynamic paths = _machine["platform"].GetPath();
+                    dynamic paths = await _machine["platform"].GetPathAsync();
 
                     // turn the available paths into an array, e.g. [1,2,3]
                     IEnumerable<int> path_slices = Enumerable
@@ -51,7 +52,7 @@ namespace l99.driver.fanuc.collectors
                     _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.RdSpindlename), "spindle_name");
                     
                     // disconnect from controller
-                    dynamic disconnect = _machine["platform"].Disconnect();
+                    dynamic disconnect = await _machine["platform"].DisconnectAsync();
                     
                     // initialization successful
                     _machine.VeneersApplied = true;
@@ -60,37 +61,36 @@ namespace l99.driver.fanuc.collectors
                 }
                 else
                 {
-                    // TODO: not in here
-                    System.Threading.Thread.Sleep(_sweepMs);
+                    await Task.Delay(_sweepMs);
                 }
             }
         }
 
-        public override void Collect()
+        public override async Task CollectAsync()
         {
             // on each sweep of the collector...
             
             // connect to the machine
-            dynamic connect = _machine["platform"].Connect();
+            dynamic connect = await _machine["platform"].ConnectAsync();
             // reveal the "connect" observation by peeling the veneer associated with it
             _machine.PeelVeneer("connect", connect);
 
             if (connect.success)
             {
                 // similarly, reveal below observations from the values returned by Focas API
-                dynamic cncid = _machine["platform"].CNCId();
+                dynamic cncid = await _machine["platform"].CNCIdAsync();
                 _machine.PeelVeneer("cnc_id", cncid);
                 
-                dynamic poweron = _machine["platform"].RdTimer(0);
+                dynamic poweron = await _machine["platform"].RdTimerAsync(0);
                 _machine.PeelVeneer("power_on_time", poweron);
                 
                 // here is an example where the RdParamLData veneer is generic based on the input parameters
                 //  and can be applied to multiple observations
-                dynamic poweron_6750 = _machine["platform"].RdParam(6750, 0, 8, 1);
+                dynamic poweron_6750 = await _machine["platform"].RdParamAsync(6750, 0, 8, 1);
                 _machine.PeelVeneer("power_on_time_6750", poweron_6750);
                 
                 // retrieve the number of paths to walk each one
-                dynamic paths = _machine["platform"].GetPath();
+                dynamic paths = await _machine["platform"].GetPathAsync();
                 _machine.PeelVeneer("get_path", paths);
 
                 // walk each path and retrieve values relevant to it
@@ -99,7 +99,7 @@ namespace l99.driver.fanuc.collectors
                     current_path++)
                 {
                     // when the path is set using Focas API, consecutive calls will retrieve that path's data
-                    dynamic path = _machine["platform"].SetPath(current_path);
+                    dynamic path = await _machine["platform"].SetPathAsync(current_path);
                     // create a marker for the path, this marker will become part of the output
                     //  to help identify the exact source of the observation
                     dynamic path_marker = new {path.request.cnc_setpath.path_no};
@@ -113,20 +113,20 @@ namespace l99.driver.fanuc.collectors
                     //  next iteration of the loop will reveal observations for that path ...
                     
                     // 'sys_info' observation contains the number of axes for this path
-                    dynamic info = _machine["platform"].SysInfo();
+                    dynamic info = await _machine["platform"].SysInfoAsync();
                     _machine.PeelAcrossVeneer(current_path, "sys_info", info);
                     
                     // 'axis_name' observation contains the axis names for this path
-                    dynamic axes = _machine["platform"].RdAxisName();
+                    dynamic axes = await _machine["platform"].RdAxisNameAsync();
                     _machine.PeelAcrossVeneer(current_path, "axis_name", axes);
 
                     // 'spindle_name' observation contains the spindle names for this path
-                    dynamic spindles = _machine["platform"].RdSpdlName();
+                    dynamic spindles = await _machine["platform"].RdSpdlNameAsync();
                     _machine.PeelAcrossVeneer(current_path, "spindle_name", spindles);
                 }
 
                 // finally, disconnect
-                dynamic disconnect = _machine["platform"].Disconnect();
+                dynamic disconnect = await _machine["platform"].DisconnectAsync();
 
                 // this sweep has been successful
                 LastSuccess = connect.success;

@@ -17,7 +17,7 @@ namespace l99.driver.fanuc
         {
             string config_file = getArgument(args, "--config", "config.yml");
             dynamic config = readConfig(config_file);
-            Machines machines = createMachines(config);
+            Machines machines = await createMachines(config);
             await machines.RunAsync();
         }
 
@@ -38,7 +38,7 @@ namespace l99.driver.fanuc
             return deserializer.Deserialize(input);
         }
 
-        static Machines createMachines(dynamic config)
+        static async Task<Machines> createMachines(dynamic config)
         {
             var machine_confs = new List<dynamic>();
 
@@ -75,12 +75,12 @@ namespace l99.driver.fanuc
             foreach (var cfg in machine_confs)
             {
                 Console.WriteLine(JObject.FromObject(cfg).ToString());
-                Broker broker = brokers.Add(cfg.broker);
+                Broker broker = await brokers.AddAsync(cfg.broker);
                 broker["disco"] = new Disco();
                 Machine machine = machines.Add(cfg.machine);
                 machine["broker"] = broker;
                 machine.AddCollector(Type.GetType(cfg.machine.collector), cfg.machine.collectorSweepMs);
-                machine.AddHandler(Type.GetType(cfg.machine.handler));
+                await machine.AddHandlerAsync(Type.GetType(cfg.machine.handler));
             }
 
             return machines;

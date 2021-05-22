@@ -1,4 +1,5 @@
-﻿using l99.driver.@base;
+﻿using System.Threading.Tasks;
+using l99.driver.@base;
 
 namespace l99.driver.fanuc.veneers
 {
@@ -17,7 +18,7 @@ namespace l99.driver.fanuc.veneers
             };
         }
         
-        protected override dynamic Any(dynamic input, dynamic? input2)
+        protected override async Task<dynamic> AnyAsync(dynamic input, dynamic? input2)
         {
             if (input.success)
             {
@@ -32,16 +33,16 @@ namespace l99.driver.fanuc.veneers
                     axes = string.Join("", input.response.cnc_sysinfo.sysinfo.axes)
                 };
                 
-                this.onDataArrived(input, current_value);
+                await onDataArrivedAsync(input, current_value);
                 
                 if (!current_value.Equals(this._lastChangedValue))
                 {
-                    this.onDataChanged(input, current_value);
+                    await onDataChangedAsync(input, current_value);
                 }
             }
             else
             {
-                onError(input);
+                await onErrorAsync(input);
             }
 
             return new { veneer = this };
