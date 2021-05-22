@@ -73,7 +73,7 @@ namespace l99.driver.fanuc.collectors
                             axis_spindle_slices.Add(((char) spindle.name).ToString().Trim('\0') +
                                                     ((char) spindle.suff1).ToString().Trim('\0').Trim() +
                                                     ((char) spindle.suff2).ToString().Trim('\0').Trim() +
-                                                    ((char) spindle.suff3).ToString().Trim('\0').Trim('\u0003').Trim());
+                                                    ((char) spindle.suff3).ToString().Trim('\0').Trim('\u0003').Trim('\u0001').Trim());
                         };
 
                         _machine.SliceVeneer(current_path, axis_spindle_slices.ToArray());
@@ -172,7 +172,7 @@ namespace l99.driver.fanuc.collectors
                         current_axis <= axes.response.cnc_rdaxisname.data_num;
                         current_axis++)
                     {
-                        dynamic axis = fields_axes[current_axis-1].GetValueAsync(axes.response.cnc_rdaxisname.axisname);
+                        dynamic axis = fields_axes[current_axis-1].GetValue(axes.response.cnc_rdaxisname.axisname);
                         dynamic axis_name = ((char) axis.name).ToString().Trim('\0') + ((char) axis.suff).ToString().Trim('\0');
                         dynamic axis_marker = new
                         {
@@ -204,13 +204,13 @@ namespace l99.driver.fanuc.collectors
                         dynamic spindle_name = ((char) spindle.name).ToString().Trim('\0') +
                                                 ((char) spindle.suff1).ToString().Trim('\0').Trim() +
                                                 ((char) spindle.suff2).ToString().Trim('\0').Trim() +
-                                                ((char) spindle.suff3).ToString().Trim('\0').Trim('\u0003').Trim();
+                                                ((char) spindle.suff3).ToString().Trim('\0').Trim('\u0003').Trim('\u0001').Trim();
                         dynamic spindle_marker = new
                         {
                             name = ((char)spindle.name).ToString().Trim('\0'), 
                             suff1 =  ((char)spindle.suff1).ToString().Trim('\0').Trim(),
                             suff2 =  ((char)spindle.suff2).ToString().Trim('\0').Trim(),
-                            suff3 =  ((char)spindle.suff3).ToString().Trim('\0').Trim('\u0003').Trim()
+                            suff3 =  ((char)spindle.suff3).ToString().Trim('\0').Trim('\u0003').Trim('\u0001').Trim()
                         };
                         
                         _machine.MarkVeneer(new[] { current_path, spindle_name }, new[] { path_marker, spindle_marker });

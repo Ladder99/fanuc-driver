@@ -30,7 +30,7 @@ namespace l99.driver.fanuc.veneers
                         name = ((char)spindle.name).ToString().Trim('\0'), 
                         suff1 =  ((char)spindle.suff1).ToString().Trim('\0').Trim(),
                         suff2 =  ((char)spindle.suff2).ToString().Trim('\0').Trim(),
-                        suff3 =  ((char)spindle.suff3).ToString().Trim('\0').Trim('\u0003').Trim()
+                        suff3 =  ((char)spindle.suff3).ToString().Trim('\0').Trim('\u0003').Trim('\u0001').Trim()
                     });
                 }
                 
