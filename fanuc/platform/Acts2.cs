@@ -4,9 +4,9 @@ namespace l99.driver.fanuc
 {
     public partial class Platform
     {
-        public async Task<dynamic> Acts2Async()
+        public async Task<dynamic> Acts2Async(short sp_no = -1)
         {
-            return await Task.FromResult(Acts2());
+            return await Task.FromResult(Acts2(sp_no));
         }
         
         public dynamic Acts2(short sp_no = -1)

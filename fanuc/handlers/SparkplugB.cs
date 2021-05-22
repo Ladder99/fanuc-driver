@@ -40,7 +40,7 @@ namespace l99.driver.fanuc.handlers
             Console.WriteLine(nextSequence() + " > " + string.Format(_topicFormat, "NBIRTH"));
             // MQTT LWT NDEATH
             
-            await Task.Yield();
+            
         }
         
         public override async Task<dynamic?> OnDataChangeAsync(Veneers veneers, Veneer veneer, dynamic? beforeChange)
@@ -72,7 +72,7 @@ namespace l99.driver.fanuc.handlers
                 });
             }
             
-            await Task.Yield();
+            
             return null;
         }
         
@@ -82,7 +82,7 @@ namespace l99.driver.fanuc.handlers
             Console.WriteLine(nextSequence() + " > " + string.Format(_topicFormat, "NDATA"));
             // veneer.LastArrivedInput.method, rc = veneer.LastArrivedInput.rc
             
-            await Task.Yield();
+            
         }
         
         public override async Task<dynamic?> OnCollectorSweepCompleteAsync(Machine machine, dynamic? beforeSweepComplete)
@@ -104,7 +104,7 @@ namespace l99.driver.fanuc.handlers
                 _ddata.Clear();
             }
 
-            await Task.Yield();
+            
             return null;
         }
     }

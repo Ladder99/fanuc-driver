@@ -47,12 +47,12 @@ namespace l99.driver.fanuc.collectors
         public override async Task CollectAsync()
         {
             dynamic connect = await _machine["platform"].ConnectAsync();
-            //_machine.PeelVeneer("connect", connect);
+            //await _machine.PeelVeneerAsync("connect", connect);
 
             if (connect.success)
             {
                 //dynamic info = _machine["platform"].SysInfo();
-                //_machine.PeelVeneer("sys_info", info);
+                //await _machine.PeelVeneerAsync("sys_info", info);
     
                 dynamic blkcount = await _machine["platform"].RdBlkCountAsync();
                 //Console.WriteLine($"RdBlkCount({blkcount.rc})::prog_bc = {blkcount.response.cnc_rdblkcount.prog_bc}");

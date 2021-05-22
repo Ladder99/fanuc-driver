@@ -56,7 +56,7 @@ namespace l99.driver.fanuc.handlers
                 return payload;
             }
 
-            await Task.Yield();
+            
             return null;
         }
         
@@ -80,7 +80,7 @@ namespace l99.driver.fanuc.handlers
             });
             */
             
-            await Task.Yield();
+            
         }
     }
 }

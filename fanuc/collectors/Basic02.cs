@@ -73,25 +73,25 @@ namespace l99.driver.fanuc.collectors
             // connect to the machine
             dynamic connect = await _machine["platform"].ConnectAsync();
             // reveal the "connect" observation by peeling the veneer associated with it
-            _machine.PeelVeneer("connect", connect);
+            await _machine.PeelVeneerAsync("connect", connect);
 
             if (connect.success)
             {
                 // similarly, reveal below observations from the values returned by Focas API
                 dynamic cncid = await _machine["platform"].CNCIdAsync();
-                _machine.PeelVeneer("cnc_id", cncid);
+                await _machine.PeelVeneerAsync("cnc_id", cncid);
                 
                 dynamic poweron = await _machine["platform"].RdTimerAsync(0);
-                _machine.PeelVeneer("power_on_time", poweron);
+                await _machine.PeelVeneerAsync("power_on_time", poweron);
                 
                 // here is an example where the RdParamLData veneer is generic based on the input parameters
                 //  and can be applied to multiple observations
                 dynamic poweron_6750 = await _machine["platform"].RdParamAsync(6750, 0, 8, 1);
-                _machine.PeelVeneer("power_on_time_6750", poweron_6750);
+                await _machine.PeelVeneerAsync("power_on_time_6750", poweron_6750);
                 
                 // retrieve the number of paths to walk each one
                 dynamic paths = await _machine["platform"].GetPathAsync();
-                _machine.PeelVeneer("get_path", paths);
+                await _machine.PeelVeneerAsync("get_path", paths);
 
                 // walk each path and retrieve values relevant to it
                 for (short current_path = paths.response.cnc_getpath.path_no;
@@ -114,15 +114,15 @@ namespace l99.driver.fanuc.collectors
                     
                     // 'sys_info' observation contains the number of axes for this path
                     dynamic info = await _machine["platform"].SysInfoAsync();
-                    _machine.PeelAcrossVeneer(current_path, "sys_info", info);
+                    await _machine.PeelAcrossVeneerAsync(current_path, "sys_info", info);
                     
                     // 'axis_name' observation contains the axis names for this path
                     dynamic axes = await _machine["platform"].RdAxisNameAsync();
-                    _machine.PeelAcrossVeneer(current_path, "axis_name", axes);
+                    await _machine.PeelAcrossVeneerAsync(current_path, "axis_name", axes);
 
                     // 'spindle_name' observation contains the spindle names for this path
                     dynamic spindles = await _machine["platform"].RdSpdlNameAsync();
-                    _machine.PeelAcrossVeneer(current_path, "spindle_name", spindles);
+                    await _machine.PeelAcrossVeneerAsync(current_path, "spindle_name", spindles);
                 }
 
                 // finally, disconnect

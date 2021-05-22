@@ -43,7 +43,7 @@ namespace l99.driver.fanuc.handlers
                 }
             };
 
-            await Task.Yield();
+            
             return payload;
         }
         
@@ -85,7 +85,7 @@ namespace l99.driver.fanuc.handlers
                 }
             };
 
-            await Task.Yield();
+            
             return payload;
         }
         
@@ -104,7 +104,7 @@ namespace l99.driver.fanuc.handlers
                 method = veneer.LastArrivedInput.method, rc = veneer.LastArrivedInput.rc
             });
             
-            await Task.Yield();
+            
         }
         
         public override async Task<dynamic?> OnCollectorSweepCompleteAsync(Machine machine, dynamic? beforeSweepComplete)
@@ -127,7 +127,7 @@ namespace l99.driver.fanuc.handlers
                 }
             };
             
-            await Task.Yield();
+            
             return payload;
         }
         
@@ -137,8 +137,8 @@ namespace l99.driver.fanuc.handlers
             string topic = $"fanuc/{machine.Id}/PING";
             string payload = JObject.FromObject(onSweepComplete).ToString();
             
-            await machine["broker"].PublishArrivalStatus(topic_all, payload);
-            await machine["broker"].PublishChangeStatus(topic, payload);
+            await machine["broker"].PublishArrivalStatusAsync(topic_all, payload);
+            await machine["broker"].PublishChangeStatusAsync(topic, payload);
         }
     }
 }
