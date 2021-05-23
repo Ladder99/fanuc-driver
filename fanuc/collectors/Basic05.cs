@@ -23,11 +23,8 @@ namespace l99.driver.fanuc.collectors
             {
                 while (!_machine.VeneersApplied)
                 {
-                    Console.WriteLine("fanuc - creating veneers");
-
                     dynamic connect = await _machine["platform"].ConnectAsync();
-                    Console.WriteLine(JObject.FromObject(connect).ToString());
-
+                    
                     if (connect.success)
                     {
                         // let's add a custom internal veneer used to measure the health of our controller connection

@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace l99.driver.fanuc
 {
@@ -17,7 +18,7 @@ namespace l99.driver.fanuc
                 return (Focas1.focas_ret)Focas1.cnc_exitprocess();
             });
 
-            return new
+            var nr = new
             {
                 method = "cnc_exitprocess",
                 invocationMs = ndr.ElapsedMilliseconds,
@@ -27,8 +28,12 @@ namespace l99.driver.fanuc
                 request = new { cnc_exitprocess = new {  } },
                 response = new { cnc_exitprocess = new { } }
             };
+            
+            _logger.Trace($"[{_machine.Id}] Platform invocation result:\n{JObject.FromObject(nr).ToString()}");
+
+            return nr;
 #else
-            return new
+            var nr = new
             {
                 method = "cnc_exitprocess",
                 invocationMs = -1,
@@ -38,6 +43,11 @@ namespace l99.driver.fanuc
                 request = new {cnc_exitprocess = new { }},
                 response = new {cnc_exitprocess = new { }}
             };
+            
+            
+            _logger.Trace($"[{_machine.Id}] Platform invocation result:\n{JObject.FromObject(nr).ToString()}");
+
+            return nr;
 #endif
         }
     }

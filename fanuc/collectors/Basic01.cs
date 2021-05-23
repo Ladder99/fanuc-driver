@@ -19,8 +19,7 @@ namespace l99.driver.fanuc.collectors
                 while (!_machine.VeneersApplied)
                 {
                     dynamic connect = await _machine["platform"].ConnectAsync();
-                    Console.WriteLine(JObject.FromObject(connect).ToString());
-
+                    
                     if (connect.success)
                     {
                         _machine.ApplyVeneer(typeof(fanuc.veneers.Connect), "connect");

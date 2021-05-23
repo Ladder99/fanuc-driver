@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace l99.driver.fanuc
 {
@@ -20,7 +21,7 @@ namespace l99.driver.fanuc
                 return (Focas1.focas_ret) Focas1.cnc_rdalmmsg2(_handle, type, ref num_out, almmsg);
             });
 
-            return new
+            var nr = new
             {
                 method = "cnc_rdalmmsg2",
                 invocationMs = ndr.ElapsedMilliseconds,
@@ -30,6 +31,10 @@ namespace l99.driver.fanuc
                 request = new {cnc_rdalmmsg2 = new {type, num}},
                 response = new {cnc_rdalmmsg2 = new {num = num_out, almmsg}}
             };
+            
+            _logger.Trace($"[{_machine.Id}] Platform invocation result:\n{JObject.FromObject(nr).ToString()}");
+
+            return nr;
         }
         
         public async Task<dynamic> RdAlmMsg2AllAsync(short count = 10, short maxType = 20)
@@ -42,12 +47,16 @@ namespace l99.driver.fanuc
                 alms.Add(type, await RdAlmMsg2Async(type, countRead));
             }
 
-            return new
+            var nr = new
             {
                 method = "cnc_rdalmmsg2_ALL",
                 request = new { cnc_rdalmmsg2_ALL = new { minType = 0, maxType, count } },
                 response = new { cnc_rdalmmsg2_ALL = alms }
             };
+            
+            _logger.Trace($"[{_machine.Id}] Platform invocation result:\n{JObject.FromObject(nr).ToString()}");
+
+            return nr;
         }
         
         public dynamic RdAlmMsg2All(short count = 10, short maxType = 20)
@@ -60,12 +69,16 @@ namespace l99.driver.fanuc
                 alms.Add(type, RdAlmMsg2(type, countRead));
             }
 
-            return new
+            var nr = new
             {
                 method = "cnc_rdalmmsg2_ALL",
                 request = new { cnc_rdalmmsg2_ALL = new { minType = 0, maxType, count } },
                 response = new { cnc_rdalmmsg2_ALL = alms }
             };
+            
+            _logger.Trace($"[{_machine.Id}] Platform invocation result:\n{JObject.FromObject(nr).ToString()}");
+
+            return nr;
         }
     }
 }

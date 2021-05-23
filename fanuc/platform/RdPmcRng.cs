@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace l99.driver.fanuc
 {
@@ -34,7 +35,7 @@ namespace l99.driver.fanuc
                     length, buf);
             });
 
-            return new
+            var nr = new
             {
                 method = "pmc_rdpmcrng",
                 invocationMs = ndr.ElapsedMilliseconds,
@@ -44,6 +45,10 @@ namespace l99.driver.fanuc
                 request = new {pmc_rdpmcrng = new {adr_type, data_type, s_number, e_number, length, IODBPMC_type}},
                 response = new {pmc_rdpmcrng = new {buf, IODBPMC_type = buf.GetType().Name}}
             };
+            
+            _logger.Trace($"[{_machine.Id}] Platform invocation result:\n{JObject.FromObject(nr).ToString()}");
+
+            return nr;
         }
     }
 }

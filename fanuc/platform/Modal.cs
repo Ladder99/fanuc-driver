@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace l99.driver.fanuc
 {
@@ -37,7 +38,7 @@ namespace l99.driver.fanuc
                 return (Focas1.focas_ret) Focas1.cnc_modal(_handle, type, block, modal);
             });
 
-            return new
+            var nr = new
             {
                 method = "cnc_modal",
                 invocationMs = ndr.ElapsedMilliseconds,
@@ -47,6 +48,10 @@ namespace l99.driver.fanuc
                 request = new {cnc_modal = new {type, block, ODBMDL_type}},
                 response = new {cnc_modal = new {modal, modal_type = modal.GetType().Name}}
             };
+            
+            _logger.Trace($"[{_machine.Id}] Platform invocation result:\n{JObject.FromObject(nr).ToString()}");
+
+            return nr;
         }
     }
 }

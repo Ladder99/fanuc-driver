@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace l99.driver.fanuc
 {
@@ -22,7 +23,7 @@ namespace l99.driver.fanuc
             // each path
             // loadmeter.svloadX.data / Math.Pow(10, loadmeter.svloadX.dec)
 
-            return new
+            var nr = new
             {
                 method = "cnc_rdsvmeter",
                 invocationMs = ndr.ElapsedMilliseconds,
@@ -32,6 +33,10 @@ namespace l99.driver.fanuc
                 request = new {cnc_rdsvmeter = new {data_num}},
                 response = new {cnc_rdsvmeter = new {data_num = data_num_out, loadmeter}}
             };
+            
+            _logger.Trace($"[{_machine.Id}] Platform invocation result:\n{JObject.FromObject(nr).ToString()}");
+
+            return nr;
         }
     }
 }

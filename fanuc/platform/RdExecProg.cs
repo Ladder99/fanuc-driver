@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace l99.driver.fanuc
 {
@@ -37,7 +38,7 @@ namespace l99.driver.fanuc
 
             //Console.WriteLine("----------------------------");
 
-            return new
+            var nr = new
             {
                 method = "cnc_rdexecprog",
                 invocationMs = ndr.ElapsedMilliseconds,
@@ -47,6 +48,10 @@ namespace l99.driver.fanuc
                 request = new {cnc_rdexecprog = new {length}},
                 response = new {cnc_rdexecprog = new {length = length_out, blknum, data}}
             };
+            
+            _logger.Trace($"[{_machine.Id}] Platform invocation result:\n{JObject.FromObject(nr).ToString()}");
+
+            return nr;
         }
     }
 }

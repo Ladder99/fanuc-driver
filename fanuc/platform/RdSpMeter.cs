@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace l99.driver.fanuc
 {
@@ -19,7 +20,7 @@ namespace l99.driver.fanuc
                 return (Focas1.focas_ret) Focas1.cnc_rdspmeter(_handle, type, ref data_num_out, loadmeter);
             });
 
-            return new
+            var nr = new
             {
                 method = "cnc_rdspmeter",
                 invocationMs = ndr.ElapsedMilliseconds,
@@ -29,6 +30,10 @@ namespace l99.driver.fanuc
                 request = new {cnc_rdspmeter = new {type, data_num}},
                 response = new {cnc_rdspmeter = new {data_num = data_num_out, loadmeter}}
             };
+            
+            _logger.Trace($"[{_machine.Id}] Platform invocation result:\n{JObject.FromObject(nr).ToString()}");
+
+            return nr;
         }
     }
 }

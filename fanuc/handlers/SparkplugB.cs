@@ -78,7 +78,6 @@ namespace l99.driver.fanuc.handlers
         
         protected override async Task afterDataErrorAsync(Veneers veneers, Veneer veneer, dynamic? onError)
         {
-            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine(nextSequence() + " > " + string.Format(_topicFormat, "NDATA"));
             // veneer.LastArrivedInput.method, rc = veneer.LastArrivedInput.rc
             

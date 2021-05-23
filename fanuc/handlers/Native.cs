@@ -96,17 +96,6 @@ namespace l99.driver.fanuc.handlers
             await veneers.Machine["broker"].PublishChangeAsync(topic, payload);
         }
         
-        protected override async Task afterDataErrorAsync(Veneers veneers, Veneer veneer, dynamic? onError)
-        {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(new
-            {
-                method = veneer.LastArrivedInput.method, rc = veneer.LastArrivedInput.rc
-            });
-            
-            
-        }
-        
         public override async Task<dynamic?> OnCollectorSweepCompleteAsync(Machine machine, dynamic? beforeSweepComplete)
         {
             dynamic payload = new
