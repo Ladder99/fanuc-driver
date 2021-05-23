@@ -11,13 +11,25 @@ namespace l99.driver.fanuc.collectors
     public class Basic06 : FanucCollector
     {
         private Stopwatch _sweepWatch = new Stopwatch();
-        
+        private int _sweepRemaining = 1000;
         public Basic06(Machine machine, int sweepMs = 1000) : base(machine, sweepMs)
         {
-            
+            _sweepRemaining = sweepMs;
         }
         
-        public override async Task InitializeAsync()
+        public override async Task SweepAsync(int delayMs = -1)
+        {
+            _sweepRemaining = _sweepMs - (int)_sweepWatch.ElapsedMilliseconds;
+            if (_sweepRemaining < 0)
+            {
+                _sweepRemaining = _sweepMs;
+            }
+            _logger.Trace($"[{_machine.Id}] Sweep delay: {_sweepRemaining}ms");
+
+            await base.SweepAsync(_sweepRemaining);
+        }
+        
+        public override async Task<dynamic?> InitializeAsync()
         {
             try
             {
@@ -100,9 +112,11 @@ namespace l99.driver.fanuc.collectors
             {
                 _logger.Error(ex, $"[{_machine.Id}] Collector initialization failed.");
             }
+
+            return null;
         }
 
-        public override async Task CollectAsync()
+        public override async Task<dynamic?> CollectAsync()
         {
             try
             {
@@ -243,6 +257,8 @@ namespace l99.driver.fanuc.collectors
             {
                 _logger.Error(ex, $"[{_machine.Id}] Collector sweep failed.");
             }
+
+            return null;
         }
     }
 }

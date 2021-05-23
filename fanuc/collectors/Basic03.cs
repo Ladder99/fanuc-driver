@@ -14,7 +14,7 @@ namespace l99.driver.fanuc.collectors
             
         }
         
-        public override async Task InitializeAsync()
+        public override async Task<dynamic?> InitializeAsync()
         {
             try
             {
@@ -86,9 +86,11 @@ namespace l99.driver.fanuc.collectors
             {
                 _logger.Error(ex, $"[{_machine.Id}] Collector initialization failed.");
             }
+
+            return null;
         }
 
-        public override async Task CollectAsync()
+        public override async Task<dynamic?> CollectAsync()
         {
             try
             {
@@ -164,6 +166,8 @@ namespace l99.driver.fanuc.collectors
             {
                 _logger.Error(ex, $"[{_machine.Id}] Collector sweep failed.");
             }
+
+            return null;
         }
     }
 }
