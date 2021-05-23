@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace l99.driver.fanuc
 {
@@ -20,7 +21,7 @@ namespace l99.driver.fanuc
                     out _handle);
             });
 
-            return new
+            var nr = new
             {
                 method = "cnc_allclibhndl3",
                 invocationMs = ndr.ElapsedMilliseconds,
@@ -38,6 +39,10 @@ namespace l99.driver.fanuc
                 },
                 response = new {cnc_allclibhndl3 = new {FlibHndl = _handle}}
             };
+            
+            _logger.Trace($"[{_machine.Id}] Platform invocation result:\n{JObject.FromObject(nr).ToString()}");
+
+            return nr;
         }
     }
 }

@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
+using NLog;
 
 namespace l99.driver.fanuc
 {
     public partial class Platform
     {
+        private ILogger _logger;
+        
         private FanucMachine _machine;
 
         private ushort _handle;
@@ -31,6 +34,7 @@ namespace l99.driver.fanuc
         
         public Platform(FanucMachine machine)
         {
+            _logger = LogManager.GetCurrentClassLogger();
             _machine = machine;
         }
     }

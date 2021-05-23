@@ -14,61 +14,73 @@ namespace l99.driver.fanuc.collectors
         
         public override async Task InitializeAsync()
         {
-            while (!_machine.VeneersApplied)
+            try
             {
-                Console.WriteLine("fanuc - creating veneers");
-
-                dynamic connect = await _machine["platform"].ConnectAsync();
-                Console.WriteLine(JObject.FromObject(connect).ToString());
-
-                if (connect.success)
+                while (!_machine.VeneersApplied)
                 {
-                    _machine.ApplyVeneer(typeof(fanuc.veneers.Connect), "connect");
-                    _machine.ApplyVeneer(typeof(fanuc.veneers.CNCId), "cnc_id");
-                    _machine.ApplyVeneer(typeof(fanuc.veneers.RdTimer), "power_on_time");
-                    _machine.ApplyVeneer(typeof(fanuc.veneers.RdParamLData), "power_on_time_6750");
-                    _machine.ApplyVeneer(typeof(fanuc.veneers.SysInfo), "sys_info");
-                    _machine.ApplyVeneer(typeof(fanuc.veneers.GetPath), "get_path");
-                    
-                    dynamic disconnect = await _machine["platform"].DisconnectAsync();
-                    
-                    _machine.VeneersApplied = true;
+                    dynamic connect = await _machine["platform"].ConnectAsync();
+                    Console.WriteLine(JObject.FromObject(connect).ToString());
 
-                    Console.WriteLine("fanuc - created veneers");
+                    if (connect.success)
+                    {
+                        _machine.ApplyVeneer(typeof(fanuc.veneers.Connect), "connect");
+                        _machine.ApplyVeneer(typeof(fanuc.veneers.CNCId), "cnc_id");
+                        _machine.ApplyVeneer(typeof(fanuc.veneers.RdTimer), "power_on_time");
+                        _machine.ApplyVeneer(typeof(fanuc.veneers.RdParamLData), "power_on_time_6750");
+                        _machine.ApplyVeneer(typeof(fanuc.veneers.SysInfo), "sys_info");
+                        _machine.ApplyVeneer(typeof(fanuc.veneers.GetPath), "get_path");
+
+                        dynamic disconnect = await _machine["platform"].DisconnectAsync();
+
+                        _machine.VeneersApplied = true;
+
+                        Console.WriteLine("fanuc - created veneers");
+                    }
+                    else
+                    {
+                        await Task.Delay(_sweepMs);
+                    }
                 }
-                else
-                {
-                    await Task.Delay(_sweepMs);
-                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, $"[{_machine.Id}] Collector initialization failed.");
             }
         }
    
         public override async Task CollectAsync()
         {
-            dynamic connect = await _machine["platform"].ConnectAsync();
-            await _machine.PeelVeneerAsync("connect", connect);
-
-            if (connect.success)
+            try
             {
-                dynamic cncid = await _machine["platform"].CNCIdAsync();
-                await _machine.PeelVeneerAsync("cnc_id", cncid);
-                
-                dynamic poweron = await _machine["platform"].RdTimerAsync(0);
-                await _machine.PeelVeneerAsync("power_on_time", poweron);
-                
-                dynamic poweron_6750 = await _machine["platform"].RdParamAsync(6750, 0, 8, 1);
-                await _machine.PeelVeneerAsync("power_on_time_6750", poweron_6750);
-                
-                dynamic info = await _machine["platform"].SysInfoAsync();
-                await _machine.PeelVeneerAsync("sys_info", info);
-                
-                dynamic paths = await _machine["platform"].GetPathAsync();
-                await _machine.PeelVeneerAsync("get_path", paths);
+                dynamic connect = await _machine["platform"].ConnectAsync();
+                await _machine.PeelVeneerAsync("connect", connect);
 
-                dynamic disconnect = await _machine["platform"].DisconnectAsync();
+                if (connect.success)
+                {
+                    dynamic cncid = await _machine["platform"].CNCIdAsync();
+                    await _machine.PeelVeneerAsync("cnc_id", cncid);
+
+                    dynamic poweron = await _machine["platform"].RdTimerAsync(0);
+                    await _machine.PeelVeneerAsync("power_on_time", poweron);
+
+                    dynamic poweron_6750 = await _machine["platform"].RdParamAsync(6750, 0, 8, 1);
+                    await _machine.PeelVeneerAsync("power_on_time_6750", poweron_6750);
+
+                    dynamic info = await _machine["platform"].SysInfoAsync();
+                    await _machine.PeelVeneerAsync("sys_info", info);
+
+                    dynamic paths = await _machine["platform"].GetPathAsync();
+                    await _machine.PeelVeneerAsync("get_path", paths);
+
+                    dynamic disconnect = await _machine["platform"].DisconnectAsync();
+                }
+
+                LastSuccess = connect.success;
             }
-            
-            LastSuccess = connect.success;
+            catch (Exception ex)
+            {
+                _logger.Error(ex, $"[{_machine.Id}] Collector sweep failed.");
+            }
         }
     }
 }

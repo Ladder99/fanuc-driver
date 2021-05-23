@@ -5,7 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using l99.driver.@base;
 using l99.driver.@base.mqtt;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
+using NLog;
+using NLog.Extensions.Logging;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
@@ -13,18 +16,33 @@ namespace l99.driver.fanuc
 {
     partial class Program
     {
+        private static ILogger _logger;
+        
         static async Task Main(string[] args)
         {
+            _logger = setupLogger();
             string config_file = getArgument(args, "--config", "config.yml");
             dynamic config = readConfig(config_file);
             Machines machines = await createMachines(config);
             await machines.RunAsync();
+            LogManager.Shutdown();
+        }
+
+        static Logger setupLogger()
+        {
+            var config = new ConfigurationBuilder().Build();
+
+            return LogManager.Setup()
+                .SetupExtensions(ext => ext.RegisterConfigSettings(config))
+                .GetCurrentClassLogger();
         }
 
         static string getArgument(string[] args, string option, string defaultValue)
         {
             var value = args.SkipWhile(i => i != option).Skip(1).Take(1).FirstOrDefault();
-            return string.IsNullOrEmpty(value) ? defaultValue : value;
+            var config_path = string.IsNullOrEmpty(value) ? defaultValue : value;
+            _logger.Debug($"Using configuration from '{config_path}'");
+            return config_path;
         }
         
         static dynamic readConfig(string config_file)
@@ -35,7 +53,9 @@ namespace l99.driver.fanuc
                 .WithNamingConvention(CamelCaseNamingConvention.Instance)
                 .Build();
 
-            return deserializer.Deserialize(input);
+            var config = deserializer.Deserialize(input);
+            _logger.Trace($"Deserialized configuration:\n{JObject.FromObject(config).ToString()}");
+            return config;
         }
 
         static async Task<Machines> createMachines(dynamic config)
@@ -44,7 +64,7 @@ namespace l99.driver.fanuc
 
             foreach (dynamic machine_conf in config["machines"])
             {
-                machine_confs.Add(new
+                var built_config = new
                 {
                     machine = new {
                         enabled = machine_conf["enabled"],
@@ -66,7 +86,11 @@ namespace l99.driver.fanuc
                         ip = machine_conf["broker"]["net_ip"], 
                         port = machine_conf["broker"]["net_port"]
                     }
-                });
+                };
+                
+                _logger.Trace($"Machine configuration built:\n{JObject.FromObject(built_config).ToString()}");
+                
+                machine_confs.Add(built_config);
             }
 
             Brokers brokers = new Brokers();
@@ -74,7 +98,7 @@ namespace l99.driver.fanuc
             
             foreach (var cfg in machine_confs)
             {
-                Console.WriteLine(JObject.FromObject(cfg).ToString());
+                _logger.Trace($"Creating machine from config:\n{JObject.FromObject(cfg).ToString()}");
                 Broker broker = await brokers.AddAsync(cfg.broker);
                 broker["disco"] = new Disco();
                 Machine machine = machines.Add(cfg.machine);
