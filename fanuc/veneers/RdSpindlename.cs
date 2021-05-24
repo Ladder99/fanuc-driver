@@ -9,9 +9,9 @@ namespace l99.driver.fanuc.veneers
     {
         public RdSpindlename(string name = "", bool isInternal = false) : base(name, isInternal)
         {
-            _lastChangedValue = new List<dynamic>
+            _lastChangedValue = new
             {
-                
+                spindles = new List<dynamic>()
             };
         }
         
@@ -19,13 +19,13 @@ namespace l99.driver.fanuc.veneers
         {
             if (input.success)
             {
-                var current_value = new List<dynamic>();
+                var temp_value = new List<dynamic>();
                 
                 var fields = input.response.cnc_rdspdlname.spdlname.GetType().GetFields();
                 for (int x = 0; x <= input.response.cnc_rdspdlname.data_num - 1; x++)
                 {
                     var spindle = fields[x].GetValue(input.response.cnc_rdspdlname.spdlname);
-                    current_value.Add(new
+                    temp_value.Add(new
                     {
                         name = ((char)spindle.name).ToString().Trim('\0'), 
                         suff1 =  ((char)spindle.suff1).ToString().Trim('\0').Trim(),
@@ -34,8 +34,13 @@ namespace l99.driver.fanuc.veneers
                     });
                 }
                 
-                var current_hc = current_value.Select(x => x.GetHashCode());
-                var last_hc = ((List<dynamic>)_lastChangedValue).Select(x => x.GetHashCode());
+                var current_value = new
+                {
+                    spindles = temp_value
+                };
+                
+                var current_hc = current_value.spindles.Select(x => x.GetHashCode());
+                var last_hc = ((List<dynamic>)_lastChangedValue.spindles).Select(x => x.GetHashCode());
                 
                 await onDataArrivedAsync(input, current_value);
                 

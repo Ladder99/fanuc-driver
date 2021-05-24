@@ -9,16 +9,16 @@ namespace l99.driver.fanuc.veneers
     {
         public Alarms(string name = "", bool isInternal = false) : base(name, isInternal)
         {
-            _lastChangedValue = new List<dynamic>
+            _lastChangedValue = new 
             {
-                
+                alarms = new List<dynamic>()
             };
         }
         
         protected override async Task<dynamic> AnyAsync(dynamic input, dynamic? input2)
         {
             var success = true;
-            var current_value = new List<dynamic>() ;
+            var temp_value = new List<dynamic>() ;
             
             foreach (var key in input.response.cnc_rdalmmsg_ALL.Keys)
             {
@@ -41,15 +41,20 @@ namespace l99.driver.fanuc.veneers
                     for (int x = 0; x <= alarm_count - 1; x++)
                     {
                         var alm = fields[x].GetValue(response_data.almmsg);
-                        current_value.Add(new { alm.alm_no, alm.type, alm.axis, alm_msg = alm.alm_msg.Trim('\u0001') });
+                        temp_value.Add(new { alm.alm_no, alm.type, alm.axis, alm_msg = alm.alm_msg.Trim('\u0001') });
                     }
                 }
             }
             
             if (success)
             {
-                var current_hc = current_value.Select(x => x.GetHashCode());
-                var last_hc = ((List<dynamic>)_lastChangedValue).Select(x => x.GetHashCode());
+                var current_value = new
+                {
+                    alarms = temp_value
+                };
+                
+                var current_hc = current_value.alarms.Select(x => x.GetHashCode());
+                var last_hc = ((List<dynamic>)_lastChangedValue.alarms).Select(x => x.GetHashCode());
                 
                 await onDataArrivedAsync(input, current_value);
                 
