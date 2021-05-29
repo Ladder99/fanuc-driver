@@ -16,7 +16,7 @@ namespace l99.driver.fanuc.handlers
 {
     public class SparkplugB: Handler
     {
-        private string SPB_BROKER_IP = "127.0.0.1";
+        private string SPB_BROKER_IP = "10.20.30.102";
         private int SPB_BROKER_PORT = 1883;
         
         private Protocol _protocol;
@@ -29,14 +29,14 @@ namespace l99.driver.fanuc.handlers
         
         public override async Task InitializeAsync()
         {
-            _protocol = new Protocol("127.0.0.1", 1883, "fanuc", IPGlobalProperties.GetIPGlobalProperties().HostName, this.machine.Id);
+            _protocol = new Protocol(SPB_BROKER_IP, SPB_BROKER_PORT, "fanuc", IPGlobalProperties.GetIPGlobalProperties().HostName, this.machine.Id);
             
             _protocol.add_node_metric("Properties/Hardware Make", "arm");
             _protocol.add_node_metric("Properties/Hardware Model", "l99");
             _protocol.add_node_metric("Properties/OS", "windows");
             _protocol.add_node_metric("Properties/Version", 3.1, MetricTypeEnum.DOUBLE);
             
-            _protocol.give_node_birth();
+            await _protocol.give_node_birth();
         }
         
         public override async Task<dynamic?> OnDataArrivalAsync(Veneers veneers, Veneer veneer, dynamic? beforeArrival)
@@ -46,65 +46,45 @@ namespace l99.driver.fanuc.handlers
             
             if (_protocol.DeviceState == Protocol.DeviceStateEnum.ALIVE)
                 return null;
+            
+            var name = $"{veneer.Name}{(veneer.SliceKey == null ? string.Empty : "/" + veneer.SliceKey.ToString())}";
+            _protocol.add_device_metric(name, veneer.LastArrivedValue, MetricTypeEnum.UNKNOWN);
 
             return null;
         }
         
         public override async Task<dynamic?> OnDataChangeAsync(Veneers veneers, Veneer veneer, dynamic? beforeChange)
         {
-            /*
             if (veneer.Name == "connect")
-            {
-                if (veneer.LastChangedValue.success == true)
-                {
-                    _isDeviceAlive = true;
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine(nextSequence() + " > " + string.Format(_topicFormat, "DBIRTH"));
-                }
-                else
-                {
-                    _isDeviceAlive = true;
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine(nextSequence() + " > " + string.Format(_topicFormat, "DDEATH"));
-                }
-            }
-
-            if (veneer.Name == "axis_data" && _isDeviceAlive == true)
-            {
-                _ddata.Add(new
-                {
-                    name= $"{veneer.Name}/{veneer.SliceKey}",
-                    timestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds(),
-                    dataType = "Float",
-                    value = (float) veneer.LastArrivedValue.pos.absolute
-                });
-            }
-            */
+                _last_connection_success = veneer.LastArrivedValue.success == true;
+            
+            var name = $"{veneer.Name}{(veneer.SliceKey == null ? string.Empty : "/" + veneer.SliceKey.ToString())}";
+            _protocol.add_device_metric(name, veneer.LastArrivedValue, MetricTypeEnum.UNKNOWN);
             
             return null;
         }
         
         public override async Task<dynamic?> OnCollectorSweepCompleteAsync(Machine machine, dynamic? beforeSweepComplete)
         {
-            _protocol.dequeue_node_metrics();
+            await _protocol.dequeue_node_metrics();
             
             switch (_protocol.DeviceState)
             {
                 case Protocol.DeviceStateEnum.NONE:
                     if(_last_connection_success == true)
-                        _protocol.give_device_birth();
+                        await _protocol.give_device_birth();
                     break;
                 
                 case Protocol.DeviceStateEnum.ALIVE:
                     if(_last_connection_success == false)
-                        _protocol.give_device_death();
+                        await _protocol.give_device_death();
                     else
-                        _protocol.dequeue_device_metrics();
+                        await _protocol.dequeue_device_metrics();
                     break;
                 
                 case Protocol.DeviceStateEnum.DEAD:
                     if(_last_connection_success == true)
-                        _protocol.give_device_birth();
+                        await _protocol.give_device_birth();
                     break;
             }
             
@@ -142,8 +122,8 @@ namespace l99.driver.fanuc.handlers.spb
         private string _group_id;
         private string _edge_node_id;
         private string _device_id;
-        private string _topicFormatNode = $"{{0}}/{{1}}/{{3}}/{{4}}";
-        private string _topicFormatDevice = $"{{0}}/{{1}}/{{3}}/{{4}}/{{5}}";
+        private string _topicFormatNode = $"{{0}}/{{1}}/{{2}}/{{3}}";
+        private string _topicFormatDevice = $"{{0}}/{{1}}/{{2}}/{{3}}/{{4}}";
 
         private int _seq;
         private int _bdSeq;
@@ -167,7 +147,7 @@ namespace l99.driver.fanuc.handlers.spb
             }
             else if (new MessageTypeEnum[] {MessageTypeEnum.DBIRTH,MessageTypeEnum.DDEATH,MessageTypeEnum.DDATA,MessageTypeEnum.DCMD}.Contains(messageType))
             {
-                return string.Format(_topicFormatNode, _namespace, _group_id, messageType.ToString(), _edge_node_id, _device_id); 
+                return string.Format(_topicFormatDevice, _namespace, _group_id, messageType.ToString(), _edge_node_id, _device_id); 
             }
             else if (new MessageTypeEnum[] {MessageTypeEnum.NBIRTH,MessageTypeEnum.NDEATH,MessageTypeEnum.NDATA,MessageTypeEnum.NCMD}.Contains(messageType))
             {
@@ -245,7 +225,7 @@ namespace l99.driver.fanuc.handlers.spb
 
         public async Task give_node_birth()
         { 
-            create_client();
+            await create_client();
         }
 
         private async Task create_client()
@@ -262,18 +242,20 @@ namespace l99.driver.fanuc.handlers.spb
                 .WithWillMessage(lwt)
                 .Build();
             _client = factory.CreateMqttClient();
-            await _client.ConnectAsync(options);
+            var c = await _client.ConnectAsync(options);
             await dequeue_node_metrics(MessageTypeEnum.NBIRTH);
         }
 
         public async Task give_device_birth()
         {
             await dequeue_device_metrics(MessageTypeEnum.DBIRTH);
+            _device_state = DeviceStateEnum.ALIVE;
         }
 
         public async Task give_device_death()
         {
             await dequeue_device_metrics(MessageTypeEnum.DDEATH);
+            _device_state = DeviceStateEnum.DEAD;
         }
 
         public async Task dequeue_node_metrics(MessageTypeEnum msgType = MessageTypeEnum.NDATA)
@@ -283,6 +265,9 @@ namespace l99.driver.fanuc.handlers.spb
             var metrics = _node_metrics
                 .Where(kv => kv.Value.processed == false)
                 .Select(kv => kv.Value.metric);
+
+            if (!metrics.Any())
+                return;
             
             dynamic payload = new
             {
@@ -308,6 +293,9 @@ namespace l99.driver.fanuc.handlers.spb
             var metrics = _device_metrics
                 .Where(kv => kv.Value.processed == false)
                 .Select(kv => kv.Value.metric);
+
+            if (!metrics.Any())
+                return;
             
             dynamic payload = new
             {
