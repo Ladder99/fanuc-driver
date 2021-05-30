@@ -79,6 +79,9 @@
       <Compile Include="..\base-driver\base\mqtt\Disco.cs">
         <Link>base\mqtt\Disco.cs</Link>
       </Compile>
+      <Compile Include="..\base-driver\base\mqtt\SparkplugB.cs">
+        <Link>base\mqtt\SparkplugB.cs</Link>
+      </Compile>
       <Compile Include="..\base-driver\base\Veneer.cs">
         <Link>base\Veneer.cs</Link>
       </Compile>

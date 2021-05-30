@@ -27,8 +27,8 @@ namespace l99.driver.fanuc.veneers
                     var axis = fields[x].GetValue(input.response.cnc_rdaxisname.axisname);
                     temp_value.Add(new
                     {
-                        name = ((char)axis.name).ToString().Trim('\0'), 
-                        suff =  ((char)axis.suff).ToString().Trim('\0')
+                        name = ((char)axis.name).AsAscii(), 
+                        suff =  ((char)axis.suff).AsAscii()
                     });
                 }
 
@@ -37,6 +37,12 @@ namespace l99.driver.fanuc.veneers
                     axes = temp_value
                 };
                 
+                await onDataArrivedAsync(input, current_value);
+                
+                if(current_value.axes.IsDifferentHash((List<dynamic>)_lastChangedValue.axes))
+                    await onDataChangedAsync(input, current_value);
+                
+                /*
                 var current_hc = current_value.axes.Select(x => x.GetHashCode());
                 var last_hc = ((List<dynamic>)_lastChangedValue.axes).Select(x => x.GetHashCode());
                 
@@ -46,6 +52,7 @@ namespace l99.driver.fanuc.veneers
                 {
                     await onDataChangedAsync(input, current_value);
                 }
+                */
             }
             else
             {

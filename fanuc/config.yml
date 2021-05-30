@@ -9,7 +9,7 @@ machines:
     net_port: !!int 8193
     net_timeout_s: !!int 2
     broker:
-      enabled: !!bool false
+      enabled: !!bool true
       net_ip: 10.20.30.102
       net_port: !!int 1883
       publish_status: !!bool true

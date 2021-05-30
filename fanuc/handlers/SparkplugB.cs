@@ -1,21 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.NetworkInformation;
-using System.Threading;
 using System.Threading.Tasks;
 using l99.driver.@base;
-using l99.driver.fanuc.handlers.spb;
-using MoreLinq;
-using MQTTnet;
-using MQTTnet.Client;
-using MQTTnet.Client.Options;
-using Newtonsoft.Json.Linq;
+using l99.driver.@base.mqtt.sparkplugb;
 
 namespace l99.driver.fanuc.handlers
 {
     public class SparkplugB: Handler
     {
+        private bool SPB_STRICT = true;
         private string SPB_BROKER_IP = "10.20.30.102";
         private int SPB_BROKER_PORT = 1883;
         
@@ -46,22 +38,78 @@ namespace l99.driver.fanuc.handlers
             
             if (_protocol.DeviceState == Protocol.DeviceStateEnum.ALIVE)
                 return null;
-            
-            var name = $"{veneer.Name}{(veneer.SliceKey == null ? string.Empty : "/" + veneer.SliceKey.ToString())}";
-            _protocol.add_device_metric(name, veneer.LastArrivedValue, MetricTypeEnum.UNKNOWN);
 
+            if (SPB_STRICT)
+            {
+                process_strict(veneer);
+            }
+            else
+            {
+                var name = $"{veneer.Name}{(veneer.SliceKey == null ? string.Empty : "/" + veneer.SliceKey.ToString())}";
+                _protocol.add_device_metric(name, veneer.LastArrivedValue, MetricTypeEnum.UNKNOWN);
+            }
+            
             return null;
         }
         
         public override async Task<dynamic?> OnDataChangeAsync(Veneers veneers, Veneer veneer, dynamic? beforeChange)
         {
-            if (veneer.Name == "connect")
-                _last_connection_success = veneer.LastArrivedValue.success == true;
-            
-            var name = $"{veneer.Name}{(veneer.SliceKey == null ? string.Empty : "/" + veneer.SliceKey.ToString())}";
-            _protocol.add_device_metric(name, veneer.LastArrivedValue, MetricTypeEnum.UNKNOWN);
-            
+            if (SPB_STRICT)
+            {
+                process_strict(veneer);
+            }
+            else
+            {
+                var name = $"{veneer.Name}{(veneer.SliceKey == null ? string.Empty : "/" + veneer.SliceKey.ToString())}";
+                _protocol.add_device_metric(name, veneer.LastChangedValue, MetricTypeEnum.UNKNOWN);
+            }
+
             return null;
+        }
+
+        private void process_strict(Veneer veneer)
+        {
+           switch (veneer.Name) 
+           {
+            case "power_on_time_6750":
+                add_metric(veneer, veneer.LastArrivedValue.ldata);
+                break;
+            case "get_path":
+                add_metric(veneer, veneer.LastArrivedValue.maxpath_no);
+                break; 
+            case "sys_info":
+                add_metric(veneer, _protocol.object_to_dataset(veneer.LastArrivedValue), MetricTypeEnum.DATASET);
+                break;
+            case "stat_info":
+                add_metric(veneer, _protocol.object_to_dataset(veneer.LastArrivedValue), MetricTypeEnum.DATASET);
+                break;
+            case "axis_name":
+                add_metric(veneer, _protocol.array_to_dataset(veneer.LastArrivedValue.axes), MetricTypeEnum.DATASET);
+                break;
+            case "spindle_name":
+                add_metric(veneer, _protocol.array_to_dataset(veneer.LastArrivedValue.spindles), MetricTypeEnum.DATASET);
+                break;
+            case "axis_data":
+                add_metric(veneer, _protocol.object_to_dataset(new
+                {
+                    veneer.LastArrivedValue.pos.absolute,
+                    veneer.LastArrivedValue.pos.machine,
+                    veneer.LastArrivedValue.pos.relative,
+                    veneer.LastArrivedValue.pos.distance,
+                    veneer.LastArrivedValue.alarm,
+                    veneer.LastArrivedValue.actf
+                }), MetricTypeEnum.DATASET);
+                break;
+            case "spindle_data":
+                add_metric(veneer, veneer.LastArrivedValue.data);
+                break;
+           }
+        }
+
+        private void add_metric(Veneer veneer, dynamic value, MetricTypeEnum metric_type = MetricTypeEnum.UNKNOWN)
+        {
+            var name = $"{veneer.Name}{(veneer.SliceKey == null ? string.Empty : "/" + veneer.SliceKey.ToString())}";
+            _protocol.add_device_metric(name, value, metric_type);
         }
         
         public override async Task<dynamic?> OnCollectorSweepCompleteAsync(Machine machine, dynamic? beforeSweepComplete)
@@ -89,435 +137,6 @@ namespace l99.driver.fanuc.handlers
             }
             
             return null;
-        }
-    }
-}
-
-namespace l99.driver.fanuc.handlers.spb
-{
-    public class Protocol
-    {
-        private class MetricWrapper
-        {
-            public bool processed;
-            public Metric metric;
-        }
-        
-        public enum DeviceStateEnum
-        {
-            NONE,
-            ALIVE,
-            DEAD
-        }
-
-        private DeviceStateEnum _device_state = DeviceStateEnum.NONE;
-        public DeviceStateEnum DeviceState
-        {
-            get => _device_state;
-        }
-        
-        private string _broker_ip;
-        private int _broker_port;
-        private string _namespace;
-        private string _group_id;
-        private string _edge_node_id;
-        private string _device_id;
-        private string _topicFormatNode = $"{{0}}/{{1}}/{{2}}/{{3}}";
-        private string _topicFormatDevice = $"{{0}}/{{1}}/{{2}}/{{3}}/{{4}}";
-
-        private int _seq;
-        private int _bdSeq;
-        private IMqttClient _client;
-        
-        public Protocol(string broker_ip, int broker_port, string group_id, string edge_node_id, string device_id, string @namespace = "spBv1.0")
-        {
-            _broker_ip = broker_ip;
-            _broker_port = broker_port;
-            _group_id = group_id;
-            _edge_node_id = edge_node_id;
-            _device_id = device_id;
-            _namespace = @namespace;
-        }
-
-        public string formatTopic(MessageTypeEnum messageType)
-        {
-            if (messageType == MessageTypeEnum.STATE)
-            {
-                return "STATE/unknown_scada_host_id";
-            }
-            else if (new MessageTypeEnum[] {MessageTypeEnum.DBIRTH,MessageTypeEnum.DDEATH,MessageTypeEnum.DDATA,MessageTypeEnum.DCMD}.Contains(messageType))
-            {
-                return string.Format(_topicFormatDevice, _namespace, _group_id, messageType.ToString(), _edge_node_id, _device_id); 
-            }
-            else if (new MessageTypeEnum[] {MessageTypeEnum.NBIRTH,MessageTypeEnum.NDEATH,MessageTypeEnum.NDATA,MessageTypeEnum.NCMD}.Contains(messageType))
-            {
-                return string.Format(_topicFormatNode, _namespace, _group_id, messageType.ToString(), _edge_node_id);
-            }
-
-            return null;
-        }
-
-        private Dictionary<string, MetricWrapper> _node_metrics = new Dictionary<string, MetricWrapper>();
-        private Dictionary<string, MetricWrapper> _device_metrics = new Dictionary<string, MetricWrapper>();
-        
-        public void add_node_metric(string name, dynamic value, MetricTypeEnum type = MetricTypeEnum.STRING)
-        {
-            if (_node_metrics.ContainsKey(name))
-            {
-                _node_metrics[name].metric.timestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
-                _node_metrics[name].metric.value = value;
-                _node_metrics[name].processed = false;
-            }
-            else
-            {
-                _node_metrics.Add(name, new MetricWrapper()
-                {
-                    processed = false,
-                    metric = new Metric()
-                    {
-                        timestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds(),
-                        value = value,
-                        name = name,
-                        dataType = type
-                    }
-                });
-            }
-        }
-        
-        public void add_device_metric(string name, dynamic value, MetricTypeEnum type = MetricTypeEnum.STRING)
-        {
-            if (_device_metrics.ContainsKey(name))
-            {
-                _device_metrics[name].metric.timestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
-                _device_metrics[name].metric.value = value;
-                _device_metrics[name].processed = false;
-            }
-            else
-            {
-                _device_metrics.Add(name, new MetricWrapper()
-                {
-                    processed = false,
-                    metric = new Metric()
-                    {
-                        timestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds(),
-                        value = value,
-                        name = name,
-                        dataType = type
-                    }
-                });
-            }
-        }
-        
-        private int seqNext()
-        {
-            if (_seq > 255)
-                _seq = 0;
-
-            int ns = _seq;
-            _seq++;
-            return ns;
-        }
-
-        private int seqCurrent()
-        {
-            return _seq - 1;
-        }
-
-        public async Task give_node_birth()
-        { 
-            await create_client();
-        }
-
-        private async Task create_client()
-        {
-            ++_bdSeq;
-            add_node_metric("bdSeq", _bdSeq, MetricTypeEnum.UINT64);
-            var factory = new MqttFactory();
-            var lwt = new MqttApplicationMessageBuilder()
-                .WithTopic(formatTopic(MessageTypeEnum.NDEATH))
-                .WithPayload(_bdSeq.ToString())
-                .Build();
-            var options = new MqttClientOptionsBuilder()
-                .WithTcpServer(_broker_ip, _broker_port)
-                .WithWillMessage(lwt)
-                .Build();
-            _client = factory.CreateMqttClient();
-            var c = await _client.ConnectAsync(options);
-            await dequeue_node_metrics(MessageTypeEnum.NBIRTH);
-        }
-
-        public async Task give_device_birth()
-        {
-            await dequeue_device_metrics(MessageTypeEnum.DBIRTH);
-            _device_state = DeviceStateEnum.ALIVE;
-        }
-
-        public async Task give_device_death()
-        {
-            await dequeue_device_metrics(MessageTypeEnum.DDEATH);
-            _device_state = DeviceStateEnum.DEAD;
-        }
-
-        public async Task dequeue_node_metrics(MessageTypeEnum msgType = MessageTypeEnum.NDATA)
-        {
-            var topic = formatTopic(msgType);
-
-            var metrics = _node_metrics
-                .Where(kv => kv.Value.processed == false)
-                .Select(kv => kv.Value.metric);
-
-            if (!metrics.Any())
-                return;
-            
-            dynamic payload = new
-            {
-                timestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds(),
-                metrics,
-                seq = seqNext()
-            };
-            
-            var msg = new MqttApplicationMessageBuilder()
-                .WithTopic(topic)
-                .WithPayload(JObject.FromObject(payload).ToString())
-                .Build();
-                
-            await _client.PublishAsync(msg, CancellationToken.None);
-            
-            _node_metrics.ForEach(kv => kv.Value.processed = true);
-        }
-        
-        public async Task dequeue_device_metrics(MessageTypeEnum msgType = MessageTypeEnum.DDATA)
-        {
-            var topic = formatTopic(msgType);
-
-            var metrics = _device_metrics
-                .Where(kv => kv.Value.processed == false)
-                .Select(kv => kv.Value.metric);
-
-            if (!metrics.Any())
-                return;
-            
-            dynamic payload = new
-            {
-                timestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds(),
-                metrics,
-                seq = seqNext()
-            };
-            
-            var msg = new MqttApplicationMessageBuilder()
-                .WithTopic(topic)
-                .WithPayload(JObject.FromObject(payload).ToString())
-                .Build();
-                
-            await _client.PublishAsync(msg, CancellationToken.None);
-            
-            _device_metrics.ForEach(kv => kv.Value.processed = true);
-        }
-    }
-    
-    [AttributeUsage(validOn: AttributeTargets.Field, AllowMultiple = true)]
-    public class RequiredAttribute: Attribute
-    {
-        public RequiredAttribute(MessageTypeEnum messageType)
-        {
-        }
-    }
-    
-    public enum MessageTypeEnum
-    {
-        NBIRTH,
-        NDEATH,
-        DBIRTH,
-        DDEATH,
-        NDATA,
-        DDATA,
-        NCMD,
-        DCMD,
-        STATE
-    }
-    
-    public enum MetricTypeEnum
-    {
-        UNKNOWN = 0,
-        INT8,
-        INT16,
-        INT32,
-        INT64,
-        UINT8,
-        UINT16,
-        UINT32,
-        UINT64,
-        FLOAT,
-        DOUBLE,
-        BOOLEAN,
-        STRING,
-        DATETIME,
-        TEXT,
-        UUID,
-        DATASET,
-        BYTES,
-        FILE,
-        TEMPLATE = 19
-    }
-    
-    public enum PropertyValueTypeEnum
-    {
-        UNKNOWN = 0,
-        INT8,
-        INT16,
-        INT32,
-        INT64,
-        UINT8,
-        UINT16,
-        UINT32,
-        UINT64,
-        FLOAT,
-        DOUBLE,
-        BOOLEAN,
-        STRING,
-        DATETIME,
-        TEXT = 14,
-        PROPERTYSET = 20,
-        PROPERTYSETLIST = 21
-    }
-    
-    public enum DataSetTypeEnum
-    {
-        UNKNOWN = 0,
-        INT8,
-        INT16,
-        INT32,
-        INT64,
-        UINT8,
-        UINT16,
-        UINT32,
-        UINT64,
-        FLOAT,
-        DOUBLE,
-        BOOLEAN,
-        STRING,
-        DATETIME,
-        TEXT = 14
-    }
-    
-    public enum TemplateParameterTypeEnum
-    {
-        UNKNOWN = 0,
-        INT8,
-        INT16,
-        INT32,
-        INT64,
-        UINT8,
-        UINT16,
-        UINT32,
-        UINT64,
-        FLOAT,
-        DOUBLE,
-        BOOLEAN,
-        STRING,
-        DATETIME,
-        TEXT = 14
-    }
-
-    public class Payload
-    {
-        public long timestamp;
-        public Metric[] metrics;
-        public long seq;
-        //public string uuid;
-        //public byte[] body;
-    }
-
-    public class Metric
-    {
-        [Required(MessageTypeEnum.NBIRTH)]
-        [Required(MessageTypeEnum.DBIRTH)]
-            public string name;
-        
-        //public long alias;
-    
-        public long timestamp;
-        
-        [Required(MessageTypeEnum.NBIRTH)]
-        [Required(MessageTypeEnum.DBIRTH)]
-            public MetricTypeEnum dataType;
-        
-        //public bool is_historical;
-        
-        //public bool is_transient;
-        
-        //public bool is_null;
-        
-        //public Metadata metadata;
-        
-        //public PropertySet properties;
-        
-        [Required(MessageTypeEnum.NBIRTH)]
-        [Required(MessageTypeEnum.DBIRTH)]
-            public dynamic value;
-    }
-
-    public class Metadata
-    {
-        public bool is_multi_part;
-        public string content_type;
-        public long size;
-        public long seq;
-        public string file_name;
-        public string file_type;
-        public string md5;
-        public string description;
-    }
-
-    public class PropertySet
-    {
-        public string[] keys;
-        public PropertyValue[] values;
-    }
-
-    public class PropertyValue
-    {
-        public PropertyValueTypeEnum type;
-        public bool is_null;
-        public dynamic value;
-    }
-
-    public class PropertySetList
-    {
-        public PropertySet[] propertyset;
-    }
-
-    public class DataSet
-    {
-        public long num_of_columns;
-        public string[] columns;
-        public DataSetTypeEnum[] types;
-        public DataSetRow[] rows;
-        
-        public class DataSetRow
-        {
-            public DataSetValue[] elements;
-        }
-    
-        public class DataSetValue
-        {
-            public dynamic value;
-        }
-    }
-
-    public class Template
-    {
-        public string version;
-        public dynamic[] metrics;
-        public Parameter[] parameters;
-        public string template_ref;
-        public bool is_definition;
-        
-        public class Parameter
-        {
-            public string name;
-            public TemplateParameterTypeEnum type;
-            public dynamic value;
         }
     }
 }

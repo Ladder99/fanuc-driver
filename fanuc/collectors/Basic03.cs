@@ -60,8 +60,8 @@ namespace l99.driver.fanuc.collectors
                                 var axis = fields[x].GetValue(axes.response.cnc_rdaxisname.axisname);
                                 // capture each axis name so we can use it to slice each path
                                 //  e.g. X1,Y1,Z1,A1
-                                axis_slices.Add(((char) axis.name).ToString().Trim('\0') +
-                                                ((char) axis.suff).ToString().Trim('\0'));
+                                axis_slices.Add(((char) axis.name).AsAscii() +
+                                                ((char) axis.suff).AsAscii());
                             }
                             
                             // now slice the current path's veneers using the axis names
@@ -135,11 +135,11 @@ namespace l99.driver.fanuc.collectors
                             current_axis++)
                         {
                             dynamic axis = fields[current_axis-1].GetValue(axes.response.cnc_rdaxisname.axisname);
-                            dynamic axis_name = ((char) axis.name).ToString().Trim('\0') + ((char) axis.suff).ToString().Trim('\0');
+                            dynamic axis_name = ((char) axis.name).AsAscii() + ((char) axis.suff).AsAscii();
                             dynamic axis_marker = new
                             {
-                                name = ((char)axis.name).ToString().Trim('\0'), 
-                                suff = ((char)axis.suff).ToString().Trim('\0')
+                                name = ((char)axis.name).AsAscii(), 
+                                suff = ((char)axis.suff).AsAscii()
                             };
                             
                             // mark the current path and axis

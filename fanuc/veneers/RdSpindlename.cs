@@ -27,10 +27,10 @@ namespace l99.driver.fanuc.veneers
                     var spindle = fields[x].GetValue(input.response.cnc_rdspdlname.spdlname);
                     temp_value.Add(new
                     {
-                        name = ((char)spindle.name).ToString().Trim('\0'), 
-                        suff1 =  ((char)spindle.suff1).ToString().Trim('\0').Trim(),
-                        suff2 =  ((char)spindle.suff2).ToString().Trim('\0').Trim(),
-                        suff3 =  ((char)spindle.suff3).ToString().Trim('\0').Trim('\u0003').Trim('\u0001').Trim()
+                        name = ((char)spindle.name).AsAscii(), 
+                        suff1 =  ((char)spindle.suff1).AsAscii(),
+                        suff2 =  ((char)spindle.suff2).AsAscii(),
+                        suff3 =  ((char)spindle.suff3).AsAscii()
                     });
                 }
                 
@@ -39,6 +39,12 @@ namespace l99.driver.fanuc.veneers
                     spindles = temp_value
                 };
                 
+                await onDataArrivedAsync(input, current_value);
+                
+                if(current_value.spindles.IsDifferentHash((List<dynamic>)_lastChangedValue.spindles))
+                    await onDataChangedAsync(input, current_value);
+                
+                /*
                 var current_hc = current_value.spindles.Select(x => x.GetHashCode());
                 var last_hc = ((List<dynamic>)_lastChangedValue.spindles).Select(x => x.GetHashCode());
                 
@@ -48,6 +54,7 @@ namespace l99.driver.fanuc.veneers
                 {
                     await onDataChangedAsync(input, current_value);
                 }
+                */
             }
             else
             {
