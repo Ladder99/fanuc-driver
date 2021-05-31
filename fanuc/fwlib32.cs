@@ -8366,8 +8366,12 @@ namespace l99.driver.fanuc
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rewind")]
         public static extern short cnc_rewind(ushort FlibHndl);
 
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdblkcount")]
+#else
         /* read block counter */
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdblkcount")]
+#endif
         public static extern short cnc_rdblkcount(ushort FlibHndl, out int a);
 
     /* cnc_rdopmsg3:read operator's message */
@@ -8433,7 +8437,11 @@ namespace l99.driver.fanuc
         public static extern short cnc_mergeprog(ushort FlibHndl, short a, int b, uint c, int d);
 
         /* read current program and its pointer */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdactpt")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdactpt")]
+#endif
         public static extern short cnc_rdactpt(ushort FlibHndl, out int a, out int b);
 
         /* read current program and its pointer and UV macro pointer */
