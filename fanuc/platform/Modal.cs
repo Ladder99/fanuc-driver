@@ -5,7 +5,7 @@ namespace l99.driver.fanuc
 {
     public partial class Platform
     {
-        public async Task<dynamic> Async(short type = 0, short block = 0, int ODBMDL_type = 1)
+        public async Task<dynamic> ModalAsync(short type = 0, short block = 0, int ODBMDL_type = 1)
         {
             return await Task.FromResult(Modal(type, block, ODBMDL_type));
         }

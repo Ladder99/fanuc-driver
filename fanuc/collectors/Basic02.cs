@@ -57,8 +57,6 @@ namespace l99.driver.fanuc.collectors
 
                         // initialization successful
                         _machine.VeneersApplied = true;
-
-                        Console.WriteLine("fanuc - created veneers");
                     }
                     else
                     {

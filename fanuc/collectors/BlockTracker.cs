@@ -30,8 +30,6 @@ namespace l99.driver.fanuc.collectors
 
                         dynamic disconnect = await _machine["platform"].DisconnectAsync();
                         _machine.VeneersApplied = true;
-
-                        Console.WriteLine("fanuc - created veneers");
                     }
                     else
                     {

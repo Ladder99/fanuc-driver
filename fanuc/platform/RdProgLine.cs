@@ -5,7 +5,7 @@ namespace l99.driver.fanuc
 {
     public partial class Platform
     {
-        public async Task<dynamic> Async(int prog_no = -1, uint line_no = 0, uint line_len = 1, uint data_len = 128)
+        public async Task<dynamic> RdProgLineAsync(int prog_no = -1, uint line_no = 0, uint line_len = 1, uint data_len = 128)
         {
             return await Task.FromResult(RdProgLine(prog_no, line_no, line_len, data_len));
         }
