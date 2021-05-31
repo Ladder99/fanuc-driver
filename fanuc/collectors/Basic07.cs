@@ -8,11 +8,11 @@ using Newtonsoft.Json.Linq;
 
 namespace l99.driver.fanuc.collectors
 {
-    public class Basic06 : FanucCollector
+    public class Basic07 : FanucCollector
     {
         private Stopwatch _sweepWatch = new Stopwatch();
         private int _sweepRemaining = 1000;
-        public Basic06(Machine machine, int sweepMs = 1000) : base(machine, sweepMs)
+        public Basic07(Machine machine, int sweepMs = 1000) : base(machine, sweepMs)
         {
             _sweepRemaining = sweepMs;
         }
@@ -55,6 +55,7 @@ namespace l99.driver.fanuc.collectors
 
                         _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.SysInfo), "sys_info");
                         _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.StatInfo), "stat_info");
+                        _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.GCodeBlocks), "gcode_blocks");
                         _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.Figures), "figures");
                         _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.RdAxisname), "axis_name");
                         _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.RdSpindlename), "spindle_name");
@@ -172,6 +173,23 @@ namespace l99.driver.fanuc.collectors
                         dynamic stat = await _machine["platform"].StatInfoAsync();
                         await _machine.PeelAcrossVeneerAsync(current_path, "stat_info", stat);
                         catch_focas_perf(stat);
+                        
+                        dynamic blkcount = await _machine["platform"].RdBlkCountAsync();
+                        catch_focas_perf(blkcount);
+                        
+                        dynamic actpt = await _machine["platform"].RdActPtAsync();
+                        catch_focas_perf(actpt);
+                        
+                        dynamic execprog = await _machine["platform"].RdExecProgAsync(128);
+                        catch_focas_perf(execprog);
+                        
+                        await _machine.PeelAcrossVeneerAsync(current_path, "gcode_blocks", new
+                        {
+                            success = blkcount.success && actpt.success && execprog.success,
+                            blkcount.response.cnc_rdblkcount.prog_bc,
+                            actpt.response.cnc_rdactpt.blk_no,
+                            execprog.response.cnc_rdexecprog.data
+                        });
                         
                         dynamic figures = await _machine["platform"].GetFigureAsync(0, 32);
                         await _machine.PeelAcrossVeneerAsync(current_path,"figures", figures);

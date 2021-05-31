@@ -2,11 +2,15 @@ using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using l99.driver.@base;
 using l99.driver.@base.mqtt.sparkplugb;
+using Newtonsoft.Json.Linq;
+using NLog;
 
 namespace l99.driver.fanuc.handlers
 {
     public class SparkplugB: Handler
     {
+        protected ILogger _logger;
+        
         private bool SPB_STRICT = true;
         //private string SPB_BROKER_IP = "10.20.30.102";
         //private int SPB_BROKER_PORT = 1883;
@@ -16,7 +20,7 @@ namespace l99.driver.fanuc.handlers
         
         public SparkplugB(Machine machine) : base(machine)
         {
-            
+            _logger = LogManager.GetLogger(this.GetType().FullName);
         }
         
         public override async Task InitializeAsync()
@@ -103,6 +107,9 @@ namespace l99.driver.fanuc.handlers
                 break;
             case "spindle_data":
                 add_metric(veneer, veneer.LastArrivedValue.data);
+                break;
+            case "gcode_blocks":
+                _logger.Trace(JArray.FromObject(veneer.LastArrivedValue).ToString());
                 break;
            }
         }

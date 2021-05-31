@@ -158,6 +158,36 @@ namespace l99.driver.fanuc.gcode
                 }
             }
         }
+
+        public IEnumerable<Block> ExecutedBlocks
+        {
+            get
+            {
+                List<Block> blocks = new List<Block>();
+                blocks.Add(_blocks[CurrentBlockPointer]);
+                
+                if (MissedBlockCount > 0)
+                {
+                    foreach (var missedBlock in MissedBlockNumbers.Reverse())
+                    {
+                        if (_blocks.ContainsKey(missedBlock))
+                        {
+                            blocks.Add(_blocks[missedBlock]);
+                        }
+                        else
+                        {
+                            blocks.Add(new Block
+                            {
+                                BlockNumber = missedBlock, 
+                                BlockText = "?"
+                            });
+                        }
+                    }
+                }
+
+                return blocks;
+            }
+        }
     }
 
     public class Block
