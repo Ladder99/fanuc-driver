@@ -84,7 +84,8 @@ namespace l99.driver.fanuc
                         pub_arrivals = machine_conf["broker"]["publish_arrivals"],
                         pub_changes = machine_conf["broker"]["publish_changes"],
                         ip = machine_conf["broker"]["net_ip"], 
-                        port = machine_conf["broker"]["net_port"]
+                        port = machine_conf["broker"]["net_port"],
+                        auto_connect = machine_conf["broker"]["auto_connect"]
                     }
                 };
                 

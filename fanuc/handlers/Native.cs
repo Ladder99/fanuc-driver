@@ -43,7 +43,6 @@ namespace l99.driver.fanuc.handlers
                 }
             };
 
-            
             return payload;
         }
         
@@ -85,7 +84,6 @@ namespace l99.driver.fanuc.handlers
                 }
             };
 
-            
             return payload;
         }
         
@@ -115,7 +113,6 @@ namespace l99.driver.fanuc.handlers
                     data = machine.CollectorSuccess ? "OK" : "NOK"
                 }
             };
-            
             
             return payload;
         }

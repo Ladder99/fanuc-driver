@@ -8,8 +8,8 @@ namespace l99.driver.fanuc.handlers
     public class SparkplugB: Handler
     {
         private bool SPB_STRICT = true;
-        private string SPB_BROKER_IP = "10.20.30.102";
-        private int SPB_BROKER_PORT = 1883;
+        //private string SPB_BROKER_IP = "10.20.30.102";
+        //private int SPB_BROKER_PORT = 1883;
         
         private Protocol _protocol;
         private bool _last_connection_success = false;
@@ -21,7 +21,8 @@ namespace l99.driver.fanuc.handlers
         
         public override async Task InitializeAsync()
         {
-            _protocol = new Protocol(SPB_BROKER_IP, SPB_BROKER_PORT, "fanuc", IPGlobalProperties.GetIPGlobalProperties().HostName, this.machine.Id);
+            //_protocol = new Protocol(SPB_BROKER_IP, SPB_BROKER_PORT, "fanuc", IPGlobalProperties.GetIPGlobalProperties().HostName, this.machine.Id);
+            _protocol = new Protocol(machine["broker"], "fanuc", IPGlobalProperties.GetIPGlobalProperties().HostName, this.machine.Id);
             
             _protocol.add_node_metric("Properties/Hardware Make", "arm");
             _protocol.add_node_metric("Properties/Hardware Model", "l99");
