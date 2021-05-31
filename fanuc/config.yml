@@ -34,3 +34,4 @@ machines:
       publish_status: !!bool true
       publish_arrivals: !!bool true
       publish_changes: !!bool true
+      
