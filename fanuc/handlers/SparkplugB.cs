@@ -109,7 +109,8 @@ namespace l99.driver.fanuc.handlers
                 add_metric(veneer, veneer.LastArrivedValue.data);
                 break;
             case "gcode_blocks":
-                _logger.Trace(JArray.FromObject(veneer.LastArrivedValue).ToString());
+                //_logger.Trace(JObject.FromObject(veneer.LastArrivedValue.blocks).ToString());
+                add_metric(veneer, _protocol.array_to_dataset(veneer.LastArrivedValue.blocks), MetricTypeEnum.DATASET);
                 break;
            }
         }

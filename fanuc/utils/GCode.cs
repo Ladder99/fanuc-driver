@@ -164,7 +164,8 @@ namespace l99.driver.fanuc.gcode
             get
             {
                 List<Block> blocks = new List<Block>();
-                blocks.Add(_blocks[CurrentBlockPointer]);
+                if(_blocks.ContainsKey(CurrentBlockPointer))
+                    blocks.Add(_blocks[CurrentBlockPointer]);
                 
                 if (MissedBlockCount > 0)
                 {
@@ -192,8 +193,8 @@ namespace l99.driver.fanuc.gcode
 
     public class Block
     {
-        public int BlockNumber;
-        public string BlockText;
+        public int BlockNumber { get; set; }
+        public string BlockText { get; set; }
 
         public override string ToString()
         {

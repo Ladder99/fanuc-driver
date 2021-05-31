@@ -2,7 +2,7 @@ machines:
   - id: sim
     enabled: !!bool true
     type: l99.driver.fanuc.FanucMachine, fanuc
-    strategy_type: l99.driver.fanuc.collectors.Basic06, fanuc
+    strategy_type: l99.driver.fanuc.collectors.Basic07, fanuc
     handler_type: l99.driver.fanuc.handlers.SparkplugB, fanuc
     sweep_ms: !!int 1000
     net_ip: 10.20.30.101
