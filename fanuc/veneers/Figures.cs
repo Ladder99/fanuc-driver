@@ -29,7 +29,8 @@ namespace l99.driver.fanuc.veneers
                 //Console.WriteLine(current_value.GetHashCode() + "  ==  " + _lastChangedValue.GetHashCode());
                 
                 //if (!current_value.Equals(this._lastChangedValue))
-                if(!JObject.FromObject(current_value).ToString().Equals(JObject.FromObject(_lastChangedValue).ToString()))
+                //if(!JObject.FromObject(current_value).ToString().Equals(JObject.FromObject(_lastChangedValue).ToString()))
+                if(current_value.IsDifferentString((object)_lastChangedValue))
                 {
                     await onDataChangedAsync(input, current_value);
                 }

@@ -15,7 +15,14 @@ namespace l99.driver.fanuc.veneers
                 alarm = -1,
                 main_program = -1, 
                 current_program = -1, 
-                sequence_number = -1
+                sequence_number = -1,
+                pos = new
+                {
+                    absolute = 0,
+                    machine = 0,
+                    relative = 0,
+                    distance = 0
+                }
             };
         }
         
@@ -42,7 +49,8 @@ namespace l99.driver.fanuc.veneers
                 //if (!current_value.Equals(_lastValue))
                 // TODO: can't do this because pos does not expand
                 //if(!current_value.ToString().Equals(_lastChangedValue.ToString())) 
-                if(!JObject.FromObject(current_value).ToString().Equals(JObject.FromObject(_lastChangedValue).ToString()))
+                //if(!JObject.FromObject(current_value).ToString().Equals(JObject.FromObject(_lastChangedValue).ToString()))
+                if(current_value.IsDifferentString((object)_lastChangedValue))
                 {
                     await onDataChangedAsync(input, current_value);
                 }
