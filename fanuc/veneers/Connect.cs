@@ -10,7 +10,7 @@ namespace l99.driver.fanuc.veneers
 
         }
 
-        protected override async Task<dynamic> FirstAsync(dynamic input, dynamic? input2)
+        protected override async Task<dynamic> FirstAsync(dynamic input, params dynamic?[] additional_inputs)
         {
             var current_value = new {input.success};
             
@@ -20,7 +20,7 @@ namespace l99.driver.fanuc.veneers
             return new { veneer = this };
         }
 
-        protected override async Task<dynamic> AnyAsync(dynamic input, dynamic? input2)
+        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additional_inputs)
         {
             var current_value = new {input.success };
             

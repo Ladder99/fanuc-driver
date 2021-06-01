@@ -24,7 +24,7 @@ namespace l99.driver.fanuc.veneers
             };
         }
         
-        protected override async Task<dynamic> AnyAsync(dynamic input, dynamic? input2)
+        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additional_inputs)
         {
             var max = ((List<dynamic>)input.focas_invocations).MaxBy(o => o.invocationMs).First();
             var min = ((List<dynamic>)input.focas_invocations).MinBy(o => o.invocationMs).First();

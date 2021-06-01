@@ -5,12 +5,12 @@ namespace l99.driver.fanuc
 {
     public partial class Platform
     {
-        public async Task<dynamic> RdSpLoadAsync(short sp_no = 0)
+        public async Task<dynamic> RdSpLoadAsync(short sp_no = 1)
         {
             return await Task.FromResult(RdSpLoad(sp_no));
         }
         
-        public dynamic RdSpLoad(short sp_no = 0)
+        public dynamic RdSpLoad(short sp_no = 1)
         {
             Focas1.ODBSPN serial_spindle = new Focas1.ODBSPN();
 

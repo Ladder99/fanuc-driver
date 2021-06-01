@@ -12,7 +12,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
-      - ~/fanuc-volumes/fanuc-driver:/etc/fanuc
+      - ~/fanuc-volumes/fanuc-driver:/etc/fanuc:rw
     logging:
       options:
         max-file: "5"

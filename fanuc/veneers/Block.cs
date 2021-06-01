@@ -10,7 +10,7 @@ namespace l99.driver.fanuc.veneers
             _lastChangedValue = new { data = string.Empty };
         }
         
-        protected override async Task<dynamic> AnyAsync(dynamic input, dynamic? input2)
+        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additional_inputs)
         {
             if (input.success)
             {

@@ -20,7 +20,8 @@ namespace l99.driver.fanuc
         
         static async Task Main(string[] args)
         {
-            _logger = setupLogger();
+            string nlog_file = getArgument(args, "--nlog", "nlog.config");
+            _logger = setupLogger(nlog_file);
             string config_file = getArgument(args, "--config", "config.yml");
             dynamic config = readConfig(config_file);
             Machines machines = await createMachines(config);
@@ -28,8 +29,18 @@ namespace l99.driver.fanuc
             LogManager.Shutdown();
         }
 
-        static Logger setupLogger()
+        static string getArgument(string[] args, string option, string defaultValue)
         {
+            var value = args.SkipWhile(i => i != option).Skip(1).Take(1).FirstOrDefault();
+            var config_path = string.IsNullOrEmpty(value) ? defaultValue : value;
+            Console.WriteLine($"Argument '{option}' = '{config_path}'");
+            return config_path;
+        }
+        
+        static Logger setupLogger(string config_file)
+        {
+            LogManager.Configuration = new NLog.Config.XmlLoggingConfiguration(config_file);
+
             var config = new ConfigurationBuilder().Build();
 
             return LogManager.Setup()
@@ -37,14 +48,6 @@ namespace l99.driver.fanuc
                 .GetCurrentClassLogger();
         }
 
-        static string getArgument(string[] args, string option, string defaultValue)
-        {
-            var value = args.SkipWhile(i => i != option).Skip(1).Take(1).FirstOrDefault();
-            var config_path = string.IsNullOrEmpty(value) ? defaultValue : value;
-            _logger.Debug($"Using configuration from '{config_path}'");
-            return config_path;
-        }
-        
         static dynamic readConfig(string config_file)
         {
             var input = new StreamReader(config_file);

@@ -378,6 +378,7 @@ sync
 
 ### Architecture: armv7 and aarch64
 
+NLog file used: `~/fanuc-driver/docker/nlog.config`  
 Config file used: `~/fanuc-driver/docker/config.yml`
 
 Build container:
@@ -404,6 +405,7 @@ docker run -it ladder99/fanuc-driver:latest
 
 Run fanuc-driver, [Mosquitto](https://docs.cedalo.com/latest/docs/mosquitto/broker-overview) MQTT broker, and [Streamsheets](https://docs.cedalo.com/latest/docs/streamsheets/sheets):
 
+NLog file used: `~/fanuc-volumes/fanuc-driver/nlog.config`  
 Config file used: `~/fanuc-volumes/fanuc-driver/config.yml`
 
 ```
@@ -412,6 +414,7 @@ cd ~
 git clone --recurse-submodules -j8 https://github.com/Ladder99/fanuc-driver.git 
 
 mkdir -p fanuc-volumes/fanuc-driver
+cp fanuc-driver/docker/nlog.config fanuc-volumes/fanuc-driver/nlog.config
 cp fanuc-driver/docker/config.yml fanuc-volumes/fanuc-driver/config.yml
 
 mkdir -p fanuc-volumes/mosquitto/config

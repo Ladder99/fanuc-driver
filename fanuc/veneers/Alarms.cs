@@ -15,7 +15,7 @@ namespace l99.driver.fanuc.veneers
             };
         }
         
-        protected override async Task<dynamic> AnyAsync(dynamic input, dynamic? input2)
+        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additional_inputs)
         {
             var success = true;
             var temp_value = new List<dynamic>() ;

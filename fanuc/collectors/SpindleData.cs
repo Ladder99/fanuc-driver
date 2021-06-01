@@ -106,15 +106,22 @@ namespace l99.driver.fanuc.collectors
                         dynamic spindles = await _machine["platform"].RdSpdlNameAsync();
                         await _machine.PeelAcrossVeneerAsync(current_path, "spindle_name", spindles);
 
-                        dynamic speed_feed = await _machine["platform"].RdSpeedAsync(0);
-                        dynamic speed_speed = await _machine["platform"].RdSpeedAsync(1);
+                        // main spindle displayed in cnc position screen
+                        // speed RPM,mm/rev... and feed mm/min...
+                        //dynamic speed_feed = await _machine["platform"].RdSpeedAsync(0);
+                        //dynamic speed_speed = await _machine["platform"].RdSpeedAsync(1);
                         dynamic speed_all = await _machine["platform"].RdSpeedAsync(-1);
 
-                        dynamic load_meter_all = await _machine["platform"].RdSpMeterAsync(0, spindles.response.cnc_rdspdlname.data_num);
-                        dynamic motor_speed_all = await _machine["platform"].RdSpMeterAsync(1, spindles.response.cnc_rdspdlname.data_num);
-                        dynamic meter_all = await _machine["platform"].RdSpMeterAsync(-1, spindles.response.cnc_rdspdlname.data_num);
+                        // TODO: does not work
+                        //dynamic spindles_data = await _machine["platform"].Acts2Async(-1);
                         
-                        dynamic spload_all = await _machine["platform"].RdSpLoadAsync(-1);
+                        // load % and speed RPM
+                        //dynamic load_meter_all = await _machine["platform"].RdSpMeterAsync(0, spindles.response.cnc_rdspdlname.data_num);
+                        //dynamic motor_speed_all = await _machine["platform"].RdSpMeterAsync(1, spindles.response.cnc_rdspdlname.data_num);
+                        //dynamic meter_all = await _machine["platform"].RdSpMeterAsync(-1, spindles.response.cnc_rdspdlname.data_num);
+                        
+                        // TODO: does not work
+                        //dynamic spload_all = await _machine["platform"].RdSpLoadAsync(-1);
                         
                         var fields_spindles = spindles.response.cnc_rdspdlname.spdlname.GetType().GetFields();
                         
@@ -137,14 +144,23 @@ namespace l99.driver.fanuc.collectors
                             
                             _machine.MarkVeneer(new[] { current_path, spindle_name }, new[] { path_marker, spindle_marker });
                             
+                            // rotational spindle speed
                             dynamic spindle_data = await _machine["platform"].Acts2Async(current_spindle);
                             await _machine.PeelAcrossVeneerAsync(new[] { current_path, spindle_name }, "spindle_data", spindle_data);
                             
-                            dynamic load_meter = await _machine["platform"].RdSpMeterAsync(0, current_spindle);
-                            dynamic motor_speed = await _machine["platform"].RdSpMeterAsync(1, current_spindle);
+                            //dynamic load_meter = await _machine["platform"].RdSpMeterAsync(0, current_spindle);
+                            //dynamic motor_speed = await _machine["platform"].RdSpMeterAsync(1, current_spindle);
                             dynamic meter = await _machine["platform"].RdSpMeterAsync(-1, current_spindle);
                             
-                            dynamic spload = await _machine["platform"].RdSpLoadAsync(current_spindle);
+                            // TODO create veneer
+                            // for single spindle machine
+                            //      veneer = RdSpeed + RdSpMeter
+                            // for multi spindle machine
+                            //      sp 1: veneer = RdSpeed (speed, feed) + RdSpMeter (speed, load)
+                            //      sp n: veneer = RdSpMeter (speed, load) (no feed)
+                            
+                            // not sure what units the response data is
+                            //dynamic spload = await _machine["platform"].RdSpLoadAsync(current_spindle);
                         };
                     }
 

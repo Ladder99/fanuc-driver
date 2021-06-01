@@ -203,11 +203,10 @@ namespace l99.driver.fanuc.collectors
                             //  we pass it as input2 to reveal the 'axis_data' observation, along with the axis index
                             //  and do the math inside RdDynamic2_1 veneer
                             dynamic axis_data = await _machine["platform"].RdDynamic2Async(current_axis, 44, 2);
-                            await _machine.PeelAcrossVeneerAsync(new[] { current_path, axis_name }, "axis_data", axis_data,new
-                            {
-                                figures, 
-                                axis_index = current_axis - 1
-                            });
+                            await _machine.PeelAcrossVeneerAsync(new[] { current_path, axis_name }, 
+                                "axis_data", 
+                                axis_data,
+                                figures, current_axis - 1);
                             catch_focas_perf(axis_data);
                         }
                         

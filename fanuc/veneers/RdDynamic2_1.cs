@@ -27,12 +27,12 @@ namespace l99.driver.fanuc.veneers
             };
         }
         
-        protected override async Task<dynamic> AnyAsync(dynamic input, dynamic? input2)
+        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additional_inputs)
         {
-            if (input.success && input2.figures.success)
+            if (input.success && additional_inputs[0].success)
             {
                 dynamic ad = input.response.cnc_rddynamic2.rddynamic;
-                dynamic fig_in = input2.figures.response.cnc_getfigure.dec_fig_in;
+                dynamic fig_in = additional_inputs[0].response.cnc_getfigure.dec_fig_in;
                 
                 var current_value = new
                 {
@@ -44,10 +44,10 @@ namespace l99.driver.fanuc.veneers
                     ad.seqnum,
                     pos = new
                     {
-                        absolute = ad.pos.absolute / Math.Pow(10.0, fig_in[input2.axis_index]),
-                        machine = ad.pos.machine / Math.Pow(10.0, fig_in[input2.axis_index]),
-                        relative = ad.pos.relative / Math.Pow(10.0, fig_in[input2.axis_index]),
-                        distance = ad.pos.distance / Math.Pow(10.0, fig_in[input2.axis_index])
+                        absolute = ad.pos.absolute / Math.Pow(10.0, fig_in[additional_inputs[1]]),
+                        machine = ad.pos.machine / Math.Pow(10.0, fig_in[additional_inputs[1]]),
+                        relative = ad.pos.relative / Math.Pow(10.0, fig_in[additional_inputs[1]]),
+                        distance = ad.pos.distance / Math.Pow(10.0, fig_in[additional_inputs[1]])
                     }
                 };
 
