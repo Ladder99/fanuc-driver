@@ -67,7 +67,7 @@ namespace l99.driver.fanuc.handlers
             
             var topic = $"fanuc/{veneers.Machine.Id}/splunk";
             string payload = JObject.FromObject(onChange).ToString();
-            await veneers.Machine["broker"].PublishChangeAsync(topic, payload);
+            await veneers.Machine.Broker.PublishChangeAsync(topic, payload);
         }
         
         protected override async Task afterDataErrorAsync(Veneers veneers, Veneer veneer, dynamic? onError)
@@ -79,8 +79,6 @@ namespace l99.driver.fanuc.handlers
                 method = veneer.LastArrivedInput.method, rc = veneer.LastArrivedInput.rc
             });
             */
-            
-            
         }
     }
 }

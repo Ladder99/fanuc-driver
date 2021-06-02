@@ -16,6 +16,8 @@ machines:
       publish_status: !!bool true
       publish_arrivals: !!bool true
       publish_changes: !!bool true
+      publish_disco: !!bool true
+      disco_base_topic: fanuc
 
   - id: naka
     enabled: !!bool false
@@ -34,4 +36,5 @@ machines:
       publish_status: !!bool true
       publish_arrivals: !!bool true
       publish_changes: !!bool true
-      
+      publish_disco: !!bool true
+      disco_base_topic: fanuc

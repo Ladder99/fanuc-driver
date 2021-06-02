@@ -311,6 +311,8 @@ machines:
       publish_status: !!bool true
       publish_arrivals: !!bool true
       publish_changes: !!bool true
+      publish_disco: !!bool true
+      disco_base_topic: fanuc
 
   - id: naka
     enabled: !!bool false
@@ -329,6 +331,8 @@ machines:
       publish_status: !!bool true
       publish_arrivals: !!bool true
       publish_changes: !!bool true
+      publish_disco: !!bool true
+      disco_base_topic: fanuc
 ```
 
 ## Building and Running
@@ -349,7 +353,7 @@ git clone --recurse-submodules -j8 https://github.com/Ladder99/fanuc-driver.git
 
 cd fanuc-driver/fanuc  
 
-dotnet build  /nowarn:CS0618 /nowarn:CS8632 -p:DefineConstants=ARMV7  
+dotnet build  /nowarn:CS0618 /nowarn:CS8632 /nowarn:CS1998 -p:DefineConstants=ARMV7  
 
 ./bin/Debug/netcoreapp3.1/fanuc  
 ```

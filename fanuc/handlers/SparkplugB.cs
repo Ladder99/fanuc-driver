@@ -2,7 +2,6 @@ using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using l99.driver.@base;
 using l99.driver.@base.mqtt.sparkplugb;
-using Newtonsoft.Json.Linq;
 using NLog;
 
 namespace l99.driver.fanuc.handlers
@@ -26,7 +25,7 @@ namespace l99.driver.fanuc.handlers
         public override async Task InitializeAsync()
         {
             //_protocol = new Protocol(SPB_BROKER_IP, SPB_BROKER_PORT, "fanuc", IPGlobalProperties.GetIPGlobalProperties().HostName, this.machine.Id);
-            _protocol = new Protocol(machine["broker"], "fanuc", IPGlobalProperties.GetIPGlobalProperties().HostName, this.machine.Id);
+            _protocol = new Protocol(machine.Broker, "fanuc", IPGlobalProperties.GetIPGlobalProperties().HostName, this.machine.Id);
             
             _protocol.add_node_metric("Properties/Hardware Make", "arm");
             _protocol.add_node_metric("Properties/Hardware Model", "l99");

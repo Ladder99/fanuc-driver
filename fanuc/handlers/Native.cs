@@ -12,13 +12,6 @@ namespace l99.driver.fanuc.handlers
             
         }
 
-        protected override async Task<dynamic?> beforeDataArrivalAsync(Veneers veneers, Veneer veneer)
-        {
-            await veneers.Machine["broker"]["disco"].AddAsync(veneers.Machine.Id, veneers.Machine["broker"]);
-            
-            return null;
-        }
-        
         public override async Task<dynamic?> OnDataArrivalAsync(Veneers veneers, Veneer veneer, dynamic? beforeArrival)
         {
             dynamic payload = new
@@ -50,14 +43,7 @@ namespace l99.driver.fanuc.handlers
         {
             var topic = $"fanuc/{veneers.Machine.Id}-all/{veneer.Name}{(veneer.SliceKey == null ? string.Empty : "/" + veneer.SliceKey.ToString())}";
             string payload = JObject.FromObject(onArrival).ToString();
-            await veneers.Machine["broker"].PublishArrivalAsync(topic, payload);
-        }
-        
-        protected override async Task<dynamic?> beforeDataChangeAsync(Veneers veneers, Veneer veneer)
-        {
-            await veneers.Machine["broker"]["disco"].AddAsync(veneers.Machine.Id, veneers.Machine["broker"]);
-            
-            return null;
+            await veneers.Machine.Broker.PublishArrivalAsync(topic, payload);
         }
         
         public override async Task<dynamic?> OnDataChangeAsync(Veneers veneers, Veneer veneer, dynamic? beforeChange)
@@ -91,7 +77,7 @@ namespace l99.driver.fanuc.handlers
         {
             var topic = $"fanuc/{veneers.Machine.Id}/{veneer.Name}{(veneer.SliceKey == null ? string.Empty : "/" + veneer.SliceKey.ToString())}";
             string payload = JObject.FromObject(onChange).ToString();
-            await veneers.Machine["broker"].PublishChangeAsync(topic, payload);
+            await veneers.Machine.Broker.PublishChangeAsync(topic, payload);
         }
         
         public override async Task<dynamic?> OnCollectorSweepCompleteAsync(Machine machine, dynamic? beforeSweepComplete)
@@ -123,8 +109,8 @@ namespace l99.driver.fanuc.handlers
             string topic = $"fanuc/{machine.Id}/PING";
             string payload = JObject.FromObject(onSweepComplete).ToString();
             
-            await machine["broker"].PublishArrivalStatusAsync(topic_all, payload);
-            await machine["broker"].PublishChangeStatusAsync(topic, payload);
+            await machine.Broker.PublishArrivalStatusAsync(topic_all, payload);
+            await machine.Broker.PublishChangeStatusAsync(topic, payload);
         }
     }
 }

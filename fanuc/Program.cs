@@ -86,6 +86,8 @@ namespace l99.driver.fanuc
                         pub_status = machine_conf["broker"]["publish_status"],
                         pub_arrivals = machine_conf["broker"]["publish_arrivals"],
                         pub_changes = machine_conf["broker"]["publish_changes"],
+                        pub_disco = machine_conf["broker"]["publish_disco"],
+                        disco_base_topic = machine_conf["broker"]["disco_base_topic"],
                         ip = machine_conf["broker"]["net_ip"], 
                         port = machine_conf["broker"]["net_port"],
                         auto_connect = machine_conf["broker"]["auto_connect"]
@@ -104,9 +106,7 @@ namespace l99.driver.fanuc
             {
                 _logger.Trace($"Creating machine from config:\n{JObject.FromObject(cfg).ToString()}");
                 Broker broker = await brokers.AddAsync(cfg.broker);
-                broker["disco"] = new Disco();
-                Machine machine = machines.Add(cfg.machine);
-                machine["broker"] = broker;
+                Machine machine = machines.Add(cfg.machine, broker);
                 machine.AddCollector(Type.GetType(cfg.machine.collector), cfg.machine.collectorSweepMs);
                 await machine.AddHandlerAsync(Type.GetType(cfg.machine.handler));
             }
