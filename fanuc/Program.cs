@@ -29,12 +29,12 @@ namespace l99.driver.fanuc
             LogManager.Shutdown();
         }
 
-        static string getArgument(string[] args, string option, string defaultValue)
+        static string getArgument(string[] args, string option_name, string defaultValue)
         {
-            var value = args.SkipWhile(i => i != option).Skip(1).Take(1).FirstOrDefault();
-            var config_path = string.IsNullOrEmpty(value) ? defaultValue : value;
-            Console.WriteLine($"Argument '{option}' = '{config_path}'");
-            return config_path;
+            var value = args.SkipWhile(i => i != option_name).Skip(1).Take(1).FirstOrDefault();
+            var option_value = string.IsNullOrEmpty(value) ? defaultValue : value;
+            Console.WriteLine($"Argument '{option_name}' = '{option_value}'");
+            return option_value;
         }
         
         static Logger setupLogger(string config_file)
@@ -105,10 +105,18 @@ namespace l99.driver.fanuc
             foreach (var cfg in machine_confs)
             {
                 _logger.Trace($"Creating machine from config:\n{JObject.FromObject(cfg).ToString()}");
+                
                 Broker broker = await brokers.AddAsync(cfg.broker);
                 Machine machine = machines.Add(cfg.machine, broker);
                 machine.AddCollector(Type.GetType(cfg.machine.collector), cfg.machine.collectorSweepMs);
                 await machine.AddHandlerAsync(Type.GetType(cfg.machine.handler));
+                
+                /*
+                Machine machine = machines
+                    .Add(cfg.machine, await brokers.AddAsync(cfg.broker))
+                    .AddCollector(Type.GetType(cfg.machine.collector), cfg.machine.collectorSweepMs)
+                    .AddHandlerAsync(Type.GetType(cfg.machine.handler));
+                */
             }
 
             return machines;
