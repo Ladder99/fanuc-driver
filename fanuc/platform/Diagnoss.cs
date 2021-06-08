@@ -25,6 +25,26 @@ namespace l99.driver.fanuc
             return await Task.FromResult(Diagnoss(number, 0, 4+8*1, 1));
         }
         
+        public async Task<dynamic> DiagnossByteFirstAxisAsync(short number = 0)
+        {
+            return await Task.FromResult(Diagnoss(number, 1, 4+1*1, 1));
+        }
+        
+        public async Task<dynamic> DiagnossWordFirstAxisAsync(short number = 0)
+        {
+            return await Task.FromResult(Diagnoss(number, 1, 4+2*1, 1));
+        }
+        
+        public async Task<dynamic> DiagnossDoubleWordFirstAxisAsync(short number = 0)
+        {
+            return await Task.FromResult(Diagnoss(number, 1, 4+4*1, 1));
+        }
+        
+        public async Task<dynamic> DiagnossRealFirstAxisAsync(short number = 0)
+        {
+            return await Task.FromResult(Diagnoss(number, 1, 4+8*1, 1));
+        }
+        
         public async Task<dynamic> DiagnossAsync(short number = 0, short axis = 0, short length = 5, int ODBDGN_type = 1)
         {
             return await Task.FromResult(Diagnoss(number, axis, length, ODBDGN_type));

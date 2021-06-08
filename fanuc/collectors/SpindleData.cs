@@ -145,7 +145,7 @@ namespace l99.driver.fanuc.collectors
                             dynamic sp_maxrpm = await _platform.RdSpMaxRpmAsync(current_spindle);
 
                             // spindle gear ratio
-                            dynamic sp_gear = await _platform.RdSpGear(current_spindle);
+                            dynamic sp_gear = await _platform.RdSpGearAsync(current_spindle);
                             
                             // not sure what units the response data is
                             //dynamic spload = await _machine["platform"].RdSpLoadAsync(current_spindle);
@@ -159,10 +159,10 @@ namespace l99.driver.fanuc.collectors
                             
                             // diagnose values
                             // 400 bit 7 = LNK/1    comms with spindle control established
-                            dynamic diag_lnk = await _platform.DiagnossByteNoAxisAsync(400);
+                            dynamic diag_lnk = await _platform.DiagnossByteFirstAxisAsync(400);
                             
                             // 403 byte             temp of winding spindle motor (C) 0-255
-                            dynamic diag_temp = await _platform.DiagnossByteNoAxisAsync(403);
+                            dynamic diag_temp = await _platform.DiagnossByteFirstAxisAsync(403);
                             
                             // 408                  spindle comms (causes of SP0749)
                             //  0 CRE               CRC 
@@ -172,37 +172,37 @@ namespace l99.driver.fanuc.collectors
                             //  4 CME               no response
                             //  5 SCA               comm amplifier alarm
                             //  7 SSA               spindle amplifier alarm
-                            dynamic diag_comms = await _platform.DiagnossByteNoAxisAsync(408);
+                            dynamic diag_comms = await _platform.DiagnossByteFirstAxisAsync(408);
                             
                             // 410 word             spindle load (%)
-                            dynamic diag_load_perc = await _platform.DiagnossWordNoAxisAsync(410);
+                            dynamic diag_load_perc = await _platform.DiagnossWordFirstAxisAsync(410);
                             
                             // 411 word             spindle load (min)
-                            dynamic diag_load_min = await _platform.DiagnossWordNoAxisAsync(410);
+                            dynamic diag_load_min = await _platform.DiagnossWordFirstAxisAsync(411);
                             
                             // 417 dword            spindle position coder feedback (detection units)
-                            dynamic diag_coder = await _platform.DiagnossDoubleWordNoAxisAsync(417);
+                            dynamic diag_coder = await _platform.DiagnossDoubleWordFirstAxisAsync(417);
                             
                             // 418 dword            position loop deviation (detection units)
-                            dynamic diag_loop_dev = await _platform.DiagnossDoubleWordNoAxisAsync(418);
+                            dynamic diag_loop_dev = await _platform.DiagnossDoubleWordFirstAxisAsync(418);
                             
                             // 425 dword            sync error (detection unit)
-                            dynamic diag_sync_error = await _platform.DiagnossDoubleWordNoAxisAsync(425);
+                            dynamic diag_sync_error = await _platform.DiagnossDoubleWordFirstAxisAsync(425);
                             
                             // 445 word             position data (pulse) 0-4095 , valid only when param3117=1
-                            dynamic diag_pos_data = await _platform.DiagnossWordNoAxisAsync(445);
+                            dynamic diag_pos_data = await _platform.DiagnossWordFirstAxisAsync(445);
                             
                             // 710 word             spindle error
-                            dynamic diag_error = await _platform.DiagnossWordNoAxisAsync(710);
+                            dynamic diag_error = await _platform.DiagnossWordFirstAxisAsync(710);
                             
                             // 711 word             spindle warning
-                            dynamic diag_warn = await _platform.DiagnossWordNoAxisAsync(711);
+                            dynamic diag_warn = await _platform.DiagnossWordFirstAxisAsync(711);
                             
                             // 1520 dword           spindle rev count 1 (1000 min)
-                            dynamic diag_rev_1 = await _platform.DiagnossDoubleWordNoAxisAsync(1520);
+                            dynamic diag_rev_1 = await _platform.DiagnossDoubleWordFirstAxisAsync(1520);
                             
                             // 1521 dword           spindle rev count 2 (1000 min)
-                            dynamic diag_rev_2 = await _platform.DiagnossDoubleWordNoAxisAsync(1521);
+                            dynamic diag_rev_2 = await _platform.DiagnossDoubleWordFirstAxisAsync(1521);
                             
                             await _machine.PeelAcrossVeneerAsync(spindle_split, "spindle_data", 
                                 current_spindle,
