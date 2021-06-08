@@ -1,7 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using l99.driver.@base;
-using Newtonsoft.Json.Linq;
 
 namespace l99.driver.fanuc.veneers
 {
