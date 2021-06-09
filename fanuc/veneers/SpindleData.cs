@@ -24,8 +24,7 @@ namespace l99.driver.fanuc.veneers
                 var spindle_value = spindle_fields[input - 1].GetValue(input.response.cnc_rdspdlname.spdlname);
                 var spindle_name = ((char) spindle_value.name).AsAscii() +
                                    ((char) spindle_value.suff1).AsAscii() +
-                                   ((char) spindle_value.suff2).AsAscii() +
-                                   ((char) spindle_value.suff3).AsAscii();
+                                   ((char) spindle_value.suff2).AsAscii();
 
 
                 var current_value = new

@@ -35,19 +35,19 @@ namespace l99.driver.fanuc.collectors
             apply(typeof(fanuc.veneers.RdActs2), "spindle_data");
         }
         
-        public async Task<bool> CollectBeginAsync()
+        public override async Task<bool> CollectBeginAsync()
         {
             return await base.CollectBeginAsync();
         }
         
-        public async Task CollectRootAsync()
+        public override async Task CollectRootAsync()
         {
             await set_native_and_peel("cnc_id", await _platform.CNCIdAsync());
                     
             await set_native_and_peel("power_on_time", await _platform.RdParamDoubleWordNoAxisAsync(6750));
         }
 
-        public async Task CollectForEachPathAsync(short current_path, dynamic path_marker)
+        public override async Task CollectForEachPathAsync(short current_path, dynamic path_marker)
         {
             await set_native_and_peel("sys_info", await _platform.SysInfoAsync());
                         
@@ -61,7 +61,7 @@ namespace l99.driver.fanuc.collectors
                 await set_native("execprog", await _platform.RdExecProgAsync(128)));
         }
 
-        public async Task CollectForEachAxisAsync(short current_axis, dynamic axis_split, dynamic axis_marker)
+        public override async Task CollectForEachAxisAsync(short current_axis, dynamic axis_split, dynamic axis_marker)
         {
             await peel("axis_data",
                 await set_native("axis_dynamic", await _platform.RdDynamic2Async(current_axis, 44, 2)), 
@@ -69,12 +69,12 @@ namespace l99.driver.fanuc.collectors
                 current_axis - 1);
         }
 
-        public async Task CollectForEachSpindleAsync(short current_spindle, dynamic spindle_split, dynamic spindle_marker)
+        public override async Task CollectForEachSpindleAsync(short current_spindle, dynamic spindle_split, dynamic spindle_marker)
         {
             await set_native_and_peel("spindle_data", await _platform.Acts2Async(current_spindle));
         }
 
-        public async Task CollectEndAsync()
+        public override async Task CollectEndAsync()
         {
             await base.CollectEndAsync();
         }

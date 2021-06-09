@@ -29,8 +29,7 @@ namespace l99.driver.fanuc.veneers
                     {
                         name = ((char)spindle.name).AsAscii(), 
                         suff1 =  ((char)spindle.suff1).AsAscii(),
-                        suff2 =  ((char)spindle.suff2).AsAscii(),
-                        suff3 =  ((char)spindle.suff3).AsAscii()
+                        suff2 =  ((char)spindle.suff2).AsAscii()
                     });
                 }
                 

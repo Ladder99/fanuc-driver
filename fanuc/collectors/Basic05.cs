@@ -71,8 +71,7 @@ namespace l99.driver.fanuc.collectors
                                 var spindle = fields_spindles[x].GetValue(spindles.response.cnc_rdspdlname.spdlname);
                                 axis_spindle_slices.Add(((char) spindle.name).AsAscii() +
                                                         ((char) spindle.suff1).AsAscii() +
-                                                        ((char) spindle.suff2).AsAscii() +
-                                                        ((char) spindle.suff3).AsAscii());
+                                                        ((char) spindle.suff2).AsAscii());
                             };
 
                             _machine.SliceVeneer(current_path, axis_spindle_slices.ToArray());
@@ -196,14 +195,12 @@ namespace l99.driver.fanuc.collectors
                             var spindle = fields_spindles[current_spindle - 1].GetValue(spindles.response.cnc_rdspdlname.spdlname);
                             dynamic spindle_name = ((char) spindle.name).AsAscii() +
                                                     ((char) spindle.suff1).AsAscii() +
-                                                    ((char) spindle.suff2).AsAscii() +
-                                                    ((char) spindle.suff3).AsAscii();
+                                                    ((char) spindle.suff2).AsAscii();
                             dynamic spindle_marker = new
                             {
                                 name = ((char)spindle.name).AsAscii(), 
                                 suff1 =  ((char)spindle.suff1).AsAscii(),
-                                suff2 =  ((char)spindle.suff2).AsAscii(),
-                                suff3 =  ((char)spindle.suff3).AsAscii()
+                                suff2 =  ((char)spindle.suff2).AsAscii()
                             };
                             
                             _machine.MarkVeneer(new[] { current_path, spindle_name }, new[] { path_marker, spindle_marker });

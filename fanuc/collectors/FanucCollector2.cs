@@ -92,7 +92,7 @@ namespace l99.driver.fanuc.collectors
             catch_focas_performance(value);
 
             if (!peel)
-                return null;
+                return value;
 
             return await _peel(key, value);
         }
@@ -216,8 +216,8 @@ namespace l99.driver.fanuc.collectors
 
                         await InitPathsAsync();
                         
-                        _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.RdAxisname), "axis_name");
-                        _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.RdSpindlename), "spindle_name");
+                        _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.RdAxisname), "axis_names");
+                        _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.RdSpindlename), "spindle_names");
                         
                         for (short current_path = paths.response.cnc_getpath.path_no;
                             current_path <= paths.response.cnc_getpath.maxpath_no;
@@ -400,7 +400,7 @@ namespace l99.driver.fanuc.collectors
 
         public virtual async Task CollectEndAsync()
         {
-            await set_native_and_peel("disconnect", await _platform.DisconnectAsync());
+            await set_native("disconnect", await _platform.DisconnectAsync());
 
             await _machine.PeelVeneerAsync("focas_perf", new
             {

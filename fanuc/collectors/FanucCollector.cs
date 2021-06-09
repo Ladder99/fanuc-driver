@@ -34,8 +34,8 @@ namespace l99.driver.fanuc.collectors
         {
             return ((char) spindle.name).AsAscii() +
                    ((char) spindle.suff1).AsAscii() +
-                   ((char) spindle.suff2).AsAscii() +
-                   ((char) spindle.suff3).AsAscii();
+                   ((char) spindle.suff2).AsAscii();
+                   // ((char) spindle.suff3).AsAscii(); reserved
         }
 
         protected dynamic SpindleMarker(dynamic spindle)
@@ -44,8 +44,8 @@ namespace l99.driver.fanuc.collectors
             {
                 name = ((char)spindle.name).AsAscii(), 
                 suff1 =  ((char)spindle.suff1).AsAscii(),
-                suff2 =  ((char)spindle.suff2).AsAscii(),
-                suff3 =  ((char)spindle.suff3).AsAscii()
+                suff2 =  ((char)spindle.suff2).AsAscii()
+                // suff3 =  ((char)spindle.suff3).AsAscii() reserved
             };
         }
 
