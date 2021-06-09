@@ -4,7 +4,7 @@
 
 This solution is built on top of Fanuc Focas libraries for interfacing with Fanuc controllers and publishing data to a MQTT broker or another target.
 
-The primary goal of this solution is to maintain the machine data in its native source format with slight transformations to make it more human readable at the target.  The intention behind this approach is to allow the developer to reference original [Focas API documentation](docs/FOCAS2_Linux.pdf) further downstream to aid in their transformation and translation efforts.   
+The primary goal of this solution is to maintain the machine data in its native source format with slight transformations to make it more human readable at the target.  The intention behind this approach is to allow the developer to reference original [Focas API documentation](docs/FOCAS2_Linux.pdf) further downstream to aid in their transformation and translation efforts.  Concepts in the `base-driver` repository can be reused to create structured drivers for other protocols.  
 
 Below illustrates [Fanuc NC Guide](https://www.fanucamerica.com/products/cnc/software/cnc-guide-simulation-software) output visualized through [MQTT Explorer](http://mqtt-explorer.com/).
 
@@ -15,6 +15,8 @@ Below illustrates [Fanuc 0i-TF](https://www.fanucamerica.com/products/cnc/cnc-sy
 ![recording2](docs/recording2.gif)
 
 ## MQTT Topic Structure - Suggested
+
+Observations can be single data points, such as axis absolute position or motor temperature.  Observations can also be more compound such as the health of a spindle which would package multiple relevant data points into a single observation payload.  Results of calls into the Focas library highly depend on the context they are invoked in.  For example, retrieving the position of an axis on the second execution path of the controller, requires that the second path is made active and the appropriate axis is called out when making the call.  This hierarchy is captured in the suggested topic structure below.
 
 ### Machine Level Observations
 
@@ -57,7 +59,7 @@ Data deltas are published to MQTT broker as retained messages.  This means that 
 
 Below is an example of native [`cnc_sysinfo`](https://www.inventcom.net/fanuc-focas-library/misc/cnc_sysinfo) invocation response data and the corresponding `sys_info` observation transformed data.
 
-Native data:
+Native data from controller:
 
 ```
 {
@@ -90,7 +92,7 @@ Native data:
 }
 ```
 
-After transformation:
+Data after transformation:
 
 ```
 {
@@ -104,7 +106,7 @@ After transformation:
 }
 ```
 
-Full published payload:
+Data as published to the broker:
 
 ```
 fanuc/sim/sys_info
@@ -158,17 +160,32 @@ A `Collector` is a strategy to apply and peel veneers to reveal observations fro
 
 ### Veneers
 
-A `Veneer` is a thin transformation layer.  When peeled, each veneer reveals an observation.  Veneers can be applied/peeled as a whole.  Veneers can be sliced and applied/peeled across logical boundaries.  Atomic values should be used for slicing veneers.  Sliced veneers must be marked before peeling in order to understand their logical placement downstream.
+A `Veneer` is a thin transformation layer.  When peeled, each veneer reveals an observation.  Veneers can be applied/peeled as a whole.  Veneers can be sliced and applied/peeled across logical boundaries (e.g. path, axis, spindle).  Atomic values should be used for slicing veneers.  Sliced veneers must be marked before peeling in order to convey the logical hierarchy of the observation to downstream systems.
+
+Example of an observation marker for spindle 'S' on execution path '1'.
+
+```json
+"marker": [
+      {
+        "path_no": 1
+      },
+      {
+        "name": "S",
+        "suff1": "",
+        "suff2": ""
+      }
+    ]
+```
 
 ### Veneering
 
-The act of applying veneers in a logical manner.
+The act of applying veneers in a logical manner in order to bind transformation logic to an observation.
 
 ![fanuc-driver_veneering](docs/fanuc-driver_veneering.png)
 
 ### Peeling
 
-The act of peeling veneers to reveal observations.
+The act of peeling veneers in order to execute transformations and reveal observations.
 
 ![fanuc-driver_peeling](docs/fanuc-driver_peeling.png)
 
@@ -195,7 +212,7 @@ public override void Collect()
     _machine.PeelVeneer("connect", connect);
 ```
 
-A connection is established to the Fanuc controller and the call to `PeelVeneer` reveals the *connect* observation.  The `Connect` `Veneer` instance is responsible for transforming the native Focas response where appropriate, comparing it to the last value seen, and invoking the `dataChanged` action.  The changed data is then available through the `Machine.Veneers.OnDataChange<Veneers, Veneer>` delegate.  Similarly, errors bubble up to `Machine.Veneers.OnError<Veneers, Veneer>`.
+A connection is established to the Fanuc controller and the call to `PeelVeneer` reveals the *connect* observation.  The `Connect` `Veneer` instance is responsible for transforming the native Focas response where appropriate, comparing it to the last value seen, and invoking the `dataArrived` and `dataChanged` actions.  Every arrived data is available via the `Machine.Veneers.OnDataArrival<Veneers, Veneer>` delegate. Changed data is available via the `Machine.Veneers.OnDataChange<Veneers, Veneer>` delegate.  Similarly, errors bubble up to `Machine.Veneers.OnError<Veneers, Veneer>`.
 
 
 ```
@@ -289,6 +306,7 @@ namespace l99.driver.fanuc.collectors
             
         }
         
+        // global machine observations
         public override async Task InitRootAsync()
         {
             apply(typeof(fanuc.veneers.CNCId), "cnc_id");
@@ -296,6 +314,7 @@ namespace l99.driver.fanuc.collectors
             apply(typeof(fanuc.veneers.RdParamLData), "power_on_time");
         }
         
+        // execution path observations
         public override async Task InitPathsAsync()
         {
             apply(typeof(fanuc.veneers.SysInfo), "sys_info");
@@ -307,6 +326,7 @@ namespace l99.driver.fanuc.collectors
             apply(typeof(fanuc.veneers.GCodeBlocks), "gcode_blocks");
         }
         
+        // axis and spindle observations
         public override async Task InitAxisAndSpindleAsync()
         {
             apply(typeof(fanuc.veneers.RdDynamic2_1), "axis_data");
@@ -314,18 +334,39 @@ namespace l99.driver.fanuc.collectors
             apply(typeof(fanuc.veneers.RdActs2), "spindle_data");
         }
         
+        // 
+        //    collection sweep
+        //
+        //    begin => 
+        //        root/global =>
+        //        walk each execution path =>
+        //        walk each axis in execution path =>
+        //        walk each spindle in execution path =>
+        //    end => 
+        //    sleep => 
+        //    begin ...
+        //    
+        
         public override async Task<bool> CollectBeginAsync()
         {
             return await base.CollectBeginAsync();
         }
         
+        // reveal global machine observations
         public override async Task CollectRootAsync()
         {
+            // single data point observation
+            //
+            //    set_native_and_peel
+            //        1. cache focas returned value as "cnc_id"
+            //        2. reveal observation bound by "cnc_id" in InitRootAsync function
+            //
             await set_native_and_peel("cnc_id", await _platform.CNCIdAsync());
                     
             await set_native_and_peel("power_on_time", await _platform.RdParamDoubleWordNoAxisAsync(6750));
         }
 
+        // reveal execution path observations
         public override async Task CollectForEachPathAsync(short current_path, dynamic path_marker)
         {
             await set_native_and_peel("sys_info", await _platform.SysInfoAsync());
@@ -334,20 +375,35 @@ namespace l99.driver.fanuc.collectors
             
             await set_native_and_peel("figures", await _platform.GetFigureAsync(0, 32));
             
+            // compound observation
+            //
+            //    set_native
+            //        1. cache focas returned value as "blkcount", "actpt", "execprog"
+            //  
+            //    peel
+            //        1. reveal observation bound by "gcode_blocks" in InitPathAsync function
+            //              "blkcount", "actpt", and "execprog" data is fed into the transformation logic
+            //
             await peel("gcode_blocks",
                 await set_native("blkcount", await _platform.RdBlkCountAsync()),
                 await set_native("actpt", await _platform.RdActPtAsync()),
                 await set_native("execprog", await _platform.RdExecProgAsync(128)));
         }
 
+        // reveal axis observations
         public override async Task CollectForEachAxisAsync(short current_axis, dynamic axis_split, dynamic axis_marker)
         {
+            // 
+            //  get
+            //      retrieve "figures" value from cache previously set in CollectForEachPathAsync
+            //
             await peel("axis_data",
                 await set_native("axis_dynamic", await _platform.RdDynamic2Async(current_axis, 44, 2)), 
                 get("figures"), 
                 current_axis - 1);
         }
 
+        // reveal spindle observations
         public override async Task CollectForEachSpindleAsync(short current_spindle, dynamic spindle_split, dynamic spindle_marker)
         {
             await set_native_and_peel("spindle_data", await _platform.Acts2Async(current_spindle));
