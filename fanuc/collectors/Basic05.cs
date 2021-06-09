@@ -133,7 +133,7 @@ namespace l99.driver.fanuc.collectors
                     await _machine.PeelVeneerAsync("power_on_time", poweron);
                     catch_focas_perf(poweron);
                     
-                    dynamic poweron_6750 = await _machine["platform"].RdParamAsync(6750, 0, 8, 1);
+                    dynamic poweron_6750 = _machine["platform"].RdParamDoubleWordNoAxisAsync(6750);
                     await _machine.PeelVeneerAsync("power_on_time_6750", poweron_6750);
                     catch_focas_perf(poweron_6750);
                     

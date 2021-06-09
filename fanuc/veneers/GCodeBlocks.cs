@@ -22,9 +22,11 @@ namespace l99.driver.fanuc.veneers
         
         protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additional_inputs)
         {
-            if (input.success)
+            if (input.success && additional_inputs[0].success && additional_inputs[1].success)
             {
-                _blocks.Add(input.prog_bc, input.blk_no, input.data);
+                _blocks.Add(input.response.cnc_rdblkcount.prog_bc, 
+                    additional_inputs[0].response.cnc_rdactpt.blk_no, 
+                    additional_inputs[1].response.cnc_rdexecprog.data);
                 
                 var current_value = new
                 {

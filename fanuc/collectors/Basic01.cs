@@ -62,7 +62,7 @@ namespace l99.driver.fanuc.collectors
                     dynamic poweron = await _machine["platform"].RdTimerAsync(0);
                     await _machine.PeelVeneerAsync("power_on_time", poweron);
 
-                    dynamic poweron_6750 = await _machine["platform"].RdParamAsync(6750, 0, 8, 1);
+                    dynamic poweron_6750 = await _machine["platform"].RdParamDoubleWordNoAxisAsync(6750);
                     await _machine.PeelVeneerAsync("power_on_time_6750", poweron_6750);
 
                     dynamic info = await _machine["platform"].SysInfoAsync();

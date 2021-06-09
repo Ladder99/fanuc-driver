@@ -94,7 +94,7 @@ namespace l99.driver.fanuc.collectors
 
                     // here is an example where the RdParamLData veneer is generic based on the input parameters
                     //  and can be applied to multiple observations
-                    dynamic poweron_6750 = await _machine["platform"].RdParamAsync(6750, 0, 8, 1);
+                    dynamic poweron_6750 = _machine["platform"].RdParamDoubleWordNoAxisAsync(6750);
                     await _machine.PeelVeneerAsync("power_on_time_6750", poweron_6750);
 
                     // retrieve the number of paths to walk each one

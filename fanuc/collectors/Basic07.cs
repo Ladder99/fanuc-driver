@@ -143,7 +143,7 @@ namespace l99.driver.fanuc.collectors
                     await _machine.PeelVeneerAsync("power_on_time", poweron);
                     catch_focas_perf(poweron);
                     
-                    dynamic poweron_6750 = await _platform.RdParamAsync(6750, 0, 8, 1);
+                    dynamic poweron_6750 = await _platform.RdParamDoubleWordNoAxisAsync(6750);
                     await _machine.PeelVeneerAsync("power_on_time_6750", poweron_6750);
                     catch_focas_perf(poweron_6750);
                     
@@ -178,13 +178,17 @@ namespace l99.driver.fanuc.collectors
                         dynamic execprog = await _platform.RdExecProgAsync(128);
                         catch_focas_perf(execprog);
                         
-                        await _machine.PeelAcrossVeneerAsync(current_path, "gcode_blocks", new
+                        /*await _machine.PeelAcrossVeneerAsync(current_path, "gcode_blocks", new
                         {
                             success = blkcount.success && actpt.success && execprog.success,
                             blkcount.response.cnc_rdblkcount.prog_bc,
                             actpt.response.cnc_rdactpt.blk_no,
                             execprog.response.cnc_rdexecprog.data
-                        });
+                        });*/
+                        
+                        await _machine.PeelAcrossVeneerAsync(current_path, "gcode_blocks", 
+                            blkcount,
+                            actpt, execprog);
                         
                         dynamic figures = await _platform.GetFigureAsync(0, 32);
                         await _machine.PeelAcrossVeneerAsync(current_path,"figures", figures);

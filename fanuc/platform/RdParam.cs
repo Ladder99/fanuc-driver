@@ -5,6 +5,26 @@ namespace l99.driver.fanuc
 {
     public partial class Platform
     {
+        public async Task<dynamic> RdParamByteNoAxisAsync(short number)
+        {
+            return await Task.FromResult(RdParam(number, 0, 4+1+1, 1));
+        }
+        
+        public async Task<dynamic> RdParamWordNoAxisAsync(short number)
+        {
+            return await Task.FromResult(RdParam(number, 0, 4+2*1, 1));
+        }
+        
+        public async Task<dynamic> RdParamDoubleWordNoAxisAsync(short number)
+        {
+            return await Task.FromResult(RdParam(number, 0, 6+2*1, 1));
+        }
+        
+        public async Task<dynamic> RdParamRealNoAxisAsync(short number)
+        {
+            return await Task.FromResult(RdParam(number, 0, 4+8*1, 1));
+        }
+    
         public async Task<dynamic> RdParamAsync(short number, short axis, short length, int IODBPSD_type)
         {
             return await Task.FromResult(RdParam(number, axis, length, IODBPSD_type));

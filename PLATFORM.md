@@ -71,6 +71,20 @@ Reads system information such as kind of CNC system, Machining(M) or Turning(T),
   }
 }
 ```
+* handler: Native
+
+`fanuc/{id}/sys_info/1`
+```json
+{
+  "addinfo": 1090,
+  "max_axis": 32,
+  "cnc_type": " 0",
+  "mt_type": " M",
+  "series": "D4F1",
+  "version": "30.0",
+  "axes": "03"
+}
+```
 
 # CNC_STATINFO
 

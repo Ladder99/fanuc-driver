@@ -5,6 +5,7 @@ namespace l99.driver.fanuc
 {
     public partial class Platform
     {
+        /* no axis returns EW_ATTRIB
         public async Task<dynamic> DiagnossByteNoAxisAsync(short number = 0)
         {
             return await Task.FromResult(Diagnoss(number, 0, 4+1*1, 1));
@@ -24,6 +25,7 @@ namespace l99.driver.fanuc
         {
             return await Task.FromResult(Diagnoss(number, 0, 4+8*1, 1));
         }
+        */
         
         public async Task<dynamic> DiagnossByteFirstAxisAsync(short number = 0)
         {
