@@ -11,7 +11,7 @@ namespace l99.driver.fanuc.veneers
         {
             _lastChangedValue = new 
             {
-                alarms = new List<dynamic>()
+                alarms = new List<dynamic>() { -1 }
             };
         }
         
