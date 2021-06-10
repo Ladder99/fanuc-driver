@@ -11,7 +11,7 @@ namespace l99.driver.fanuc.collectors
         public FanucCollector(Machine machine, int sweepMs = 1000) : base(machine, sweepMs)
         {
             _platform = _machine["platform"];
-            _platform.StartupProcess(3, "~/focas2.log");
+            _platform.StartupProcess(3, "focas2.log");
         }
         
         ~FanucCollector()
