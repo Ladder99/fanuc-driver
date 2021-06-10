@@ -5,9 +5,9 @@ using l99.driver.@base;
 
 namespace l99.driver.fanuc.veneers
 {
-    public class Alarms : Veneer
+    public class Alarms2 : Veneer
     {
-        public Alarms(string name = "", bool isInternal = false) : base(name, isInternal)
+        public Alarms2(string name = "", bool isInternal = false) : base(name, isInternal)
         {
             _lastChangedValue = new 
             {
@@ -20,9 +20,9 @@ namespace l99.driver.fanuc.veneers
             var success = true;
             var temp_value = new List<dynamic>() ;
             
-            foreach (var key in input.response.cnc_rdalmmsg_ALL.Keys)
+            foreach (var key in input.response.cnc_rdalmmsg2_ALL.Keys)
             {
-                var type_success = input.response.cnc_rdalmmsg_ALL[key].success;
+                var type_success = input.response.cnc_rdalmmsg2_ALL[key].success;
 
                 if (!type_success)
                 {
@@ -30,8 +30,8 @@ namespace l99.driver.fanuc.veneers
                     break;
                 }
 
-                var request_data = input.response.cnc_rdalmmsg_ALL[key].request.cnc_rdalmmsg;
-                var response_data = input.response.cnc_rdalmmsg_ALL[key].response.cnc_rdalmmsg;
+                var request_data = input.response.cnc_rdalmmsg2_ALL[key].request.cnc_rdalmmsg2;
+                var response_data = input.response.cnc_rdalmmsg2_ALL[key].response.cnc_rdalmmsg2;
                 var alarm_type = request_data.type;
                 var alarm_count = response_data.num;
 
@@ -54,8 +54,8 @@ namespace l99.driver.fanuc.veneers
                 };
                 
                 await onDataArrivedAsync(input, current_value);
-
-                if (current_value.alarms.IsDifferentHash((List<dynamic>) _lastChangedValue.alarms))
+                
+                if(current_value.alarms.IsDifferentHash((List<dynamic>)_lastChangedValue.alarms))
                 {
                     await onDataChangedAsync(input, current_value);
                 }

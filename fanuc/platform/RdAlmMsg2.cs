@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
@@ -50,6 +51,10 @@ namespace l99.driver.fanuc
             var nr = new
             {
                 method = "cnc_rdalmmsg2_ALL",
+                invocationMs = (long) alms.Sum(x => (int)x.Value.invocationMs),
+                doc = "https://www.inventcom.net/fanuc-focas-library/misc/cnc_rdalmmsg2",
+                success = true, // TODO: aggregate
+                rc = Focas1.EW_OK, // TODO: aggregate
                 request = new { cnc_rdalmmsg2_ALL = new { minType = 0, maxType, count } },
                 response = new { cnc_rdalmmsg2_ALL = alms }
             };
@@ -72,6 +77,10 @@ namespace l99.driver.fanuc
             var nr = new
             {
                 method = "cnc_rdalmmsg2_ALL",
+                invocationMs = (long) alms.Sum(x => (int)x.Value.invocationMs),
+                doc = "https://www.inventcom.net/fanuc-focas-library/misc/cnc_rdalmmsg2",
+                success = true, // TODO: aggregate
+                rc = Focas1.EW_OK, // TODO: aggregate
                 request = new { cnc_rdalmmsg2_ALL = new { minType = 0, maxType, count } },
                 response = new { cnc_rdalmmsg2_ALL = alms }
             };
