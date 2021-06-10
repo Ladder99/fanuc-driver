@@ -21,7 +21,7 @@ namespace l99.driver.fanuc.collectors
         }
         
         protected Dictionary<string, dynamic> propertyBag;
-        protected dynamic focas_invocations = new List<dynamic>();
+        protected List<dynamic> focas_invocations = new List<dynamic>();
         protected Stopwatch sweepWatch = new Stopwatch();
         protected int sweepRemaining = 1000;
         private SegmentEnum _currentSegment = SegmentEnum.NONE;
@@ -291,6 +291,8 @@ namespace l99.driver.fanuc.collectors
         {
             try
             {
+                focas_invocations.Clear();
+                
                 _currentSegment = SegmentEnum.BEGIN;
                 
                 if(await CollectBeginAsync())
