@@ -8368,6 +8368,8 @@ namespace l99.driver.fanuc
 
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdblkcount")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdblkcount")]
 #else
         /* read block counter */
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdblkcount")]
@@ -8439,6 +8441,8 @@ namespace l99.driver.fanuc
         /* read current program and its pointer */
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdactpt")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdactpt")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdactpt")]
 #endif
@@ -9602,6 +9606,8 @@ namespace l99.driver.fanuc
         /* get maximum valid figures and number of decimal places */
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_getfigure")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_getfigure")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_getfigure")]
 #endif
@@ -10326,6 +10332,8 @@ namespace l99.driver.fanuc
         /* read timer data from cnc */
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdtimer")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdtimer")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdtimer")]
 #endif
@@ -11546,6 +11554,8 @@ namespace l99.driver.fanuc
   
 #if ARMV7
         [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdcncid")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdcncid")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdcncid")]
 #endif
