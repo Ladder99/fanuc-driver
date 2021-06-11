@@ -1212,9 +1212,7 @@ namespace l99.driver.fanuc
         public class IODBPSD_1
         {
             public short datano;
-            
             public short type;
-
             public IODBPSD_1_INNER data;
         }
 
@@ -1223,10 +1221,8 @@ namespace l99.driver.fanuc
         {
             [FieldOffset(0)]
             public byte cdata;
-            
             [FieldOffset(0)]
             public short idata;
-            
             [FieldOffset(0)]
             public int ldata;
         }

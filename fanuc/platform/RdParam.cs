@@ -51,14 +51,14 @@ namespace l99.driver.fanuc
                     break;
             }
 
-            Console.WriteLine(param.GetType().FullName);
+            //Console.WriteLine(param.GetType().FullName);
             
             NativeDispatchReturn ndr = nativeDispatch(() =>
             {
                 return (Focas1.focas_ret) Focas1.cnc_rdparam(_handle, number, axis, length, param);
             });
 
-            Console.WriteLine(JObject.FromObject(param).ToString());
+            //Console.WriteLine(JObject.FromObject(param).ToString());
             
             var nr = new
             {

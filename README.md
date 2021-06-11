@@ -1,5 +1,7 @@
 # fanuc-driver
 
+[OS / Architecture / Machine Tool Matrix](LIBRARY.md)
+
 [API Description and Sample Responses](PLATFORM.md)
 
 This solution is built on top of Fanuc Focas libraries for interfacing with Fanuc controllers and publishing data to a MQTT broker or another target.
@@ -488,6 +490,8 @@ machines:
 
 ### armv7
 
+(for aarch64, see Docker)
+
 Follow .NET Core SDK installation instructions here: https://sukesh.me/2020/07/07/how-to-install-net-core-on-raspberry-pi/  
   
 Clone the repository, build the project, and run it.  
@@ -506,10 +510,33 @@ dotnet build  /nowarn:CS0618 /nowarn:CS8632 /nowarn:CS1998 -p:DefineConstants=AR
 
 ./bin/Debug/netcoreapp3.1/fanuc  
 ```
-  
-### win32
+
+### linux x64 (TODO)
+
+Follow .NET Core SDK installation instructions here: TODO
+
+Clone the repository, build the project, and run it.
+
+```  
+export DOTNET_ROOT=$HOME/dotnet
+export PATH=$PATH:$HOME/dotnet
+
+cd ~
+
+git clone --recurse-submodules -j8 https://github.com/Ladder99/fanuc-driver.git  
+
+cd fanuc-driver/fanuc  
+
+dotnet build  /nowarn:CS0618 /nowarn:CS8632 /nowarn:CS1998 -p:DefineConstants=LINUX64  
+
+./bin/Debug/netcoreapp3.1/fanuc  
+```
+
+### windows x32
   
 Install [JetBrains Rider](https://www.jetbrains.com/rider/) and build for 32-bit CPU.  
+
+### windows x64 (TODO)
 
 ## Docker
 
@@ -544,8 +571,23 @@ git clone --recurse-submodules -j8 https://github.com/Ladder99/fanuc-driver.git
 cd fanuc-driver  
 
 docker build -f Dockerfile.ARM --tag=ladder99/fanuc-driver:latest .
+```
 
-# docker push ladder99/fanuc-driver
+### Architecture: linux amd64
+
+NLog file used: `~/fanuc-driver/docker/nlog.config`  
+Config file used: `~/fanuc-driver/docker/config.yml`
+
+Build container:
+
+```
+cd ~
+
+git clone --recurse-submodules -j8 https://github.com/Ladder99/fanuc-driver.git  
+
+cd fanuc-driver  
+
+docker build -f Dockerfile.LINUX64 --tag=ladder99/fanuc-driver:latest .
 ```
 
 ### Run Container:
