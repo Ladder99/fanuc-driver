@@ -1193,20 +1193,35 @@ namespace l99.driver.fanuc
         } /* In case that the number of alarm is 8 */
 #endif
 
-        [StructLayout(LayoutKind.Explicit)]
+        /*[StructLayout(LayoutKind.Explicit)]
         public class IODBPSD_1
         {
             [FieldOffset(0)]
-            public short datano;    /* data number */
+            public short datano;
             [FieldOffset(2)]
-            public short type;      /* axis number */
+            public short type;
             [FieldOffset(4)]
-            public byte cdata;     /* parameter / setting data */
+            public byte cdata;
             [FieldOffset(4)]
             public short idata;
             [FieldOffset(4)]
             public int ldata;
+        }*/
+        
+        [StructLayout(LayoutKind.Sequential)]
+        public class IODBPSD_1
+        {
+            public short datano;
+            
+            public short type;
+            
+            public byte cdata;
+            
+            public short idata;
+            
+            public int ldata;
         }
+    
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class IODBPSD_2
         {

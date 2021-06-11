@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
@@ -50,8 +51,8 @@ namespace l99.driver.fanuc
                     break;
             }
 
-            Focas1.ODBALMMSG almmsg = new Focas1.ODBALMMSG();
-
+            Console.WriteLine(param.GetType().FullName);
+            
             NativeDispatchReturn ndr = nativeDispatch(() =>
             {
                 return (Focas1.focas_ret) Focas1.cnc_rdparam(_handle, number, axis, length, param);
