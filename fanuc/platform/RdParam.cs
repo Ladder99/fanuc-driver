@@ -58,6 +58,8 @@ namespace l99.driver.fanuc
                 return (Focas1.focas_ret) Focas1.cnc_rdparam(_handle, number, axis, length, param);
             });
 
+            Console.WriteLine(JObject.FromObject(param).ToString());
+            
             var nr = new
             {
                 method = "cnc_rdparam",

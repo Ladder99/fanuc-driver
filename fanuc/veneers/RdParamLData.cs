@@ -17,7 +17,9 @@ namespace l99.driver.fanuc.veneers
         {
             if (input.success)
             {
-                var current_value = new { ldata = input.response.cnc_rdparam.param.ldata };
+                //var current_value = new { ldata = input.response.cnc_rdparam.param.ldata };
+                
+                var current_value = new { ldata = input.response.cnc_rdparam.param.data.ldata };
                 
                 await onDataArrivedAsync(input, current_value);
                 

@@ -1214,11 +1214,20 @@ namespace l99.driver.fanuc
             public short datano;
             
             public short type;
-            
+
+            public IODBPSD_1_INNER data;
+        }
+
+        [StructLayout(LayoutKind.Explicit)]
+        public class IODBPSD_1_INNER
+        {
+            [FieldOffset(0)]
             public byte cdata;
             
+            [FieldOffset(0)]
             public short idata;
             
+            [FieldOffset(0)]
             public int ldata;
         }
     
