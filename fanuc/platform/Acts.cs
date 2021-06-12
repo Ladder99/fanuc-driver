@@ -12,11 +12,11 @@ namespace l99.driver.fanuc
         
         public dynamic Acts()
         {
-            Focas1.ODBACT actualfeed = new Focas1.ODBACT();
+            Focas.ODBACT actualfeed = new Focas.ODBACT();
 
             NativeDispatchReturn ndr = nativeDispatch(() =>
             {
-                return (Focas1.focas_ret) Focas1.cnc_acts(_handle, actualfeed);
+                return (Focas.focas_ret) Focas.cnc_acts(_handle, actualfeed);
             });
 
             var nr = new
@@ -24,7 +24,7 @@ namespace l99.driver.fanuc
                 method = "cnc_acts",
                 invocationMs = ndr.ElapsedMilliseconds,
                 doc = "https://www.inventcom.net/fanuc-focas-library/position/cnc_acts",
-                success = ndr.RC == Focas1.EW_OK,
+                success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_acts = new { }},
                 response = new {cnc_acts = new {actualfeed}}

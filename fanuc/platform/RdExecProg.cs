@@ -20,7 +20,7 @@ namespace l99.driver.fanuc
 
             NativeDispatchReturn ndr = nativeDispatch(() =>
             {
-                return (Focas1.focas_ret) Focas1.cnc_rdexecprog(_handle, ref length_out, out blknum, (object) data);
+                return (Focas.focas_ret) Focas.cnc_rdexecprog(_handle, ref length_out, out blknum, (object) data);
             });
 
             //string source = string.Join("", data).Trim();
@@ -43,7 +43,7 @@ namespace l99.driver.fanuc
                 method = "cnc_rdexecprog",
                 invocationMs = ndr.ElapsedMilliseconds,
                 doc = "https://www.inventcom.net/fanuc-focas-library/program/cnc_rdexecprog",
-                success = ndr.RC == Focas1.EW_OK,
+                success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdexecprog = new {length}},
                 response = new {cnc_rdexecprog = new {length = length_out, blknum, data}}

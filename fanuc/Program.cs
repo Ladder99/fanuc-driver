@@ -20,6 +20,7 @@ namespace l99.driver.fanuc
         
         static async Task Main(string[] args)
         {
+            detectArch();
             string nlog_file = getArgument(args, "--nlog", "nlog.config");
             _logger = setupLogger(nlog_file);
             string config_file = getArgument(args, "--config", "config.yml");
@@ -29,6 +30,11 @@ namespace l99.driver.fanuc
             LogManager.Shutdown();
         }
 
+        static void detectArch()
+        {
+            Console.WriteLine($"Bitness: {(IntPtr.Size == 8 ? "64-bit" : "32-bit")}");
+        }
+        
         static string getArgument(string[] args, string option_name, string defaultValue)
         {
             var value = args.SkipWhile(i => i != option_name).Skip(1).Take(1).FirstOrDefault();

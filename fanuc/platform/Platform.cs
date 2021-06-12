@@ -14,13 +14,13 @@ namespace l99.driver.fanuc
 
         private struct NativeDispatchReturn
         {
-            public Focas1.focas_ret RC;
+            public Focas.focas_ret RC;
             public long ElapsedMilliseconds;
         }
         
-        private Func<Func<Focas1.focas_ret>, NativeDispatchReturn> nativeDispatch = (nativeCallWrapper) =>
+        private Func<Func<Focas.focas_ret>, NativeDispatchReturn> nativeDispatch = (nativeCallWrapper) =>
         {
-            Focas1.focas_ret rc = Focas1.focas_ret.EW_OK;
+            Focas.focas_ret rc = Focas.focas_ret.EW_OK;
             Stopwatch sw = new Stopwatch();
             sw.Start();
             rc = nativeCallWrapper();

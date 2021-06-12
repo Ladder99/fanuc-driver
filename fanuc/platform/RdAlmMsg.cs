@@ -15,11 +15,11 @@ namespace l99.driver.fanuc
         public dynamic RdAlmMsg(short type = 0, short num = 10)
         {
             short num_out = num;
-            Focas1.ODBALMMSG almmsg = new Focas1.ODBALMMSG();
+            Focas.ODBALMMSG almmsg = new Focas.ODBALMMSG();
 
             NativeDispatchReturn ndr = nativeDispatch(() =>
             {
-                return (Focas1.focas_ret) Focas1.cnc_rdalmmsg(_handle, type, ref num_out, almmsg);
+                return (Focas.focas_ret) Focas.cnc_rdalmmsg(_handle, type, ref num_out, almmsg);
             });
 
             var nr = new
@@ -27,7 +27,7 @@ namespace l99.driver.fanuc
                 method = "cnc_rdalmmsg",
                 invocationMs = ndr.ElapsedMilliseconds,
                 doc = "https://www.inventcom.net/fanuc-focas-library/misc/cnc_rdalmmsg",
-                success = ndr.RC == Focas1.EW_OK,
+                success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdalmmsg = new {type, num}},
                 response = new {cnc_rdalmmsg = new {num = num_out, almmsg}}
@@ -54,7 +54,7 @@ namespace l99.driver.fanuc
                 invocationMs = (long) alms.Sum(x => (int)x.Value.invocationMs),
                 doc = "https://www.inventcom.net/fanuc-focas-library/misc/cnc_rdalmmsg",
                 success = true, // TODO: aggregate
-                rc = Focas1.EW_OK, // TODO: aggregate
+                rc = Focas.EW_OK, // TODO: aggregate
                 request = new { cnc_rdalmmsg_ALL = new { minType = 0, maxType, count } },
                 response = new { cnc_rdalmmsg_ALL = alms }
             };
@@ -80,7 +80,7 @@ namespace l99.driver.fanuc
                 invocationMs = (long) alms.Sum(x => (int)x.Value.invocationMs),
                 doc = "https://www.inventcom.net/fanuc-focas-library/misc/cnc_rdalmmsg",
                 success = true, // TODO: aggregate
-                rc = Focas1.EW_OK, // TODO: aggregate
+                rc = Focas.EW_OK, // TODO: aggregate
                 request = new { cnc_rdalmmsg_ALL = new { minType = 0, maxType, count } },
                 response = new { cnc_rdalmmsg_ALL = alms }
             };

@@ -15,7 +15,7 @@ namespace l99.driver.fanuc
 #if ARMV7 || LINUX64 || LINUX32
             NativeDispatchReturn ndr = nativeDispatch(() =>
             {
-                return (Focas1.focas_ret)Focas1.cnc_exitprocess();
+                return (Focas.focas_ret)Focas.cnc_exitprocess();
             });
 
             var nr = new
@@ -23,7 +23,7 @@ namespace l99.driver.fanuc
                 method = "cnc_exitprocess",
                 invocationMs = ndr.ElapsedMilliseconds,
                 doc = "",
-                success = ndr.RC == Focas1.EW_OK,
+                success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new { cnc_exitprocess = new {  } },
                 response = new { cnc_exitprocess = new { } }
@@ -39,7 +39,7 @@ namespace l99.driver.fanuc
                 invocationMs = -1,
                 doc = "",
                 success = true,
-                Focas1.EW_OK,
+                Focas.EW_OK,
                 request = new {cnc_exitprocess = new { }},
                 response = new {cnc_exitprocess = new { }}
             };

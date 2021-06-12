@@ -198,9 +198,9 @@ namespace l99.driver.fanuc.collectors
                     {
                         _currentSegment = SegmentEnum.ROOT;
                         
-                        _machine.ApplyVeneer(typeof(fanuc.veneers.FocasPerf), "focas_perf", true);
-                        _machine.ApplyVeneer(typeof(fanuc.veneers.Connect), "connect");
-                        _machine.ApplyVeneer(typeof(fanuc.veneers.GetPath), "paths");
+                        await apply(typeof(fanuc.veneers.FocasPerf), "focas_perf", true);
+                        await apply(typeof(fanuc.veneers.Connect), "connect");
+                        await apply(typeof(fanuc.veneers.GetPath), "paths");
                         
                         await InitRootAsync();
                         
@@ -216,8 +216,8 @@ namespace l99.driver.fanuc.collectors
 
                         await InitPathsAsync();
                         
-                        _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.RdAxisname), "axis_names");
-                        _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.RdSpindlename), "spindle_names");
+                        await apply(typeof(fanuc.veneers.RdAxisname), "axis_names");
+                        await apply(typeof(fanuc.veneers.RdSpindlename), "spindle_names");
                         
                         for (short current_path = paths.response.cnc_getpath.path_no;
                             current_path <= paths.response.cnc_getpath.maxpath_no;
@@ -247,7 +247,7 @@ namespace l99.driver.fanuc.collectors
 
                             _machine.SliceVeneer(current_path, axis_spindle_slices.ToArray());
 
-                            set("current_path", current_path);
+                            await set("current_path", current_path);
                             
                             await InitAxisAndSpindleAsync();
                         }
@@ -272,16 +272,38 @@ namespace l99.driver.fanuc.collectors
             return null;
         }
 
+        /// <summary>
+        /// Applied Veneers:
+        ///     FocasPerf as "focas_perf",
+        ///     Connect as "connect",
+        ///     GetPath as "paths"
+        /// </summary>
         public virtual async Task InitRootAsync()
         {
             
         }
         
+        /// <summary>
+        /// Applied Veneers:
+        ///     FocasPerf as "focas_perf",
+        ///     Connect as "connect",
+        ///     GetPath as "paths",
+        ///     RdAxisname as "axis_names",
+        ///     RdSpindlename as "spindle_names"
+        /// </summary>
         public virtual async Task InitPathsAsync()
         {
             
         }
         
+        /// <summary>
+        /// Applied Veneers:
+        ///     FocasPerf as "focas_perf",
+        ///     Connect as "connect",
+        ///     GetPath as "paths",
+        ///     RdAxisname as "axis_names",
+        ///     RdSpindlename as "spindle_names"
+        /// </summary>
         public virtual async Task InitAxisAndSpindleAsync()
         {
             
@@ -299,27 +321,27 @@ namespace l99.driver.fanuc.collectors
                 {
                     _currentSegment = SegmentEnum.ROOT;
                     
-                    await CollectRootAsync();
-
                     await set_native_and_peel("paths", await _platform.GetPathAsync());
                     
+                    await CollectRootAsync();
+
                     for (short current_path = get("paths").response.cnc_getpath.path_no;
                         current_path <= get("paths").response.cnc_getpath.maxpath_no;
                         current_path++)
                     {
                         _currentSegment = SegmentEnum.PATH;
-                        set("current_path", current_path);
+                        await set("current_path", current_path);
                         
-                        set("path", await _platform.SetPathAsync(current_path));
+                        await set("path", await _platform.SetPathAsync(current_path));
                         dynamic path_marker = PathMarker(get("path"));
                         
                         _machine.MarkVeneer(current_path, path_marker);
                         
-                        await CollectForEachPathAsync(current_path, path_marker);
-                        
                         await set_native_and_peel("axis_names", await _platform.RdAxisNameAsync());
                         
                         await set_native_and_peel("spindle_names", await _platform.RdSpdlNameAsync());
+                        
+                        await CollectForEachPathAsync(current_path, path_marker);
                         
                         var fields_axes = get("axis_names").response.cnc_rdaxisname.axisname.GetType().GetFields();
 
@@ -332,7 +354,7 @@ namespace l99.driver.fanuc.collectors
                             dynamic axis = fields_axes[current_axis-1].GetValue(get("axis_names").response.cnc_rdaxisname.axisname);
                             dynamic axis_name = AxisName(axis);
                             dynamic axis_marker = AxisMarker(axis);
-                            set("axis_split", new[] {current_path, axis_name});
+                            await set("axis_split", new[] {current_path, axis_name});
                             
                             _machine.MarkVeneer(get("axis_split"), new[] { path_marker, axis_marker });
 
@@ -350,7 +372,7 @@ namespace l99.driver.fanuc.collectors
                             var spindle = fields_spindles[current_spindle - 1].GetValue(get("spindle_names").response.cnc_rdspdlname.spdlname);
                             dynamic spindle_name = SpindleName(spindle);
                             dynamic spindle_marker = SpindleMarker(spindle);
-                            set("spindle_split", new[] {current_path, spindle_name});
+                            await set("spindle_split", new[] {current_path, spindle_name});
                                 
                             _machine.MarkVeneer(get("spindle_split"), new[] { path_marker, spindle_marker });
 
@@ -371,6 +393,10 @@ namespace l99.driver.fanuc.collectors
             return null;
         }
         
+        /// <summary>
+        /// Available Data:
+        ///     Connect => get("connect") (after base is called)
+        /// </summary>
         public virtual async Task<bool> CollectBeginAsync()
         {
             sweepWatch.Restart();
@@ -380,26 +406,60 @@ namespace l99.driver.fanuc.collectors
             return get("connect").success;
         }
         
+        /// <summary>
+        /// Available Data:
+        ///     Connect => get("connect"),
+        ///     GetPath => get("paths")
+        /// </summary>
         public virtual async Task CollectRootAsync()
         {
             
         }
 
+        /// <summary>
+        /// Available Data:
+        ///     Connect => get("connect"),
+        ///     GetPath => get("paths"),
+        ///     RdAxisName => get("axis_names"),
+        ///     RdSpdlName => get("spindle_names")
+        /// </summary>
         public virtual async Task CollectForEachPathAsync(short current_path, dynamic path_marker)
         {
             
         }
 
+        /// <summary>
+        /// Available Data:
+        ///     Connect => get("connect"),
+        ///     GetPath => get("paths"),
+        ///     RdAxisName => get("axis_names"),
+        ///     RdSpdlName => get("spindle_names")
+        /// </summary>
         public virtual async Task CollectForEachAxisAsync(short current_axis, dynamic axis_split, dynamic axis_marker)
         {
             
         }
 
+        /// <summary>
+        /// Available Data:
+        ///     Connect => get("connect"),
+        ///     GetPath => get("paths"),
+        ///     RdAxisName => get("axis_names"),
+        ///     RdSpdlName => get("spindle_names")
+        /// </summary>
         public virtual async Task CollectForEachSpindleAsync(short current_spindle, dynamic spindle_split, dynamic spindle_marker)
         {
             
         }
 
+        /// <summary>
+        /// Available Data:
+        ///     Connect => get("connect"),
+        ///     GetPath => get("paths"),
+        ///     RdAxisName => get("axis_names"),
+        ///     RdSpdlName => get("spindle_names"),
+        ///     Disconnect => get("disconnect") (after base is called)
+        /// </summary>
         public virtual async Task CollectEndAsync()
         {
             await set_native("disconnect", await _platform.DisconnectAsync());

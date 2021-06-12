@@ -12,11 +12,11 @@ namespace l99.driver.fanuc
         
         public dynamic RdSpeed(short type = 0)
         {
-            Focas1.ODBSPEED speed = new Focas1.ODBSPEED();
+            Focas.ODBSPEED speed = new Focas.ODBSPEED();
 
             NativeDispatchReturn ndr = nativeDispatch(() =>
             {
-                return (Focas1.focas_ret) Focas1.cnc_rdspeed(_handle, type, speed);
+                return (Focas.focas_ret) Focas.cnc_rdspeed(_handle, type, speed);
             });
 
             var nr = new
@@ -24,7 +24,7 @@ namespace l99.driver.fanuc
                 method = "cnc_rdspeed",
                 invocationMs = ndr.ElapsedMilliseconds,
                 doc = "https://www.inventcom.net/fanuc-focas-library/position/cnc_rdspeed",
-                success = ndr.RC == Focas1.EW_OK,
+                success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdspeed = new {type}},
                 response = new {cnc_rdspeed = new {speed}}

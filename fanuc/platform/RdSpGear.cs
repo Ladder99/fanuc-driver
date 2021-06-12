@@ -12,11 +12,11 @@ namespace l99.driver.fanuc
         
         public dynamic RdSpGear(short sp_no = 1)
         {
-            Focas1.ODBSPN serialspindle = new Focas1.ODBSPN();
+            Focas.ODBSPN serialspindle = new Focas.ODBSPN();
 
             NativeDispatchReturn ndr = nativeDispatch(() =>
             {
-                return (Focas1.focas_ret) Focas1.cnc_rdspgear(_handle, sp_no, serialspindle);
+                return (Focas.focas_ret) Focas.cnc_rdspgear(_handle, sp_no, serialspindle);
             });
 
             var nr = new
@@ -24,7 +24,7 @@ namespace l99.driver.fanuc
                 method = "cnc_rdspgear",
                 invocationMs = ndr.ElapsedMilliseconds,
                 doc = "https://www.inventcom.net/fanuc-focas-library/position/cnc_rdspgear",
-                success = ndr.RC == Focas1.EW_OK,
+                success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdspgear = new {sp_no}},
                 response = new {cnc_rdspgear = new {serialspindle}}

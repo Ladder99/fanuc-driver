@@ -13,11 +13,11 @@ namespace l99.driver.fanuc
         public dynamic RdSvMeter(short data_num = 8)
         {
             short data_num_out = data_num;
-            Focas1.ODBSVLOAD loadmeter = new Focas1.ODBSVLOAD();
+            Focas.ODBSVLOAD loadmeter = new Focas.ODBSVLOAD();
 
             NativeDispatchReturn ndr = nativeDispatch(() =>
             {
-                return (Focas1.focas_ret) Focas1.cnc_rdsvmeter(_handle, ref data_num_out, loadmeter);
+                return (Focas.focas_ret) Focas.cnc_rdsvmeter(_handle, ref data_num_out, loadmeter);
             });
 
             // each path
@@ -28,7 +28,7 @@ namespace l99.driver.fanuc
                 method = "cnc_rdsvmeter",
                 invocationMs = ndr.ElapsedMilliseconds,
                 doc = "https://www.inventcom.net/fanuc-focas-library/position/cnc_rdsvmeter",
-                success = ndr.RC == Focas1.EW_OK,
+                success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdsvmeter = new {data_num}},
                 response = new {cnc_rdsvmeter = new {data_num = data_num_out, loadmeter}}

@@ -59,22 +59,22 @@ namespace l99.driver.fanuc
             switch (ODBDGN_type)
             {
                 case 1:
-                    diag = new Focas1.ODBDGN_1();
+                    diag = new Focas.ODBDGN_1();
                     break;
                 case 2:
-                    diag = new Focas1.ODBDGN_2();
+                    diag = new Focas.ODBDGN_2();
                     break;
                 case 3:
-                    diag = new Focas1.ODBDGN_3();
+                    diag = new Focas.ODBDGN_3();
                     break;
                 case 4:
-                    diag = new Focas1.ODBDGN_4();
+                    diag = new Focas.ODBDGN_4();
                     break;
             }
 
             NativeDispatchReturn ndr = nativeDispatch(() =>
             {
-                return (Focas1.focas_ret) Focas1.cnc_diagnoss(_handle, number, axis, length, diag);
+                return (Focas.focas_ret) Focas.cnc_diagnoss(_handle, number, axis, length, diag);
             });
 
             var nr = new
@@ -82,7 +82,7 @@ namespace l99.driver.fanuc
                 method = "cnc_diagnoss",
                 invocationMs = ndr.ElapsedMilliseconds,
                 doc = "https://www.inventcom.net/fanuc-focas-library/misc/cnc_diagnoss",
-                success = ndr.RC == Focas1.EW_OK,
+                success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_diagnoss = new {number, axis, length, ODBDGN_type}},
                 response = new {cnc_diagnoss = new {diag}}

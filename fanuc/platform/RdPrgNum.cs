@@ -12,11 +12,11 @@ namespace l99.driver.fanuc
         
         public dynamic RdPrgNum()
         {
-            Focas1.ODBPRO prgnum = new Focas1.ODBPRO();
+            Focas.ODBPRO prgnum = new Focas.ODBPRO();
 
             NativeDispatchReturn ndr = nativeDispatch(() =>
             {
-                return (Focas1.focas_ret) Focas1.cnc_rdprgnum(_handle, prgnum);
+                return (Focas.focas_ret) Focas.cnc_rdprgnum(_handle, prgnum);
             });
 
             var nr = new
@@ -24,7 +24,7 @@ namespace l99.driver.fanuc
                 method = "cnc_rdprgnum",
                 invocationMs = ndr.ElapsedMilliseconds,
                 doc = "https://www.inventcom.net/fanuc-focas-library/program/cnc_rdprgnum",
-                success = ndr.RC == Focas1.EW_OK,
+                success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdprgnum = new { }},
                 response = new {cnc_rdprgnum = new {prgnum}}

@@ -14,7 +14,7 @@ namespace l99.driver.fanuc
         {
             NativeDispatchReturn ndr = nativeDispatch(() =>
             {
-                return (Focas1.focas_ret) Focas1.cnc_allclibhndl3(
+                return (Focas.focas_ret) Focas.cnc_allclibhndl3(
                     _machine.FocasEndpoint.IPAddress, 
                     _machine.FocasEndpoint.Port,
                     _machine.FocasEndpoint.ConnectionTimeout, 
@@ -26,7 +26,7 @@ namespace l99.driver.fanuc
                 method = "cnc_allclibhndl3",
                 invocationMs = ndr.ElapsedMilliseconds,
                 doc = "https://www.inventcom.net/fanuc-focas-library/handle/cnc_allclibhndl3",
-                success = ndr.RC == Focas1.EW_OK,
+                success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new
                 {

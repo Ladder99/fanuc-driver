@@ -5,13 +5,16 @@
 /*                                                                   */
 /* Copyright (C) 2002-2011 by FANUC CORPORATION All rights reserved. */
 /*                                                                   */
+/*                                                                   */
+/* 2021 - modified to support 32bit and 64bit                        */
+/*                                                                   */
 /*-------------------------------------------------------------------*/
 using System;
 using System.Runtime.InteropServices;
 
 namespace l99.driver.fanuc
 {
-    public class Focas1
+    public class Focas
     {
         /* Axis define */
 #if FS30D
@@ -1192,7 +1195,7 @@ namespace l99.driver.fanuc
             public REALPRM rdata8 = new REALPRM();
         } /* In case that the number of alarm is 8 */
 #endif
-
+        
         /*[StructLayout(LayoutKind.Explicit)]
         public class IODBPSD_1
         {
@@ -1226,7 +1229,7 @@ namespace l99.driver.fanuc
             [FieldOffset(0)]
             public int ldata;
         }
-    
+        
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class IODBPSD_2
         {
@@ -8723,6 +8726,8 @@ namespace l99.driver.fanuc
         [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdparam")]
 #elif LINUX32_105
         [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdparam")]
+#elif WIN64
+        [DllImport("FWLIB64.dll", EntryPoint = "cnc_rdparam")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdparam")]
 #endif
@@ -8737,6 +8742,8 @@ namespace l99.driver.fanuc
         [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdparam")]
 #elif LINUX32_105
         [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdparam")]
+#elif WIN64
+        [DllImport("FWLIB64.dll", EntryPoint = "cnc_rdparam")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdparam")]
 #endif
@@ -8751,6 +8758,8 @@ namespace l99.driver.fanuc
         [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdparam")]
 #elif LINUX32_105
         [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdparam")]
+#elif WIN64
+        [DllImport("FWLIB64.dll", EntryPoint = "cnc_rdparam")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdparam")]
 #endif
@@ -8765,6 +8774,8 @@ namespace l99.driver.fanuc
         [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdparam")]
 #elif LINUX32_105
         [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdparam")]
+#elif WIN64
+        [DllImport("FWLIB64.dll", EntryPoint = "cnc_rdparam")]
 #else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdparam")]
 #endif
@@ -11744,5 +11755,5 @@ namespace l99.driver.fanuc
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_exeprgname2")]
         public static extern short cnc_exeprgname2(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.AsAny)] object b);
         
-    } // End for Focas1 class
+    } // End for Focas class
 }

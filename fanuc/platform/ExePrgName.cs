@@ -12,11 +12,11 @@ namespace l99.driver.fanuc
         
         public dynamic ExePrgName()
         {
-            Focas1.ODBEXEPRG exeprg = new Focas1.ODBEXEPRG();
+            Focas.ODBEXEPRG exeprg = new Focas.ODBEXEPRG();
 
             NativeDispatchReturn ndr = nativeDispatch(() =>
             {
-                return (Focas1.focas_ret) Focas1.cnc_exeprgname(_handle, exeprg);
+                return (Focas.focas_ret) Focas.cnc_exeprgname(_handle, exeprg);
             });
 
             var nr= new
@@ -24,7 +24,7 @@ namespace l99.driver.fanuc
                 method = "cnc_exeprgname",
                 invocationMs = ndr.ElapsedMilliseconds,
                 doc = "https://www.inventcom.net/fanuc-focas-library/program/cnc_exeprgname",
-                success = ndr.RC == Focas1.EW_OK,
+                success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_exeprgname = new { }},
                 response = new {cnc_exeprgname = new {exeprg}}

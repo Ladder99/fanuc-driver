@@ -17,10 +17,10 @@ namespace l99.driver.fanuc
             switch (ODBDY2_type)
             {
                 case 1:
-                    rddynamic = new Focas1.ODBDY2_1();
+                    rddynamic = new Focas.ODBDY2_1();
                     break;
                 case 2:
-                    rddynamic = new Focas1.ODBDY2_2();
+                    rddynamic = new Focas.ODBDY2_2();
                     break;
             }
 
@@ -28,7 +28,7 @@ namespace l99.driver.fanuc
 
             NativeDispatchReturn ndr = nativeDispatch(() =>
             {
-                return (Focas1.focas_ret) Focas1.cnc_rddynamic2(_handle, axis, length, rddynamic);
+                return (Focas.focas_ret) Focas.cnc_rddynamic2(_handle, axis, length, rddynamic);
             });
 
             var nr = new
@@ -36,7 +36,7 @@ namespace l99.driver.fanuc
                 method = "cnc_rddynamic2",
                 invocationMs = ndr.ElapsedMilliseconds,
                 doc = "https://www.inventcom.net/fanuc-focas-library/position/cnc_rddynamic2",
-                success = ndr.RC == Focas1.EW_OK,
+                success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rddynamic2 = new {axis, length}},
                 response = new {cnc_rddynamic2 = new {rddynamic}}

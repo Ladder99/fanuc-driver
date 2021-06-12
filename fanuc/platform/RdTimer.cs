@@ -12,11 +12,11 @@ namespace l99.driver.fanuc
         
         public dynamic RdTimer(short type = 0)
         {
-            Focas1.IODBTIME time = new Focas1.IODBTIME();
+            Focas.IODBTIME time = new Focas.IODBTIME();
 
             NativeDispatchReturn ndr = nativeDispatch(() =>
             {
-                return (Focas1.focas_ret) Focas1.cnc_rdtimer(_handle, type, time);
+                return (Focas.focas_ret) Focas.cnc_rdtimer(_handle, type, time);
             });
 
             var nr = new
@@ -24,7 +24,7 @@ namespace l99.driver.fanuc
                 method = "cnc_rdtimer",
                 invocationMs = ndr.ElapsedMilliseconds,
                 doc = "https://www.inventcom.net/fanuc-focas-library/misc/cnc_rdtimer",
-                success = ndr.RC == Focas1.EW_OK,
+                success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdtimer = new {type}},
                 response = new {cnc_rdtimer = new {time}}

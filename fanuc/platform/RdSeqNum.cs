@@ -12,11 +12,11 @@ namespace l99.driver.fanuc
         
         public dynamic RdSeqNum()
         {
-            Focas1.ODBSEQ seqnum = new Focas1.ODBSEQ();
+            Focas.ODBSEQ seqnum = new Focas.ODBSEQ();
 
             NativeDispatchReturn ndr = nativeDispatch(() =>
             {
-                return (Focas1.focas_ret) Focas1.cnc_rdseqnum(_handle, seqnum);
+                return (Focas.focas_ret) Focas.cnc_rdseqnum(_handle, seqnum);
             });
 
             var nr = new
@@ -24,7 +24,7 @@ namespace l99.driver.fanuc
                 method = "cnc_rdseqnum",
                 invocationMs = ndr.ElapsedMilliseconds,
                 doc = "https://www.inventcom.net/fanuc-focas-library/program/cnc_rdseqnum",
-                success = ndr.RC == Focas1.EW_OK,
+                success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdseqnum = new { }},
                 response = new {cnc_rdseqnum = new {seqnum}}

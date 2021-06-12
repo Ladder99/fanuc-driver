@@ -18,7 +18,7 @@ namespace l99.driver.fanuc
 
             NativeDispatchReturn ndr = nativeDispatch(() =>
             {
-                return (Focas1.focas_ret) Focas1.cnc_rdprogline(_handle, prog_no, line_no, prog_data, ref line_len, ref data_len);
+                return (Focas.focas_ret) Focas.cnc_rdprogline(_handle, prog_no, line_no, prog_data, ref line_len, ref data_len);
             });
 
             var nr = new
@@ -26,7 +26,7 @@ namespace l99.driver.fanuc
                 method = "cnc_rdprogline",
                 invocationMs = ndr.ElapsedMilliseconds,
                 doc = "https://www.inventcom.net/fanuc-focas-library/program/cnc_rdprogline",
-                success = ndr.RC == Focas1.EW_OK,
+                success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdprogline = new {prog_no, line_no, line_len_in, data_len_in}},
                 response = new {cnc_rdprogline = new {prog_data, line_len, data_len}}

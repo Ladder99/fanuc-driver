@@ -16,7 +16,7 @@ namespace l99.driver.fanuc
 
             NativeDispatchReturn ndr = nativeDispatch(() =>
             {
-                return (Focas1.focas_ret) Focas1.cnc_getfigure(_handle, data_type, out valid_fig, dec_fig_in, dec_fig_out);
+                return (Focas.focas_ret) Focas.cnc_getfigure(_handle, data_type, out valid_fig, dec_fig_in, dec_fig_out);
             });
 
             var nr = new
@@ -24,7 +24,7 @@ namespace l99.driver.fanuc
                 method = "cnc_getfigure",
                 invocationMs = ndr.ElapsedMilliseconds,
                 doc = "https://www.inventcom.net/fanuc-focas-library/misc/cnc_getfigure",
-                success = ndr.RC == Focas1.EW_OK,
+                success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_getfigure = new {data_type, axis}},
                 response = new {cnc_getfigure = new {valid_fig, dec_fig_in, dec_fig_out}}

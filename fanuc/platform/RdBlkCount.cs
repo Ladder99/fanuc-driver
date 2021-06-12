@@ -16,7 +16,7 @@ namespace l99.driver.fanuc
 
             NativeDispatchReturn ndr = nativeDispatch(() =>
             {
-                return (Focas1.focas_ret) Focas1.cnc_rdblkcount(_handle, out prog_bc);
+                return (Focas.focas_ret) Focas.cnc_rdblkcount(_handle, out prog_bc);
             });
 
             var nr = new
@@ -24,7 +24,7 @@ namespace l99.driver.fanuc
                 method = "cnc_rdblkcount",
                 invocationMs = ndr.ElapsedMilliseconds,
                 doc = "https://www.inventcom.net/fanuc-focas-library/program/cnc_rdblkcount",
-                success = ndr.RC == Focas1.EW_OK,
+                success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdblkcount = new { }},
                 response = new {cnc_rdblkcount = new {prog_bc}}

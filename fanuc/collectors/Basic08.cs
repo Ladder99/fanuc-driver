@@ -12,27 +12,27 @@ namespace l99.driver.fanuc.collectors
         
         public override async Task InitRootAsync()
         {
-            apply(typeof(fanuc.veneers.CNCId), "cnc_id");
+            await apply(typeof(fanuc.veneers.CNCId), "cnc_id");
             
-            apply(typeof(fanuc.veneers.RdParamLData), "power_on_time");
+            await apply(typeof(fanuc.veneers.RdParamLData), "power_on_time");
         }
         
         public override async Task InitPathsAsync()
         {
-            apply(typeof(fanuc.veneers.SysInfo), "sys_info");
+            await apply(typeof(fanuc.veneers.SysInfo), "sys_info");
             
-            apply(typeof(fanuc.veneers.StatInfo), "stat_info");
+            await apply(typeof(fanuc.veneers.StatInfo), "stat_info");
 
-            apply(typeof(fanuc.veneers.Figures), "figures");
+            await apply(typeof(fanuc.veneers.Figures), "figures");
             
-            apply(typeof(fanuc.veneers.GCodeBlocks), "gcode_blocks");
+            await apply(typeof(fanuc.veneers.GCodeBlocks), "gcode_blocks");
         }
         
         public override async Task InitAxisAndSpindleAsync()
         {
-            apply(typeof(fanuc.veneers.RdDynamic2_1), "axis_data");
+            await apply(typeof(fanuc.veneers.RdDynamic2_1), "axis_data");
             
-            apply(typeof(fanuc.veneers.RdActs2), "spindle_data");
+            await apply(typeof(fanuc.veneers.RdActs2), "spindle_data");
         }
         
         public override async Task<bool> CollectBeginAsync()

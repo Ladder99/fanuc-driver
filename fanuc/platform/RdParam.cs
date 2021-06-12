@@ -38,16 +38,16 @@ namespace l99.driver.fanuc
             switch (IODBPSD_type)
             {
                 case 1:
-                    param = new Focas1.IODBPSD_1();
+                    param = new Focas.IODBPSD_1();
                     break;
                 case 2:
-                    param = new Focas1.IODBPSD_2();
+                    param = new Focas.IODBPSD_2();
                     break;
                 case 3:
-                    param = new Focas1.IODBPSD_3();
+                    param = new Focas.IODBPSD_3();
                     break;
                 case 4:
-                    param = new Focas1.IODBPSD_4();
+                    param = new Focas.IODBPSD_4();
                     break;
             }
 
@@ -55,7 +55,7 @@ namespace l99.driver.fanuc
             
             NativeDispatchReturn ndr = nativeDispatch(() =>
             {
-                return (Focas1.focas_ret) Focas1.cnc_rdparam(_handle, number, axis, length, param);
+                return (Focas.focas_ret) Focas.cnc_rdparam(_handle, number, axis, length, param);
             });
 
             //Console.WriteLine(JObject.FromObject(param).ToString());
@@ -65,7 +65,7 @@ namespace l99.driver.fanuc
                 method = "cnc_rdparam",
                 invocationMs = ndr.ElapsedMilliseconds,
                 doc = "https://www.inventcom.net/fanuc-focas-library/ncdata/cnc_rdparam",
-                success = ndr.RC == Focas1.EW_OK,
+                success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdparam = new {number, axis, length, IODBPSD_type}},
                 response = new {cnc_rdparam = new {param, IODBPSD_type = param.GetType().Name}}
