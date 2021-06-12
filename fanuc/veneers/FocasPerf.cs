@@ -15,6 +15,7 @@ namespace l99.driver.fanuc.veneers
             {
                 invocation = new
                 {
+                    count = -1,
                     maxMethod = string.Empty,
                     maxMs = -1,
                     minMs = -1,
@@ -39,6 +40,7 @@ namespace l99.driver.fanuc.veneers
                 input.sweepMs,
                 invocation = new
                 {
+                    count = input.focas_invocations.Count,
                     maxMethod = max.method,
                     maxMs = max.invocationMs,
                     minMs = min.invocationMs,
