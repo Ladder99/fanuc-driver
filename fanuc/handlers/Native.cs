@@ -20,14 +20,17 @@ namespace l99.driver.fanuc.handlers
                 {
                     time =  new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds(),
                     machine = veneers.Machine.Id,
+                    type = veneer.IsInternal ? "internal" :
+                            veneer.IsCompound ? "compound" :
+                                "source",
                     name = veneer.Name,
                     marker = veneer.Marker
                 },
                 source = new
                 {
-                    method = veneer.IsInternal ? "" : veneer.LastArrivedInput.method,
-                    invocationMs = veneer.IsInternal ? -1 : veneer.LastArrivedInput.invocationMs,
-                    data = veneer.IsInternal ? new { } : veneer.LastArrivedInput.request.GetType().GetProperty(veneer.LastArrivedInput.method).GetValue(veneer.LastArrivedInput.request, null)
+                    method = (veneer.IsInternal || veneer.IsCompound) ? "" : veneer.LastArrivedInput.method,
+                    invocationMs = (veneer.IsInternal || veneer.IsCompound) ? -1 : veneer.LastArrivedInput.invocationMs,
+                    data = (veneer.IsInternal || veneer.IsCompound) ? new { } : veneer.LastArrivedInput.request.GetType().GetProperty(veneer.LastArrivedInput.method).GetValue(veneer.LastArrivedInput.request, null)
                 },
                 delta = new
                 {
@@ -54,14 +57,17 @@ namespace l99.driver.fanuc.handlers
                 {
                     time =  new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds(),
                     machine = veneers.Machine.Id,
+                    type = veneer.IsInternal ? "internal" :
+                        veneer.IsCompound ? "compound" :
+                        "source",
                     name = veneer.Name,
                     marker = veneer.Marker
                 },
                 source = new
                 {
-                    method = veneer.LastChangedInput.method,
-                    veneer.LastChangedInput.invocationMs,
-                    data = veneer.LastChangedInput.request.GetType().GetProperty(veneer.LastChangedInput.method).GetValue(veneer.LastChangedInput.request, null)
+                    method = (veneer.IsInternal || veneer.IsCompound) ? "" : veneer.LastChangedInput.method,
+                    invocationMs = (veneer.IsInternal || veneer.IsCompound) ? -1 : veneer.LastChangedInput.invocationMs,
+                    data = (veneer.IsInternal || veneer.IsCompound) ? new { } : veneer.LastChangedInput.request.GetType().GetProperty(veneer.LastChangedInput.method).GetValue(veneer.LastChangedInput.request, null)
                 },
                 delta = new
                 {

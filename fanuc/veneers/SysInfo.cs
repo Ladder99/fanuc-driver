@@ -5,7 +5,7 @@ namespace l99.driver.fanuc.veneers
 {
     public class SysInfo : Veneer
     {
-        public SysInfo(string name = "", bool isInternal = false) : base(name, isInternal)
+        public SysInfo(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
             _lastChangedValue = new
             {

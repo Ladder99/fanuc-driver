@@ -6,7 +6,7 @@ namespace l99.driver.fanuc.veneers
 {
     public class Alarms2 : Veneer
     {
-        public Alarms2(string name = "", bool isInternal = false) : base(name, isInternal)
+        public Alarms2(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
             _lastChangedValue = new 
             {

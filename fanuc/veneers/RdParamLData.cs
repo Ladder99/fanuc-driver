@@ -5,7 +5,7 @@ namespace l99.driver.fanuc.veneers
 {
     public class RdParamLData : Veneer
     {
-        public RdParamLData(string name = "", bool isInternal = false) : base(name, isInternal)
+        public RdParamLData(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
             _lastChangedValue = new
             {

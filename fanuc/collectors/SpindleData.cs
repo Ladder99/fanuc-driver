@@ -31,7 +31,7 @@ namespace l99.driver.fanuc.collectors
         
         public override async Task InitAxisAndSpindleAsync()
         {
-            await apply(typeof(fanuc.veneers.SpindleData), "spindle_data");
+            await apply(typeof(fanuc.veneers.SpindleData), "spindle_data", is_compound: true);
         }
         
         public override async Task<bool> CollectBeginAsync()
@@ -121,31 +121,31 @@ namespace l99.driver.fanuc.collectors
             await set_native("diag_load_perc", await _platform.DiagnossWordFirstAxisAsync(410));
             
             // 411 word             spindle load (min)
-            await set_native("diag_load_min", _platform.DiagnossWordFirstAxisAsync(411));
+            await set_native("diag_load_min", await _platform.DiagnossWordFirstAxisAsync(411));
             
             // 417 dword            spindle position coder feedback (detection units)
-            await set_native("diag_coder", _platform.DiagnossDoubleWordFirstAxisAsync(417));
+            await set_native("diag_coder", await _platform.DiagnossDoubleWordFirstAxisAsync(417));
             
             // 418 dword            position loop deviation (detection units)
-            await set_native("diag_loop_dev", _platform.DiagnossDoubleWordFirstAxisAsync(418));
+            await set_native("diag_loop_dev", await _platform.DiagnossDoubleWordFirstAxisAsync(418));
             
             // 425 dword            sync error (detection unit)
-            await set_native("diag_sync_error", _platform.DiagnossDoubleWordFirstAxisAsync(425));
+            await set_native("diag_sync_error", await _platform.DiagnossDoubleWordFirstAxisAsync(425));
             
             // 445 word             position data (pulse) 0-4095 , valid only when param3117=1
-            await set_native("diag_pos_data", _platform.DiagnossWordFirstAxisAsync(445));
+            await set_native("diag_pos_data", await _platform.DiagnossWordFirstAxisAsync(445));
             
             // 710 word             spindle error
-            await set_native("diag_error", _platform.DiagnossWordFirstAxisAsync(710));
+            await set_native("diag_error", await _platform.DiagnossWordFirstAxisAsync(710));
             
             // 711 word             spindle warning
-            await set_native("diag_warn", _platform.DiagnossWordFirstAxisAsync(711));
+            await set_native("diag_warn", await _platform.DiagnossWordFirstAxisAsync(711));
             
             // 1520 dword           spindle rev count 1 (1000 min)
-            await set_native("diag_rev_1", _platform.DiagnossDoubleWordFirstAxisAsync(1520));
+            await set_native("diag_rev_1", await _platform.DiagnossDoubleWordFirstAxisAsync(1520));
             
             // 1521 dword           spindle rev count 2 (1000 min)
-            await set_native("diag_rev_2", _platform.DiagnossDoubleWordFirstAxisAsync(1521));
+            await set_native("diag_rev_2", await _platform.DiagnossDoubleWordFirstAxisAsync(1521));
             
             await peel("spindle_data", 
                 current_spindle,

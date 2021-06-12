@@ -7,7 +7,7 @@ namespace l99.driver.fanuc.veneers
 {
     public class RdSpindlename: Veneer
     {
-        public RdSpindlename(string name = "", bool isInternal = false) : base(name, isInternal)
+        public RdSpindlename(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
             _lastChangedValue = new
             {

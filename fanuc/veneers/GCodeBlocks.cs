@@ -10,7 +10,7 @@ namespace l99.driver.fanuc.veneers
     {
         private Blocks _blocks;
         
-        public GCodeBlocks(string name = "", bool isInternal = false) : base(name, isInternal)
+        public GCodeBlocks(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
             _blocks = new Blocks();
             

@@ -142,7 +142,7 @@ namespace l99.driver.fanuc.collectors
             }
         }
 
-        protected async Task apply(Type veneer_type, string veneer_name, bool is_internal = false)
+        protected async Task apply(Type veneer_type, string veneer_name, bool is_compound = false, bool is_internal = false)
         {
             switch (_currentSegment)
             {
@@ -153,15 +153,15 @@ namespace l99.driver.fanuc.collectors
                     break;
                 
                 case SegmentEnum.ROOT:
-                    _machine.ApplyVeneer(veneer_type, veneer_name, is_internal);
+                    _machine.ApplyVeneer(veneer_type, veneer_name, is_compound, is_internal);
                     break;
                 
                 case SegmentEnum.PATH:
-                    _machine.ApplyVeneerAcrossSlices(veneer_type, veneer_name, is_internal);
+                    _machine.ApplyVeneerAcrossSlices(veneer_type, veneer_name, is_compound, is_internal);
                     break;
                     
                 case SegmentEnum.AXIS:
-                    _machine.ApplyVeneerAcrossSlices(get("current_path"), veneer_type, veneer_name, is_internal);
+                    _machine.ApplyVeneerAcrossSlices(get("current_path"), veneer_type, veneer_name, is_compound, is_internal);
                     break;
                 
                 case SegmentEnum.SPINDLE:

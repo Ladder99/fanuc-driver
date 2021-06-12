@@ -5,7 +5,7 @@ namespace l99.driver.fanuc.veneers
 {
     public class Figures : Veneer
     {
-        public Figures(string name = "", bool isInternal = false) : base(name, isInternal)
+        public Figures(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
             _lastChangedValue = new
             {

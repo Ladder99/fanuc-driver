@@ -7,7 +7,7 @@ namespace l99.driver.fanuc.veneers
 {
     public class SpindleData: Veneer
     {
-        public SpindleData(string name = "", bool isInternal = false) : base(name, isInternal)
+        public SpindleData(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
             _lastChangedValue = new
             {
@@ -86,8 +86,8 @@ namespace l99.driver.fanuc.veneers
                 feed_eu = speed_feed_EU(sp_speed.response.cnc_rdspeed.speed.actf.unit),
                 speed = sp_speed.response.cnc_rdspeed.speed.acts.data,
                 speed_eu = speed_feed_EU(sp_speed.response.cnc_rdspeed.speed.acts.unit),
-                load = sp_meter.response.cnc_rdspmeter.loadmeter.spload.data,
-                load_eu = load_EU(sp_meter.response.cnc_rdspmeter.loadmeter.spload.unit),
+                load = sp_meter.response.cnc_rdspmeter.loadmeter.spload1.spload.data,
+                load_eu = load_EU(sp_meter.response.cnc_rdspmeter.loadmeter.spload1.spload.unit),
                 maxrpm = sp_maxrpm.response.cnc_rdspmaxrpm.serialspindle.data[0],
                 maxrpm_eu = "rpm",
                 gearratio = sp_gear.response.cnc_rdspgear.serialspindle.data[0],

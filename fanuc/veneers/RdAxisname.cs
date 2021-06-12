@@ -7,7 +7,7 @@ namespace l99.driver.fanuc.veneers
 {
     public class RdAxisname: Veneer
     {
-        public RdAxisname(string name = "", bool isInternal = false) : base(name, isInternal)
+        public RdAxisname(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
             _lastChangedValue = new
             {

@@ -7,7 +7,7 @@ namespace l99.driver.fanuc.veneers
 {
     public class RdDynamic2_1 : Veneer
     {
-        public RdDynamic2_1(string name = "", bool isInternal = false) : base(name, isInternal)
+        public RdDynamic2_1(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
             _lastChangedValue = new
             {

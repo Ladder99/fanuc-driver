@@ -9,7 +9,7 @@ namespace l99.driver.fanuc.veneers
 {
     public class FocasPerf : Veneer
     {
-        public FocasPerf(string name = "", bool isInternal = false) : base(name, isInternal)
+        public FocasPerf(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
             _lastChangedValue = new
             {
