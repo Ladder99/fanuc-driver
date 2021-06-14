@@ -6,6 +6,10 @@
         <Configurations>Debug;Release;Debug 32bit</Configurations>
         <Platforms>AnyCPU</Platforms>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <Company>mriiot</Company>
+        <AssemblyVersion>1.0.0</AssemblyVersion>
+        <FileVersion>1.0.0</FileVersion>
+        <NeutralLanguage>en</NeutralLanguage>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug 32bit' ">
@@ -21,6 +25,7 @@
       <PackageReference Include="MQTTnet" Version="3.0.15" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
       <PackageReference Include="NLog.Extensions.Logging" Version="1.7.2" />
+      <PackageReference Include="NLua" Version="1.5.9" />
       <PackageReference Include="YamlDotNet" Version="11.1.3-nullable-enums-0003" />
     </ItemGroup>
 
@@ -103,6 +108,9 @@
       <None Update="fwlibNCG64.dll">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <Content Include="lua\*">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
     <ItemGroup>

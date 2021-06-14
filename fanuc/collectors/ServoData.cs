@@ -7,7 +7,7 @@ namespace l99.driver.fanuc.collectors
 {
     public class ServoData : FanucCollector
     {
-        public ServoData(Machine machine, int sweepMs = 1000) : base(machine, sweepMs)
+        public ServoData(Machine machine, int sweepMs = 1000, params dynamic[] additional_params) : base(machine, sweepMs, additional_params)
         {
             
         }

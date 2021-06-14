@@ -18,6 +18,27 @@ machines:
       publish_changes: !!bool true
       publish_disco: !!bool true
       disco_base_topic: fanuc
+      
+  - id: sim_lua
+    enabled: !!bool true
+    type: l99.driver.fanuc.FanucMachine, fanuc
+    strategy_type: l99.driver.fanuc.collectors.NLuaRunner, fanuc
+    strategy_lua: lua/collector_example1.lua
+    handler_type: l99.driver.fanuc.handlers.Native, fanuc
+    sweep_ms: !!int 1000
+    net_ip: 10.20.30.101
+    net_port: !!int 8193
+    net_timeout_s: !!int 2
+    broker:
+      enabled: !!bool false
+      net_ip: 10.20.30.102
+      net_port: !!int 1883
+      auto_connect: !!bool false
+      publish_status: !!bool true
+      publish_arrivals: !!bool true
+      publish_changes: !!bool true
+      publish_disco: !!bool true
+      disco_base_topic: fanuc
 
   - id: naka
     enabled: !!bool false

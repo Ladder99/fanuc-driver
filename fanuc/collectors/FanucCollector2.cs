@@ -26,7 +26,7 @@ namespace l99.driver.fanuc.collectors
         protected int sweepRemaining = 1000;
         private SegmentEnum _currentSegment = SegmentEnum.NONE;
         
-        public FanucCollector2(Machine machine, int sweepMs = 1000) : base(machine, sweepMs)
+        public FanucCollector2(Machine machine, int sweepMs = 1000, params dynamic[] additional_params) : base(machine, sweepMs, additional_params)
         {
             sweepRemaining = sweepMs;
             propertyBag = new Dictionary<string, dynamic>();

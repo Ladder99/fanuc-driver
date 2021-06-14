@@ -73,30 +73,33 @@ namespace l99.driver.fanuc
 
             foreach (dynamic machine_conf in config["machines"])
             {
+                //machine_conf.ContainsKey("")
+                
                 var built_config = new
                 {
                     machine = new {
-                        enabled = machine_conf["enabled"],
-                        type = machine_conf["type"],
-                        id = machine_conf["id"],
-                        ip = machine_conf["net_ip"],
-                        port = machine_conf["net_port"],
-                        timeout = machine_conf["net_timeout_s"],
-                        collector = machine_conf["strategy_type"],
-                        collectorSweepMs = machine_conf["sweep_ms"],
-                        handler = machine_conf["handler_type"]
+                        enabled = machine_conf.ContainsKey("enabled") ? machine_conf["enabled"] : false,
+                        type = machine_conf.ContainsKey("type") ? machine_conf["type"] : "l99.driver.fanuc.FanucMachine, fanuc",
+                        id = machine_conf.ContainsKey("id") ? machine_conf["id"] : Guid.NewGuid().ToString(),
+                        ip = machine_conf.ContainsKey("net_ip") ? machine_conf["net_ip"] : "127.0.0.1",
+                        port = machine_conf.ContainsKey("net_port") ? machine_conf["net_port"] : 8193,
+                        timeout = machine_conf.ContainsKey("net_timeout_s") ? machine_conf["net_timeout_s"] : 2,
+                        collector = machine_conf.ContainsKey("strategy_type") ? machine_conf["strategy_type"] : "l99.driver.fanuc.collectors.Basic01, fanuc",
+                        collector_lua = machine_conf.ContainsKey("strategy_lua") ? machine_conf["strategy_lua"] : string.Empty,
+                        collector_sweep_ms = machine_conf.ContainsKey("sweep_ms") ? machine_conf["sweep_ms"] : 2000,
+                        handler = machine_conf.ContainsKey("handler_type") ? machine_conf["handler_type"] : "l99.driver.fanuc.handlers.Native, fanuc",
                     },
                     broker = new
                     {
-                        enabled = machine_conf["broker"]["enabled"],
-                        pub_status = machine_conf["broker"]["publish_status"],
-                        pub_arrivals = machine_conf["broker"]["publish_arrivals"],
-                        pub_changes = machine_conf["broker"]["publish_changes"],
-                        pub_disco = machine_conf["broker"]["publish_disco"],
-                        disco_base_topic = machine_conf["broker"]["disco_base_topic"],
-                        ip = machine_conf["broker"]["net_ip"], 
-                        port = machine_conf["broker"]["net_port"],
-                        auto_connect = machine_conf["broker"]["auto_connect"]
+                        enabled = (machine_conf.ContainsKey("broker") && machine_conf["broker"].ContainsKey("enabled")) ? machine_conf["broker"]["enabled"] : false,
+                        pub_status = (machine_conf.ContainsKey("broker") && machine_conf["broker"].ContainsKey("publish_status")) ? machine_conf["broker"]["publish_status"] : false,
+                        pub_arrivals = (machine_conf.ContainsKey("broker") && machine_conf["broker"].ContainsKey("publish_arrivals")) ? machine_conf["broker"]["publish_arrivals"] : false,
+                        pub_changes = (machine_conf.ContainsKey("broker") && machine_conf["broker"].ContainsKey("publish_changes")) ? machine_conf["broker"]["publish_changes"] : false,
+                        pub_disco = (machine_conf.ContainsKey("broker") && machine_conf["broker"].ContainsKey("publish_disco")) ? machine_conf["broker"]["publish_disco"] : false,
+                        disco_base_topic = (machine_conf.ContainsKey("broker") && machine_conf["broker"].ContainsKey("disco_base_topic")) ? machine_conf["broker"]["disco_base_topic"] : "fanuc",
+                        ip = (machine_conf.ContainsKey("broker") && machine_conf["broker"].ContainsKey("net_ip")) ? machine_conf["broker"]["net_ip"] : "127.0.0.1", 
+                        port = (machine_conf.ContainsKey("broker") && machine_conf["broker"].ContainsKey("net_port")) ? machine_conf["broker"]["net_port"] : 1883,
+                        auto_connect = (machine_conf.ContainsKey("broker") && machine_conf["broker"].ContainsKey("enabled")) ? machine_conf["broker"]["auto_connect"] : false
                     }
                 };
                 
@@ -114,13 +117,13 @@ namespace l99.driver.fanuc
                 
                 Broker broker = await brokers.AddAsync(cfg.broker);
                 Machine machine = machines.Add(cfg.machine, broker);
-                machine.AddCollector(Type.GetType(cfg.machine.collector), cfg.machine.collectorSweepMs);
+                machine.AddCollector(Type.GetType(cfg.machine.collector), cfg.machine.collector_sweep_ms, cfg.machine.collector_lua);
                 await machine.AddHandlerAsync(Type.GetType(cfg.machine.handler));
                 
                 /*
                 Machine machine = machines
                     .Add(cfg.machine, await brokers.AddAsync(cfg.broker))
-                    .AddCollector(Type.GetType(cfg.machine.collector), cfg.machine.collectorSweepMs)
+                    .AddCollector(Type.GetType(cfg.machine.collector), cfg.machine.collector_sweep_ms)
                     .AddHandlerAsync(Type.GetType(cfg.machine.handler));
                 */
             }

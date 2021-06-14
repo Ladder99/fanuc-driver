@@ -8,7 +8,7 @@ namespace l99.driver.fanuc.collectors
     {
         protected dynamic _platform;
         
-        public FanucCollector(Machine machine, int sweepMs = 1000) : base(machine, sweepMs)
+        public FanucCollector(Machine machine, int sweepMs = 1000, params dynamic[] additional_params) : base(machine, sweepMs, additional_params)
         {
             _platform = _machine["platform"];
             _platform.StartupProcess(3, "focas2.log");
