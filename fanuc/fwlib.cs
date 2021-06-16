@@ -1196,31 +1196,16 @@ namespace l99.driver.fanuc
         } /* In case that the number of alarm is 8 */
 #endif
         
-        /*[StructLayout(LayoutKind.Explicit)]
-        public class IODBPSD_1
-        {
-            [FieldOffset(0)]
-            public short datano;
-            [FieldOffset(2)]
-            public short type;
-            [FieldOffset(4)]
-            public byte cdata;
-            [FieldOffset(4)]
-            public short idata;
-            [FieldOffset(4)]
-            public int ldata;
-        }*/
-        
         [StructLayout(LayoutKind.Sequential)]
         public class IODBPSD_1
         {
             public short datano;
             public short type;
-            public IODBPSD_1_INNER data;
+            public IODBPSD_1_UNION data;
         }
 
         [StructLayout(LayoutKind.Explicit)]
-        public class IODBPSD_1_INNER
+        public class IODBPSD_1_UNION
         {
             [FieldOffset(0)]
             public byte cdata;
@@ -1237,23 +1222,26 @@ namespace l99.driver.fanuc
             public short type;      /* axis number */
             public REALPRM rdata = new REALPRM();
         }
-        [StructLayout(LayoutKind.Explicit)]
+        
+        [StructLayout(LayoutKind.Sequential)]
         public class IODBPSD_3
         {
-            [FieldOffset(0)]
-            public short datano;    /* data number */
-            [FieldOffset(2)]
-            public short type;      /* axis number */
-            [FieldOffset(4),
-           MarshalAs(UnmanagedType.ByValArray, SizeConst = MAX_AXIS)]
+            public short datano;
+            public short type;
+            public IODBPSD_3_UNION data;
+        }
+
+        [StructLayout(LayoutKind.Explicit)]
+        public class IODBPSD_3_UNION
+        {
+            [FieldOffset(0), MarshalAs(UnmanagedType.ByValArray, SizeConst = MAX_AXIS)]
             public byte[] cdatas = new byte[MAX_AXIS];
-            [FieldOffset(4),
-           MarshalAs(UnmanagedType.ByValArray, SizeConst = MAX_AXIS)]
+            [FieldOffset(0), MarshalAs(UnmanagedType.ByValArray, SizeConst = MAX_AXIS)]
             public short[] idatas = new short[MAX_AXIS];
-            [FieldOffset(4),
-           MarshalAs(UnmanagedType.ByValArray, SizeConst = MAX_AXIS)]
+            [FieldOffset(0), MarshalAs(UnmanagedType.ByValArray, SizeConst = MAX_AXIS)]
             public int[] ldatas = new int[MAX_AXIS];
         }
+        
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class IODBPSD_4
         {
@@ -1261,6 +1249,7 @@ namespace l99.driver.fanuc
             public short type;      /* axis number */
             public REALPRMS rdatas = new REALPRMS();
         }
+        
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class IODBPSD_A
         {
@@ -1272,6 +1261,7 @@ namespace l99.driver.fanuc
             public IODBPSD_1 data6 = new IODBPSD_1();
             public IODBPSD_1 data7 = new IODBPSD_1();
         } /* (sample) must be modified */
+        
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class IODBPSD_B
         {
@@ -1283,6 +1273,7 @@ namespace l99.driver.fanuc
             public IODBPSD_2 data6 = new IODBPSD_2();
             public IODBPSD_2 data7 = new IODBPSD_2();
         } /* (sample) must be modified */
+        
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class IODBPSD_C
         {
@@ -1294,6 +1285,7 @@ namespace l99.driver.fanuc
             public IODBPSD_3 data6 = new IODBPSD_3();
             public IODBPSD_3 data7 = new IODBPSD_3();
         } /* (sample) must be modified */
+        
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class IODBPSD_D
         {
