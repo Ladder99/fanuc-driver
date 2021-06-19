@@ -35,7 +35,7 @@ function script:collect_root(table, collector)
     print("collect root");
 
     collector:set_native_and_peel("cnc_id", collector.Platform:CNCId());
-    collector:set_native_and_peel("power_on_time", collector:Platform.RdParamDoubleWordNoAxis(6750));
+    collector:set_native_and_peel("power_on_time", collector.Platform:RdParamDoubleWordNoAxisAsync(6750));
 end
 
 
@@ -66,12 +66,12 @@ function script:collect_path(table, collector, current_path)
     print(sysinfo);
     ]]--
     
-    collector:set_native_and_peel("stat_info", collector:Platform.StatInfo());
-    collector:set_native_and_peel("figures", collector:Platform.GetFigure(0, 32));
+    collector:set_native_and_peel("stat_info", collector.Platform:StatInfo());
+    collector:set_native_and_peel("figures", collector.Platform:GetFigure(0, 32));
     collector:peel("gcode_blocks",
-        collector:set_native("blkcount", collector:Platform.RdBlkCount()),
-        collector:set_native("actpt", collector:Platform.RdActPt()),
-        collector:set_native("execprog", collector:Platform.RdExecProg(128)));
+        collector:set_native("blkcount", collector.Platform:RdBlkCount()),
+        collector:set_native("actpt", collector.Platform:RdActPt()),
+        collector:set_native("execprog", collector.Platform:RdExecProg(128)));
 end
 
 
@@ -79,7 +79,7 @@ function script:collect_axis(table, collector, current_path, current_axis, axis_
     print("collect axis " .. current_path .. " " .. axis_name);
     
     collector:peel("axis_data",
-        collector:set_native("axis_dynamic", collector:Platform.RdDynamic2(current_axis, 44, 2)), 
+        collector:set_native("axis_dynamic", collector.Platform:RdDynamic2(current_axis, 44, 2)), 
         collector:get("figures"), 
         current_axis - 1);
 end
@@ -88,5 +88,5 @@ end
 function script:collect_spindle(table, collector, current_path, current_spindle, spindle_name)
     print("collect spindle " .. current_path .. " " .. spindle_name);
     
-    collector:set_native_and_peel("spindle_data", collector:Platform.Acts2(current_spindle));
+    collector:set_native_and_peel("spindle_data", collector.Platform:Acts2(current_spindle));
 end

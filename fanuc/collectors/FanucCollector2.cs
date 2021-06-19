@@ -126,7 +126,7 @@ namespace l99.driver.fanuc.collectors
             return null;
         }
 
-        protected async Task<dynamic?> peel(string veneer_key, params dynamic[] inputs)
+        public async Task<dynamic?> peel(string veneer_key, params dynamic[] inputs)
         {
             if (inputs.Length == 0)
             {
