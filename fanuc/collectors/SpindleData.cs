@@ -70,12 +70,12 @@ namespace l99.driver.fanuc.collectors
             //dynamic spload_all = await _machine["platform"].RdSpLoadAsync(-1);
         }
 
-        public override async Task CollectForEachAxisAsync(short current_axis, dynamic axis_split, dynamic axis_marker)
+        public override async Task CollectForEachAxisAsync(short current_axis, string axis_name, dynamic axis_split, dynamic axis_marker)
         {
             
         }
 
-        public override async Task CollectForEachSpindleAsync(short current_spindle, dynamic spindle_split, dynamic spindle_marker)
+        public override async Task CollectForEachSpindleAsync(short current_spindle, string spindle_name, dynamic spindle_split, dynamic spindle_marker)
         {
             // rotational spindle speed
             await set_native("sp_acts", await _platform.Acts2Async(current_spindle));

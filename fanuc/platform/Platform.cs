@@ -10,6 +10,11 @@ namespace l99.driver.fanuc
         
         private FanucMachine _machine;
 
+        public ushort Handle
+        {
+            get => _handle;
+        }
+        
         private ushort _handle;
 
         private struct NativeDispatchReturn

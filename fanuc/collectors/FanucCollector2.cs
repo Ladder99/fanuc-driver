@@ -42,7 +42,7 @@ namespace l99.driver.fanuc.collectors
             });
         }
 
-        protected dynamic? get(string propertyBagKey)
+        public dynamic? get(string propertyBagKey)
         {
             if (propertyBag.ContainsKey(propertyBagKey))
             {
@@ -54,17 +54,17 @@ namespace l99.driver.fanuc.collectors
             }
         }
 
-        protected async Task<dynamic?> set(string propertyBagKey, dynamic? value)
+        public async Task<dynamic?> set(string propertyBagKey, dynamic? value)
         {
             return await _set(propertyBagKey, value, false, false);
         }
         
-        protected async Task<dynamic?> set_native(string propertyBagKey, dynamic? value)
+        public async Task<dynamic?> set_native(string propertyBagKey, dynamic? value)
         {
             return await _set(propertyBagKey, value, true, false);
         }
         
-        protected async Task<dynamic?> set_native_and_peel(string propertyBagKey, dynamic? value)
+        public async Task<dynamic?> set_native_and_peel(string propertyBagKey, dynamic? value)
         {
             return await _set(propertyBagKey, value, true, true);
         }
@@ -142,7 +142,13 @@ namespace l99.driver.fanuc.collectors
             }
         }
 
-        protected async Task apply(Type veneer_type, string veneer_name, bool is_compound = false, bool is_internal = false)
+        public async Task apply(string veneer_type, string veneer_name, bool is_compound = false, bool is_internal = false)
+        {
+            Type t = Type.GetType($"l99.driver.fanuc.veneers.{veneer_type}");
+            await apply(t, veneer_name, is_compound, is_internal);
+        }
+
+        public async Task apply(Type veneer_type, string veneer_name, bool is_compound = false, bool is_internal = false)
         {
             switch (_currentSegment)
             {
@@ -358,7 +364,7 @@ namespace l99.driver.fanuc.collectors
                             
                             _machine.MarkVeneer(get("axis_split"), new[] { path_marker, axis_marker });
 
-                            await CollectForEachAxisAsync(current_axis, get("axis_split"), axis_marker);
+                            await CollectForEachAxisAsync(current_axis, axis_name, get("axis_split"), axis_marker);
                         }
 
                         var fields_spindles = get("spindle_names").response.cnc_rdspdlname.spdlname.GetType().GetFields();
@@ -376,7 +382,7 @@ namespace l99.driver.fanuc.collectors
                                 
                             _machine.MarkVeneer(get("spindle_split"), new[] { path_marker, spindle_marker });
 
-                            await CollectForEachSpindleAsync(current_spindle, get("spindle_split"), spindle_marker);
+                            await CollectForEachSpindleAsync(current_spindle, spindle_name, get("spindle_split"), spindle_marker);
                         };
                     }
                 }
@@ -435,7 +441,7 @@ namespace l99.driver.fanuc.collectors
         ///     RdAxisName => get("axis_names"),
         ///     RdSpdlName => get("spindle_names")
         /// </summary>
-        public virtual async Task CollectForEachAxisAsync(short current_axis, dynamic axis_split, dynamic axis_marker)
+        public virtual async Task CollectForEachAxisAsync(short current_axis, string axis_name, dynamic axis_split, dynamic axis_marker)
         {
             
         }
@@ -447,7 +453,7 @@ namespace l99.driver.fanuc.collectors
         ///     RdAxisName => get("axis_names"),
         ///     RdSpdlName => get("spindle_names")
         /// </summary>
-        public virtual async Task CollectForEachSpindleAsync(short current_spindle, dynamic spindle_split, dynamic spindle_marker)
+        public virtual async Task CollectForEachSpindleAsync(short current_spindle, string spindle_name, dynamic spindle_split, dynamic spindle_marker)
         {
             
         }

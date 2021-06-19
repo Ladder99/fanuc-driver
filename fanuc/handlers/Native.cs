@@ -32,7 +32,7 @@ namespace l99.driver.fanuc.handlers
                     invocationMs = (veneer.IsInternal || veneer.IsCompound) ? -1 : veneer.LastArrivedInput.invocationMs,
                     data = (veneer.IsInternal || veneer.IsCompound) ? new { } : veneer.LastArrivedInput.request.GetType().GetProperty(veneer.LastArrivedInput.method).GetValue(veneer.LastArrivedInput.request, null)
                 },
-                delta = new
+                state = new
                 {
                     time = veneer.ArrivalDelta,
                     data = veneer.LastArrivedValue
@@ -69,7 +69,7 @@ namespace l99.driver.fanuc.handlers
                     invocationMs = (veneer.IsInternal || veneer.IsCompound) ? -1 : veneer.LastChangedInput.invocationMs,
                     data = (veneer.IsInternal || veneer.IsCompound) ? new { } : veneer.LastChangedInput.request.GetType().GetProperty(veneer.LastChangedInput.method).GetValue(veneer.LastChangedInput.request, null)
                 },
-                delta = new
+                state = new
                 {
                     time = veneer.ChangeDelta,
                     data = veneer.LastChangedValue
@@ -100,7 +100,7 @@ namespace l99.driver.fanuc.handlers
                 {
                     data = machine.Info
                 },
-                delta = new
+                state = new
                 {
                     data = machine.CollectorSuccess ? "OK" : "NOK"
                 }

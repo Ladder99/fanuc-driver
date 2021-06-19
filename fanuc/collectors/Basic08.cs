@@ -61,7 +61,7 @@ namespace l99.driver.fanuc.collectors
                 await set_native("execprog", await _platform.RdExecProgAsync(128)));
         }
 
-        public override async Task CollectForEachAxisAsync(short current_axis, dynamic axis_split, dynamic axis_marker)
+        public override async Task CollectForEachAxisAsync(short current_axis, string axis_name, dynamic axis_split, dynamic axis_marker)
         {
             await peel("axis_data",
                 await set_native("axis_dynamic", await _platform.RdDynamic2Async(current_axis, 44, 2)), 
@@ -69,7 +69,7 @@ namespace l99.driver.fanuc.collectors
                 current_axis - 1);
         }
 
-        public override async Task CollectForEachSpindleAsync(short current_spindle, dynamic spindle_split, dynamic spindle_marker)
+        public override async Task CollectForEachSpindleAsync(short current_spindle, string spindle_name, dynamic spindle_split, dynamic spindle_marker)
         {
             await set_native_and_peel("spindle_data", await _platform.Acts2Async(current_spindle));
         }
