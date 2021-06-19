@@ -4,21 +4,44 @@ luanet.load_assembly 'System'
 
 script =  {}
 
+
 function script:init_root(table, collector)
-    print("init root");
+    print("initialize root");
     
-    collector:apply("SysInfo", "sys_info");
+    collector:apply("CNCId", "cnc_id");
+    collector:apply("RdParamLData", "power_on_time");
 end
+
 
 function script:init_paths(table, collector)
-    print("init paths");
+    print("initialize paths");
+    
+    collector:apply("SysInfo", "sys_info");
+    collector:apply("StatInfo", "stat_info");
+    collector:apply("Figures", "figures");
+    collector:apply("GCodeBlocks", "gcode_blocks");
 end
+
 
 function script:init_axis_and_spindle(table, collector)
-    print("init axis");
+    print("initialize axis/spindle");
+    
+    collector:apply("RdDynamic2_1", "axis_data");
+    collector:apply("RdActs2", "spindle_data");
 end
 
+
 function script:collect_root(table, collector)
+    print("collect root");
+
+    collector:set_native_and_peel("cnc_id", collector.Platform:CNCId());
+    collector:set_native_and_peel("power_on_time", collector:Platform.RdParamDoubleWordNoAxis(6750));
+end
+
+
+function script:collect_path(table, collector, current_path)
+    print("collect path " .. current_path);
+    
     -- Focas call
     system_info = collector.Platform:SysInfo();
 
@@ -42,19 +65,28 @@ function script:collect_root(table, collector)
     print(rc);
     print(sysinfo);
     ]]--
-end
-
-
-function script:collect_path(table, collector, current_path)
-    print("collect path " .. current_path);
+    
+    collector:set_native_and_peel("stat_info", collector:Platform.StatInfo());
+    collector:set_native_and_peel("figures", collector:Platform.GetFigure(0, 32));
+    collector:peel("gcode_blocks",
+        collector:set_native("blkcount", collector:Platform.RdBlkCount()),
+        collector:set_native("actpt", collector:Platform.RdActPt()),
+        collector:set_native("execprog", collector:Platform.RdExecProg(128)));
 end
 
 
 function script:collect_axis(table, collector, current_path, current_axis, axis_name)
     print("collect axis " .. current_path .. " " .. axis_name);
+    
+    collector:peel("axis_data",
+        collector:set_native("axis_dynamic", collector:Platform.RdDynamic2(current_axis, 44, 2)), 
+        collector:get("figures"), 
+        current_axis - 1);
 end
 
 
 function script:collect_spindle(table, collector, current_path, current_spindle, spindle_name)
     print("collect spindle " .. current_path .. " " .. spindle_name);
+    
+    collector:set_native_and_peel("spindle_data", collector:Platform.Acts2(current_spindle));
 end
