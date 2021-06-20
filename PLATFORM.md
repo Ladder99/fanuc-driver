@@ -76,13 +76,36 @@ Reads system information such as kind of CNC system, Machining(M) or Turning(T),
 `fanuc/{id}/sys_info/1`
 ```json
 {
-  "addinfo": 1090,
-  "max_axis": 32,
-  "cnc_type": " 0",
-  "mt_type": " M",
-  "series": "D4F1",
-  "version": "30.0",
-  "axes": "03"
+  "observation": {
+    "time": 1624154806926,
+    "machine": "sim_lua",
+    "type": "source",
+    "name": "sys_info",
+    "marker": {
+      "path_no": 1
+    }
+  },
+  "source": {
+    "method": "cnc_sysinfo",
+    "invocationMs": 0,
+    "data": {}
+  },
+  "state": {
+    "time": "00:00:01.9078127",
+    "data": {
+      "loader_control": false,
+      "i_series": true,
+      "compound_machining": false,
+      "transfer_line": false,
+      "model": "MODEL D",
+      "max_axis": 32,
+      "cnc_type": "Series 0i",
+      "mt_type": "Machining center",
+      "series": "D4F1",
+      "version": "30.0",
+      "axes": 3
+    }
+  }
 }
 ```
 
