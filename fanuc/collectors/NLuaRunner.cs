@@ -107,6 +107,19 @@ namespace l99.driver.fanuc.collectors
             }
         }
 
+        public string to_string(dynamic o, string sep = "")
+        {
+            return String.Join(sep,o);
+        }
+        
+        public string to_json(dynamic o)
+        {
+            if(o.GetType().IsArray)
+                return JArray.FromObject(o).ToString();
+            else
+                return JObject.FromObject(o).ToString();
+        }
+
         public override async Task InitRootAsync()
         {
             try
