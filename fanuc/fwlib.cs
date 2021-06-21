@@ -8371,9 +8371,34 @@ namespace l99.driver.fanuc
 #endif
 
         /* read program information */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdproginfo")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdproginfo")]
+#elif LINUX32_100
+        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdproginfo")]
+#elif LINUX32_105
+        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdproginfo")]
+#elif WIN64
+        [DllImport("FWLIB64.dll", EntryPoint = "cnc_rdproginfo")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdproginfo")]
+#endif
         public static extern short cnc_rdproginfo(ushort FlibHndl, short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBNC_1 c);
+        
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdproginfo")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdproginfo")]
+#elif LINUX32_100
+        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdproginfo")]
+#elif LINUX32_105
+        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdproginfo")]
+#elif WIN64
+        [DllImport("FWLIB64.dll", EntryPoint = "cnc_rdproginfo")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdproginfo")]
+#endif
         public static extern short cnc_rdproginfo(ushort FlibHndl, short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBNC_2 c);
 
         /* read program number under execution */
@@ -11701,7 +11726,19 @@ namespace l99.driver.fanuc
         public static extern short cnc_getfocas1opt(ushort FlibHndl, short a, out int b);
 
         /* read Ethernet board information */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdetherinfo")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdetherinfo")]
+#elif LINUX32_100
+        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdetherinfo")]
+#elif LINUX32_105
+        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdetherinfo")]
+#elif WIN64
+        [DllImport("FWLIB64.dll", EntryPoint = "cnc_rdetherinfo")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdetherinfo")]
+#endif
         public static extern short cnc_rdetherinfo(ushort FlibHndl, out short a, out short b);
 
 #if ARMV7
