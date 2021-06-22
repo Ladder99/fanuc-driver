@@ -9733,7 +9733,19 @@ namespace l99.driver.fanuc
         public static extern short cnc_getdtailerr(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBERR a);
 
         /* read informations of CNC parameter */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdparainfo")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdparainfo")]
+#elif LINUX32_100
+        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdparainfo")]
+#elif LINUX32_105
+        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdparainfo")]
+#elif WIN64
+        [DllImport("FWLIB64.dll", EntryPoint = "cnc_rdparainfo")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdparainfo")]
+#endif
         public static extern short cnc_rdparainfo(ushort FlibHndl,
             short a, ushort b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBPARAIF c);
 
@@ -9748,7 +9760,19 @@ namespace l99.driver.fanuc
             short a, ushort b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBDIAGIF c);
 
         /* read maximum, minimum and total number of CNC parameter */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdparanum")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdparanum")]
+#elif LINUX32_100
+        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdparanum")]
+#elif LINUX32_105
+        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdparanum")]
+#elif WIN64
+        [DllImport("FWLIB64.dll", EntryPoint = "cnc_rdparanum")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdparanum")]
+#endif
         public static extern short cnc_rdparanum(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBPARANUM a);
 
         /* read maximum, minimum and total number of CNC setting data */
