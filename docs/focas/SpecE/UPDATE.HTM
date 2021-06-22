@@ -1,0 +1,975 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>FOCAS1/Ethernet Update History</title>
+<link rel="stylesheet" type="text/css" href="fwlib32.css">
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<p><a href="fwlib32.htm">Top Page</a></p>
+
+<hr>
+
+<ul>
+	<li><a href="#UpDateFocas2">Update History of FOCAS1/2 Library</a></li>
+	<li><a href="#UpDateHssb">Update History of FOCAS1/HSSB Library (Old Drawing No.:A02B-0207-K730)</a></li>
+	<li><a href="#UpDateEther">Update History of FOCAS1/Ethernet Library (Old Drawing No.:A02B-0207-K732)</a></li>
+</ul>
+
+<h2><a name="UpDateFocas2">Update History of FOCAS1/2 Library</a></h2>
+
+<h2>Edition 5.3 (December 25, 2019)</h2>
+<ul>
+<li>On 64-bit Windows 10 operating system, When the FOCAS application using the FOCAS function for NC guide accesses the CNC guide, application error may occur. This problem has been corrected.
+<li>When the file information acquisition function cnc_rddsfile of the data server is executed in the Fast Ethernet connection, the number of acquired files may not match the number of acquired files. This problem has been corrected.
+<li>In FOCAS2 / Ethernet, a library handle allocation function cnc_allclibhndls corresponding to the security function by the access code has been added.
+<li>FOCAS application can be operated by multi-user on PC.
+<li class="K739">In the servo waveform acquisition function, the exclusive control of the sampling function is supported.
+</ul>
+
+<h2>Edition 5.2 (April 25, 2019)</h2>
+<ul>
+<li>A license agreement to use FOCAS library is revised.
+</ul>
+
+<h2>Edition 5.1 (November 21, 2018)</h2>
+<ul>
+<li>A license agreement to use FOCAS library is revised.
+<li>Fwlib30i64.dll : When executing PMC functions such as pmc_rdpmcrng function of 64-bit FOCAS2/HSSB in Windows10, the program exception might occur. This problem is corrected.
+<li>The following libraries are deleted.
+	<ul>
+	<li>FOCAS2 library for Linux
+	<li>FOCAS2 library for Android
+	<li>FOCAS2 library for iOS
+	</ul>
+</ul>
+</ul>
+<h2>Edition 4.16 (June 05, 2018)</h2>
+<ul>
+<li>A license agreement to use FOCAS library is revised.
+<li>Fwlibe1.dll : When reading spindle data by cnc_rdaxisdata function of FOCAS2/Ethernet, the incorrect data might be read in data of the second or more axes in a path and the second or more types. This problem is corrected.
+</ul>
+<h2>Edition 4.15 (February 28, 2018)</h2>
+<ul>
+<li class="K737">The following servo waveform acquisition functions are deleted.
+<table class=dd>
+	<tr><td>cnc_sdtsetchnl, cnc_sdtclrchnl, cnc_sdtstartsmpl, cnc_sdtcancelsmpl,</tr>
+	<tr><td>cnc_sdtreadsmpl, cnc_sdtendsmpl, cnc_sdtread1shot, cnc_sdtsetchnl2,</tr>
+	<tr><td>cnc_sdtstartsmpl2, cnc_sdtreadsmpl2, cnc_sdtendsmpl2</tr>
+</table>
+<li>It is necessary to agree a license agreement to use FOCAS library.
+</ul>
+<h2>Edition 4.14 (February 01, 2018)</h2>
+<ul>
+<li>Fwlibe1.dll : The argument type=5-7 of cls=3,4 and type=3-5 of cls=5 for cnc_rdaxisdata function is supported.
+</ul>
+
+<h2>Edition 4.13 (November 22, 2017)</h2>
+<ul>
+<li>CPU card D is supported.
+</ul>
+
+<h2>Edition 4.11 (June 28, 2017)</h2>
+<ul>
+<li>Fwlibe1.dll : The port forwarding function of router (static IP masquerade) is supported.
+</ul>
+
+<h2>Edition 4.10 (December 22, 2016)</h2>
+<ul>
+<li>Fwlibe1.dll : The following functions are supported.
+	<ul>
+	<li><a href="./Data\eth_rdparam.htm">eth_rdparam    </a>Get the parameter of Ethernet
+	<li><a href="./Data\eth_wrparam.htm">eth_wrparam    </a>Set the parameter of Ethernet
+	</ul>
+</ul>
+
+<h2>Edition 4.9 (July 28, 2016)</h2>
+<ul>
+<li>The 32/64-bit floating-point type of PMC are supported.
+</ul>
+
+<h2>Edition 4.7 (October 09, 2015)</h2>
+<ul>
+<li>Multi axes control system (G3G1,G3H1) are supported.
+<li>Apply to Winows 10 Pro/IoT.
+</ul>
+
+<h2>Edition 4.6 (July 10, 2015)</h2>
+<ul>
+<li>Fwlibe1.dll : The following functions are supported.
+	<ul>
+	<li><a href="./Program\cnc_setpdf_pglock.htm">    cnc_setpdf_pglock    </a>Set the protection of running/editing of NC program
+	<li><a href="./Program\cnc_resetpdf_pglock.htm">  cnc_resetpdf_pglock  </a>Reset the protection of running/editing of NC program
+	<li><a href="./Program\cnc_rdpdf_pglockstat.htm"> cnc_rdpdf_pglockstat </a>Get the status of running/editing of NC program
+	<li><a href="./History\cnc_wrkeyhistry.htm">      cnc_wrkeyhistry      </a>Record of key stroke
+	<li><a href="./Data\eth_rddsmode.htm">            eth_rddsmode         </a>Get the mode of DATA SERVER
+	<li><a href="./Data\eth_rddsm198host.htm">        eth_rddsm198host     </a>Get the host for M198 operation of DATA SERVER
+	<li><a href="./Data\eth_wrdsm198host.htm">        eth_wrdsm198host     </a>Set the host for M198 operation of DATA SERVER
+	<li><a href="./Data\cnc_rddsdevinfo.htm">         cnc_rddsdevinfo      </a>Get memory device information on DATA SERVER
+	<li><a href="./Data\cnc_dsmget_req.htm">          cnc_dsmget_req       </a>Start MGET of DATA SERVER
+	<li><a href="./Data\cnc_dsmput_req.htm">          cnc_dsmput_req       </a>Start MPUT of DATA SERVER
+	<li><a href="./Data\cnc_dslistget_req.htm">       cnc_dslistget_req    </a>Start List-GET of DATA SERVER
+	<li><a href="./Data\cnc_dslistput_req.htm">       cnc_dslistput_req    </a>Start List-PUT of DATA SERVER
+	<li><a href="./Data\cnc_dslistdel_req.htm">       cnc_dslistdel_req    </a>Start List-DEL of DATA SERVER
+	<li><a href="./Misc\cnc_reset2.htm">              cnc_reset2           </a>CNC reset (2)
+	<li><a href="./Misc\cnc_rdrepeatval.htm">         cnc_rdrepeatval      </a>Read the repeat counter
+	</ul>
+</ul>
+
+<h2>Edition 4.5 (January 09, 2015)</h2>
+<ul>
+<li>Program operation on large capacity is supported.
+<li>Fwlibe1.dll : The following functions are supported.
+	<ul>
+	<li><a href="./Data\eth_rdhost.htm"> eth_rdhost </a>Get the connection host number of Ethernet 
+	<li><a href="./Data\eth_wrhost.htm"> eth_wrhost </a>Set the connection host number of Ethernet 
+	<li><a href="./Data\eth_rddsm198dir.htm"> eth_rddsm198dir </a>Get the folder for M198 operation of DATA SERVER 
+	<li><a href="./Data\eth_wrdsm198dir.htm"> eth_wrdsm198dir </a>Set the folder for M198 operation of DATA SERVER 
+	<li><a href="./Data\cnc_rddsdncfile.htm"> cnc_rddsdncfile </a>Get file for DNC operation 
+	<li><a href="./Data\cnc_rddsdir.htm"> cnc_rddsdir </a>Get current folder 
+	<li><a href="./Data\cnc_rddsfile.htm"> cnc_rddsfile </a>Get file list information 
+	<li><a href="./Data\cnc_dsmkdir.htm"> cnc_dsmkdir </a>Make folder 
+	<li><a href="./Data\cnc_dsrmdir.htm"> cnc_dsrmdir </a>Delete folder 
+	<li><a href="./Data\cnc_dschdir.htm"> cnc_dschdir </a>Change current foledr 
+	<li><a href="./Data\cnc_dsrename.htm"> cnc_dsrename </a>Change folder name or file name 
+	<li><a href="./Data\cnc_dsput_req.htm"> cnc_dsput_req </a>Start PUT of DATA SERVER 
+	<li><a href="./Data\cnc_dsftpcancel.htm"> cnc_dsftpcancel </a>Stop file transfer of DATA SERVER 
+	<li><a href="./Program\cnc_rdmdiprgstat.htm"> cnc_rdmdiprgstat </a>Get MDI program information 
+	</ul>
+<li>FOCAS2/Ethernet library becomes available in Linux for ARM computers.
+</ul>
+
+<h2>Edition 4.4 (October 24, 2014)</h2>
+<ul>
+<li>When there are two or more spindles in one path, FOCAS2 functions to read the spindle data may not return rarely.
+</ul>
+
+<h2>Edition 4.3 (September 30, 2014)</h2>
+<ul>
+<li>Allpy to FANUC Series 0i-MODEL F.
+</ul>
+
+<h2>Edition 4.2 (October 18, 2013)</h2>
+<ul>
+<li>The HSSB interface board for PCI express is supported.
+</ul>
+
+<h2>Edition 4.1 (March 29, 2013)</h2>
+<ul>
+<li>FOCAS2/Ethernet library becomes available in Linux.
+</ul>
+
+<h2>Edition 4.0 (July 13, 2012)</h2>
+<ul>
+<li>Fwlibe1.dll : The following functions are supported.
+	<ul>
+	<li><a href="./Pmc\pmc_rdprmstart.htm"> pmc_rdprmstart </a>Start uploading PMC parameter
+	<li><a href="./Pmc\pmc_rdpmcparam.htm"> pmc_rdpmcparam </a>Upload PMC parameter
+	<li><a href="./Pmc\pmc_rdprmend.htm">   pmc_rdprmend   </a>End of uploading PMC parameter
+	<li><a href="./Pmc\pmc_wrprmstart.htm"> pmc_wrprmstart </a>Start downloading PMC parameter
+	<li><a href="./Pmc\pmc_wrpmcparam.htm"> pmc_wrpmcparam </a>Download PMC parameter
+	<li><a href="./Pmc\pmc_wrprmend.htm">   pmc_wrprmend   </a>End of downloading PMC parameter
+	</ul>
+<li>NCBoot32.exe : Apply to the password function for the MEM format file of the Macro executor.
+</ul>
+
+<h2>Edition 3.9 (July 29, 2011)</h2>
+<ul>
+<li>Allpy to FANUC Power Motion i-MODEL A.
+<li>Allpy to FANUC Series 0i Mate-MODEL D.
+</ul>
+
+<h2>Edition 3.8 (February 24, 2011)</h2>
+<ul>
+<li>Apply to the 64-bit version of Winows 7 Professional.
+<li>Fwlibe1.dll : The following functions are supported.
+	<ul>
+	<li><a href="./Profibus\pbm_rd_param.htm"> pbm_rd_param  </a>Reading of the parameters of the PROFIBUS master function
+	<li><a href="./Profibus\pbm_wr_param.htm"> pbm_wr_param  </a>Setting the parameters of the PROFIBUS master function
+	<li><a href="./Profibus\pbm_chg_mode.htm"> pbm_chg_mode  </a>Change of the operation mode
+	<li><a href="./Ncdata\cnc_rdmacror3.htm">  cnc_rdmacror3 </a>Read custom macro variables and name(area specified)
+	</ul>
+</ul>
+
+<h2>Edition 3.7 (September 01, 2010)</h2>
+<ul>
+<li>Apply to FS30i/31i/32i/35i-B.
+<li>The update and the corrections of mistake.
+</ul>
+
+<h2>Edition 3.6 (June 15, 2009)</h2>
+<ul>
+<li>Apply to Stand-alone type FS0i-D.
+<li>Fwlibe1.dll : The tool offset for the complex machining is supported.
+</ul>
+
+<h2>Edition 3.5 (July 01, 2008)</h2>
+<ul>
+<li>Fwlibe1.dll : The following functions related to the data server are added.
+	<ul>
+	<li><a href="./Data\cnc_wrdsdncfile.htm"> cnc_wrdsdncfile </a>Set file for DNC operation
+	<li><a href="./Data\cnc_dsremove.htm">    cnc_dsremove    </a>Delete file
+	<li><a href="./Data\cnc_dsget_req.htm">   cnc_dsget_req   </a>Start GET of DATA SERVER
+	<li><a href="./Data\cnc_dsftpstat.htm">   cnc_dsftpstat   </a>Read file transfer result of DATA SERVER
+	</ul>
+<li>Fwlibe1.dll : The following functions related to the tool management function are added.
+	<ul>
+	<li><a href="./ToolMng\cnc_rdmag_property.htm">  cnc_rdmag_property </a>Read the magazine property data
+	<li><a href="./ToolMng\cnc_wrmag_property.htm">  cnc_wrmag_property </a>Write the magazine property data
+	<li><a href="./ToolMng\cnc_delmag_property.htm"> cnc_delmag_property</a>Delete the magazine property data
+	<li><a href="./ToolMng\cnc_rdpot_property.htm">  cnc_rdpot_property </a>Read the pot property data
+	<li><a href="./ToolMng\cnc_wrpot_property.htm">  cnc_wrpot_property </a>Write the pot property data
+	<li><a href="./ToolMng\cnc_delpot_property.htm"> cnc_delpot_property</a>Delete the pot property data
+	</ul>
+<li>Fwlibe1.dll : The following function related to the NC file data is added.
+	<ul>
+	<li><a href="./Ncdata\cnc_rdparainfo3.htm"> cnc_rdparainfo3 </a>Read parameter information (3)
+	</ul>
+<li>The NCBOOT32 supports the following editions of CNC BOOT system.
+	<ul>
+	<li>60M9/03 or later
+	<li>60MA/03 or later
+	<li>60MB/02 or later
+	<li>60WA/03 or later
+	<li>60WB/03 or later
+	</ul>
+</ul>
+
+<h2>Edition 3.4 (May 13, 2008)</h2>
+<ul>
+<li>NCBoot32.exe : When the language of Windows is not Japanese, it is not possible to execute [SAVE], [LOAD] and [DELETE] operations. This problem is corrected.
+<li>NCBoot32.exe : When CNC BOOT system is 60W1 or 60W2 series, the Basic Assembly B1 to B4 of CNC software cannot be loaded. This problem is corrected.
+</ul>
+
+<h2>Edition 3.3 (April 25, 2008)</h2>
+<ul>
+<li>Apply to FS0i-D.
+<li>NCBoot32.exe is supported to 60M9, 60MA, 60MB, 60WA and 60WB series of CNC BOOT.
+</ul>
+
+<h2>Edition 3.2 (December 27, 2007)</h2>
+<ul>
+<li>FOCAS2 functions are applied to NCGuidePro.
+<li>Fwlib30i.dll : The upload/download of the rotary table dynamic fixture offset was enabled.
+<li>Fwlib30i.dll, Fwlibe1.dll : The operation history, the external operator's message history and the alarm history can be cleared separately by the cnc_clearophis function for FS30i series.
+<li>Fwlib30i.dll, Fwlibe1.dll : The <a href="./Program\cnc_exeprgname2.htm">cnc_exeprgname2</a> function is added.
+<li>Fwlib160.dll, Fwlib0iB.dll : Even if the punch out for the extended relay data(address E) is invalid by the setting of PMC, the pmc_rdpmcparam function outputs the data.  This problem is corrected.
+</ul>
+
+<h2>Edition 3.1 (May 29, 2007)</h2>
+<ul>
+<li>Fwlib30i.dll : The alarm messages and the operator's messages in Korean, Russian and Turkish become to be read.
+<li>Fwlib160.dll : The P/S alarms No.5500 to 5542 become to be read.
+<li>Fwlib160.dll : The servo alarms from No.648 to 655 become to be read.
+<li>FwlibPMi.dll : The servo alarms from No.608 to 655 become to be read.
+<li>The FOCAS1/2 libraries did not work correctly in Windows95/98/NT4.0 without Internet Explorer 5.0 or later. This problem is corrected.
+</ul>
+
+<h2>Edition 3.0 (April 24, 2007)</h2>
+<ul>
+<li>Apply to Windows Vista Business.
+<li>Fwlib150.dll : The tool life management function 1024 pairs are supported.
+<li>Fwlib30i.dll : The functions for Profibus-DP are added.
+<li>FwlibPMi.dll : The cnc_reset2 function is added.
+<li>Fwlib160.dll, Fwlibe1.dll : The following functions for Tool management function are added.
+	<ul>
+	<li><a href="./ToolMng\cnc_wrtoolgeom_tlm.htm">  cnc_wrtoolgeom_tlm  </a>Write tool geometry data
+	<li><a href="./ToolMng\cnc_rdtoolgeom_tlm.htm">  cnc_rdtoolgeom_tlm  </a>Read tool geometry data
+	</ul>
+<li>Fwlib160.dll, FwlibPMi.dll : The CNC parameters from No.2436 to 2999 become to be read.
+<li>NCBoot32.exe : The loading operation of another F-ROM file was prohibited while a F-ROM file is loading.
+<li>Fwlib160.dll : The cnc_rdopmsg3 could not get the empty macro message. This problem is corrected.
+<li>Fwlibe1.dll : The cnc_rdomhistry and cnc_rdomhistry2 function might not work correctly. This problem is corrected.
+<li>Fwlibe1.dll : The functions of tool management for Series 30i/31i/32i did not work correctly. This problem is corrected.
+<li>Fwlib30i.dll : When the 2nd PMC or 3rd PMC did not exist, the dual check safety parameter could not be written with pmc_wrpmcparam. This problem is corrected. 
+<li>Fwlib160.dll : When the Multi C executor function was used, the cnc_cexesram function returned EW_NOOPT. This problem is corrected.
+<li>Fwlibe1.dll : When -1 was specified for spindle number, the cnc_acts2 function for Series 30i/31i/32i returned EW_NUMBER. This problem is corrected.
+</ul>
+
+<h2>Edition 2.6</h2>
+<ul>
+<li>Fwlib0i.dll, Fwlib0iB.dll, Fwlib160.dll, Fwlib16W.dll, FwlibPMi.dll : The cnc_rdpmacro and cnc_rdpmacror function may not get correct data occasionally. This problem is corrected.
+</ul>
+
+<h2>Edition 2.5</h2>
+<ul>
+<li>Fwlib160.dll : The servo alarms whose numbers are within 624 to 631, 632 to 639 and 640 to 647 come to be read.
+<li>Fwlib160.dll : NC program come to be read by the cnc_upload3 function while MDI program is executed.
+<li>Fwlibe1.dll : The cnc_pdf_delall function is added.
+<li>Fwlibe1.dll : The unsolicited messaging functions are supported in Series 30i/31i/32i.
+<li>Fwlibe1.dll : The cnc_rdpmacroinfo2 function is added.
+<li>Fwlib30i.dll : The functions related to servo learning data are supported in FS30i/31i/32i.
+<li>Fwlib160.dll : The amount of machine axes movement read by the cnc_rd5axovrlap function may be twice of the displayed value on NC. This problem is corrected.
+<li>Fwlib160.dll, Fwlibe1.dll : The cnc_getfrominfo function may not get the correct data when -1 is specified to the slotno parameter. This problem is corrected.
+<li>Fwlibe1.dll : The cnc_rdgcode function returns EW_LENGTH when all modal G code data are read by the function and less the actual total group number is specified to the group number to be read (num_gcd). This problem is corrected.
+<li>Fwlibe1.dll : The cnc_rdgrpinfo4 and cnc_rdtlgrp function may not get the correct data. This problem is corrected.
+<li>Fwlib30i.dll : When the specified start PMC address is negative in the pmc_rdpmcrng or pmc_rdpmcrng function, the error EW_RANGE is not returned. This problem is corrected.
+<li>Fwlib30i.dll : When an European character is included in the alarm messages, the message texts cannot be read correctly. This problem is corrected.
+<li>Fwlib30i.dll : In the cnc_wrpmacror or cnc_wrmacror function, when the numerical data to be write is 0 and the exponent data to be write is 1, the written macro variable becomes "vacant". This problem is corrected.
+<li>Fwlib30i.dll : When a macro message is read by the cnc_opmsg3 function without the option of the custom macro function, the return code is not EW_NOOPT, but EW_ATTRIB. This problem is corrected.
+</ul>
+
+<h2>Edition 2.4</h2>
+<ul>
+<li>Fwlib30i.dll : The <a href="./misc/cnc_rdrepeatval_ext.htm">cnc_rdrepeatval_ext</a> function to acquire the total repetition number and the remainder counter is added.
+<li>Fwlib160.dll : The additional customized data function of the tool management function is supported.
+<li>Fwlib160.dll : The <a href="./misc/cnc_getlanguage.htm">cnc_getlanguage</a> function to acquire the display language of NC is added.
+<li>Fwlib160.dll : When the display language of CNC is the simplified Chinese characters, the alarm message, the alarm history and the name of cnc maintenance item comes to be acquired as GB2312 codes.
+<li>Fwlibe1.dll : The <a href="./misc/cnc_statinfo2.htm">cnc_statinfo2</a> function is added.
+<li>Fwlib16w.dll : The CNC parameter number 16000-16999 become to be read.
+<li>Fwlib16w.dll : The servo alarm number 456-459,468 and 469 become to be acquired.
+<li>Fwlib16w.dll : The diagnosis data number 620-669 and 700-709 become to be read.
+<li>Fwlib30i.dll : The diagnosis data could not get correctly if the number of control axes is less than the path number.  This problem is corrected.
+<li>Fwlib30i.dll : The cnc_rdcommand returned EW_NUMBER when commanded data was read one by one.  This problem is corrected.
+<li>Fwlib30i.dll : The cnc_rdexchgtgrp could not get the optional group number of the group that was turning the tool exchange signal on.  This problem is corrected.
+<li>Fwlib30i.dll : The cnc_exaxisname function did not work correctly.  This problem is corrected.
+<li>Fwlib160.dll : A correct value was not able to be acquired by cnc_rdpm_item when a life remained time was negative.  And, an unsetting item was not able to be acquired.  This problem is corrected.
+<li>Fwlib160.dll : The SRAM ECC ERROR occurred when the cnc_rdsyssoft2 was executed on the 1 CPU 2 system.  This problem is corrected.
+<li>Fwlib160.dll : The cnc_seqsrch returned EW_REJECT when the CNC parameter No.8700#3 was "0" and the CNC status is the DNC mode.  This problem is corrected.
+<li>Fwlib160.dll : The cnc_seqsech2 is locked if there is no EOB in the last block of a program which does not have the specified sequence number.  This problem is corrected.
+<li>Fwlibe1.dll : The cnc_rdalmhistry5 could not get modal information and coordinate values correctly.  This problem is corrected.
+<li>Fwlibe1.dll : The cnc_rdophistry4 could not get data of alarm with additional information below the g_modal member of the ODBOPHIS4 structure correctly.  This problem is corrected.
+<li>Fwlibe1.dll : The cnc_rdtlusegrp returned EW_PARAM when the optional group number of the tool life management B function was not used with FS30i.  This problem is corrected.
+<li>Fwlibe1.dll : The cnc_rdtlinfo of FS30i could not get the maximum number of the tool group correctly.  This problem is corrected.
+<li>Fwlibe1.dll : The cnc_rdpmacror of FS16i could not get the No.500,000 or later of P code macro variables for high-speed cycle cutting.  This problem is corrected.
+<li>Fwlibe1.dll : The cnc_rdomhistry2 returned EW_PROTCOL when you read the 11 history datas or more at a time.  This problem is corrected.
+<li>NCBoot32.exe : NCBOOT32.EXE may not be started sometimes after it displays the message "Reset request is not accepted by CNC/PMC".  This problem is corrected.
+</ul>
+
+
+<h2>Edition 2.3</h2>
+<ul>
+<li>The distinction of FOCAS1 and FOCAS2 are clearly described.
+
+<li>Fwlibe1.dll : The necessary function for downloading data to the data server has been added.
+	<ul>
+	<li><a href="./data/ds_dwnstart.htm">  ds_dwnstart  </a>Start downloading to data server 
+	<li><a href="./data/ds_download.htm">  ds_download  </a>Download to data server 
+	<li><a href="./data/ds_dwnend.htm">    ds_dwnend    </a>End of downloading to data server
+	<li><a href="./data/ds_rdhdddir.htm">  ds_rdhdddir  </a>Get hard disk file list of data server
+	<li><a href="./data/ds_delhddfile.htm">ds_delhddfile</a>Delete hard disk file of data server
+	<li><a href="./data/ds_chghdddir.htm"> ds_chghdddir </a>Change of current directory of hard disk of data server
+	<li><a href="./data/ds_rdresult.htm">  ds_rdresult  </a>Get execution result of function of data server
+	<li><a href="./data/ds_cancel.htm">    ds_cancel    </a>Stop function for data server
+	</ul>
+<li>Fwlibe1.dll : Reception stop(cnc_unsolicstop) of the unsolicited messaging can be instructed from other PC in which the CNC unsolicited messaging server is active.
+<li>Fwlib160.dll : The PROFIBUS functions have been supplied to the control software(6559 Series).
+<li>Fwlib160.dll, Fwlibe1.dll : The item which had been added to the cutting condition file data for laser system has been supported.
+<li>Fwlib160.dll : The bidirectional pitch error function has been supported.
+<li>Fwlib160.dll : The function(cnc_rdrepeatval_ext) to acquire total repetition number and remainder counter has been added.
+
+<li>Fwlib160.dll : When CNC parameter No.5006#0 is '1', the read value of fixture offset was wrong.  This problem is corrected.
+<li>Fwlib160.dll : In case of using diameter/radius dynamic switching function, the coordinate value acquired by  cnc_rddynamic and the cnc_rddynamic2 was wrong.  This problem is corrected.
+<li>Fwlib160.dll, Fwlib0i.dll Fwlib0iB.dll, FwlibPMi.dll : The block omission might occur in the High Speed DNC operation by using cnc_dnc and cnc_cdnc.  This problem is corrected.
+<li>Fwlib160.dll, Fwlib0iB.dll, FwlibPMi.dll : When the data writing function to CNC was executed from another process or thread while executing cnc_dwnstart3, the downloading process might be hang-up.  This peoblem is corrected.
+
+<li>Fwlib30i.dll : If cnc_allclibhndl or cnc_allclibhndl2 was executed under the CNC power was off, the return value was EW_OK.  This problem is corrected.
+
+<li>NCBoot32.exe : The size of BOOT window, Load window, and AutoBackup window has been enlarged to see all digits of file time stamps.
+<li>NCBoot32.exe : A series and version information of the BOOT software are added on the BOOT screen.
+<li>NCBoot32.exe : In case of connecting with FS30i/31i/32i, if the power of PC was turned on again before the PC starts up completely, a SYSTEM ALARM screen might appear. This problem is corrected.
+<li>NCBoot32.exe : 	If PCwas rebooted while connecting with FS30i/31i/32i, a SYSTEM ALARM screen might appear when CNC Screen Display Function started. This problem is corrected. You also need a BOOT software 60W1-07 or later.
+NCBoot32.exe : 	The BOOT window disappears abnormally when restoring the "NO DATA" item on the AutoBackup window for FS30i/31i/32i. This problem is corrected.
+
+</ul>
+
+
+<h2>Edition 2.2</h2>
+<ul>
+<li>Fwlib160.dll : The diagnosis data number 670-672 can be acquired.
+<li>Fwlibe1.dll : Tool life management functions for 30i has been supported.
+<li>Fwlibe1.dll : Tool management function for 30i has been supported.
+<li>Fwlib30i.dll : Data server functions has been supported.
+<li>Fwlib150.dll, Fwlib15i.dll : In cnc_rdproginfo function, the argument(length) of data block and the structure format were changed as well as 16i.
+<li>FwlibPMi.dll : The servo alarm number 406,407,409,454-459,468,469 and 600-607 can be acquired.
+<li>Fwlib0i.dll : Read/Write function of work zero offset value did not operate correctly.  This problem is corrected.
+<li>A part of the content of the header file for FOCAS2 library was wrong.  This problem is corrected.
+</ul>
+
+
+<h2>Edition 2.1</h2>
+<ul>
+<li>The mistake of description of some functions were corrected.
+<li>Fwlib160.dll : The number of data which cnc_rdprgdirtime can read at a time was limited to 963. This limitation is removed.
+<li>Fwlib160.dll : Upload/download functions(<a href="./Data/ds_rdfile.htm">ds_rdfile</a>/<a href="./Data/ds_wrfile.htm">ds_wrfile</a>) of data in the data server has been added.
+<li>Fwlib160.dll : The variable of conversation macro(No.20,000 or later) and high-speed cycles(No.200,000 or later) of P-code macro variable become to be read by cnc_rdpmacror.
+<li>Fwlib160.dll : The program of edit/display prohibition might not be able to be acquired with cnc_rdexecprog.  This problem is corrected.
+<li>Fwlib160.dll : The high-speed search function(<a href="./program/cnc_seqsrch2.htm">cnc_seqsrch2</a>) of the sequence number has been added.
+<li>Fwlib160.dll : The function(<a href="./program/cnc_delrange.htm">cnc_delrange</a>) to delete the program of the specified area has been added.
+<li>Fwlib160.dll : The functions(<a href="./Misc/cnc_rdpm_mcnitem.htm">cnc_rdpm_mcnitem</a>,  <a href="./Misc/cnc_wrpm_mcnitem.htm">cnc_wrpm_mcnitem</a>, <a href="./Misc/cnc_rdpm_cncitem.htm">cnc_rdpm_cncitem</a>, <a href="./Misc/cnc_rdpm_item.htm">cnc_rdpm_item</a>,  <a href="./Misc/cnc_wrpm_item.htm">cnc_wrpm_item</a>) for maintenance screen has been added.
+<li>Fwlib160.dll : Program merge function(<a href="./program/cnc_mergeprog.htm">cnc_mergeprog</a>) have been added.
+<li>Fwlib160.dll : The functions(<a href="./Data/ds_searchword.htm">ds_searchword</a>, <a href="./Data/ds_searchresult.htm">ds_searchresult</a>) for searching of the optional string of the program in the data server has been added.
+<li>Fwlib160.dll : CNC parameter number 19900-19929 become to be read.
+<li>Fwlib160.dll : The function(<a href="./Ncdata/cnc_rdactfixofs.htm">cnc_rdactfixofs</a>, <a href="./Ncdata/cnc_rdfixofs.htm">cnc_rdfixofs</a>, <a href="./Ncdata/cnc_wrfixofs.htm">cnc_wrfixofs</a>) for rotary table dynamic fixture offset has been supported.
+<li>Fwlib160.dll : The extended operation history data has been supported.
+<li>Fwlib160.dll : The processing speed of cnc_rdprogdir2, cnc_rdprogdir3 and cnc_rdprogdir4 has been improved.
+<li>Fwlib160.dll : The processing speed of cnc_rdactpt has been improved.
+<li>Fwlib160.dll : The diameter/radius dynamic switching function has been supported in the functions related to the acquisition of the coordinates value.
+<li>Fwlib160.dll : The search for the comment sentence and the macro sentence have been supported in cnc_searchword.
+<li>Fwlib160.dll : Even when the CNC status was STOP mode, the program can be searched by cnc_search.
+<li>Fwlib160.dll : The execution pointer can be set with cnc_wractpt in the nested program.
+<li>Fwlib160.dll : The <a href="./Program/cnc_rdprogline2.htm">cnc_rdprogline2</a> function has been added.
+<li>Fwlib160.dll : When cnc_rdexecprog was executed in MEM or MDI mode, the returned value of the characters number might become the value of minus 1 from the specified value.  This problem is corrected.
+<li>Fwlib160.dll : If cnc_rdexecprog was executed while RISC program in the CNC memory was running, only the range of G05P10000-G05P0 could be read.  This problem is corrected.
+<li>Fwlib160.dll : Even if cnc_rdexecpt is called when CNC is reset status, the function is made not to be EW_REJECT.
+<li>Fwlib160.dll : When the sequence search is done by cnc_seqsrch during the DMMC running or MEM running or the Emergency mode, the returned value is made to be EW_REJECT.
+<li>Fwlib160.dll : When larger numbers than the registration number are specified for the argument(offset) of ds_rdhdddir and ds_rdhistdir, the returned value is made to be EW_NUMBER.
+<li>Fwlib160.dll : When the CNC mode is switched to EDIT mode from MEM mode, the program number which was acquired by cnc_rdprgnum is modified to be the same number as the display of CNC.
+<li>Fwlib160.dll : When there was no LF in the top of program, and the N6 digit or more were specified, the error EW_DATA was returned by cnc_wrmdiprog.  This problem is corrected.
+<li>Fwlib160.dll : The program could not be acquired by cnc_rdexecprog when switching to the MEM mode after the sequence number was retrieved in the DNC mode. This problem is corrected.
+<li>Fwlib160.dll : The "!" mark of the external alarm message and the operator's message was acquired as "a". This problem is corrected.
+<li>Fwlib160.dll : The place of decimal point or unit which was acquired by cnc_rdspeed function might be wrong. This problem is corrected.
+<li>Fwlib160.dll : The function hung up when the compatible data server function(function to support the function of 10BASE-5 with 10BASE-T) was used. This problem is corrected.
+<li>Fwlib160.dll : The axis information which was acquired by cnc_rdwaveprm was not correct. This problem is corrected.
+<li>Fwlib160.dll : In case of O8 digits, the program number O16777216 or more number could not be up-loaded by cnc_upstart3. This problem is corrected.
+<li>Fwlib160.dll : The data for profibus-DP could not be written individually with pmc_prfwrslvid.  This problem is corrected.
+<li>Fwlib160.dll : Address 'E' of T system can be acquired by cnc_rdaxisname.
+<li>Fwlib160.dll : More number of lines than the specified numbers might be returned by cnc_rdprogline and cnc_rdprogline2.  This problem is corrected.
+<li>Fwlib160.dll : The NC program might be deleted from the specified line to the final line by cnc_delprogline.  This problem is corrected.
+<li>Fwlib160.dll : Proper information of parameter number 12051-12199 could not be read by cnc_rdparainfo.  This problem is corrected.
+<li>Fwlib160.dll : When cnc_rdactpt was executed, the EW_BUS error might occur.  This problem is corrected.
+<li>Fwlib160.dll : A sign, a Greek character, and the double-byte alphabet can be acquired in the functions related to the acquisition of the character string.
+<li>Fwlib160.dll : When the cnc_getfigure was called in the inch system, the number of digits below the decimal point of the PMC control axis was wrong.  This problem is corrected.
+<li>Fwlib160.dll : If cnc_allclibhndl2 was called when the power supply of the CNC is turned off, the application might be hung-up in the log output process.  This problem is corrected.
+<li>Fwlib160.dll : When the block counter was read by cnc_rdexecprog, the value was wrong.  This problem is corrected.
+
+<li>Fwlib160.dll, Fwlibe1.dll : Read/Write function(<a href="./Profibus/pmc_prfrdopmode.htm">pmc_prfrdopmode</a>, <a href="./Profibus/pmc_prfwropmode.htm">pmc_prfwropmode</a>) of the operation mode for Profibus master has been added.
+<li>Fwlib160.dll, Fwlibe1.dll : The functions(<a href="./Position/cnc_rd5axmandt.htm">cnc_rd5axmandt</a>, <a href="./Position/cnc_rd5axovrlap.htm">cnc_rd5axovrlap</a>, <a href="./Position/cnc_clr5axpls.htm">cnc_clr5axpls</a>) for the manual feed for 5-axes machining has been added.
+<li>Fwlib160.dll, Fwlibe1.dll : When the timer information was acquired by cnc_gettimer just after setting by cnc_settimer, the former timer information which was changed by cnc_settimer might be acquired.  This problem is corrected.
+
+<li>Fwlibe1.dll : The P-code macro function of FS15i has been supported.
+<li>Fwlibe1.dll : When the spindle parameter was read by cnc_rdparam in FS16i, the error might return. This problem is corrected.
+<li>Fwlibe1.dll : The information of 2nd spindle or later could not be read by cnc_acts2 in 30i. This problem is corrected.
+<li>Fwlibe1.dll : cnc_rdalminifo and cnc_rdalmmsg2 functions for 30i did not work correctly. This problem is corrected.
+<li>Fwlibe1.dll : When function of the acquisition of the operator's message(cnc_rdopmsg3) was executed on condition that "all message" was specified, the number of messages was not set correctly.  This problem is corrected.
+<li>Fwlibe1.dll : When the unsolicited messaging function was stopped by cnc_unsolicstop, the EW_NUMBER might occur. This problem is corrected.
+<li>Fwlibe1.dll : EW_BUSY occurred when the CNC unsolicited messaging function was started in the application which received the information  of Ethernet cable insertion after pulling it out.  This problem is corrected.
+<li>Fwlibe1.dll : The switching function of PMC units number of FS30i has been supported.
+
+<li>Fwlib30i.dll : The functions for PMC parameter read/write has been supported.
+<li>Fwlib30i.dll, Fwlibe1.dll : Read/Write function(<a href="./Pmc/pmc_set_timer_type.htm">pmc_set_timer_type</a>, <a href="./Pmc/pmc_get_timer_type.htm">pmc_get_timer_type</a>) of the PMC timer has been added.
+
+<li>Fwlib0i.dll : The log output function has been supported.
+
+<!--<li>Fwlib0iB.dll : The Profibus functions for 0i-C has been supported.-->
+
+<li>FwlibPMi.dll : The log output function has been supported.
+<li>FwlibPMi.dll : The <a href="./Misc/cnc_rdopmsg2.htm">cnc_rdopmsg2</a> and <a href="./Misc/cnc_rdopmsg3.htm">cnc_rdopmsg3</a> functions has been added.
+<li>FwlibPMi.dll : The <a href="./Misc/cnc_rdcexesram.htm">cnc_rdcexesram</a>, <a href="./Misc/cnc_wrcexesram.htm">cnc_wrcexesram</a>, and <a href="./Misc/cnc_cexesramsize.htm">cnc_cexesramsize</a> functions has been supported.
+<li>FwlibPMi.dll : The diagnosis data number 447-449, 550-553 and 620-649 can be acquired.
+<li>FwlibPMi.dll : ER32 error of PMC might not be acquired by pmc_rdalmmsg. This problem is corrected.
+
+<li>Fwlib16W.dll : The FROM/SRAM functions for FS16i-W/18i-W has been supported.
+<li>Fwlib16W.dll : The P-code macro function of FS16i-W/18i-W has been supported.
+
+<li>Fwlib15i.dll : The P-code macro function of FS15i has been supported.
+<li>Fwlib15i.dll : When the alarm message exceeded 32 characters, the buffer overflow occurred in nc_rdalmhistry2.  This problem is corrected.
+
+<li>The HSSB driver that supports FROM/SRAM management function for FS30i/31i/32i has been included.
+<li>CNC parameter number 19900-19929 can be set by the Option Setup Utility(OptSet.exe).
+<li>In the IPL screen of NCBOOT32, Japanese characters can be displayed by specifying FANUC font codes.
+<li>When the CNC was powered on, the unsolicited messaging server might not recognize power on information correctly.  This problem is corrected.
+<li>When the cnc_unsolicstart function was executed in the callback function which received information of power on of CNC, this function did not work properly.  This problem is corrected.
+</ul>
+
+<h2>Edition 2.0</h2>
+<ul>
+<li>FS30i has been supported.
+<li>The executing program number was not acquired by cnc_rdexecpt of  Fwlib160.dll, has been amended.
+<li>If cnc_rdexecprog of Fwlib160.dll was executed while the edit-protected program was executed, the application error might occur, has been amended.
+<li>The system error sometimes occurred when cnc_rdexecprog of FWLIB160.DLL was executed, has been amended.
+<li>When NC program was read using HSSB libraries except for 15/15i in case that the NC program memory has been broken, the functions relating to upload might fail into the exception error, has been amended.
+<li>NCBoot32 has been updated so that it can name the back-up C-EXE files as the same file names that are named by the CNC boot function.
+</ul>
+
+
+<h2><a name="UpDateHssb">Update History of FOCAS1/HSSB Library (Old Drawing No.:A02B-0207-K730)</a></h2>
+
+<h2>Edition 1.15</h2>
+<ul>
+<li>The following function are added to Fwlib160.dll.
+	<ul>
+	<li><a href="./position/cnc_rdspdlspeed.htm">cnc_rdspdlspeed</a>(Get spindle speed of serial spindle)
+	<li><a href="./program/cnc_renameprog.htm">cnc_renameprog</a>	(Change program number)
+	<li><a href="./program/cnc_rdprogline.htm">cnc_rdprogline</a>	(ead NC program by line basis)
+	<li><a href="./program/cnc_wrprogline.htm">cnc_wrprogline</a>	(Write NC program by line basis)
+	<li><a href="./program/cnc_delprogline.htm">cnc_delprogline</a>	(Delete NC program by line basis)
+	<li><a href="./program/cnc_searchword.htm">cnc_searchword</a>	(Search string in NC program)
+	<li><a href="./program/cnc_searchresult.htm">cnc_searchresult</a>(Get result of string search in NC program)
+	<li><a href="./program/cnc_copyprog.htm">cnc_copyprog</a>	(Copy NC program)
+	<li><a href="./program/cnc_condense.htm">cnc_condense</a>	(Condense program)
+	<li><a href="./program/cnc_setpglock.htm">cnc_setpglock</a>	(Set the protection of running/editing of NC program)
+	<li><a href="./program/cnc_resetpglock.htm">cnc_resetpglock</a>	(Reset the protection of running/editing of NC program)
+	<li><a href="./program/cnc_rdpglockstat.htm">cnc_rdpglockstat</a>(Get the status of running/editing of NC program)
+	<li><a href="./program/cnc_rdmdiprgstat.htm">cnc_rdmdiprgstat</a>(Get MDI program information)
+	<li><a href="./ncdata/cnc_rdhsprminfo.htm">cnc_rdhsprminfo</a>	(Get information for high-speed read of parameter)
+	<li><a href="./ncdata/cnc_rdhsparam.htm">cnc_rdhsparam</a>	(High-speed read of parameter)
+	<li><a href="./toollife/cnc_rdexchgtgrp.htm">cnc_rdexchgtgrp</a>(Read tool life management data(Exchange necessary tool group number))
+	<li><a href="./toollife/cnc_rdgrpinfo4.htm">cnc_rdgrpinfo4</a>	(Read tool life management data(tool group information 4))
+	<li><a href="./history/cnc_rdalmhistry3.htm">cnc_rdalmhistry3</a>(Read alarm history data (3))
+	<li><a href="./history/cnc_wrkeyhistry.htm">cnc_wrkeyhistry</a>	(Record of key stroke)
+	<li><a href="./data/etb_rdparam.htm">etb_rdparam</a>		(Get Ethernet board parameter)
+	<li><a href="./data/etb_wrparam.htm">etb_wrparam</a>		(Set Ethernet board parameter)
+	<li><a href="./data/etb_rderrmsg.htm">etb_rderrmsg</a>		(Get error message of Ethernet board)
+	<li><a href="./data/ds_rdmode.htm">ds_rdmode</a>		(Get data server mode)
+	<li><a href="./data/ds_wrmode.htm">ds_wrmode</a>		(Set data server mode)
+	<li><a href="./data/ds_rdhddinfo.htm">ds_rdhddinfo</a>		(Get hard disk information of data server)
+	<li><a href="./data/ds_rdhdddir.htm">ds_rdhdddir</a>		(Get hard disk file list of data server)
+	<li><a href="./data/ds_delhddfile.htm">ds_delhddfile</a>	(Delete hard disk file of data server)
+	<li><a href="./data/ds_copyhddfile.htm">ds_copyhddfile</a>	(Copy hard disk file of data server)
+	<li><a href="./data/ds_renhddfile.htm">ds_renhddfile</a>	(Change of hard disk file name of data server)
+	<li><a href="./data/ds_puthddfile.htm">ds_puthddfile</a>	(PUT of hard disk file of data server)
+	<li><a href="./data/ds_mputhddfile.htm">ds_mputhddfile</a>	(MPUT of hard disk file of data server)
+	<li><a href="./data/ds_lputhddfile.htm">ds_lputhddfile</a>	(LIST-PUT of hard disk file of data server)
+	<li><a href="./data/ds_ldelhddfile.htm">ds_ldelhddfile</a>	(LIST-DELETE of hard disk file of data server)
+	<li><a href="./data/ds_makehdddir.htm">ds_makehdddir</a>	(Make hard disk directory of data server)
+	<li><a href="./data/ds_delhdddir.htm">ds_delhdddir</a>		(Delete hard disk directory of data server)
+	<li><a href="./data/ds_chghdddir.htm">ds_chghdddir</a>		(Change of current directory of hard disk of data server)
+	<li><a href="./data/ds_rdhostinfo.htm">ds_rdhostinfo</a>	(Get host login directory information of data server)
+	<li><a href="./data/ds_rdhostdir.htm">ds_rdhostdir</a>		(Get host file list of data server)
+	<li><a href="./data/ds_rdhostdir2.htm">ds_rdhostdir2</a>	(Get host file list of data server(2))
+	<li><a href="./data/ds_delhostfile.htm">ds_delhostfile</a>	(Delete host file of data server)
+	<li><a href="./data/ds_gethostfile.htm">ds_gethostfile</a>	(GET of host file of data server)
+	<li><a href="./data/ds_mgethostfile.htm">ds_mgethostfile</a>	(MGET of host file of data server)
+	<li><a href="./data/ds_lgethostfile.htm">ds_lgethostfile</a>	(LIST-GET of host file of data server)
+	<li><a href="./data/ds_rdresult.htm">ds_rdresult</a>		(Get execution result of function of data server)
+	<li><a href="./data/ds_cancel.htm">ds_cancel</a>		(Stop function for data server)
+	<li><a href="./data/ds_rdncfile.htm">ds_rdncfile</a>		(Input of NC file in data server)
+	<li><a href="./data/ds_rdncfile2.htm">ds_rdncfile2</a>		(Input of NC file in data server(2))
+	<li><a href="./data/ds_wrncfile.htm">ds_wrncfile</a>		(Output of NC file in data server)
+	<li><a href="./data/ds_rddnchddfile.htm">ds_rddnchddfile</a>	(Get hard disk file name of data server for DNC operation)
+	<li><a href="./data/ds_wrdnchddfile.htm">ds_wrdnchddfile</a>	(Set hard disk file name of data server for DNC operation)
+	<li><a href="./data/ds_rddnchostfile.htm">ds_rddnchostfile</a>	(Get host file name of data server for DNC operation)
+	<li><a href="./data/ds_wrdnchostfile.htm">ds_wrdnchostfile</a>	(Set host file name of data server for DNC operation)
+	<li><a href="./data/ds_rdm198hdddir.htm">ds_rdm198hdddir</a>	(Get directory of data server for M198 operation)
+	<li><a href="./data/ds_wrm198hdddir.htm">ds_wrm198hdddir</a>	(Set directory of data server for M198 operation)
+	<li><a href="./data/ds_rdm198host.htm">ds_rdm198host</a>	(Get connected host of data server for M198 operation)
+	<li><a href="./data/ds_wrm198host.htm">ds_wrm198host</a>	(Set connects host of data server for M198 operation)
+	<li><a href="./data/ds_rdhostno.htm">ds_rdhostno</a>		(Get connected host of data server)
+	<li><a href="./data/ds_wrhostno.htm">ds_wrhostno</a>		(Set connects host of data server)
+	<li><a href="./data/ds_rdmntinfo.htm">ds_rdmntinfo</a>		(Get maintenance information of data server)
+	<li><a href="./data/ds_checkhdd.htm">ds_checkhdd</a>		(Chack of hard disk of data server)
+	<li><a href="./data/ds_formathdd.htm">ds_formathdd</a>		(Format of hard disk of data server)
+	<li><a href="./misc/cnc_rdrepeatval.htm">cnc_rdrepeatval</a>	(Read the repeat counter)
+	<li><a href="./misc/cnc_reset2.htm">cnc_reset2</a>		(CNC reset(2))
+	<li><a href="./misc/cnc_rdexecpt.htm">cnc_rdexecpt</a>		(Read execution pointer)
+	<li><a href="./pmc/pmc_rdprmstart.htm">pmc_rdprmstart</a>	(Start uploading PMC parameter)
+	<li><a href="./pmc/pmc_rdpmcparam.htm">pmc_rdpmcparam</a>	(Upload PMC parameter)
+	<li><a href="./pmc/pmc_rdprmend.htm">pmc_rdprmend</a>		(End of uploading PMC parameter)
+	<li><a href="./pmc/pmc_wrprmstart.htm">pmc_wrprmstart</a>	(Start downloading PMC parameter)
+	<li><a href="./pmc/pmc_wrpmcparam.htm">pmc_wrpmcparam</a>	(Download PMC parameter)
+	<li><a href="./pmc/pmc_wrprmend.htm">pmc_wrprmend</a>		(End of downloading PMC parameter)
+	</ul>
+<li>Fwlib160.dll has been amended so that it can read the rotation area interference alarm number 514, 515.
+<li>Fwlib160.dll has been amended so that it can read the CNC parameter number 29000-29999(Laser parameters).
+<li>Fwlib160.dll has been amended so that it can read the diagnosis data number 458-460,680-689.
+<li>The macro message data can be read by cnc_rdopmsg3 of Fwlib160.dll without an external message and an external data input options.
+<li>The read function(<a href="./program/cnc_rdprogdir4.htm">cnc_rdprogdir4</a>) of program directory has been added to Fwlib160.dll and Fwlib0iB.dll.
+<li>Fwlib160.dll has been amended so that it can read the servo alarm number 608-615 and 616-623.
+<li>The extended backup memory of PMC has been supported with Fwlib15i.dll.
+<li>The processing speed of <a href="./misc/cnc_rdexecpt.htm">cnc_rdexecpt</a> and <a href="./program/cnc_rdexecprog.htm">cnc_rdexecprog</a> of Fwlib160.dll has been improved.
+<li>The time for the termination of the CNC Screen Display Function has been shortened at Fwlib160.dll.
+<li>When you called the writing function of the macro while executing the CNC Screen Display Function at FS15i, sometimes the function did not return, has been amended.
+<li>The system error sometimes occurred when cnc_rdcoordnum was executed, has been amended.
+<li>When the input unit was inch, the cnc_getfigure of Fwlib160.dll sometimes returned the incorrect value, has been amended.
+</ul>
+
+
+<h2>Edition 1.14</h2>
+<ul>
+<li>FS0i-Model B has been supported.
+<li>The error message of mmcncd.sys recorded in the event viewer of Windows2000 was not correct, has been amended.
+<li>When PC is restarted with the HSSB board removed from PC of Windows XP in which the HSSB driver was installed, PC has been rebooted, has been amended.
+</ul>
+
+
+<h2>Edition 1.13</h2>
+<ul>
+<li>The data window library can be applied to Windows XP Professional.
+<li>NumLock.exe, which enables to change the state of NumLock key, has been added.
+<li>The read function(<a href="./program/cnc_rdprogdir3.htm">cnc_rdprogdir3</a>) of program directory have been added to Fwlib160.dll and Fwlibpmi.dll.
+<li>The Tool management function of Fwlib160.dll has supported the lathe system.
+<li>Fwlib16W.dll has been amended so that it can read the CNC parameter number 12200-14899.
+<li>Fwlib160.dll has been amended so that it can read the diagnosis data number 710-749.
+<li>Fwlib160.dll has been amended so that it can read the servo alarm number 600-607.
+<li>The read function(<a href="./position/cnc_rdspmeter.htm">cnc_rdspmeter</a>) of spindle load meter has been added to Fwlib160.dll.
+<li>The function(<a href="./misc/cnc_wractpt.htm">cnc_wractpt</a>, <a href="./misc/cnc_rdactpt.htm">cnc_rdactpt</a>) for acquisition/setting of NC program execution pointer has been added to Fwlib160.dll.
+<li>The functions for program number 8 digit have been added to Fwlib0i.dll and Fwlib150.dll.
+<li>The PROFIBUS functions of Fwlib160.dll has supported the Version 09 of the control software(6557 Series) for PROFIBUS.
+<li>Fwlib160.dll has been amended so that it can read the Spindle alarm number 9000 or later.
+<li>When the function of Data Server of Fwlib160.dll was called for Model C, the Bus Error occurred, has been amended.
+<li>The number of digits below the decimal point of F instruction was wrong by cnc_modal, has been amended.
+<li>When "Tool management function" is the "Tool management function 240 pairs" or "Tool management function 1000 pairs", the EW_NOOPT occurs by the function related to the tool management, has been amended.
+<li>When the macro information of embedded macro is read with 'type=2' by cnc_rdprgdir2 at Fwlib160.dll, the correct size is not read or system alarm occurs, has been amended.
+<li>Sometimes Ncboot32 don't delete a macro library file when a conversation macro file is loaded, has been amended.
+</ul>
+
+
+<h2>Edition 1.12</h2>
+<ul>
+<li>The external reset function(<a href="./misc/cnc_reset.htm">cnc_reset</a>) of CNC has been added.
+<li>The function(<a href="./misc/cnc_rdcoordnum.htm">cnc_rdcoordnum</a>) for reading the number of the additional workpiece coordinate systems of the workpiece coordinate systems has been added.
+<li>The function(<a href="./pmc/pmc_rdpmctitle.htm">pmc_rdpmctitle</a>) for reading of PMC title on PMC-SB7 was added.
+<li>When the block of executing program is read by cnc_rdexecprog at Fwlib16w.dll, the extra character may be inserted ahead of '%' at the program end, has been amended.
+<li>There are diagnosis data which can not be read by cnc_diagnosr at FS15i, has been amended.
+<li>When the last diagnosis data is read by cnc_diagnosr at FS15i, the function remains in the deactivated state for a long time, and then returns EW_ATTRIB, has been amended.
+<li>When cnc_rddiaginfo at FS15i reads beyond the last number of diagnosis data, it gets the first data, has been amended.
+<li>When a specific alarm is generated on FS15B and the alarm data is read by cnc_rdalminfo, cnc_rdalmhistry, the wrong data is read, or the application error occurs, has been amended.
+<li>When the path is changed to 2nd path from loader control by cnc_setpath at Fwlib160.dll on the two path and loader control system, the EW_BUS error occurs, has been amended.
+<li>By cnc_rdexecprog at Fwlib160.dll, the contents of the called subprogram can not be acquired, when the subprogram is called from the called program by M98 or M198 of DNC processing,  has been amended.
+<li>When the macro variables are read by using Fwlib16W.dll, the No.200 or later are not able to be read, has been amended.
+<li>When the macro alarm is read by cnc_rdopmsg3 at Fwlib160.dll, the comment message of the CNC program is also read besides the macro alarm, has been amended.
+<li>NCBoot32 and NCBOOTis cannot load the file less than 1024 bytes, has been amended.
+<li>The EW_BUS error might occur if "RESET" key is pushed when the macro alarm is read by cnc_rdalminfo at Fwlib160.dll, has been amended.
+<li>When the machine position of the rotation axis is read by specifying each axis at Fwlib160.dll, the wrong value might be read if the input unit system and the output unit system are different, has been amended.
+<li>NC is hung-up when writing the macro variable etc. are processed in other processes while the NC program was being down-loaded on 15B, has been amended.
+</ul>
+
+
+<h2>Edition 1.11</h2>
+<ul>
+<li>Tool management function has been supported.
+<li>Macro-message reading function has been supported at Fwlib160.dll.
+<li>Constant surface speed control function data (SRPM/SSPM/SMAX) has been supported at Fwlib160.dll.
+<li>When the diagnosis data was read at Fwlib160.dll, the function sometimes failed with return code, EW_BUS. It has been amended.
+<li>At 16i-LA system, it had become impossible to read the parameter information ranged after 15000th, has been amended.
+<li>When the parameter No.12000 or later or No.19000 or later were read at Fwlib160.dll, the NC system might be hung up. It has been amended.
+<li>When the parameter No.1860 was read at the Fwlib160.dll, the read value might be different from the value that is displayed on CNC, has been amended.
+<li>On 16i-M dual path system with cutter compensation B, when the Tool Offset data was read for the 2nd path, an NMI system alarm occurred on CNC, has been amended.
+</ul>
+
+
+<h2>Edition 1.10</h2>
+<ul>
+<li>FS16i/18i/21i-Model B has been supported.
+<li>PMC-SB7(except the PMC-SB7 2 path system) has been supported.
+<li>The F-ROM backup/restore and the S-RAM backup function have been added to Fwlib160.dll.
+<li>When the tool compensation number is set to 400 or 999 on the T system, the functions for reading the tool number of the tool life management at Fwlib160.dll has been amended so as to get the correct value.
+<li>Fwlibpmi.dll has been amended so that it can read the diagnosis data, No.8000-8099, 8100-8199, 8200-8209.
+<li>Fwlibpmi.dll has been amended so that it can read the NC parameter, No.28000-28835, 30000-30099, 30100-30499, 30500-30509.
+<li>Fwlib160.dll has been amended so that the reading alarm information for the spindle alarm can get the detailed alarm(7nxx) when the alarm number 751, 761, 771 and 781 occurred.
+<li>When the following alarms whose specification was changed on the CNC side occur, the reading alarm information function of Fwlib160.dll gets also the old alarm number, has been amended.
+	<ul>
+	    Alarm No.350,351,400,414,416
+	</ul>
+<li>Fwlib160.dll has been amended so that it can read the following servo alarm numbers.
+	<ul>
+	    No.330,331,387,406,407,409,422,423,450-459,468-484,486-492,494-498
+	</ul>
+<li>Fwlib160.dll has been amended so that it can read the PS alarm number 5400 or later.
+<li>Fwlib160.dll has been amended so that it can read the diagnosis data number 690-699, 700 or later.
+<li>Fwlib160.dll has been amended so that it can read the CNC parameter number 14900-14999, 19500-19999.
+<li>When the NC program is uploaded by using Fwlib160.dll, Fwlib0i.dll, Fwlibpmi.dll, every ':' in the NC program is converted to 'O' though NC parameter 3205#0(COL) was set to one.  It has been amended.
+<li>NCBOOT32.EXE has been amended so that the function, "Start up the registered application program", which had been impossible at PC reboot by the update of version 2.12, is recovered.  (Corrected version is 2.14.)
+<li>When the operation history data is read by using Fwlib160.dll or Fwlib0i.dll, the No.128,1128,2128 or later of G/F signals can not be read. It has been amended.
+</ul>
+
+
+<h2>Edition 1.9</h2>
+<ul>
+<li>FS0i has been supported.
+<li><a href="./pmc/pmc_rdalmmsg.htm">pmc_rdalmmsg</a> function which reads the alarm messages from PMC has been added.
+<table class=dd>
+	<tr><td>FWLIB150.DLL <td> : <td>Processing library for 15-B		</tr>
+	<tr><td>FWLIB15i.DLL <td> : <td>Processing library for 15i		</tr>
+	<tr><td>FWLIB160.DLL <td> : <td>Processing library for 16/18/21	</tr>
+	<tr><td>FWLIB16W.DLL <td> : <td>Processing library for 16i/18i-W	</tr>
+	<tr><td>FWLIBPMi.DLL <td> : <td>Processing library for Power Mate i-D/H	</tr>
+</table>
+<li>65-key keyboard for FS16i/18i/21i/15i and keyboard for FS16i/18i-W has been supported by MDI Keyboard driver.
+<li>On FS15i, when it reads G-code of group number 27 by cnc_rdgocde, function returns EW_NUMBER(3) error, has been amended.
+<li>The MDI keyboard driver for Windows 95 has been improved so that when Ctrl+Alt+Del keys are pressed, the dialogue box which inquires the existence of pointing device will be displayed.
+<li>On FS15i, in case of reading about 100 NC program numbers with name(comment) by cnc_rdprogdir2, it takes more than 30 seconds, has been amended.
+<li>On FS15i, when the NC power is turned off during the execution of cnc_allclibhndl, an application calling it is terminated abnormally,
+  has been amended.
+<li>On FS15i, when an input/output device number specified by NC parameter is invalid, downloading/uploading function is hung up, has been amended.
+<li>On FS15i, when a data window function is called during downloading/uploading, downloading/uploading is never finished, has been amended.
+<li>When any data window function is called at power on of FS15i, the common RAM parity of HSSB occurs (at NC side, it is displayed as system alarm), has been amended.
+<li>On FS15i, when the KEY2 signal is zero, cnc_wrmacro returns with error EW_PROT(=7) and cannot write a macro variable, has been amended.
+<li>At cnc_wavestat function for 16/18/21, the sampling status does not become 1 after executing the start of one shot type wave diagnosis until CNC starts the real sampling, has been amended.
+<li>When FS15i has many NC programs and then cnc_rdprogdir is executed, the access violation occurs, has been amended.
+</ul>
+
+
+<h2>Edition 1.8</h2>
+<ul>
+<li>The HSSB driver and MDI key driver are available at Windows 2000 professional.
+<li>FS16i/18i-W has been supported.
+<li>The following functoins have been added to Fwlib15i.dll.
+	<ul>
+	<li>Internal position compensation
+	<li>HPCC
+	<li>Fixture offset
+	<li>Servo, spindle, and waveform diagnose
+	<li>History data
+	<li>Timer data
+	</ul>
+<li>When the laser alarm over No.4500 occurred, cnc_rdalminfo cannot get the correct information, has been amended.
+<li>When number of parameter is read by Fwlib160.dll, the incorrect number might be read.  It has been amended.
+<li>When NC parameter 1403#0(MIF:Minimum unit of F-command at feed per minute) is 1 at 16/18/21, reading modal data function(cnc_modal) gets the  feedrate with being increased by 1,000 times, has been amended.
+<li>In case of i series, when cnc_wrlprcprc function of Fwlib160.dll is used, the incorrect data was read.  It has been amended.
+<li>When PMC_SE is used, EW_VERSION might occur by cnc_allclibhndl function in Fwlib160.dll.  It has been amended.
+<li>The access speed of integer type P-code macro variable is improved.
+<li>cnc_rdsyssoft of Fwlib15i.dll returns logical slot number and physical slot number conversely, has been amended.
+<li>In NCBOOT32, when the thermal error of the hard disk occurred, its error message does not appear, has been amended.
+</ul>
+
+
+<h2>Edition 1.7</h2>
+<ul>
+<li>The reading functions of the operation history data for Fwlib160.dll have been improved so as to get data more rapidly.
+	<ul>
+  (cnc_rdophisno, cnc_rdophistry)
+	</ul>
+<li>At 'Read alarm history data(cnc_rdalmhistry)' of Fwlib160.dll, the character string for the external/macro alarm could get as only "External alarm" and "Macro alarm", has been amended.
+<li>In case that the NC program stored on NC's memory has the special character (') at the special location, when 'Read program directory(cnc_rdprogdir)' of Fwlib150.dll is executed, the error EW_DATA is returned, has been amended.
+<li>Fwlib15i.dll has been corrected so as not to change the current directory into 'Fwlib' directory under Windows.
+<li>MDI keyboard driver has been improved so that it can select the newly created keyboards(56-key type/61-key type).
+<li>When a real parameter whose setting depends on the reference axis is read by cnc_rdparam() of Fwlib15i.dll, its minimum unit is not correct. It has been amended.
+<li>Cnc_rdopmsg() of Fwlib15i.dll cannot read macro messages. It has been amended.
+<li>Cnc_rdmacror of Fwlib160.dll sometimes fails to read the macro variables correctly, has been amended.
+<li>When the NCBOOT32.EXE is executed on FS15i which has the FANUC Ethernet board, CNC falls into the system alarm, has been amended.
+<li>The writing MDI program function (cnc_wrmdiprog) of Fwlib160.dll sometimes hangs up while its execution, has been amended.
+<li>The reading function of alarm information (cnc_rdalminfo) of Fwlibpmi.dll cannot read the information for alarm number 309, has been amended.
+<li>Fwlib150.dll has been improved so as to support "Get/Set calendar timer of CNC" functions (<a href="./misc/cnc_gettimer.htm">cnc_gettimer()</a>, <a href="./misc/cnc_settimer.htm">cnc_settimer()</a>).
+</ul>
+
+
+<h2>Edition 1.6</h2>
+<ul>
+<li>FS15i has been supported.
+<li>PCI HSSB interface board has been supported.
+<li>The function description of Power Mate i is included into the Data window library function specification.  So, the library function description of Power Mate i is not attached.
+<li>NCBOOT32.EXE terminates if it was invoked by Windows before the completion of the initialization of HSSB driver, has been amended.
+<li>The servo alarm information cannot be read correctly by using cnc_rdalminfo() at the multi-axis FS15-B, has been amended.
+<li>In case of FS15-B system for the DNC operation, when application attempts to send the NC program for DNC after only NC was started and reset previously, cnc_dnc()/cnc_cdnc() returns error. It has been amended.
+<li>In case of FS16/18 with loader control, when custom macro variables are set common between tool paths by the parameter 6036, 6037, cnc_rdmacro()/cnc_wrmacro() cannot handle the macro variables on the loader side.
+<li>At 16i-LA system, it is impossible to read the parameters ranged after 15000th, has been amended.
+<li>Data window library cannot work at the PC system where Windows NT 4 Service Pack 4 is applied. It has been amended.
+</ul>
+
+
+<h2>Edition 1.5</h2>
+<ul>
+<li>The Power Mate i-H and the Power Mate i-D are supported.
+<li>Ncboot32.exe: The function to notify the application program of the HSSB communication error was added. (Refer to the ncboot32.doc for the details)
+<li>MDI key driver: When RESET key of the MDI was pushed, the PC inputs "0". It has been amended.
+<li>Fwlib32.txt: The mistake of description about variable(cnc_macro_type) was corrected.
+<li>FS160: cnc_rdgrpid2(), cnc_rd1tlifedat2() and cnc_wr1tlifedat2() has been added.
+<li>FS160: The function of T code 8 digit of tool life management is supported.
+<li>FS160: The imaginary tool nose position and the offset data of the negative value are not read rightly at the read of tool offset, when the parameter number 5006#0 is '1'.  It has been amended.
+<li>FS160: P code macro variable is not read rightly on the sub side of i series of 2-path systems.  It has been amended.
+<li>FS160: New servo alarm, APC alarm, and OT alarm are supported.
+<li>FS160: The Data Window library has been improved so that the problem should not occur when the power supply of CNC is turned off while executing the library.
+<li>FS160: If the read function of executing program(cnc_rdexecprog) was used, the pointer of NC data was not correct. It has been amended.
+<li>FS160: When the read function of executing program(cnc_rdexecprog) was executed to the program which was read-protected, the contents of the program could be gotten. It has been amended.
+<li>FS160: On the 8 digit function of program number, though the parameter number 3204#3 or #4 is '1', the read-protected program can be read. It has been amended.
+<li>FS160: There were alarm numbers and the diagnosis data which could not be acquired. It has been amended.
+	<ul>
+  Parameter number 309,508,509,764,771-774,781-784 
+	</ul>
+	<ul>
+  Diagnosis data number 430-444, 445-449, 550-553, 560, 570-580
+	</ul>
+<li>FS160: The parameter number from No.12000 to 12999 could not be read. It has been amended.
+<li>FS160: In the machine of inch system, the data of number of digits below decimal point of output unit was not correct. It has been amended.
+<li>FS160: When the DNC operation was executed, the function(cnc_cdnc) occasionally returns "Reset or stop request".  It has been amended.
+<li>FS150: cnc_dncstart2(), cnc_dnc2(), cnc_dncend2() and cnc_rddncdgndt() has been added.
+<li>FS150: Something wrong with the cnc_rdprgdir2() function has been amended.
+<li>FS150: The Data Window library has been improved so that the problem should not occur when the power supply of CNC is turned off while executing the library.
+<li>FS150: The function for HSSB multi-connection was added.
+<li>PM: When the rotary switch is set to position '1' on Model D and the machine was turning on, the library functions return '-8'. It has been amended.
+<li>PM: The mistake of header file for VB was corrected.
+<li>PM: Something wrong with the cnc_rddynamic() function has been amended.
+<li>PM: Something wrong with the cnc_rddiaginfo() function has been amended.
+<li>PM: The function description related to the macro of fwlibpmj.txt was corrected.
+<li>PM: The description related to the tool offset of fwlibpmj.txt has been added.
+<p>P.S.) The mistake of description for the function about "global variable" was corrected.
+</ul>
+</ul>
+
+
+<h2>Edition 1.4</h2>
+<ul>
+<li>The Power Mate-H and the Power Mate-D are supported.
+<li>The MDI key driver is added.
+<li>The 16 bit version drivers for the i-series are deleted.
+<li>The contents of memory of CNC dump utility is added.
+<li>The option setting utility is added.
+</ul>
+
+
+<h2>Edition 1.3</h2>
+<ul>
+<li>The driver and the data window library can be applied to Windows NT.
+<li>The 16 bit version maintenance screen has been eliminated.
+<li>The trouble that pmc_wrcntldata() returns error 5, even if correct arguments is given, has been amended.
+<li>FS160: The eight digits NC program number has been supported.
+<li>FS160: The trouble that the P-code macro READ/WRITE functions cause the abnormal termination, when 20000th P-code macro is set to floating-point type, has been amended.
+<li>FS160: The trouble that cnc_rdmacror(), cnc_wrmacror(),  cnc_rdpmacror() and cnc_wrpmacror() does not return any error, even if the data length given by the argument is shorter than necessary data length, has been amended.
+<li>FS160: The trouble that cnc_rdprgdir2() does not return any error, even if a negative value is given as the number of data, has been amended.
+<li>FS160: The cnc_rdexecprog() has been improved in order to read the program running by DNC or RISC operation.
+<li>FS150: The trouble that sometimes the cnc_rdtofsr() returns error 1 has been amended.
+</ul>
+
+
+<h2>Edition 1.2</h2>
+<ul>
+<li>The HSSB multi-connection has been supported. (in PC environment)
+<li>The 16 bit version drivers (HSSBSYS.EXE, ITSYS.EXE, NCBOOT.EXE) became unnecessary. (in PC environment)
+<li>There were two types of FWLIB32.DLL, for FS15 and for FS16. From this edition, FWLIB32.DLL has become an integrated DLL, it uses FWLIB150.DLL and FWLIB160.DLL.
+<li>FS16i/18i/21i have been supported. But, the HSSB multi-connection is not available on them, and the 16 bit driver is necessary for them.
+<li>FS150: The data window library has been applied to the 24 axes system.
+<li>FS150: The cnc_rdpitchr() fails to read the data when NC is the multi-axes system, has been amended.
+<li>FS160: The cnc_rdmdlconfig2() has been added.
+<li>FS160: New functions for Punch Press have been developed.
+<li>FS160: At the high speed DNC mode, the cnc_dnc() sent wrong data to NC, has been amended.
+</ul>
+
+
+<h2>Edition 1.1</h2>
+<ul>
+<li>The data window library has been applied to FS15B.
+</ul>
+
+
+<h2>Edition 1.0</h2>
+<ul>
+<li>New creation
+</ul>
+
+
+<!---------------------------------------------------------------------------->
+<h2><a name="UpDateEther">Update History of FOCAS1/Ethernet Library (Old Drawing No.:A02B-0207-K732)</a></h2>
+
+<h2>Edition 1.9</h2>
+<ul>
+<li>FS16i/18i-W has been supported.
+<li>It was confirmed that Microsoft Visual C# .NET and Visual Basic.NET have been available.
+<li>The control sometimes did not return from cnc_dwnend3 when the NC program was down loaded by FOCAS1 for the Fast Ethernet when the program of the same number has been registered, has been amended.
+</ul>
+
+<h2>Edition 1.8</h2>
+<ul>
+<li>FS0i-B has been supported.
+</ul>
+
+<h2>Edition 1.7</h2>
+<ul>
+<li>The data window library can be applied to Windows XP Professional.
+<li>The Unsolicited Messaging Function has been added to Fwlibe1.dll.
+<li>The Tool management function for FS16i/18i has supported the lathe system.
+<li>The function(<a href="./misc/cnc_wractpt.htm">cnc_wractpt</a>, <a href="./misc/cnc_rdactpt.htm">cnc_rdactpt</a>) for acquisition/setting of NC program execution pointer for FS16i/18i/21i has been added.
+<li>When "Tool management function" is the "Tool management function 240 pairs" or "Tool management function 1000 pairs", the EW_NOOPT occurs by the function related to the tool management, has been amended.
+</ul>
+
+<h2>Edition 1.6</h2>
+<ul>
+<li>The following function are added.
+	<ul>
+	<li><a href="./misc/cnc_rdcoordnum.htm">cnc_rdcoordnum</a>
+	<li><a href="./misc/cnc_rdetherinfo.htm">cnc_rdetherinfo</a>
+	<li><a href="./position/cnc_rdspcss.htm">cnc_rdspcss</a>
+	<li><a href="./pmc/pmc_rdpmctitle.htm">pmc_rdpmctitle</a>
+	</ul>
+</ul>
+
+<h2>Edition 1.5</h2>
+<ul>
+<li>Tool management function has been supported.
+	<ul>
+	<li><a href="./toolmng/cnc_regtool.htm">cnc_regtool</a>
+	<li><a href="./toolmng/cnc_deltool.htm">cnc_deltool</a>
+	<li><a href="./toolmng/cnc_rdtool.htm">cnc_rdtool</a>
+	<li><a href="./toolmng/cnc_wrtool.htm">cnc_wrtool</a>
+	<li><a href="./toolmng/cnc_wrtool2.htm">cnc_wrtool2</a>
+	<li><a href="./toolmng/cnc_regmagazine.htm">cnc_regmagazine</a>
+	<li><a href="./toolmng/cnc_delmagazine.htm">cnc_delmagazine</a>
+	<li><a href="./toolmng/cnc_rdmagazine.htm">cnc_rdmagazine</a>
+	<li><a href="./toolmng/cnc_wrmagazine.htm">cnc_wrmagazine</a>
+	</ul>
+<li>NC data protection function has been supported.
+	<ul>
+	<li><a href="./misc/cnc_getlockstat.htm">cnc_getlockstat</a>
+	<li><a href="./misc/cnc_chgprotbit.htm">cnc_chgprotbit</a>
+	</ul>
+<li>The FROM data backeup/restore and SRAM data backup functions have been added.	<ul>
+	<li><a href="./misc/cnc_getfrominfo.htm">cnc_getfrominfo</a>
+	<li><a href="./misc/cnc_fromgetstart.htm">cnc_fromgetstart</a>
+	<li><a href="./misc/cnc_fromget.htm">cnc_fromget</a>
+	<li><a href="./misc/cnc_fromgetend.htm">cnc_fromgetend</a>
+	<li><a href="./misc/cnc_fromputstart.htm">cnc_fromputstart</a>
+	<li><a href="./misc/cnc_fromput.htm">cnc_fromput</a>
+	<li><a href="./misc/cnc_fromputend.htm">cnc_fromputend</a>
+	<li><a href="./misc/cnc_fromremove.htm">cnc_fromremove</a>
+	<li><a href="./misc/cnc_getsraminfo.htm">cnc_getsraminfo</a>
+	<li><a href="./misc/cnc_sramgetstart.htm">cnc_sramgetstart</a>
+	<li><a href="./misc/cnc_sramget.htm">cnc_sramget</a>
+	<li><a href="./misc/cnc_sramgetend.htm">cnc_sramgetend</a>
+	</ul>
+<li>The read/write functions for the SRAM variable area for the C-language executor have been added.
+	<ul>
+	<li><a href="./misc/cnc_rdcexesram.htm">cnc_rdcexesram</a>
+	<li><a href="./misc/cnc_wrcexesram.htm">cnc_wrcexesram</a>
+	<li><a href="./misc/cnc_cexesramsize.htm">cnc_cexesramsize</a>
+	</ul>
+<li>Any functions sometimes freeze when they write data to the log file, has been amended.
+</ul>
+
+<h2>Edition 1.4</h2>
+<ul>
+<li>Function which reads the alarm messages from PMC has been added.
+	<ul>
+	<li><a href="./pmc/pmc_rdalmmsg.htm">pmc_rdalmmsg</a>
+	</ul>
+<li>P code macro variables cannot be read correctly by using cnc_rdpmacro or cnc_rdpmacror, when the binary form floating-point type is specified as the type of variables, has been amended.
+<li>cnc_rdparam_ext function returns -17, when more than 10 number is specified as number of read parameters of FS15i, has been amended.
+</ul>
+
+<h2>Edition 1.3</h2>
+<ul>
+<li>FS15i has been supported.
+<li>Compound Machining Function for FS16i/18i has been supported.
+<li>The data window library can be applied to Windows 2000 Professional.
+<li>When an Ethernet communication error occurs during the execution of FOCAS1/Ethernet functions, an illegal memory access operation occurs, has been amended.
+<li>When a thread is waiting for socket connection by executing cnc_allclibhndl3 and cnc_allclinhndl3 is called in another thread, the socket connection on latter thread cannot be achieved, has been amended.
+</ul>
+
+<h2>Edition 1.2</h2>
+<ul>
+<li>Add functions that are related to PUNCH PRESS/LASER.
+<li>The value "-0.001" is written to the macro variable using cnc_wrmacro function, "0.0009531" is set on the CNC side, has been amended.
+</ul>
+
+<h2>Edition 1.1</h2>
+<ul>
+<li>The following function are added.
+	<ul>
+	<li><a href="./position/cnc_rdhndintrpt.htm">cnc_rdhndintrpt</a>
+	<li><a href="./ncdata/cnc_rdparam_ext.htm">cnc_rdparam_ext</a>
+	<li><a href="./toollife/cnc_rdtlinfo.htm">cnc_rdtlinfo</a>
+	<li><a href="./toollife/cnc_rdtlusegrp.htm">cnc_rdtlusegrp</a>
+	<li><a href="./toollife/cnc_rdtlgrp.htm">cnc_rdtlgrp</a>
+	<li><a href="./toollife/cnc_rdtltool.htm">cnc_rdtltool</a>
+	<li><a href="./misc/cnc_rdalmmsg.htm">cnc_rdalmmsg</a>
+	<li><a href="./misc/cnc_rddiag_ext.htm">cnc_rddiag_ext</a>
+	<li><a href="./misc/cnc_rdspdlname.htm">cnc_rdspdlname</a>
+	</ul>
+<li>In the cnc_rdsyssoft function, the area of software's series and version that doesn't exist is not cleared by 0, has been amended.
+<li>In the cnc_rdmacroinfo function, the indicator of available macro variables is always returned as 0, has been amended.
+</ul>
+
+<h2>Edition 1.0</h2>
+<ul>
+<li>New creation
+</ul>
+
+<hr>
+
+<p><a href="fwlib32.htm">Top Page</a></p>
+</body>
+</html>

@@ -1,0 +1,722 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdsetinfo</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdsetinfo(unsigned short FlibHndl, short s_number, unsigned short read_no, ODBSETIF *setif);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Reads the CNC setting data information specified by "s_number" and "read_no".</p>
+
+            <p>The CNC setting data is basically non-continuous, and the attribute like the type and the size, etc. is different at each number. Use this function for the purpose such as displaying the setting data.</p>
+
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_number</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the start setting data number.</p>
+                    </content>
+                </item>
+                <item>
+                    <name>read_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the number of the setting data information to be read.</p>
+                    </content>
+                </item>
+                <item>
+                    <name>setif</name>
+                    <type>out</type>
+                    <content>
+                        <p>Pointer to the ODBSETIF structure including the setting data information. The ODBSETIF structure is as follows.</p>
+
+<pre>
+typedef struct odbsetif {
+    unsigned short info_no ;  /* number of setting data information */
+    short       prev_no ;         /* previous setting data number */
+    short       next_no ;         /* next setting data number */
+    struct {
+        short   set_no ;          /* setting data number */
+        short   set_type ;        /* attribute of setting data */
+    } info[N] ;     /* N is number of setting data information */
+} ODBSETIF ;
+</pre>
+
+                        <dl>
+                            <dt>info_no</dt>
+                            <dd>Number of setting data information <br/>Number of the setting data information which has been read actually.</dd>
+                            <dt>prev_no</dt>
+                            <dd>Previous setting data number <br/>Previous effective number of the setting data information which has been read first.</dd>
+                            <dt>next_no</dt>
+                            <dd>Next setting data number <br/>Next effective number of the setting data information which has been read last.</dd>
+                            <dt>info[N].set_no</dt>
+                            <dd>Setting data number <br/>The setting data number which exists actually.</dd>
+                            <dt>info[N].set_type</dt>
+                            <dd>Attribute of setting data <br/>The following attributes are set.</dd>
+                            <dd>
+                                <ul>
+                                    <br/>
+                                    <li>Series 15, 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i</li>
+                                    <table>
+                                        <colgroup valign="top" width="60">
+                                        <colgroup valign="top">
+                                        <colgroup valign="top">
+                                        <tr>
+                                            <td>bit 0, 1</td>
+                                            <td>:</td>
+                                            <td>type attribute
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>bit type</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>byte type</td></tr>
+                                                    <tr><td>2</td><td>:</td><td>word type </td></tr>
+                                                    <tr><td>3</td><td>:</td><td>2-word type</td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 2</td><td>:</td><td>axis attribute 
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>without axis</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>with axis</td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 3</td>
+                                            <td>:</td>
+                                            <td>sign ( Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i )
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>with sign</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>without sign</td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 4</td>
+                                            <td>:</td>
+                                            <td>settings input 
+                                                <table class="dd">
+                                                    <tr><td>(always)1</td><td>:</td><td>enable </td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 5</td>
+                                            <td>:</td>
+                                            <td>write protection
+                                                <table class="dd">
+                                                    <tr><td>(always)0</td><td>:</td><td>enable </td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 6</td>
+                                            <td>:</td>
+                                            <td>power must be off after writing
+                                                <table class="dd">
+                                                    <tr><td>(always)0</td><td>:</td><td>disable</td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 7</td>
+                                            <td>:</td>
+                                            <td>read protection 
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>enable</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>disable</td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 8</td>
+                                            <td>:</td>
+                                            <td>spindle parameter ( Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i )
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>no spindle</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>spindle</td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 9,..,15</td>
+                                            <td>:</td>
+                                            <td>(reserve)</td>
+                                        </tr>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                    </table>
+                                    <br/>
+                                    <li>Series 15i</li>
+                                    <table>
+                                        <colgroup valign="top" width="70">
+                                        <colgroup valign="top">
+                                        <colgroup valign="top">
+                                        <tr>
+                                            <td>bit 0, 1</td>
+                                            <td>:</td>
+                                            <td>(reserve)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 2</td>
+                                            <td>:</td>
+                                            <td>axis attribute 
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>without axis</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>with axis</td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 3</td>
+                                            <td>:</td>
+                                            <td>(reserve)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 4</td>
+                                            <td>:</td>
+                                            <td>settings input 
+                                                <table class="dd">
+                                                    <tr><td>(always) 1</td><td>:</td><td>enable </td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 5</td>
+                                            <td>:</td>
+                                            <td>write protection
+                                                <table class="dd">
+                                                    <tr><td>(always) 0</td><td>:</td><td>enable </td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 6</td>
+                                            <td>:</td>
+                                            <td>power must be off after writing
+                                                <table class="dd">
+                                                    <tr><td>(always) 0</td><td>:</td><td>disable</td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 7</td>
+                                            <td>:</td>
+                                            <td>read protection 
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>enable</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>disable</td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 8</td>
+                                            <td>:</td>
+                                            <td>spindle parameter 
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>no spindle</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>spindle</td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 9,..,11</td>
+                                            <td>:</td>
+                                            <td>type attribute
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>bit type</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>byte type</td></tr>
+                                                    <tr><td>2</td><td>:</td><td>word type </td></tr>
+                                                    <tr><td>3</td><td>:</td><td>2-word type</td></tr>
+                                                    <tr><td>4</td><td>:</td><td>real type</td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 12,..,15</td><td>:</td><td>(reserve)</td>
+                                        </tr>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                    </table>
+                                    <br/>
+                                    <li>Series 30i, 0i-D/F, PMi-A</li>
+                                    <table>
+                                        <colgroup valign="top" width="70">
+                                        <colgroup valign="top">
+                                        <colgroup valign="top">
+                                        <tr>
+                                            <td>bit 0, 1</td>
+                                            <td>:</td>
+                                            <td>type attribute
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>bit type</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>byte type</td></tr>
+                                                    <tr><td>2</td><td>:</td><td>word type </td></tr>
+                                                    <tr><td>3</td><td>:</td><td>2-word type or real type</td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 2</td>
+                                            <td>:</td>
+                                            <td>array type attribute 
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>except array type</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>array type</td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 3</td>
+                                            <td>:</td>
+                                            <td>sign 
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>with sign</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>without sign</td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 4</td>
+                                            <td>:</td>
+                                            <td>settings input
+                                                <table class="dd">
+                                                    <tr><td>(always) 1</td><td>:</td><td>enable</td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 5</td>
+                                            <td>:</td>
+                                            <td>write protection
+                                                <table class="dd">
+                                                    <tr><td>(always) 0</td><td>:</td><td>enable</td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 6</td>
+                                            <td>:</td>
+                                            <td>power must be off after writing 
+                                                <table class="dd">
+                                                    <tr><td>(always) 0</td><td>:</td><td>disable</td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 7</td>
+                                            <td>:</td>
+                                            <td>read protection
+                                                <table class="dd">
+                                                    <tr><td>(always)0</td><td>:</td><td>enable</td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 8</td>
+                                            <td>:</td>
+                                            <td>spindle parameter
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>no spindle</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>spindle</td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 9,..,11</td><td>:</td><td>(reserve)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 12</td>
+                                            <td>:</td>
+                                            <td>in case of type attribute = 3
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>except real type</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>real type</td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 13,..,15</td><td>:</td><td>(reserve)</td>
+                                        </tr>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                    </table>
+                                </ul>
+                            </dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+
+        <is>
+            <hssb>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>s_number</name>
+                        <type>in</type>
+                        <content>
+                            <p>Specify the start setting data number.</p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>read_no</name>
+                        <type>in</type>
+                        <content>
+                            <p>Specify the number of the setting data information to be read.</p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>setif</name>
+                        <type>out</type>
+                        <content>
+                            <p>Pointer to the ODBSETIF structure including the setting data information. The ODBSETIF structure is as follows.</p>
+
+<pre>
+typedef struct odbsetif {
+    unsigned short info_no ;  /* number of setting data information */
+    short       prev_no ;         /* previous setting data number */
+    short       next_no ;         /* next setting data number */
+    struct {
+        short   set_no ;          /* setting data number */
+        short   set_type ;        /* attribute of setting data */
+    } info[N] ;     /* N is number of setting data information */
+} ODBSETIF ;
+</pre>
+
+                            <dl>
+                                <dt>info_no</dt>
+                                <dd>Number of setting data information <br/>Number of the setting data information which has been read actually.</dd>
+                                <dt>prev_no</dt>
+                                <dd>Previous setting data number <br/>Previous effective number of the setting data information which has been read first.</dd>
+                                <dt>next_no</dt>
+                                <dd>Next setting data number <br/>Next effective number of the setting data information which has been read last.</dd>
+                                <dt>info[N].set_no</dt>
+                                <dd>Setting data number <br/>The setting data number which exists actually.</dd>
+                                <dt>info[N].set_type</dt>
+                                <dd>Attribute of setting data <br/>The following attributes are set.</dd>
+                                <dd>
+                                    <table>
+                                        <colgroup valign="top" width="70">
+                                        <colgroup valign="top">
+                                        <colgroup valign="top">
+                                        <tr>
+                                            <td>bit 0, 1</td>
+                                            <td>:</td>
+                                            <td>type attribute
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>bit type</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>byte type</td></tr>
+                                                    <tr><td>2</td><td>:</td><td>word type </td></tr>
+                                                    <tr><td>3</td><td>:</td><td>2-word type or real type</td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 2</td>
+                                            <td>:</td>
+                                            <td>array type attribute 
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>except array type</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>array type</td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 3</td>
+                                            <td>:</td>
+                                            <td>sign 
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>with sign</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>without sign</td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 4</td>
+                                            <td>:</td>
+                                            <td>settings input
+                                                <table class="dd">
+                                                    <tr><td>(always) 1</td><td>:</td><td>enable</td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 5</td>
+                                            <td>:</td>
+                                            <td>write protection
+                                                <table class="dd">
+                                                    <tr><td>(always) 0</td><td>:</td><td>enable</td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 6</td>
+                                            <td>:</td>
+                                            <td>power must be off after writing 
+                                                <table class="dd">
+                                                    <tr><td>(always) 0</td><td>:</td><td>disable</td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 7</td>
+                                            <td>:</td>
+                                            <td>read protection
+                                                <table class="dd">
+                                                    <tr><td>(always)0</td><td>:</td><td>enable</td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 8</td>
+                                            <td>:</td>
+                                            <td>spindle parameter
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>no spindle</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>spindle</td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 9,..,11</td><td>:</td><td>(reserve)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 12</td>
+                                            <td>:</td>
+                                            <td>in case of type attribute = 3
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>except real type</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>real type</td></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 13,..,15</td><td>:</td><td>(reserve)</td>
+                                        </tr>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                    </table>
+                                </dd>
+                            </dl>
+                        </content>
+                    </item>
+                </vc>
+            </hssb>
+        </is>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                Data number error<br/>Start setting data number (s_number) is wrong.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+        <add><b></b></add>
+
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdset</name>
+            <file>ncdata/cnc_rdset.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrset</name>
+            <file>ncdata/cnc_wrset.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdsetr</name>
+            <file>ncdata/cnc_rdsetr.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrsets</name>
+            <file>ncdata/cnc_wrsets.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdsetnum</name>
+            <file>ncdata/cnc_rdsetnum.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>etb_rdparam</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI etb_rdparam(unsigned short FlibHndl, short type , IODBETP *param); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                Get the parameter of ethernet board.
+                The following parameter can be acquired by this function.
+            </p>
+            <ul type="disc">
+                <li>Parameter for TCP/IP</li>
+                <li>Parameter for connected host</li>
+                <li>Parameter for FTP server</li>
+                <li>Parameter for Ethernet function</li>
+            </ul>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <hssb>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the parameter type which wants to be acquired.
+                            Specify the following type.
+                        </p>
+                        <table border="0">
+                            <tr> <td>0</td><td>:</td><td>Parameter for TCP/IP</td> </tr>
+                            <tr> <td>1</td><td>:</td><td>Parameter for connected host (for server No.1)</td> </tr>
+                            <tr> <td>2</td><td>:</td><td>Parameter for connected host (for server No.2)</td> </tr>
+                            <tr> <td>3</td><td>:</td><td>Parameter for connected host (for server No.3)</td> </tr>
+                            <tr> <td>4</td><td>:</td><td>Parameter for FTP server</td> </tr>
+                            <tr> <td>5</td><td>:</td><td>Parameter for ethernet function</td> </tr>
+                        </table>
+                    </content>
+                </item>
+                <item>
+                    <name>param</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Specify the pointer to IODBETP structure to store the acquired parameter.
+                            IODBETP structure is as follows.
+                        </p>
+<pre>
+typedef struct _iodbetp {
+    short       ParameterType;
+    union {
+        TCPPRM  tcp;
+        HOSTPRM host;
+        FTPPRM  ftp;
+        ETBPRM  etb;
+    } prm;
+} ETBPARAM;
+
+typedef struct _tcpprm {
+    char    OwnIPAddress[16];
+    char    SubNetMask[16];
+    char    RouterIPAddress[16];
+} TCPPRM;
+
+typedef struct _hostprm {
+    unsigned short  DataServerPort;
+    char            DataServerIPAddress[16];
+    char            DataServerUserName[32];
+    char            DataServerPassword[32];
+    char            DataServerLoginDirectory[128];
+} HOSTPRM;
+
+typedef struct _ftpprm {
+    char    FTPServerUserName[32];
+    char    FTPServerPassword[32];
+    char    FTPServerLoginDirectory[128];
+} FTPPRM;
+
+typedef struct _etbprm {
+    char    OwnMACAddress[13];
+    short   MaximumChannel;
+    short   HDDExistence;
+    short   NumberOfScreens;
+} ETBPRM;
+
+</pre>
+                        <dl>
+                            <p>
+                                <dt>param.ParameterType</dt>
+                                <dd>The value of specified parameter(type) by argument of this function is set.</dd>
+                            </p>
+                            <p>
+                                <dt>param.tcpprm.OwnIPAddress[16]</dt>
+                                <dd>IP address of CNC</dd>
+                                <dd>The Ascii string less than 16 characters which included NULL is set.</dd>
+                            </p>
+                            <p>
+                                <dt>param.tcpprm.SubNetMask[16]</dt>
+                                <dd>Mask address of IP address on Network</dd>
+                                <dd>The Ascii string less than 16 characters which included NULL is set.</dd>
+                            </p>
+                            <p>
+                                <dt>param.tcpprm.RouterIPAddress[16]</dt>
+                                <dd>IP address of router</dd>
+                                <dd>The Ascii string less than 16 characters which included NULL is set.</dd>
+                            </p>
+                            <p>
+                                <dt>param.hostprm.DataServerPort</dt>
+                                <dd>The port number for the DATA SERVER.</dd>
+                            </p>
+                            <p>
+                                <dt>param.hostprm.DataServerIPAddress[16]</dt>
+                                <dd>IP address of host computer</dd>
+                                <dd>The Ascii string less than 16 characters which included NULL is set.</dd>
+                            </p>
+                            <p>
+                                <dt>param.hostprm.DataServerUserName[32]</dt>
+                                <dd>Username for login to the host computer.</dd>
+                                <dd>The Ascii string less than 32 characters which included NULL is set.</dd>
+                            </p>
+                            <p>
+                                <dt>param.hostprm.DataServerPassword[32]</dt>
+                                <dd>Password for login to the host computer.</dd>
+                                <dd>The Ascii string less than 32 characters which included NULL is set.</dd>
+                            </p>
+                            <p>
+                                <dt>param.hostprm.DataServerLoginDirectory[128]</dt>
+                                <dd>Directory name for login to the host computer.</dd>
+                                <dd>The Ascii string less than 128 characters which included NULL is set.</dd>
+                            </p>
+                            <p>
+                                <dt>param.ftpprm.FTPServerUserName[32]</dt>
+                                <dd>User name for host computer to login to DATA SERVER.</dd>
+                                <dd>The Ascii string less than 32 characters which included NULL is set.</dd>
+                            </p>
+                            <p>
+                                <dt>param.ftpprm.FTPServerPassword[32]</dt>
+                                <dd>Password for host computer to login to DATA SERVER.</dd>
+                                <dd>The Ascii string less than 32 characters which included NULL is set.</dd>
+                            </p>
+                            <p>
+                                <dt>param.ftpprm.FTPServerLoginDirectory[128]</dt>
+                                <dd>Directory name for host computer to login to DATA SERVER.</dd>
+                                <dd>The Ascii string less than 128 characters which included NULL is set.</dd>
+                            </p>
+                            <p>
+                                <dt>param.etbprm.OwnMACAddress[13]</dt>
+                                <dd>MAC address of ethernet board</dd>
+                                <dd>The Ascii string less than 13 characters which included NULL is set.</dd>
+                            </p>
+                            <p>
+                                <dt>param.etbprm.MaximumChannel</dt>
+                                <dd>Number of channels which can be used.</dd>
+                            </p>
+                            <p>
+                                <dt>param.etbprm.HDDExistence</dt>
+                                <dd>The state of hard disk mounting</dd>
+                                <dd>The value by which whether the hard disk (The ATA flash card is included) is mounted is shown is set.</dd>
+                                <dd><table border="0" class="dd">
+                                    <tr> <td>0</td><td>:</td><td>Not mounted</td> </tr>
+                                    <tr> <td>2</td><td>:</td><td>Mounted</td> </tr>
+                                </table></dd>
+                            </p>
+                            <p>
+                                <dt>param.etbprm.NumberOfScreens</dt>
+                                <dd>Total number of ethernet error message screen used by Ethernet function</dd>
+                            </p>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </hssb>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>
+                Parameter type error<br/>
+                Parameter type(type) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option</content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            <p> 
+                The DATA SERVER function and the extended driver/library function are necessary.
+            </p>
+        </hssb>
+    </option>
+
+
+
+    <parameter>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>etb_wrparam</name>
+            <file>Data/etb_wrparam.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

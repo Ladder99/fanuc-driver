@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdposerrs2</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdposerrs2(unsigned short FlibHndl,ODBPSER *pser); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                Reads "The position deflection S1, S2 for spindle adjustment" in the synchronous control mode.
+            </p>
+            <p>
+                The position deflection S1, S2 is valid only during the synchronous control mode.
+            </p>
+        </cmn>
+    </doc>  
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>pser</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the ODBPSER structure including the position deflection S1, S2 for spindle adjustment.
+                            The ODBPSER structure is as follows.
+                        </p>
+<pre>
+typedef struct odbpser {
+    long    poserr1 ;       /* position deflection S1 */
+    long    poserr2 ;       /* position deflection S2 */
+} ODBPSER ;
+</pre>
+                    </content>
+                </item>
+            </vc>
+        </common>
+
+        <is>
+            <hssb>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>pser</name>
+                        <type>out</type>
+                        <content>
+                            <p>
+                                Pointer to the ODBPSER structure including the position deflection S1, S2 for spindle adjustment.
+                                The ODBPSER structure is as follows.
+                            </p>
+<pre>
+typedef struct odbpser {
+    long    poserr1 ;       /* position deflection S1 */
+    long    poserr2 ;       /* position deflection S2 */
+} ODBPSER ;
+</pre>
+                        </content>
+                    </item>
+                </vc>
+            </hssb>
+        </is>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                no option<br/>
+                The serial spindle function and the extended driver/library function are necessary.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            The extended driver/library function is necessary.
+        </hssb>
+        <ethr>  
+                <p>The Ethernet function and the extended driver/library function are necessary.</p>
+                <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+                <p>When Embedded Ethernet is used,</p>
+                <p><ul>above two optional functions are not required.</ul></p>
+                <p>When Ethernet board is used,</p>
+                <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>
+            The serial spindle function is necessary.
+        </need>
+        <type>
+            <li>The spindle orientation function</li>
+            <li>The rigid tapping function</li>
+            <li>The Cs contouring control function</li>
+            <li>The spindle positioning function (only Series 16T/18T/21T, 16iT/18iT/21iT, 0i-F, 30i)</li>
+            <li>The multi spindle control (only Series 16T/18T/21T, 16iT/18iT/21iT, 0i-F, 30i)</li>
+        </type>
+
+        <is>
+            <hssb>
+                The following functions are necessary for this function.
+                <ul type="disc">
+                    <li>The serial spindle function</li>
+                    <li>The extended driver/library function</li>
+                </ul><br/>
+                This function is related to the following CNC options.
+                <ul type="disc">
+                    <li>The spindle orientation function</li>
+                    <li>The rigid tapping function</li>
+                    <li>The Cs contouring control function</li>
+                    <li>The spindle positioning function</li>
+                    <li>The multi spindle control</li>
+                </ul>
+            </hssb>
+        </is>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul type="disc">
+                <li>Series 15</li>
+                    Parameters concerning the serial spindle output function and the Cs contouring control function.<br/>
+                    Parameters concerning the spindle control function.
+                <li>Series 16/18/21, 16i/18i/21i, 0i, 30i, Power Mate i</li>
+                    Parameters concerning the spindle control function.
+            </ul>
+        </type>
+    </parameter>
+
+    <is_parameter>
+        <type>
+            <ul>
+                Parameters concerning the spindle control function.
+            </ul>
+        </type>
+    </is_parameter>
+
+
+
+    <mode>
+    </mode>
+
+    <is_mode>
+    </is_mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>E</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

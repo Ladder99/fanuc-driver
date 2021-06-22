@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdunsolicprm</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdunsolicprm( unsigned short FlibHndl, short number, IODBUNSOLIC *data );</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+Reads the parameter for unsolicited messaging from CNC. This function is available only for Series 16i/18i/21i, 0i and Power Mate i. This function cannot be used with Visual Basic. Please use Visual C++ for making your application.<br/>
+Please refer to <a href="./Unsolic.htm" target="_parent">"Unsolicited Messaging Function"</a> for the detail information of unsolicited messaging function.
+<p/>
+It is necessary to execute <a href="UnSolic/cnc_unsolicstart.htm" target="_parent">cnc_unsolicstart</a> and make the parameter effective before reading the parameters by this function. So, when this function is called just after the parameters are set by the <a href="UnSolic/cnc_wrunsolicprm.htm" target="_parent">cnc_wrunsolicprm</a>, the correct value cannot be read. 
+
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <ethr>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>number</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            The parameter number for unsolicited messaging. Reserved argument, so must be set to "1".
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>data</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to IODBUNSOLIC structure in which the parameter for the unsolicited messaging will be stored.
+                        </p>
+The IODBUNSOLIC structure is as follows.
+<pre>
+typedef struct iodbunsolic {
+    char            ipaddr[16] ;
+    unsigned short  port ;
+    short           reqaddr ;
+    short           pmcno ;
+    short           retry ;
+    short           timeout ;
+    short           alivetime;
+    short           setno ;
+    union {
+        struct {
+            short   type ;
+            short   rdaddr ;
+            short   rdno ;
+            short   rdsize ;
+        } pmc ;
+        struct {
+            short   type ;
+            long    dummy1 ;
+            short   dummy2 ;
+        } dmy ;
+    } rddata[3] ;
+} IODBUNSOLIC ;</pre>
+                        <dl>
+                            <dt>ipaddr</dt>
+                                <dd>IP address of destination PC.</dd>
+                            <dt>port</dt>
+                                <dd>TCP port number of destination PC.</dd>
+                            <dt>reqaddr</dt>
+                                <dd>PMC address type for the data transmission control.</dd>
+                                <dd>
+                                    <table class="dd">
+                                        <tr><td align="right">5</td>  <td>:</td> <td>R (Internal relay)</td></tr>
+                                        <tr><td align="right">12</td> <td>:</td> <td>E (Extended relay)</td></tr>
+                                    </table>
+                                </dd>
+                            <dt>pmcno</dt>
+                                <dd>PMC address number for the data transmission control.</dd>
+                            <dt>retry</dt>
+                                <dd>Number of transmission retry to observe communication board transmits data.</dd>
+                            <dt>timeout</dt>
+                                <dd>Timeout time(sec) to observe communication board transmits data.</dd>
+                            <dt>alivetime</dt>
+                                <dd>The interval time(sec)of the existence signals which are transmitted while communication board operates.</dd>
+                            <dt>setno</dt>
+                                <dd>Number of the Message data to be transmitted. (1-3).</dd>
+                            <dt>type</dt>
+                                <dd>The type of the transmission data. (=1).</dd>
+                            <dt>rdaddr</dt>
+                                <dd>PMC address which becomes the contents of Message data.</dd>
+                                <dd>
+                                    <table class="dd">
+                                        <tr> <td align="right">0</td>  <td>:</td> <td>G (Signal to PMC->CNC)</td></tr>
+                                        <tr> <td align="right">1</td>  <td>:</td> <td>F (Signal to CNC->PMC)</td></tr>
+                                        <tr> <td align="right">2</td>  <td>:</td> <td>Y (Signal to PMC->machine)</td></tr>
+                                        <tr> <td align="right">3</td>  <td>:</td> <td>X (Signal to machine->PMC)</td></tr>
+                                        <tr> <td align="right">4</td>  <td>:</td> <td>A (Message demand)</td></tr>
+                                        <tr> <td align="right">5</td>  <td>:</td> <td>R (Internal relay)</td></tr>
+                                        <tr> <td align="right">6</td>  <td>:</td> <td>T (Changeable timer)</td></tr>
+                                        <tr> <td align="right">7</td>  <td>:</td> <td>K (Keep relay)</td></tr>
+                                        <tr> <td align="right">8</td>  <td>:</td> <td>C (Counter)</td></tr>
+                                        <tr> <td align="right">9</td>  <td>:</td> <td>D (Data table)</td></tr>
+                                        <tr> <td align="right">10</td> <td>:</td> <td>M (Input signal from other devices)</td></tr>
+                                        <tr> <td align="right">11</td> <td>:</td> <td>N (Output signal to other devices)</td></tr>
+                                        <tr> <td align="right">12</td> <td>:</td> <td>E (Extended relay)</td></tr>
+                                    </table>
+                                </dd>
+                            <dt>rdno</dt>
+                                <dd>Start address number of PMC data which becomes the contents of Message data.</dd>
+                            <dt>rdsize</dt>
+                                <dd>Size(byte) of PMC data which becomes the contents of Message data.</dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </ethr>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>Unavailable</content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>The parameter number(number) for unsolicited messaging is wrong.</content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>The parameter for the unsolicited messaging has not been set.</content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter>
+        <fast>
+          <ul>
+            <li>Series 16i/18i/21i, 0i, Power Mate i<br/>
+                No.904#4=1 (must be set)
+            </li>
+          </ul>
+        </fast>
+    </parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>E</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>E</fs16ia>
+            <fs18ia>E</fs18ia>
+            <fs21ia>E</fs21ia>
+            <fs16ib>E</fs16ib>
+            <fs18ib>E</fs18ib>
+            <fs21ib>E</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>E</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>E</fs16ia>
+            <fs18ia>E</fs18ia>
+            <fs21ia>E</fs21ia>
+            <fs16ib>E</fs16ib>
+            <fs18ib>E</fs18ib>
+            <fs21ib>E</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>E</d>
+            <h>E</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_wrunsolicprm</name>
+            <file>Unsolic/cnc_wrunsolicprm.htm</file>
+        </item>
+        <item>
+            <name>cnc_unsolicstart</name>
+            <file>Unsolic/cnc_unsolicstart.htm</file>
+        </item>
+        <item>
+            <name>cnc_unsolicstop</name>
+            <file>Unsolic/cnc_unsolicstop.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdunsolicmsg</name>
+            <file>Unsolic/cnc_rdunsolicmsg.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

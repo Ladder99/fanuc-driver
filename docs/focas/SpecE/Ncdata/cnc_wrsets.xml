@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_wrsets</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_wrsets(unsigned short FlibHndl, short length, void *set);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Writes all setting data stored in "set". The data format depends on each setting data. The format of Byte/Word/2-Word setting data is generally signed binary.</p>
+
+            <p>Writes the setting data for all axes once by specifying 'ALL_AXES' in 'type'. The setting data for each axis must be stored in each array of "IODBPSD". </p>
+
+            <p>The attribute of setting data depends on the type and axis, and it is
+            different for each setting data.  It is as follows, and can be got by <a href="ncdata/cnc_rdsetinfo.htm" target="_parent">cnc_rdsetinfo</a> function.</p>
+
+            <table class="dd" border="1">
+                <colgroup valign="top"/>
+                <colgroup valign="top"/>
+                <colgroup valign="top"/>
+                <tr>
+                    <th>Setting data type</th>
+                    <th>Meaning</th>
+                    <th>Byte size</th>
+                </tr>
+                <tr>
+                    <td>Bit setting data</td>
+                    <td>Every bits have each definition.</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>Bit setting data with axis</td>
+                    <td>Every bits have each definition. (each axis)</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>Byte setting data</td>
+                    <td>1-byte data is stored.</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>Byte setting data with axis</td>
+                    <td>1-byte data is stored. (each axis)</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>Word setting data</td>
+                    <td>2-byte data is stored.</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td>Word setting data with axis</td>
+                    <td>2-byte data is stored. (each axis)</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td>2-Word parameter</td>
+                    <td>4-byte data is stored.</td>
+                    <td>4</td>
+                </tr>
+                <tr>
+                    <td>2-Word parameter with axis</td>
+                    <td>4-byte data is stored. (each axis)</td>
+                    <td>4</td>
+                </tr>
+                <tr>
+                    <td>Real setting data<span class="xis"><br/>(Series 15i, 30i, 0i-D/F, PMi-A)</span></td>
+                    <td>4-byte data which indicates value of variable and 4-byte data which indicates number of places of decimals are stored.</td>
+                    <td>8</td>
+                </tr>
+                <tr>
+                    <td>Real setting data with axis<span class="xis"><br/>(Series 15i, 30i, 0i-D/F, PMi-A)</span></td>
+                    <td>4-byte data which indicates value of variable and 4-byte data which indicates number of places of decimals are stored. (each axis)</td>
+                    <td>8</td>
+                </tr>
+            </table>
+
+            <p>It is impossible to write any bit setting data bit by bit. 8 bits(i.e. 1 byte) which belong to the same setting data number are written at the same time.</p>
+
+            <p>This function is the same as <a href="ncdata/cnc_wrparas.htm" target="_parent">cnc_wrparas</a> function except that it cannot write the parameter without setting attribute.</p>
+
+            <p>See the "PARAMETER MANUAL" of CNC for details of each setting data.</p>
+
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the data block length which is enough to store the
+                    specified setting data.</p>
+
+                        <p>The structure per 1 setting data is as follows, and each
+                    setting data must be lined up in order of number.</p>
+
+                        <p class="dd">[= Sum of (4+(byte size of each setting data)
+                                                    *(number of axis))]</p>
+
+                        <p>In case that the size of setting data is 2 byte, the IODBPSD
+                    structure is as follows.
+                    In case that the size of setting data is 1 or 2 byte and the
+                    length per 1 setting data is not a multiple of 4, 'dummy' is
+                    necessary in the end of structure.  In case that its size is
+                    4 or 8 byte, the size of data part per 1 setting data or 1 axis
+                    is 4 or 8 byte, and so 'dummy' is not necessary.</p>
+
+                        <p><b>IODBPSD</b></p>
+                        <table>
+                            <colgroup align="left" valign="top">
+                            <colgroup align="left" valign="top">
+                            <colgroup align="left" valign="top">
+                            <tr>
+                                <th>no axis/1 axis</th>
+                                <th>all axes</th>
+                            </tr>
+                            <tr>
+                                <td valign="top"><img src="ncdata/nprm.gif"/></td>
+                                <td valign="top"><img src="ncdata/nprma.gif"/></td>
+                            </tr>
+                            </colgroup>
+                            </colgroup>
+                            </colgroup>
+                        </table>
+                        <ul>
+                            <p>
+                                n = Maximum controlled axes
+                            </p>
+                        </ul>
+
+                        <p class="info">
+                        In case of Series 15i, 16/18/21, 16i/18i/21i, 0i, 30i, Power Mate i and PMi-A, the spindle setting data has an axis attribute, and the data for number of spindle are valid.</p>
+
+                    </content>
+                </item>
+                <item>
+                    <name>set</name>
+                    <type>in</type>
+                    <content>
+                        <p>Pointer to the area to store the setting data. Each setting data can be referred by using the IODBPSD structure.</p>
+<pre>
+Series 15, 16/18/21, 16i/18i/21i, 0i-A/B and Power Mate i
+
+typedef struct  iodbpsd {
+   short datano;              /* setting data number */
+   short type;                /* upper byte:type */
+                              /* lower byte:axis */
+   union {
+      char  cdata;            /* bit/byte setting data */
+      short idata;            /* word setting data */
+      long  ldata;            /* 2-word setting data */
+      char  cdatas[MAX_AXIS]; /* bit/byte set. data with axis*/
+      short idatas[MAX_AXIS]; /* word setting data with axis*/
+      long  ldatas[MAX_AXIS]; /* 2-word set. data with axis */
+   } u ;
+} IODBPSD ;               /* MAX_AXIS : max. controlled axes */
+</pre>
+
+<pre>
+Series 15i, 30i, 0i-D/F, PMi-A and Ethernet connection
+
+typedef struct realprm {     /* real setting data */
+   long prm_val;             /* value of variable */
+   long dec_val;             /* number of places of decimals */
+} REALPRM;
+
+typedef struct  iodbpsd {
+   short datano;               /* setting data number */
+   short type;                 /* upper byte:type */
+                               /* lower byte:axis */
+   union {
+      char    cdata;           /* bit/byte setting data */
+      short   idata;           /* word setting data */
+      long    ldata;           /* 2-word setting data */
+      REALPRM rdata;           /* real setting data */
+      char    cdatas[MAX_AXIS];/*bit/byte set. data with axis*/
+      short   idatas[MAX_AXIS];/* word set. data with axis */
+      long    ldatas[MAX_AXIS];/* 2-word set. data with axis */
+      REALPRM rdatas[MAX_AXIS];/* real set. data with axis */
+   } u;
+} IODBPSD ;               /* MAX_AXIS : max. controlled axes */
+</pre>
+
+                        <dl>
+                            <dt>datano</dt>
+                            <dd>Specify the setting data number.<br/>
+                            See the "PARAMETER MANUAL" of CNC about available
+                            setting data number.
+                            It can be got by <a href="ncdata/cnc_rdsetnum.htm" target="_parent">cnc_rdsetnum</a> function and <a href="ncdata/cnc_rdsetinfo.htm" target="_parent">cnc_rdsetinfo</a> function.</dd>
+                            <br/>
+                            <dt>type</dt>
+                            <dd>Specify the attribute of setting data.
+                                <ul>
+                                    <br/>
+                                    Upper byte:type
+                                    <table class="dd">
+                                        <tr>
+                                            <td>0</td>
+                                            <td>:</td>
+                                            <td>bit type</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>:</td>
+                                            <td>byte type</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>:</td>
+                                            <td>word type</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>:</td>
+                                            <td>2-word type</td>
+                                        </tr>
+                                        <tr>
+                                            <td>4</td>
+                                            <td>:</td>
+                                            <td>real type(Series 15i, 30i, 0i-D/F, PMi-A)</td>
+                                        </tr>
+                                    </table>
+                                    Lower byte:axis
+                                    <table class="dd">
+                                        <tr>
+                                            <td>0</td>
+                                            <td>:</td>
+                                            <td>assigns no axis</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1,..,m</td>
+                                            <td>:</td>
+                                            <td>assigns 1 axis(m=max. controlled axes)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ALL_AXES</td>
+                                            <td>:</td>
+                                            <td>assigns all axes(ALL_AXES=-1)</td>
+                                        </tr>
+                                    </table>
+                                </ul>
+                            </dd>
+                            <br/>
+                            <dt>rdata, rdatas ( Series 15i, 30i, 0i-D/F, PMi-A )</dt>
+                            <dd>Specify the real setting data.<br/>Specify the value of variable in prm_val, and specify the number of places of decimals in dec_val.</dd>
+                            <dd>
+                                <div class="dd">
+                                    <p>Real setting data = prm_val * 10 ** (-dec_val)</p>
+                                    <p>(Example) When the value of real setting data is 12.345, prm_val and dec_val are read as follows.</p>
+                                    <p class="dd">prm_val = 12345<br/>dec_val = 3</p>
+                                </div>
+                            </dd>
+                        </dl>
+
+                    </content>
+                </item>
+            </vc>
+        </common>
+
+        <is>
+            <hssb>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>length</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Specify the data block length which is enough to store the specified setting data.
+                            </p>
+
+                            <p>
+                                The structure per 1 setting data is as follows, and each
+                                setting data must be lined up in order of number.
+                            </p>
+
+                            <p class="dd">[= Sum of (4+(byte size of each setting data)
+                                                        *(number of axis))]</p>
+
+                            <p>
+                                In case that the size of setting data is 2 byte, the IODBPSD
+                                structure is as follows.
+                                In case that the size of setting data is 1 or 2 byte and the
+                                length per 1 setting data is not a multiple of 4, 'dummy' is
+                                necessary in the end of structure.  In case that its size is
+                                4 or 8 byte, the size of data part per 1 setting data or 1 axis
+                                is 4 or 8 byte, and so 'dummy' is not necessary.
+                            </p>
+
+                            <p><b>IODBPSD</b></p>
+                            <table>
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                <tr>
+                                    <th>no axis/1 axis</th>
+                                    <th>all axes</th>
+                                </tr>
+                                <tr>
+                                    <td valign="top"><img src="ncdata/nprm.gif"/></td>
+                                    <td valign="top"><img src="ncdata/nprma.gif"/></td>
+                                </tr>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                                <tr>
+                                    <td></td>
+                                    <td>n = Maximum controlled axes</td>
+                                </tr>
+                            </table>
+
+                            <p class="info">
+                                The spindle setting data has an axis attribute, and the data for number of spindle are valid.
+                            </p>
+
+                        </content>
+                    </item>
+                    <item>
+                        <name>set</name>
+                        <type>in</type>
+                        <content>
+                            <p>Pointer to the area to store the setting data. Each setting data can be referred by using the IODBPSD structure.</p>
+<pre>
+typedef struct realprm {     /* real setting data */
+   long prm_val;             /* value of variable */
+   long dec_val;             /* number of places of decimals */
+} REALPRM;
+
+typedef struct  iodbpsd {
+   short datano;               /* setting data number */
+   short type;                 /* upper byte:type */
+                               /* lower byte:axis */
+   union {
+      char    cdata;           /* bit/byte setting data */
+      short   idata;           /* word setting data */
+      long    ldata;           /* 2-word setting data */
+      REALPRM rdata;           /* real setting data */
+      char    cdatas[MAX_AXIS];/*bit/byte set. data with axis*/
+      short   idatas[MAX_AXIS];/* word set. data with axis */
+      long    ldatas[MAX_AXIS];/* 2-word set. data with axis */
+      REALPRM rdatas[MAX_AXIS];/* real set. data with axis */
+   } u;
+} IODBPSD ;               /* MAX_AXIS : max. controlled axes */
+</pre>
+
+                            <dl>
+                                <dt>datano</dt>
+                                <dd>Specify the setting data number.<br/>
+                                See the "PARAMETER MANUAL" of CNC about available
+                                setting data number.
+                                It can be got by <a href="ncdata/cnc_rdsetnum.htm" target="_parent">cnc_rdsetnum</a> function and <a href="ncdata/cnc_rdsetinfo.htm" target="_parent">cnc_rdsetinfo</a> function.</dd>
+                                <br/>
+                                <dt>type</dt>
+                                <dd>Specify the attribute of setting data.
+                                    <ul>
+                                        <br/>
+                                        Upper byte:type
+                                        <table class="dd">
+                                            <tr>
+                                                <td>0</td>
+                                                <td>:</td>
+                                                <td>bit type</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>:</td>
+                                                <td>byte type</td>
+                                            </tr>
+                                            <tr>
+                                                <td>2</td>
+                                                <td>:</td>
+                                                <td>word type</td>
+                                            </tr>
+                                            <tr>
+                                                <td>3</td>
+                                                <td>:</td>
+                                                <td>2-word type</td>
+                                            </tr>
+                                            <tr>
+                                                <td>4</td>
+                                                <td>:</td>
+                                                <td>real type</td>
+                                            </tr>
+                                        </table>
+                                        Lower byte:axis
+                                        <table class="dd">
+                                            <tr>
+                                                <td>0</td>
+                                                <td>:</td>
+                                                <td>assigns no axis</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1,..,m</td>
+                                                <td>:</td>
+                                                <td>assigns 1 axis(m=max controlled axes)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>ALL_AXES</td>
+                                                <td>:</td>
+                                                <td>assigns all axes(ALL_AXES=-1)</td>
+                                            </tr>
+                                        </table>
+                                    </ul>
+                                </dd>
+                                <br/>
+                                <dt>rdata, rdatas</dt>
+                                <dd>Specify the real setting data.<br/>Specify the value of variable in prm_val, and specify the number of places of decimals in dec_val.</dd>
+                                <dd>
+                                    <div class="dd">
+                                        <p>Real setting data = prm_val * 10 ** (-dec_val)</p>
+                                        <p>(Example) When the value of real setting data is 12.345, prm_val and dec_val are read as follows.</p>
+                                        <p class="dd">prm_val = 12345<br/>dec_val = 3</p>
+                                    </div>
+                                </dd>
+                            </dl>
+
+                        </content>
+                    </item>
+                </vc>
+            </hssb>
+        </is>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                Data block length error<br/>
+                Size of area to store setting data(length) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>Data number error<br/>
+                Setting data number(datano) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>Data attribute error<br/>
+                Axis number(type) is wrong.
+            </content>
+        </item>
+        <item class="xis">
+            <name>EW_NOOPT</name>
+            <content>No option<br/>There is no option required for the specified setting data.<br/>( Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i )</content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+
+        <type>
+            <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i</li>
+            CNC option for some specific setting data.
+        </type>
+
+        <is>
+            <hssb>The extended driver/library function is necessary.</hssb>
+        </is>
+    </option>
+
+
+
+    <parameter>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+        <add><b></b></add>
+
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdset</name>
+            <file>ncdata/cnc_rdset.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrset</name>
+            <file>ncdata/cnc_wrset.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdsetr</name>
+            <file>ncdata/cnc_rdsetr.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdsetinfo</name>
+            <file>ncdata/cnc_rdsetinfo.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdsetnum</name>
+            <file>ncdata/cnc_rdsetnum.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

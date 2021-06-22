@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>pmc_prfrdallcadr</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI pmc_prfrdallcadr(unsigned short FlibHndl, short slave_no, IODBPRFADR *odb) ; </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Reads the address allocation of the specified slave number.</p>
+            <p>
+                This function is available at the version 01-07 and 09 or later of the PROFIBUS-DP control software(6557 Series).  
+                In the control software in the version 08, the return value becomes EW_VERSION.<br/>
+                This function is unavailable at the 6558 Series.
+            </p>
+            <p>
+                * Please refer to "PROFIBUS-DP function manual" for details of the PROFIBUS-DP function.
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>slave_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the slave number to read.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>odb</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the IODBPRFADR structure including the address allocation.
+                            The IODBPRFADR structure is as follows.
+<pre>
+typedef struct {
+    unsigned char  di_size ;
+    char           di_type ;
+    unsigned short di_addr ;
+    short          reserve1;
+    unsigned char  do_size ;
+    char           do_type ;
+    unsigned short do_addr ;
+    short          reserve2;
+    unsigned char  dgn_size;
+    char           dgn_type;
+    unsigned short dgn_addr;
+} IODBPRFADR ;
+</pre>
+                            <dl>
+                                <dt>di_size</dt>
+                                    <dd>
+                                        The size of area used as buffer of DI data is stored.
+                                    </dd>
+                                <dt>di_type</dt>
+                                    <dd>
+                                        The kind of the PMC address used as a buffer of the DI data is stored with ASCII CODE.
+                                    </dd>
+                                <dt>di_addr</dt>
+                                    <dd>
+                                        The top number of the PMC address used as a buffer of the DI data is stored.
+                                    </dd>
+                                <dt>reserve1</dt>
+                                    <dd>not used</dd>
+                                <dt>do_size</dt>
+                                    <dd>
+                                        The size of area used as buffer of DO data is stored.
+                                    </dd>
+                                <dt>do_type</dt>
+                                    <dd>
+                                        The kind of the PMC address used as a buffer of the DO data is stored with ASCII CODE.
+                                    </dd>
+                                <dt>do_addr</dt>
+                                    <dd>
+                                        The top number of the PMC address used as a buffer of the DO data is stored.
+                                    </dd>
+                                <dt>reserve2</dt>
+                                    <dd>not used</dd>
+                                <dt>dgn_size</dt>
+                                    <dd>
+                                        The size of the area where the diagnosis data is read is stored.
+                                    </dd>
+                                <dt>dgn_type</dt>
+                                    <dd>
+                                        The kind of the PMC address used as an area where the diagnosis data is read is stored with ASCII CODE.
+                                    </dd>
+                                <dt>dgn_addr</dt>
+                                    <dd>
+                                        The top number of the PMC address used as an area where the diagnosis data is read is stored.
+                                    </dd>
+                            </dl>
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_RANGE</name>
+            <content>data number error<br/>
+                    Slave number(slave_no) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>
+                    <li>The PROFIBUS-DP board(hardware) is necessary.</li>
+                    <li>The PROFIBUS-DP control software is necessary.</li>
+                    <li>The PROFIBUS-DP master function is necessary.</li>
+                    <li>The extended driver/library function is necessary.</li>
+            </content>
+        </item>
+        <item>
+            <name>EW_VERSION</name>
+            <content>Version of PROFIBUS-DP control software is wrong.<br/>
+                    This function was called by version 08 of the control software.  
+                    Exchange the control software besides the version 08.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>The PROFIBUS-DP master function is necessary.</need>
+    </option>
+
+
+
+    <parameter>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>pmc_prfwrallcadr</name>
+            <file>Profibus/pmc_prfwrallcadr.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

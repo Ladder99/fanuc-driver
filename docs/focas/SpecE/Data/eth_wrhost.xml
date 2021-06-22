@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>eth_wrhost</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI eth_wrhost(unsigned short FlibHndl, short type, short host); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                Set the host number selected Ethernet function.
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details. </p>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                        Specify the kind of communication function setting to the connected host.<br/>
+                        Kind of communication function is as follows.<br/>
+                        <table border="0" class = "dd">
+                        <tr> <td>1   </td><td>:</td><td>Embedded Ethernet[Internal port]</td> </tr>
+                        <tr> <td>2   </td><td>:</td><td>Embedded Ethernet[PCMCIA LANCard]</td> </tr>
+                        <tr> <td>3   </td><td>:</td><td>Fast Ethernet Board or Fast DATA SERVER Board</td> </tr>
+                        <tr> <td>4   </td><td>:</td><td>Windows CE Embedded Ethernet[Internal port]</td> </tr>
+                        <tr> <td>5   </td><td>:</td><td>Windows CE Embedded Ethernet[PCMCIA LANCard]</td> </tr>
+                        </table>
+                    </content>
+                </item>
+                <item>
+                    <name>host</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Set the host number(1,..,3) selected Ethernet function.
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a> function.<br/>
+                The following details status will be set onto the member, err_no of ODBERR structure.<br/>
+                <table class="dd">
+                    <tr> <td>20</td><td>:</td><td>Embedded Ethernet is nothing.</td> </tr>
+                    <tr> <td>21</td><td>:</td><td>Windows CE Embedded Ethernet is nothing.</td> </tr>
+                    <tr> <td>22</td><td>:</td><td>The option board is nothing.</td> </tr>
+                    <tr> <td>24</td><td>:</td><td>The DATA SERVER function is nothing.</td> </tr>
+                </table>
+            </content>
+        </item>
+<!--
+        <item>
+            <name>EW_FUNC</name>
+            <content>Function Error<br/>
+                Acquiring of parameter is failed.<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a> function.<br/>
+                The following details status will be set onto the member, err_no of ODBERR structure.<br/>
+                <table class="dd">
+                    <tr> <td>14</td><td>:</td><td>Acquiring of library handle is failed.</td> </tr>
+                </table>
+            </content>
+        </item>
+-->
+        <item>
+            <name>EW_PROT</name>
+            <content>
+                Writing to the parameter is failed.<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a> function.<br/>
+                The following details status will be set onto the member, err_no of ODBERR structure.<br/>
+                <table class="dd">
+                    <tr> <td>11</td><td>:</td><td>Writing to the File SRAM is failed.</td> </tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>Data error<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a> function.<br/>
+                The following details status will be set onto the member, err_no of ODBERR structure.<br/>
+                <table class="dd">
+                    <tr> <td>2</td><td>:</td><td>Out of data range.</td> </tr>
+                </table>
+                The following details status will be set onto the member, err_dtno of ODBERR structure.<br/>
+                <table class="dd">
+                    <tr> <td>3</td><td>:</td><td>Kind of device error.</td> </tr>
+                    <tr> <td>301</td><td>:</td><td>Connected host number range error.</td> </tr>
+                </table>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            <p> 
+                The DATA SERVER function and the extended driver/library function are necessary.
+            </p>
+        </hssb>
+    </option>
+
+
+
+    <parameter></parameter>
+    <!-- 30i(WinCE) -->
+    <is_parameter></is_parameter>
+
+
+
+    <mode></mode>
+    <!-- 30i(WinCE) -->
+    <is_mode></is_mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>eth_rdhost</name>
+            <file>Data/eth_rdhost.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

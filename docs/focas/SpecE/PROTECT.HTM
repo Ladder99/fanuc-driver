@@ -1,0 +1,69 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>FOCAS1/Ethernet NC data protection</title>
+<link rel="stylesheet" type="text/css" href="fwlib32.css">
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<p><a href="fwlib32.htm">Top Page</a></p>
+
+<hr>
+
+<h2>NC data protection (16i/18i/21i/0i-B/0i-C/Power Mate i Only)</h2>
+
+
+<p>A past Library did not take a protection measures when various data was read and written, from the viewpoint that CNC/PMC and the personal computer were closely connected. <br>
+However, in case of Ethernet version, CNC/PMC and the PC are connected via Ethernet, and operated at LAN, and moreover, via Internet. <br>
+In this case, the person whom the system designer did not forecast at first might connect from LAN or the outside of the workshop. <br>
+The protection measures has been introduced to Ethernet version so that this person should not incorrectly access, and not destroy the data of NC by design, or by accident. 
+
+<p>Among various data of NC, the protected data is as follows. 
+<ul>
+	<li>F-ROM user files
+		<table>
+			<colgroup valign=top>
+			<colgroup valign=top>
+			<tr>
+				<td>Ladder program, C language executor, Macro executor, Order-made macro, PMC C language, Maintenance Information, Embedded macro
+			</tr>
+		</table>
+	<li>Entire S-RAM image
+	<li>NC programs
+	<li>P code macro variables
+	<li>NC parameters
+	<li>PMC parameters
+		<table>
+			<colgroup valign=top>
+			<colgroup valign=top>
+			<tr>
+				<td>R [Internal relay], T [Changeable timer], K [Keep relay], C [Counter], D [Data table]
+			</tr>
+		</table>
+</ul>
+
+<p>MTB and the end user can separately set whether these data items are protected or are not protected on CNC. <br>
+This is preserved as bit type data of the NC parameter (thereafter, it is called, "Protection pattern data"), and adds password/key word to the NC parameter for the limitation to the access to this data. <br>
+The protection pattern data set at NC is preserved as master data. And, it is possible to set, and to change only on NC. <br>
+When the application of Ethernet version is executed, the copy image of a couple of protection pattern data is taken in the work area of the Ethernet board for the application. <br>
+The function terminates abnormally by error code EW_PASSWD(=17) in the Ethernet library by referring to the copy image of this protection pattern data when an application calles the function that accesses the protected data. <br>
+It is necessary to update the copy image of the protection pattern data beforehand to access data normally. (Refer to <a href=".\misc\cnc_chgprotbit.htm">cnc_chgprotbit</a> function) <br>
+This change is effective by the end of the application and the influence of a set change does not affect other applications. 
+
+<p><img src="protect.gif"></p>
+
+<table>
+	<colgroup align=top valign=top>
+	<colgroup valign=top>
+	<tr><td>*<td>Please refer to <a href=".\misc\cnc_getlockstat.htm">cnc_getlockstat</a>, <a href=".\misc\cnc_chgprotbit.htm">cnc_chgprotbit</a> function for get and set in the protection pattern data. </tr> 
+</table>
+
+<hr>
+
+<p><a href="fwlib32.htm">Top Page</a></p>
+</body>
+</html>

@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <title>cnc_rdunsolicprm2</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdunsolicprm2( unsigned short FlibHndl, short number, IODBUNSOLIC *data );</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+Reads the parameter for unsolicited messaging from CNC. This function is available only for Series Series 30i/31i/32i, 0i-D/F and PMi-A. This function cannot be used with Visual Basic. Please use Visual C++ for making your application.<br/>
+Please refer to <a href="./Unsolic.htm" target="_parent">"Unsolicited Messaging Function"</a> for the detail information of unsolicited messaging function.
+<p/>
+
+It is necessary to execute <a href="UnSolic/cnc_wrunsolicprm2.htm" target="_parent">cnc_wrunsolicprm2</a> and make the parameter effective before reading the parameters by this function. 
+
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <ethr>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>number</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            The parameter number for unsolicited messaging. Reserved argument, so must be set to "1".
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>data2</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to IODBUNSOLIC2 structure in which the parameter for the unsolicited messaging will be stored.
+                        </p>
+The IODBUNSOLIC structure is as follows.
+<pre>
+typedef struct iodbunsolic2 {
+    char                ipaddr[64];
+    unsigned long       port;
+    unsigned short      retry;
+    unsigned short      timeout;
+    unsigned short      alivetime;
+    char                dummy1[8];
+    UNSOLICMSG_TYPE_PRM cntrl;
+    unsigned short      transnum;
+    char                dummy2[14];
+    UNSOLICMSG_TYPE_PRM trans[3];
+} IODBUNSOLIC2;
+
+typedef struct unsolicmsg_type_prm {
+    unsigned short      type;
+    char                dummy1[2];
+    union {
+        typedef {
+            unsigned short  path;
+            short           addr;
+            unsigned long   no;
+            unsigned long   size;
+        } pmc;
+        typedef {
+            unsigned short  path;
+            char            dummy2[2];
+            unsigned long   no; 
+            unsigned long   num;
+        } macro;
+    } prm
+} UNSOLICMSG_TYPE_PRM;
+</pre>
+                        <dl>
+                            <dt>ipaddr</dt>
+                                <dd>IP address or host name of destination PC.</dd>
+                                <dd>ex.) "192.168.0.1"</dd>
+
+                            <dt>port</dt>
+                                <dd>TCP/UDP port number of destination PC.</dd>
+                                <dd>Range) 5001 - 65535</dd>
+
+                            <dt>retry</dt>
+                                <dd>Number of transmission retry to observe communication board transmits data. Set the retry count that is used when there is no answer for the data transmission.</dd>
+                                <dd>Range) 1 - 32767</dd>
+
+                            <dt>timeout</dt>
+                                <dd>Timeout times(sec)</dd>
+                                <dd>Timeout(sec) to observe communication board transmits data. Set the time(sec) of timeout until answering to the data transmission.</dd>
+                                <dd>Range) 1 - 32767</dd>
+
+                            <dt>alivetime</dt>
+                                <dd>Alive signal time(sec)</dd>
+                                <dd>The interval time(sec)of the existence signals which are transmitted while communication board operates. Set the value less than the value of the above "timeout".</dd>
+                                <dd>Range) 1 - 32767</dd>
+
+                            <dt>cntrl.prm.type</dt>
+                                <dd>Kind of control parameter</dd>
+                                <dd>This data is the kind of control parameter for the ladder program or the NC program to demand the message transmission.</dd>
+                                <dd>
+                                    <table class="dd">
+                                        <tr><td>0</td>  <td>:</td> <td>Control parameter is invalid.        </td></tr>
+                                        <tr><td>1</td>  <td>:</td> <td>PMC address(Response Notice method)  </td></tr>
+                                        <tr><td>2</td>  <td>:</td> <td>PMC address(Simple method)           </td></tr>
+                                        <tr><td>3</td>  <td>:</td> <td>Custom macro variable(Simple method) </td></tr>
+                                        <tr><td>4</td>  <td>:</td> <td>Temporary RTM variable(Simple method)(0i-F,30i/31i/32i only)</td></tr>
+                                    </table>
+                                </dd>
+
+                            <dt>cntrl.prm.pmc.path</dt>
+                                <dd>PMC unit type for control parameter</dd>
+                                <dd>This data is PMC unit type number for control parameter for the ladder program to demand the message transmission.</dd>
+                                <dd>When the value of "Kind of control parameter" is "1" and "2", this value is effective.</dd>
+                                <dd>Range) 1 - 3 (The range depends on an effective PMC unit type number.) When this value is 65535, the control parameter is invalid.</dd>
+
+                            <dt>cntrl.prm.pmc.addr</dt>
+                                <dd>PMC address for control parameter</dd>
+                                <dd>This data is PMC address for control parameter for the ladder program  to demand the message transmission.</dd>
+                                <dd>When the value of "Kind of control parameter" is "1" and "2", this value is effective.</dd>
+                                <dd>
+                                    <table class="dd">
+                                        <tr><td>5</td>  <td>:</td> <td>R (Internal relay)</td></tr>
+                                        <tr><td>12</td> <td>:</td> <td>E (Extended relay)</td></tr>
+                                    </table>
+                                </dd>
+
+                            <dt>cntrl.prm.pmc.no</dt>
+                                <dd>PMC address number for control parameter</dd>
+                                <dd>This data is PMC address number for control parameter for the ladder program  to demand the message transmission.</dd>
+                                <dd>When the value of "Kind of control parameter" is "1" and "2", this value is effective.</dd>
+                                <dd>Range) (The range depends on an effective PMC area)</dd>
+
+                            <dt>cntrl.prm.pmc.size</dt>
+                                <dd>unused</dd>
+
+                            <dt>cntrl.prm.macro.path</dt>
+                                <dd>CNC path number for control parameter</dd>
+                                <dd>This data is CNC path number for control parameter for the NC program to demand the message transmission.</dd>
+                                <dd>When the value of "Kind of control parameter" is "3" and "4", this value is effective.</dd>
+                                <dd>Range) 1 - 10(The range depends on an effective PMC area) When this value is 65535, the control parameter is invalid.</dd>
+
+                            <dt>cntrl.prm.macro.no</dt>
+                                <dd>Macro variable number for control parameter</dd>
+                                <dd>This data is Macro variable number for control parameter for the NC program to demand the message transmission.</dd>
+                                <dd>When the value of "Kind of control parameter" is "3" and "4", this value is effective.</dd>
+                                <dd>Range) (The range depends on an effective Macro variable)</dd>
+
+                            <dt>cntrl.prm.macro.num</dt>
+                                <dd>unused</dd>
+
+                            <dt>transnum</dt>
+                                <dd>Transmission number</dd>
+                                <dd>Number of transmitted messages.</dd>
+                                <dd>Range) 1 - 3</dd>
+
+                            <dt>trans[n].prm.type</dt>
+                                <dd>Kind of transmission parameter : range of n (0-2). </dd>
+                                <dd>
+                                    <table class="dd">
+                                        <tr><td>0</td>  <td>:</td> <td>Transmission parameter is invalid.</td></tr>
+                                        <tr><td>1</td>  <td>:</td> <td>PMC address                       </td></tr>
+                                        <tr><td>3</td>  <td>:</td> <td>Custom macro variable             </td></tr>
+                                        <tr><td>4</td>  <td>:</td> <td>Temporary RTM variable            </td></tr>
+                                        <tr><td>5</td>  <td>:</td> <td>Permanent RTM variable(0i-F,30i/31i/32i only)</td></tr>
+                                    </table>
+                                </dd>
+
+                            <dt>trans[n].prm.pmc.path</dt>
+                                <dd>PMC unit type number for transmission parameter : range of n (0-2).</dd>
+                                <dd>When the value of "Kind of transmission parameter" is "1", this value is effective.</dd>
+                                <dd>Range) 1 - 3 (The range depends on an effective PMC unit type number.) When this value is 65535, the transmission parameter is invalid.</dd>
+
+                            <dt>trans[n].prm.pmc.addr</dt>
+                                <dd>PMC address for transmission parameter : range of n (0-2).</dd>
+                                <dd>When the value of "Kind of transmission parameter" is "1", this value is effective.</dd>
+                                <dd>
+                                    <table class="dd">
+                                        <tr><td align="right">0</td>  <td>:</td> <td>G (Signal to PMC->CNC)</td> </tr>
+                                        <tr><td align="right">1</td>  <td>:</td> <td>F (Signal to CNC->PMC)</td> </tr>
+                                        <tr><td align="right">2</td>  <td>:</td> <td>Y (Signal to PMC->machine)</td> </tr>
+                                        <tr><td align="right">3</td>  <td>:</td> <td>X (Signal to machine->PMC)</td> </tr>
+                                        <tr><td align="right">4</td>  <td>:</td> <td>A (Message demand)</td> </tr>
+                                        <tr><td align="right">5</td>  <td>:</td> <td>R (Internal relay)</td> </tr>
+                                        <tr><td align="right">6</td>  <td>:</td> <td>T (Changeable timer)</td> </tr>
+                                        <tr><td align="right">7</td>  <td>:</td> <td>K (Keep relay)</td> </tr>
+                                        <tr><td align="right">8</td>  <td>:</td> <td>C (Counter)</td> </tr>
+                                        <tr><td align="right">9</td>  <td>:</td> <td>D (Data table)</td> </tr>
+                                        <tr><td align="right">10</td> <td>:</td> <td>M (Input signal from other devices)(0i-F,30i/31i/32i only)</td> </tr>
+                                        <tr><td align="right">11</td> <td>:</td> <td>N (Output signal to other devices)(0i-F,30i/31i/32i only)</td> </tr>
+                                        <tr><td align="right">12</td> <td>:</td> <td>E (Extended relay)</td> </tr>
+                                        <tr><td align="right">13</td> <td>:</td> <td>Z (System relay)(0i-F,30i/31i/32i only)</td> </tr>
+                                    </table>
+                                </dd>
+
+                            <dt>trans[n].prm.pmc.no</dt>
+                                <dd>PMC address number for transmission parameter : range of n (0-2).</dd>
+                                <dd>When the value of "Kind of transmission parameter" is "1", this value is effective.</dd>
+                                <dd>Range) 1 - 10(The range depends on an effective PMC area)</dd>
+
+                            <dt>trans[n].prm.pmc.size</dt>
+                                <dd>PMC data size for transmission parameter (bytes) : range of n (0-2).</dd>
+                                <dd>When the value of "Kind of transmission parameter" is "3", "4" and "5", this value is effective.</dd>
+                                <dd>Range) (The range depends on an effective PMC data area and transmission number.)</dd>
+
+                            <dt>trans[n].prm.macro.path</dt>
+                                <dd>CNC path number of transmission parameter : range of n (0-2).</dd>
+                                <dd>When the value of "Kind of transmission parameter" is "3", "4" and "5", this value is effective.</dd>
+                                <dd>Range) 1 - 10 (The range depends on an effective CNC path number) When this value is 65535, the transmission parameter is invalid.</dd>
+
+                            <dt>trans[n].prm.macro.no</dt>
+                                <dd>Macro valiable number for transmission parameter : range of n (0-2).</dd>
+                                <dd>When the value of "Kind of transmission parameter" is "3", "4" and "5", this value is effective.</dd>
+                                <dd>Range) (The range depends on an effective Macro variable data )</dd>
+
+                            <dt>trans[n].prm.macro.num</dt>
+                                <dd>Number of macro variable for transmission parameter : range of n (0-2).</dd>
+                                <dd>When the value of "Kind of transmission parameter" is "3", "4" and "5", this value is effective.</dd>
+                                <dd>Range) (The range depends on an effective Macro variable data and transmission number.)</dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </ethr>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>Unavailable</content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>The parameter number(number) for unsolicited messaging is wrong.</content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>The parameter for the unsolicited messaging has not been set.</content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 0i-D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter>
+        <fast>
+          <ul>
+              No.904#4=1   : Unsilocited messaging function(must be set)<br/>
+              No.904#5     : If you use the DNS function, set "1".<br/>
+              No.14880#4=1 : Unsilocited messaging function(Embedded Ethernet(Built-in port))<br/>
+              No.14880#5   : If you use the DNS function, set "1".(Embedded Ethernet(Built-in port))<br/>
+          </ul>
+        </fast>
+    </parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>E</fs0id>
+            <fs0if>E</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>E</fs30ia>
+            <fs30ib>E</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>E</fs0id>
+            <fs0if>E</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>E</fs30ia>
+            <fs30ib>E</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>E</fs0id>
+            <fs0if>E</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>E</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>E</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>E</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_wrunsolicprm</name>
+            <file>Unsolic/cnc_wrunsolicprm.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrunsolicprm2</name>
+            <file>Unsolic/cnc_wrunsolicprm2.htm</file>
+        </item>
+        <item>
+            <name>cnc_unsolicstart</name>
+            <file>Unsolic/cnc_unsolicstart.htm</file>
+        </item>
+        <item>
+            <name>cnc_unsolicstop</name>
+            <file>Unsolic/cnc_unsolicstop.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdunsolicmsg</name>
+            <file>Unsolic/cnc_rdunsolicmsg.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdunsolicmsg2</name>
+            <file>Unsolic/cnc_rdunsolicmsg2.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_copyprog</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_copyprog(unsigned short FlibHndl, long src_no, long dst_no);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Copy the NC program.</p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the library handle.<br/>
+                           See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>src_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the source NC program number.</p>
+                    </content>
+                </item>
+                <item>
+                    <name>dst_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the destination NC program number.</p>
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+        
+        <is>
+            <hssb>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>Specify the library handle.<br/>
+                               See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>src_no</name>
+                        <type>in</type>
+                        <content>
+                            <p>Specify the source NC program number.</p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>dst_no</name>
+                        <type>in</type>
+                        <content>
+                            <p>Specify the destination NC program number.</p>
+                        </content>
+                    </item>
+                </vc>
+            </hssb>
+        </is>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_BUSY</name>
+            <content>
+                Program edit processing
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                Data error<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                The following detail status will be set onto the member, err_no of ODBERR structure.<br/>
+                <table>
+                    <tr><td>1</td><td>:</td><td>The program specified by the source program number does not exist.</td></tr>
+                    <tr><td>2</td><td>:</td><td>The program specified by the destination program number is outside of the range.</td></tr>
+                    <tr><td>3</td><td>:</td><td>The program area is broken.</td></tr>
+                    <tr><td>13</td><td>:</td><td>Program registration number is full.</td></tr>
+                    <tr><td>14</td><td>:</td><td>The program specified by the source program number already exists.(16i:except No.3201#2=1)</td></tr>
+                    <tr><td>15</td><td>:</td><td>The program specified by the destination program number has been selected on the NC side.</td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                no option<br/>
+                The extended driver/library function is necessary.
+            </content>
+        </item>
+        <item>
+            <name>EW_MODE</name>
+            <content>
+                CNC mode error<br/>
+                MDI edit or Background edit processing in CNC side. (except 30i/31i/32i, 0i-D/F, PMi-A)
+            </content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>
+                Write protection on CNC side<br/>
+                <li>Tape memory is write-protected by the CNC parameter setting(O8000-/O9000- protection, encoding).</li>
+                <li>Specified destination program number is protected by 
+                    <a href="Program/cnc_setpglock.htm" target="_parent">cnc_setpglock</a> function.</li>
+            </content>
+        </item>
+        <item>
+            <name>EW_OVRFLOW</name>
+            <content>
+                Program memory overflow.<br/>
+                Program registration area is full.
+            </content>
+        </item>
+        <item>
+            <name>EW_ALARM</name>
+            <content>
+                Alarm (PS000, PS101) in CNC side (only 16/18/21)<br/>
+                Release the alarm(PS000 and PS101).
+            </content>
+        </item>
+
+        <is>
+            <item>
+                <name>EW_BUSY</name>
+                <content>
+                    Program edit processing
+                </content>
+            </item>
+            <item>
+                <name>EW_DATA</name>
+                <content>
+                    Data error<br/>
+                    In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                    The following detail status will be set onto the member, err_no of ODBERR structure.<br/>
+                    <table>
+                        <tr><td>1</td><td>:</td><td>The program specified by the source program number does not exist.</td></tr>
+                        <tr><td>2</td><td>:</td><td>The program specified by the destination program number is outside of the range.</td></tr>
+                        <tr><td>3</td><td>:</td><td>The program area is broken.</td></tr>
+                        <tr><td>13</td><td>:</td><td>Program registration number is full.</td></tr>
+                        <tr><td>14</td><td>:</td><td>The program specified by the source program number already exists.</td></tr>
+                        <tr><td>15</td><td>:</td><td>The program specified by the destination program number has been selected on the NC side.</td></tr>
+                    </table>
+                </content>
+            </item>
+            <item>
+                <name>EW_NOOPT</name>
+                <content>
+                    no option<br/>
+                    The extended driver/library function is necessary.
+                </content>
+            </item>
+            <item>
+                <name>EW_MODE</name>
+                <content>
+                    CNC mode error<br/>
+                    MDI edit or Background edit processing in CNC side.<span class="xis">(except 30i/31i/32i, 0i-D, PMi-A)</span>
+                </content>
+            </item>
+            <item>
+                <name>EW_PROT</name>
+                <content>
+                    Write protection on CNC side<br/>
+                    <li>Tape memory is write-protected by the CNC parameter setting(O8000-/O9000- protection, encoding).</li>
+                    <li>Specified destination program number is protected.</li>
+                        <!--
+                        Specified destination program number is protected by 
+                        <a href="Program/cnc_setpglock.htm" target="_parent">cnc_setpglock</a> function.</li>
+                        -->
+                </content>
+            </item>
+            <item>
+                <name>EW_OVRFLOW</name>
+                <content>
+                    Program memory overflow.<br/>
+                    Program registration area is full.
+                </content>
+            </item>
+        </is>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            <p>The extended driver/library function is necessary.</p>
+        </hssb>
+
+        <is>
+            <hssb>
+                <p>The extended driver/library function is necessary.</p>
+            </hssb>
+        </is>
+    </option>
+
+
+
+    <parameter></parameter>
+
+    <is_parameter></is_parameter>
+
+
+
+    <mode>
+    </mode>
+
+    <is_mode>
+    </is_mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference></reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

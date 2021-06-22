@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdmacror3</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdmacror3(unsigned short FlibHndl, unsigned long s_no, unsigned long *num, IODBMRN3 *mcr);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Reads the custom macro variables specified by the starting number, "s_no", and number of variables, "*num".<br/>
+            In this function, when you read the macro variable No. #500-#549, the macro name can be read together. In other variable numbers, NULL is read to the name.<br/>
+
+            It is not influenced by setting of <a href="ncdata/cnc_setmactype.htm" target="_parent">cnc_setmactype</a> function.</p>
+
+            <p>The kinds of custom macro variable are as follows.</p>
+
+            <table class="dd">
+                <colgroup valign="top">
+                <colgroup valign="top">
+                <tr>
+                    <td>(1)</td>
+                    <td>Local variable (#1,..,#33)<br/>
+                        The local variables which belong to the macro program just being executed when the application program calls this function are read.</td>
+                </tr>
+                <tr>
+                    <td>(2)</td>
+                    <td>Common variable (#100,..,#999)<br/>
+                        See the description of <a href="ncdata/cnc_rdmacroinfo.htm" target="_parent">cnc_rdmacroinfo</a> function about the available range of common variables.</td>
+                </tr>
+                <tr>
+                    <td>(3)</td>
+                    <td>System variable (#1000～)<br/>
+                     In case of system variable, the variable can be read one by one at a time.</td>
+                </tr>
+                <tr>
+                    <td>(4)</td>
+                    <td>Common variable (#98000～#98499)<br/>
+                        See the description of <a href="ncdata/cnc_rdmacroinfo.htm" target="_parent">cnc_rdmacroinfo</a> function about the available range of common variables.</td>
+                </tr>
+                </colgroup>
+                </colgroup>
+            </table>
+
+            <p>The value of an undefined variable is called "vacant", and it is expressed as follows.</p>
+
+            <p class="dd">0xFFFFFFFFFFFFFFFF</p>
+
+            <p>See "OPERATOR'S MANUAL" of CNC for details of the custom macro variable.</p>
+
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the start custom macro variable number.</p>
+                    </content>
+                </item>
+                <item>
+                    <name>num</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>Specify pointer to the number of custom macro variable.<br/>
+                           The number which was read actually is returned.</p>
+                    </content>
+                </item>
+                <item>
+                    <name>mcr</name>
+                    <type>out</type>
+                    <content>
+                        <p>Pointer to the IODBMRN3 structure for the information of custom macro variable.  The IODBMRN3 structure is as follows.</p>
+<pre>
+typedef struct  iodbmrn {
+    double  mcr_val ;   /* custom macro variable */
+    char    name[32] ;  /* Macro name (includee NULL code) */
+} IODBMRN3 ;
+</pre>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>Data block length error<br/>The number of custom macro variables(*num) is 0 or less.</content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>Data number error<br/>Custom macro variable number(s_no) is wrong.</content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>This function needs the custom macro option.</content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 0i-D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>Custom macro</need>
+        <type>
+            Addition of custom macro common variables<br/>
+            Embedded macro<br/>
+            Addition of custom macro common variables 1000<br/>
+        </type>
+    </option>
+
+
+
+    <parameter>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <add><b></b></add>
+
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdmacro</name>
+            <file>ncdata/cnc_rdmacro.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrmacro</name>
+            <file>ncdata/cnc_wrmacro.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdmacror</name>
+            <file>ncdata/cnc_rdmacror.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdmacror2</name>
+            <file>ncdata/cnc_rdmacror2.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrmacror</name>
+            <file>ncdata/cnc_wrmacror.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrmacror2</name>
+            <file>ncdata/cnc_wrmacror2.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdmacroinfo</name>
+            <file>ncdata/cnc_rdmacroinfo.htm</file>
+        </item>
+        <item>
+            <name>cnc_getmactype</name>
+            <file>ncdata/cnc_getmactype.htm</file>
+        </item>
+        <item>
+            <name>cnc_setmactype</name>
+            <file>ncdata/cnc_setmactype.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

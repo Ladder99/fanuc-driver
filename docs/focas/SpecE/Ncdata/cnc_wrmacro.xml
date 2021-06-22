@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_wrmacro</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_wrmacro(unsigned short FlibHndl, short number, short length, long mcr_val, short dec_val);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Writes the custom macro variable specified by "number". The data must be stored in "mcr_val", "dec_val" with signed binary format. </p>
+
+            <p>The kind of custom macro variable is as follows. The local variable cannot be written.</p>
+
+            <ol>
+                <li>Common variable (#100 to #999)</li>
+                    See the description of <a href="ncdata/cnc_rdmacroinfo.htm" target="_parent">cnc_rdmacroinfo</a> function about the available range of common variables. <br/>
+                <li>System variable (#1000 to #9999)</li>
+                    #3000, #3003, #3004 and #3006 cannnot be written. <br/>
+            </ol>
+
+            <p>It is possible to exchange the type of macro variable by <a href="ncdata/cnc_setmactype.htm" target="_parent">cnc_setmactype</a> function.</p>
+
+            <ul>
+                <li>decimal form floating-point type (data format=M*10**(-E))</li><br/>
+                <table>
+                    <colgroup valign="top">
+                    <colgroup valign="top">
+                    <colgroup valign="top">
+                    <tr>
+                        <td>mcr_val</td>
+                        <td>:</td>
+                        <td>value of variable(=M)<br/>
+                        4-byte binary data with sign<br/>
+                        (available range:999999999 to -999999999)</td>
+                    </tr>
+                    <tr>
+                        <td>dec_val</td>
+                        <td>:</td>
+                        <td>number of places of decimals(=E)<br/>
+                        2-byte binary data with sign<br/>
+                        (available range:-128 to 127)</td>
+                    </tr>
+                    </colgroup>
+                    </colgroup>
+                    </colgroup>
+                </table>
+                <br/>
+                <li>binary form floating-point type (data format=M*2**(-E))</li><br/>
+                <table>
+                    <colgroup valign="top">
+                    <colgroup valign="top">
+                    <colgroup valign="top">
+                    <tr>
+                        <td>mcr_val</td>
+                        <td>:</td>
+                        <td>numerical part of variable(=M)<br/>
+                        4-byte binary data with sign<br/>
+                        (available range:No limitation)</td>
+                    </tr>
+                    <tr>
+                        <td>dec_val</td>
+                        <td>:</td>
+                        <td>exponent part of variable(=E)<br/>
+                        2-byte binary data with sign<br/>
+                        (available range:-128 to 127)</td>
+                    </tr>
+                    </colgroup>
+                    </colgroup>
+                    </colgroup>
+                </table>
+
+            </ul>
+
+            <p>The value of an undefined variable is called "vacant", and it is expressed as follows both at decimal form floating-point type and at binary form floating-point type.</p>
+
+            <blockquote>
+                <p>mcr_val = 0<br/>
+                dec_val = -1</p>
+            </blockquote>
+
+            <p>See "OPERATOR'S MANUAL" of CNC for details of the custom macro variable.</p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>number</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the custom macro variable number.</p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify 10.</p>
+                    </content>
+                </item>
+                <item>
+                    <name>mcr_val</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the value of variable/numerical part of variable.</p>
+                    </content>
+                </item>
+                <item>
+                    <name>dec_val</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the number of places of decimals/exponent part of variable.</p>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                Data block length error<br/>Size (length) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>Data number error<br/>Custom macro variable number (number) is wrong.</content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>Data error<br/>Value of custom macro variable (mcr_val, dec_val) is out of available range.</content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>This function needs the custom macro option.</content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>protection error (30i/31i/32i, 0i-D/F, PMi-A only)<br/>The variable is read-only. </content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>
+            <li>Series 15/15i, 30i/31i/32i, PMi-A</li>
+            Custom macro<br/>
+            <br/>
+            <li>Series 16/18/21, 16i/18i/21i, 0i, Power Mate i</li>
+            Custom macro B<br/>
+        </need>
+        <type>
+            <li>Series 15</li>
+            Custom macro common variable 200 sets<br/>
+            Custom macro common variable 300 sets<br/>
+            Custom macro common variable 600 sets<br/>
+            <br/>
+            <li>Series 15i</li>
+            Custom macro common variable 900 sets<br/>
+            <br/>
+            <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i, PMi-A</li>
+            Custom macro common variable extension<br/>
+            <br/>
+            <li>Series 0i-F</li>
+            Embedded macro<br/>
+            <br/>
+            <li>Series 30i/31i/32i</li>
+            Custom macro common variable extension<br/>
+            Embedded macro<br/>
+            <br/>
+        </type>
+
+        <is>
+            <hssb>The extended driver/library function is necessary.</hssb>
+            <need>
+                Custom macro
+            </need>
+            <type>
+                Custom macro common variable extension<br/>
+                Embedded macro
+            </type>
+        </is>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+            <li>Series 30i/31i/32i, 0i-D/F, PMi-A</li>
+            6031, 6032 (influenced by setting)
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>E</fs16i>
+            <fs18i>E</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+        <add><b></b></add>
+
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdmacro</name>
+            <file>ncdata/cnc_rdmacro.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdmacror</name>
+            <file>ncdata/cnc_rdmacror.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrmacror</name>
+            <file>ncdata/cnc_wrmacror.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdmacror2</name>
+            <file>ncdata/cnc_rdmacror2.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrmacror2</name>
+            <file>ncdata/cnc_wrmacror2.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdmacroinfo</name>
+            <file>ncdata/cnc_rdmacroinfo.htm</file>
+        </item>
+        <item>
+            <name>cnc_getmactype</name>
+            <file>ncdata/cnc_getmactype.htm</file>
+        </item>
+        <item>
+            <name>cnc_setmactype</name>
+            <file>ncdata/cnc_setmactype.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+        <vc>
+<pre>
+The following program writes the specified value in the specified custom macro
+variable.
+
+#include "fwlib32.h"
+
+/* number is variable number to be written. */
+/* value is value to be written. */
+/* dec is decimal digit number. */
+short example( short number, long value, short dec )
+{
+        short ret ;
+        ret = cnc_wrmacro( h, number, 10, value, dec ) ;
+        return ( ret ) ;
+}
+</pre>
+        </vc>
+<vcs><![CDATA[
+The following program writes the specified value in the specified custom macro
+variable.
+
+class example
+{
+    /* number is variable number to be written. */
+    /* value is value to be written. */
+    /* dec is decimal digit number. */
+    public short sample(short number, int value, short dec)
+    {
+            short ret;
+            ret = Focas1.cnc_wrmacro(h, number, 10, value, dec);
+            return (ret);
+    }
+}]]></vcs>
+    </example>
+
+
+
+  </func>
+</root>

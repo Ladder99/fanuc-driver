@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_upend3</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_upend3(unsigned short FlibHndl); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                Notifies the end of uploading NC program to the internal logic of the Data window library.<br/>
+                (This function must be executed after <a href="Program/cnc_upload3.htm" target="_parent">cnc_upload3</a> function.)
+            </p>
+            <p>
+                There are cases where errors(EW_DATA, etc.) during execution of uploading NC program are returned by this function.
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle.
+                            See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                <a href="Program/cnc_upstart3.htm" target="_parent">cnc_upstart3</a> function has not been executed.
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                Data error<br/>
+                In order to get more information for this err_no return value, execute
+                <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                The following detail status will be set onto the member, err_no of ODBERR structure.<br/>
+                <table>
+                    <colgroup align="center" valign="top">
+                    <colgroup align="center" valign="top">
+                    <colgroup valign="top">
+                    <tr>
+                        <td>2</td><td>:</td><td>Program is not found within the specified range.</td>
+                    </tr>
+                    <tr>
+                        <td>3</td><td>:</td><td>NC program memory is broken.</td>
+                    </tr>
+                    </colgroup>
+                    </colgroup>
+                    </colgroup>
+                </table>
+                See <a href="#disc">Description</a> about the timing of error.
+            </content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>
+                Protected<br/>
+                Tape memory is read-protected by the CNC parameter setting(O8000-/O9000- protection, encoding).<br/>
+                See <a href="#disc">Description</a> about the timing of error.
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                CNC execution denied (Series 15i)<br/>
+                Uploading is disable in the current CNC status.<br/>
+                (Machining, resetting, mode changing)<br/>
+                See <a href="#disc">Description</a> about the timing of error.
+            </content>
+        </item>
+        <item>
+            <name>EW_ALARM</name>
+            <content>
+                Alarm state (Series 15i)<br/>
+                Alarm has occurred while uploading.
+                See <a href="#disc">Description</a> about the timing of error.
+            </content>
+        </item>
+
+        <is>
+            <item>
+                <name>EW_FUNC</name>
+                <content>
+                    <a href="Program/cnc_upstart3.htm" target="_parent">cnc_upstart3</a> function has not been executed.
+                </content>
+            </item>
+            <item>
+                <name>EW_DATA</name>
+                <content>
+                    Data error<br/>
+                    In order to get more information for this err_no return value, execute
+                    <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                    The following detail status will be set onto the member, err_no of ODBERR structure.<br/>
+                    <table>
+                        <colgroup align="center" valign="top">
+                        <colgroup align="center" valign="top">
+                        <colgroup valign="top">
+                        <tr>
+                            <td>2</td><td>:</td><td>Program is not found within the specified range.</td>
+                        </tr>
+                        <tr>
+                            <td>3</td><td>:</td><td>NC program memory is broken.</td>
+                        </tr>
+                        </colgroup>
+                        </colgroup>
+                        </colgroup>
+                    </table>
+                    See <a href="#disc">Description</a> about the timing of error.
+                </content>
+            </item>
+            <item>
+                <name>EW_PROT</name>
+                <content>
+                    Protected<br/>
+                    Tape memory is read-protected by the CNC parameter setting(O8000-/O9000- protection, encoding).<br/>
+                    See <a href="#disc">Description</a> about the timing of error.
+                </content>
+            </item>
+<!--
+            <item>
+                <name>EW_REJECT</name>
+                <content>
+                    CNC execution denied<br/>
+                    Uploading is disable in the current CNC status.
+                    (Machining, resetting, mode changing)<br/>
+                    See <a href="#disc">Description</a> about the timing of error.
+                </content>
+            </item>
+            <item>
+                <name>EW_ALARM</name>
+                <content>
+                    Alarm state<br/>
+                    Alarm has occurred while uploading.<br/>
+                    See <a href="#disc">Description</a> about the timing of error.
+                </content>
+            </item>
+-->
+        </is>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <type>
+            <li>Series 15i</li>
+                Pitch error cliompensation<br/>
+                Custom macro<br/>
+            <br/>
+            <li>Series 16i/18i/21i, 0i, 30i, PMi-A</li>
+                Pitch error compensation<br/>
+                Custom macro<br/>
+                Work zero offset
+        </type>
+        
+        <is>
+            <hssb>The extended driver/library function is necessary.</hssb>
+            <type>
+                    Pitch error compensation<br/>
+                    Custom macro<br/>
+                    Work zero offset
+            </type>
+        </is>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 15i</li>
+                    0021=16(HSSB), 7(Ethernet) (*) (must be set)<br/>
+                    0023=16(HSSB), 7(Ethernet) (*) (must be set)<br/>
+                    0000#3<br/>
+                    0011#0,#1,2201#0,#1<br/>
+                    2210,2211,2212,2213<br/>
+                <br/>
+                <li>Series 16i/18i/21i, 0i, 30i, PMi-A</li>
+                    0100#3<br/>
+                    3202#0,#4,#6<br/>
+                    3204#3,#4<br/>
+                    3210,3211<br/>
+                <br/>
+                <li>Power Mate i</li>
+                    0100#3<br/>
+                    3202#0,#4,#6<br/>
+                    3204#3,#4<br/>
+            </ul>
+            <blockquote>
+                <table>
+                    <tr><td rowspan="3" valign="top">*</td><td colspan="3">In case of NC program</td></tr>
+                    <tr><td>EDIT mode              </td><td>:</td><td>0021 is used</td></tr>
+                    <tr><td>Not EDIT mode          </td><td>:</td><td>0023 is used</td></tr>
+                    <tr><td rowspan="3" valign="top">*</td><td colspan="3">In case of except NC program</td></tr>
+                    <tr><td>Not background editing</td><td>:</td><td>0021 is used</td></tr>
+                    <tr><td>Background editing    </td><td>:</td><td>0023 is used</td></tr>
+                </table>
+            </blockquote>
+        </type>
+    </parameter>
+
+    <is_parameter>
+        <type>
+            <ul>
+                0100#3<br/>
+                3202#0,#4,#6<br/>
+                3204#3,#4<br/>
+                3210,3211<br/>
+            </ul>
+        </type>
+    </is_parameter>
+
+
+
+    <mode>
+        <cmn>
+            This function can be used in any CNC mode.<br/>
+            (It is necessary to set mode according to the target data.)
+        </cmn>
+    </mode>
+
+    <is_mode>
+    </is_mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>O</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>E</fs16i>
+            <fs18i>E</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+        
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_upstart3</name>
+            <file>Program/cnc_upstart3.htm</file>
+        </item>
+        <item>
+            <name>cnc_upload3</name>
+            <file>Program/cnc_upload3.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+        <common>
+            <p>See the example of <a href="Program/cnc_upload3.htm#sample" target="_parent">cnc_upload3</a>.</p>
+        </common>
+    </example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_dncstart2</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_dncstart2(unsigned short FlibHndl, char *filename);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>This function returns whether DNC operation or M198 operation is being executed or not.</p>
+            <p>
+                This function returns EW_OK in case that DNC operation or M198 operation are started.
+                If a return value is EW_OK at M198 operation, this function returns a program number/program name demanded from CNC, instead at DNC operation, NULL is returned for the program number/program name.<br/>
+                Also, if a return value is EW_OK, it become possible to output the
+                program of DNC operation or M198 operation by a function <a href="Program/cnc_dnc2.htm" target="_parent">cnc_dnc2</a>
+            </p>
+            <p>This function returns EW_REJECT in case that DNC operation or M198 operation has not been started.</p>
+            <p>The following functions will return EW_FUNC in case that cnc_dncstart2 function is not executed.<br/>
+                <span class="dd"><a href="Program/cnc_dnc2.htm" target="_parent">cnc_dnc2</a></span><br/>
+                <span class="dd"><a href="Program/cnc_dncend2.htm" target="_parent">cnc_dncend2</a></span>
+            </p>
+            <p>A basic procedure for DNC operation or M198 operation is shown below.</p>
+            <p><img src="Program/dnc.gif"/></p>
+            <table  border="2" bordercolorlight="Black" bordercolordark="Black">
+                <tr><td>This function is not available to Embedded Ethernet.</td></tr>
+            </table>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle.
+                            See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>filename</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            The pointer of the area where the NC program number/program name will be set by CNC.
+                        </p>
+                        <p>
+                            In order to get the program number for operation, at least 16 bytes area is required.<br/>
+                            Otherwise, the result of this function is not predictable.
+                        </p>
+                        <p>
+                            In order to get the program name for operation, at least 64 bytes area is required.<br/>
+                            Otherwise, the result of this function is not predictable.
+                        </p>
+                        <p>
+                            Program number/program name is set as ASCII code with NULL terminated at this area.
+                        </p>
+                        <p>
+                            <table>
+                                <tr>
+                                    <td valign="top">&#60;Example1&#62;</td>
+                                    <td>
+                                        In case that 'O1234' was designated as the program number,
+                                        the following character string is set to 'filename'.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <span class="dd">"O1234" + NULL</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">&#60;Example2&#62;</td>
+                                    <td>
+                                        In case that 'GEAR_PARTS_001' was designated as the program name,
+                                        the following character string is set to 'filename'.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        <span class="dd">"GEAR_PARTS_001" + NULL</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </p>
+                        <p>
+                            The NULL string is set as the program number/program name in case of DNC operation,
+                            and the character string that shows the program number/program name in case of M198 operation.
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_BUSY</name>
+            <content>
+                Busy<br/>
+                cnc_dncstart2 function has been executed.<br/>
+                Terminate DNC operation by using <a href="Program/cnc_dncend2.htm" target="_parent">cnc_dncend2</a> function.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The extended driver/library function is necessary.
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                CNC parameter error<br/>
+                The following CNC parameter must be set.<br/>
+                Series 15/15i<br/>
+                <span class="dd">7713#0 = 1</span><br/>
+                Series 16/18, 16i/18i/21i, 0i-A/B/C<br/>
+                <span class="dd">8706#1 = 1</span>
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                DNC or M198 operation is not started.
+            </content>
+        </item>
+
+        <is>
+            <item>
+                <name>EW_BUSY</name>
+                <content>
+                    Busy<br/>
+                    cnc_dncstart2 function has been executed.<br/>
+                    Terminate DNC operation by using <a href="Program/cnc_dncend2.htm" target="_parent">cnc_dncend2</a> function.
+                </content>
+            </item>
+            <item>
+                <name>EW_REJECT</name>
+                <content>
+                    DNC or M198 operation is not started.
+                </content>
+            </item>
+            <item>
+                <name>EW_NOOPT</name>
+                <content>
+                    No option<br/>
+                    The extended driver/library function is necessary.
+                </content>
+            </item>
+        </is>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+            <li>HSSB</li>
+                <ul>
+                <li>Series 15</li>
+                        0000#0 (influenced by setting)<br/>
+                        7713#0 = 1 (must be set)<br/>
+                        0020 = 15 (must be set)<br/>
+                <br/>
+                <li>Series 15i</li>
+                        0000#0 (influenced by setting)<br/>
+                        0020 = 15 (must be set)<br/>
+                <br/>
+                <li>Series 16/18/21, 16i/18i/21i, 0i-A/B</li>
+                        0000#0 (influenced by setting)<br/>
+                        8706#0 (influenced by setting) (This parameter is effective only in path 1. Set 0 except the 1st path.)<br/>
+                        8706#1 = 1 (must be set)<br/>
+                        0020 = 15 (must be set)<br/>
+                        0020 = 16 (must be set)(In case of HSSB PORT2 function)<br/>
+                <br/>
+                <li>Series 30i/31i/32i, 0i-D/F, PMi-A</li>
+                        0000#0 (influenced by setting)<br/>
+                        0020 = 15 (must be set)<br/>
+                        0020 = 16 (must be set)(In case of HSSB PORT2 function and NCGuidePro)<br/>
+                <br/>
+                </ul>
+            <li>Ethernet</li>
+                <ul>
+                <li>Series 15i</li>
+                        0000#0 (influenced by setting)<br/>
+                        0020 = 6 (must be set)<br/>
+                <br/>
+                <li>Series 16i/18i/21i, 0i, 30i/31i/32i, PMi-A<!--, Power Mate i--></li>
+                        0000#0 (influenced by setting)<br/>
+                        0020 = 6 (must be set)
+                </ul>
+            </ul>
+        </type>
+    </parameter>
+
+    <is_parameter>
+        <type>
+            <ul>
+                0000#0 (influenced by setting)<br/>
+                0020 = 15 (must be set)
+            </ul>
+        </type>
+    </is_parameter>
+
+    <mode>
+        <cmn>
+            <ul>
+            <li>HSSB</li>
+                <ul>
+                    <li>Series 15</li>
+                        It is necessary to be set in TAPE mode.<br/>
+                    <br/>
+                    <li>Series 15i</li>
+                        It is necessary to be set in DNC mode.<br/>
+                    <br/>
+                    <li>Series 16/18, 16i/18i/21i, 0i-A/B</li>
+                        It is necessary to be set in MEM mode, and "DMMC" signal(DI),
+                        G042#7=1 in case of DNC operation.<br/>
+                    <br/>
+                    <li>Series 30i/31i/32i, Series 0i-D/F, PMi-A, 16i/18i/21i(In case of HSSB PORT2 function)</li>
+                        It is necessary to be set in MEM mode, and "DNCI" signal(DI),
+                        G043#5=1 in case of DNC operation. <br/>
+                </ul>
+            <br/>
+            <li>Ethernet</li>
+                <ul>
+                    <li>Series 15i</li>
+                        It is necessary to be set in DNC mode. <br/>
+                    <br/>
+                    <li>Series 16i/18i/21i, 0i, 30i/31i/32i, PMi-A<!--, Power Mate i--></li>
+                        It is necessary to be set in MEM mode, and "DNCI" signal(DI), G043#5=1 in case of DNC operation.
+                </ul>
+            </ul>
+        </cmn>
+    </mode>
+
+    <is_mode>
+        <cmn>
+            It is necessary to be set in MEM mode, and "DNCI" signal(DI), G043#5=1 in case of DNC operation.
+        </cmn>
+    </is_mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+        
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_dnc2</name>
+            <file>Program/cnc_dnc2.htm</file>
+        </item>
+        <item>
+            <name>cnc_dncend2</name>
+            <file>Program/cnc_dncend2.htm</file>
+        </item>
+        <item>
+            <name>cnc_rddncdgndt</name>
+            <file>Program/cnc_rddncdgndt.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+        <common>
+            See the example of <a href="Program/cnc_dnc2.htm#sample" target="_parent">cnc_dnc2</a>.
+        </common>
+    </example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+    <func>
+
+
+        <!-- 関数名 -->
+        <title>cnc_rdspindleid2</title>
+
+
+
+        <!-- 関数宣言 -->
+        <declare>
+            <!-- Visual C++の宣言 -->
+            <vc>
+                <include>#include "fwlib32.h"</include>
+                <prottype>FWLIBAPI short WINAPI cnc_rdspindleid2(unsigned short FlibHndl,
+            short sp, short type, ODBCSPID2 *spindleid);</prottype>
+            </vc>
+        </declare>
+
+
+
+        <!-- 解説 -->
+        <doc>
+            <cmn>
+                <p>Read specified spindle id information from adaptation device. </p>
+                <p>Each information is stored in member of the ODBCSPID2 structure. </p>
+            </cmn>
+        </doc>
+
+
+
+        <!-- 引数 -->
+        <argument>
+            <common>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Specify the library handle.See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>axis</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Specify the controlled spindle number of reading spindle ID information.
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>type</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Specify the type of reading data for spindle ID information. 
+                                The type which can be specified is as follows. 
+                            </p>
+                            <table border="0" class="dd">
+                                <tr><td>0</td><td>：</td><td>Main SP motor specification</td></tr>
+                                <tr><td>1</td><td>：</td><td>Main SP motor serial number</td></tr>
+                                <tr><td>2</td><td>：</td><td>Sub SP motor specification</td></tr>
+                                <tr><td>3</td><td>：</td><td>Sub SP motor serial number</td></tr>
+                                <tr><td>4</td><td>：</td><td>SP specification</td></tr>
+                                <tr><td>5</td><td>：</td><td>SP serial number</td></tr>
+                                <tr><td>6</td><td>：</td><td>PS specification</td></tr>
+                                <tr><td>7</td><td>：</td><td>PS serial number</td></tr>
+                                <tr><td>8</td><td>：</td><td>PS software series edition</td></tr>
+                                <tr><td>-1</td><td>：</td><td>All of the above-mentioned data kind</td></tr>
+                            </table>
+                        </content>
+                    </item>
+                    <item>
+                        <name>spindleid</name>
+                        <type>out</type>
+                        <content>
+                            <p>
+                                Specify the pointer to a variable of ODBCSPID2 structure for setting spindle ID information.
+                                The details of members of ODBCSPID2 structure are as follows.
+                                "NULL ('\0')" is added to the end of character strings.
+                            </p>
+<pre>
+typedef struct {
+    char   mt_spc[20] ;        /* Main SP motor specification */
+    char   mt_srn[10] ;        /* Main SP motor serial number */
+    char   sbmt_spc[20] ;      /* Sub SP motor specification */
+    char   sbmt_srn[10] ;      /* Sub SP motor serial number */
+    char   spm_spc[22] ;       /* SP specification */
+    char   spm_srn[12] ;       /* SP serial number */
+    char   psm_spc[22] ;       /* PS specification */
+    char   psm_srn[12] ;       /* PS serial number */
+    char   pss_see[9] ;        /* PS software series edition */
+} ODBCSPID2 ;
+</pre>
+                        </content>
+                    </item>
+                </vc>
+            </common>
+        </argument>
+
+
+        <!-- 戻り値 -->
+        <errcode>
+        </errcode>
+
+
+
+        <!-- CNCオプション -->
+        <option>
+            <hssb>
+                The extended driver/library function is necessary. 
+            </hssb>
+            <ethr>
+                <p>The Ethernet function and the extended driver/library function are necessary.</p>
+                <p>However, in case of 0i-D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+                <p>When Embedded Ethernet is used,</p>
+                    <p class="dd">above two optional functions are not required.</p>
+                <p>When Ethernet board is used,</p>
+                    <p class="dd">only Ethernet function is required.</p>
+            </ethr>
+
+            <!-- 30i(WinCE) -->
+            <is>
+                <hssb>
+                    The following functions are necessary for this function.
+                    <ul type="disc">
+                        <li>The extended driver/library function.</li>
+                    </ul>
+                </hssb>
+            </is>
+        </option>
+
+
+
+        <!-- CNCパラメータ -->
+        <parameter>
+        </parameter>
+
+        <!-- 30i(WinCE) -->
+        <is_parameter>
+        </is_parameter>
+
+
+
+        <!-- CNCモード -->
+        <mode></mode>
+        <!-- 30i(WinCE) -->
+        <is_mode></is_mode>
+
+
+
+        <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>X</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>X</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    </func>
+</root>

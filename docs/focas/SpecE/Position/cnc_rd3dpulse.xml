@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_rd3dpulse</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rd3dpulse(unsigned short FlibHndl, ODB3DPLS *hdlpulse);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Reads the handle interrupt pulse amount about 3-dimensional handle feed.</p>
+            <p>The handle interrupt pulse amount in special handle feed mode(G156#0,
+            #1,#2/DI) is stored in each member of "ODB3DPLS".</p>
+
+            <table border="1">
+                <tr>
+                    <th>Special handle feed mode</th>
+                    <th>Interrupt pulse amount stored</th>
+                </tr>
+                <tr>
+                    <td>Tool axis perpendicular direction mode X axis direction </td>
+                    <td>right_angle_x</td>
+                </tr>
+                <tr>
+                    <td>Tool axis perpendicular direction mode Y axis direction </td>
+                    <td>right_angle_y</td>
+                </tr>
+                <tr>
+                    <td>Tool axis direction mode </td>
+                    <td>tool_axis</td>
+                </tr>
+                <tr>
+                    <td>Tool tip center rotation mode A, B axis </td>
+                    <td>tool_tip_a_b</td>
+                </tr>
+                <tr>
+                    <td>Tool tip center rotation mode C axis </td>
+                    <td>tool_tip_c</td>
+                </tr>
+            </table>
+
+            <p>The places of decimal points can be got by <a href="misc/cnc_getfigure.htm" target="_parent">cnc_getfigure</a> function specified tool offset.</p>
+
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>hdlpulse</name>
+                    <type>out</type>
+                    <content>
+                        <p>Pointer to the ODB3DPLS structure including the handle
+                    interrupt pulse amount of each mode.
+                    The ODB3DPLS structure is as follows.</p>
+<pre>
+typedef struct odb3dpls {
+    long    right_angle_x ; /* Tool axis perpendicular
+                               direction mode X axis direction */
+    long    right_angle_y ; /* Tool axis perpendicular
+                               direction mode Y axis direction */
+    long    tool_axis ;     /* Tool axis direction mode */
+    long    tool_tip_a_b ;
+                    /* Tool tip center rotation mode A, B axis */
+    long    tool_tip_c ;
+                    /* Tool tip center rotation mode C axis */
+} ODB3DPLS ;
+
+ODB3DPLS hdlpulse[2] ;
+            /* hdlpulse[0] : for general and first parallel axis */
+            /* hdlpulse[1] : for second parallel axis */
+</pre>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>The 3-dimensional handle feed function and
+                                    the extended driver/library function are
+                                    necessary.  Besides, either the manual handle
+                                    feed function or the manual handle interrupt
+                                    function is necessary.</content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+        </ethr>
+        <need>
+                This function needs the 3-dimensional handle feed function.<br/>
+                This function needs either the manual handle feed function or the manual handle interrupt function.
+        </need>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 15/15i</li>
+                Parameters concerning the 3-dimensional handle feed function.<br/>
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rd3dtooltip</name>
+            <file>position/cnc_rd3dtooltip.htm</file>
+        </item>
+        <item>
+            <name>cnc_rd3dmovrlap</name>
+            <file>position/cnc_rd3dmovrlap.htm</file>
+        </item>
+        <item>
+            <name>cnc_rd3dofschg</name>
+            <file>position/cnc_rd3dofschg.htm</file>
+        </item>
+        <item>
+            <name>cnc_clr3dplsmov</name>
+            <file>position/cnc_clr3dplsmov.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_rdactpt</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>
+            FWLIBAPI short WINAPI cnc_rdactpt(unsigned short FlibHndl, long *prog_no, long *blk_no);
+        </prottype>
+      </vc>
+    </declare>
+
+    <doc>
+        <cmn>
+            <p>Get the actual execution pointer in MDI, MEM and EDIT, TJOG, THND mode. </p>
+            <p>When this function works in DNC/M198 <span class="xis">and RISC</span> operation, the return code is EW_REJECT. </p>
+            <p>The restrictions in FS30i, FS0i-D/F and PMi-A are as follows.
+            <ul>
+                <li>When this function works in DNC/M198, the return code is always EW_REJECT.</li>
+                <li>In case of FS30i-A, when STL signal is ON, the return code is EW_REJECT.</li>
+                <li>In case of FS0i-D/F, FS30i-B and PMi-A, even if STL signal is ON, the return code is EW_OK. (when Parameter No.13104#1=1, the return code is EW_REJECT)</li>
+                <li>In case of FS0i-D/F, FS30i-B and PMi-A, even if M198 is executed, the return code is EW_OK.</li>
+                <li>When program is looked-ahead, It take next block number of block be looked-ahead.</li>
+            </ul>
+            </p>
+        </cmn>
+
+        <is>
+            <p>Get the actual execution pointer in MDI, MEM and EDIT, TJOG, THND mode. </p>
+            <p>The restrictions are as follows.
+            <ul>
+                <li>When this function works in DNC/M198, the return code is always EW_REJECT.</li>
+                <li>In case of FS30i-A, when STL signal is ON, the return code is EW_REJECT.</li>
+                <li>In case of FS0i-D and FS30i-B(Parameter No.13104#1=1), when STL signal is ON, the return code is EW_REJECT.</li>
+                <li>When program is looked-ahead, It take next block number of block be looked-ahead.</li>
+            </ul>
+            </p>
+        </is>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>prog_no</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                           Pointer to the variable to store the actual executed program number into.<br/>
+                            It is -1 when MDI program is executed. 
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>blk_no</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                           Pointer to the variable to store the actual executed program pointer into.<br/>
+                            It is a block number as the top of the program is 0.
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>The extended driver/library function is necessary.</content>
+        </item>
+        <item>
+            <name>EW_MODE</name>
+            <content>CNC mode error<br/>CNC mode is except MDI, MEM, EDIT, TJOG and THND one.</content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>CNC execution denied<br/>
+            <ul style="margin-top:0;margin-bottom:0">
+            <li>No program is executed.</li>
+            <li>CNC is in DNC/M198 <span class="xis">or RISC</span> operation.</li>
+            <li>STL signal is ON.<span class="xis">(FS30i/31i/32i, 0i-D/F, PMi-A)</span></li>
+            <li>CNC is in the emergency stop.<span class="xis">(FS30i/31i/32i, 0i-D/F, PMi-A)</span></li>
+            </ul>
+            </content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/F, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 0i-D/F、30i-B, PMi-A<br/>
+                    13104#1<br/>
+                </li>
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <mode>
+        <cmn>
+            It is possible to use in MDI, MEM, EDIT, TJOG and THND mode.
+        </cmn>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>H</a>
+        </pw>
+        <add><b></b></add>
+        <is>
+            <!-- M -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_wractpt</name>
+            <file>Program/cnc_wractpt.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

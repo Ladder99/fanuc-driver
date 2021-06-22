@@ -1,0 +1,1852 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>General Description</title>
+<link rel="stylesheet" type="text/css" href="fwlib32.css">
+<style>
+<!--
+ol li ul {list-style-type:disc}
+ol li ul li ul{list-style-type:circle}
+-->
+</style>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<p><a href="fwlib32.htm">Top Page</a>
+
+<hr>
+
+<h2>General Description</h2>
+
+<ol>
+
+<ol>
+    <li><a href="#File">Library files</a>
+    <li><a href="#WinApi">Calling convention of API</a>
+    <li><a href="#Multi">Multi-thread</a>
+    <li><a href="#Lang">Language for development</a>
+    <li><a href="#Struct">Alignment of structure member</a>
+    <li><a href="#Header">Header file</a>
+    <li><a href="#UserDef">When you use the array of the 'user definition type' with Visual Basic 6.0</a>
+    <li><a href="#AxisNum">Number of axes at Data window</a>
+    <li><a href="#O8">Program number 8 digits (Series 15i, 16/18)</a>
+    <li><a href="#FS15">Difference of the function specifications (Series 15 and other CNCs (Series 16/18/21/0, Power Mate))</a>
+    <li><a href="#FS15vsFS15i">Difference of the function specifications (Series 15-B, Series 15i)</a>
+    <li><a href="#FS30">Difference of the function specifications (Series 30i, 0i-D/F, PMi-A and other CNCs)</a>
+    <li><a href="#FS30iAvsFS30iB">Difference of the function specifications (Series 30i-A, Series 30i-B)</a>
+    <li><a href="#FS16Comp">Advanced mode(32 axes) and traditional mode(8 axes) for FS30i</a>
+    <li><a href="#HSSBvsEther">Difference of the HSSB version and the Ethernet version</a>
+    <li><a href="#DriveName">Specifying the folder and file name for FS30i, 0i-D/F and PMi-A.</a>
+    <li><a href="#NonVolatileMemory">Non-volatile memory for FS30i, 0i-D/F and PMi-A</a>
+</ol>
+<p>
+<br/>
+
+<!---------------------------------------------------------------------------->
+<li><a name="File">Library files</a>
+<ul>
+	<li>32 bit version
+</ul>
+<blockquote>
+<table class=dl>
+	<tr><td>FWLIB32.DLL  <td> : <td>CNC/PMC Data window control library				</tr>
+	<tr><td>FWLIBE1.DLL  <td> : <td>Processing library for TCP/IP (*1)				</tr>
+	<tr><td>FWLIB150.DLL <td> : <td>Processing library of HSSB for 15-B				</tr>
+	<tr><td>FWLIB15i.DLL <td> : <td>Processing library of HSSB for 15i				</tr>
+	<tr><td>FWLIB160.DLL <td> : <td>Processing library of HSSB for 16/18/21				</tr>
+	<tr><td>FWLIB16W.DLL <td> : <td>Processing library of HSSB for 16i/18i-W			</tr>
+	<tr><td>FWLIB0i.DLL  <td> : <td>Processing library of HSSB for 0i-A				</tr>
+	<tr><td>FWLIB0iB.DLL <td> : <td>Processing library of HSSB for 0i-B				</tr>
+	<tr><td>FWLIB0iD.DLL <td> : <td>Processing library of HSSB for 0i-D				</tr>
+	<tr><td>FWLIBPM.DLL  <td> : <td>Processing library of HSSB for Power Mate-D/H			</tr>
+	<tr><td>FWLIBPMi.DLL <td> : <td>Processing library of HSSB for Power Mate i-D/H			</tr>
+	<tr><td>FWLIB30i.DLL <td> : <td>Processing library of HSSB for 30i/31i/32i/35i,0i-F,PMi-A	</tr>
+	<tr><td>FWLIBNCG.DLL <td> : <td>Processing library of HSSB for NCGuide(31i/32i/35i,0i-F)	</tr>
+	<tr><td>FWLIB0DN.DLL <td> : <td>Processing library of HSSB for NCGuide(0i-D)			</tr>
+	<tr><td>FWLIB32.LIB  <td> : <td>Import library							</tr>
+	<tr><td>FWLIB32.H    <td> : <td>C/C++ header file for CNC/PMC data window functions and structures (*2)(*3)(*4) </tr>
+	<tr><td>FWLIB32.BAS  <td> : <td>Visual Basic header file for CNC/PMC data window functions and structures (*2)(*3)(*4) </tr>
+</table>
+</blockquote>
+<ul>
+	<li>64 bit version
+</ul>
+<blockquote>
+<table class=dl>
+	<tr><td>FWLIB64.DLL    <td> : <td>CNC/PMC Data window control library				</tr>
+	<tr><td>FWLIBE64.DLL   <td> : <td>Processing library for TCP/IP (*1)				</tr>
+	<tr><td>FWLIB0iD64.DLL <td> : <td>Processing library of HSSB for 0i-D				</tr>
+	<tr><td>FWLIB30i64.DLL <td> : <td>Processing library of HSSB for 30i/31i/32i/35i,0i-F,PMi-A	</tr>
+	<tr><td>FWLIBNCG64.DLL <td> : <td>Processing library of HSSB for NCGuide(31i/32i/35i,0i-F)	</tr>
+	<tr><td>FWLIB0DN64.DLL <td> : <td>Processing library of HSSB for NCGuide(0i-D)			</tr>
+	<tr><td>FWLIB64.LIB    <td> : <td>Import library						</tr>
+	<tr><td>FWLIB64.H      <td> : <td>C/C++ header file for CNC/PMC data window functions and structures (*2)(*3)(*4) </tr>
+</table>
+	<br/>
+	<p>(*1)Processing library for TCP/IP can be used with 0i-B/C/D/F, 16i/18i/21i, 15i, Power Mate i-D/H, Power Motion i-A, FS30i/31i/32i/35i and NCGuide.
+	<p>(*2)The header file is different in each CNC model.
+	<p>(*3)The header file for each CNC model can be used by both of HSSB and TCP/IP.
+	<p>(*4)The header file for TCP/IP is common for the HSSB and the Ethernet version. This file can be used to all CNC models by defining the constant.
+</blockquote>
+
+
+
+<!---------------------------------------------------------------------------->
+<li><a name="WinApi">Calling convention of API</a>
+<blockquote>
+<p>This manual describes the interface of Data window library. Each function of 32 bit Data window library follows the calling convention of Win32 API.  So, each function of this library can be called from 32 bit application development tools, such as Visual C++ or Visual Basic.</p>
+<p>This manual describes the interface of Data window library. Each function of 64 bit Data window library follows the calling convention of x64 API.  So, each function of this library can be called from 64 bit application development tools, such as Visual C++.
+</blockquote>
+
+
+
+<!---------------------------------------------------------------------------->
+<li><a name="Multi">Multi-thread</a>
+<blockquote>
+<p>Win32/x64 supports multi-thread. Each function in this library can be called from the multiple threads at a time. The access to the single system resource, such as CNC/PMC's internal memory, at a time is exclusively controlled by this library.
+</blockquote>
+
+
+
+<!---------------------------------------------------------------------------->
+<li><a name="Lang">Language for development</a>
+<blockquote>
+<p>CNC/PMC Data window library is tested by using the following development language.
+<ul>
+	<li>32 bit version<br/>
+	    - Visual C++ 6.0<br/>
+	    - Visual Basic 6.0
+</ul>
+<ul>
+	<li>64 bit version<br/>
+	    - Visual Studio 2010
+</ul>
+<p>Besides, Data window library is developed with using Microsoft's development tools. The validity of using this library with other vendor's development tools has not been confirmed.
+</blockquote>
+
+
+
+<!---------------------------------------------------------------------------->
+<li><a name="Struct">Alignment of structure member</a>
+<blockquote>
+<p>This library is designed to use the 4 byte structure member alignment<!--, for the Win32 environment-->.
+<p>In 4 byte alignment, variables whose size are longer than 4 byte are aligned at the address of multiple of 4.  For example, at the following structure,<br>
+<pre>
+    struct {
+        short   a1;     /* 2 bytes */
+        long    a2;     /* 4 bytes */
+    };
+</pre>
+<p>there is 2 byte gap between variable a1 and a2. And the size of structure is raised to multiple of 4.
+<p>By introducing 4 byte alignment, the size of structures and offset of its members are different from those of 2 byte alignment. Therefore, <b>the application program which uses the size of structures and offset of its members by calculating according to the information described on &quot;FANUC MMC-IV OPERATOR'S MANUAL&quot; will not work correctly.</b> The size of structures should be obtained by using sizeof() operator.
+<p>In the header file, FWLIB32.H or FWLIB64.H, the alignment at each structure is specified as 4 byte compulsorily by using &quot;pragma pack(4)&quot;. In case that the structures which are required as the application interface with <!--32 bit--> data window library have to be re-defined at user source program, <b>specify &quot;pragma pack(4)&quot; or compiler option &quot;/Zp4&quot;.</b>
+</blockquote>
+
+
+
+
+<!---------------------------------------------------------------------------->
+<li><a name="Header">Header file</a>
+<blockquote>
+<p>Data window library is configured by specifying &quot;dllexport&quot; to each function. To use the functions of this library at C or C++ language, &quot;dllimport&quot; must be specified to each function. The header file, FWLIB32.H or FWLIB64.H, provides this attribute.
+<p><b>As the link error should occur while making the application unless it includes this header file</b>, it is required that the header file is included in the application program.
+</blockquote>
+
+
+<!---------------------------------------------------------------------------->
+<li><a name="#UserDef">When you use the array of the 'user definition type' with Visual Basic 6.0</a>
+<blockquote>
+<p>When you use the array of the 'user definition type' with Visual Basic 6.0, you should be define the following new 'user definition type'.
+<p>Ex) cnc_rdprogdir3 function
+<pre>
+Type MyPrgDir3
+    DirBuf(0 To 9) As PRGDIR3
+End Type' In case that the number is 10.
+</pre>
+
+<pre>
+Example
+        The following program reads all registration information of NC program, and outputs the program number list.
+
+        Type MyPrgDir3
+            DirBuf(0 To 99) As PRGDIR3
+        End Type'
+
+
+        Dim ret As Integer
+        Dim prg As MyPrgDir3
+        Dim i As Integer
+        Dim num As Integer
+        Dim top As Long
+        Dim dir3 As String
+
+        Open "C:\\temp\\sample.dat" For Output As #1
+
+        top = 0
+        Do
+            num = 100
+            ret = cnc_rdprogdir3(h, 0, top, num, prg)
+            If ret = EW_NUMBER Then
+                Exit Do
+            ElseIf ret <> 0 Then
+                dir3 = "ERROR: " + Format(ret, "###0")
+                Print #1, dir3
+                Exit Do
+            End If
+
+            For i = 0 To num - 1
+                dir3 = "O" + Format(prg.DirBuf(i).lNumber, "######0")
+                Print #1, dir3
+            Next
+            top = prg.DirBuf(num - 1).lNumber + 1
+        Loop While (num >= 100)
+
+        Close #1
+</pre>
+
+
+<p>When you specified the following, the function do not work correctly(the acquired data was wrong or application error occurred etc.).
+<pre>
+Dim prg(0 To 9) As PRGDIR3
+ret = cnc_rdprogdir3(h, 0, top, num, prg)
+</pre>
+
+</blockquote>
+
+
+<!---------------------------------------------------------------------------->
+<li><a name="AxisNum">Number of axes at Data window</a>
+<blockquote>
+<dl>
+	<dt>Maximum controlled axes	<dd>maximum number of axes for Data window interface
+	<dt>Current controlled axes	<dd>number of axes controlled by CNC system currently
+</dl>
+<p>Maximum controlled axes is defined as 'MAX_AXIS' in the header file. It differs at each CNC system, so, define the following constant by using the '-D' option which is specified on compiling.
+
+	<ul>
+	<li>In case of header file for TCP/IP<br/>
+	    The header file for TCP/IP can be used to all CNC models(both of HSSB and TCP/IP) by the following -D option.<br/>
+	    Please define "HSSB_LIB" when you use this header file for HSSB.
+	<table border=1>
+		<tr> <th>System							<th>Option(-D)	</tr>
+		<tr> <td>FS16/18/21, 0i-B, 0i-C, 16i/18i-W, Power Mate i(8 axes)<td>(none)	</tr>
+		<tr> <td>FS0i-D(32 axes)					<td>FS0IDD	 </tr>
+		<tr> <td>FS30i/31i/32i/35i, 0i-F, PMi-A(32 axes)		<td>FS30D	 </tr>
+		<tr> <td>FS15-B/15i Multi axes(24 axes)				<td>M_AXIS2	 </tr>
+		<tr> <td>FS15-B Multi axes(15 axes)				<td>M_AXIS1	 </tr>
+		<tr> <td>FS15-B(10 axes)					<td>FS15BD	 </tr>
+		<tr> <td>FS15i(10 axes)						<td>FS15D	 </tr>
+		<tr> <td>FS0i-A(4 axes)						<td>FS0ID	 </tr>
+		<tr> <td>Power Mate(6 axes)					<td>PMD	 </tr>
+	</table>
+	<p>note) In case of FS15, please define "FS15BD"(For FS15-B) or "FS15D"(For FS15i) by the series.</p>
+<pre>
+#if defined (FS30D) || defined (FS0IDD)
+#define MAX_AXIS        32
+#elif defined (M_AXIS2)
+#define MAX_AXIS        24
+#elif defined(M_AXIS1)
+#define MAX_AXIS        15
+#elif defined (FS15BD)
+#define MAX_AXIS        10
+#elif defined (FS15D)
+#define MAX_AXIS        10
+#elif defined (FS0ID)
+#define MAX_AXIS        4
+#elif defined (PMD)
+#define MAX_AXIS        6
+#else
+#define MAX_AXIS        8
+#endif
+</pre>
+</ul>
+<br/>
+
+<ul>
+	<li>In case of header file for Series 30i/31i/32i/35i, Series 0i-D/F and PMi-A
+	<table border=1>
+		<tr> <th>System			<th>Option(-D)	</tr>
+		<tr> <td>Standard (32 axes)	<td>(node)	</tr>
+	</table>
+<pre>
+#define MAX_AXIS        32
+</pre>
+</ul>
+<br/>
+
+<ul>
+	<li>In case of header file for Series 15-B
+	<table border=1>
+		<tr> <th>System			<th>Option(-D)	</tr>
+		<tr> <td>Standard (10 axes)	<td>(none)	</tr>
+		<tr> <td>Multi axes (15 axes)	<td>M_AXIS1	</tr>
+		<tr> <td>Multi axes (24 axes)	<td>M_AXIS2	</tr>
+	</table>
+<pre>
+#if defined(M_AXIS2)
+#define MAX_AXIS        24
+#elif defined(M_AXIS1)
+#define MAX_AXIS        15
+#else
+#define MAX_AXIS        10
+#endif
+</pre>
+</ul>
+<br/>
+
+<ul>
+	<li>In case of header file for Series 15i
+	<table border=1>
+		<tr> <th>System			<th>Option(-D)	</tr>
+		<tr> <td>Standard (10 axes)	<td>(none)	</tr>
+		<tr> <td>Multi axes (24 axes)	<td>M_AXIS2	</tr>
+	</table>
+<pre>
+#if defined(M_AXIS2)
+#define MAX_AXIS        24
+#else
+#define MAX_AXIS        10
+#endif
+</pre>
+</ul>
+<br/>
+
+<ul>
+	<li>In case of header file for Series 16/18/21, 0i-B, 16i/18i-W and Power Mate i
+	<table border=1>
+		<tr> <th>System			<th>Option(-D)	</tr>
+		<tr> <td>Standard (8 axes)	<td>(none)	</tr>
+	</table>
+<pre>
+#define MAX_AXIS        8
+</pre>
+</ul>
+<br/>
+
+<ul>
+	<li>In case of header file of HSSB for Series 0i-A
+	<table border=1>
+		<tr> <th>System			<th>Option(-D)	</tr>
+		<tr> <td>Standard (4 axes)	<td>(none)	</tr>
+	</table>
+<pre>
+#define MAX_AXIS        4
+</pre>
+</ul>
+<br/>
+
+<ul>
+	<li>In case of header file of HSSB for Power Mate
+	<table border=1>
+		<tr> <th>System			<th>Option(-D)	</tr>
+		<tr> <td>Standard (6 axes)	<td>(none)	</tr>
+	</table>
+<pre>
+#define MAX_AXIS        6
+</pre>
+</ul>
+<br/>
+
+</blockquote>
+
+
+<blockquote>
+<p>In case of Visual Basic, define that in VB menu &quot;[Tool] -> [Option] -> [Detail Setting] -> [Conditional compile argument]&quot;.
+
+<p>'Current controlled axis' can be got by 'Read CNC system information (<a href="./misc/cnc_sysinfo.htm">cnc_sysinfo</a>)' function.
+</blockquote>
+
+</blockquote>
+
+
+
+<!---------------------------------------------------------------------------->
+<li><a name="O8">Program number 8 digits (Series 15i, 16/18)</a>
+
+<p><b>In case of program number 8 digits, the argument and the member of the structure which are related to program number of Data window function, is changed from &quot;short&quot; to &quot;long&quot;.</b>
+<p>In case of C/C++ language, define character constant &quot;ONO8D&quot; at compiling by option &quot;-D&quot; to switch library for program number 8 digits.
+<blockquote>
+	<table border=1>
+		<tr><th>System				<th>Option(-D)	</tr>
+		<tr><td>Program number 4 digits		<td>(None)	</tr>
+		<tr><td>Program number 8 digits		<td>ONO8D	</tr>
+	</table>
+</blockquote>
+<p>In case of Visual Basic, define &quot;ONO8D=1&quot; in VB menu &quot;[Tool] -> [Option] -> [Detail Setting] -> [Conditional compile argument]&quot; to switch library for program number 8 digits. If &quot;ONO8D&quot; is not defined or &quot;ONO8D=0&quot; is defined, it becomes for program number 4 digits.
+<p>The window function compiled for the program number 8 digits operates normally when CNC side is program number 4 digits. Conversely, if the window function for the program number 4 digits is used when CNC side is the program number 8 digits, it becomes an error(EW_FUNC).
+</blockquote>
+
+
+
+<!---------------------------------------------------------------------------->
+<li><a name="FS15">Difference of the function specifications (Series 15 and other CNCs (Series 16/18/21/0, Power Mate))</a>
+<blockquote>
+
+<p>
+If you make an application for Series 15i, you must specify the compiling option, which is &quot;FS15D&quot;.
+<p>
+In case of C/C++ language, define character constant &quot;FS15D&quot; at compiling by option. In case of Visual Basic, define &quot;FS15D=1&quot; in VB menu &quot; [Tool] -> [Option] -> [Detail Setting] -> [Conditional compile argument] &quot;.
+<p>
+And, there are some differences of the specifications between Series 15i and others (Series 16/18/21/0, Power Mate) about library function. The major differences are as follows.
+
+<ul>
+<li>Data size for all axes
+<div>
+<p>In some function, when you read/write data for all axes, data size that must be allocated is different as follows.
+
+<blockquote>
+	<table>
+		<tr><td>Series 16/18/21/0, Power Mate<td>:<td>Size for <b>current controlled axes</b></tr>
+		<tr><td>Series 15i<td>:<td>Size for <b>maximum controlled axes</b></tr>
+	</table>
+</blockquote>
+<p> The following functions are related to this subject.
+<table border=1>
+	<tr>
+		<th>Brief description
+		<th>Function name
+	</tr>
+	<tr>
+		<td> Read absolute axis position
+		<td><a href="./position/cnc_absolute.htm">cnc_absolute</a>, 
+			<a href="./position/cnc_absolute2.htm">cnc_absolute2</a>
+	</tr>
+	<tr>
+		<td> Read machine axis position
+		<td><a href="./position/cnc_machine.htm">cnc_machine</a>
+	</tr>
+	<tr>
+		<td> Read relative axis position
+		<td><a href="./position/cnc_relative.htm">cnc_relative</a>, 
+			<a href="./position/cnc_relative2.htm">cnc_relative2</a>
+	</tr>
+	<tr>
+		<td> Read distance to go
+		<td><a href="./position/cnc_distance.htm">cnc_distance</a>
+	</tr>
+	<tr>
+		<td> Read skip position
+		<td><a href="./position/cnc_skip.htm">cnc_skip</a>
+	</tr>
+	<tr>
+		<td> Read servo delay value
+		<td><a href="./position/cnc_srvdelay.htm">cnc_srvdelay</a>
+	</tr>
+	<tr>
+		<td> Read acceleration/deceleration delay value
+		<td><a href="./position/cnc_accdecdly.htm">cnc_accdecdly</a>
+	</tr>
+	<tr>
+		<td> Set origin/preset relative axis position
+		<td><a href="./position/cnc_wrrelpos.htm">cnc_wrrelpos</a>
+	</tr>
+	<tr>
+		<td> Preset work coordinate
+		<td><a href="./position/cnc_prstwkcd.htm">cnc_prstwkcd</a>
+	</tr>
+	<tr>
+		<td> Read work zero offset value
+		<td><a href="./ncdata/cnc_rdzofs.htm">cnc_rdzofs</a>
+	</tr>
+	<tr>
+		<td> Write work zero offset value
+		<td><a href="./ncdata/cnc_wrzofs.htm">cnc_wrzofs</a>
+	</tr>
+	<tr>
+		<td>Read parameter
+		<td><a href="./ncdata/cnc_rdparam.htm">cnc_rdparam</a>
+	</tr>
+	<tr>
+		<td>Write parameter
+		<td><a href="./ncdata/cnc_wrparam.htm">cnc_wrparam</a>
+	</tr>
+	<tr>
+		<td>Read setting data
+		<td><a href="./ncdata/cnc_rdset.htm">cnc_rdset</a>
+	</tr>
+	<tr>
+		<td>Write setting data
+		<td><a href="./ncdata/cnc_wrset.htm">cnc_wrset</a>
+	</tr>
+	<tr>
+		<td>Read diagnosis data
+		<td><a href="./misc/cnc_diagnoss.htm">cnc_diagnoss</a>
+	</tr>
+</table>
+</div>
+
+
+<li>Program number digits
+<div>
+<p><b>In case of Series 15i, the number of the program number digits is always 8. </b>
+<p>So, it is necessary to switch API to the one for the program number 8 digits in case of Series 15i. Refer to &quot;<a href="#O8">Program number 8 digits</a>&quot; in order to know how to switch API. The following functions are related to this subject.
+
+<table border=1>
+<tr>
+	<th>Brief description
+	<th>Function name
+</tr>
+<tr>
+	<td>Read all dynamic data
+	<td><a href="./position/cnc_rddynamic.htm">cnc_rddynamic</a>
+</tr>
+<tr>
+	<td>Search specified program
+	<td><a href="./program/cnc_search.htm">cnc_search</a>
+</tr>
+<tr>
+	<td>Delete specified program
+	<td><a href="./program/cnc_delete.htm">cnc_delete</a>
+</tr>
+<tr>
+	<td>Read program directory(2)
+	<td><a href="./program/cnc_rdprogdir2.htm">cnc_rdprogdir2</a>
+</tr>
+<tr>
+	<td>Read program number under execution
+	<td><a href="./program/cnc_rdprgnum.htm">cnc_rdprgnum</a>
+</tr>
+</table>
+</div>
+
+
+<li>Tool number digits
+<div>
+<p><b>In case of Series 15i, the number of the tool number digits is always 8. </b>
+<p>In case of Series 15i, the functions for the tool number 4 digits are not supported in the following table. Use the functions for the tool number 8 digits.
+
+
+<table border=1>
+<tr>
+	<th>Brief description
+	<th>For tool number 4 digits
+	<th>For tool number 8 digits
+</tr>
+<tr>
+	<td>Read tool life management data (tool group number)
+	<td><a href="./toollife/cnc_rdgrpid.htm">cnc_rdgrpid</a>
+	<td><a href="./toollife/cnc_rdgrpid2.htm">cnc_rdgrpid2</a>
+</tr>
+<tr>
+	<td>Read tool life management data (tool length number-1)
+	<td><a href="./toollife/cnc_rd1length.htm">cnc_rd1length</a>
+	<td rowspan=4><a href="./toollife/cnc_rd1tlifedat2.htm">cnc_rd1tlifedat2</a>
+</tr>
+<tr>
+	<td>Read tool life management data (cutter compensation number-1)
+	<td><a href="./toollife/cnc_rd1radius.htm">cnc_rd1radius</a>
+</tr>
+<tr>
+	<td>Read tool life management data (tool information-1)
+	<td><a href="./toollife/cnc_t1info.htm">cnc_t1info</a>
+</tr>
+<tr>
+	<td>Read tool life management data (tool data1)
+	<td><a href="./toollife/cnc_rd1tlifedata.htm">cnc_rd1tlifedata</a>
+</tr>
+<tr>
+	<td>Write tool life management data (tool data1)
+	<td><a href="./toollife/cnc_wr1tlifedata.htm">cnc_wr1tlifedata</a>
+	<td><a href="./toollife/cnc_wr1tlifedat2.htm">cnc_wr1tlifedat2</a>
+</tr>
+</table>
+</div>
+
+
+<li>Real parameter / Real diagnosis
+<div>
+<p><b>Real parameter and real diagnosis data are added for Series 15i.</b>
+<p><b>To support the real data, the specifications of Series 15i are different from those of others about the following functions.</b> See the specifications of each function for details.
+
+<table border=1>
+<tr>
+	<th>Brief description
+	<th>Function name
+</tr>
+<tr>
+	<td>Read parameter
+	<td><a href="./ncdata/cnc_rdparam.htm">cnc_rdparam</a>, 
+		<a href="./ncdata/cnc_rdparar.htm">cnc_rdparar</a>
+</tr>
+<tr>
+	<td>Write parameter
+	<td><a href="./ncdata/cnc_wrparam.htm">cnc_wrparam</a>, 
+		<a href="./ncdata/cnc_wrparas.htm">cnc_wrparas</a>
+</tr>
+<tr>
+	<td>Read parameter information
+	<td><a href="./ncdata/cnc_rdparainfo.htm">cnc_rdparainfo</a>
+</tr>
+<tr>
+	<td>Read setting data
+	<td><a href="./ncdata/cnc_rdset.htm">cnc_rdset</a>, 
+		<a href="./ncdata/cnc_rdsetr.htm">cnc_rdsetr</a>
+</tr>
+<tr>
+	<td>Write setting data
+	<td><a href="./ncdata/cnc_wrset.htm">cnc_wrset</a>, 
+		<a href="./ncdata/cnc_wrsets.htm">cnc_wrsets</a>
+</tr>
+<tr>
+	<td>Read setting data information
+	<td><a href="./ncdata/cnc_rdsetinfo.htm">cnc_rdsetinfo</a>
+</tr>
+<tr>
+	<td>Read diagnosis data
+	<td><a href="./misc/cnc_diagnoss.htm">cnc_diagnoss</a>, 
+		<a href="./misc/cnc_diagnosr.htm">cnc_diagnosr</a>
+</tr>
+<tr>
+	<td>Read diagnosis data information
+	<td><a href="./misc/cnc_rddiaginfo.htm">cnc_rddiaginfo</a>
+</tr>
+</table>
+</div>
+
+
+<li>Alarm status
+<div>
+<p>In case of Series 15i, unlike others, <b>the alarm status is &quot;long&quot;, not &quot;short&quot;</b>.
+<p>In case of Series 15i, you can use the following functions for short status. However, you cannot read all of alarm status by using these functions. You use the functions for long status as far as you can.
+
+
+<table border=1>
+<tr>
+	<th>Brief description
+	<th>For short status
+	<th>For long status
+</tr>
+<tr>
+	<td>Read all dynamic data
+	<td><a href="./position/cnc_rddynamic.htm">cnc_rddynamic</a>
+	<td><a href="./position/cnc_rddynamic2.htm">cnc_rddynamic2</a>
+</tr>
+<tr>
+	<td>Read alarm status
+	<td><a href="./misc/cnc_alarm.htm">cnc_alarm</a>
+	<td><a href="./misc/cnc_alarm2.htm">cnc_alarm2</a>
+</tr>
+</table>
+
+<p><b>The meaning of alarm status of Series 15i is different from that of others.</b> Be careful when you use the following functions.
+
+<table border=1>
+<tr>
+	<th>Brief description
+	<th>Function name
+</tr>
+<tr>
+	<td>Read all dynamic data
+	<td><a href="./position/cnc_rddynamic.htm">cnc_rddynamic</a>, 
+		<a href="./position/cnc_rddynamic2.htm">cnc_rddynamic2</a>
+</tr>
+<tr>
+	<td>Read operation history data
+	<td><a href="./history/cnc_rdophistry.htm">cnc_rdophistry</a>, 
+		<a href="./history/cnc_rdophistry2.htm">cnc_rdophistry2</a>
+</tr>
+<tr>
+	<td>Read alarm history data
+	<td><a href="./history/cnc_rdalmhistry.htm">cnc_rdalmhistry</a>, 
+		<a href="./history/cnc_rdalmhistry2.htm">cnc_rdalmhistry2</a>
+</tr>
+<tr>
+	<td>Read alarm status
+	<td><a href="./misc/cnc_alarm.htm">cnc_alarm</a>, 
+		<a href="./misc/cnc_alarm2.htm">cnc_alarm2</a>
+</tr>
+<tr>
+	<td>Read alarm information
+	<td><a href="./misc/cnc_rdalminfo.htm">cnc_rdalminfo</a>
+</tr>
+<tr>
+	<td>Read alarm message
+	<td><a href="./misc/cnc_rdalmmsg.htm">cnc_rdalmmsg</a>
+</tr>
+</table>
+</div>
+
+
+<li>Structure
+<div>
+<p>In the following functions, <b>the structures, which are passed to the functions, are different between Series 15i and others.</b>
+
+<table border=1>
+<tr>
+	<th>Brief description
+	<th>Function name
+</tr>
+<tr>
+	<td>Read CNC status information
+	<td><a href="./misc/cnc_statinfo.htm">cnc_statinfo</a>
+</tr>
+<tr>
+	<td>Read alarm information (*Note)
+	<td><a href="./misc/cnc_rdalminfo.htm">cnc_rdalminfo</a>
+</tr>
+<tr>
+	<td>Read operator's message
+	<td><a href="./misc/cnc_rdopmsg.htm">cnc_rdopmsg</a>
+</tr>
+<tr>
+	<td>Read output signal image of software operator's panel
+	<td><a href="./misc/cnc_rdopnlsgnl.htm">cnc_rdopnlsgnl</a>
+</tr>
+<tr>
+	<td>Write output signal of software operator's panel
+	<td><a href="./misc/cnc_wropnlsgnl.htm">cnc_wropnlsgnl</a>
+</tr>
+</table>
+(*Note) In case that Series 15i has <b>multi axes function</b> (maximum controlled axes = 24) only
+</div>
+
+
+<li>Available functions
+<div>
+<p>The functions that you can use for the following propose are different between Series 15i and others.
+
+<table border=1>
+<tr>
+	<th>Propose
+	<th>Series 16/18/21, Power Mate
+	<th>Series 15
+</tr>
+<tr>
+	<td> Read operation history data
+	<td><a href="./history/cnc_rdophistry.htm">cnc_rdophistry</a>
+	<td><a href="./history/cnc_rdophistry2.htm">cnc_rdophistry2</a>
+</tr>
+<tr>
+	<td> Read number of alarm history data
+	<td><a href="./history/cnc_rdalmhistry.htm">cnc_rdalmhistry</a>
+	<td><a href="./history/cnc_rdalmhistry2.htm">cnc_rdalmhistry2</a>
+</tr>
+<tr>
+	<td> Read waveform diagnosis parameter
+	<td><a href="./wave/cnc_rdwaveprm.htm">cnc_rdwaveprm</a>
+	<td><a href="./wave/cnc_rdwaveprm2.htm">cnc_rdwaveprm2</a>
+</tr>
+<tr>
+	<td> Write waveform diagnosis parameter
+	<td><a href="./wave/cnc_wrwaveprm.htm">cnc_wrwaveprm</a>
+	<td><a href="./wave/cnc_wrwaveprm2.htm">cnc_wrwaveprm2</a>
+</tr>
+<tr>
+	<td> Read modal data
+	<td><a href="./misc/cnc_modal.htm">cnc_modal</a>
+	<td><a href="./misc/cnc_rdgcode.htm">cnc_rdgcode</a>, 
+		<a href="./misc/cnc_rdcommand.htm">cnc_rdcommand</a>
+</tr>
+</table>
+
+<p>The following functions are available for Series 15i only.
+<ul>
+	<li>Function related to 3-dimensional handle feed
+	<li>Function related to high-speed and high-precision machining
+	<li>Function related to fixture offset
+	<li>Search sequence number for program restart (2) (<a href="./misc/cnc_rstrseqsrch2.htm">cnc_rstrseqsrch2</a>)
+	<li>Read block restart information (<a href="./misc/cnc_rdbrstrinfo.htm">cnc_rdbrstrinfo</a>)
+	<li>Function related to internal position compensation data
+	<li>Read/Write CNC timer data (<a href="./misc/cnc_rdtimer.htm">cnc_rdtimer</a>, <a href="./misc/cnc_wrtimer.htm">cnc_wrtimer</a>)
+</ul>
+
+<p>The following functions are not supported for Series 15i.
+<ul>
+	<li>Function related to P code macro variable
+	<li>Function related to M code group data
+	<li>Function related to interference check data
+	<li>Function related to work coordinate shift value (T series)
+	<li>Function related to B axis control
+	<li>Read/Write tool life management data (group optional number, rest counter)
+	<li>Function related to external operator's message history data
+	<li>Read data for spindle adjustment (synchronous control mode) (<a href="./motor/cnc_rdposerrs2.htm">cnc_rdposerrs2</a>, <a href="./motor/cnc_rdsynerrsy.htm">cnc_rdsynerrsy</a>)
+	<li>Function related to PUNCH PRESS/LASER
+</ul>
+</div>
+
+</blockquote>
+
+
+<!---------------------------------------------------------------------------->
+<li><a name="FS15vsFS15i">Difference of the function specifications (Series 15-B, Series 15i)</a>
+<blockquote>
+<ul>
+
+<p>Please note that there are some differences of the specifications between Series 15-B and Series 15i about library function. The major differences are as follows.
+<li>Program number 8 digits
+<div>
+<p>The specification of program number is different between Series 15-B and Series 15i.
+<blockquote>
+	<table>
+		<tr><td>Series 15-B	<td>:<td>program number 4 digits</tr>
+		<tr><td>Series 15i	<td>:<td>program number 8 digits</tr>
+	</table>
+</blockquote>
+
+<p>So, it is necessary to switch API to the one for the program number 8 digits in case of Series 15i. Refer to <a href="#O8">Program number 8 digits (for Series 15i, 16/18)</a> in order to know how to switch API. 
+<p>The following functions are related to this subject.
+
+<table border=1>
+<tr>
+	<th>Brief description
+	<th>Function name
+</tr>
+<tr>
+	<td>Read all dynamic data
+	<td><a href="./position/cnc_rddynamic2.htm">cnc_rddynamic2</a>
+</tr>
+<tr>
+	<td>Start uploading NC program
+	<td><a href="./program/cnc_upstart.htm">cnc_upstart</a>
+</tr>
+<tr>
+	<td>Search specified program
+	<td><a href="./program/cnc_search.htm">cnc_search</a>
+</tr>
+<tr>
+	<td>Delete specified program
+	<td><a href="./program/cnc_delete.htm">cnc_delete</a>
+</tr>
+<tr>
+	<td>Read program directory
+	<td><a href="./program/cnc_rdprogdir.htm">cnc_rdprogdir</a>
+</tr>
+<tr>
+	<td>Read program directory(2)
+	<td><a href="./program/cnc_rdprogdir2.htm">cnc_rdprogdir2</a>
+</tr>
+<tr>
+	<td>Read program number under execution
+	<td><a href="./program/cnc_rdprgnum.htm">cnc_rdprgnum</a>
+</tr>
+</table>
+
+<li>Tool number 8 digits
+<div>
+<p>The specification of tool number is different between Series 15-B and Series 15i.
+<blockquote>
+	<table>
+		<tr><td>Series 15-B	<td>:<td>tool number 4 digits</tr>
+		<tr><td>Series 15i	<td>:<td>tool number 8 digits</tr>
+	</table>
+</blockquote>
+<p>The follwing functions cannot be used at Series 15i. The functions which are substituted for these functions are mentioned later.
+
+<table border=1>
+<tr>
+	<th>Brief description
+	<th>Function name
+</tr>
+<tr>
+	<td>Read tool life management data(tool group number)
+	<td><a href="./toollife/cnc_rdgrpid.htm">cnc_rdgrpid</a>
+</tr>
+<tr>
+	<td>Read tool life management data(tool length number-1)
+	<td><a href="./toollife/cnc_rd1length.htm">cnc_rd1length</a>
+</tr>
+<tr>
+	<td>Read tool life management data(cutter compensation num.-1)
+	<td><a href="./toollife/cnc_rd1radius.htm">cnc_rd1radius</a>
+</tr>
+<tr>
+	<td>Read tool life management data(tool information-1)
+	<td><a href="./toollife/cnc_t1info.htm">cnc_t1info</a>
+</tr>
+<tr>
+	<td>Read tool life management data(tool data1)
+	<td><a href="./toollife/cnc_rd1tlifedata.htm">cnc_rd1tlifedata</a>
+</tr>
+<tr>
+	<td>Write tool life management data(tool data1)
+	<td><a href="./toollife/cnc_wr1tlifedata.htm">cnc_wr1tlifedata</a>
+</tr>
+</table>
+
+<li>Real parameter/ Real diagnosis
+<div>
+<p>Real parameter and real diagnosis data are added for Series 15i. The structures including these data are changed in order to read and write them.
+
+<table border=1>
+<tr>
+	<th>Brief description
+	<th>Function name
+</tr>
+<tr>
+	<td>Read parameter
+	<td><a href="./ncdata/cnc_rdparam.htm">cnc_rdparam</a>
+</tr>
+<tr>
+	<td>Write parameter
+	<td><a href="./ncdata/cnc_wrparam.htm">cnc_wrparam</a>
+</tr>
+<tr>
+	<td>Read parameter(area specified)
+	<td><a href="./ncdata/cnc_rdparar.htm">cnc_rdparar</a>
+</tr>
+<tr>
+	<td>Write parameter(area specified)
+	<td><a href="./ncdata/cnc_wrparas.htm">cnc_wrparas</a>
+</tr>
+<tr>
+	<td>Read parameter information
+	<td><a href="./ncdata/cnc_rdparainfo.htm">cnc_rdparainfo</a>
+</tr>
+<tr>
+	<td>Read setting data
+	<td><a href="./ncdata/cnc_rdset.htm">cnc_rdset</a>
+</tr>
+<tr>
+	<td>Write setting data
+	<td><a href="./ncdata/cnc_wrset.htm">cnc_wrset</a>
+</tr>
+<tr>
+	<td>Read setting data(area specified)
+	<td><a href="./ncdata/cnc_rdsetr.htm">cnc_rdsetr</a>
+</tr>
+<tr>
+	<td>Write setting data(area specified)
+	<td><a href="./ncdata/cnc_wrsets.htm">cnc_wrsets</a>
+</tr>
+<tr>
+	<td>Read setting data information
+	<td><a href="./ncdata/cnc_rdsetinfo.htm">cnc_rdsetinfo</a>
+</tr>
+<tr>
+	<td>Read diagnosis data
+	<td><a href="./misc/cnc_diagnoss.htm">cnc_diagnoss</a>
+</tr>
+<tr>
+	<td>Read diagnosis data(area specified)
+	<td><a href="./misc/cnc_diagnosr.htm">cnc_diagnosr</a>
+</tr>
+<tr>
+	<td>Read diagnosis data information
+	<td><a href="./misc/cnc_rddiaginfo.htm">cnc_rddiaginfo</a>
+</tr>
+</table>
+
+<p>The following list shows whether the function for Series 15-B can be used for Series 15i, or not. Some functions except in this list have the difference of the specifications between Series 15-B and the Series 15i.  See the specifications of each function for details.
+
+<li>CNC: Function related to controlled axis/spindle
+<div>
+<table border=1>
+<tr>
+	<th>Function name(15-B)
+	<th>Brief description
+	<th>in case of Series 15i
+</tr>
+<tr>
+	<td>cnc_rddynamic
+	<td>Read all dynamic data
+	<td>It is necessary for the application program to switch API to the one which can deal with the program number 8 digits.
+            This function cannot read all alarm status of Series 15i. 
+            So, you should better use <a href="./position/cnc_rddynamic2.htm">cnc_rddynamic2</a>.
+</tr>
+</table>
+<p>
+<li>CNC: Function related to CNC program
+<div>
+<table border=1>
+<tr>
+	<th>Function name(15-B)
+	<th>Brief description
+	<th>in case of Series 15i
+</tr>
+<tr>
+	<td>cnc_dncstart
+	<td>Start downloading DNC program
+	<td rowspan=6>These functions are not supported on Series 15i.</td></td>
+</tr>
+<tr>
+	<td>cnc_dnc
+	<td>Download DNC program
+<!--	<td rowspan=6>These functions are not supported on Series 15i.</td></td> -->
+</tr>
+<tr>
+	<td>cnc_cdnc
+	<td>Download DNC program(conditional)
+<!--	<td rowspan=6>These functions are not supported on Series 15i.</td></td> -->
+</tr>
+<tr>
+	<td>cnc_dncend
+	<td>End of downloading DNC program
+<!--	<td rowspan=6>These functions are not supported on Series 15i.</td></td> -->
+</tr>
+<tr>
+	<td>cnc_rdmdipntr
+	<td>Read execution pointer for MDI operation
+<!--	<td rowspan=6>These functions are not supported on Series 15i.</td></td> -->
+</tr>
+<tr>
+	<td>cnc_wrmdipntr
+	<td>Write execution pointer for MDI operation
+<!--	<td rowspan=6>These functions are not supported on Series 15i.</td></td> -->
+</tr>
+<tr>
+	<td>cnc_upstart
+	<td>Start uploading NC program
+	<td rowspan=6>It is necessary for the application program to switch API to the one which can deal with the program number 8 digits.</td></td>
+</tr>
+<tr>
+	<td>cnc_search
+	<td>Search specified program
+<!--	<td rowspan=6>It is necessary for the application program to switch API to the one which can deal with the program number 8 digits.</td></td> -->
+</tr>
+<tr>
+	<td>cnc_delete
+	<td>Delete specified program
+<!--	<td rowspan=6>It is necessary for the application program to switch API to the one which can deal with the program number 8 digits.</td></td> -->
+</tr>
+<tr>
+	<td>cnc_rdprogdir
+	<td>Read program directory
+<!--	<td rowspan=6>It is necessary for the application program to switch API to the one which can deal with the program number 8 digits.</td></td> -->
+</tr>
+<tr>
+	<td>cnc_rdprogdir2
+	<td>Read program directory(2)
+<!--	<td rowspan=6>It is necessary for the application program to switch API to the one which can deal with the program number 8 digits.</td></td> -->
+</tr>
+<tr>
+	<td>cnc_rdprgnum
+	<td>Read program number under execution
+<!--	<td rowspan=6>It is necessary for the application program to switch API to the one which can deal with the program number 8 digits.</td></td> -->
+</tr>
+</table>
+
+<p>
+<li>CNC: Function related to CNC file data
+<div>
+
+<table border=1>
+<tr>
+	<th>Function name(15-B)
+	<th>Brief description
+	<th>in case of Series 15i
+</tr>
+<tr>
+	<td>cnc_rdparam
+	<td>Read parameter
+	<td rowspan=10>The structures including the data are changed in order to read and write the real parameter.</td></td>
+</tr>
+<tr>
+	<td>cnc_wrparam
+	<td>Write parameter
+<!--	<td rowspan=10>The structures including the data are changed in order to read and write the real parameter.</td></td> -->
+</tr>
+<tr>
+	<td>cnc_rdparar
+	<td>Read parameter(area specified)
+<!--	<td rowspan=10>The structures including the data are changed in order to read and write the real parameter.</td></td> -->
+</tr>
+<tr>
+	<td>cnc_wrparas
+	<td>Write parameter(area specified)
+<!--	<td rowspan=10>The structures including the data are changed in order to read and write the real parameter.</td></td> -->
+</tr>
+<tr>
+	<td>cnc_rdparainfo
+	<td>Read parameter information
+<!--	<td rowspan=10>The structures including the data are changed in order to read and write the real parameter.</td></td> -->
+</tr>
+<tr>
+	<td>cnc_rdset
+	<td>Read setting data
+<!--	<td rowspan=10>The structures including the data are changed in order to read and write the real parameter.</td></td> -->
+</tr>
+<tr>
+	<td>cnc_wrset
+	<td>Write setting data
+<!--	<td rowspan=10>The structures including the data are changed in order to read and write the real parameter.</td></td> -->
+</tr>
+<tr>
+	<td>cnc_rdsetr
+	<td>Read setting data(area specified)
+<!--	<td rowspan=10>The structures including the data are changed in order to read and write the real parameter.</td></td> -->
+</tr>
+<tr>
+	<td>cnc_wrsets
+	<td>Write setting data(area specified)
+<!--	<td rowspan=10>The structures including the data are changed in order to read and write the real parameter.</td></td> -->
+</tr>
+<tr>
+	<td>cnc_rdsetinfo
+	<td>Read setting data information
+<!--	<td rowspan=10>The structures including the data are changed in order to read and write the real parameter.</td></td> -->
+</tr>
+<tr>
+	<td>cnc_rdhpccset
+	<td>Read setting data for HPCC
+	<td rowspan=6>These functions are not supported on Series 15i. Read/write parameter function (cnc_rdparam, cnc_wrparam, cnc_rdparar, and cnc_wrparas) can be substituted for these functions.</td></td>
+</tr>
+<tr>
+	<td>cnc_wrhpccset
+	<td>Write setting data for HPCC
+<!--	<td rowspan=6>These functions are not supported on Series 15i. Read/write parameter function (cnc_rdparam, cnc_wrparam, cnc_rdparar, and cnc_wrparas) can be substituted for these functions.</td></td> -->
+</tr>
+<tr>
+	<td>cnc_rdhpcctupr
+	<td>Read tuning data(parameter input) for HPCC
+<!--	<td rowspan=6>These functions are not supported on Series 15i. Read/write parameter function (cnc_rdparam, cnc_wrparam, cnc_rdparar, and cnc_wrparas) can be substituted for these functions.</td></td> -->
+</tr>
+<tr>
+	<td>cnc_wrhpcctupr
+	<td>Write tuning data(parameter input) for HPCC
+<!--	<td rowspan=6>These functions are not supported on Series 15i. Read/write parameter function (cnc_rdparam, cnc_wrparam, cnc_rdparar, and cnc_wrparas) can be substituted for these functions.</td></td> -->
+</tr>
+<tr>
+	<td>cnc_rdhpcctuac
+	<td>Read tuning data(acc./dec. input) for HPCC
+<!--	<td rowspan=6>These functions are not supported on Series 15i. Read/write parameter function (cnc_rdparam, cnc_wrparam, cnc_rdparar, and cnc_wrparas) can be substituted for these functions.</td></td> -->
+</tr>
+<tr>
+	<td>cnc_wrhpcctuac
+	<td>Write tuning data(acc./dec. input) for HPCC
+<!--	<td rowspan=6>These functions are not supported on Series 15i. Read/write parameter function (cnc_rdparam, cnc_wrparam, cnc_rdparar, and cnc_wrparas) can be substituted for these functions.</td></td> -->
+</tr>
+</table>
+
+<p>
+<li>CNC: Function related to tool life management data
+<div>
+<table border=1>
+<tr>
+	<th>Function name(15-B)
+	<th>Brief description
+	<th>in case of Series 15i
+</tr>
+<tr>
+	<td>cnc_rdgrpid
+	<td>Read tool group number
+	<td>This function is not supported on Series 15i. Use "cnc_rdgrpid2".
+</tr>
+<tr>
+	<td>cnc_rd1length
+	<td>Read tool length number-1
+	<td rowspan=3>These functions are not supported on Series 15i. Use "cnc_rd1tlifedat2" instead of these function.</td></td>
+</tr>
+<tr>
+	<td>cnc_rd1radius
+	<td>Read cutter compensation number-1
+<!--	<td rowspan=3>These functions are not supported on Series 15i. Use "cnc_rd1tlifedat2" instead of these function.</td></td> -->
+</tr>
+<tr>
+	<td>cnc_t1info
+	<td>Read tool information-1
+<!--	<td rowspan=3>These functions are not supported on Series 15i. Use "cnc_rd1tlifedat2" instead of these function.</td></td> -->
+</tr>
+<tr>
+	<td>cnc_rd1tlifedata
+	<td>Read tool data1
+	<td>This function is not supported on Series 15i. Use "cnc_rd1tlifedat2".
+</tr>
+<tr>
+	<td>cnc_wr1tlifedata
+	<td>Write tool data1
+	<td>This function is not supported on Series 15i. Use "cnc_wr1tlifedat2".
+</tr>
+</table>
+
+<p>
+<li>CNC: Function related to history data
+<div>
+<table border=1>
+<tr>
+	<th>Function name(15-B)
+	<th>Brief description
+	<th>in case of Series 15i
+</tr>
+<tr>
+	<td>cnc_rdophistry
+	<td>Read operation history data
+	<td>This function is not supported on Series 15i. Use "cnc_rdophistry2".
+</tr>
+<tr>
+	<td>cnc_rdalmhistry
+	<td>Read alarm history data
+	<td>This function is not supported on Series 15i. Use "cnc_rdalmhistry2".
+</tr>
+</table>
+
+<p>
+<li>CNC: Function related to Servo/spindle
+<div>
+<table border=1>
+<tr>
+	<th>Function name(15-B)
+	<th>Brief description
+	<th>in case of Series 15i
+</tr>
+<tr>
+	<td>cnc_rdwaveprm
+	<td>Read waveform diagnosis parameter
+	<td>This function is not supported on Series 15i. Use "cnc_rdwaveprm2".
+</tr>
+<tr>
+	<td>cnc_wrwaveprm
+	<td>Write waveform diagnosis parameter
+	<td>This function is not supported on Series 15i. Use "cnc_wrwaveprm2".
+</tr>
+</table>
+
+<p>
+<li>CNC: Function related to Others
+<div>
+<table border=1>
+<tr>
+	<th>Function name(15-B)
+	<th>Brief description
+	<th>in case of Series 15i
+</tr>
+<tr>
+	<td>cnc_sysconfig
+	<td>Read CNC configuration information
+	<td>This function is not supported on Series 15i. Use "cnc_rdsyssoft".
+</tr>
+<tr>
+	<td>cnc_rdmdlconfig
+	<td>Read module configuration of CNC system
+	<td>This function is not supported on Series 15i. Use "cnc_rdmdlconfig2".
+</tr>
+<tr>
+	<td>cnc_alarm
+	<td>Read alarm status
+	<td>This function cannot read all alarm status of Series 15i. So, you should better use "cnc_alarm2".
+</tr>
+<tr>
+	<td>cnc_modal
+	<td>Read modal data
+	<td>This function is not supported on Series 15i. Use "cnc_rdgcode" and "cnc_rdcommand" instead of this function.
+</tr>
+<tr>
+	<td>cnc_diagnoss
+	<td>Read diagnosis data
+	<td rowspan=3>The structures including the data are changed in order to read and write the real diagnosis data.</td></td>
+</tr>
+<tr>
+	<td>cnc_diagnosr
+	<td>Read diagnosis data(area specified)
+<!--	<td rowspan=3>The structures including the data are changed in order to read and write the real diagnosis data.</td></td> -->
+</tr>
+<tr>
+	<td>cnc_rddiaginfo
+	<td>Read diagnosis data information
+<!--	<td rowspan=3>The structures including the data are changed in order to read and write the real diagnosis data.</td></td> -->
+</tr>
+</table>
+
+<p>
+<li>PMC: Function related to PMC
+<div>
+<table border=1>
+<tr>
+	<th>Function name(15-B)
+	<th>Brief description
+	<th>in case of Series 15i
+</tr>
+<tr>
+	<td>pmc_rdmsg
+	<td>Read message from PMC to MMC
+	<td rowspan=4>These functions are not supported on Series 15i.</td></td>
+</tr>
+<tr>
+	<td>pmc_wrmsg
+	<td>Write message from MMC to PMC
+<!--	<td rowspan=4>These functions are not supported on Series 15i.</td></td> -->
+</tr>
+<tr>
+	<td>pmc_crdmsg
+	<td>Read message from PMC to MMC (conditional)
+<!--	<td rowspan=4>These functions are not supported on Series 15i.</td></td> -->
+</tr>
+<tr>
+	<td>pmc_cwrmsg
+	<td>Write message from MMC to PMC (conditional)
+<!--	<td rowspan=4>These functions are not supported on Series 15i.</td></td> -->
+</tr>
+</table>
+
+</ul>
+</blockquote>
+
+
+
+<!---------------------------------------------------------------------------->
+<li><a name="FS30">Difference of the function specifications (Series 30i, 0i-D/F, PMi-A and other CNCs)</a>
+<blockquote>
+<ul>
+
+<p>Please note that there are some differences of the specifications between  the library except Series 30i, 0i-D/F, PMi-A and Series 30i, 0i-D/F, PMi-A about library function. The major differences are as follows.
+
+<li>Data size at all axes specification
+<div>
+<p>In some function, when you read/write data for all axes, data size that must be allocated is different as follows.
+
+<blockquote>
+	<table>
+		<tr><td>the library except Series 30i, 0i-D/F, PMi-A<td>:<td>number of the actual control axis.</tr>
+		<tr><td>the library for Series 30i, 0i-D/F, PMi-A   <td>:<td>number of maximum axes in interface.</tr>
+	</table>
+</blockquote>
+<p>The number of maximum axes is defined in the header file as MAX_AXIS(=32).
+<p>The following functions are related to this subject.
+
+<table border=1>
+<tr>
+	<th>Brief description
+	<th>Function name
+</tr>
+<tr>
+	<td>Read absolute axis position
+	<td><a href="./position/cnc_absolute.htm">cnc_absolute</a>, 
+	    <a href="./position/cnc_absolute2.htm">cnc_absolute2</a>
+</tr>
+<tr>
+	<td>Read machine axis position
+	<td><a href="./position/cnc_machine.htm">cnc_machine</a>
+</tr>
+<tr>
+	<td>Read relative axis position
+	<td><a href="./position/cnc_relative.htm">cnc_relative</a>, 
+	    <a href="./position/cnc_relative2.htm">cnc_relative2</a>
+</tr>
+<tr>
+	<td>Read distance to go
+	<td><a href="./position/cnc_distance.htm">cnc_distance</a>
+</tr>
+<tr>
+	<td>Read skip position
+	<td><a href="./position/cnc_skip.htm">cnc_skip</a>
+</tr>
+<tr>
+	<td>Read servo delay value
+	<td><a href="./position/cnc_srvdelay.htm">cnc_srvdelay</a>
+</tr>
+<tr>
+	<td>Read acceleration/deceleration delay value
+	<td><a href="./position/cnc_accdecdly.htm">cnc_accdecdly</a>
+</tr>
+<tr>
+	<td>Set origin/preset relative axis position
+	<td><a href="./position/cnc_wrrelpos.htm">cnc_wrrelpos</a>
+</tr>
+<tr>
+	<td>Preset work coordinate
+	<td><a href="./position/cnc_prstwkcd.htm">cnc_prstwkcd</a>
+</tr>
+<tr>
+	<td>Read work zero offset value
+	<td><a href="./ncdata/cnc_rdzofs.htm">cnc_rdzofs</a>
+</tr>
+<tr>
+	<td>Write work zero offset value
+	<td><a href="./ncdata/cnc_wrzofs.htm">cnc_wrzofs</a>
+</tr>
+<tr>
+	<td>Read parameter
+	<td><a href="./ncdata/cnc_rdparam.htm">cnc_rdparam</a>
+</tr>
+<tr>
+	<td>Write parameter
+	<td><a href="./ncdata/cnc_wrparam.htm">cnc_wrparam</a>
+</tr>
+<tr>
+	<td>Read setting data
+	<td><a href="./ncdata/cnc_rdset.htm">cnc_rdset</a>
+</tr>
+<tr>
+	<td>Write setting data
+	<td><a href="./ncdata/cnc_wrset.htm">cnc_wrset</a>
+</tr>
+<tr>
+	<td>Read diagnosis data
+	<td><a href="./misc/cnc_diagnoss.htm">cnc_diagnoss</a>
+</tr>
+</table>
+
+<li>Data size for spindle functions
+<div>
+<p>In Series 30i, 0i-D/F, the maximum spindle number has been extended to 8 from 4. So, data size of function related to the spindle that must be allocated is different as follows.
+
+<p>The number of maximum spindles is defined in the header file as MAX_SPINDLES(=8).
+<p>The following functions are related to this subject.
+
+<table border=1>
+<tr>
+	<th>Brief description
+	<th>Function name
+</tr>
+<tr>
+	<td>Read load information of serial spindle
+	<td><a href="./position/cnc_rdspload.htm">cnc_rdspload</a>
+</tr>
+<tr>
+	<td>Read maximum r.p.m. ratio of serial spindle
+	<td><a href="./position/cnc_rdspmaxrpm.htm">cnc_rdspmaxrpm</a>
+</tr>
+<tr>
+	<td>Read gear ratio of serial spindle
+	<td><a href="./position/cnc_rdspgear.htm">cnc_rdspgear</a>
+</tr>
+<tr>
+	<td>Read actual spindle speed(S) (2)
+	<td><a href="./position/cnc_acts2.htm">cnc_acts2</a>
+</tr>
+<tr>
+	<td>Read operation mode for spindle setting
+	<td><a href="./motor/cnc_rdopmode.htm">cnc_rdopmode</a>
+</tr>
+<tr>
+	<td>Read position deflection S for spindle adjustment
+	<td><a href="./motor/cnc_rdposerrs.htm">cnc_rdposerrs</a>
+</tr>
+<tr>
+	<td>Read spindle alarm for spindle monitor
+	<td><a href="./motor/cnc_rdspdlalm.htm">cnc_rdspdlalm</a>
+</tr>
+<tr>
+	<td>Read control input signal for spindle monitor
+	<td><a href="./motor/cnc_rdctrldi.htm">cnc_rdctrldi</a>
+</tr>
+<tr>
+	<td>Read control output signal for spindle monitor
+	<td><a href="./motor/cnc_rdctrldo.htm">cnc_rdctrldo</a>
+</tr>
+</table>
+
+<li>Function related to CNC program
+<div>
+<p>The management of the program came to be managed by the file name and the hierarchical directory. So, the function specification was changed completely.
+
+<li>Real type parameter/Real type diagnosis data
+<div>
+<p>In Series 30i, 0i-D/F and PMi-A, the real type parameter and the real type diagnosis data are added. The structures including these data are changed in order to read and write them.
+<p>The following functions are related to this subject.
+
+<table border=1>
+<tr>
+	<th>Brief description
+	<th>Function name
+</tr>
+<tr>
+	<td>Read parameter
+	<td><a href="./ncdata/cnc_rdparam.htm">cnc_rdparam</a>
+</tr>
+<tr>
+	<td>Write parameter
+	<td><a href="./ncdata/cnc_wrparam.htm">cnc_wrparam</a>
+</tr>
+<tr>
+	<td>Read parameter(area specified)
+	<td><a href="./ncdata/cnc_rdparar.htm">cnc_rdparar</a>
+</tr>
+<tr>
+	<td>Write parameter(area specified)
+	<td><a href="./ncdata/cnc_wrparas.htm">cnc_wrparas</a>
+</tr>
+<tr>
+	<td>Read parameter information
+	<td><a href="./ncdata/cnc_rdparainfo.htm">cnc_rdparainfo</a>
+</tr>
+<tr>
+	<td>Read setting data
+	<td><a href="./ncdata/cnc_rdset.htm">cnc_rdset</a>
+</tr>
+<tr>
+	<td>Write setting data
+	<td><a href="./ncdata/cnc_wrset.htm">cnc_wrset</a>
+</tr>
+<tr>
+	<td>Read setting data(area specified)
+	<td><a href="./ncdata/cnc_rdsetr.htm">cnc_rdsetr</a>
+</tr>
+<tr>
+	<td>Write setting data(area specified)
+	<td><a href="./ncdata/cnc_wrsets.htm">cnc_wrsets</a>
+</tr>
+<tr>
+	<td>Read setting data information
+	<td><a href="./ncdata/cnc_rdsetinfo.htm">cnc_rdsetinfo</a>
+</tr>
+<tr>
+	<td>Read diagnosis data
+	<td><a href="./misc/cnc_diagnoss.htm">cnc_diagnoss</a>
+</tr>
+<tr>
+	<td>Read diagnosis data(area specified)
+	<td><a href="./misc/cnc_diagnosr.htm">cnc_diagnosr</a>
+</tr>
+<tr>
+	<td>Read diagnosis data information
+	<td><a href="./misc/cnc_rddiaginfo.htm">cnc_rddiaginfo</a>
+</tr>
+</table>
+
+<li>CNC alarm
+<div>
+<p>In Series 30i, 0i-D/F and PMi-A, the alarm status become the 32 bits.  <b>All the alarm status of Series 30i, 0i-D/F and PMi-A cannot be read</b> though the cnc_alarm function is supported. Use the "cnc_alarm2".
+<p>The content of the alarm status is also different from FOCAS1.
+<p>And the area where axis information in structure used by the cnc_rdalminfo is stored is expanded from "short" into "long".
+
+<li>Modal/Command
+<div>
+<p><b>All the modal/command information of Series 30i, 0i-D/F and PMi-A cannot be read</b> though the cnc_modal function is supported. Use the "cnc_rdgocde" and "cnc_rdcommand".
+<p>The specification of "block after next block(=2)" cannot be specified for the block of the reading object on the cnc_modal.
+<p>The command value(mainly I,J and K) is extended to the 12 digits. So, the data which overflows when the value of 12 digits is converted into the integer in four bytes is rounded. And the number of places of decimals is set. So, the number of places of decimals might be set besides F code.
+<p>The number of places of decimals might become negative value, so, the number of places of decimals is changed to "8 bits with sign" from "3 bits without sign".</p>
+
+<img src="General1.gif">
+
+</ul>
+</blockquote>
+
+<li><a name="FS30iAvsFS30iB">Difference of the function specifications (Series 30i-A, Series 30i-B)</a>
+
+<blockquote>
+<ul>
+
+<p>Please note that there are some differences of the specifications between Series 30i-A and Series 30i-B about library function. The major differences are as follows.
+<li>Get execution pointer
+<div>
+<p>In case of Series 30i-A, when STL signal is ON, the return code is EW_REJECT.</p>
+<p>In case of Series 30i-B, even if STL signal is ON, the return code is EW_OK. (when Parameter No.13104#1=1, the return code is EW_REJECT)</p>
+<p>In case of Series 30i-B, even if M198 is executed, the return code is EW_OK.
+
+<p>The following functions are related to this subject.
+
+<table border=1>
+<tr>
+	<th>Brief description
+	<th>Function name
+</tr>
+<tr>
+	<td>Get execution pointer
+	<td><a href="./program/cnc_rdactpt.htm">cnc_rdactpt</a>
+</tr>
+<tr>
+	<td>Read execution pointer
+	<td><a href="./program/cnc_rdexecpt.htm">cnc_rdexecpt</a>
+</tr>
+<tr>
+	<td>Get execution pointer(For arbitrary file name)
+	<td><a href="./program/cnc_pdf_rdactpt.htm">cnc_pdf_rdactpt</a>
+</tr>
+</table>
+
+<li>Read series/version of CNC system software
+<div>
+<p>Software ID of the CNC system software is different.
+
+<p>The following functions are related to this subject.
+
+<table border=1>
+<tr>
+	<th>Brief description
+	<th>Function name
+</tr>
+<tr>
+	<td>Read series/version of CNC system software (3)
+	<td><a href="./misc/cnc_rdsyssoft3.htm">cnc_rdsyssoft3</a>
+</tr>
+</table>
+
+<li>Read CNC status information</li>
+<div>
+<p>In case of Series 30i-B, type 3(FS35i-B only) of emergency status and type 4-8 of alarm status are added.
+
+<p>The following functions are related to this subject.
+
+<table border=1>
+<tr>
+	<th>Brief description
+	<th>Function name
+</tr>
+<tr>
+	<td>Read CNC status information
+	<td><a href="./misc/cnc_statinfo.htm">cnc_statinfo</a>
+</tr>
+<tr>
+	<td>Read CNC status information(2)
+	<td><a href="./misc/cnc_statinfo2.htm">cnc_statinfo2</a>
+</tr>
+</table>
+
+
+</ul>
+</blockquote>
+
+
+<!---------------------------------------------------------------------------->
+<li><a name="FS16Comp">Advanced mode(32 axes) and traditional mode(8 axes) for FS30i
+<blockquote>
+
+<p>The original mode (advanced mode) and the compatible mode (traditional mode) is switched by the <a href="./handle/cnc_setlibopt.htm">cnc_setlibopt</a>. The default is advanced mode.
+<p>The specification of each mode is as follows.
+
+<table border=1>
+<tr>
+	<th>Item
+	<th>Advanced mode
+	<th>traditional mode
+</tr>
+<tr>
+	<td>Number of maximum controlled axes
+	<td>32
+	<td>8
+</tr>
+<tr>
+	<td>Number of maximum controlled spindles
+	<td>8
+	<td>4
+</tr>
+<tr>
+	<td>Read/Write of all axis specification.
+	<td>The size of the allocated buffer is always the size of the maximum controlled axes.
+	<td>The size of the allocated buffer is the size of the current controlled axes. (It is similar to FS16i.)
+</tr>
+<tr>
+	<td>Real type of parameter and diagnosis data
+	<td>8 bytes with sign
+	<td>The conversion to 4 bytes integer.
+</tr>
+<tr>
+	<td>Alarm status
+	<td>32 bits
+	<td>16 bits
+</tr>
+</table>
+
+<p>The number of axes shows the number of buffers used to access to the data of axis.
+<p>In the following cases, the traditional mode can not be used.
+<ul>
+	<li>When the number of current controlled axes in the system exceeds 8.
+	<li>When the number of controlled spindles in the system exceeds 4.
+</ul>
+
+<p>The differences of the data structures between the advanced mode and the traditional mode are as follows.
+
+<ul>
+<li>Parameter/Diagnosis
+<p>In traditional mode, the real type parameter and the real type diagnosis data are converted into two word integer type by which a minimum setting unit is assumed to be the first digit.
+<pre>
+  Example) In case of 1.230 : data=1230, number of places of decimals=3
+</pre>
+<p>In advanced mode, the function of library is expanded the part of the specification along with the support of parameter/diagnosis data of FS30i.<b>(Part in bold line)</b> In traditional mode, this extended part is never input and output.
+
+<dl>
+	<dt><a href="./ncdata/cnc_rdparar.htm">cnc_rdparar</a>, <a href="./ncdata/cnc_wrparas.htm">cnc_wrparas</a> &quot;From the explanation of &quot;type in the IODBPSD structure&quot;&quot;
+	<dd>type : Attribute of parameter which was read is stored.
+		<table class=dd>
+			<tr><td>0		<td>:		<td>bit type		</tr>
+			<tr><td>1		<td>:		<td>byte type		</tr>
+			<tr><td>2		<td>:		<td>word type		</tr>
+			<tr><td>3		<td>:		<td>2-word type		</tr>
+			<tr><td><b>4</b><td><b>:</b><td><b>real type</b></tr>
+		</table>
+
+	<dt><a href="./misc/cnc_diagnosr.htm">cnc_diagnosr</a> &quot;From the explanation of &quot;type in the ODBDGN structure&quot;&quot;
+	<dd>type : Attribute of diagnosis which was read is stored.
+		<table class=dd>
+			<tr><td>0		<td>:		<td>byte type		</tr>
+			<tr><td>1		<td>:		<td>word type		</tr>
+			<tr><td>2		<td>:		<td>2-word type		</tr>
+			<tr><td>3		<td>:		<td>but type(8 bit)	</tr>
+			<tr><td>4		<td>:		<td>bit type(1 bit)	</tr>
+			<tr><td><b>5</b><td><b>:</b><td><b>real type</b></tr>
+		</table>
+
+	<dt><a href="./ncdata/cnc_rdparainfo.htm">cnc_rdparainfo</a> &quot;From the explanation of &quot;prm_type in the ODBPARAIF structure&quot;&quot;
+	<dd>info[N].prm_type : Attribute of parameter. The following attributes are set.
+		<table class=dd>
+			<colgroup valign=top>
+			<colgroup valign=top>
+			<tr>
+				<td>bit 0,1	<td>:	<td>type attribute
+				<table>
+					<tr>	<td>0	<td>:	<td>bit type	</tr>
+					<tr>	<td>1	<td>:	<td>byte type	</tr>
+					<tr>	<td>2	<td>:	<td>word type	</tr>
+					<tr>	<td>3	<td>:	<td>2-word type <b>or real type</b>	</tr>
+				</table>
+			</tr>
+			<tr><td><td>:<br>:<td></tr>
+			<tr>
+				<td><b>bit 12</b>	<td><b>:</b>	<td><b>in case that type attribute = 3</b>
+				<table>
+					<tr>	<td><b>0</b>	<td><b>:</b>	<td><b>except real type</b>	</tr>
+					<tr>	<td><b>1</b>	<td><b>:</b>	<td><b>real type</b>		</tr>
+				</table>
+			</tr>
+		</table>
+
+	<dt><a href="./misc/cnc_rddiaginfo.htm">cnc_rddiaginfo</a> &quot;From the explanation of &quot;diag_type in the ODBDIAGIF structure&quot;&quot;
+	<dd>info[N].diag_type : Attribute of diagnosis data. The following attributes are set.
+		<table class=dd>
+			<colgroup valign=top>
+			<colgroup valign=top>
+			<tr>
+				<td>bit 0,1	<td>:	<td>type attribute(It is effective when bit 3 = 0)
+				<table>
+					<tr>	<td>0	<td>:	<td>bit type (8 bit)	</tr>
+					<tr>	<td>1	<td>:	<td>byte type			</tr>
+					<tr>	<td>2	<td>:	<td>word type			</tr>
+					<tr>	<td>3	<td>:	<td>2-word type <b>or real type</b>	</tr>
+				</table>
+			</tr>
+			<tr><td><td>:<br>:<td></tr>
+			<tr>
+				<td><b>bit 12</b>	<td><b>:</b>	<td><b>in case that type attribute = 3</b>
+				<table>
+					<tr>	<td><b>0</b>	<td><b>:</b>	<td><b>except real type</b>	</tr>
+					<tr>	<td><b>1</b>	<td><b>:</b>	<td><b>real type</b>		</tr>
+				</table>
+			</tr>
+		</table>
+</dl>
+</div>
+<li>Alarm status
+<div>
+<p>In order to get every alarm by using 16 bits alarm status, in the traditional mode, when a alarm which is shown by the upper word (from bit 16 to 31) in the 32 bits alarm status of <a href="./misc/cnc_alarm2.htm">cnc_alarm2</a> function occurs, bit 14 in the 16 bit alarm status of <a href="./misc/cnc_alarm.htm">cnc_alarm</a> function is turned on. In the advanced mode, bit 14 is reserved.
+<p>
+<table class="dd">
+	<tr><td>#00</td> <td>:</td> <td>Parameter switch on</td>				<td>(SW)</td> </tr>
+	<tr><td>#01</td> <td>:</td> <td>Power off parameter set</td>			<td>(PW)</td> </tr>
+	<tr><td>   </td> <td> </td> <td>:</td> 									<td>    </td> </tr>
+	<tr><td>   </td> <td> </td> <td>:</td> 									<td>    </td> </tr>
+	<tr><td>#13</td> <td>:</td> <td>Syncronized error</td>					<td>(SN)</td> </tr>
+	<tr><td><b>#14</b></td> <td>:</td> <td><b>Others(#16 to #31)</b></td>	<td>	</td> </tr>
+	<tr><td>#15</td> <td>:</td> <td>External alarm message</td> 			<td>(EX)</td> </tr>
+</table>
+<p>Then, when 14 is passed to the alarm type parameter of <a href="./misc/cnc_rdalminfo.htm">cnc_rdalminfo</a> function, all alarm information from bit 16 to 32 can be retrieved.
+</div>
+</ul>
+</blockquote>
+
+<!---------------------------------------------------------------------------->
+<li><a name="HSSBvsEther">Difference of the HSSB version and the Ethernet version</a>
+<blockquote>
+<ul>
+	<li>4 status (EW_SOCKET, EW_PROTOCOL, EW_ALARM, EW_STOP) are added to the return status of the functions.
+		<br>&nbsp
+	<li>The following functions of the HSSB are not supported. <b>Use the function in the right side of the following table.</b>
+		<table border=1>
+			<thead>
+			<tr>
+				<th>Brief description
+				<th>HSSB
+				<th>Ethernet
+			</tr>
+			</thead><tbody> 
+			<tr>
+				<td>Allocate library handle
+				<td>cnc_allclibhndl, cnc_allclibhndl2
+				<td><a href="./handle/cnc_allclibhndl3.htm">cnc_allclibhndl3</a>
+			</tr>
+			<tr>
+				<td>Start downloading NC program
+				<td>cnc_dwnstart
+				<td><a href="./program/cnc_dwnstart3.htm">cnc_dwnstart3</a>
+			</tr>
+			<tr>
+				<td>Download NC program
+				<td>cnc_download, cnc_cdownload
+				<td><a href="./program/cnc_download3.htm">cnc_download3</a>
+			</tr>
+			<tr>
+				<td>End of downloading NC program
+				<td>cnc_dwnend
+				<td><a href="./program/cnc_dwnend3.htm">cnc_dwnend3</a>
+			</tr>
+			<tr>
+				<td>Start downloading DNC program
+				<td>cnc_dncstart
+				<td><a href="./program/cnc_dncstart2.htm">cnc_dncstart2</a>
+			</tr>
+			<tr>
+				<td>Download DNC program
+				<td>cnc_dnc, cnc_cdnc
+				<td><a href="./program/cnc_dnc2.htm">cnc_dnc2</a>
+			</tr>
+			<tr>
+				<td>End of downloading DNC program
+				<td>cnc_dncend
+				<td><a href="./program/cnc_dncend2.htm">cnc_dncend2</a>
+			</tr>
+			<tr>
+				<td>Start uploading NC program
+				<td>cnc_upstart
+				<td><a href="./program/cnc_upstart3.htm">cnc_upstart3</a>
+			</tr>
+			<tr>
+				<td>Upload NC program
+				<td>cnc_upload, cnc_cupload
+				<td><a href="./program/cnc_upload3.htm">cnc_upload3</a>
+			</tr>
+			<tr>
+				<td>End of uploading NC program
+				<td>cnc_upend
+				<td><a href="./program/cnc_upend3.htm">cnc_upend3</a>
+			</tr>
+			</tbody>
+		</table>
+		<br>&nbsp
+	<li>The following functions are not supported in the Ethernet.
+		<ul>
+			<li>Function related to Data Server, DNC1, DNC2, OSI-Ethernet
+			<li>Function related to servo learning data
+			<li>Message translation with LADDER program (pmc_rdmsg, pmc_wrmsg)
+		</ul>
+		<br>&nbsp
+	<li>
+	NC's BOOT/IPL function (backup/restore SRAM, exchanging system software, etc.) is not supported by the Ethernet version.
+		<br>&nbsp
+	<li>Cannot access to the loader control board (5th path) by the Ethernet version. (except FS30i)
+		<br>&nbsp
+	There is a limitation about maximun number of applications which can access to one CNC at the same time. See &quot;<a href="dnc1.htm">Communication with Ethernet Board</a>&quot; for details.
+</ul>
+</blockquote>
+
+<!---------------------------------------------------------------------------->
+<li><a name="DriveName">Specifying the folder and file name for FS30i, 0i-D/F and PMi-A.</a>
+<blockquote>
+
+	<p>In FS30i, 0i-D/F and PMi-A, the folder name specify by "Drive Name + Folder Name".(In FS0i-D, folder name is not available to CNC memory.)</p>
+	<p>And, the file name specify "Drive Name + folder Name + File Name".</p>
+	<br/>
+	<p>In case of folder name, place "/"(slash) at the end of string.  If there is no "/", it is regarded as the string for file. </p>
+	<p>The format is as follows.</p>
+	<ul><li>//Drive Name/Filder Name 1/Folder Name 2/.../Folder Name n/File Name</li></ul>
+	<br/>
+	<p>Ex.1) The "USER/PATH1" folder in CNC memory.
+	<ul><li> //CNC_MEM/USER/PATH1/ </li></ul><br/>
+	<p>Ex.2) The "PART1.PRG" file in "NCDATA/MACHINE1" folder in Data server.
+	<ul><li> //DATA_SV/NCDATA/MACHINE1/PART1.PRG </li></ul>
+	<br/>
+	<p>The Drive name can be acquired by <a href="./Program/cnc_rdpdf_drive.htm" target="_parent">cnc_rdpdf_drive</a> function.</p>
+
+</blockquote>
+
+<li><a name="NonVolatileMemory">Non-volatile memory for FS30i, 0i-D/F and PMi-A</a>
+<blockquote>
+<p>Machining programs are stored in non-volatile memory in the CNC unit.</p>
+<p>You must use "High-speed program management<a href="./Program/cnc_saveprog_start.htm" target="_parent">cnc_saveprog_start</a>/<a href="./Program/cnc_saveprog_end.htm" target="_parent">cnc_saveprog_end</a>" when registration and the deletion of the machining programs are frequently repeated in such case that the machining programs are automatically downloaded from a personal computer at
+each machining.</P>
+<p>In "High-speed program management<a href="./Program/cnc_saveprog_start.htm" target="_parent">cnc_saveprog_start</a>/<a href="./Program/cnc_saveprog_end.htm" target="_parent">cnc_saveprog_end</a>", the program is not saved to the
+non-volatile memory at registration, modification, or deletion of programs.</p>
+
+</blockquote>
+
+<!---------------------------------------------------------------------------->
+</ol>
+
+<hr>
+
+<!---------------------------------------------------------------------------->
+<p><a href="fwlib32.htm">Top Page</a>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdmsptype</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdmsptype( unsigned short FlibHndl, short s_number, short e_number, short length, IODBMSTP *mspt ); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+Reads the measured point type data specified by "s_number", "e_number".<br/>
+The data is stored in "data" array of "IODBMSTP" with signed binary format.<br/>
+ - Available range of data : 0,...,3
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <ethr>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_number</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+Specify the start number of the measured point.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>e_number</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+Specify the end number of the measured point.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+Specify the data block length(size of IODBMSTP structure).
+                        </p>
+(6+(number of measured points))<br/>
+<img src="Wire/IODBMSTP.gif"></img><br/>
+                    </content>
+                </item>
+                <item>
+                    <name>mspt</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+Pointer to the IODBMSTP structure including the measured point type data.
+                        </p>
+The IODBMSTP structure is as follows.
+<pre><![CDATA[
+typedef struct iodbmstp {
+        short datano_s; /* start number of measured point */
+        short dummy;    /* (not used) */
+        short datano_e; /* end number of measured point */
+        char  data[N];  /* measured point type data */
+} IODBMSTP ;            /* N : number of measured points */
+]]></pre>
+                    </content>
+                </item>
+            </vc>
+        </ethr>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>Data block length error<br/>Size of IODBMSTP structure(length) is wrong.</content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>Data number error<br/>Measured point number(s_number, e_number) is wrong.</content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <ethr>The Ethernet function and the extended driver/library function are necessary.</ethr>
+    </option>
+
+
+
+    <parameter>
+        <type>
+<ul>
+8822#1(influenced by setting)
+</ul>
+        </type>
+    </parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+             <fs0if>-</fs0if>
+             <fs15>-</fs15>
+            <fs15i>-</fs15i>
+             <fs16>-</fs16>
+             <fs18>-</fs18>
+             <fs21>-</fs21>
+           <fs16ia>-</fs16ia>
+           <fs18ia>-</fs18ia>
+           <fs21ia>-</fs21ia>
+           <fs16ib>-</fs16ib>
+           <fs18ib>-</fs18ib>
+           <fs21ib>-</fs21ib>
+           <fs30ia>-</fs30ia>
+           <fs30ib>-</fs30ib>
+        </m>
+        <t>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+             <fs0if>-</fs0if>
+             <fs15>-</fs15>
+            <fs15i>-</fs15i>
+             <fs16>-</fs16>
+             <fs18>-</fs18>
+             <fs21>-</fs21>
+           <fs16ia>-</fs16ia>
+           <fs18ia>-</fs18ia>
+           <fs21ia>-</fs21ia>
+           <fs16ib>-</fs16ib>
+           <fs18ib>-</fs18ib>
+           <fs21ib>-</fs21ib>
+           <fs30ia>-</fs30ia>
+           <fs30ib>-</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+             <fs0if>-</fs0if>
+             <fs15>-</fs15>
+            <fs15i>-</fs15i>
+             <fs16>-</fs16>
+             <fs18>-</fs18>
+             <fs21>-</fs21>
+           <fs16ia>-</fs16ia>
+           <fs18ia>-</fs18ia>
+           <fs21ia>-</fs21ia>
+           <fs16ib>-</fs16ib>
+           <fs18ib>-</fs18ib>
+           <fs21ib>-</fs21ib>
+           <fs30ia>-</fs30ia>
+           <fs30ib>-</fs30ib>
+        </lc>
+        <p>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>-</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>-</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>E</fs16i>
+            <fs18i>E</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>-</d>
+            <h>-</h>
+            <a>-</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_wrmsptype</name>
+            <file>Wire/cnc_wrmsptype.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

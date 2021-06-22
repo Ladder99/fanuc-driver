@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_rdprgnum</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdprgnum(unsigned short FlibHndl, ODBPRO *prgnum);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Reads program number(modal O number) of the program which is being currently selected in CNC.</p>
+            <p>
+                As for Series 15i, 16/18/21, 16i/18i/21i, 0i, 30i, Power Mate i, PMi-A, if CNC exetues the
+                sub-program, this function can read also the main program number.
+                In this case, that main program number is the root program number which
+                was selected on the CNC for the execution.
+                If the program being executed is not a sub-program, the same program
+                number is set to both 'Running program number' and 'Main program number'.
+            </p>
+            <p>This function is used for management of NC programs in CNC by the application program, etc.</p>
+            <p>
+                The program numbers are stored in "buf.data" and 'buf.mdata" with unsigned binary format.<br/>
+            </p>
+            <p>
+                In Series 16/18, 16i/18i, 0i-F, 30i, Power mate i, it is possible to use this function for
+                the program number 8 digits, however it is necessary to switch API to the one for the
+                program number 8 digits.<br/>
+                In Series 15i, it is necessary to switch API to the one for the program number 8 digits.
+                See <a href="general.htm#O8" target="_parent">Program number 8 digits</a> for details.
+            </p>
+        </cmn>
+
+        <is>
+            <p>Reads program number of the program which is being currently selected in CNC.</p>
+            <p>
+                If CNC exetues the sub-program, this function can read also the main program number.
+                In this case, that main program number is the root program number which
+                was selected on the CNC for the execution.
+                If the program being executed is not a sub-program, the same program
+                number is set to both 'Running program number' and 'Main program number'.
+            </p>
+            <p>This function is used for management of NC programs in CNC by the application program, etc.</p>
+            <p>
+                The program numbers are stored in "buf.data" and 'buf.mdata" with unsigned binary format.
+            </p>
+            <p>
+                It is possible to use this function for the program number 8 digits,
+                however it is necessary to switch API to the one for the program number 8 digits.
+                See <a href="general.htm#O8" target="_parent">Program number 8 digits</a> for details.
+            </p>
+        </is>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle.
+                            See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>prgnum</name>
+                    <type>out</type>
+                    <content>
+                        <p>Pointer to the ODBPRO structure including the program numbe being executed.<br/>
+                        The ODBPRO structure is as follows.</p>
+<pre>
+<b>For program number 4 digits,</b>
+typedef struct odbpro {
+     short  dummy[2] ;   /* Not used. */
+     short  data ;       /* Running program number. */
+     short  mdata ;      /* Main program number.    */
+} ODBPRO ;               /*                         */
+
+<b>For program number 8 digits,</b>
+typedef struct odbpro {
+     short  dummy[2] ;   /* Not used */
+     long   data ;       /* Running program number. */
+     long   mdata ;      /* Main program number.    */
+} ODBPRO ;               /*                         */
+</pre>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                Unavailable (Series 15i,16/18,16i/18i, Power Mate i)<br/>
+                This application is not customized for the program number 8 digits.<br/>
+                See <a href="general.htm#O8" target="_parent">Program number 8 digits</a> for details.
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                CNC parameter error (Only Series 15)<br/>
+                7613#0=0 when CNC is turned on.<br/>
+                Set CNC parameter again.
+            </content>
+        </item>
+
+        <is>
+        </is>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter>
+        <type>
+        <li>HSSB</li>
+        <ul>
+            <li>Series 15</li>
+                <span class="dd">7613#0=1 (must be set)</span><br/>
+            <br/>
+        </ul>
+        </type>
+    </parameter>
+
+    <is_parameter>
+    </is_parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+        
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+    </reference>
+
+
+
+    <example>
+<vc>
+The next program displays "CURRENT(O9876)  MAIN(O1234)" while the block
+"O9876/N210" of the following NC program is being executed.
+
+#include "fwlib32.h"
+
+void example( void )
+{
+        struct odbpro buf ;
+        cnc_rdprgnum( h, &#38;buf ) ;
+        printf( "CURRENT(O%d)  MAIN(O%d)\n", buf.data, buf.mdata ) ;
+}
+
+        O1234 ;                 O5678 ;                 O9876 ;
+        N10 M98 P5678 ;         N110 M98 P9876 ;        N210 M45 ;
+        N20 M30 ;               N120 M99 ;              N220 M99 ;
+</vc>
+<vcs><![CDATA[
+The next program displays "CURRENT(O9876)  MAIN(O1234)" while the block
+"O9876/N210" of the following NC program is being executed.
+
+class example
+{
+    public void sample()
+    {
+            Focas1.ODBPRO buf = new Focas1.ODBPRO();
+            Focas1.cnc_rdprgnum(h, buf);
+            Console.WriteLine("CURRENT(O{0})  MAIN(O{1})", buf.data, buf.mdata);
+    }
+}
+
+        O1234 ;                 O5678 ;                 O9876 ;
+        N10 M98 P5678 ;         N110 M98 P9876 ;        N210 M45 ;
+        N20 M30 ;               N120 M99 ;              N220 M99 ;
+]]></vcs>
+    </example>
+
+
+
+  </func>
+</root>

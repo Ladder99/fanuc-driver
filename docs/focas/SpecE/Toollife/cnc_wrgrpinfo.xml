@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_wrgrpinfo</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_wrgrpinfo(unsigned short FlibHndl,short length,IODBTGI *grpinfo); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn><p>Writes the tool group information. The following information can be modified.</p>
+            <ul type="disc">
+                 <li>Tool life value.</li>
+                 <li>Tool life counter.</li>
+                 <li>Type of tool life counter</li>
+                 <table border="0" class="dd">
+                     <tr><td>0</td><td>:</td><td>count</td></tr>
+                     <tr><td>1</td><td>:</td><td>minute</td></tr>
+                 </table>
+             </ul>
+             <p>This function is not available for T/TT system. (except 30i series, 0i-D/F)</p>
+             <p>The maximum number of the tool life value and the tool life counter is the following.</p>
+             <p>
+                <ul type="disc">
+                  <li>Series 15, 16/18/21, 16i/18i/21i, 0i-A/B/C/D</li>
+                    <table>
+                      <tr><td>At the count specification </td><td>:</td><td>  9999 counts</td></tr>
+                      <tr><td>　                         </td><td>:</td><td>999999 counts(in case of the tool life management B)</td></tr>
+                      <tr><td>At the minute specification</td><td>:</td><td>  4300 minutes</td></tr>
+                      <tr><td>                         　</td><td>:</td><td>100000 minutes(in case of the tool life management B) </td></tr>
+                   </table>
+                  <li>Series 15i</li>
+                    <table>
+                      <tr><td>At the count specification </td><td>:</td><td>99999999 counts</td></tr>
+                      <tr><td>At the minute specification</td><td>:</td><td>   59940 minutes</td></tr>
+                    </table>
+                  <li>Series 0i-F, 30i/31i/32i</li>
+                    <table>
+                       <tr><td>At the count specification </td><td>:</td><td>   65535 counts</td></tr>
+                       <tr><td>　                         </td><td>:</td><td>99999999 counts(in case of the tool life management B)</td></tr>
+                       <tr><td>At the minute specification</td><td>:</td><td>   4300 minutes</td></tr>
+                       <tr><td>                         　</td><td>:</td><td>100000 minutes(in case of the tool life management B) </td></tr>
+                       <tr><td>                         　</td><td> </td><td>(When life count interval is 0.1 seconds, the max. value is 60,000 minutes.) </td></tr>
+                    </table>
+                </ul>
+            </p>
+        </cmn>
+
+        <is>
+        <cmn><p>Write the tool group information. The following information can be modified. </p>
+            <ul type="disc">
+                 <li>Tool life value.</li>
+                 <li>Tool life counter.</li>
+                 <li>Type of tool life counter</li>
+                 <table border="0" class="dd">
+                     <tr><td>0</td><td>:</td><td>count</td></tr>
+                     <tr><td>1</td><td>:</td><td>minute</td></tr>
+                 </table>
+             </ul>
+             <p>The maximum number of the tool life value and the tool life counter is the following.</p>
+                <ul type="disc">
+                  <table>
+                     <tr><td>At the count specification </td><td>:</td><td>   65535 counts</td></tr>
+                     <tr><td>　                         </td><td>:</td><td>99999999 counts(in case of the tool life management B)</td></tr>
+                     <tr><td>At the minute specification</td><td>:</td><td>   4300 minutes</td></tr>
+                     <tr><td>                         　</td><td>:</td><td>100000 minutes(in case of the tool life management B) </td></tr>
+                     <tr><td>                         　</td><td> </td><td>(When life count interval is 0.1 seconds, the max. value is 60,000 minutes.) </td></tr>
+                  </table>
+              </ul>
+        </cmn>
+        </is>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the length of the data block(size of IODBTGI structure)
+                            <p><b>IODBTGI</b></p>
+                            <img src="Toollife/grpinfo.gif"/>
+                            <p>N is number of the tool group to be written.</p>
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>grpinfo</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Pointer to the IODBTGI structure to set the tool group information.
+                            The IODBTGI structure is as follows.
+<pre>
+typedef struct iodbtgi {
+    short      s_grp;       /* Start tool group number. */
+    short      dummy;       /* Not used. */
+    short      e_grp;       /* End tool group number. */
+    struct {
+        long   n_tool;      /* Not used. */
+        long   count_value; /* Tool life value. */
+        long   counter;     /* Tool life counter. */
+        long   count_type;  /* Tool life counter type. */
+    } data[N];
+} IODBTGI ;         /* N is number of tool group to be written. */
+</pre>
+
+                          <dl>
+                            <dt>s_grp</dt>
+                            <dd>Specify the start tool group number.</dd>
+                            <dt>e_grpv</dt>
+                            <dd>Specify the end tool group number.</dd>
+                            <dt>count_value</dt>
+                            <dd>Specify the tool life value.</dd>
+                            <dt>counter</dt>
+                            <dd>Specify the tool life counter.</dd>
+                            <dt>count_type</dt>
+                            <dd>Specify the tool life counter type.</dd>
+                            <dd><table border="0" class="dd">
+                                <tr><td>0</td><td>:</td><td>count</td></tr>
+                                <tr><td>1</td><td>:</td><td>minute</td></tr>
+                            </table></dd>
+                        </dl>
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+           <name>EW_LENGTH</name>
+            <content>
+                data block length error<br/>
+                Size of IODBTGI structure(length) is wrong.
+            </content>
+        </item>
+        <item>
+           <name>EW_NUMBER</name>
+            <content>
+                data number error<br/>
+                The specification of tool group number (s_grp,e_grp) is wrong.
+            </content>
+        </item>
+        <item>
+           <name>EW_DATA</name>
+            <content>
+                data error<br/>
+                In order to get more information for this err_no return value, 
+                execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.
+                The following details status will be set onto the member, err_no of ODBERR structure.
+                <table border="0">
+                    <tr><td>0</td><td>:</td><td>Completion status other than EW_DATA</td></tr>
+                    <tr><td>1</td><td>:</td><td>Tool life value(count_value) error</td></tr>
+                    <tr><td>2</td><td>:</td><td>Tool life counter(counter) error</td></tr>
+                    <tr><td>3</td><td>:</td><td>Tool life counter type(count_type) error</td></tr>
+                    <tr><td>5</td><td>:</td><td>Automatic operation</td> </tr>
+                    <tr><td>6</td><td>:</td><td>Using next group or current used group : It cannot updata except tool life counter.</td> </tr>
+                </table>
+                And tool group number including incorrect data will be set onto the member,
+                err_dtno of ODBERR.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                no option<br/>
+                The tool life management function and the extended driver/library function are necessary.
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                CNC execution rejected<br/>
+                Cannot write as the executing, selecting or buffering group. <br/>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            <p>The extended driver/library function are necessary.</p>
+        </hssb>
+
+        <ethr>
+            <p>The Ethernet function and the extended driver/library function are necessary.</p>
+            <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F and 30i the required CNC option is as follows.</p>
+            <p>When Embedded Ethernet is used,</p>
+            <p><ul>above two optional functions are not required.</ul></p>
+            <p>When Ethernet board is used,</p>
+            <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>
+            <li>Series 15/15i, 16/18/21/21i, 0i, 30i/31i/32i</li>
+                The tool life management function.<br/>
+            <li>Series 16i/18i</li>
+                The tool life management function or the tool life management B function.
+        </need>
+        <type>
+            <li>Series 15/15i<br/>
+                <p>This function is influenced by 1024/512 pairs of the tool life management.</p>
+            </li>
+            <li>Series 16/18/21, 16i/18i/21i<br/>
+                <p>This function is influenced by 512(M Series) pairs of the tool life management.</p>
+            </li>
+            <li>Series 0i-F, 30i/31i/32i<br/>
+                <p>This function is influenced by additional pairs number of the tool life management.</p>
+                <table>
+                    <tr> <td>the tool life management</td>        <td>:</td><td>256 pairs of the tool life management on whole system with M Series</td></tr>
+                    <tr> <td>additional pairs number of the tool life management</td><td>:</td><td>1024 pairs of the tool life management on whole system with M Series</td></tr>
+                </table>
+            </li>
+        </type>
+
+        <is>
+        <hssb>
+            <p>The tool life management function and the extended driver/library function are necessary.</p>
+            <p>And this function is influenced by additional pairs number of the tool life management.</p>
+        <table>
+            <tr> <td>the tool life management</td><td>:</td>
+                 <td>256 pairs of the tool life management on whole system with M Series</td></tr>
+            <tr> <td>additional pairs number of the tool life management</td><td>:</td>
+                 <td>1024 pairs of the tool life management on whole system with M Series</td></tr>
+        </table>
+        </hssb>
+        </is>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul type="disc">
+                <li>Series 15/15i</li>
+                    7400#0,#1,#3
+                <li>Series 16/18/21, 16i/18i/21i</li>
+                    6800#0,#1,#2
+                <li>Series 30i</li>
+                    6800#0,#1,#2<br/>
+                    6805#4 (tool life management B)<br/>
+                    6813<br/>
+                <li>Series 0i-A/B/C</li>
+                    6800#0,#1,#2<br/>
+                    8132#0=1 (must be set)
+                <li>Series 0i-D</li>
+                    6800#0,#1,#2<br/>
+                    6813<br/>
+                    8132#0=1 (must be set)<br/>
+                <li>Series 0i-F</li>
+                    6800#0,#1,#2<br/>
+                    6805#4 (tool life management B)<br/>
+                    6813<br/>
+                    8132#0=1 (must be set)<br/>
+            </ul>
+        </type>
+    </parameter>
+    <!-- 30i(WinCE) -->
+    <is_parameter>
+        <type>
+            <table>
+                <tr><td> </td><td>6800#0,#1,#2</td><td> </td><td>(influenced by setting)</td></tr>
+            </table>
+        </type>
+    </is_parameter>
+
+
+
+    <mode></mode>
+    <!-- 30i(WinCE) -->
+    <is_mode></is_mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_clr3dplsmov</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_clr3dplsmov(unsigned short FlibHndl, short type);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Clears the handle interrupt pulse amount and the handle interrupt move amount.</p>
+            <p>It is only the handle interrupt pulse amount to be able to specify the mode.
+            (The handle interrupt move amount is cleared always for all axes.)</p>
+        </cmn>
+    </doc>
+
+
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the special handle feed mode number to clear handle
+                    interrupt pulse amount.</p>
+                        <table class="dd">
+                        <colgroup valign="top" />
+                        <colgroup valign="top" />
+                        <colgroup valign="top" />
+                        <colgroup valign="top" />
+                        <colgroup valign="top" />
+                        <tr>
+                            <td>1</td>
+                            <td>:</td>
+                            <td>Tool axis perpendicular direction mode X axis direction</td>
+                            <td>(for general and first parallel axis)</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>:</td>
+                            <td>Tool axis perpendicular direction mode Y axis direction</td>
+                            <td>(for general and first parallel axis)</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>:</td>
+                            <td>Tool axis direction mode</td>
+                            <td>(for general and first parallel axis)</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>:</td>
+                            <td>Tool tip center rotation mode A, B axis</td>
+                            <td>(for general and first parallel axis)</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>:</td>
+                            <td>Tool tip center rotation mode C axis</td>
+                            <td>(for general and first parallel axis)</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>:</td>
+                            <td>Tool axis perpendicular direction mode X axis direction</td>
+                            <td>(for second parallel axis)</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>:</td>
+                            <td>Tool axis perpendicular direction mode Y axis direction</td>
+                            <td>(for second parallel axis)</td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td>:</td>
+                            <td>Tool axis direction mode</td>
+                            <td>(for second parallel axis)</td>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td>:</td>
+                            <td>Tool tip center rotation mode A, B axis</td>
+                            <td>(for second parallel axis)</td>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td>:</td>
+                            <td>Tool tip center rotation mode C axis</td>
+                            <td>(for second parallel axis)</td>
+                        </tr>
+                        <tr>
+                            <td>-1</td>
+                            <td>:</td>
+                            <td>All mode</td>
+                            <td/>
+                        </tr>
+                        </table>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_DATA</name>
+            <content>Data error<br/>Special handle feed mode number(type) is wrong.</content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>The 3-dimensional handle feed function and
+                                    the extended driver/library function are
+                                    necessary.  Besides, either the manual handle
+                                    feed function or the manual handle interrupt
+                                    function is necessary.</content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+        </ethr>
+        <need>
+            This function needs the 3-dimensional handle feed function and
+                    the extended driver/library function.  Moreover, this function
+                    needs either the manual handle feed function or the manual
+                    handle interrupt function.
+        </need>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 15/15i</li>
+                Parameters concerning the 3-dimensional handle feed function.
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rd3dtooltip</name>
+            <file>position/cnc_rd3dtooltip.htm</file>
+        </item>
+        <item>
+            <name>cnc_rd3dpulse</name>
+            <file>position/cnc_rd3dpulse.htm</file>
+        </item>
+        <item>
+            <name>cnc_rd3dmovrlap</name>
+            <file>position/cnc_rd3dmovrlap.htm</file>
+        </item>
+        <item>
+            <name>cnc_rd3dofschg</name>
+            <file>position/cnc_rd3dofschg.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

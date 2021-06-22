@@ -1,0 +1,31 @@
+<html>
+<head>
+<script language="JavaScript">
+      var dir = "Pmc";
+
+      var vbCheck = true;
+
+      function jumpPage(linkURL){
+          location.href=linkURL;
+      }
+
+      function getLinkId(){
+          return dir;
+      }
+
+      function getXMLFileName(){
+          return dir+ "/"+"pmc_rdcntldata.xml";
+      }
+
+      function getVBCheck(){
+          return vbCheck;
+      }
+
+</script>
+<title>pmc_rdcntldata</title>
+</head>
+      <frameset rows="55pt,*" frameborder="no" framespacing="0">
+      <frame src="../cnc_com_top.htm" name="frmtop" noresize scrolling="no">
+      <frame src="../cnc_com_main.htm" name="frmmain">
+      </frameset>
+</html>

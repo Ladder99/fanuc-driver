@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdsyssoft</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdsyssoft(unsigned short FlibHndl, ODBSYSS *syssoft); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+Reads the series/version of CNC system software. These information are stored in each member of ODBSYSS.<p/>
+Reading the data which depends on the path needs exchanging the path using <a href="misc/cnc_setpath.htm" target="_parent">cnc_setpath</a> function.<p/>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>syssoft</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the ODBSYSS structure for the data of the series/version of CNC system software.<br/>
+                        </p>
+The ODBSYSS structure is as follows.
+<pre><![CDATA[
+typedef struct odbsyss {
+     char    slot_no_p[16];        /* Physical slot number           */
+     char    slot_no_l[16];        /* Logical slot number            */
+     short   module_id[16];        /* Module ID                      */
+     short   soft_id[16];          /* Software ID                    */
+     char    soft_series[16][5];   /* Software series with CPU       */
+     char    soft_version[16][5];  /* Software version with CPU      */
+     short   soft_inst;            /* soft. installation status      */
+     char    boot_ser[5];          /* Series of boot software        */
+     char    boot_ver[5];          /* Version of boot software       */
+     char    servo_ser[5];         /* Series of servo software       */
+     char    servo_ver[5];         /* Version of servo software      */
+     char    pmc_ser[5];           /* Series of PMC management soft. */
+     char    pmc_ver[5];           /* Version of PMC management soft.*/
+     char    ladder_ser[5];        /* Series of ladder software      */
+     char    ladder_ver[5];        /* Version of ladder software     */
+     char    mcrlib_ser[5];        /* Series of macro library        */
+     char    mcrlib_ver[5];        /* Version of macro library       */
+     char    mcrapl_ser[5];        /* Series of macro application    */
+     char    mcrapl_ver[5];        /* Version of macro application   */
+     char    spl1_ser[5];          /* Series of spindle soft.(1st)   */
+     char    spl1_ver[5];          /* Version of spindle soft.(1st)  */
+     char    spl2_ser[5];          /* Series of spindle soft.(2nd)   */
+     char    spl2_ver[5];          /* Version of spindle soft.(2nd)  */
+     char    spl3_ser[5];          /* Series of spindle soft.(3rd)   */
+     char    spl3_ver[5];          /* Version of spindle soft.(3rd)  */
+     char    c_exelib_ser[5];      /* Series of C-executer library   */
+     char    c_exelib_ver[5];      /* Version of C-executer library  */
+     char    c_exeapl_ser[5];      /* Series of C-exe. application   */
+     char    c_exeapl_ver[5];      /* Version of C-exe. application  */
+     char    int_vga_ser[5];       /* Series of VGA soft.(internal)  */
+     char    int_vga_ver[5];       /* Version of VGA soft.(internal) */
+     char    out_vga_ser[5];       /* Series of VGA soft.(external)  */
+     char    out_vga_ver[5];       /* Version of VGA soft.(external) */
+     char    pmm_ser[5];           /* Series of power motion manager software  */
+     char    pmm_ver[5];           /* Version of power motion manager software */
+     char    pmc_mng_ser[5];       /* Series of PMC management software        */
+     char    pmc_mng_ver[5];       /* Version of PMC management software       */
+     char    pmc_shin_ser[5];      /* Series of PMC management software  (internal SH) */
+     char    pmc_shin_ver[5];      /* Version of PMC management software (internal SH) */
+     char    pmc_shout_ser[5];     /* Series of PMC management software  (external SH) */
+     char    pmc_shout_ver[5];     /* Version of PMC management software (external SH) */
+     char    pmc_c_ser[5];         /* Series of PMC management software  (C language)  */
+     char    pmc_c_ver[5];         /* Version of PMC management software (C language)  */
+     char    pmc_edit_ser[5];      /* Series of PMC management software  (edit card)   */
+     char    pmc_edit_ver[5];      /* Version of PMC management software (edit card)   */
+     char    lddr_mng_ser[5];      /* Series of ladder software   */
+     char    lddr_mng_ver[5];      /* Version of ladder software  */
+     char    lddr_apl_ser[5];      /* Series of ladder software  (C application) */
+     char    lddr_apl_ver[5];      /* Version of ladder software (C application) */
+     char    spl4_ser[5];          /* Series of spindle soft.(4th)  */
+     char    spl4_ver[5];          /* Version of spindle soft.(4th) */
+     char    mcr2_ser[5];          /* Series of 2nd macro-executer  */
+     char    mcr2_ver[5];          /* Version of 2nd macro-executer */
+     char    mcr3_ser[5];          /* Series of 3rd macro-executer  */
+     char    mcr3_ver[5];          /* Version of 3rd macro-executer */
+     char    eth_boot_ser[5];      /* Series of boot software of Ethernet Board  */
+     char    eth_boot_ver[5];      /* Version of boot software of Ethernet Board */
+     char    reserve[8][5];        /* (reserve) */
+} ODBSYSS ;
+]]></pre>
+
+<dl>
+    <dt>slot_no_p</dt>
+    <dd>Physical slot number<br/>
+        The physical slot numbers of the modules which are built in the slots are stored in binary in order of their position.  This array is terminated with FFH. The data subsequent to FFH are invalid.</dd>
+    <dd><blockquote>
+            <table border="0">
+                <tr>    <td>00H to 0FH</td> <td>:</td>  <td>Primary slot number</td>    </tr>
+                <tr>    <td>80H to 8FH</td> <td>:</td>  <td>Secondary slot number</td>  </tr>
+            </table>
+        </blockquote></dd>
+    
+    <dt>slot_no_l</dt>
+    <dd>Logical slot number<br/>
+        The logical slot numbers of the modules which are built in the slots are stored in binary in order of their position.  This array is terminated with FFH. The data subsequent to FFH are invalid.</dd>
+    <dd><blockquote>
+            <table border="0">
+                <tr>    <td>00H to 0FH</td> <td>:</td>  <td>logical slot number</td>        </tr>
+            </table>
+        </blockquote></dd>
+    
+    <dt>module_id</dt>
+    <dd>Module ID<br/>
+        The module ID of the modules which are built in the slots are stored in binary in order of their position. This array is terminated with FFH. The data subsequent to FFH are invalid. 'XX' is internal information.<br/>
+        The followings are main module ID.</dd>
+    <dd><ul>
+            <li>Series 15i</li>
+            <table border="0">
+                <tr>    <td>XXEBH</td>  <td>:</td>  <td>CNC Main            </td>   </tr>
+                <tr>    <td>XXE0H</td>  <td>:</td>  <td>PMC C language board        </td>   </tr>
+                <tr>    <td>XXD8H</td>  <td>:</td>  <td>Additional axis board       </td>   </tr>
+                <tr>    <td>XXFEH</td>  <td>:</td>  <td>Ethernet board      </td>   </tr>
+                <tr>    <td>XXAAH</td>  <td>:</td>  <td>HSSB I/F            </td>   </tr>
+                <tr>    <td>XX81H</td>  <td>:</td>  <td>Customer's board    </td>   </tr>
+                <tr>    <td>XXFCH</td>  <td>:</td>  <td>PROFIBUS DP(Master) </td>   </tr>
+                <tr>    <td>XXE3H</td>  <td>:</td>  <td>PROFIBUS DP(Slave)  </td>   </tr>
+                <tr>    <td>XXEFH</td>  <td>:</td>  <td>DEVICENET(Master)   </td>   </tr>
+                <tr>    <td>XXBFH</td>  <td>:</td>  <td>DEVICENET(Slave)    </td>   </tr>
+                <tr>    <td>XX59H</td>  <td>:</td>  <td>FL-NET              </td>   </tr>
+            </table>
+            <li>Series 16/18, 16i/18i/21i, 0i, Power Mate i</li>
+            <table border="0">
+                <tr>    <td>XX3FH</td>  <td>:</td>  <td>Remote buffer   </td>       </tr>
+                <tr>    <td>XX45H</td>  <td>:</td>  <td>Graphic(CAP-II) </td>       </tr>
+                <tr>    <td>XX46H</td>  <td>:</td>  <td>I/O card        </td>       </tr>
+                <tr>    <td>XX6DH</td>  <td>:</td>  <td>CAP-II          </td>       </tr>
+                <tr>    <td>XX7FH</td>  <td>:</td>  <td>RISC(64bit)     </td>       </tr>
+                <tr>    <td>XX94H</td>  <td>:</td>  <td>MMC-IV          </td>       </tr>
+                <tr>    <td>XX9AH</td>  <td>:</td>  <td>Graphic (standard)  </td>       </tr>
+                <tr>    <td>XX9DH</td>  <td>:</td>  <td>PMC-SC          </td>       </tr>
+                <tr>    <td>XXA7H</td>  <td>:</td>  <td>FS16B/Main(6 axes)  </td>       </tr>
+                <tr>    <td>XX95H</td>  <td>:</td>  <td>I/O Link-2(Gate array version)</td></tr>
+                <tr>    <td>XXAAH</td>  <td>:</td>  <td>HSSB            </td>       </tr>
+                <tr>    <td>XXC4H</td>  <td>:</td>  <td>I/O Link-2      </td>       </tr>
+                <tr>    <td>XXDDH</td>  <td>:</td>  <td>Power Mate i    </td>       </tr>
+                <tr>    <td>XXADH</td>  <td>:</td>  <td>FS18B/Main(4 axes)  </td>       </tr>
+                <tr>    <td>XXAEH</td>  <td>:</td>  <td>FS18B/Main(6 axes)  </td>       </tr>
+                <tr>    <td>XXB0H</td>  <td>:</td>  <td>FS16B/SUB       </td>       </tr>
+                <tr>    <td>XXB2H</td>  <td>:</td>  <td>FS16B/Main(4 axes)  </td>       </tr>
+                <tr>    <td>XXB4H</td>  <td>:</td>  <td>FS18B/SUB       </td>       </tr>
+                <tr>    <td>XXB7H</td>  <td>:</td>  <td>FS16C/Main(6 axes)  </td>       </tr>
+                <tr>    <td>XXB9H</td>  <td>:</td>  <td>FS16C,18C/SUB   </td>       </tr>
+                <tr>    <td>XXBAH</td>  <td>:</td>  <td>FS16C,18C/SUB   </td>       </tr>
+                <tr>    <td>XXBDH</td>  <td>:</td>  <td>FS18C/Main(6 axes)  </td>       </tr>
+            </table>
+        </ul>
+    </dd>
+    <dt>soft_id</dt>
+    <dd>Software ID<br/>
+        The software ID of the modules which are built in the slots are stored in binary in order of their position. This array is terminated with FFH.  The data subsequent to FFH are invalid.<br/>
+        The followings are main software ID.</dd>
+    <dd><ul>
+            <li>Series 15i</li>
+            <table border="0">
+                <tr>    <td>40H</td>    <td>:</td>  <td>CNC Main            </td>   </tr>
+                <tr>    <td>41H</td>    <td>:</td>  <td>PMC C language board        </td>   </tr>
+                <tr>    <td>50H</td>    <td>:</td>  <td>Additional axis board       </td>   </tr>
+                <tr>    <td>61H</td>    <td>:</td>  <td>Ethernet board      </td>   </tr>
+                <tr>    <td>65H</td>    <td>:</td>  <td>HSSB I/F            </td>   </tr>
+                <tr>    <td>44H</td>    <td>:</td>  <td>Customer's board    </td>   </tr>
+                <tr>    <td>6AH</td>    <td>:</td>  <td>PROFIBUS DP(Master) </td>   </tr>
+                <tr>    <td>69H</td>    <td>:</td>  <td>PROFIBUS DP(Slave)  </td>   </tr>
+                <tr>    <td>70H</td>    <td>:</td>  <td>DEVICENET(Master)   </td>   </tr>
+                <tr>    <td>71H</td>    <td>:</td>  <td>DEVICENET(Slave)    </td>   </tr>
+                <tr>    <td>76H</td>    <td>:</td>  <td>FL-NET              </td>   </tr>
+            </table>
+            <li>Series 16/18, 16i/18i/21i, 0i, Power Mate i</li>
+            <table border="0">
+                <tr>    <td>40H</td>    <td>:</td>  <td>CNC             </td>   </tr>
+                <tr>    <td>41H</td>    <td>:</td>  <td>PMC-SC          </td>   </tr>
+                <tr>    <td>42H</td>    <td>:</td>  <td>Internal I/O card   </td>   </tr>
+                <tr>    <td>43H</td>    <td>:</td>  <td>CNC SUB         </td>   </tr>
+                <tr>    <td>45H</td>    <td>:</td>  <td>Graphic (standard)  </td>   </tr>
+                <tr>    <td>46H</td>    <td>:</td>  <td>Graphic(CAP-II) </td>   </tr>
+                <tr>    <td>49H</td>    <td>:</td>  <td>CAP-II          </td>   </tr>
+                <tr>    <td>4AH</td>    <td>:</td>  <td>Remote buffer   </td>   </tr>
+                <tr>    <td>4FH</td>    <td>:</td>  <td>PMC-SE          </td>   </tr>
+                <tr>    <td>5EH</td>    <td>:</td>  <td>MMC-IV,HSSB I/F </td>   </tr>
+                <tr>    <td>67H</td>    <td>:</td>  <td>PMC-SB5/SB6     </td>   </tr>
+            </table>
+        </ul>
+    </dd>
+    <dt>soft_series</dt>
+    <dd>Software series<br/>
+        Software series information is stored in ASCII code in order of its position (4 byte + 'NULL').</dd>
+    <dt>soft_version</dt>
+    <dd>Software version<br/>
+        Software series information is stored in ASCII code in order of its position (4 byte + 'NULL').</dd>
+    <dt>soft_inst</dt>
+    <dd>Software installation status for CNC/CNC SUB/LOADER(dependent on path)</dd>
+    <dd><blockquote>
+            <table border="0">
+                <tr>    <td>bit0 = 1</td>   <td>:</td>  <td>OPTION-A1</td>  </tr>
+                <tr>    <td>bit1 = 1</td>   <td>:</td>  <td>OPTION-A2</td>  </tr>
+                <tr>    <td>bit2 = 1</td>   <td>:</td>  <td>OPTION-A3</td>  </tr>
+                <tr>    <td>bit3 = 1</td>   <td>:</td>  <td>OPTION-A4</td>  </tr>
+            </table>
+        </blockquote>
+    </dd>
+    <dt>boot_ser</dt>
+    <dd>Series of boot software</dd>
+    <dt>boot_ver</dt>
+    <dd>Version of boot software</dd>
+    <dt>servo_ser</dt>
+    <dd>Series of servo software (dependent on path)</dd>
+    <dt>servo_ver</dt>
+    <dd>Version of servo software (dependent on path)</dd>
+    <dt>pmc_ser</dt>
+    <dd>Series of PMC management soft (dependent on path)<br/>
+        Use pmc_mng_ser instead of pmc_ser.</dd>
+    <dt>pmc_ver</dt>
+    <dd>Series of PMC management software (dependent on path)<br/>
+        Use pmc_mng_ser instead of pmc_ser.</dd>
+    <dt>ladder_ser</dt>
+    <dd>Series of ladder software (dependent on path)<br/>
+        Use ladder_mng_ser instead of ladder_ser.</dd>
+    <dt>ladder_ver</dt>
+    <dd>Version of ladder software (dependent on path)<br/>
+        Use ladder_mng_ser instead of ladder_ver.</dd>
+    <dt>mcrlib_ser</dt>
+    <dd>Series of macro library/order made macro (dependent on path)</dd>
+    <dt>mcrlib_ver</dt>
+    <dd>Version of macro library/order made macro (dependent on path)</dd>
+    <dt>mcrapl_ser</dt>
+    <dd>Series of macro application (dependent on path)</dd>
+    <dt>mcrapl_ver</dt>
+    <dd>Version of macro application (dependent on path)</dd>
+    <dt>spl1_ser</dt>
+    <dd>Series of spindle software (1st) (dependent on path)</dd>
+    <dt>spl1_ver</dt>
+    <dd>Version of spindle software (1st) (dependent on path)</dd>
+    <dt>spl2_ser</dt>
+    <dd>Series of spindle software (2nd) (dependent on path)</dd>
+    <dt>spl2_ver</dt>
+    <dd>Version of spindle software (2nd) (dependent on path)</dd>
+    <dt>spl3_ser</dt>
+    <dd>Series of spindle software (3rd) (dependent on path)</dd>
+    <dt>spl3_ver</dt>
+    <dd>Version of spindle software (3rd) (dependent on path)</dd>
+    <dt>c_exelib_ser</dt>
+    <dd>Series of C-executer library</dd>
+    <dt>c_exelib_ver</dt>
+    <dd>Version of C-executer application</dd>
+    <dt>c_exeapl_ser</dt>
+    <dd>Series of C-executer application</dd>
+    <dt>c_exeapl_ver</dt>
+    <dd>Version of C-executer application</dd>
+    <dt>int_vga_ser</dt>
+    <dd>Series of VGA software (internal)</dd>
+    <dt>int_vga_ver</dt>
+    <dd>Version of VGA software (internal)</dd>
+    <dt>out_vga_ser</dt>
+    <dd>Series of VGA software (external)</dd>
+    <dt>out_vga_ver</dt>
+    <dd>Version of VGA software (external)</dd>
+
+    <p>* Following items are only available for Series 15i, Series 16i/18i/21i, 0i, and Power Mate i.</p>
+
+    <dt>pmm_ser</dt>
+    <dd>Series of power motion manager software (dependent on path)</dd>
+    <dt>pmm_ver</dt>
+    <dd>Version of power motion manager software (dependent on path)</dd>
+    <dt>pmc_mng_ser</dt>
+    <dd>Series of PMC management software (dependent on path)<br/>
+        Please use this item instead of sPmc_ser if CNC is Series 16i/18i/21i, 0i, Power Mate i.</dd>
+    <dt>pmc_mng_ver</dt>
+    <dd>Version of PMC management soft (dependent on path)<br/>
+        Please use this item instead of sPmc_ver if CNC is Series 16i/18i/21i, 0i, Power Mate i.</dd>
+    <dt>pmc_shin_ser</dt>
+    <dd>Series of PMC management software (internal SH) (dependent on path)</dd>
+    <dt>pmc_shin_ver</dt>
+    <dd>Version of PMC management software (internal SH) (dependent on path)</dd>
+    <dt>pmc_shout_ser</dt>
+    <dd>Series of PMC management software (external SH) (dependent on path)</dd>
+    <dt>pmc_shout_ver</dt>
+    <dd>Version of PMC management software (external SH) (dependent on path)</dd>
+    <dt>pmc_c_ser</dt>
+    <dd>Series of PMC management software (C language) (dependent on path)</dd>
+    <dt>pmc_c_ver</dt>
+    <dd>Version of PMC management software (C language) (dependent on path)</dd>
+    <dt>pmc_edit_ser</dt>
+    <dd>Series of PMC management software (edit card) (dependent on path)</dd>
+    <dt>pmc_edit_ver</dt>
+    <dd>Version of PMC management software (edit card) (dependent on path)</dd>
+    <dt>lddr_mng_ser</dt>
+    <dd>Series of ladder software (dependent on path)<br/>
+        Please use this item instead of ladder_ser if CNC is Series 15i, 16i/18i/21i, 0i, Power Mate i.</dd>
+    <dt>lddr_mng_ver</dt>
+    <dd>Version of ladder software (dependent on path)<br/>
+        Please use this item instead of ladder_ver if CNC is Series 15i, 16i/18i/21i, 0i, Power Mate i.</dd>
+    <dt>lddr_apl_ser</dt>
+    <dd>Series of ladder software (C application) (dependent on path)</dd>
+    <dt>lddr_apl_ver</dt>
+    <dd>Version of ladder software (C application) (dependent on path)</dd>
+    <dt>spl4_ser</dt>
+    <dd>Series of spindle software (4th) (dependent on path)</dd>
+    <dt>spl4_ver</dt>
+    <dd>Version of spindle software (4th) (dependent on path)</dd>
+    <dt>mcr2_ser</dt>
+    <dd>Series of 2nd macro executer (dependent on path)</dd>
+    <dt>mcr2_ver</dt>
+    <dd>Series of 2nd macro executer (dependent on path)</dd>
+    <dt>mcr3_ser</dt>
+    <dd>Series of 3rd macro executer (dependent on path)</dd>
+    <dt>mcr3_ver</dt>
+    <dd>Version of 3rd macro executer (dependent on path)</dd>
+    <dt>eth_boot_ser</dt>
+    <dd>Series of boot software of Ethernet Board</dd>
+    <dt>eth_boot_ver</dt>
+    <dd>Version of boot software of Ethernet Board</dd>
+    <dt>reserve</dt>
+    <dd>(reserve)</dd>
+</dl>
+<p/>* Above series/version are stored in ASCII code(4 byte + 'NULL').  In case of no software, first character is 'NULL'.
+
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <add></add>
+    </option>
+
+
+
+    <parameter></parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>O</fs15i>
+             <fs16>H</fs16>
+             <fs18>H</fs18>
+             <fs21>X</fs21>
+           <fs16ia>O</fs16ia>
+           <fs18ia>O</fs18ia>
+           <fs21ia>O</fs21ia>
+           <fs16ib>O</fs16ib>
+           <fs18ib>O</fs18ib>
+           <fs21ib>O</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>H</fs16>
+             <fs18>H</fs18>
+             <fs21>X</fs21>
+           <fs16ia>O</fs16ia>
+           <fs18ia>O</fs18ia>
+           <fs21ia>O</fs21ia>
+           <fs16ib>O</fs16ib>
+           <fs18ib>O</fs18ib>
+           <fs21ib>O</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>X</a>
+        </pw>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdsyssoft2</name>
+            <file>misc/cnc_rdsyssoft2.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdsyssoft3</name>
+            <file>misc/cnc_rdsyssoft3.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

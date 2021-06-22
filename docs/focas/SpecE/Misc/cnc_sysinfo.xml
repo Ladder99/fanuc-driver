@@ -1,0 +1,526 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_sysinfo</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_sysinfo(unsigned short FlibHndl, ODBSYS *sysinfo); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+Reads system information such as kind of CNC system, Machining(M) or Turning(T), series and version of CNC system software and number of the controlled axes. 
+<p/>
+Use this function to confirm compatibility of CNC's system software and PMC's software or to get the number of controllable axes before reading axis coordinate data such as absolute, machine position. 
+<p/>
+Note) that a null character ('\0') is not added at the end of each strings. 
+         </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>sysinfo</name>
+                    <type>out</type>
+                    <content>
+
+
+                        <p/>Pointer to the ODBSYS structure including CNC system information.
+                        <br/>There is difference at the structure between Series 15 and Series 15i/16/18/21/16i/18i/21i/0i/30i/31i/32i/35i/Power Mate i, PMi-A.
+<p/>The ODBSYS structure define type for Series 15 is as follows.
+<pre>
+<li>Series 15</li>
+typedef struct odbsys {
+        short   dummy ;      /* dummy */
+        char    max_axis[2] ;/* Max. controlled axes */
+        char    cnc_type[2] ;/* Kind of CNC (ASCII) */
+        char    mt_type[2] ; /* Kind of M/T/TT (ASCII) */
+        char    series[4] ;  /* Series number (ASCII) */
+        char    version[4] ; /* Version number (ASCII) */
+        char    axes[2] ;   /* Current controlled axes(ASCII)*/
+} ODBSYS ;
+</pre>
+
+The ODBSYS structure define type for Series 15i/16/18/21/16i/18i/21i/0i/30i/31i/32i/35i/Power Mate i, PMi-A is as follows.
+
+<pre>
+<li>Series 15i, 16/18/21, 16i/18i/21i, 0i, 30i/31i/32i, Power Mate i, PMi-A</li>
+typedef struct odbsys {
+        short   addinfo ;    /* Additional information */
+        short   max_axis ;   /* Max. controlled axes */
+        char    cnc_type[2] ;/* Kind of CNC (ASCII) */
+        char    mt_type[2] ; /* Kind of M/T/TT (ASCII) */
+        char    series[4] ;  /* Series number (ASCII) */
+        char    version[4] ; /* Version number (ASCII) */
+        char    axes[2] ;   /* Current controlled axes(ASCII)*/
+} ODBSYS ;
+</pre>
+
+<dl>
+    <dt>dummy</dt>
+        <dd>Not used</dd>
+    <dt>addinfo</dt>
+    <dd>Additional information</dd>
+    <dd>This is available at Series 15i/16/18/21, 16i/18i/21i/0i, 30i/31i/32i/35i, Power Mate i, PMi-A.</dd>
+        <dl>
+            <dt>bit 0</dt>
+            <dd><table>
+                <tr> <td>0</td> <td>:</td> <td>without loader control function</td> </tr>
+                <tr> <td>1</td> <td>:</td> <td>with loader control function</td> </tr>
+            </table></dd>
+            <dt>bit 1</dt>
+            <dd><table>
+                <tr> <td>0</td> <td>:</td> <td>not an i Series CNC</td> </tr>
+                <tr> <td>1</td> <td>:</td> <td>i Series CNC</td> </tr>
+            </table></dd>
+            <dt>bit 2</dt>
+            <dd>reserved</dd>
+            <dt>bit 3</dt>
+            <dd><table>
+                <tr> <td>0</td> <td>:</td> <td>without compound machining function</td> </tr>
+                <tr> <td>1</td> <td>:</td> <td>with compound machining function</td> </tr>
+            </table></dd>
+            <dt>bit 4</dt>
+            <dd><table>
+                <tr> <td>0</td> <td>:</td> <td>without transfer line function</td> </tr>
+                <tr> <td>1</td> <td>:</td> <td>with transfer line function</td> </tr>
+            </table></dd>
+            <dt>bit 5</dt>
+            <dd><table>
+                <tr> <td>0</td> <td>:</td> <td>not Plus type</td> </tr>
+                <tr> <td>1</td> <td>:</td> <td>Plus type</td> </tr>
+            </table></dd>
+            <dt>Bit6,..,Bit7</dt>
+            <dd>reserved</dd>
+            <dt>Bit8～15</dt>
+            <dd>MODEL information</dd>
+            <dd><table>
+                <tr> <td>0</td> <td>:</td> <td>MODEL information is not supported</td> </tr>
+                <tr> <td>1</td> <td>:</td> <td>MODEL A</td> </tr>
+                <tr> <td>2</td> <td>:</td> <td>MODEL B</td> </tr>
+                <tr> <td>3</td> <td>:</td> <td>MODEL C</td> </tr>
+                <tr> <td>4</td> <td>:</td> <td>MODEL D</td> </tr>
+                <tr> <td>6</td> <td>:</td> <td>MODEL F</td> </tr>
+            </table></dd>
+            <dd>In Series 15i, 16/18/21, 16i/18i/21i, 0i-A/B/C, 30i-A, Power Matei, MODEL information is not supported.</dd>
+
+        </dl>
+
+    <dt>max_axis</dt>
+    <dd>Maximum controlled axes<br/>This is the maximum controlled axes in CNC.</dd>
+    <ul>    <ul>
+        <li type="disc">Series 15</li>
+        <dd>both max_axis[0] and max_axis[1] are NULL('\0') : 10 axes</dd>
+        <dd>in other case : value itself(ASCII: ex.'15')</dd>
+        <li type="disc">Series 15i, 16/18/21, 16i/18i/21i, 0i, 30i, Power Mate i, PMi-A</li>
+        <dd>value itself(BINARY)</dd>
+    </ul>   </ul>
+    <dt>cnc_type</dt>
+    <dd>Kind of CNC (ASCII)</dd>
+        <dd><table>
+            <tr><td>'15'</td><td>:</td><td>Series 15/15i</td></tr>
+            <tr><td>'16'</td><td>:</td><td>Series 16/16i</td></tr>
+            <tr><td>'18'</td><td>:</td><td>Series 18/18i</td></tr>
+            <tr><td>'21'</td><td>:</td><td>Series 21/21i</td></tr>
+            <tr><td>'30'</td><td>:</td><td>Series 30i</td></tr>
+            <tr><td>'31'</td><td>:</td><td>Series 31i</td></tr>
+            <tr><td>'32'</td><td>:</td><td>Series 32i</td></tr>
+            <tr><td>'35'</td><td>:</td><td>Series 35i</td></tr>
+            <tr><td>' 0'</td><td>:</td><td>Series 0i</td></tr>
+            <tr><td>'PD'</td><td>:</td><td>Power Mate i-D</td></tr>
+            <tr><td>'PH'</td><td>:</td><td>Power Mate i-H</td></tr>
+            <tr><td>'PM'</td><td>:</td><td>Power Motion i</td></tr>
+        </table></dd>
+
+    <dt>mt_type</dt>
+    <dd>Kind of M/T (ASCII)</dd>
+        <dd><table>
+            <tr>
+                <td>' M'</td>
+                <td>:</td>
+                <td>Machining center</td>
+            </tr>
+            <tr>
+                <td>' T'</td>
+                <td>:</td>
+                <td>Lathe</td>
+            </tr>
+            <tr>
+                <td>'MM'</td>
+                <td>:</td>
+                <td>M series with 2 path control</td>
+            </tr>
+            <tr>
+                <td>'TT'</td>
+                <td>:</td>
+                <td>T series with 2/3 path control</td>
+            </tr>
+            <tr>
+                <td>'MT'</td>
+                <td>:</td>
+                <td>T series with compound machining function</td>
+            </tr>
+            <tr>
+                <td>' P'</td>
+                <td>:</td>
+                <td>Punch press</td>
+            </tr>
+            <tr>
+                <td>' L'</td>
+                <td>:</td>
+                <td>Laser</td>
+            </tr>
+            <tr>
+                <td>' W'</td>
+                <td>:</td>
+                <td>Wire cut</td>
+            </tr>
+        </table></dd>
+
+    <dt>series</dt>
+    <dd>Series number of CNC (ASCII)</dd>
+    <dd>The character string of 4 digits is stored.</dd>
+
+    <dt>version</dt>
+    <dd>Version number of CNC(ASCII)</dd>
+    <dd>The character string of 4 digits is stored.</dd>
+
+    <dt>axes</dt>
+    <dd>Current controlled axes(ASCII)</dd>
+    <dd>The character string of 2 digits is stored.</dd>
+    <dd>In case of 4 axes, ' 4' is set.</dd>
+</dl>
+<img src="misc/ODBSYS.gif"></img>
+<p/>
+For example, the following information are gotten by execution of this function on Series 16i-M (B0F1-0001) system with 3 servo axes and without loader control.
+<pre>
+sysinfo.addinfo  = 2
+sysinfo.max_axis = 8
+sysinfo.cnc_type = "16"
+sysinfo.mt_type  = " M"
+sysinfo.series   = "B0F1"
+sysinfo.version  = "0001"
+sysinfo.axes     = " 3"
+</pre>
+
+                    </content>
+                </item>
+            </vc>
+
+        </common>
+
+
+        <!-- is Argument Start -->
+        <is>
+            <hssb>
+                <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>sysinfo</name>
+                    <type>out</type>
+                    <content>
+
+
+                        <p/>Pointer to the ODBSYS structure including CNC system information.
+
+<pre>
+typedef struct odbsys {
+        short   addinfo ;    /* Additional information */
+        short   max_axis ;   /* Max. controlled axes */
+        char    cnc_type[2] ;/* Kind of CNC (ASCII) */
+        char    mt_type[2] ; /* Kind of M/T/TT (ASCII) */
+        char    series[4] ;  /* Series number (ASCII) */
+        char    version[4] ; /* Version number (ASCII) */
+        char    axes[2] ;   /* Current controlled axes(ASCII)*/
+} ODBSYS ;
+</pre>
+
+<dl>
+    <dt>dummy</dt>
+        <dd>Not used</dd>
+    <dt>addinfo</dt>
+    <dd>Additional information</dd>
+        <dl>
+            <dt>bit 0</dt>
+            <dd><table>
+                <tr> <td>0</td> <td>:</td> <td>without loader control function</td> </tr>
+                <tr> <td>1</td> <td>:</td> <td>with loader control function</td> </tr>
+            </table></dd>
+            <dt>bit 1</dt>
+            <dd><table>
+                <tr> <td>0</td> <td>:</td> <td>not an i Series CNC</td> </tr>
+                <tr> <td>1</td> <td>:</td> <td>i Series CNC</td> </tr>
+            </table></dd>
+            <dt>bit 2</dt>
+            <dd>reserved</dd>
+            <dt>bit 3</dt>
+            <dd><table>
+                <tr> <td>0</td> <td>:</td> <td>without compound machining function</td> </tr>
+                <tr> <td>1</td> <td>:</td> <td>with compound machining function</td> </tr>
+            </table></dd>
+            <dt>Bit4,..,Bit15</dt>
+            <dd>reserved</dd>
+        </dl>
+
+    <dt>max_axis</dt>
+    <dd>Maximum controlled axes<br/>This is the maximum controlled axes in CNC.</dd>
+    <ul>    <ul>
+        <dd>value itself(BINARY)</dd>
+    </ul>   </ul>
+    <dt>cnc_type</dt>
+    <dd>Kind of CNC (ASCII)</dd>
+        <dd><table>
+            <tr><td>'30'</td><td>:</td><td>Series 30i</td></tr>
+            <tr><td>'31'</td><td>:</td><td>Series 31i</td></tr>
+            <tr><td>'32'</td><td>:</td><td>Series 32i</td></tr>
+        </table></dd>
+
+    <dt>mt_type</dt>
+    <dd>Kind of M/T (ASCII)</dd>
+        <dd><table>
+            <tr>
+                <td>' M'</td>
+                <td>:</td>
+                <td>Machining center</td>
+            </tr>
+            <tr>
+                <td>' T'</td>
+                <td>:</td>
+                <td>Lathe</td>
+            </tr>
+            <tr>
+                <td>'MM'</td>
+                <td>:</td>
+                <td>M series with 2 path control</td>
+            </tr>
+            <tr>
+                <td>'TT'</td>
+                <td>:</td>
+                <td>T series with 2/3 path control</td>
+            </tr>
+            <tr>
+                <td>'MT'</td>
+                <td>:</td>
+                <td>T series with compound machining function</td>
+            </tr>
+        </table></dd>
+
+    <dt>series</dt>
+    <dd>Series number of CNC (ASCII)</dd>
+    <dd>The character string of 4 digits is stored.</dd>
+
+    <dt>version</dt>
+    <dd>Version number of CNC(ASCII)</dd>
+    <dd>The character string of 4 digits is stored.</dd>
+
+    <dt>axes</dt>
+    <dd>Current controlled axes(ASCII)</dd>
+    <dd>The character string of 2 digits is stored.</dd>
+    <dd>In case of 4 axes, ' 4' is set.</dd>
+</dl>
+<p/>
+For example, the following information are gotten by execution of this function on Series 30is-M (G001-0001) system with 3 servo axes.
+<pre>
+sysinfo.addinfo  = 2
+sysinfo.max_axis = 32
+sysinfo.cnc_type = "30"
+sysinfo.mt_type  = " M"
+sysinfo.series   = "G001"
+sysinfo.version  = "0001"
+sysinfo.axes     = " 3"
+</pre>
+
+                    </content>
+                </item>
+                </vc>
+            </hssb>
+        </is>
+        <!-- is Argument End -->
+    </argument>
+
+
+
+    <errcode>
+    </errcode>
+
+
+
+    <option>
+        <hssb>In this function, CNC option is unnecessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+        <parameter>
+        </parameter>
+        <is_parameter>
+        </is_parameter>
+
+
+
+        <mode></mode>
+        <is_mode></is_mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+        <add><b></b></add>
+        <is>
+            <!-- M -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_sysinfo_ex</name>
+            <file>misc/cnc_sysinfo_ex.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

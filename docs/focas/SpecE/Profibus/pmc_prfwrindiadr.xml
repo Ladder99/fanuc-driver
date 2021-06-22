@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <title>pmc_prfwrindiadr</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI pmc_prfwrindiadr(unsigned short FlibHndl, IODBINDEADR *idb) ;</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Writes the indication address for communication mode of master function.<br/>
+               When the parameters are changed, the restart of CNC is required for putting the change into effect.<br/>
+               This function is only for 6558 Series.
+            </p>
+            <p>* Please refer to "PROFIBUS-DP function manual" for details of the PROFIBUS-DP function.
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>idb</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                        <p>
+                            Pointer to the IODBINDEADR structure including the indication address of master function.<br/>
+                            The IODBINDEADR structure is as follows.
+                        </p>
+<pre>
+typedef struct {
+    unsigned char  dummy ;
+    char           indi_type ;
+    unsigned short indi_addr ;
+} IODBINDEADR ;
+</pre>
+                            <dl>
+                                <dt>indi_type</dt>
+                                    <dd>Specify the kind of the PMC address used as a indication address with ASCII CODE.</dd>
+
+                                <dt>indi_addr</dt>
+                                    <dd>Specify the top number of the PMC address used as a indication address.</dd>
+                                    <dd>When you want to initialize this data, please set "0xFFFF".</dd>
+                            </dl>
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_DATA</name>
+            <content>Data error<br/>
+                The specification of the address allocation is wrong.<br/>
+                In order to get more information for this err_no return value,
+                execute <a href="Pmc/pmc_getdtailerr.htm" target="_parent">pmc_getdtailerr</a> function. <br/>
+                The following details status will be set onto the member, err_no of ODBPMCERR structure.
+                <table border="0">
+                    <tr><td>1</td><td>：</td><td>indi_type is wrong.</td></tr>
+                    <tr><td>2</td><td>：</td><td>indi_addr is wrong.</td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>
+                    <li>The PROFIBUS-DP board(hardware) is necessary.</li>
+                    <li>The PROFIBUS-DP control software is necessary.</li>
+                    <li>The PROFIBUS-DP master function is necessary.</li>
+                    <li>The extended driver/library function is necessary.</li>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>The PROFIBUS-DP master function is necessary.</need>
+    </option>
+
+
+
+    <parameter>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>pmc_prfrdindiadr</name>
+            <file>Profibus/pmc_prfrdindiadr.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <title>cnc_dtsvcnclupdn</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_dtsvcnclupdn(unsigned short FlibHndl);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Cancels the following if it is being executed.</p>
+
+            <p class="dd">
+                - Download from DATA SERVER to CNC<br/>
+                - Upload from CNC to DATA SERVER</p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                Upload/download is not executed<br/>
+<table>
+<tr> <td valign="top">-</td> <td valign="top">Upload/download between DATA SERVER and CNC is not executed now.</td> </tr>
+</table>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+No option
+<table>
+<tr> <td valign="top">-</td> <td valign="top">The extended driver/library function is necessary.</td> </tr>
+<tr> <td valign="top">-</td> <td valign="top">The DATA SERVER board(hardware) is necessary.</td> </tr>
+</table>
+</content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+    </option>
+
+
+
+    <parameter></parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_dtsvdownload</name>
+            <file>Data/cnc_dtsvdownload.htm</file>
+        </item>
+        <item>
+            <name>cnc_dtsvupload</name>
+            <file>Data/cnc_dtsvupload.htm</file>
+        </item>
+        <item>
+            <name>cnc_dtsvupdnstat</name>
+            <file>Data/cnc_dtsvupdnstat.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

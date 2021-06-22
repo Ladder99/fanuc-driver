@@ -1,0 +1,581 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>Return Status of Data Window Functions</title>
+<link rel="stylesheet" type="text/css" href="fwlib32.css">
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<p><a href="fwlib32.htm">Top Page</a>
+
+<hr>
+
+<h2>Return Status of Data Window Functions</h2>
+
+<ul>
+	<li><a href="#ErrCNC">CNC Data Window</a></li>
+	<li><a href="#ErrPMC">PMC Data Window</a></li>
+	<li><a href="#ErrETH">Ethernet Version Only</a></li>
+</ul>
+
+<p> 
+
+<h3><a name="ErrCNC">CNC Data Window</a></h3>
+
+<table border=1 width=100%>
+	<colgroup align=center width=10%>
+	<colgroup width=30%>
+	<colgroup width=60%>
+	<thead>
+	<tr>
+		<th>Return
+		<th>Meaning
+		<th>Explanation and Error handling
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td>EW_PROTOCOL<br>(-17)
+		<td>Protocol error (Ethernet version only)
+		<td>Data from Ethernet Board is incorrect.<br>
+		Contact with the service section or the section in charge.
+	</tr>
+	<tr>
+		<td>EW_SOCKET<br>(-16)
+		<td>Socket error (Ethernet version only)
+		<td>Investigate CNC power supply, Ethernet cable and I/F board.
+	</tr>
+	<tr>
+		<td>EW_NODLL<br>(-15)
+		<td>DLL file error
+		<td>There is no DLL file for each CNC series corresponding to specified node.
+	</tr>
+	<tr>
+		<td>EW_BUS<br>(-11)
+		<td>Bus error (HSSB version only)
+		<td>A bus error of CNC system occurred.<br>
+		Contact with the service section or the section in charge.
+	</tr>
+	<tr>
+		<td>EW_SYSTEM2<br>(-10)
+		<td>System error (2) (HSSB version only)
+		<td>A system error of CNC system occurred.<br>
+		Contact with the service section or the section in charge.
+	</tr>
+	<tr>
+		<td>EW_HSSB<br>(-9)
+		<td>Communication error of HSSB (HSSB version only)
+		<td>Investigate the serial line or I/F board of HSSB.
+	</tr>
+	<tr>
+		<td>EW_HANDLE<br>(-8)
+		<td>Handle number error
+		<td>Get the library handle number.
+	</tr>
+	<tr>
+		<td>EW_VERSION<br>(-7)
+		<td>Version mismatch between the CNC/PMC and library
+		<td>The CNC/PMC version does not match that of the library.<br>
+		Replace the library or the CNC/PMC control software.
+	</tr>
+	<tr>
+		<td>EW_UNEXP<br>(-6)
+		<td>Abnormal library state
+		<td>An unanticipated error occurred.<br>
+		Contact with the section in charge.
+	</tr>
+	<tr>
+		<td>EW_SYSTEM<br>(-5)
+		<td>System error (HSSB version only)
+		<td>A system error of CNC occurred.<br>
+		Contact with the service section or the section in charge.
+	</tr>
+	<tr>
+		<td>EW_PARITY<br>(-4)
+		<td>Shared RAM parity error (HSSB version only)
+		<td>A hardware error occurred.<br>
+		Contact with the service section.
+	</tr>
+	<tr>
+		<td>EW_MMCSYS<br>(-3)
+		<td>FANUC drivers installation error (HSSB version only)
+		<td>The drivers required for execution are not installed.
+	</tr>
+	<tr>
+		<td>EW_RESET<br>(-2)
+		<td>Reset or stop request
+		<td>The RESET or STOP button was pressed.<br>
+		Call the termination function.
+	</tr>
+	<tr>
+		<td>EW_BUSY<br>(-1)
+		<td>Busy
+		<td>Wait until the completion of CNC processing, or retry.
+		
+	</tr>
+	<tr>
+		<td>EW_OK<br>(0)
+		<td>Normal termination
+		<td>
+	</tr>
+	<tr>
+		<td>EW_FUNC<br>(1)
+		<td>Error(function is not executed, or not available)
+		<td>Specific function which must be executed beforehand has not been executed.<br>
+		Otherwise that function is not available.
+	</tr>
+	<tr>
+		<td>EW_LENGTH<br>(2)
+		<td>Error(data block length error, error of number of data)
+		<td>Check and correct the data block length or number of data.
+	</tr>
+	<tr>
+		<td>EW_NUMBER<br>(3)
+		<td>Error(data number error)
+		<td>Check and correct the data number.
+	</tr>
+	<tr>
+		<td>EW_ATTRIB<br>(4)
+		<td>Error(data attribute error)
+		<td>Check and correct the data attribute.
+	</tr>
+	<tr>
+		<td>EW_DATA<br>(5)
+		<td>Error(data error)
+		<td>Check and correct the data.<br>
+		For the following operations, this code indicates that the specified program cannot be found.
+		<ul>
+			<li>Delete specified program
+			<li>Search specified program
+			<li>Start uploading NC program
+		</ul>
+	</tr>
+	<tr>
+		<td>EW_NOOPT<br>(6)
+		<td>Error(no option)
+		<td>There is no corresponding CNC option.
+	</tr>
+	<tr>
+		<td>EW_PROT<br>(7)
+		<td>Error(write protection)
+		<td>Write operation is prohibited.
+	</tr>
+	<tr>
+		<td>EW_OVRFLOW<br>(8)
+		<td>Error(memory overflow)
+		<td>CNC tape memory is overflowed.
+	</tr>
+	<tr>
+		<td>EW_PARAM<br>(9)
+		<td>Error(CNC parameter error)
+		<td>CNC parameter is set incorrectly.
+	</tr>
+	<tr>
+		<td>EW_BUFFER<br>(10)
+		<td>Error(buffer empty/full)
+		<td>The buffer is empty or full.<br>
+		Wait until completion of CNC processing, or retry.
+	</tr>
+	<tr>
+		<td>EW_PATH<br>(11)
+		<td>Error(path number error)
+		<td>A path number is incorrect.
+	</tr>
+	<tr>
+		<td>EW_MODE<br>(12)
+		<td>Error(CNC mode error)
+		<td>The CNC mode is incorrect.<br>
+		Correct the CNC mode.
+	</tr>
+	<tr>
+		<td>EW_REJECT<br>(13)
+		<td>Error(CNC execution rejection)
+		<td>The execution at the CNC is rejected.<br>
+		Check the condition of execution.
+	</tr>
+	<tr>
+		<td>EW_DTSRVR<br>(14)
+		<td>Error(Data server error)
+		<td>Some errors occur at the data server.
+	</tr>
+	<tr>
+		<td>EW_ALARM<br>(15)
+		<td>Error(alarm)
+		<td>The function cannot be executed due to an alarm in CNC.<br>
+		Remove the cause of alarm.
+	</tr>
+	<tr>
+		<td>EW_STOP<br>(16)
+		<td>Error(stop)
+		<td>CNC status is stop or emergency.
+	</tr>
+	<tr>
+		<td>EW_PASSWD<br>(17)
+		<td>Error(State of data protection)
+		<td>Data is protected by the CNC data protection function.
+	</tr>
+</tbody></table>
+
+<h3><a name="ErrPMC">PMC Data Window</a></h3>
+
+<table border=1 width=100%>
+	<colgroup align=center width=10%>
+	<colgroup width=30%>
+	<colgroup width=60%>
+	<thead>
+	<tr>
+		<th>Return
+		<th>Meaning
+		<th>Explanation and Error handling
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td>EW_PROTOCOL<br>(-17)
+		<td>Protocol error (Ethernet version only)
+		<td>Data from Ethernet Board is incorrect.<br>
+		Contact with the service section or the section in charge.
+	</tr>
+	<tr>
+		<td>EW_SOCKET<br>(-16)
+		<td>Socket error (Ethernet version only)
+		<td>Investigate CNC power supply, Ethernet cable and I/F board.
+	</tr>
+	<tr>
+		<td>EW_NODLL<br>(-15)
+		<td>DLL file error
+		<td>There is no DLL file for each CNC series corresponding to specified node.
+	</tr>
+	<tr>
+		<td>EW_BUS<br>(-11)
+		<td>Bus error (HSSB version only)
+		<td>A bus error of CNC system occurred.<br>
+		Contact with the service section or the section in charge.
+	</tr>
+	<tr>
+		<td>EW_SYSTEM2<br>(-10)
+		<td>System error (2) (HSSB version only)
+		<td>A system error of CNC system occurred.<br>
+		Contact with the service section or the section in charge.
+	</tr>
+	<tr>
+		<td>EW_HSSB<br>(-9)
+		<td>Communication error of HSSB (HSSB version only)
+		<td>Investigate the serial line or I/F board of HSSB.
+	</tr>
+	<tr>
+		<td>EW_HANDLE<br>(-8)
+		<td>Handle number error
+		<td>Get the library handle number.
+	</tr>
+	<tr>
+		<td>EW_VERSION<br>(-7)
+		<td>Version mismatch between the CNC/PMC and library
+		<td>The CNC/PMC version does not match that of the library.<br>
+		Replace the library or the CNC/PMC control software.
+	</tr>
+	<tr>
+		<td>EW_UNEXP<br>(-6)
+		<td>Abnormal library state
+		<td>An unanticipated error occurred.<br>
+		Contact with the section in charge.
+	</tr>
+	<tr>
+		<td>EW_SYSTEM<br>(-5)
+		<td>System error (HSSB version only)
+		<td>A system error of CNC occurred.<br>
+		Contact with the service section or the section in charge.
+	</tr>
+	<tr>
+		<td>EW_PARITY<br>(-4)
+		<td>Shared RAM parity error (HSSB version only)
+		<td>A hardware error occurred.<br>
+		Contact with the service section.
+	</tr>
+	<tr>
+		<td>EW_MMCSYS<br>(-3)
+		<td>FANUC drivers installation error (HSSB version only)
+		<td>The drivers required for execution are not installed.
+	</tr>
+	<tr>
+		<td>EW_OK<br>(0)
+		<td>Normal termination
+		<td>
+	</tr>
+	<tr>
+		<td>EW_NOPMC<br>(1)
+		<td>Error(No PMC)
+		<td>The PMC does not exist.
+	</tr>
+	<tr>
+		<td>EW_LENGTH<br>(2)
+		<td>Error(data block length error)
+		<td>Check and correct the data block length.
+	</tr>
+	<tr>
+		<td>EW_RANGE<br>(3)
+		<td>Error(address range error)
+		<td>Check and correct the address range.
+	</tr>
+	<tr>
+		<td>EW_TYPE<br>(4)
+		<td>Error(address type/data type error)
+		<td>Check and correct the address type/data type
+	</tr>
+	<tr>
+		<td>EW_DATA<br>(5)
+		<td>Error(data error)
+		<td>Check and correct the data.
+	</tr>
+	<tr>
+		<td>EW_NOOPT<br>(6)
+		<td>Error(no option)
+		<td>There is no corresponding CNC option.
+	</tr>
+	<tr>
+		<td>EW_BUFFER<br>(10)
+		<td>Error(buffer empty/full)
+		<td>The buffer is empty or full.<br>
+		Wait until completion of PMC processing, or retry.<br>
+		Alternatively, add the required processing for the PMC.
+	</tr>
+	<tr>
+		<td>EW_PASSWD<br>(17)
+		<td>Error(State of data protection)
+		<td>Data is protected by the CNC data protection function.
+	</tr>
+</tbody></table>
+
+<p>
+
+<h3><a name="ErrETH">Ethernet Version Only</a></h3>
+
+<ul>
+	<li>EW_SOCKET (=-16)
+		<blockquote>
+			<p>It means Socket API related error. The following detail error codes can be retrieved from <a href="./misc/cnc_getdtailerr.htm">cnc_getdtailerr</a> and <a href="./pmc/pmc_getdtailerr.htm">pmc_getdtailerr</a> functions.
+
+			<table border=1 width=80%>
+				<colgroup align=center width=7%>
+				<colgroup width=40%>
+				 <tr>
+					<th>err_no
+					<th>Meaning
+					<th>err_dtno
+				</tr>
+				<tr>
+					<td>1
+					<td>Error of socket API function
+					<td rowspan="7">Return value of Windows API WSAGetLastError function.
+				</tr>
+				<tr>
+					<td>2
+					<td>Error of connect API function
+				</tr>
+				<tr>
+					<td>3
+					<td>Error of send API function
+				</tr>
+				<tr>
+					<td>4
+					<td>Error of recv API function
+				</tr>
+				<tr>
+					<td>5
+					<td>Error of select API function
+				</tr>
+				<tr>
+					<td>6
+					<td>Error of setsockopt API function
+				</tr>
+				<tr>
+					<td>7
+					<td>Error of gethostbyname API function
+				</tr>
+				<tr>
+					<td>8
+					<td>Timeout error of send API function
+					<td>It means where the error is occurred.<br>
+					<table border=0>
+						<colgroup align=center valign=top>
+						<colgroup align=center valign=top>
+						<colgroup valign=top>
+						<tr>
+							<td>1
+							<td>:
+							<td>At sending request
+						</tr>
+						<tr>
+							<td>2
+							<td>:
+							<td>At sending data of download
+						</tr>
+					</table>
+				</tr>
+				<tr>
+					<td>9
+					<td>Timeout error of recv API function
+					<td>It means where the error is occurred.<br>
+					<table border=0>
+						<colgroup align=center valign=top>
+						<colgroup align=center valign=top>
+						<colgroup valign=top>
+						<tr>
+							<td>1
+							<td>:
+							<td>At receiving request header
+						</tr>
+						<tr>
+							<td>2
+							<td>:
+							<td>At receiving request data
+						</tr>
+						<tr>
+							<td>3
+							<td>:
+							<td>At canceling upload data
+						</tr>
+						<tr>
+							<td>4
+							<td>:
+							<td>At receiving data of upload
+						</tr>
+						<tr>
+							<td>5
+							<td>:
+							<td>At starting or finishing the communication
+						</tr>
+					</table>
+				</tr>
+				<tr>
+					<td>10
+					<td>Error of Winsock API is occurred in other process
+					<td>Always 0.
+				</tr>
+				<tr>
+					<td>11
+					<td>EOF (end of file) detected
+					<td>It means where the error is occurred.<br>
+					<table border=0>
+						<colgroup align=center valign=top>
+						<colgroup align=center valign=top>
+						<colgroup valign=top>
+						<tr>
+							<td>1
+							<td>:
+							<td>At send API function
+						</tr>
+						<tr>
+							<td>2
+							<td>:
+							<td>At recv API function
+						</tr>
+					</table>
+				</tr>
+			</table>
+		</blockquote>
+	</li>
+	<li>EW_PROTOCOL (=-17)
+		<blockquote>
+			<p>It means the violation of the protocol. The following detail error codes can be retrieved from <a href="./misc/cnc_getdtailerr.htm">cnc_getdtailerr</a> and <a href="./pmc/pmc_getdtailerr.htm">pmc_getdtailerr</a> functions.
+
+			<table border=1 width=80% windth=80%>
+				<colgroup align=center width="7%">
+				<colgroup width="40%">
+				<tr>
+					<th>err_no
+					<th>Meaning
+					<th>err_dtno
+				</tr>
+				<tr>
+					<td>1
+					<td>The send data is larger than the maximum transfer unit.
+					<td rowspan="6">Always 0.
+				</tr>
+				<tr>
+					<td>2
+					<td>The sending data size is illegal.
+				</tr>
+				<tr>
+					<td>3
+					<td>The number of the recieved packet is 0.
+				</tr>
+				<tr>
+					<td>4
+					<td>The mark of the protocol is incorrect in the recieved packet header.
+				</tr>
+				<tr>
+					<td>5
+					<td>The packet type flag is incorrect in the recieved packet header.
+				</tr>
+				<tr>
+					<td>6
+					<td>The flag of the direction is incorrect in the recieved packet header.
+				</tr>
+				<tr>
+					<td>7
+					<td>Illegal received data size.
+					<td>The detail information is shown.
+					<table border=0>
+						<colgroup align=center valign=top>
+						<colgroup align=center valign=top>
+						<colgroup valign=top>
+						<tr>
+							<td>1
+							<td>:
+							<td>The received data size is larger than the maximum transfer unit.
+						</tr>
+						<tr>
+							<td>2
+							<td>:
+							<td>The received data size is incorrect at start of communication.
+						</tr>
+						<tr>
+							<td>3
+							<td>:
+							<td>The data size of the recieved packet is less than 2 bytes.
+						</tr>
+						<tr>
+							<td>4
+							<td>:
+							<td>The sum of data blocks of the recieved packet is larger than all packet size.
+						</tr>
+						<tr>
+							<td>5
+							<td>:
+							<td>The sum of data blocks of the recieved packet is smaller than all packet size.
+						</tr>
+					</table>
+					
+				</tr>
+				<tr>
+					<td>8
+					<td>Communication error in the Ethernet Board
+					<td>Error code of the Ethernet Board<br>
+					When the error occuers, its detail message is displayed in the log screen of the Ethernet Board on CNC side. And refer it.<br>
+					The main error is as follows.
+					<table border=0>
+						<colgroup align=center valign=top>
+						<colgroup align=center valign=top>
+						<colgroup valign=top>
+						<tr>
+							<td>2
+							<td>:
+							<td>The personal computer would establish over limited connection. See &quot;<a href="dnc1.htm#limit">Communication with Ethernet Board</a>&quot; for details.
+						</tr>
+					</table>
+				</tr>
+			</table>
+		</blockquote>
+	</li>
+</ul>
+
+<hr>
+
+<p><a href="fwlib32.htm">Top Page</a>
+</body>
+</html>

@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>pmc_rdpmcparam</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI pmc_rdpmcparam(unsigned short FlibHndl, long *length, char *buff);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            The PMC parameter(timer, counter, keep relay, and data) is uploaded by the tape format.<br/>
+            <br/>
+            When you execute this function, change to 'EDIT' mode. <br/>
+            The format of the read PMC parameter is shown as follows.<br/>
+            <br/>
+            <span class="xis">
+            In case of SB5/SB6:
+            <table class="dd">
+                <tr><td>%;</td><td></td></tr>
+                <tr><td>N60xxx Pnnnnn;</td><td>Timer(T)</td></tr>
+                <tr><td align="center">:</td><td></td></tr>
+                <tr><td>N61xxx Pnnnnn;</td><td>Counter(C)</td></tr>
+                <tr><td align="center">:</td><td></td></tr>
+                <tr><td>N62xxx Pnnnnn;</td><td>Keep relay(K)</td></tr>
+                <tr><td align="center">:</td><td></td></tr>
+                <tr><td>N63xxx Pnnnnn;</td><td>Data table control(D) of data</td></tr>
+                <tr><td align="center">:</td><td></td></tr>
+                <tr><td>N64xxx Pnnnnn;</td><td>Data(D) of data</td></tr>
+                <tr><td align="center">:</td><td></td></tr>
+                <tr><td>%;</td><td></td></tr>
+            </table>
+            <br/>
+            In case of SB7:
+            <table class="dd">
+                <tr><td>%;</td><td></td></tr>
+                <tr><td>(PMC=SB7,MSID=0);</td><td>Header</td></tr>
+                <tr><td>N60xxx Pnnnnn;</td><td>Timer(T)</td></tr>
+                <tr><td align="center">:</td><td></td></tr>
+                <tr><td>N61xxx Pnnnnn;</td><td>Counter(C)</td></tr>
+                <tr><td align="center">:</td><td></td></tr>
+                <tr><td>N62xxx Pnnnnn;</td><td>Keep relay(K)</td></tr>
+                <tr><td align="center">:</td><td></td></tr>
+                <tr><td>N63xxx Pnnnnn;</td><td>Data table control(D) of data</td></tr>
+                <tr><td align="center">:</td><td></td></tr>
+                <tr><td>N64xxx Pnnnnn;</td><td>Data(D) of data</td></tr>
+                <tr><td align="center">:</td><td></td></tr>
+                <tr><td>N69xxx Pnnnnn;</td><td>Extended memory(E)</td></tr>
+                <tr><td align="center">:</td><td></td></tr>
+                <tr><td>%;</td><td></td></tr>
+            </table>
+            <br/>
+            In case of PMC for 30i/31i/32i:
+            </span>
+            <table class="dd">
+                <tr><td>%；</td><td></td></tr>
+                <tr><td>(PMC=30I-A,MSID=1);</td><td>Header</td></tr>
+                <tr><td>N60xxxx Pnnnnn；</td><td>Timer(T)</td></tr>
+                <tr><td align="center">：</td><td></td></tr>
+                <tr><td>N61xxxx Pnnnnn；</td><td>Counter(C)</td></tr>
+                <tr><td align="center">：</td><td></td></tr>
+                <tr><td>N62xxxx Pnnnnn；</td><td>Keep relay(K)</td></tr>
+                <tr><td align="center">：</td><td></td></tr>
+                <tr><td>N63xxxx Pnnnnn；</td><td>Data table control(D) of data</td></tr>
+                <tr><td align="center">：</td><td></td></tr>
+                <tr><td>N64xxxx Pnnnnn；</td><td>Data(D) of data</td></tr>
+                <tr><td align="center">：</td><td></td></tr>
+                <tr><td>N69xxxx Pnnnnn；</td><td>Extended memory(E)</td></tr>
+                <tr><td align="center">：</td><td></td></tr>
+                <tr><td>%；</td><td></td></tr>
+            </table>
+        <span class="dd">
+        <p>In case of 31i/32i, the header information is as follows.</p>
+            <table class="dd">
+                    <tr><td>31i</td><td>:</td><td>(PMC=31I-A,MSID=1);</td></tr>
+                    <tr><td>32i</td><td>:</td><td>(PMC=32I-A,MSID=1);</td></tr>
+                </table>
+        </span>
+        <span class="dd">
+        <p>The header information is as follows by the unit type of PMC.</p>
+            <table class="dd">
+                    <tr><td>1st PMC              </td><td>:</td><td>(PMC=30I-A,MSID=1);</td></tr>
+                    <tr><td>2nd PMC              </td><td>:</td><td>(PMC=30I-A,MSID=2);</td></tr>
+                    <tr><td>3rd PMC              </td><td>:</td><td>(PMC=30I-A,MSID=3);</td></tr>
+                    <tr><td>Dual-check safety PMC</td><td>:</td><td>(PMC=30I-A,MSID=9);</td></tr>
+                </table>
+        </span>
+            <br/>
+            <span class="dd">* ";" shows EOB(=0x0a).</span><br/>
+            <br/>
+            When the EOB data cannot be read by specified *length, data to immediately before is read.<br/>
+            Moreover, when also one block of the PMC parameter cannot be read, EW_LENGTH error occurs.
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle.<br/>
+                            See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in/out</type>
+                    <content>
+                        Specify the pointer to the variable which stored the reading length.<br/>
+                        When the function is normal return (EW_OK), the function returns the length of 
+                        the character which was actually read.
+                    </content>
+                </item>
+                <item>
+                    <name>buff</name>
+                    <type>out</type>
+                    <content>
+                        Specify the pointer to the area where the PMC parameter is stored.<br/>
+                        When the size of the area specified with this pointer is smaller than the size 
+                        specified by *length, the operation of this function is not guaranteed.
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_RESET</name>
+            <content>
+                Stop request<br/>
+                All PMC parameter already was uploaded.
+            </content>
+        </item>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                <a href="Pmc/pmc_rdprmstart.htm" target="_parent">pmc_rdprmstart</a> function has not been executed.
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                Data length error<br/>
+                The value of 0 or less was specified for read size(*length).
+            </content>
+        </item>
+        <item>
+            <name>EW_PATH</name>
+            <content>
+                PMC unit type was wrong.<span class="xis">(only 30i/31i/32i)</span><br/>
+                The PMC unit type was changed.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                no option
+            </content>
+        </item>
+        <item>
+            <name>EW_MODE</name>
+            <content>
+                CNC mode error<br/>
+                CNC mode is not EDIT mode.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            The extended driver/library function is necessary.
+        </hssb>
+    </option>
+
+
+
+    <parameter></parameter>
+
+
+
+    <mode>
+        <cmn>
+            It is possible to use in EDIT mode.
+        </cmn>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>pmc_rdprmstart</name>
+            <file>Pmc/pmc_rdprmstart.htm</file>
+        </item>
+        <item>
+            <name>pmc_rdprmend</name>
+            <file>Pmc/pmc_rdprmend.htm</file>
+        </item>
+        <item>
+            <name>pmc_wrprmstart</name>
+            <file>Pmc/pmc_wrprmstart.htm</file>
+        </item>
+        <item>
+            <name>pmc_wrpmcparam</name>
+            <file>Pmc/pmc_wrpmcparam.htm</file>
+        </item>
+        <item>
+            <name>pmc_wrprmend</name>
+            <file>Pmc/pmc_wrprmend.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

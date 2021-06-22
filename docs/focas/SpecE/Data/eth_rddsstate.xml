@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>eth_rddsstate</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI eth_rddsstate(unsigned short FlibHndl, short path, OUT_DSSTATE *dsstate); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                Get each path of maintenance information on DATA SERVER.
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details. </p>
+                    </content>
+                </item>
+                <item>
+                    <name>path</name>
+                    <type>in</type>
+                    <content>
+                        Specify the channel number to set for the M198 on DATA SERVER.<br/>
+                        It is able to set from 1 to 10.<br/>
+                    </content>
+                </item>
+                <item>
+                    <name>dsstate</name>
+                    <type>out</type>
+                    <content>
+                        Pointer to the OUT_DSSTATE structure to store the getting maintenance information is specified.<br/>
+                        The OUT_DSSTATE structure is as follows.<br/>
+<pre>
+typedef struct _out_dsstate {
+    short           DtsvrChannel;
+    short           pad;
+    short           Mode;
+    unsigned short  EmptyCount;
+    unsigned long   TotalSize;
+    unsigned short  WritePtr;
+    unsinged short  ReadPtr;
+} OUT_DSSTATE;
+</pre>
+                        <dl>
+                            <dt>DtsvrChannel</dt>
+                            <dd>Channel number on DATA SERVER</dd>
+                            <dd>Range 1,..,10</dd>
+
+                            <dt>pad</dt>
+                            <dd>This variable is unused.</dd>
+
+                            <dt>Mode</dt>
+                            <dd>Mode on DATA SERVER</dd>
+                            <table border="0" class = "dd">
+                            <tr> <td></td><td></td><td>0   </td><td>:</td><td>Nothing</td> </tr>
+                            <tr> <td></td><td></td><td>1   </td><td>:</td><td>Strage mode</td> </tr>
+                            <tr> <td></td><td></td><td>2   </td><td>:</td><td>Buffer mode</td> </tr>
+                            <tr> <td></td><td></td><td>3   </td><td>:</td><td>FTP mode</td> </tr>
+                            </table>
+
+                            <dt>EmptyCount</dt>
+                            <dd>Empty buffer counts</dd>
+                            <dd>Range 0,..,65535</dd>
+
+                            <dt>TotalSize</dt>
+                            <dd>Total byte size of data transfer</dd>
+                            <dd>Range 0,..,65535</dd>
+
+                            <dt>WritePtr</dt>
+                            <dd>Write pointer</dd>
+                            <dd>Range 0,..,65535</dd>
+
+                            <dt>ReadPtr</dt>
+                            <dd>Read pointer</dd>
+                            <dd>Range 0,..,65535</dd>
+                        </dl>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a> function.<br/>
+                The following details status will be set onto the member, err_no of ODBERR structure.<br/>
+                <table class="dd">
+                    <tr> <td>22</td><td>:</td><td>The option board is nothing.</td> </tr>
+                    <tr> <td>24</td><td>:</td><td>The DATA SERVER function is nothing.</td> </tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_PATH</name>
+            <content>The channel number(path) is worng.<br/>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            <p> 
+                The DATA SERVER function and the extended driver/library function are necessary.
+            </p>
+        </hssb>
+    </option>
+
+
+
+    <parameter></parameter>
+    <!-- 30i(WinCE) -->
+    <is_parameter></is_parameter>
+
+
+
+    <mode></mode>
+    <!-- 30i(WinCE) -->
+    <is_mode></is_mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

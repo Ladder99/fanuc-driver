@@ -1,0 +1,126 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>Library handle</title>
+<link rel="stylesheet" type="text/css" href="fwlib32.css">
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<p><a href="fwlib32.htm">Top Page</a></p>
+
+<hr>
+
+<h2>Library handle</h2>
+
+<p>
+At the library for HSSB, to establish the communication with the HSSB Board on CNC side,  it is necessary to get the library handle number by <a href="./handle/cnc_allclibhndl.htm">cnc_allclibhndl</a> or <a href="./handle/cnc_allclibhndl2.htm">cnc_allclibhndl2</a> function.
+</p>
+
+<p>
+At the library for Ethernet, to establish the communication with the Ethernet Board on CNC side, it is necessary to get the library handle number and create the TCP/IP connection by passing a CNC's IP address parameter to the <a href="./handle/cnc_allclibhndl3.htm">cnc_allclibhndl3</a> function.
+</p>
+
+<p>
+Once the library handle number is acquired, it must be held until the application program terminates, because it is necessary to pass the number as an argument to each CNC/PMC Data window library function.
+</p>
+
+<p>The library handle is owned by the thread that got it. Even if the thread-A which has already got a library handle shows the library handle to another thread-B, the thread-B cannot use that library handle.
+</p>
+
+<p>
+It is possible that one thread gets multiple library handles by calling the function for getting the library handle repeatedly. For example, on the 2 path control system, it is possible that the thread on an application gets two library handles for the same CNC (in other words, the same Node or the same IP address) and allocates the individual path to each handle.
+</p>
+
+<p>
+If you create some handles for the same IP address, the library creates only one TCP/IP connection per process. This is for saving the resource of the Ethernet Board on the CNC side. <b>So when the connection of one library handle is destroyed by the communication error and TCP/IP connection closes, the connection in other handle is destroyed, too.</b>
+</p>
+
+<p>
+When an application program terminates, the library handles must be released by using the <a href="./handle/cnc_freelibhndl.htm">cnc_freelibhndl</a> function.
+</p>
+
+<p class="caution">&lt;Note&gt;<br>
+<br>
+If an application program terminates without releasing the library handle number, the memory area assigned for the management of the handle remains allocated and accumulates.  If it is repeated, the library handle number will become unable to be acquired at last.
+</p>
+
+<p>The outline of processing sequence of an application program is as follows.
+</p>
+
+<img src="handle.gif">
+
+<p>Cautions which have to be considered when the power supply on the NC which is connected with PC via HSSB is turned off, are shown below.</p>
+
+<ol>
+	<li>Validity of the library handle when power supply on the NC side is turned off
+
+		<blockquote>
+			<p>When the power supply of NC side is turned off after the library handle is acquired, the acquired library handles become invalid. (When multiple NCs are connected via HSSB interface, only the library handle of the NC whose power supply is turned off becomes invalid.)</p>
+			<p>If the library function is executed with the invalid library handle, the completion status of EW_HSSB is returned.</p>
+			<p>Moreover, when the library function is executed with the invalid library handle after starting up the NC again, the completion status of EW_HANDLE is returned. The library handle which became invalid must be released by the function cnc_freelibhndl().
+		</blockquote>
+	</li>
+
+	<li>When the power supply on the NC side is turned off while the library function is being executed
+
+		<blockquote>
+			<p>In this case, the result of the operation under execution is unpredictable.  Therefore, the power supply should be turned off after confirming that no library functions are being executed.</p>
+			<p>When the power supply on the NC side is turned off while the library is not being executed, the library function becomes executable by acquiring the library handle again after NC is started up.</p>
+		</blockquote>
+	</li>
+
+	<li>Specification of <a href="./handle/cnc_allclibhndl.htm">cnc_allclibhndl</a> and <a href="./handle/cnc_allclibhndl2.htm">cnc_allclibhndl2</a>
+
+		<blockquote>
+			<p>If cnc_allclibhndl or cnc_allclibhndl2 is executed while the power supply on the NC side is off, EW_HSSB is returned as the completion status.</p>
+			<p>And, if cnc_allclibhndl or cnc_allclibhndl2 is executed immediately after the NC starting up, the completion status EW_BUSY may be returned.
+			<p>This means that the initialization of the interface between NC and MMC function is not finished.  Retry calling the function until the initialization completes when the completion status is EW_BUSY.</p>
+		</blockquote>
+	</li>
+</ol>
+
+
+<p>Cautions which have to be considered when the power supply on the NC which is connected with PC via Ethernet is turned off, are shown below.
+</p>
+
+<ol>
+	<li>Validity of the library handle when power supply on the NC side is turned off
+		<blockquote>
+			<p>When the power supply of CNC is turned off after the library handle is acquired, the connection is not disabled soon. <b>If the power is turned off, the library cannot detect the disconnection of TCP/IP because TCP/IP reset is not noticed from the Ethernet Board on the CNC side.</b> (This status is called 'half-open' as TCP/IP technical term.)
+			</p>
+			<p>After executing the library in the half-open state, the timeout error is occurred at the time which is specified in <a href="./handle/cnc_allclibhndl3.htm">cnc_allclibhndl3</a>, and then all library handles of the CNC whose power supply has been turned off become invalid.
+			</p>
+			<p>If the library function is executed with the invalid library handle while the power supply of the CNC is off, <b>EW_SOCKET</b> is returned as the completion status. <b>The library handle, which became invalid, must be released by the function <a href="./handle/cnc_freelibhndl.htm">cnc_freelibhndl</a>.</b> And after CNC is started, the library function becomes available by getting the library handle again.
+			</p>
+		</blockquote>
+	</li>
+	<li>When the power supply on the CNC side is turned off while the library function is running
+		<blockquote>
+			<p>When the power supply on the CNC side is turned off while the library function is running, the result of the operation under execution is not guaranteed.
+			</p>
+		</blockquote>
+	</li>
+	<li>Specification of <a href="./handle/cnc_allclibhndl3.htm">cnc_allclibhndl3</a>
+		<blockquote>
+			<p>
+			If cnc_allclibhndl3 is executed while the power supply on the NC side is off, <b>EW_SOCKET</b> is returned as the completion status.
+			</p>
+			<p>However, the completion status of cnc_allclibhndl3 will be EW_OK for the new library handle, once other library handle has been got by cnc_allclibhndl3 and then the Ethernet connection failed to half-open state by the power off of the CNC.
+			</p>
+			<p>If the connection is already created, cnc_allclibhndl3 tries to reuse it. In case of above condition, the connection is created by first cnc_allclibhndl3 calling and 2nd calling tries to attach it to new handle number. <b>Then, the library will create a new connection if the library can detect that connection is reset. But in this case the connection status is half-open and the library cannot detect the close of TCP/IP.</b> So the library will attach the half-open state connection to a new handle and the second handle getting will be succeeded.
+			</p>
+			<p>After executing the library in this state, the timeout error will be occurred and the half-open state connection will be closed.
+			</p>
+		</blockquote>
+	</li>
+</ol>
+
+<hr>
+
+<p><a href="fwlib32.htm">Top Page</a></p>
+</body>
+</html>

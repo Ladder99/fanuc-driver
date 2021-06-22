@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <title>pbm_rd_subprm</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI pbm_rd_subprm( unsigned short FlibHndl, short type, T_SLVSLT_IND *slvslt_ind, OUT_PBMSUBPRM *sub_prm); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Reads the setting assistant parameters</p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specifies the kind of the setting assistant parameter.<br/>
+                           slvslt_ind structure is used according to the kind of parameter.
+                        <table border="0">
+                            <tr><td>  0</td><td>:</td><td>number of maximum slave that can be set         </td></tr>
+                            <tr><td>  1</td><td>:</td><td>number of maximum slot that can be set          </td></tr>
+                            <tr><td> 10</td><td>:</td><td>number of maximum slave that can be communicated</td></tr>
+                            <tr><td> 11</td><td>:</td><td>total number of slot that has been set          </td></tr>
+                            <tr><td> 20</td><td>:</td><td>state of SHIFT mode of module data length       </td></tr>
+                            <tr><td>100</td><td>:</td><td>number of maximum module length that can be set </td></tr>
+                        </table>
+                        <p>(note) about usage of slvslt_ind</p>
+                        <table  border="0">
+                            <tr><td>   </td><td> 0 to 1 </td><td>:</td><td>slvslt_ind is not used</td></tr>
+                            <tr><td>   </td><td>10 to 11</td><td>:</td><td>slvslt_ind is not used</td></tr>
+                            <tr><td>   </td><td>20      </td><td>:</td><td>slvslt_ind is not used</td></tr>
+                            <tr><td>   </td><td>100     </td><td>:</td><td>slvslt_ind.slv_no and slvslt_ind.slt_no are used</td></tr>
+                        </table>
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>slvslt_ind</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specifies the pointer to the T_SLVSLT_IND structure.<br/>
+                            The T_SLVSLT_IND structure is as follows.  When the slave station or slot module is set to type, this structure is used.
+<pre>
+typedef struct _T_SLVSLT_IND{
+    unsigned char   slv_no;
+    unsigned char   slt_no;
+} T_SLVSLT_IND;
+</pre>
+                            <dl>
+                            <dt>slv_no</dt>
+                                <dd>Station number of slave</dd>
+                                <dd>range: from 0 to 125</dd>
+
+                            <dt>slt_no</dt>
+                                <dd>Slot number</dd>
+                                <dd>range: from 0 to 127</dd>
+                            </dl>
+                        </p>
+                    </content>
+                </item>
+
+                <item>
+                    <name>sub_prm</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Specifies the pointer to the OUT_PBMSUBPRM structure to store the acquired parameter.<br/>
+                            The OUT_PBMSUBPRM structure is as follows.
+
+<pre>
+typedef struct _OUT_PBMSUBPRM{
+    union {
+        unsigned char  max_slv_num;
+        unsigned char  max_slt_num;
+        unsigned char  enb_slv_num;
+        unsigned char  total_slts;
+        unsigned char  shift_mode_stat;
+        T_MAXMODLENPRM max_mod_len_prm;
+    } subprm;
+} OUT_PBMSUBPRM;
+
+typedef struct _T_MAXMODLENPRM{
+    unsigned char   slv_no;
+    unsigned char   slt_no;
+    unsigned char   max_mod_len;
+    unsigned char   pad;
+} T_MAXMODLENPRM;
+</pre>
+                            <dl>
+                            <dt>max_slv_num</dt>
+                                <dd>number of maximum slave that can be set</dd>
+                                <dd>range: 48</dd>
+
+                            <dt>max_slt_num</dt>
+                                <dd>number of maximum slot that can be set</dd>
+                                <dd>range: 128</dd>
+
+                            <dt>enb_slv_num</dt>
+                                <dd>number of slave that can be communicated</dd>
+                                <dd>range: 0 to 48</dd>
+
+                            <dt>total_slts</dt>
+                                <dd>number of slots to which setting is effective</dd>
+                                <dd>range: 0 to 128</dd>
+
+                            <dt>shift_mode_stat</dt>
+                                <dd>state of SHIFT mode of module data length</dd>
+                                <dd><table border="0">
+                                    <tr><td>0x00</td><td>:</td><td>invalid</td></tr>
+                                    <tr><td>0xff</td><td>:</td><td>valid  </td></tr>
+                                </table></dd>
+
+                            <dt>max_mod_len_prm.slv_no</dt>
+                                <dd>number of slave station</dd>
+                                <dd>range: 0 to 125</dd>
+
+                            <dt>max_mod_len_prm.slt_no</dt>
+                                <dd>number of slot</dd>
+                                <dd>range: 0 to 127</dd>
+
+                           <dt> max_mod_len_prm.max_mod_len</dt>
+                                <dd>number of maximum module length that can be set</dd>
+                                <dd>range: 0 to 128</dd>
+                                <dd>unit:  byte</dd>
+
+                            <dt>max_mod_len_prm.pad</dt>
+                                <dd>unused</dd>
+
+                            </dl>
+                        </p>
+                    </content>
+                </item>
+
+
+
+
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_DATA</name>
+            <content>data error<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                err_no of ODBERR structure.
+                <table border="0">
+                    <tr><td>2</td><td>:</td><td>out of range</td></tr>
+                </table>
+                err_dtno of ODBERR structure.
+                <table border="0">
+                    <tr><td>1</td><td>:</td><td>station number of slave is invalid                  </td></tr>
+                    <tr><td>2</td><td>:</td><td>slot number is invalid                              </td></tr>
+                    <tr><td>6</td><td>:</td><td>a kind of the setting assistant parameter is invalid</td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                err_no of ODBERR structure.
+                <table border="0">
+                    <tr><td>40</td><td>:</td><td>There is no PROFIBUS master board.           </td></tr>
+                    <tr><td>41</td><td>:</td><td>There is no PROFIBUS master function.        </td></tr>
+                    <tr><td>42</td><td>:</td><td>There is no SRAM of PROFIBUS master function.</td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>CNC execution rejection<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                err_no of ODBERR structure.
+                <table border="0">
+                    <tr><td>10</td><td>:</td><td>fail to read the parameter from SRAM</td></tr>
+                </table>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <need>The PROFIBUS-DP master function is necessary.</need>
+    </option>
+
+
+
+    <parameter>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>H</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>pbm_ini_prm</name>
+            <file>Profibus/pbm_ini_prm.htm</file>
+        </item>
+        <item>
+            <name>pbm_rd_allslvtbl</name>
+            <file>Profibus/pbm_rd_allslvtbl.htm</file>
+        </item>
+        <item>
+            <name>pbm_exe_subfunc</name>
+            <file>Profibus/pbm_exe_subfunc.htm</file>
+        </item>
+        <item>
+            <name>pbm_rd_errcode</name>
+            <file>Profibus/pbm_rd_errcode.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

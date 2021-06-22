@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdlcmddat</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdlcmddat(unsigned short FlibHndl, ODBLCMDT *cmddat); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Reads the command data of laser.</p>
+            <p>The data is stored in each member of the ODBLCMDT user define type.</p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>  
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>cmddat</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the ODBLCMDT structure including the command data of laser.  
+                            The ODBLCMDT structure is as follows.
+<pre>
+・Series 16i/18i-L
+typedef struct iodblcmdt {
+    short   slct;      /* Flag of valid data */
+    long    feed;      /* Actual feedrate */
+    short   power;     /* Actual peak power */
+    short   freq;      /* Actual pulse frequency */
+    short   duty;      /* Actual pulse duty */
+    short   g_kind;    /* Command data of assist gas select */
+    short   g_ready_t; /* Assist gas time */
+    short   g_press;   /* Actual assist gas pressure */
+    short   error;     /* Command data of reference displace */
+    long    dsplc;     /* Command data of tool radius offset */
+    short   reserve[7];/* (reserve) */
+} ODBLCMDT ;
+
+・Series 30i/31i-LB
+typedef struct iodblcmdt {
+    short   slct;       /* Flag of valid data                   */
+    long    feed;       /* Actual feedrate                      */
+    short   power;      /* Actual peak power                    */
+    short   freq;       /* Actual pulse frequency               */
+    short   duty;       /* Actual pulse duty                    */
+    short   g_kind;     /* Command data of assist gas select    */
+    short   g_ready_t;  /* Assist gas time                      */
+    short   g_press;    /* Actual assist gas pressure           */
+    short   error;      /* Command data of reference displace   */
+    long    dsplc;      /* Command data of tool radius offset   */
+    long    error2；    /* Command data of reference displace 2 */
+    char    gap_axis；  /* Gap control axis                     */
+    char    feed_dec；  /* Decimals places                      */
+    char    dsplc_dec； /* Decimals places                      */
+    char    error2_dec；/* Decimals places                      */
+    short   reserve[3]; /* (reserve)                            */
+} ODBLCMDT ;
+</pre>
+                            <dl>
+                                <dt>slct</dt>
+                                    <dd>Flag of valid data is set.</dd>
+                                    <dd><table border="0" class="dd">
+                                        <tr> <td>bit 0</td><td>:</td><td>Actual feedrate</td> </tr>
+                                        <tr> <td>bit 1</td><td>:</td><td>Actual peak power</td> </tr>
+                                        <tr> <td>bit 2</td><td>:</td><td>Actual pulse frequency</td> </tr>
+                                        <tr> <td>bit 3</td><td>:</td><td>Actual pulse duty</td> </tr>
+                                        <tr> <td>bit 4</td><td>:</td><td>Command data of assist gas select</td> </tr>
+                                        <tr> <td>bit 5</td><td>:</td><td>Assist gas time</td> </tr>
+                                        <tr> <td>bit 6</td><td>:</td><td>Actual assist gas pressure</td> </tr>
+                                        <tr> <td>bit 7</td><td>:</td><td>Command data of reference displace</td> </tr>
+                                        <tr> <td>bit 8</td><td>:</td><td>Command data of tool radius offset</td> </tr>
+                                        <tr> <td>bit 9,..,15</td><td>:</td><td>(reserve)</td> </tr>
+                                    </table></dd>
+                                    <dd>* When a bit is 0, it means the corresponding data has no meaning.</dd>
+                                <dt>feed</dt>
+                                    <dd>Actual feedrate is set.</dd>
+                                <dt>power</dt>
+                                    <dd>Actual peak power is set.</dd>
+                                <dt>freq</dt>
+                                    <dd>Actual pulse frequency is set.</dd>
+                                <dt>duty</dt>
+                                    <dd>Actual pulse duty is set.</dd>
+                                <dt>g_kind</dt>
+                                    <dd>Command data of assist gas select is set.</dd>
+                                <dt>g_ready_t</dt>
+                                    <dd>Assist gas time is set.</dd>
+                                <dt>g_press</dt>
+                                    <dd>Actual assist gas pressure is set.</dd>
+                                <dt>error</dt>
+                                    <dd>Command data of reference displace is set.</dd>
+                                <dt>dsplc</dt>
+                                    <dd>Command data of tool radius offset is set.</dd>
+
+
+                                <dt>error2</dt>
+                                    <dd>・Series 30i/31i-LB only</dd>
+                                    <dd>Command data of reference displace 2 is set.</dd>
+                                <dt>gap_axis</dt>
+                                    <dd>・Series 30i/31i-LB only</dd>
+                                    <dd>Whether The first gap control axis axis or The second gap control axis  axis is commanded as a gap control axis is set.</dd>
+                                    <dd>The meaning of a set value of gap_axis is shown in the following table.</dd>
+                                    <ul>
+                                    <table border="1">
+                                        <colgroup>
+                                        <colgroup width="100">
+                                        <tr>
+                                            <th>gap_axis</th> <th>Setting of the gap control axis </th>
+                                        </tr>
+                                        <tr> <td >0</td><td>The second gap control axis.</td>  </tr>
+                                        <tr> <td >1</td><td>The first gap control axis.</td> </tr>
+                                        <tr> <td >-1</td><td>The gap control is invalid.</td> </tr>
+                                    </colgroup>
+                                    </colgroup>
+                                    </table>
+                                    </ul>
+                                <dt>feed_dec</dt>
+                                    <dd>・Series 30i/31i-LB only</dd>
+                                    <dd>decimals places in Actual feedrate is set.</dd>
+                                <dt>dsplc_dec</dt>
+                                    <dd>・Series 30i/31i-LB only</dd>
+                                    <dd>decimals places in Command data of tool radius offset is set.</dd>
+                                <dt>error2_dec</dt>
+                                    <dd>・Series 30i/31i-LB only</dd>
+                                    <dd>decimals places in Command data of reference displace is set.</dd>
+                                    <dd>The corresponding data is as follows.</dd>
+                                    <ul>
+                                    <table border="1">
+                                        <colgroup>
+                                        <colgroup width="100">
+                                        <tr>
+                                            <th>小数点以下桁数部</th> <th>対応するデータ部</th>
+                                        </tr>
+                                        <tr> <td >feed_dec</td><td>feed</td>  </tr>
+                                        <tr> <td >dsplc_dec</td><td>dsplc</td>  </tr>
+                                        <tr> <td >error2_dec</td><td>error2</td>  </tr>
+                                    </colgroup>
+                                    </colgroup>
+                                    </table>
+                                    </ul>
+                                <dt>reserve</dt>
+                                    <dd>(reserve)</dd>
+                            </dl>
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                Unavailable<br/>
+                This function cannot be used except 16i/18i-L, 30i/31i-LB.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The extended driver/library function is necessary.
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                CNC parameter error(Series 30i/31i-LB only)<br/>
+                Mistake of laser oscillator (parameter No.15030)
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <li>Series 30i/31i-LB</li>
+            <span class="dd">No.15030</span>
+        </type>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </m>
+        <t>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </lc>
+        <p>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>-</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </w>
+        <pw>
+            <d>-</d>
+            <h>-</h>
+            <a>-</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

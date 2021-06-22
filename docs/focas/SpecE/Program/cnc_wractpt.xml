@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_wractpt</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>
+            FWLIBAPI short WINAPI cnc_wractpt(unsigned short FlibHndl, long prog_no, short type, long *blk_no);
+        </prottype>
+      </vc>
+    </declare>
+
+    <doc>
+        <cmn>
+            <p>
+                Sets the execution pointer of the NC program for the MDI or Memory operation.
+            <p>
+            </p>
+                If there are some blocks that CNC has already read, these blocks will be executed before the block specified by this function.
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>prog_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                        Program number<br/>
+                        When you write the MDI program, you have to specify -1. 
+                        </p>
+                        <div class="xis">
+                        <p class="info">
+                            You can set the pointer for the current selected program. If the selected program is called by calling macro or sub-program (that is a nested program), you also can set the pointer to it(16i/18i/21i/30i/31i/32i/0i-D/F, PMi-A only). 
+                        </p>
+                        </div>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+Type of the execution pointer you will set.
+                        </p>
+                        <table class="dd">
+                            <tr>
+                                <td valign="top">0</td><td valign="top">:</td><td valign="top">Absolute pointer (The block number from the top of the program when the top is 0.)</td>
+                            </tr>
+                            <tr>
+                                <td valign="top">1</td><td valign="top">:</td><td valign="top">Relative pointer (The relative value from the current execution pointer.)</td>
+                            </tr>
+                        </table>
+                    </content>
+                </item>
+                <item>
+                    <name>blk_no</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>Pointer to the long type variable holding the block number to set.</p>
+                        <p>In case of 30i, 0i-D/F and PMi-A, when the block number which is not present is specified in MDI program, the cursor moves to the last line.</p>
+                        <dt>In case of type = 0</dt>
+                            <ul>
+                            <li type="disk">Specify the block number from the top of the program when the top is 0.</li>
+                            </ul>
+                        <dt>In case of type = 1</dt>
+                            <ul>
+                            <li type="disk">Specify the relative value from the current execution pointer.</li>
+                            <li type="disk">When the specified block number is 0, the execution pointer is not changed and the actual absolute block number is stored into (*blk_no).</li>
+                            </ul>
+
+                        <dt>The examples of the absolute pointer and relative one are as follows:</dt>
+                        <table border="1">
+                            <colgroup align="left" valign="top">
+                            <tr>    <th>Selected NC program</th> <th>Absolute</th> <th>Relative</th> </tr>
+                            <tr>    <td>O1234;             </td> <td>0       </td> <td>-3</td>       </tr>
+                            <tr>    <td>G00 X0. Z0.;       </td> <td>1       </td> <td>-2</td>       </tr>
+                            <tr>    <td>G01 X10. Z5. F100.;</td> <td>2       </td> <td>-1</td>       </tr>
+                            <tr>    <td>X20. Z15.;         </td> <td>3       </td> <td> 0</td>       </tr>
+                            <tr>    <td>X35.;              </td> <td>4       </td> <td> 1</td>       </tr>
+                            <tr>    <td>Z20;               </td> <td>5       </td> <td> 2</td>       </tr>
+                            <tr>    <td>M30;               </td> <td>6       </td> <td> 3</td>       </tr>
+                            <tr>    <td>%                  </td> <td>7       </td> <td> 4</td>       </tr>
+                            </colgroup>
+                        </table>
+                        <dt>* In this case, the execution pointer is on the block having "X20. Z15.;".</dt>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>Data attribute error<br/>Type is illegal.</content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>Data error
+            <ul style="margin-top:0;margin-bottom:0">
+            <li>The program number(prog_no) is not present.</li>
+            <li>The block number(*blk_no) is not present.</li>
+            </ul>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>
+            The extended driver/library function is necessary.
+            </content>
+        </item>
+        <item>
+            <name>EW_MODE</name>
+            <content>CNC mode error
+            <ul style="margin-top:0;margin-bottom:0">
+            <li>Except MDI and EDIT mode</li>
+            <li>prog_no is not -1 in MDI mode</li>
+            <li>prog_no is -1 in EDIT mode</li>
+            <li>Selected program number is specified in MEM mode(16i)</li>
+            </ul>
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>CNC execution denied
+            <ul style="margin-top:0;margin-bottom:0">
+            <li>CNC is machining right now.</li>
+            <li>MDI program is not present(16i).</li>
+            <li>The program is nested.</li>
+            <li>No program is selected.</li>
+            <li>Some alarm in CNC. (except 30i/31i/32i, 0i-D/F, PMi-A)</li>
+            <li>CNC is in the emergency stop. (30i/31i/32i, 0i-D/F, PMi-A)</li>
+            </ul>
+            </content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/F and 30i the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter></parameter>
+
+
+
+    <mode>
+        <cmn>
+           It is possible to use in MDI or EDIT mode.
+        </cmn>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>H</a>
+        </pw>
+        <add><b></b></add>
+        <is>
+            <!-- M -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdactpt</name>
+            <file>Program/cnc_rdactpt.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

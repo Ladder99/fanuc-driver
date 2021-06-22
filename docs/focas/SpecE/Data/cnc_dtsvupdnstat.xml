@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <title>cnc_dtsvupdnstat</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_dtsvupdnstat(unsigned short FlibHndl);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+The execution result of <a href="Data/cnc_dtsvdownload.htm" target="_parent">cnc_dtsvdownload</a>, <a href="Data/cnc_dtsvupload.htm" target="_parent">cnc_dtsvupload</a> function can be got only once.<br/>
+The completion status is as follows when this function is executed.
+<p/>
+<img src="Data/dtsv_updwn.gif"/>
+<ul>
+* "Req." shows the start request for download/upload the  file by <a href="Data/cnc_dtsvdownload.htm" target="_parent">cnc_dtsvdownload</a>/<a href="Data/cnc_dtsvupload.htm" target="_parent">cnc_dtsvupload</a> functions.<br/>
+* "ret=" is the completion status when this function is done.
+</ul>
+
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_RESET</name>
+            <content>
+                Reset or stop request<br/>
+                - As 'RESET or STOP' was pushed, upload/download was forced to cancel.
+            </content>
+        </item>
+        <item>
+            <name>EW_BUSY</name>
+            <content>
+                Busy<br/>
+                - As upload/download is being executed, try again.
+            </content>
+        </item>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                Function is not executed<br/>
+                - upload/download is not executed Execute either <a href="Data/cnc_dtsvdownload.htm" target="_parent">cnc_dtsvdownload</a> or <a href="Data/cnc_dtsvupload.htm" target="_parent">cnc_dtsvupload</a> beforehand.
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                Data error<br/>
+                - file has already existed <br/>
+                  <dd>The file which replaced by upload/download is write-protected.</dd>
+                - file does not exist<br/>
+                  <dd>The indicated file does not exist.</dd>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+
+No option
+<table>
+<tr> <td valign="top">-</td> <td valign="top">The extended driver/library function is necessary.</td> </tr>
+<tr> <td valign="top">-</td> <td valign="top">The DATA SERVER board(hardware) is necessary.</td> </tr>
+</table>
+
+            </content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>
+                - Protection KEY(DI/KEY3) is off.<br/>
+                - CNC parameter is a state of write-protection.(O8000-/O9000- protection, encoding).
+            </content>
+        </item>
+        <item>
+            <name>EW_OVRFLOW</name>
+            <content>
+                Memory overflow<br/>p
+                - Because free area in CNC memory runs short, make enough free area.<br/>
+                - The total number of program exceeded the limit of registrable programs in CNC.
+            </content>
+        </item>
+
+        <item>
+            <name>EW_DTSRVR</name>
+            <content>
+                 DATA SERVER error<br/>
+                 In order to get more information for this err_no return value, execute <a href="misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.  The following details status will be set onto the member, err_no of ODBERR structure.
+                <table class="dd">
+                    <tr><td>1 <![CDATA[<-->]]>  498</td><td>:</td><td>DATA SERVER error</td></tr>
+                    <tr><td>499</td><td>:</td> <td>DATA SERVER system error</td></tr>
+                </table>
+            </content>
+        </item>
+   </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+    </option>
+
+
+
+    <parameter></parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_dtsvdownload</name>
+            <file>Data/cnc_dtsvdownload.htm</file>
+        </item>
+        <item>
+            <name>cnc_dtsvupload</name>
+            <file>Data/cnc_dtsvupload.htm</file>
+        </item>
+        <item>
+            <name>cnc_dtsvcnclupdn</name>
+            <file>Data/cnc_dtsvcnclupdn.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

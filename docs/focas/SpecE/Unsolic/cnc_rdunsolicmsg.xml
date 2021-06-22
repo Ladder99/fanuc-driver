@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdunsolicmsg</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdunsolicmsg( short bill, IDBUNSOLICMSG *data );</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+Reads the unsolicited messaging data. This function is available only for Series 16i/18i/21i, 0i and Power Mate i. This function cannot be used with Visual Basic. Please use Visual C++ for making your application.
+<br/>
+Please refer to <a href="./Unsolic.htm" target="_parent">"Unsolicited Messaging Function"</a> for the detail information of unsolicited messaging function.
+<p/>
+This function does not have the argument, library handle "FlibHndl". 
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <ethr>
+            <vc>
+                <item>
+                    <name>bill</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+Handle for the Message data reading. Specify the value acquired by the <a href="UnSolic/cnc_unsolicstart.htm" target="_parent">cnc_unsolicstart</a> or the value notified by the argument(lParam) of the message reception function.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>data</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+Pointer to IDBUNSOLICMSG structure in which the unsolicited messaging data will be stored.
+                        </p>
+The IDBUNSOLICMSG structure is as follows.
+<pre>
+typedef struct idbunsolicmsg {
+    short   getno ;
+    struct {
+        short   rdsize ;
+        void    *data ;
+    } msg[3] ;
+} IDBUNSOLICMSG ;
+</pre>
+                        <dl>
+                            <dt>getno</dt>
+                                <dd>Number of the Message data which was acquired by the unsolicited messaging. (1-3).</dd>
+                            <dt>rdsize</dt>
+                                <dd>Size of PMC data which was transmitted by the unsolicited messaging. (byte)</dd>
+                            <dt>data</dt>
+                                <dd>Specify the pointer to the buffer in which the PMC data which was transmitted is stored. The size of this area must ensure the size which has been specified as "rdsize" at <a href="UnSolic/cnc_wrunsolicprm.htm" target="_parent">cnc_wrunsolicprm</a>.</dd>
+                            <dt>Setting example)</dt>
+                                    <table class="dd">
+                                        <tr><td>IP address          </td> <td>:</td> <td>192.168.0.1</td></tr>
+                                        <tr><td>TCP port number     </td> <td>:</td> <td>8196</td></tr>
+                                        <tr><td>PMC address         </td> <td>:</td> <td>R2000</td></tr>
+                                        <tr><td>Retry number        </td> <td>:</td> <td>3</td></tr>
+                                        <tr><td>Timeout             </td> <td>:</td> <td>10 sec</td></tr>
+                                        <tr><td>Transmission data   </td> <td>:</td> <td>2</td></tr>
+                                        <tr><td>1st message         </td> <td>:</td> <td>R2100-2149</td></tr>
+                                        <tr><td>2nd message         </td> <td>:</td> <td>D110-149</td></tr>
+
+                                        <tr><td><br/></td></tr>
+
+                                        <tr><td>IDBUNSOLICMSG data;<br/>
+                                                char msg1[50];<br/>
+                                                char msg2[40];<br/></td></tr>
+                                    </table>
+                                    <table class="dd">
+                                        <tr><td>data.msg[0].data = msg1;</td> <td>//</td> <td>Contents of R2100-2149</td></tr>
+                                        <tr><td>data.msg[1].data = msg2;</td> <td>//</td> <td>Contents of D110-149</td></tr>
+                                    </table>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </ethr>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>Unavailable</content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+              The message corresponding to the handle(bill) has not been transmitted.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter>
+        <fast>
+          <ul>
+            <li>Series 16i/18i/21i, 0i, Power Mate i<br/>
+                No.904#4=1 (must be set)
+            </li>
+          </ul>
+        </fast>
+    </parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>E</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>E</fs16ia>
+            <fs18ia>E</fs18ia>
+            <fs21ia>E</fs21ia>
+            <fs16ib>E</fs16ib>
+            <fs18ib>E</fs18ib>
+            <fs21ib>E</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>E</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>E</fs16ia>
+            <fs18ia>E</fs18ia>
+            <fs21ia>E</fs21ia>
+            <fs16ib>E</fs16ib>
+            <fs18ib>E</fs18ib>
+            <fs21ib>E</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>E</d>
+            <h>E</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_wrunsolicprm</name>
+            <file>Unsolic/cnc_wrunsolicprm.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdunsolicprm</name>
+            <file>Unsolic/cnc_rdunsolicprm.htm</file>
+        </item>
+        <item>
+            <name>cnc_unsolicstart</name>
+            <file>Unsolic/cnc_unsolicstart.htm</file>
+        </item>
+        <item>
+            <name>cnc_unsolicstop</name>
+            <file>Unsolic/cnc_unsolicstop.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

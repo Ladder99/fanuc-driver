@@ -1,0 +1,230 @@
+<html>
+<head>
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<link rel="stylesheet" type="text/css" href="fwlib32.css">
+<title>top</title>
+<script language="JavaScript">
+    var endPrefix = "@";                       // 接頭語の終了識別子(上書き禁止)
+    var endResult = "?";                       // 結果の終了識別子(上書き禁止)
+    var typeCookie = "#FANUC_Ver2.0#"; // クッキー情報の終了識別子(上書き禁止)
+    var typeDivid = "=";                        // 分離識別子(上書き禁止) 
+    var typeOK = "O";
+    var typeNG = "X";
+    var listInfo = "FANUC_LIST=";               // 関数一覧リストのリンク先をクッキーに設定
+
+    var elemNum = 4;
+    var cookieArray;                                // クッキー値
+    
+    var prefix = "/flist_";                          // リンク先接頭語
+    var wXml = ".xml";                              // 拡張子
+
+    // 初期処理
+    function initRun(){
+        // クッキーのデフォルトをチェック状態にする
+        cookieArray = new Array(elemNum);
+        for(var i=0; i < elemNum ; i++){
+            cookieArray[i] = typeOK;
+        }
+        
+        // クッキーの内容を取得する
+        var strCookieInfo = document.cookie;
+        
+        // クッキー情報がある場合
+        if(strCookieInfo != null)
+        {
+            var sIndex = 0;                // 開始オフセットの位置
+            var eIndex = 0;                // 終了オフセットの位置
+        
+            sIndex = strCookieInfo.indexOf(typeCookie);
+
+            // クッキー情報が有効の場合
+            if(sIndex != -1) {
+                eIndex = strCookieInfo.indexOf(typeCookie , sIndex+typeCookie.length);
+
+                // 取得文字列
+                var strResult = strCookieInfo.substring(sIndex+typeCookie.length , eIndex);
+                sIndex = strResult.indexOf(typeDivid,0);
+                sIndex ++;
+                var state=false;
+                var strTemp="";
+                for(var i=0 ; i<elemNum ; i++) {
+                    eIndex = strResult.indexOf( endResult ,  sIndex);
+                    strTemp = strResult.substring(sIndex , eIndex);
+                    sIndex = eIndex + 1;
+                    j = strTemp.indexOf("true" ,  0);
+                    if(j != -1)    // trueがある場合
+                    {
+                        state = typeOK;
+                    }
+                    else    // falseがある場合
+                    {
+                        state= typeNG;
+                    }
+                    cookieArray[i] = state;
+                }
+            }
+        }
+    }
+
+    // コンボボックスが選択された項目にジャンプ
+    function topixJump(){
+        var listName = "";
+        var index = document.TopMenu.TopixJump.selectedIndex;
+        var val = document.TopMenu.TopixJump.options[index].value;
+
+        listName = val + prefix + val + wXml;
+        
+        var cookieInfo = listInfo + val + endResult;
+        writeCookie(cookieInfo);
+
+        if(parent.fmain != null)
+        {
+            parent.fmain.location.href=listName;
+        }
+        // メイン領域が未処理の場合
+        else
+        {
+            parent.pageReload();
+        }
+    }
+
+    // トップページへのリンク
+    function topPageJump(){
+        var linkURL = "FWLIB32.HTM";    // トップページへリンク
+        parent.jumpPage(linkURL);
+    }
+    
+    // URLへリンクする
+    function linkURL(){
+        var strCookieInfo = document.cookie;
+        // クッキーから関数一覧情報が有るか取得する
+        var val = strCookieInfo.indexOf(listInfo);
+        var urlType ="";    // クッキーの関数一覧情報
+        if(val != -1)   // クッキーに関数一覧情報がある場合
+        {
+            var stIndex = listInfo.length;
+            // 関数一覧情報取得
+            stIndex = val + stIndex;
+            var endIndex = strCookieInfo.indexOf(endResult , stIndex);
+            urlType = strCookieInfo.substring(stIndex , endIndex);
+        }
+        else    // クッキーに関数一覧情報がない場合
+        {
+            urlType = "Handle";
+        }
+        
+        var url = urlType + prefix + urlType + wXml;    // リンク先URL
+        var dumyName = "";
+        var times = document.TopMenu.TopixJump.length;  // オプション数
+        var i = 0;
+        for(i=0 ;  i < times ; i++){
+            dummyName = document.TopMenu.TopixJump.options[i].value;
+            if(dummyName == urlType)
+            {
+                // リストを選択する
+                document.TopMenu.TopixJump.options[i].selected = true;
+                break;
+            }
+        }
+        if(parent.fmain != null)
+        {
+            parent.fmain.location.href= url;            // リンクする
+        }
+        // メイン領域が未処理の場合
+        else
+        {
+            parent.pageReload();
+        }
+    }
+    
+    //
+    // 接続方法の情報をクッキーに保存
+    //
+    function writeCookie(param) {
+        var dayls = new Date();
+        var temp;
+        temp = dayls.getYear();
+        if(temp < 1900){
+            temp += 1900;
+        }
+        temp++;
+        dayls.setYear(temp);
+        dayls.setMonth(dayls.getMonth());
+        dayls.setDate(dayls.getDate());
+        dayls.setHours(dayls.getHours());
+        dayls.setMinutes(dayls.getMinutes());
+        dayls.setSeconds(dayls.getSeconds());
+        document.cookie=""+param+ "; expires=" + dayls.toGMTString();
+    }
+
+    function setOption()
+    {
+        var strCookieInfo = document.cookie;
+        // クッキーから関数一覧情報が有るか取得する
+        var val = strCookieInfo.indexOf(listInfo);
+        var urlType ="";    // クッキーの関数一覧情報
+        if(val != -1)   // クッキーに関数一覧情報がある場合
+        {
+            var stIndex = listInfo.length;
+            // 関数一覧情報取得
+            stIndex = val + stIndex;
+            var endIndex = strCookieInfo.indexOf(endResult , stIndex);
+            urlType = strCookieInfo.substring(stIndex , endIndex);
+        }
+        else    // クッキーに関数一覧情報がない場合
+        {
+            urlType = "Handle";
+        }
+
+        var times = document.TopMenu.TopixJump.length;  // オプション数
+        var i = 0;
+        for(i=0 ;  i < times ; i++){
+            dummyName = document.TopMenu.TopixJump.options[i].value;
+            if(dummyName == urlType)
+            {
+                // リストを選択する
+                document.TopMenu.TopixJump.options[i].selected = true;
+                break;
+            }
+        }
+    }
+</script>
+</head>
+<body bgcolor="lavender">
+<form name="TopMenu">
+    <table border=0 >
+        <td width="30%" align="left"><a href = "javascript:topPageJump()"><font size="2" color="Blue">Top Page</font></a>
+        <td width="*" align="center">
+            <select name="TopixJump" onChange="topixJump()">
+                <option value="All">All Function list</option>
+                <option value="Handle">CNC: Function related to library handle, node</option>
+                <option value="Position">CNC: Function related to controlled axis/spindle</option>
+                <option value="Program">CNC: Function related to CNC program</option>
+                <option value="Ncdata">CNC: Function related to CNC file data</option>
+                <option value="Toollife">CNC: Function related to tool life management data</option>
+                <option value="ToolMng">CNC: Function related to tool management data</option>
+                <option value="ToolGeom">CNC: Function related to tool geometry size data</option>
+                <option value="History">CNC: Function related to history data</option>
+                <option value="Motor">CNC: Function related to servo/spindle</option>
+                <option value="Wave">CNC: Function related to waveform diagnosis</option>
+                <option value="Punch">CNC: Function related to PUNCH PRESS</option>
+                <option value="Laser">CNC: Function related to LASER</option>
+                <option value="Wire">CNC: Function related to WIRE CUT</option>
+                <option value="Data">CNC: Function related to data server,DNC1,DNC2,OSI-Ethernet</option>
+                <option value="Servo">CNC: Function related to servo learning data</option>
+                <option value="UnSolic">CNC: Function related to Unsolicited messaging function</option>
+                <option value="Pmc">PMC: Function related to PMC</option>
+                <option value="Profibus">PMC: Function related to PROFIBUS-DP</option>
+                <option value="Misc">CNC: Function related to others</option>
+            </select>
+        </td>
+        <script language="JavaScript">
+            // 初期処理
+            initRun();
+            // リンク先設定
+            linkURL();
+        </script>
+    </table>
+</form>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_rdpglockstat</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdpglockstat(unsigned short FlibHndl,long *num_prog, long *prog_no);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                The numbers of program and the program number is got which setted the
+                protection of running/editing by <a href="Program/cnc_setpglock.htm" target="_parent">cnc_setpglock</a>.
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle.<br/>
+                            See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>num_prog</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Specify the pointer to the variable to store the number of program to which the protection of running/editing was setted.<br/>
+                            Set the 4 to num_prog at this function calling. After the execution of this function, the number of program to which the  running/editing is protected is set.<br/>
+                            When there is no program to which the protection of running/editing was setted, 0 is set for this data.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>prog_no</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Specify the pointer to the variable to store the program number to which the protection of running/editing was setted.<br/>
+                            Prepare the array defined by the variable of 4 or more for this data because the protection of the running/editing can be set up to 4.<br/>
+                            When the program which setted the protection of running/editing does not exist, this data is no setted.
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                Unavailable<br/>
+                This function is not supported by CNC.
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                Data number error<br/>
+                The value of less than four was specified for number of programs(num_prog).
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                no option<br/>
+                The extended driver/library function is necessary.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            <p>The extended driver/library function is necessary.</p>
+        </hssb>
+    </option>
+
+
+
+    <parameter></parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_setpglock</name>
+            <file>Program/cnc_setpglock.htm</file>
+        </item>
+        <item>
+            <name>cnc_resetpglock</name>
+            <file>Program/cnc_resetpglock.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

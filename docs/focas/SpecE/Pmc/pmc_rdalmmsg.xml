@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>pmc_rdalmmsg</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI pmc_rdalmmsg(unsigned short FlibHndl, short s_number, short *read_num, short *exist, ODBPMCALM *pmcalm); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                Reads the alarm messages from PMC.
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle.<br/>
+                            See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_number</name>
+                    <type>in</type>
+                    <content>
+                       Specify the starting number(=1,2,3..) from which PMC alarm messages is read.
+                    </content>
+                </item>
+                <item>
+                    <name>read_num</name>
+                    <type>in/out</type>
+                    <content>
+                        Pointer to the number of alarm messages to be read.<br/>
+                        Specify the number of alarm messages to be read before function call and 
+                        actual number of alarm messages being read is stored after the function call.
+                    </content>
+                </item>
+                <item>
+                    <name>exist</name>
+                    <type>out</type>
+                    <content>
+                        When 'read_num' is specified less than the actual number of PMC alarms occurred on PMC side,
+                         '1' is returned.
+                        <table class="dd">
+                            <tr>
+                                <td>-1 </td><td>: </td><td>There is no alarm.</td>
+                            </tr>
+                            <tr>
+                                <td>0 </td><td>: </td><td>All alarms were read.</td>
+                            </tr>
+                            <tr>
+                                <td>1 </td><td>: </td><td>Alarm still exists.</td>
+                            </tr>
+                        </table>
+                        <br/>
+                        If the alarm still exists, it is possible to read the remained PMC alarms by setting
+                         "s_number = s_number + read_num" and calling this function again.
+                    </content>
+                </item>
+                <item>
+                    <name>pmcalm</name>
+                    <type>out</type>
+                    <content>
+                        Pointer to the array of ODBPMCALM structure where returned data are stored.<br/>
+                        The number of array must be required so as to store the PMC alarms specified by 'read_num'.<br/>
+                        The ODBPMCALM structure is as follows.
+
+<pre>
+Type MyODBPMCALM
+    nOdb_pmcalm(0 To 9) As ODBPMCALM
+End Type ' In case that the read_num is 10.
+</pre>
+
+                        <dl>
+                            <dt>almmsg</dt>
+                                <dd>Alarm message character string is set.<br/>
+                                    The message is terminated with NULL('\0').<br/>
+                                    <span class="xis">
+                                    The alarm messages are described in "fwpmcalm.ini".(except 30i, 0i-D/F, PMi-A)<br/>
+                                    Customized alarm messages can be acquired by modifying the messages in
+                                     "fwpmcalm.ini" file.<br/>
+                                     <br/>
+                                    Please copy "fwpmcalm.ini" onto the application folder or Windows system folder.<br/>
+                                    When this file does not exist there, this function outputs the internal default messages.<br/>
+                                    Series 30i, 0i-D/F and PMi-A does not use "fwpmcalm.ini" file.<br/>
+                                    </span>
+                 </dd>
+                        </dl>
+                        <span class="xis">
+                        <dl>
+                            <dt>"fwpmcalm.ini" file format is as follows.</dt>
+                                <dd>[Section]</dd>
+                                <dd>Key = "Alarm message strings"</dd>
+                        <br/>
+                                <dd>Section</dd>
+                                <dd>
+                        <table class="dd">
+                                    <tr>
+                                        <td>PMC-NA</td><td> : </td><td>indicates the following messages are for PMC-NA.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>OTHERS</td><td> : </td><td>indicates the following messages are for other 
+                                                                        PMCs than PMC-NA.</td>
+                                    </tr>
+                        </table>
+                                </dd>
+                                <dd>Key</dd>
+                                <dd>
+                        <table class="dd">
+                                    Key is defined as the next format.
+                                    <tr>
+                                        <td>In case of error message</td><td>: </td><td>ERxx (xx is error number)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>In case of warning message</td><td> : </td><td>WNxx (xx is warning number)</td>
+                                    </tr>
+                        </table>
+                        <table class="dd">
+                                    When the same message numbers exist, '_x' (x=1,2,...) is attached to the key.
+                        </table>
+                                </dd>
+                                <dd>Alarm message strings</dd>
+                                <dd>
+                        <table class="dd">
+                                    An arbitrary character string can be specified up to 128  characters
+                                    (NULL as the terminator is included). <br/>
+                                    The ';' cannot be used in the character string.<br/>
+                                    Moreover, the '%02d'(For the decimal number) and the '%02x'(For the hexadecimal number)
+                                    are described into  the messages which show the group number, etc..
+                        </table>
+                        <br/>
+                                </dd>
+                                <dd>Example : </dd>
+                                <dd>
+                        <table class="dd">
+                                    <tr><td>[OTHERS]</td></tr>
+                                    <tr><td>ER01</td><td> = </td><td>"ER01 PROGRAM DATA ERROR"</td></tr>
+                                    <tr><td>ER35_1</td><td> = </td><td>"ER35 TOO MUCH OUTPUT DATA IN GROUP(%02d)"</td></tr>
+                                    <tr><td>WN01</td><td> = </td><td>"WN01 LADDER MAX SIZE ERROR"</td></tr>
+                        </table>
+                        <br/>
+                                </dd>
+                                <dd>Notes for modifying "fwpmcalm.ini" file</dd>
+                                <dd>
+                        <table class="dd">
+                                    <tr><td valign="top">1)</td><td>Please do not modify the Section, PMC-NA, OTHERS,
+                                                        and the Key themselves.</td></tr>
+                                    <tr><td valign="top">2)</td><td>A Key and corresponding message can be deleted.<br/>
+                                                       When a Key and corresponding message are deleted,
+                                                       the fixed message which this function holds internally
+                                                       is acquired.</td></tr>
+                                    <tr><td valign="top">3)</td><td>The modifying of alarm messages is possible,
+                                                        but the new Key cannot be added.</td></tr>
+                        </table>
+                                </dd>
+                        </dl>
+                        </span>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NOPMC</name>
+            <content>
+                There is no PMC.
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                data number error<br/>
+                The specification of the starting number (s_number) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                data error<br/>
+                data(read_num) is out of range.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter></parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+    </reference>
+
+
+
+  </func>
+</root>

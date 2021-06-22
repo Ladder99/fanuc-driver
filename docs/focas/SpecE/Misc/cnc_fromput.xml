@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_fromput</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>
+            FWLIBAPI short WINAPI cnc_fromput(unsigned short FlibHndl, void *data, long *length);
+        </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Writes the F-ROM data to CNC.<br/>
+                After F-ROM data writing, execute <a href="Misc/cnc_fromputend.htm" target="_parent">cnc_fromputend</a> function in order to indicate the termination of writing process.</p>
+
+                <p>The procedure for reading F-ROM data from the file and storing into the F-ROM on the CNC is as follows.</p>
+                
+                <p><img src="Misc/fromput.gif"></img></p>
+                
+                <p>Internal 128KB buffer is prepared for data writing.<br/>
+                When the data transferred by the <a href="Misc/cnc_fromput.htm" target="_parent">cnc_fromput</a> function becomes 128KB (at the first time, 128KB+128bytes), the CNC executes the writing process to F-ROM.</p>
+                
+                <p><img src="Misc/fromput2.gif"></img></p>
+                
+                <p>It takes for a while to write the 128K Byte block of F-ROM data to CNC.<br/>
+                This function waits its process completion in the library.</p>
+                
+                <p>When this function writes the F-ROM data to CNC, the error (such as EW_DATA) may happen, so please check the return value of this function at your application.</p>
+                
+                <p>The Size of SYSTEM data(Control software, Ladder program etc.) is 128K Bytes * n(n=1,2,3,...) + 128 Bytes.
+You must write all data from F-ROM file by this function.</p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>data</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                           Pointer to the variable to which the writing data is stored.<br/>
+                           Specify the pointer of the variable to which the F-ROM data is written.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>Pointer to the variable to which the data length was set.<br/>
+                        Specify the size in byte which you want to write to the variable. After executing this function, the size of data which was actually written is set.<br/>
+                        The maximum size which can be written at a time is F-ROM size (fromsize) acquired by the <a href="Misc/cnc_getfrominfo.htm" target="_parent">cnc_getfrominfo</a> function.
+                        </p>
+                            <table>
+                                <tr><td rowspan="3" valign="top">Note) </td>
+                                <td>When the F-ROM data is protected, this function returns EW_PASSWD.<br/>
+                                The error occurs as soon as turning out the name of the F-ROM data because the name is preserved in the given writing data. The name of the F-ROM data is described from top of the F-ROM data within 672 bytes, so please specify 672 bytes or more for the length.</td></tr>
+                                
+                            </table>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>Unavailable or <a href="Misc/cnc_fromputstart.htm" target="_parent">cnc_fromputstart</a> function has not been executed.
+    </content>
+        </item>
+        <item>
+            <name>EW_BUFFER</name>
+            <content>Buffer full<br/>Retry because the buffer is full.</content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>Number of data(length) is wrong. (The value of 0 or less was specified).</content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+F-ROM data writing error.<br/>
+In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> . 
+The following detail status will be set onto the member, err_no of ODBERR structure. 
+                <table>
+                    <colgroup align="center" valign="top">
+                    <colgroup align="center" valign="top">
+                    <colgroup valign="top">
+                    <tr>
+                        <td>1</td>
+                        <td>:</td>
+                        <td>F-ROM writing failed (defective device)</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>:</td>
+                        <td>F-ROM erasing failed (defective device)</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>:</td>
+                        <td>No writing space in F-ROM</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>:</td>
+                        <td>The F-ROM data not permitted at the CNC system was specified.</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>:</td>
+                        <td>The size of the system data actually written on the F-ROM and the system data being specified is different.</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>:</td>
+                        <td>F-ROM(MODULE) cannot be recognized. (defective device)</td>
+                    </tr>
+                    <tr>
+                        <td>145</td>
+                        <td>:</td>
+                        <td>The total data size is excessed.<br/>
+                        The excessed F-ROM data is ignored.</td>
+                    </tr>
+                </colgroup>
+                </colgroup>
+                </colgroup>
+             </table>
+         </content>
+        </item>    
+        <item>
+            <name>EW_PASSWD</name>
+            <content>  Specified F-ROM data cannot be written because the data is protected.</content>
+        </item>
+          <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr>
+            <p>The Ethernet function and the extended driver/library function are necessary.</p>
+            <p>However, in case of Series 16i/18i/21i-B, 0i-B/C, the required CNC option is as follows.</p>
+            <p>When Embedded Ethernet is used,</p>
+            <p><ul>above two optional functions are not required.</ul></p>
+            <p>When Ethernet board is used,</p>
+            <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <add></add>
+    </option>
+
+
+
+    <parameter>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>O</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>O</fs16ia>
+           <fs18ia>O</fs18ia>
+           <fs21ia>O</fs21ia>
+           <fs16ib>O</fs16ib>
+           <fs18ib>O</fs18ib>
+           <fs21ib>O</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>O</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>O</fs16ia>
+           <fs18ia>O</fs18ia>
+           <fs21ia>O</fs21ia>
+           <fs16ib>O</fs16ib>
+           <fs18ib>O</fs18ib>
+           <fs21ib>O</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>X</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>X</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_getfrominfo</name>
+            <file>Misc/cnc_getfrominfo.htm</file>
+        </item>
+        <item>
+            <name>cnc_fromputstart</name>
+            <file>Misc/cnc_fromputstart.htm</file>
+        </item>
+        <item>
+            <name>cnc_fromputend</name>
+            <file>Misc/cnc_fromputend.htm</file>
+        </item>        
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

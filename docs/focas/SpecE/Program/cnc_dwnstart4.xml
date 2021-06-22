@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_dwnstart4</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_dwnstart4(unsigned short FlibHndl,short type, char* dir_name);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                Notifies the start of uploading NC data (NC program, tool offset, etc.) to the internal logic of the
+                Data window library.<br/>
+                (This function must be executed before <a href="Program/cnc_download4.htm" target="_parent">cnc_download4</a>.)
+            </p>
+            <p>
+                In case of download for NC programs, a destination folder can be specified.
+            </p>
+            <p>
+                <a href="Program/cnc_download4.htm" target="_parent">cnc_download4</a> function and
+                <a href="Program/cnc_dwnend4.htm" target="_parent">cnc_dwnend4</a> function will return
+                EW_FUNC in case that cnc_dwnstart4 function is not executed.
+            </p>
+            <p>A basic procedure for download is shown below.</p>
+            <p><img src="Program/dnload4.gif"/></p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle.
+                            See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the kinf of the data.
+                        </p>
+                            <table class="dd">
+                                <tr><td> 0</td><td>:</td><td>NC program</td></tr>
+                                <tr><td> 1</td><td>:</td><td>Tool offset data</td></tr>
+                                <tr><td> 2</td><td>:</td><td>Parameter</td></tr>
+                                <tr><td> 3</td><td>:</td><td>Pitch error compensation data</td></tr>
+                                <tr><td> 4</td><td>:</td><td>Custom macro variables</td></tr>
+                                <tr><td> 5</td><td>:</td><td>Work zero offset data</td></tr>
+                                <tr><td>18</td><td>:</td><td>Rotary table dynamic fixture offset</td></tr>
+                            </table>
+                    </content>
+                </item>
+                <item>
+                    <name>dir_name</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify a destination folder name for download. (The maximum length of the character string is 241 and the string should be included by NULL('\0') terminate character.)<br/>
+                            When NULL is specified, a destination folder becomes a current folder.
+                            <blockquote>
+                            Example : &quot;//CNC_MEM/USER/PATH1/&quot;
+                            </blockquote>
+                            It is available when type = 0.<br/>
+                            Please refer to <a href="general.htm#DriveName" target="_parent">&quot;General Description (Specifying the folder and file name for FS30i, 0i-D/F and PMi-A.)&quot;</a> for details of the folder name.
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_BUSY</name>
+            <content>
+                Busy<br/>
+                <ul style="margin-top:0;margin-bottom:0">
+                    <li>cnc_dwnstart4(<a href="Program/cnc_vrfstart.htm" target="_parent">cnc_vrfstart</a>) function has been executed.</li>
+                        Terminate a downloading (verifying) by using <a href="Program/cnc_dwnend4.htm" target="_parent"> cnc_dwnend4</a>(<a href="Program/cnc_vrfend.htm" target="_parent">cnc_vrfend</a>) function.
+                </ul>
+            </content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>
+                Data attribute error<br/>
+                Data type (type) is illegal.
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                Data error<br/>
+                In order to get more information for this err_no return value, execute
+                <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                The following detail status will be set onto the member, err_no of ODBERR structure.
+                <table>
+                    <colgroup align="center" valign="top"></colgroup>
+                    <colgroup align="center" valign="top"></colgroup>
+                    <colgroup valign="top"></colgroup>
+                    <tr>
+                        <td>1</td><td>:</td><td>Program folder name is wromg.</td>
+                    </tr>
+                </table>
+                See <a href="#disc">Description</a> about the timing of error.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                In case of custom macro variables or pitch error compensation data, this function needs
+                the option for the target data.
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                CNC parameter error<br/>
+                In case of parameter, set 'parameter write enable' state by setting screen.
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                CNC execution denied
+                <ul style="margin-top:0;margin-bottom:0">
+                    <li>CNC is machining</li>
+                    Cannot download while automatic operation is being executed on CNC in case of except NC program.
+                </ul>
+            </content>
+        </item>
+        <item>
+            <name>EW_ALARM</name>
+            <content>
+                Alarm state
+                <ul style="margin-top:0;margin-bottom:0">
+                    <li>Alarm (PW000) on CNC side</li>
+                        Reset the alarm on CNC.
+                </ul>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <type>
+            Pitch error compensation<br/>
+            Custom macro<br/>
+            Work zero offset
+        </type>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+                0000#0<br/>
+                3201#2,#5,#6<br/>
+                3202#0,#4<br/>
+                3204#3,#4<br/>
+                3210,3211<br/>
+                8900#0
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+        <is>
+            <!-- M -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_download4</name>
+            <file>Program/cnc_download4.htm</file>
+        </item>
+        <item>
+            <name>cnc_dwnend4</name>
+            <file>Program/cnc_dwnend4.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+        <common>
+            See the example of <a href="Program/cnc_download4.htm#sample" target="_parent">cnc_download4</a>.
+        </common>
+    </example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,612 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_chgprotbit</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>
+            FWLIBAPI short WINAPI cnc_chgprotbit(unsigned short FlibHndl, short user_id, unsigned char *pattern, long keyword);
+        </prottype>
+      </vc>
+    </declare>
+    <doc>
+        <cmn>
+Sets the state of various NC data protection (protection pattern data). <br/>
+The protection pattern data is bit pattern data which collects flags corresponding to various NC data.  It is for MTB and for the end user.<br/>
+This data should be set on each NC, and the data is read to the application during the start of application by the Ethernet library in the each process (copy image of the protection pattern data). <br/>
+In this function, the copy image of the protection pattern data can be changed. 
+The copy image of the protection pattern data is independent at each process, and the change is effective only to the one which the process by which this function is issued maintains. <br/><br/>
+
+Please specify the same key word as the password set on NC for the argument when changing. <br/>
+Especially, when 0 is specified for the key word, the copy image of the protection pattern data is reset in the original data set on NC.<br/>
+Error code EW_PASSWD returns when an incorrect key word is specified. 
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <ethr>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>user_id</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            The user (MTB and the end user) who protects the NC data is specified.
+                        </p>
+                        <table class="dd">
+                            <tr>
+                                <td>1</td>
+                                <td>:</td>
+                                <td>MTB</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>:</td>
+                                <td>End user</td>
+                            </tr>
+                        </table>
+                    </content>
+                </item>
+                <item>
+                    <name>pattern</name>
+                    <type>in/out</type>
+                    <content>
+                        <div class="dd">
+                            It is a pointer to data which stores the bit pattern by which the NC data which removes protection is specified. Please secure the consecutive area in four bytes to store data. <br/>
+                            When one is set to the bit, it is meant to remove corresponding NC data protection. <br/>
+                            The meaning of each bit is as follows. <br/>
+                        </div>
+                        <ul>
+                            <table border="1">
+                                <tr>
+                                    <td>pattern[0]</td>
+                                    <td>
+                                    <table>
+                                        <colgroup valign="top" width="56">
+                                        <colgroup align="center" valign="top">
+                                        <colgroup valign="top">
+                                        <tr>
+                                            <td>bit 0</td>
+                                            <td>:</td>
+                                            <td>F-ROM user file(PMC ladder)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 1</td>
+                                            <td>:</td>
+                                            <td>F-ROM user file(C language executor)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 2</td>
+                                            <td>:</td>
+                                            <td>F-ROM user file(Macro executor/Order-made macro)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 3</td>
+                                            <td>:</td>
+                                            <td>F-ROM user file(PMC C language)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 4</td>
+                                            <td>:</td>
+                                            <td>F-ROM user file(Maintenance information)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 5</td>
+                                            <td>:</td>
+                                            <td>F-ROM user file(Embedded macro function)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 6</td>
+                                            <td>:</td>
+                                            <td>(Reserved)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 7</td>
+                                            <td>:</td>
+                                            <td>Image of the entire S-RAM </td>
+                                        </tr>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                    </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>pattern[1]</td>
+                                    <td>
+                                    <table>
+                                        <colgroup valign="top" width="56">
+                                        <colgroup align="center" valign="top">
+                                        <colgroup valign="top">
+                                        <tr>
+                                            <td>bit 0</td>
+                                            <td>:</td>
+                                            <td>NC programs</td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 1</td>
+                                            <td>:</td>
+                                            <td>P code macro variables</td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 2</td>
+                                            <td>:</td>
+                                            <td>NC parameters</td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 3</td>
+                                            <td>:</td>
+                                            <td>PMC parameters(R [Internal relay],T [Changeable timer],K [Keep relay],C [Counter],D [Data table])</td>
+                                        </tr>
+                                        <tr>
+                                            <td>bit 4 to 7</td>
+                                            <td>:</td>
+                                            <td>(Reserved)</td>
+                                        </tr>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                    </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>pattern[2]</td>
+                                    <td>
+                                    <table>
+                                        <colgroup valign="top" width="56">
+                                        <colgroup align="center" valign="top">
+                                        <colgroup valign="top">
+                                        <tr>
+                                            <td>bit 0 to 7</td>
+                                            <td>:</td>
+                                            <td>(Reserved)</td>
+                                        </tr>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                    </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>pattern[3]</td>
+                                    <td>
+                                    <table>
+                                        <colgroup valign="top" width="56">
+                                        <colgroup align="center" valign="top">
+                                        <colgroup valign="top">
+                                        <tr>
+                                            <td>bit 0 to 7</td>
+                                            <td>:</td>
+                                            <td>(Reserved)</td>
+                                        </tr>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                    </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            </ul>
+                            <p>After the function is executed, the current bit pattern by which the modified state of various NC data protection is shown is returned.</p>
+                    </content>
+                </item>
+                <item>
+                    <name>keyword</name>
+                    <type>in</type>
+                    <content>
+                        <p>It is a key word transmitted to NC . The decimal number of eight digits or less can be specified.<br/>
+                           NC data protection corresponding to the bit pattern specified for pattern is released if this keyword matches to the password preserved in NC.<br/>
+                           Especially, when 0 is specified for the keyword, the copy image of the protection pattern data is reset in the original data set on NC.
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </ethr>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>Unavailable<br/>
+            The NC control software or the Ethernet firmware does not support this function.
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>Data number error<br/>
+                    The specification of user_id is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_PASSWD</name>
+            <content>The given key word is not correct.<br/>
+In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a>
+ function. The following detail status will be set onto the member, err_no of ODBERR structure.
+                 <table>
+                    <colgroup align="center" valign="top">
+                    <colgroup align="center" valign="top">
+                    <colgroup valign="top">
+                    <tr>
+                        <td>0</td>
+                        <td>:</td>
+                        <td>Errors other than EW_PASSWD</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>:</td>
+                        <td>Key word is different from the password (in trial limit)</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>:</td>
+                        <td>The trial limit (three times) has been expired. </td>
+                    </tr>
+                    </colgroup>
+                    </colgroup>
+                    </colgroup>
+                </table>
+                When err_no = 2, the value of the trial counter is returned at member err_dtno of the ODBERR structure. In this case, it is necessary to reset the trial counter by reentering the power of NC. 
+            </content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <add></add>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 16i/18i/21i, 0i<br/></li>
+                    <table>
+                        <colgroup valign="top">
+                        <colgroup valign="top">
+                        <colgroup valign="top">
+                        <tr>
+                            <td>No.250-253</td><td>:</td><td>Data corresponding to each bit when you access the NC data in Ethernet 
+                            <table class="dd">
+                                <tr><td>0</td><td>:</td><td>Data access is permitted.</td></tr>
+                                <tr><td>1</td><td>:</td><td>Data access is inhibited. </td></tr>
+                            </table>
+                            Please refer to the table below for the meaning of each bit.</td>
+                        </tr>
+
+                        <tr>
+                            <td>No.254</td><td>:</td><td>Password for Ethernet(For MTB)</td></tr>
+
+                        <tr>
+                            <td>No.255</td><td>:</td><td>Key word for Ethernet(For MTB)
+                            <table class="dd">
+                                <colgroup valign="top">
+                                <colgroup valign="top">
+                                <tr><td/><td>Password and key word to permit change in parameter No.250-253,254.</td></tr>
+                                <tr><td>*</td><td>MTB sets this parameter.</td></tr>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>No.260-263</td><td>:</td><td>Data corresponding to each bit when you access the NC data in Ethernet 
+                            <table class="dd">
+                                <tr><td>0</td><td>:</td><td>Data access is permitted.</td></tr>
+                                <tr><td>1</td><td>:</td><td>Data access is inhibited.</td></tr>
+                            </table>
+                            Please refer to the table below for the meaning of each bit.</td>
+                        </tr>
+
+                        <tr>
+                            <td>No.264</td><td>:</td><td>Password for Ethernet(For end user)</td>
+                        </tr>
+
+                        <tr>
+                            <td>No.265</td><td>:</td><td>Key word for Ethernet(For end user)
+                            <table class="dd">
+                                <colgroup valign="top">
+                                <colgroup valign="top">
+                                <tr><td/><td>Password and key word to permit change in parameter No.260-263,264.</td></tr>
+                                <tr><td>*</td><td>The end user sets this parameter.</td></tr>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+                            </td>
+                        </tr>
+                        </colgroup>
+                        </colgroup>
+                        </colgroup>
+                    </table>
+                </ul>
+                <ul>
+                    <table border="1">
+                        <tr>
+                            <td>No.250<br/>
+                            No.260</td>
+                            <td>
+                            <table>
+                                <colgroup valign="top" width="56">
+                                <colgroup align="center" valign="top">
+                                <colgroup valign="top">
+                                <tr>
+                                    <td>bit 0</td>
+                                    <td>:</td>
+                                    <td>F-ROM user file(PMC ladder)</td>
+                                </tr>
+                                <tr>
+                                    <td>bit 1</td>
+                                    <td>:</td>
+                                    <td>F-ROM user file(C language executor)</td>
+                                </tr>
+                                <tr>
+                                    <td>bit 2</td>
+                                    <td>:</td>
+                                    <td>F-ROM user file(Macro executor/Order-made macro)</td>
+                                </tr>
+                                <tr>
+                                    <td>bit 3</td>
+                                    <td>:</td>
+                                    <td>F-ROM user file(PMC C language)</td>
+                                </tr>
+                                <tr>
+                                    <td>bit 4</td>
+                                    <td>:</td>
+                                    <td>F-ROM user file(Maintenance information)</td>
+                                </tr>
+                                <tr>
+                                    <td>bit 5</td>
+                                    <td>:</td>
+                                    <td>F-ROM user file(Embedded macro function)</td>
+                                </tr>
+                                <tr>
+                                    <td>bit 6</td>
+                                    <td>:</td>
+                                    <td>(Reserved)</td>
+                                </tr>
+                                <tr>
+                                    <td>bit 7</td>
+                                    <td>:</td>
+                                    <td>Image of the entire S-RAM </td>
+                                </tr>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>No.251<br/>
+                            No.261</td>
+                            <td>
+                            <table>
+                                <colgroup valign="top" width="56">
+                                <colgroup align="center" valign="top">
+                                <colgroup valign="top">
+                                <tr>
+                                    <td>bit 0</td>
+                                    <td>:</td>
+                                    <td>NC programs</td>
+                                </tr>
+                                <tr>
+                                    <td>bit 1</td>
+                                    <td>:</td>
+                                    <td>P code macro variables</td>
+                                </tr>
+                                <tr>
+                                    <td>bit 2</td>
+                                    <td>:</td>
+                                    <td>NC parameters</td>
+                                </tr>
+                                <tr>
+                                    <td>bit 3</td>
+                                    <td>:</td>
+                                    <td>PMC parameters(R [Internal relay],T [Changeable timer],K [Keep relay],C [Counter],D [Data table])</td>
+                                </tr>
+                                <tr>
+                                    <td>bit 4 to 7</td>
+                                    <td>:</td>
+                                    <td>(Reserved)</td>
+                                </tr>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>No.252<br/>
+                            No.262</td>
+                            <td>
+                            <table>
+                                <colgroup valign="top" width="56">
+                                <colgroup align="center" valign="top">
+                                <colgroup valign="top">
+                                <tr>
+                                    <td>bit 0 to 7</td>
+                                    <td>:</td>
+                                    <td>(Reserved)</td>
+                                </tr>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>No.253<br/>
+                            No.263</td>
+                            <td>
+                            <table>
+                                <colgroup valign="top" width="56">
+                                <colgroup align="center" valign="top">
+                                <colgroup valign="top">
+                                <tr>
+                                    <td>bit 0 to 7</td>
+                                    <td>:</td>
+                                    <td>(Reserved)</td>
+                                </tr>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+                            </td>
+                        </tr>
+                    </table>
+                    <table>
+                        <colgroup align="top" valign="top">
+                        <colgroup valign="top">
+                        <tr><td>Note)</td><td>In i Series MODEL A, there is no No.252,253,262,263. in the NC parameters. </td></tr>
+                        </colgroup>
+                        </colgroup>
+                    </table>
+                    </ul>
+        </type>
+        <add></add>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>E</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>E</fs16ia>
+            <fs18ia>E</fs18ia>
+            <fs21ia>E</fs21ia>
+            <fs16ib>E</fs16ib>
+            <fs18ib>E</fs18ib>
+            <fs21ib>E</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>E</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>E</fs16ia>
+            <fs18ia>E</fs18ia>
+            <fs21ia>E</fs21ia>
+            <fs16ib>E</fs16ib>
+            <fs18ib>E</fs18ib>
+            <fs21ib>E</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>E</fs16i>
+            <fs18i>E</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>E</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>E</fs16i>
+            <fs18i>E</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>E</d>
+            <h>E</h>
+            <a>X</a>
+        </pw>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_getlockstat</name>
+            <file>Misc/cnc_getlockstat.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

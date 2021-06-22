@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_wrhpcctuac</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_wrhpcctuac(unsigned short FlibHndl, IODBHPAC *hpac);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Writes tuning data(acc./dec. input) for high-speed and high-precision machining.</p>
+
+            <p>This function is not supported on Series 15i. The function which writes CNC parameter ( <a href="ncdata/cnc_wrparam.htm" target="_parent">cnc_wrparam</a> or <a href="ncdata/cnc_wrparas.htm" target="_parent">cnc_wrparas</a> ) can be substituted for this function. <br/>Refer to CNC operator's manual and CNC parameter manual in order to know CNC parameters which correspond to the data to be written by this function.</p>
+
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <hssb>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>hpac</name>
+                    <type>in</type>
+                    <content>
+                        <p>Pointer to the IODBHPAC structure for the tuning data(acc./dec. input) for high-speed and high-precision machining. The IODBHPAC structure is as follows.</p>
+
+<pre>
+typedef struct iodbhpac {
+    struct {
+        short   slct;       /* flag of valid data */
+        short   diff;       /* (not used) */
+        short   fine;       /* fine level */
+        short   acc_lv;     /* acceleration/deceleration level*/
+        long    bipl;       /* acceleration for before IPL */
+        short   aipl;       /* time constant for after IPL */
+        long    corner;     /* difference of corner feed */
+        long    clamp;      /* acceleration for clamp */
+        long    c_acc;      /* acceleration of feed clamp by */
+                            /*               radius of circle*/
+        long    foward;     /* coefficient of feed forward */
+        long    reserve[8]; /* (not used) */
+    }tune[3]
+} IODBHPAC ;
+
+hpac.tune[0].slct,...,hpac.tune[0].reserve
+                                : tuning data for fine level
+hpac.tune[1].slct,...,hpac.tune[1].reserve
+                                : tuning data for medium level
+hpac.tune[2].slct,...,hpac.tune[2].reserve
+                                : tuning data for rough level
+</pre>
+                        <dl>
+                            <dt>slct</dt>
+                            <dd>Flag of valid data selection must be set.<br/>
+                                <br/>
+                                <table class="dd">
+                                    <tr>
+                                        <td>bit 0</td>
+                                        <td>:</td>
+                                        <td>fine level</td>
+                                    </tr>
+                                    <tr>
+                                        <td>bit 1</td>
+                                        <td>:</td>
+                                        <td>acceleration/deceleration level</td>
+                                    </tr>
+                                    <tr>
+                                        <td>bit 2</td>
+                                        <td>:</td>
+                                        <td>acceleration for before IPL</td>
+                                    </tr>
+                                    <tr>
+                                        <td>bit 3</td>
+                                        <td>:</td>
+                                        <td>time constant for after IPL</td>
+                                    </tr>
+                                    <tr>
+                                        <td>bit 4</td>
+                                        <td>:</td>
+                                        <td>difference of corner feed</td>
+                                    </tr>
+                                    <tr>
+                                        <td>bit 5</td>
+                                        <td>:</td>
+                                        <td>acceleration for clamp</td>
+                                    </tr>
+                                    <tr>
+                                        <td>bit 6</td>
+                                        <td>:</td>
+                                        <td>acceleration of feed clamp by radius of circle</td>
+                                    </tr>
+                                    <tr>
+                                        <td>bit 7</td>
+                                        <td>:</td>
+                                        <td>coefficient of feed forward</td>
+                                    </tr>
+                                    <tr>
+                                        <td>bit 8,..,15</td>
+                                        <td>:</td>
+                                        <td>(not used)</td>
+                                    </tr>
+                                </table>
+                                <br/>
+                                * In order to write the data to CNC, turn on the
+                              corresponding bit on this data.
+                            </dd>
+                            <br/>
+
+                            <dt>diff</dt>
+                            <dd>(not used)</dd>
+                            <br/>
+
+                            <dt>fine</dt>
+                            <dd>Specify fine level.</dd>
+                            <br/>
+
+                            <dt>acc_lv</dt>
+                            <dd>Specify acceleration/deceleration level.</dd>
+                            <br/>
+
+                            <dt>bipl</dt>
+                            <dd>Specify acceleration for before IPL.</dd>
+                            <br/>
+
+                            <dt>aipl</dt>
+                            <dd>Specify time constant for after IPL.</dd>
+                            <br/>
+
+                            <dt>corner</dt>
+                            <dd>Specify difference of corner feed.</dd>
+                            <br/>
+
+                            <dt>clamp</dt>
+                            <dd>Specify acceleration for clamp.</dd>
+                            <br/>
+
+                            <dt>c_acc</dt>
+                            <dd>Specify acceleration of feed clamp by radius of circle.</dd>
+                            <br/>
+
+                            <dt>foward</dt>
+                            <dd>Specify coefficient of feed forward.</dd>
+                            <br/>
+
+                            <dt>reserve[8]</dt>
+                            <dd>(not used)</dd>
+                            <br/>
+
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </hssb>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>Unavailable<br/>This function cannot be used at T Series.</content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                Data error<br/>
+                Tuning data for high-speed and high-precision machining(IODBHPAC) is wrong.<br/>
+                In order to get more information for this err_no return value, execute <a href="misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.  The following details status will be set onto the member, err_no of ODBERR structure.<br/>
+
+                <table class="dd">
+                    <tr>
+                        <td>1</td>
+                        <td>:</td>
+                        <td>fine</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>:</td>
+                        <td>acc_lv</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>:</td>
+                        <td>bipl</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>:</td>
+                        <td>aipl</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>:</td>
+                        <td>corner</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>:</td>
+                        <td>clamp</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>:</td>
+                        <td>c_acc</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>:</td>
+                        <td>foward</td>
+                    </tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>The extended driver/library function is necessary.</content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>Write protection<br/>- Protection KEY(DI/KEY2) is off.<br/>
+                                    - CNC parameter is a state of write-protection.</content>
+        </item>
+        <item>
+            <name>EW_MODE</name>
+            <content>CNC mode error<br/>The mode is not in MDI.</content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+    </option>
+
+
+
+    <parameter>
+    </parameter>
+
+
+
+    <mode>
+        <cmn>It is possible to use in MDI mode.</cmn>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdhpccset</name>
+            <file>ncdata/cnc_rdhpccset.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrhpccset</name>
+            <file>ncdata/cnc_wrhpccset.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdhpcctupr</name>
+            <file>ncdata/cnc_rdhpcctupr.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrhpcctupr</name>
+            <file>ncdata/cnc_wrhpcctupr.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdhpcctuac</name>
+            <file>ncdata/cnc_rdhpcctuac.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

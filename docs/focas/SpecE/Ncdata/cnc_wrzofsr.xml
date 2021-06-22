@@ -1,0 +1,707 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_wrzofsr</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_wrzofsr(unsigned short FlibHndl, short length, IODBZOR *zofsr);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                Writes the work zero offset value specified by "datano_s", "datano_e", "type".  The offset value must be stored in "data" array of "IODBZOR" with signed binary format.<br/>Writes the offset value for all axes once by specifying 'ALL_AXES' in 'type'.
+            </p>
+            <p>The unit of offset value is the same as "Read work zero offset value(<a href="ncdata/cnc_rdzofs.htm" target="_parent">cnc_rdzofs</a>)". See the description of <a href="ncdata/cnc_rdzofs.htm" target="_parent">cnc_rdzofs</a> function.</p>
+            
+            <div class="xis"> <!-- attention -->
+            <p>As for Series 16i/18i-W, the unit of offset value is as follows.</p>
+            <ul>
+                <li>Series 16i/18i-W</li>
+                <p>
+                    <table border="1">
+                        <tr>
+                            <th/>
+                            <th>1004#1<br/>(ISC)</th>
+                            <th>1004#0<br/>(ISA)</th>
+                            <th>Linear axis<br/>mm input<br/>[mm]</th>
+                            <th>Linear axis<br/>inch input<br/>[inch]</th>
+                            <th>Rotation axis<br/> <br/>[deg]</th>
+                        </tr>
+
+                        <tr>
+                            <td>IS-A</td>
+                            <td>0</td>
+                            <td>1</td>
+                            <td>0.01</td>
+                            <td>0.001</td>
+                            <td>0.01</td>
+                        </tr>
+
+                        <tr>
+                            <td>IS-B</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0.001</td>
+                            <td>0.0001</td>
+                            <td>0.001</td>
+                        </tr>
+
+                        <tr>
+                            <td>IS-C</td>
+                            <td>1</td>
+                            <td>0</td>
+                            <td>0.0001</td>
+                            <td>0.00001</td>
+                            <td>0.0001</td>
+                        </tr>
+                    </table>
+                </p>
+            </ul>
+            </div> <!-- attention class="xis" -->
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the data block length(size of IODBZOR structure).<br/>
+                           (8+4*(number of axes)*(number of offset))</p>
+                        <p><b>IODBZOR</b></p>
+                        <table>
+                            <colgroup align="left" valign="top">
+                            <colgroup align="left" valign="top">
+                            <colgroup align="left" valign="top">
+                            <tr>
+                                <th>1 axis</th>
+                                <th>all axes</th>
+                            </tr>
+                            <tr>
+                                <td valign="top"><img src="ncdata/naxis.gif" /></td>
+                                <td valign="top"><img src="ncdata/naxisa.gif" /></td>
+                            </tr>
+                            </colgroup>
+                            </colgroup>
+                            </colgroup>
+                        </table>
+                        
+                        <p>n = Maximum controlled axes (* The data for current controlled axes are valid.)<br/>K = Number of offset to be written </p>
+
+                    </content>
+                </item>
+                <item>
+                    <name>zofsr</name>
+                    <type>in</type>
+                    <content>
+                        <p>Pointer to the IODBZOR structure including the work zero offset value. The IODBZOR structure is as follows. </p>
+<pre>
+typedef struct  iodbzor {
+    short   datano_s;        /* start offset number  */
+    short   type;            /* axis number          */
+    short   datano_e;        /* end offset number    */
+    long    data[MAX_AXIS*K];/* offset data value    */
+} IODBZOR ;       /* MAX_AXIS : max. controlled axes */
+                  /* K : number of offset  */
+</pre>
+                        <dl>
+                            <dt>datano_s</dt>
+                            <dd>Specify the start work zero offset number.
+                                <ul>
+                                    <br/>
+                                    <li>Series 15/15i, 0i-D</li>
+                                    <table>
+                                        <tr>
+                                            <td>0</td>
+                                            <td>:</td>
+                                            <td>External work zero offset value </td>
+                                        </tr>
+                                        <tr>
+                                            <td>1,..,6</td>
+                                            <td>:</td>
+                                            <td>Work zero offset value of G54 through G59 </td>
+                                        </tr>
+                                        <tr>
+                                            <td>7,..,54</td>
+                                            <td>:</td>
+                                            <td>Work zero offset value of G54.1P1 through G54.1P48</td>
+                                        </tr>
+                                    </table>
+                                    <br/>
+                                    <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C</li>
+                                    <table>
+                                        <tr>
+                                            <td>M Series</td>
+                                            <td>0</td>
+                                            <td>:</td>
+                                            <td>External work zero offset value </td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>1,..,6</td>
+                                            <td>:</td>
+                                            <td>Work zero offset value of G54 through G59 </td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>7,..,306</td>
+                                            <td>:</td>
+                                            <td>Work zero offset value of G54.1P1 through G54.1P300 </td>
+                                        </tr>
+                                        <tr>
+                                            <td>T Series</td>
+                                            <td>0</td>
+                                            <td>:</td>
+                                            <td>External work zero offset value </td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>1,..,6</td>
+                                            <td>:</td>
+                                            <td>Work zero offset value of G54 through G59 </td>
+                                        </tr>
+                                    </table>
+                                    <br/>
+                                    <li>Series 0i-F, 30i</li>
+                                    <table>
+                                        <tr>
+                                            <td></td>
+                                            <td>0</td>
+                                            <td>:</td>
+                                            <td>External work zero offset value </td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>1,..,6</td>
+                                            <td>:</td>
+                                            <td>Work zero offset value of G54 through G59 </td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>7,..,306</td>
+                                            <td>:</td>
+                                            <td>Work zero offset value of G54.1P1 through G54.1P300 </td>
+                                        </tr>
+                                    </table>
+                                    <br/>
+                                    <li>Series 16i/18i-W</li>
+                                    <table>
+                                        <tr>
+                                            <td></td>
+                                            <td>0</td>
+                                            <td>:</td>
+                                            <td>External work zero offset value</td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>1,..,6</td>
+                                            <td>:</td>
+                                            <td>Work zero offset value of G54 through G59 </td>
+                                        </tr>
+                                    </table>
+                                    <br/>
+                                </ul>
+                            </dd>
+                            <dt>datano_e</dt>
+                            <dd>Specify the end work zero offset number.</dd>
+                            <br/>
+                            <dt>type</dt>
+                            <dd>Specify the axis number.<p/>
+                                <table class="dd">
+                                    <colgroup align="left" valign="top"/>
+                                    <colgroup align="left" valign="top"/>
+                                    <tr>
+                                        <td>ALL_AXES</td>
+                                        <td>:</td>
+                                        <td>assigns all axes (ALL_AXES=-1)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1,..,m</td>
+                                        <td>:</td>
+                                        <td>assigns 1 axis (m=current controlled axes)</td>
+                                    </tr>
+                                </table>
+                            </dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+
+        <is>
+            <hssb>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>length</name>
+                        <type>in</type>
+                        <content>
+                            <p>Specify the data block length(size of IODBZOR structure).<br/>
+                               (8+4*(number of axes)*(number of offset))</p>
+                            <p><b>IODBZOR</b></p>
+                            <table>
+                                <colgroup align="left" valign="top"/>
+                                <colgroup align="left" valign="top"/>
+                                <tr>
+                                    <th>1 axis</th>
+                                    <th>all axes</th>
+                                </tr>
+                                <tr>
+                                    <td><img src="ncdata/naxis.gif" /></td>
+                                    <td><img src="ncdata/naxisa.gif" /></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        n = Maximum controlled axes (* The data for current controlled axes are valid.)<br/>
+                                        K = Number of offset to be written 
+                                    </td>
+                                </tr>
+                            </table>
+                        </content>
+                    </item>
+                    <item>
+                        <name>zofsr</name>
+                        <type>in</type>
+                        <content>
+                            <p>Pointer to the IODBZOR structure including the work zero offset value. The IODBZOR structure is as follows. </p>
+<pre>
+typedef struct  iodbzor {
+    short   datano_s;        /* start offset number  */
+    short   type;            /* axis number          */
+    short   datano_e;        /* end offset number    */
+    long    data[MAX_AXIS*K];/* offset data value    */
+} IODBZOR ;       /* MAX_AXIS : max. controlled axes */
+                  /* K : number of offset  */
+</pre>
+                            <dl>
+                                <dt>datano_s</dt>
+                                <dd>Specify the start work zero offset number.
+                                    <ul>
+                                        <table>
+                                            <tr>
+                                                <td></td>
+                                                <td>0</td>
+                                                <td>:</td>
+                                                <td>External work zero offset value </td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>1,..,6</td>
+                                                <td>:</td>
+                                                <td>Work zero offset value of G54 through G59 </td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>7,..,306</td>
+                                                <td>:</td>
+                                                <td>Work zero offset value of G54.1P1 through G54.1P300 </td>
+                                            </tr>
+                                        </table>
+                                        <br/>
+                                    </ul>
+                                </dd>
+                                <dt>datano_e</dt>
+                                <dd>Specify the end work zero offset number.</dd>
+                                <br/>
+                                <dt>type</dt>
+                                <dd>Specify the axis number.<p/>
+                                    <table class="dd">
+                                        <colgroup align="left" valign="top"/>
+                                        <colgroup align="left" valign="top"/>
+                                        <tr>
+                                            <td>ALL_AXES</td>
+                                            <td>:</td>
+                                            <td>assigns all axes (ALL_AXES=-1)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1,..,m</td>
+                                            <td>:</td>
+                                            <td>assigns 1 axis (m=current controlled axes)</td>
+                                        </tr>
+                                    </table>
+                                </dd>
+                            </dl>
+                        </content>
+                    </item>
+                </vc>
+            </hssb>
+        </is>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>Data block length error<br/>Size of IODBZOR structure(length) is wrong.</content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>Data number error<br/>Offset number(datano_s, datano_e) is wrong.</content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>Data attribute error<br/>Axis number(type) is wrong.</content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>Data error <span class="xis">(Series 15, 0i-F, 30i)</span><br/>Offset data(data) is out of range.</content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option <span class="xis">(Series 16/18/21, 16i/18i/21i, 0i, 30i)</span><br/>This function needs the work zero offset option.</content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F and 30i, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+
+        <type>
+                <li>Series 15/15i</li>
+                <table>
+                    <colgroup valign="top">
+                    <colgroup valign="top">
+                    <tr>
+                        <td>Work zero offset 48 sets</td>
+                    </tr>
+                    </colgroup>
+                    </colgroup>
+                </table>
+                <br/>
+                <li>Series 16/18/21, 16i/18i/21i, 0i</li>
+                <table>
+                    <colgroup valign="top">
+                    <colgroup valign="top">
+                    <tr>
+                        <td>M Series</td>
+                        <td>Work zero offset</td>
+                    </tr>
+                    <tr>
+                        <td/>
+                        <td>Work zero offset 48 sets</td>
+                    </tr>
+                    <tr>
+                        <td/>
+                        <td>Work zero offset 300 sets</td>
+                    </tr>
+                    <tr>
+                        <td>T Series</td>
+                        <td>Work zero offset</td>
+                    </tr>
+                    </colgroup>
+                    </colgroup>
+                </table>
+                <br/>
+                <li>Series 0i-F</li>
+                <table>
+                    <colgroup valign="top">
+                    <tr>
+                        <td>Work zero offset 300 sets</td>
+                    </tr>
+                    </colgroup>
+                </table>
+                <br/>
+                <li>Series 30i</li>
+                <table>
+                    <colgroup valign="top">
+                    <tr>
+                        <td>Work zero offset</td>
+                    </tr>
+                    <tr>
+                        <td>Work zero offset 48 sets</td>
+                    </tr>
+                    <tr>
+                        <td>Work zero offset 300 sets</td>
+                    </tr>
+                    <tr>
+                        <td>IS-C,IS-D,IS-E</td>
+                    </tr>
+                    </colgroup>
+                </table>
+        </type>
+
+        <add></add>
+
+        <is>
+            <hssb>The extended driver/library function is necessary.</hssb>
+            <need>Work zero offset</need>
+            <type>
+                <table>
+                    <colgroup valign="top"/>
+                    <tr>
+                        <td>Work zero offset 48 sets</td>
+                    </tr>
+                    <tr>
+                        <td>Work zero offset 300 sets</td>
+                    </tr>
+                    <tr>
+                        <td>IS-C,IS-D,IS-E</td>
+                    </tr>
+                </table>
+            </type>
+        </is>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 15</li>
+                1004#0,#1,#5, 1009#1
+            </ul>
+            <ul>
+                <li>Series 15i</li>
+                1012#0,#1,#2,#3
+            </ul>
+            <ul>
+                <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C</li>
+                1004#0,#1
+            </ul>
+            <ul>
+                <li>Series 30i</li>
+                1013#3,#2,#1,#0
+            </ul>
+            <ul>
+                <li>Series 0i-D/F</li>
+                1013#1,#0
+            </ul>
+        </type>
+
+        <add></add>
+    </parameter>
+
+
+    <is_parameter>
+        <type>
+            <ul>
+                1013#3,#2,#1,#0
+            </ul>
+        </type>
+    </is_parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <add><b></b></add>
+
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdzofs</name>
+            <file>ncdata/cnc_rdzofs.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrzofs</name>
+            <file>ncdata/cnc_wrzofs.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdzofsr</name>
+            <file>ncdata/cnc_rdzofsr.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdzofsinfo</name>
+            <file>ncdata/cnc_rdzofsinfo.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+<vc>
+The following program writes the work zero offset values of G54 through G59
+for the specified axis.
+
+#include "fwlib32.h"
+
+/* axis is axis index to be altered. */
+/* offset is array of new offset value. */
+short example( short axis, long *offset )
+{
+    IODBZOR zofsr ;
+    short ret ;
+    zofsr.datano_s = 1 ;
+    zofsr.datano_e = 6 ;
+    zofsr.type = axis ;
+    memcpy( &#38;zofsr.data[0], offset, 4*6 ) ;
+    ret = cnc_wrzofsr( h, 8+4*1*6, &#38;zofsr ) ;
+    return ( ret ) ;
+}
+</vc>
+<vcs><![CDATA[
+The following program writes the work zero offset values of G54 through G59
+for the specified axis.
+
+class example
+{
+    /* axis is axis index to be altered. */
+    /* offset is array of new offset value. */
+    public short sample(short axis, int[] offset)
+    {
+        Focas1.IODBZOR zofsr = new Focas1.IODBZOR();
+        short ret;
+        zofsr.datano_s = 1;
+        zofsr.datano_e = 6;
+        zofsr.type = axis;
+        offset.CopyTo(zofsr.data, 0);
+        ret = Focas1.cnc_wrzofsr(h, 8 + 4 * 1 * 6, zofsr);
+        return (ret);
+    }
+}]]></vcs>
+    </example>
+
+
+
+  </func>
+</root>

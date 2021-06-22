@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_wrhissgnl</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_wrhissgnl(unsigned short FlibHndl, IODBSIG *sig); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                Writes the target signal for the operation history.<br/>
+                Please use <a href="History/cnc_wrhissgnl2.htm" target="_parent">cnc_wrhissgnl2</a> instead of this function for Series 16i/18i/21i MODEL B with the extended operation history function.<br/>
+                And please use <a href="History/cnc_wrhissgnl3.htm" target="_parent">cnc_wrhissgnl3</a> function for Series 30i.
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>sig </name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Pointer to the IODBSIG structure to set the various target signal information for the operation history.
+                            The IODBSIG structure is as follows.
+                        </p>
+<pre>
+typedef struct iodbsig {
+    short      datano;   /* Not used          */
+    short      type;     /* Number of signals */
+    struct {
+        short   ent_no;   /* Registration sequence number   */
+        short   sig_no;   /* Registered signal number       */
+        char    sig_name; /* Registered signal name         */
+        char    mask_pat; /* Signal mask pattern            */
+    } data[20];
+} IODBSIG ;
+</pre>
+                        <dl>
+                            <dt>type</dt>
+                                <dd>Number of signals (from 1 to 20) </dd>
+                            <dt>ent_no</dt>
+                                <dd>Registration sequence number (from 1 to 20)</dd>
+                            <dt>sig_no</dt>
+                                <dd>Signal number to register<br/>
+                                <dd><ul type="disc">
+                                    <li>Series 15/15i</li>
+                                        <table class="dd">
+                                            <tr><td>X</td><td>:</td><td>0~127</td></tr>
+                                            <tr><td>G</td><td>:</td><td>0~511</td></tr>
+                                            <tr><td>Y</td><td>:</td><td>0~127</td></tr>
+                                            <tr><td>F</td><td>:</td><td>0~511</td></tr>
+                                        </table>
+                                </ul></dd>
+                                <dd><ul type="disc">
+                                    <li>Series 16i/18i/21i, 0i, Power Mate i</li>
+                                        <table class="dd">
+                                            <tr><td>X</td><td>:</td><td>0~127 or 1000~1063</td></tr>
+                                            <tr><td>G</td><td>:</td><td>0~255 or 1000~1255 or 2000~2255</td></tr>
+                                            <tr><td>Y</td><td>:</td><td>0~127 or 1000~1063</td></tr>
+                                            <tr><td>F</td><td>:</td><td>0~255 or 1000~1255 or 2000~2255</td></tr>
+                                        </table>
+                                </ul></dd>
+                                </dd>
+                            <dt>sig_name</dt>
+                                <dd>Signal address to register<br/>
+                                    <table class="dd">
+                                       <tr><td>0</td><td>:</td><td>No registration</td></tr>
+                                        <tr><td>1</td><td>:</td><td>X</td></tr>
+                                        <tr><td>2</td><td>:</td><td>G</td></tr>
+                                        <tr><td>3</td><td>:</td><td>Y</td></tr>
+                                        <tr><td>4</td><td>:</td><td>F</td></tr>
+                                    </table>
+                                </dd>
+                            <dt>mask_pat</dt>
+                                <dd>Signal mask pattern</dd>
+                         </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>
+                Data attribute error<br/>
+                The specification of "Number of signals"(type) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                Data error<br/>
+                In order to get more information for this err_no return value,
+                execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.
+                The following detail status will be set onto the member, err_no of ODBERR structure.
+                <table class="dd">
+                    <tr><td>0</td><td>:</td><td>Completion status other than EW_DATA</td></tr>
+                    <tr><td>1</td><td>:</td><td>"Registration sequence number"(ent_no) error</td></tr>
+                    <tr><td>2</td><td>:</td><td>"Signal number"(sig_no) error</td></tr>
+                    <tr><td>3</td><td>:</td><td>"Signal address"(sig_name) error</td></tr>
+                </table>
+                And the wrong array number will be set onto the member, err_dtno of ODBERR.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The extended driver/library function is necessary.
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                CNC parameter error
+                <ul type="disc">
+                    <li>0013#5=1 (Series 15/15i),</li>
+                    <li>3112#5=0 (Series 16/18/21, 16i/18i/21i, 0i, Power Mate i),</li>
+                    <li>3112#5=1 (Series 16i/18i-W) </li>
+                </ul>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            This function needs the extended driver/library function.
+        </hssb>
+        <ethr>
+            <p>The Ethernet function and the extended driver/library function are necessary.</p>
+            <p>However, in case of Series 16i/18i/21i-B, 0i-B/C, the required CNC option is as follows.</p>
+            <p>When Embedded Ethernet is used,</p>
+            <p><ul>above two optional functions are not required.</ul></p>
+            <p>When Ethernet board is used,</p>
+            <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul type="disc">
+                <li>Series 15/15i</li>
+                    0013#5=1 (must be set)
+                <li>Series 16/18/21, 16i/18i/21i, 0i, Power Mate i</li>
+                    3112#5=0 (must be set)
+                <li>Series 16i/18i-W</li>
+                    3112#5=1 (must be set)
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>X</a>
+        </pw>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdhissgnl</name>
+            <file>History/cnc_rdhissgnl.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrhissgnl2</name>
+            <file>History/cnc_wrhissgnl2.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrhissgnl3</name>
+            <file>History/cnc_wrhissgnl3.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <title>cnc_dtsvrdset</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_dtsvrdset(unsigned short FlibHndl,IODBDSSET *set);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            Reads the setting data in the DATA SERVER.<p/>
+
+            If this function is executed while <a href="Data/cnc_dtsvftpput.htm" target="_parent">cnc_dtsvftpput</a> or  <a href="Data/cnc_dtsvftpget.htm" target="_parent">cnc_dtsvftpget</a> is executing(until the completion status is got by <a href="Data/cnc_dtsvftpstat.htm" target="_parent">cnc_dtsvftpstat</a>), EW_BUSY is returned.
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <hssb>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>set</name>
+                    <type>out</type>
+                    <content>
+                        Pointer to the IODBDSSET structure including the setting data in the DATA SERVER.<p/>
+The IODBDSSET structure is as follows.
+<pre>
+typedef struct iodbdsset {
+        char host_ip[16] ;
+        char host_uname[32] ;
+        char host_passwd[32] ;
+        char host_dir[128] ;
+        char dtsv_mac[13] ;
+        char dtsv_ip[16] ;
+        char dtsv_mask[16] ;
+} IODBDSSET ;
+</pre>
+                        <dl>
+                            <dt>host_ip[16]</dt>
+                            <dd>Current IP address of host computer is stored by ASCII code(max. 16 characters including 'NULL').</dd>
+                            
+                            <dt>host_uname[32]</dt>
+                            <dd>Current user name of host computer, which is used to login by means of 'FTP', is stored by ASCII code(max. 32 characters including 'NULL').</dd>
+                            
+                            <dt>host_passwd[32]</dt>
+                            <dd>(not used)</dd>
+                            
+                            <dt>host_dir[128]</dt>
+                            <dd>Current directory of host computer, which is accessed by DATA SERVER, is stored by ASCII code(max. 128 characters including 'NULL').</dd>
+                            
+                            <dt>dtsv_mac[13]</dt>
+                            <dd>Current MAC address of DATA SERVER board is stored by ASCII code(max. 13 characters including 'NULL').</dd>
+                            
+                            <dt>dtsv_ip[16]</dt>
+                            <dd>Current IP address of DATA SERVER board is stored by ASCII code (max. 16 characters including 'NULL').</dd>
+                            
+                            <dt>dtsv_mask[16]</dt>
+                            <dd>Mask address of current IP address of network is stored by ASCII code(max. 16 characters including 'NULL').</dd>
+                            
+                        </dl>
+                     </content>
+                </item>
+            </vc>
+        </hssb>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_BUSY</name>
+            <content>
+                Busy<br/>
+                Try again because DATA SERVER is processing.<br/>
+                (There is a possibility of forgetting to call <a href="Data/cnc_dtsvftpstat.htm" target="_parent">cnc_dtsvftpstat</a> function.)
+            </content>
+        </item>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                Unavailable<br/>
+<table>
+<tr> <td valign="top">-</td> <td valign="top">This function is not available for the DATA SERVER board (10BASE-T).</td> </tr>
+</table>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+No option
+<table>
+<tr> <td valign="top">-</td> <td valign="top">The extended driver/library function is necessary.</td> </tr>
+<tr> <td valign="top">-</td> <td valign="top">The DATA SERVER board(hardware) is necessary.</td> </tr>
+</table>
+            </content>
+        </item>
+
+        <item>
+            <name>EW_DTSRVR</name>
+            <content>
+                 DATA SERVER error<br/>
+                 In order to get more information for this err_no return value, execute <a href="misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.  The following details status will be set onto the member, err_no of ODBERR structure.
+                <table class="dd">
+                    <tr><td>1 <![CDATA[<-->]]>  498</td><td>:</td><td>DATA SERVER error</td></tr>
+                    <tr><td>499</td><td>:</td> <td>DATA SERVER system error</td></tr>
+                </table>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+    </option>
+
+
+
+    <parameter></parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_dtsvwrset</name>
+            <file>Data/cnc_dtsvwrset.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

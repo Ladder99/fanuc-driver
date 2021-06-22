@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdprstrinfo</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdprstrinfo(unsigned short FlibHndl, ODBPRS *prstr);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                Reads the program restart information. The program restart information is stored in each member of "ODBPRS".
+            </p>
+            <p>
+                In case of Series 16/18, 16i/18i/21i, 0i, 30i, B code read count and value are not used except M series.
+            </p>
+            <p>
+                In case of Series 15, the program restart position and remaining travel distance are valid when both NC parameter 2204#1 and 7613#0 are on(=1).
+            </p>
+        </cmn>
+        <is>
+            <p>
+                Reads the program restart information. The program restart information is stored in each member of "ODBPRS".
+            </p>
+            <p>
+                B code read count and value are not used except M series.
+            </p>
+        </is>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>prstr</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the ODBPRS structure including the program restart information. The ODBPRS structure is as follows. 
+                        </p>
+<pre>
+typedef struct odbprs {
+     short   datano;            /* Not used */
+     short   type;              /* Not used */
+     short   data_info[5];      /* Data setting information */
+     long    rstr_bc;           /* Block number */
+     long    rstr_m[35];        /* M code value */
+     long    rstr_t[2];         /* T code value */
+     long    rstr_s;            /* S code value */
+     long    rstr_b;            /* B code value */
+     long    dest[MAX_AXIS];    /* Program restart position */
+     long    dist[MAX_AXIS];    /* Program restart remaining
+                                        travel distance */
+} ODBPRS ;      /* MAX_AXIS : max. controlled axes. */
+</pre>
+<dl>
+    <dt>datano</dt>
+        <dd>Not used</dd>
+    <dt>type</dt>
+        <dd>Not used</dd>
+    <dt>data_info</dt>
+        <dd>Data setting information</dd>
+        <dd>The read count for rstr_m, rstr_t, rstr_s, rstr_b is set respectively.</dd>
+    <dt>data_info[0]</dt>
+        <dd>Always 1</dd>
+    <dt>data_info[1] </dt>
+        <dd>M code read count (0 to 35)</dd>
+    <dt>data_info[2] </dt>
+        <dd>T code read count (0 to 2)</dd>
+    <dt>data_info[3] </dt>
+        <dd>S code read count (0 to 1)</dd>
+    <dt>data_info[4] </dt>
+        <dd>B code read count (0 to 1)</dd>
+    <dt>rstr_bc</dt>
+        <dd>Block number is stored.</dd>
+    <dt>rstr_m</dt>
+        <dd>M code value is stored in the array.</dd>
+    <dt>rstr_t</dt>
+        <dd>T code value is stored in the array.</dd>
+    <dt>rstr_s</dt>
+        <dd>S code value is stored.</dd>
+    <dt>rstr_b</dt>
+        <dd>B code value is stored.</dd>
+    <dt>dest</dt>
+        <dd>Program restart position is stored. The limit within the number of controlled axes is effective. </dd>
+    <dt>dist</dt>
+        <dd>Program restart remaining travel distance is stored. The limit within the number of controlled axes is effective.</dd>
+</dl>
+
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>The program restart function and the extended driver/library function is necessary.</content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>The program restart function is necessary.</need>
+        <add></add>
+    </option>
+
+
+
+    <parameter>
+        <type><li>Series 15</li>
+              <dd>2204#1=1, 7613#0=1  --- must be set</dd>
+        </type>
+        <add></add>
+    </parameter>
+    <is_parameter></is_parameter>
+
+
+
+    <mode></mode>
+    <is_mode></is_mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+             <fs0if>O</fs0if>
+             <fs15>H</fs15>
+            <fs15i>O</fs15i>
+             <fs16>H</fs16>
+             <fs18>H</fs18>
+             <fs21>H</fs21>
+           <fs16ia>O</fs16ia>
+           <fs18ia>O</fs18ia>
+           <fs21ia>O</fs21ia>
+           <fs16ib>O</fs16ib>
+           <fs18ib>O</fs18ib>
+           <fs21ib>O</fs21ib>
+           <fs30ia>O</fs30ia>
+           <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+             <fs0if>O</fs0if>
+             <fs15>H</fs15>
+            <fs15i>X</fs15i>
+             <fs16>H</fs16>
+             <fs18>H</fs18>
+             <fs21>X</fs21>
+           <fs16ia>O</fs16ia>
+           <fs18ia>O</fs18ia>
+           <fs21ia>O</fs21ia>
+           <fs16ib>O</fs16ib>
+           <fs18ib>O</fs18ib>
+           <fs21ib>O</fs21ib>
+           <fs30ia>O</fs30ia>
+           <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+           <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rstrseqsrch</name>
+            <file>misc/cnc_rstrseqsrch.htm</file>
+        </item>
+        <item class="xis">
+            <name>cnc_rstrseqsrch2</name>
+            <file>misc/cnc_rstrseqsrch2.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>pmc_rdmsg</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI pmc_rdmsg(unsigned short FlibHndl,short *length, short *data);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                Reads the data of 32 bytes transmitted from the PMC.<br/>
+                It is necessary to transmit the data on the PMC side to read the data.<br/>
+                If the data is not transmitted from the PMC, it waits in the library.<br/>
+                The data is stored in the data array.<br/>
+                The meaning of the data can be decided by the each application of the PMC and the MMC.<br/>
+                <br/>
+                The outline of each processing is as follows.<br/>
+                <img src="Pmc/pmc_rdmsg.gif"/>
+
+            </p>
+            <p>
+                <table>
+                    <colgroup valign="top">
+                    <tr><td valign="top">Note)</td><td>When the MMC side processing is late, the completion status on the PMC side is &#60;-10&#62;.<br/>
+                                           See the "PROGRAMMING MANUAL" of PMC for details of the PMC side processing.</td></tr>
+                    </colgroup>
+                </table>
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <hssb>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle.<br/>
+                            See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                            Specify the pointer to the reception data length.<br/>
+                            The data length actually received is returned.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>data</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the pointer to the reception data storage area.<br/>
+                            The array is as follows.<br/>
+                            <br/>
+                            short   data[16] ;<br/>
+                            <br/>
+                            <table>
+                                <tr><td valign="top">Note)</td><td>The order of the data changes places on the MMC side and the PMC side as the following figure in case of PMC-NA.</td></tr>
+                            </table>
+                            <img src="Pmc/pmc_mmc_data.gif"/>
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </hssb>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NOPMC</name>
+            <content>
+                There is no PMC.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+    </option>
+
+
+
+    <parameter></parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>H</d>
+            <h>H</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+    </reference>
+
+
+
+  </func>
+</root>

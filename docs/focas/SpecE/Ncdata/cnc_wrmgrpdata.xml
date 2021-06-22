@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_wrmgrpdata</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_wrmgrpdata(unsigned short FlibHndl, IDBMGRP *buf);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Writes specified number of M code group data starting from the specified number.</p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>buf</name>
+                    <type>in</type>
+                    <content>
+                        <p>Pointer to the IDBMGRP structure which specifies the M code group data to be written. The IDBMGRP structure is as follows.</p>
+
+<pre>
+typedef struct idbmgrp {
+    short   s_no;
+    short   dummy;
+    short   num;
+    short   group[N];
+} IDBMGRP;
+/* N stands for the number of M code group data being written.(Maximum 500) */
+</pre>
+                        <dl>
+                            <dt>s_no</dt>
+                            <dd>
+                                Specify starting number.<br/>
+                                Valid range is from 0 to 499.
+                            </dd>
+                            <br/>
+                            <dt>num</dt>
+                            <dd>
+                                Specify the number of the data to be written.<br/>
+                                Valid range is from 1 to 500.
+                            </dd>
+                            <br/>
+                            <dt>group</dt>
+                            <dd>
+                                Specify M code group number to be written.<br/>
+                                Valid range is from 0 to 127.
+                            </dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>Data block length error<br/>
+                The number indication(num) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>Data number error<br/>
+                The start number(s_no) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                Data error<br/>
+                The number of M code group is wrong.<br/>
+                In order to get more information for this err_no return value, execute <a href="misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                The following detail status will be set onto the member, err_no of ODBERR structure.<br/>
+                <table>
+                    <tr>
+                        <td>0</td>
+                        <td>:</td>
+                        <td>error except EW_DATA</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>:</td>
+                        <td>error of M code group number</td>
+                    </tr>
+                </table>
+                And the wrong array number will be set onto the member, err_dtno of ODBERR.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>The M code group option and the extended
+                                    driver/library function are necessary.</content>
+        </item>
+        <item>
+            <name>EW_MODE</name>
+            <content>CNC mode error<br/>The mode is not in MDI.</content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>CNC execution rejected<br/>MDI operation is in progress.</content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>Write protection<span class="xis">(Series 15, 0i-F, 30i)</span><br/>'Parameter write enable' of CNC parameter is 0.</content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i-B, 0i-F and 30i, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <type>
+            <p>This function needs the M code group option.</p>
+        </type>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 15</li>
+                8000#0=1<br/>
+                <br/>
+                <li>Series 16/18</li>
+                8900#0=1<br/>
+            </ul>
+        </type>
+    </parameter>
+    <is_parameter>
+    </is_parameter>
+
+
+
+    <mode>
+        <cmn>
+            It is possible to use in MDI mode.
+        </cmn>
+    </mode>
+
+
+
+    
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdmgrpdata</name>
+            <file>ncdata/cnc_rdmgrpdata.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

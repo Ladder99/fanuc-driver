@@ -1,0 +1,551 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdmdlconfig</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdmdlconfig(unsigned short FlibHndl, ODBMDLC *mdlconfig);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+Reads the module configuration of CNC system.<p/>
+These information are stored in each member of ODBMDLC.<p/>
+Reading the data which depends on the path needs exchanging the path.<p/>
+This function is only available for Series 16/18 MODEL-C.
+
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <hssb>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+
+                <item>
+                    <name>mdlconfig</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the ODBMDLC structure for the module configuration of CNC system.The ODBMDLC structure is as follows.
+                        </p>
+- The ODBMDLC structure for Series 16/18 is as follows.
+<pre><![CDATA[
+typedef struct odbmdlc {
+     short   from;          /* Capacity of FROM module                                  */
+     short   dram;          /* Capacity of DRAM module                                  */
+     short   sram;          /* Capacity of additional SRAM module                       */
+     short   pmc;           /* Type of PMC module                                       */
+     short   crtc;          /* Type of CRTC module                                      */
+     short   servo12;       /* Existence of servo module(axis1,2)                       */
+     short   servo34;       /* Existence of servo module(axis3,4)                       */
+     short   servo56;       /* Existence of servo module(axis5,6)                       */
+     short   servo78;       /* (reserve)                                                */
+     short   sic;           /* Existence of SIC                                         */
+     short   pos_lsi;       /* Existence of POSITION LSI                                */
+     short   hi_aio;        /* Existence of high-speed skip & analog I/O                */
+     short   reserve1[12];  /* (reserve)                                                */
+
+     /* Above items depend on each path.              */
+     /* Following items are independent of each path. */
+
+     short   drmmrc;        /* Capacity of Extended DRAM for management software(PMC-SC) */
+     short   drmarc;        /* Capacity of DRAM for application(PMC-SC)                  */
+     short   pmcmrc;        /* Type of PMC module(PMC-SC)                                */
+     short   dmaarc;        /* Existence of additional board for DMA(PMC-SC)             */
+     short   iopt;          /* Number of DI/DO points(I/O card)                          */
+     short   hdiio;         /* Existence of LSI for high-speed skip(I/O card)            */
+     short   gm2gr1;        /* Existence of graphic engine 2                             */
+     short   crtgr2;        /* Type of CRTC module(OPT-1)                                */
+     short   gm1gr2;        /* Existence of graphic module1(OPT-1)                       */
+     short   gm2gr2;        /* Existence of graphic module2(OPT-1)                       */
+     short   cmmrb;         /* Existence of communication module(OPT-1)                  */
+     short   sv5axs;        /* Existence of servo module(axis5,6)(axis card)             */
+     short   sv7axs;        /* Existence of servo module(axis7,8)(axis card)             */
+     short   sicaxs;        /* Existence of SIC(axis card)                               */
+     short   posaxs;        /* Existence of POSITION LSI(axis card)                      */
+     short   hamaxs;        /* Existence of high-speed skip & analog I/O(axis card)      */
+     short   romr64;        /* Capacity of system EPROM module(64bitRISC)                */
+     short   srmr64;        /* Capacity of SRAM module(64bitRISC)                        */
+     short   dr1r64;        /* Capacity of DRAM module1(64bitRISC)                       */
+     short   dr2r64;        /* Capacity of DRAM module2(64bitRISC)                       */
+     short   iopio2;        /* Number of DI/DO points(I/O card#2)                        */
+     short   hdiio2;        /* Existence of LSI for high-speed skip(I/O card#2)          */
+     short   cmmrb2;        /* Existence of communication module(OPT-1#2)                */
+     short   romfap;        /* Existence of system EPROM module(CAP2)                    */
+     short   srmfap;        /* Capacity of SRAM module(CAP2)                             */
+     short   drmfap;        /* Capacity of DRAM module(CAP2)                             */
+     short   drmare;        /* Capacity of DRAM for application(PMC-SE)                  */
+     short   pmcmre;        /* Type of PMC module(PMC-SE)                                */
+     short   dmaare;        /* Existence of additional board for DMA(PMC-SE)             */
+     short   frmbgg;        /* Capacity of FROM module(BG-GRPH)                          */
+     short   drmbgg;        /* Capacity of DRAM module(BG-GRPH)                          */
+     short   asrbgg;        /* Capacity of additional SRAM module(BG-GRPH)               */
+     short   edtpsc;        /* Version of module(PMC-SB5/SB6)                            */
+     short   slcpsc;        /* Existence of SLC(PMC-SB5/SB6)                             */
+     short   reserve2[34];  /* (reserve)                                                 */
+} ODBMDLC ;
+]]></pre>
+<dl>
+    <dt>from</dt>
+        <dd>Capacity of FROM module</dd>
+           <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td>  <td align="right">10</td> <td>:</td> <td> 6 (MB)   </td> </tr>
+               <tr> <td align="right"> 0</td> <td>:</td> <td>(reserve) </td>             <td align="right">11</td> <td>:</td> <td> 8 (MB)   </td> </tr>
+               <tr> <td align="right"> 1</td> <td>:</td> <td> 2 (MB)   </td>             <td align="right">12</td> <td>:</td> <td>10 (MB)   </td> </tr>
+               <tr> <td align="right"> 2</td> <td>:</td> <td> 4 (MB)   </td>             <td align="right">13</td> <td>:</td> <td>12 (MB)   </td> </tr>
+               <tr> <td align="right"> 3</td> <td>:</td> <td> 6 (MB)   </td>             <td align="right">14</td> <td>:</td> <td>14 (MB)   </td> </tr>
+               <tr> <td align="right"> 4</td> <td>:</td> <td> 8 (MB)   </td>             <td align="right">15</td> <td>:</td> <td> 1 (MB)   </td> </tr>
+               <tr> <td align="right"> 5</td> <td>:</td> <td>10 (MB)   </td>             <td align="right">16</td> <td>:</td> <td> 1 (MB)   </td> </tr>
+               <tr> <td align="right"> 6</td> <td>:</td> <td>12 (MB)   </td>             <td align="right">17</td> <td>:</td> <td>(reserve)</td> </tr>
+               <tr> <td align="right"> 7</td> <td>:</td> <td> 4 (MB)   </td>             <td align="right">18</td> <td>:</td> <td> 4 (MB)   </td> </tr>
+               <tr> <td align="right"> 8</td> <td>:</td> <td> 3 (MB)   </td>             <td align="right">19</td> <td>:</td> <td> 8 (MB)   </td> </tr>
+               <tr> <td align="right"> 9</td> <td>:</td> <td> 2 (MB)   </td> </tr>
+           </table></dd>
+    <dt>dram</dt>
+        <dd>Capacity of DRAM module</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 4</td> <td>:</td> <td>16 (MB)</td> </tr>
+               <tr> <td align="right"> 0</td> <td>:</td> <td> 4 (MB)</td>               <td align="right"> 5</td> <td>:</td> <td> 8 (MB)</td> </tr>
+               <tr> <td align="right"> 1</td> <td>:</td> <td> 2 (MB)</td>               <td align="right"> 6</td> <td>:</td> <td> 4 (MB)</td> </tr>
+               <tr> <td align="right"> 2</td> <td>:</td> <td> 1 (MB)</td>               <td align="right"> 7</td> <td>:</td> <td>24 (MB)</td> </tr>
+               <tr> <td align="right"> 3</td> <td>:</td> <td> 6 (MB)</td> </tr>
+           </table></dd>
+    <dt>sram</dt>
+        <dd>Capacity of additional SRAM module</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 5</td> <td>:</td> <td>768 (KB)   </td> </tr>
+               <tr> <td align="right"> 0</td> <td>:</td> <td>  1 (MB) </td>             <td align="right"> 6</td> <td>:</td> <td>(reserve) </td> </tr>
+               <tr> <td align="right"> 1</td> <td>:</td> <td>512 (KB) </td>             <td align="right"> 7</td> <td>:</td> <td>2.25(MB)   </td> </tr>
+               <tr> <td align="right"> 2</td> <td>:</td> <td>  2 (MB) </td>             <td align="right"> 8</td> <td>:</td> <td>(reserve) </td> </tr>
+               <tr> <td align="right"> 3</td> <td>:</td> <td>(reserve)</td>             <td align="right"> 9</td> <td>:</td> <td>256 (KB)   </td> </tr>
+               <tr> <td align="right"> 4</td> <td>:</td> <td>(reserve) </td> </tr>
+           </table></dd>
+    <dt>pmc</dt>
+        <dd>Type of PMC module</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 2</td> <td>:</td> <td>PMP2+SLC</td> </tr>
+               <tr> <td align="right"> 0</td> <td>:</td> <td>BOC2    </td>              <td align="right"> 3</td> <td>:</td> <td>BSI     </td> </tr>
+               <tr> <td align="right"> 1</td> <td>:</td> <td>BSI+SLC </td>              <td align="right"> 4</td> <td>:</td> <td>PMP2    </td> </tr>
+           </table></dd>
+    <dt>crtc</dt>
+        <dd>Type of CRTC module</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 3</td> <td>:</td> <td>HSSB-VGA </td> </tr>
+               <tr> <td align="right"> 0</td> <td>:</td> <td>14"CRT     </td>           <td align="right"> 4</td> <td>:</td> <td>(reserve)</td> </tr>
+               <tr> <td align="right"> 1</td> <td>:</td> <td>9"CRT      </td>           <td align="right"> 5</td> <td>:</td> <td>9"VGA    </td> </tr>
+               <tr> <td align="right"> 2</td> <td>:</td> <td>VGA        </td> </tr>
+           </table></dd>
+    <dt>servo12</dt>
+        <dd>Existence of servo module(axis1,2)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 0</td> <td>:</td> <td>Exists</td> </tr>
+           </table></dd>
+    <dt>servo34</dt>
+        <dd>Existence of servo module(axis3,4)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 0</td> <td>:</td> <td>Exists</td> </tr>
+           </table></dd>
+    <dt>servo56</dt>
+        <dd>Existence of servo module(axis5,6)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 0</td> <td>:</td> <td>Exists</td> </tr>
+           </table></dd>
+    <dt>sic</dt>
+        <dd>Existence of SIC</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 0</td> <td>:</td> <td>Exists</td> </tr>
+           </table></dd>
+    <dt>pos_lsi</dt>
+        <dd>Existence of POSITION LSI</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 0</td> <td>:</td> <td>Exists</td> </tr>
+           </table></dd>
+    <dt>hi_aio</dt>
+        <dd><![CDATA[Existence of high-speed skip & analog I/O]]></dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 1</td> <td>:</td> <td>only high-speed skip</td> </tr>
+               <tr> <td align="right"> 0</td> <td>:</td> <td>Both exist</td>            <td align="right"> 2</td> <td>:</td> <td>only analog I/O</td>      </tr>
+           </table></dd>
+    <dt>drmmrc</dt>
+        <dd>Capacity of additional DRAM for management software (PMC-SC)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 0</td> <td>:</td> <td>Exists</td> </tr>
+           </table></dd>
+    <dt>drmarc</dt>
+        <dd>Capacity of DRAM for application (PMC-SC)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td>  <td align="right"> 2</td> <td>:</td> <td>512(KB)</td> </tr>
+               <tr> <td align="right"> 0</td> <td>:</td> <td>2(MB)</td>                  <td align="right"> 3</td> <td>:</td> <td>  1(MB)</td> </tr>
+               <tr> <td align="right"> 1</td> <td>:</td> <td>(reserve)</td> </tr>
+           </table></dd>
+    <dt>pmcmrc</dt>
+        <dd>Type of PMC module(PMC-SC)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 2</td> <td>:</td> <td>PMP2+SLC</td> </tr>
+               <tr> <td align="right"> 0</td> <td>:</td> <td>BOC2</td>                  <td align="right"> 3</td> <td>:</td> <td>BSI     </td> </tr>
+               <tr> <td align="right"> 1</td> <td>:</td> <td>BSI+SLC</td>               <td align="right"> 4</td> <td>:</td> <td>PMP2    </td> </tr>
+           </table></dd>
+    <dt>dmaarc</dt>
+        <dd>Existence of additional board for DMA (PMC-SC)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 0</td> <td>:</td> <td>Exists</td> </tr>
+           </table></dd>
+    <dt>iopt</dt>
+        <dd>Number of DI/DO points (I/O card)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 2</td> <td>:</td> <td> 80/ 56</td> </tr>
+               <tr> <td align="right"> 0</td> <td>:</td> <td>144/112</td>               <td align="right"> 3</td> <td>:</td> <td>104/ 72</td> </tr>
+               <tr> <td align="right"> 1</td> <td>:</td> <td> 40/ 40</td>               <td align="right"> 4</td> <td>:</td> <td>156/120</td> </tr>
+           </table></dd>
+    <dt>hdiio</dt>
+        <dd>Existence of LSI for high-speed skip (I/O card)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 0</td> <td>:</td> <td>Exists</td> </tr>
+           </table></dd>
+    <dt>gm2gr1</dt>
+        <dd>Existence of graphic engine 2</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 0</td> <td>:</td> <td>Exists</td> </tr>
+           </table></dd>
+    <dt>crtgr2</dt>
+        <dd>Type of CRTC module (OPT-1)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 3</td> <td>:</td> <td>(reserve)</td> </tr>
+               <tr> <td align="right"> 0</td> <td>:</td> <td>14" CRT </td>              <td align="right"> 4</td> <td>:</td> <td>14" CRT GRPH</td> </tr>
+               <tr> <td align="right"> 1</td> <td>:</td> <td> 9" CRT </td>              <td align="right"> 5</td> <td>:</td> <td> 9" CRT GRPH</td> </tr>
+               <tr> <td align="right"> 2</td> <td>:</td> <td>VGA MAIN</td>              <td align="right"> 6</td> <td>:</td> <td>VGA GRPH</td> </tr>
+           </table></dd>
+    <dt>gm1gr2</dt>
+        <dd>Existence of graphic module 1 (OPT-1)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 0</td> <td>:</td> <td>Exists</td> </tr>
+           </table></dd>
+    <dt>gm2gr2</dt>
+        <dd>Existence of graphic module 2 (OPT-1)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 0</td> <td>:</td> <td>Exists</td> </tr>
+           </table></dd>
+    <dt>cmmrb</dt>
+        <dd>Existence of communication module (OPT-1)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 0</td> <td>:</td> <td>Exists</td> </tr>
+           </table></dd>
+    <dt>sv5axs</dt>
+        <dd>Existence of servo module (axis5,6) (axis card)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 0</td> <td>:</td> <td>Exists</td> </tr>
+           </table></dd>
+    <dt>sv7axs</dt>
+        <dd>Existence of servo module (axis7,8) (axis card)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 0</td> <td>:</td> <td>Exists</td> </tr>
+           </table></dd>
+    <dt>sicaxs</dt>
+        <dd>Existence of SIC (axis card)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 0</td> <td>:</td> <td>Exists</td> </tr>
+           </table></dd>
+    <dt>posaxs</dt>
+        <dd>Existence of POSITION LSI (axis card)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 0</td> <td>:</td> <td>Exists</td> </tr>
+           </table></dd>
+    <dt>hamaxs</dt>
+        <dd><![CDATA[Existence of high-speed skip & analog I/O (axis card)]]></dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 1</td> <td>:</td> <td>only high-speed skip</td> </tr>
+               <tr> <td align="right"> 0</td> <td>:</td> <td>Both exist</td>            <td align="right"> 2</td> <td>:</td> <td>only analog I/O</td> </tr>
+           </table></dd>
+    <dt>romr64</dt>
+        <dd>Capacity of system EPROM module (64bitRISC)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 3</td> <td>:</td> <td>512 (KB)</td> </tr>
+               <tr> <td align="right"> 0</td> <td>:</td> <td> 4 (MB)</td>               <td align="right"> 4</td> <td>:</td> <td>256 (KB)</td> </tr>
+               <tr> <td align="right"> 1</td> <td>:</td> <td> 2 (MB)</td>               <td align="right"> 5</td> <td>:</td> <td>128 (KB)</td> </tr>
+               <tr> <td align="right"> 2</td> <td>:</td> <td> 1 (MB)</td>               <td align="right"> 6</td> <td>:</td> <td>768 (KB)</td> </tr>
+           </table></dd>
+    <dt>srmr64</dt>
+        <dd>Capacity of SRAM module (64bitRISC)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 3</td> <td>:</td> <td>512 (KB)</td> </tr>
+               <tr> <td align="right"> 0</td> <td>:</td> <td>4 (MB)</td>                <td align="right"> 4</td> <td>:</td> <td>256 (KB)</td> </tr>
+               <tr> <td align="right"> 1</td> <td>:</td> <td>2 (MB)</td>                <td align="right"> 5</td> <td>:</td> <td>128 (KB)</td> </tr>
+               <tr> <td align="right"> 2</td> <td>:</td> <td>1 (MB)</td>                <td align="right"> 6</td> <td>:</td> <td>768 (KB)</td> </tr>
+           </table></dd>
+    <dt>dr1r64</dt>
+        <dd>Capacity of DRAM module 1 (64bitRISC)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 2</td> <td>:</td> <td>  2 (MB)</td> </tr>
+               <tr> <td align="right"> 0</td> <td>:</td> <td>(reserve)</td>             <td align="right"> 3</td> <td>:</td> <td>  4 (MB)</td> </tr>
+               <tr> <td align="right"> 1</td> <td>:</td> <td>(reserve)</td> </tr>
+           </table></dd>
+    <dt>dr2r64</dt>
+        <dd>Capacity of DRAM module 2 (64bitRISC)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 2</td> <td>:</td> <td>  2 (MB)</td> </tr>
+               <tr> <td align="right"> 0</td> <td>:</td> <td>(reserve)</td>             <td align="right"> 3</td> <td>:</td> <td>  4 (MB)</td> </tr>
+               <tr> <td align="right"> 1</td> <td>:</td> <td>(reserve)</td> </tr>
+           </table></dd>
+    <dt>iopio2</dt>
+        <dd>Number of DI/DO points(I/O card#2)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 2</td> <td>:</td> <td> 80/ 56</td> </tr>
+               <tr> <td align="right"> 0</td> <td>:</td> <td>144/112</td>               <td align="right"> 3</td> <td>:</td> <td>104/ 72</td> </tr>
+               <tr> <td align="right"> 1</td> <td>:</td> <td> 40/ 40</td>               <td align="right"> 4</td> <td>:</td> <td>156/120</td> </tr>
+           </table></dd>
+    <dt>hdiio2</dt>
+        <dd>Existence of LSI for high-speed skip (I/O card#2)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 0</td> <td>:</td> <td>Exists</td> </tr>
+           </table></dd>
+    <dt>cmmrb2</dt>
+        <dd>Existence of communication module (OPT-1#2)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 0</td> <td>:</td> <td>Exists</td> </tr>
+           </table></dd>
+    <dt>romfap</dt>
+        <dd>Existence of system EPROM module (CAP2)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 3</td> <td>:</td> <td>512 (KB)</td> </tr>
+               <tr> <td align="right"> 0</td> <td>:</td> <td>(reserve)</td>             <td align="right"> 4</td> <td>:</td> <td>256 (KB)</td> </tr>
+               <tr> <td align="right"> 1</td> <td>:</td> <td>(reserve)</td>             <td align="right"> 5</td> <td>:</td> <td>128 (KB)</td> </tr>
+               <tr> <td align="right"> 2</td> <td>:</td> <td>1 (MB)</td>                <td align="right"> 6</td> <td>:</td> <td>768 (KB)</td> </tr>
+           </table></dd>
+    <dt>srmfap</dt>
+        <dd>Capacity of SRAM module (CAP2)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 3</td> <td>:</td> <td>512 (KB)</td> </tr>
+               <tr> <td align="right"> 0</td> <td>:</td> <td>(reserve)</td>             <td align="right"> 4</td> <td>:</td> <td>256 (KB)</td> </tr>
+               <tr> <td align="right"> 1</td> <td>:</td> <td>(reserve)</td>             <td align="right"> 5</td> <td>:</td> <td>128 (KB)</td> </tr>
+               <tr> <td align="right"> 2</td> <td>:</td> <td>1 (MB)   </td>             <td align="right"> 6</td> <td>:</td> <td>768 (KB)</td> </tr>
+           </table></dd>
+    <dt>drmfap</dt>
+        <dd>Capacity of DRAM module (CAP2)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 3</td> <td>:</td> <td>512 (KB)</td> </tr>
+               <tr> <td align="right"> 0</td> <td>:</td> <td>2  (MB)</td>               <td align="right"> 4</td> <td>:</td> <td>256 (KB)</td> </tr>
+               <tr> <td align="right"> 1</td> <td>:</td> <td>1.5(MB)</td>               <td align="right"> 5</td> <td>:</td> <td>128 (KB)</td> </tr>
+               <tr> <td align="right"> 2</td> <td>:</td> <td>1  (MB)</td>               <td align="right"> 6</td> <td>:</td> <td>(reserve)</td> </tr>
+           </table></dd>
+    <dt>drmare</dt>
+        <dd>Capacity of DRAM for applications (PMC-SE)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 2</td> <td>:</td> <td>512(KB)</td> </tr>
+               <tr> <td align="right"> 0</td> <td>:</td> <td>2(MB)</td>                 <td align="right"> 3</td> <td>:</td> <td>  1(MB)</td> </tr>
+           </table></dd>
+    <dt>pmcmre</dt>
+        <dd>Type of PMC module (PMC-SE)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 2</td> <td>:</td> <td>PMP2+SLC</td> </tr>
+               <tr> <td align="right"> 0</td> <td>:</td> <td>BOC2   </td>               <td align="right"> 3</td> <td>:</td> <td>BSI</td> </tr>
+               <tr> <td align="right"> 1</td> <td>:</td> <td>BSI+SLC</td>               <td align="right"> 4</td> <td>:</td> <td>PMP2</td> </tr>
+           </table></dd>
+    <dt>dmaare</dt>
+        <dd>Existence of additional board for DMA (PMC-SE)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 0</td> <td>:</td> <td>Exists</td> </tr>
+           </table></dd>
+    <dt>frmbgg</dt>
+        <dd>Capacity of FROM module (BG-GRAPH)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right">10</td> <td>:</td> <td> 6 (MB)</td> </tr>
+               <tr> <td align="right"> 0</td> <td>:</td> <td>(reserve)</td>             <td align="right">11</td> <td>:</td> <td> 8 (MB)</td> </tr>
+               <tr> <td align="right"> 1</td> <td>:</td> <td> 2 (MB)   </td>            <td align="right">12</td> <td>:</td> <td>10 (MB)</td> </tr>
+               <tr> <td align="right"> 2</td> <td>:</td> <td> 4 (MB)   </td>            <td align="right">13</td> <td>:</td> <td>12 (MB)</td> </tr>
+               <tr> <td align="right"> 3</td> <td>:</td> <td> 6 (MB)   </td>            <td align="right">14</td> <td>:</td> <td>14 (MB)</td> </tr>
+               <tr> <td align="right"> 4</td> <td>:</td> <td> 8 (MB)   </td>            <td align="right">15</td> <td>:</td> <td> 1 (MB)</td> </tr>
+               <tr> <td align="right"> 5</td> <td>:</td> <td>10 (MB)   </td>            <td align="right">16</td> <td>:</td> <td> 1 (MB)</td> </tr>
+               <tr> <td align="right"> 6</td> <td>:</td> <td>12 (MB)   </td>            <td align="right">17</td> <td>:</td> <td>(reserve)</td> </tr>
+               <tr> <td align="right"> 7</td> <td>:</td> <td> 4 (MB)   </td>            <td align="right">18</td> <td>:</td> <td> 4 (MB)</td> </tr>
+               <tr> <td align="right"> 8</td> <td>:</td> <td> 3 (MB)   </td>            <td align="right">19</td> <td>:</td> <td> 8 (MB)</td> </tr>
+               <tr> <td align="right"> 9</td> <td>:</td> <td>2 (MB)</td> </tr>
+           </table></dd>
+    <dt>drmbgg</dt>
+        <dd>Capacity of DRAM module (BG-GRAPH)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 4</td> <td>:</td> <td>16 (MB)</td> </tr>
+               <tr> <td align="right"> 0</td> <td>:</td> <td> 4 (MB)    </td>           <td align="right"> 5</td> <td>:</td> <td> 8 (MB)</td> </tr>
+               <tr> <td align="right"> 1</td> <td>:</td> <td> 2 (MB)    </td>           <td align="right"> 6</td> <td>:</td> <td> 4 (MB)</td> </tr>
+               <tr> <td align="right"> 2</td> <td>:</td> <td> 1 (MB)    </td>           <td align="right"> 7</td> <td>:</td> <td>24 (MB)</td> </tr>
+               <tr> <td align="right"> 3</td> <td>:</td> <td> 6 (MB)</td> </tr>
+           </table></dd>
+    <dt>asrbgg</dt>
+        <dd>Capacity of additional SRAM module (BG-GRPH)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 5</td> <td>:</td> <td>768 (KB)</td> </tr>
+               <tr> <td align="right"> 0</td> <td>:</td> <td>  1 (MB)   </td>           <td align="right"> 6</td> <td>:</td> <td>(reserve)</td> </tr>
+               <tr> <td align="right"> 1</td> <td>:</td> <td>512 (KB)   </td>           <td align="right"> 7</td> <td>:</td> <td>2.25(MB)</td> </tr>
+               <tr> <td align="right"> 2</td> <td>:</td> <td>  2 (MB)   </td>           <td align="right"> 8</td> <td>:</td> <td>(reserve)</td> </tr>
+               <tr> <td align="right"> 3</td> <td>:</td> <td>(reserve) </td>            <td align="right"> 9</td> <td>:</td> <td>256 (KB)</td> </tr>
+               <tr> <td align="right"> 4</td> <td>:</td> <td>(reserve)</td> </tr>
+           </table></dd>
+    <dt>edtpsc</dt>
+        <dd>Version of module (PMC-SB5/SB6)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist </td> <td align="right"> 0,...,F</td> <td>:</td> <td>Version</td> </tr>
+           </table></dd>
+    <dt>slcpsc</dt>
+        <dd>Existence of SLC (PMC-SB5/SB6)</dd>
+        <dd><table class="dd">
+               <tr> <td align="right">-1</td> <td>:</td> <td width="100">Not exist</td> <td align="right"> 0</td> <td>:</td> <td>Exists</td> </tr>
+           </table></dd>
+</dl>
+                    </content>
+                </item>
+            </vc>
+        </hssb>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>The extended driver/library function is necessary.</content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <add></add>
+    </option>
+
+
+
+    <parameter>
+        <add></add>
+    </parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>H</fs16>
+             <fs18>H</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>H</fs16>
+             <fs18>H</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference></reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_wrpot_property</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_wrpot_property( unsigned short FlibHndl, short magazine, short s_number, short *data_num, IODBPOTPRTY * potprty ); </prottype>
+      </vc>
+    </declare>
+
+
+    <doc>
+        <cmn><p>
+             This function writes the pot property data within the range specified by "s_number" and "data_num".
+             </p>
+        </cmn>
+    </doc>
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>magazine</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the writing magazine number("1"-"8").
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_number</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the start number of the writing pot type.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>data_num</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                           The pointer to the number of writing data.
+                        </p>
+                        <p>
+                           The pot property data that belongs to one pot type is counted by the set with one writing number.<br/>
+                           Set the number of writing data to the data specified with the pointer beforehand.<br/>
+                           The pot property data of the number of "*data_num" are written from the data number which is specified by "s_number".<br/>
+                           The number of data actually written is returned to "*data_num" when the execution of this function ends.<br/>
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>potprty</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            The pointer to the structure that storage the pot property data.<br/>
+                            IODBPOTPRTY structure is as follows.<br/>
+                        </p>
+<pre>
+typedef struct  iodbpotprty {
+    short           tool_no         /* Tool control number   */
+    short           pot_type ;      /* Pot type              */
+    unsigned char   pot_info1 ;     /* Pot information data1 */
+    unsigned char   pot_info2 ;     /* Pot information data2 */
+    char            reserve[2] ;    /* Reserved              */
+    long            cstm[10] ;      /* Customize data        */
+} IODBPOTPRTY;
+</pre>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+    <errcode>
+        <item>
+           <name>EW_BUSY</name>
+            <content>
+                Wait until the completion of CNC processing, or retry. <br/>
+            </content>
+        </item>
+        <item>
+           <name>EW_LENGTH</name>
+            <content>
+                Writing number(data_num) is wrong.
+            </content>
+        </item>
+        <item>
+           <name>EW_NUMBER</name>
+            <content>
+                Start number(s_number) is wrong.
+            </content>
+        </item>
+        <item>
+           <name>EW_ATTRIB</name>
+            <content>
+                Magazine number(magazine) is wrong.
+            </content>
+        </item>
+        <item>
+           <name>EW_DATA</name>
+            <content>
+                The member in the IODBPOTPRTY structure is invalid.<br/>
+                In order to get more information for this err_no return value, execute 
+                <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.
+                The following detail status will be set onto the member, err_no of OBDERR structure.
+                <table border="0">
+                    <tr><td>0</td><td>：</td><td>error except EW_DATA</td></tr>
+                    <tr><td>1</td><td>：</td><td>error of tool control number</td></tr>
+                    <tr><td>2</td><td>：</td><td>error of pot type</td></tr>
+                    <tr><td>3</td><td>：</td><td>error of pot information data1</td></tr>
+                    <tr><td>4</td><td>：</td><td>error of Pot information data2</td></tr>
+                    <tr><td>11-20</td><td>：</td><td>error of customize data 1-10.</td></tr>
+                    <tr><td>100</td><td>：</td><td>tool interfarence</td></tr>
+                    <tr><td>101</td><td>：</td><td>Illigal multi edge</td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The Tool management function 64-pairs, 240-pairs or 1000 pairs and the tool management extension B function are necessary.
+            </content>
+        </item>
+    </errcode>
+
+
+    <option>
+        <hssb>
+            <p>The extended driver/library function are necessary.</p>
+        </hssb>
+
+        <ethr>
+            <p>The Ethernet function and the extended driver/library function are necessary.</p>
+            <p>However, in case of Series 16i/18i/21i-B, 0i-F and 30i, the required CNC option is as follows.</p>
+            <p>When Embedded Ethernet is used,</p>
+            <p><ul>above two optional functions are not required.</ul></p>
+            <p>When Ethernet board is used,</p>
+            <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>
+            <p>
+            The Tool management function 64-pairs, 240-pairs or 1000 pairs and the tool management extension B function are necessary.
+            </p>
+        </need>
+    </option>
+
+
+    <parameter>
+        <type>
+            Magazine property / pot property (No.13210#1=1)
+        </type>
+    </parameter>
+
+
+    <mode>
+    </mode>
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+    <reference>
+        <item>
+            <name>cnc_rdpot_property</name>
+            <file>ToolMng/cnc_rdpot_property.htm</file>
+        </item>
+        <item>
+            <name>cnc_delpot_property</name>
+            <file>ToolMng/cnc_delpot_property.htm</file>
+        </item>
+    </reference>
+
+
+    <example>
+    </example>
+
+
+  </func>
+</root>

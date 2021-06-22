@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>pmc_prfwrslvprm</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI pmc_prfwrslvprm(unsigned short FlibHndl, short slave_no, void *idb) ; </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Writes the slave parameter of the specified slave number.</p>
+            <p>
+                This function is available at the version 01-07 and 09 or later of the
+                PROFIBUS-DP control software(6557 Series).  In the control software in
+                the version 08, the return value becomes EW_VERSION.<br/>
+                When the parameters are changed, the restart of CNC is required for putting the change into effect.<br/>
+                This function is unavailable at the 6558 Series.
+            </p>
+            <p>
+                * Please refer to "PROFIBUS-DP function manual" for details of the
+                  PROFIBUS-DP function.
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>slave_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the slave number to write. (0～125)
+                        </p>
+                    </content>  
+                </item>
+                <item>
+                    <name>idb</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Pointer to the structure including the slave parameter.
+                            This structure is different depending on the version of control software of PROFIBUS-DP(6557 Series). 
+                        <dl>
+                            <dt>In case of Version 01 to 07:</dt>
+                                <dd>Pointer to the IODBSLVPRM structure. The IODBSLVPRM structure is as follows.</dd>
+                        </dl>
+<pre>
+typedef struct {
+    short          dis_enb ;
+    unsigned short ident_no ;
+    unsigned char  slv_flag ;
+    unsigned char  slv_type ;
+    char           reserve1[12] ;
+    unsigned char  slv_stat ;
+    unsigned char  wd_fact1 ;
+    unsigned char  wd_fact2 ;
+    unsigned char  min_tsdr ;
+    char           reserve2 ;
+    unsigned char  grp_ident ;
+    short          user_plen ;
+    char           user_pdata[32] ;
+    short          cnfg_dlen ;
+    char           cnfg_data[126] ;
+    short          slv_ulen ;
+    char           slv_udata[30] ;
+    char           reserve3[8] ;
+} IODBSLVPRM ;
+</pre>
+                        <dl>
+                            <dt>In case of Version 09 or later:</dt>
+                            <dd>Pointer to the IODBSLVPRM2 user define type. The IODBSLVPRM2 structure is as follows.</dd>
+                        </dl>
+<pre>
+typedef struct {
+    short          dis_enb ;
+    unsigned short ident_no ;
+    unsigned char  slv_flag ;
+    unsigned char  slv_type ;
+    char           reserve1[12] ;
+    unsigned char  slv_stat ;
+    unsigned char  wd_fact1 ;
+    unsigned char  wd_fact2 ;
+    unsigned char  min_tsdr ;
+    char           reserve2 ;
+    unsigned char  grp_ident ;
+    short          user_plen ;
+    char           user_pdata[206] ;
+    short          cnfg_dlen ;
+    char           cnfg_data[126] ;
+    short          slv_ulen ;
+    char           slv_udata[30] ;
+    char           reserve3[8] ;
+} IODBSLVPRM2 ;
+</pre>
+                            <dl>
+                                <dt>dis_enb</dt>
+                                    <dd>Specify whether to communicate with the DP-Slave of the specified slave number.</dd>
+                                    <dd><table border="0" class="dd">
+                                        <tr> <td>0</td><td>:</td><td>DISABLE</td><td>    Communication is not done.</td> </tr>
+                                        <tr> <td>1</td><td>:</td><td>ENABLE</td><td>    Communication is done.</td> </tr>
+                                    </table></dd>
+                                <dt>ident_no</dt>
+                                    <dd>Specify the identification number of DP-Slave.</dd>
+                                <dt>slv_flag</dt>
+                                    <dd>Specify the slave flag. The meaning of each bit is as follows.</dd>
+                                    <table border="0" class="dd">
+                                        <tr> <td>BIT7</td> </tr>
+                                        <tr> <td></td><td>0</td><td>:</td><td>DP-Slave will not be activated.</td> </tr>
+                                        <tr> <td></td><td>1</td><td>:</td><td>DP-Slave will be activated.</td> </tr>
+                                    </table>
+                                    <table border="0" class="dd">
+                                        <tr> <td>BIT6</td> </tr>
+                                        <tr> <td></td><td>0</td><td>:</td><td>New parameter data will not be transferred.</td> </tr>
+                                        <tr> <td></td><td>1</td><td>:</td><td>New parameter data will be transferred.</td> </tr>
+                                    </table>
+                                    
+                                    <p><dd>* BIT0 to BIT5 are not used.</dd></p>
+                                <dt>slv_type</dt>
+                                    <dd>Specify the slave type of the maker specification. (0-255)</dd>
+                                <dt>reserve1</dt>
+                                    <dd>not used</dd>
+                                <dt>slv_stat</dt>
+                                    <dd>Specify the slave status. The meaning of each bit is as follows.</dd>
+                                    <dl>
+                                        <dt>In case of BIT7=ON, BIT6=OFF</dt>
+                                            <dd>The DP-Slave cannot change the parameter from the DP-Master.</dd>
+                                        <dt>In case of BIT7=OFF, BIT6=ON</dt>
+                                            <dd>The DP-Slave can change the parameter from the DP-Master.</dd>
+                                    </dl>
+                                    <table border="0" class="dd">
+                                        <tr> <td>BIT5</td> </tr>
+                                        <tr> <td></td><td>0</td><td>:</td><td>OFF</td><td>    The Sync control command can not be used.</td> </tr>
+                                        <tr> <td></td><td>1</td><td>:</td><td>ON</td><td>    The Sync control command can be used.</td> </tr>
+                                        <tr> <td>BIT4</td> </tr>
+                                        <tr> <td></td><td>0</td><td>:</td><td>OFF</td><td>    The Freeze control command can not be used.</td> </tr>
+                                        <tr> <td></td><td>1</td><td>:</td><td>ON</td><td>    The Freeze control command can be used.</td> </tr>
+                                        <tr> <td>BIT3</td> </tr>
+                                        <tr> <td></td><td>0</td><td>:</td><td>OFF</td><td>    The Watchdog control is not done.</td> </tr>
+                                        <tr> <td></td><td>1</td><td>:</td><td>ON</td><td>    The Watchdog control is done.</td> </tr>
+                                    </table>
+                                    <p><dd>* BIT0 to BIT2 are not used.</dd></p>
+                                <dt>wd_fact1</dt>
+                                    <dd>Specify the coefficient to decide the time of the Watchdog control. (1-255)</dd>
+                                <dt>wd_fact2</dt>
+                                    <dd>Specify the coefficient to decide the time of the Watchdog control. (1-255)</dd>
+                                <p></p>
+                                <dd>* The Watchdog control time, wd_fact1, and the wd_fact2 relation are as follows.</dd>
+                                <dd>The Watchdog control time(msec) = 10 * wd_fact1 * wd_fact2</dd>
+                                <dt>min_tsdr</dt>
+                                    <dd>Specify the minimum wait time to send the response to DP-Master. (1-255)</dd>
+                                <dt>reserve2</dt>
+                                    <dd>not used</dd>
+                                <dt>grp_ident</dt>
+                                    <dd>Specify the group for the DDLM_Global_Control function.</dd>
+                                <dt>user_plen</dt>
+                                    <dd>
+                                        Specify the number of bytes of specific data which is neccesary for the slave parameter set from the maker.
+                                    </dd>
+                                    <dd><table border="0" class="dd">
+                                        <tr> <td>6557</td><td>Series Version 01-07</td><td>:</td><td>(0-32)</td> </tr>
+                                        <tr> <td>6557</td><td>Series Version 09 or later</td><td>:</td><td>(0-206)</td> </tr>
+                                    </table></dd>
+                                <dt>user_pdata</dt>
+                                    <dd>    
+                                        Specify the specific data which is neccesary for the slave parameter set from the maker.
+                                        The data of the number of bytes returned to above-mentioned user_plen is effective.
+                                    </dd>
+                                <dt>cnfg_dlen</dt>
+                                    <dd>
+                                        Specify the number of bytes of data to specify DI/DO size for the data exchange 
+                                        between DP-Master and DP-Slave. (0-126)
+                                    </dd>
+                                <dt>cnfg_data</dt>
+                                    <dd>
+                                        Specify the data to specify DI/DO size for the data exchange between DP-Master and DP-Slave.
+                                        The data of the number of bytes returned to above-mentioned cnfg_dlen is effective.
+                                    </dd>
+                                <dt>slv_ulen</dt>
+                                    <dd>
+                                        Specify the number of bytes of specified data from the maker side to show the characteristic
+                                        of the DP-Slave. (0-30)
+                                    </dd>
+                                <dt>slv_udata</dt>
+                                    <dd>
+                                        Specify the specified data from the maker side to show the characteristic of the DP-Slave.
+                                        The data of the number of bytes returned to above-mentioned slv_ulen is effective.
+                                    </dd>
+                                <dt>reserve3</dt>
+                                    <dd>not used</dd><br/>
+                                <dt>* 6557 Series Version 09 or later:</dt>
+                                    <dd>Set values for parameters user_plen, cnfg_dlen, and slv_ulen so that the total of the three parameter lengths does not exceed 207.</dd>
+                            </dl>
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_RANGE</name>
+            <content>data number error<br/>
+                    Slave number(slave_no) is wrong.
+            </content>
+        </item>
+        <item>
+           <name>EW_DATA</name>
+            <content>
+                Data error<br/>
+                The slave parameter is wrong.<br/>
+                In order to get more information for this err_no return value,
+                execute <a href="Pmc/pmc_getdtailerr.htm" target="_parent">pmc_getdtailerr</a> function.  
+                The following details status will be set onto the member, err_no of ODBPMCERR structure.
+                <table border="0">
+                    <tr><td>1</td><td>:</td><td>dis_enb is wrong.</td></tr>
+                    <tr><td>2</td><td>:</td><td>wd_fact1 is wrong.</td></tr>
+                    <tr><td>3</td><td>:</td><td>wd_fact2 is wrong.</td></tr>
+                    <tr><td>4</td><td>:</td><td>min_tsdr is wrong.</td></tr>
+                    <tr><td>5</td><td>:</td><td>user_plen is wrong.</td></tr>
+                    <tr><td>6</td><td>:</td><td>cnfg_dlen is wrong.</td></tr>
+                    <tr><td>7</td><td>:</td><td>slv_ulen is wrong.</td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>
+                    <li>The PROFIBUS-DP board(hardware) is necessary.</li>
+                    <li>The PROFIBUS-DP control software is necessary.</li>
+                    <li>The PROFIBUS-DP master function is necessary.</li>
+                    <li>The extended driver/library function is necessary.</li>
+            </content>
+        </item>
+        <item>
+            <name>EW_VERSION</name>
+            <content>Version of PROFIBUS-DP control software is wrong.<br/>
+                    This function was called by version 08 of the control software.  
+                    Exchange the control software besides the version 08.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>The PROFIBUS-DP master function is necessary.</need>
+    </option>
+
+
+
+    <parameter>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>pmc_prfrdslvprm</name>
+            <file>Profibus/pmc_prfrdslvprm.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+
+<root>
+  <func>
+
+
+    <title>cnc_rdopnlsgnl</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdopnlsgnl(unsigned short FlibHndl, short slct_data, IODBSGNL *sgnl);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+              Reads the output signal image of software operator's panel.
+            </p>
+      </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>slct_data</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the data select flag.
+                        </p>
+<table class="dd">
+    <tr>    <td>bit 0</td>  <td>:</td>  <td>Mode signal</td>    </tr>
+    <tr>    <td>bit 1</td>  <td>:</td>  <td>Manual handle feed axis selection signal</td>   </tr>
+    <tr>    <td>bit 2</td>  <td>:</td>  <td>Manual handle feed travel distance selection signal</td>    </tr>
+    <tr>    <td>bit 3</td>  <td>:</td>  <td>Rapid traverse override signal</td> </tr>
+    <tr>    <td>bit 4</td>  <td>:</td>  <td>Manual feedrate override signal</td>    </tr>
+    <tr>    <td>bit 5</td>  <td>:</td>  <td>Feedrate override signal</td>   </tr>
+    <tr class="xis">    <td>bit 6</td>  <td>:</td>  <td>Sppindle override signal (only Series 15i)</td>    </tr>
+    <tr class="ois">    <td>bit 6</td>  <td>:</td>  <td>(Not used)</td>    </tr>
+    <tr>    <td>bit 7</td>  <td>:</td>  <td>Optional block skip signal</td> </tr>
+    <tr>    <td>bit 8</td>  <td>:</td>  <td>Single block signal</td>    </tr>
+    <tr>    <td>bit 9</td>  <td>:</td>  <td>Machine lock signal</td>    </tr>
+    <tr>    <td>bit 10</td> <td>:</td>  <td>Dry run signal</td> </tr>
+    <tr>    <td>bit 11</td> <td>:</td>  <td>Memory protection signal</td>   </tr>
+    <tr>    <td>bit 12</td> <td>:</td>  <td>Automatic operation halt signal</td>    </tr>
+    <tr>    <td>bit 13</td> <td>:</td>  <td>(Not used)</td> </tr>
+    <tr>    <td>bit 14</td> <td>:</td>  <td>(Not used)</td> </tr>
+    <tr>    <td>bit 15</td> <td>:</td>  <td>(Not used)</td> </tr>
+</table>                                    
+<p/>* When the bit corresponding to the signal is set to 0, that signal is not read. To read the signal, set the corresponding bit to 1.
+
+                    </content>
+                </item>
+                <item>
+                    <name>sgnl</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the IODBSGNL structure including the output signal image of software operator's panel.
+                        </p>
+
+The IODBSGNL structure is as follows.
+
+<span class="xis">
+<pre>
+<li>Series 15/15i</li>
+
+typedef struct iodbsgnl {
+     short     datano;     /* (Not used) */
+     short     type;       /* Data select flag */
+     short     mode;       /* Mode signal */
+     short     hndl_ax;    /* Manual handle feed axis selection signal */
+     short     hndl_mv;    /* Manual handle feed travel distance selection signal */
+     short     rpd_ovrd;   /* Rapid traverse override signal */
+     short     jog_ovrd;   /* Manual feedrate override signal*/
+     short     feed_ovrd;  /* Feedrate override signal */
+     short     spdl_ovrd;  /* Spindle override signal */
+     short     blck_del;   /* Optional block skip signal(0/1)*/
+     short     sngl_blck;  /* Single block signal(0/1) */
+     short     machn_lock; /* Machine lock signal(0/1) */
+     short     dry_run;    /* Dry run signal(0/1) */
+     short     mem_prtct;  /* Memory protection signal(0/1) */
+     short     feed_hold;  /* Automatic operation halt signal(0/1) */
+     short     manual_rpd; /* (Not used) */
+     short     dummy[2];   /* (Not used) */
+} IODBSGNL ;
+</pre>
+</span>
+<pre>
+<span class="xis">
+<li>Series 16/18/21, 16i/18i/21i, 0i, 30i, Power Mate i, PMi-A</li>
+</span>
+typedef struct iodbsgnl {
+     short     datano;     /* (Not used) */
+     short     type;       /* Data select flag */
+     short     mode;       /* Mode signal */
+     short     hndl_ax;    /* Manual handle feed axis selection signal */
+     short     hndl_mv;    /* Manual handle feed travel distance selection signal */
+     short     rpd_ovrd;   /* Rapid traverse override signal */
+     short     jog_ovrd;   /* Manual feedrate override signal */
+     short     feed_ovrd;  /* Feedrate override signal */
+     short     spdl_ovrd;  /* (Not used) */
+     short     blck_del;   /* Optional block skip signal(0/1) */
+     short     sngl_blck;  /* Single block signal(0/1) */
+     short     machn_lock; /* Machine lock signal(0/1) */
+     short     dry_run;    /* Dry run signal(0/1) */
+     short     mem_prtct;  /* Memory protection signal(0/1) */
+     short     feed_hold;  /* Automatic operation halt signal(0/1) */
+} IODBSGNL ;
+</pre>
+
+<dl>
+    <dt>datano</dt>
+        <dd>Not used</dd>
+
+    <dt>type</dt>
+        <dd>Data selection flag is stored.</dd>
+
+    <dt>mode</dt>
+        <dd>Mode signal is stored.</dd>
+        <span class="xis">
+        <dd><li>Series 15/15i</li></dd>
+        <dd><table class="dd">
+            <tr><td>0</td><td>:</td><td>MDI</td></tr>
+            <tr><td>1</td><td>:</td><td>MEM</td></tr>
+            <tr><td>2</td><td>:</td><td>EDIT</td></tr>
+            <tr><td>3</td><td>:</td><td>HND</td></tr>
+            <tr><td>4</td><td>:</td><td>JOG</td></tr>
+            <tr><td>5</td><td>:</td><td>REF</td></tr>
+            <tr><td>6</td><td>:</td><td>DNC</td></tr>
+            <tr><td>7</td><td>:</td><td>INC</td></tr>
+        </table></dd>
+        </span>
+        <dd class="xis"><li>Series 16/18/21, 16i/18i/21i, 0i, 30i, Power Mate i, PMi-A</li></dd>
+        <dd><table class="dd">
+            <tr><td>0</td><td>:</td><td>MDI</td></tr>
+            <tr><td>1</td><td>:</td><td>MEM</td></tr>
+            <tr><td>2</td><td>:</td><td>EDIT</td></tr>
+            <tr><td>3</td><td>:</td><td>HNDL or INC</td></tr>
+            <tr><td>4</td><td>:</td><td>JOG</td></tr>
+            <tr><td>5</td><td>:</td><td>REF</td></tr>
+        </table></dd>
+
+    <dt>hndl_ax</dt>
+        <dd>Manual handle feed axis selection signal is stored.</dd>
+        <dd><table>
+            <tr><td>0</td><td>:</td><td>HX</td></tr>
+            <tr><td>1</td><td>:</td><td>HY</td></tr>
+            <tr><td>2</td><td>:</td><td>HZ</td></tr>
+            <tr><td>3</td><td>:</td><td>H4</td></tr>
+        </table></dd>
+
+    <dt>hndl_mv </dt>
+        <dd>Manual handle feed travel distance selection signal is stored.</dd>
+        <dd><table>
+            <tr><td>0</td><td>:</td><td>&#215;1</td></tr>
+            <tr><td>1</td><td>:</td><td>&#215;10</td></tr>
+            <tr><td>2</td><td>:</td><td>&#215;100</td></tr>
+        </table></dd>
+
+    <dt>rpd_ovrd</dt>
+        <dd>Rapid traverse override signal is stored.</dd>
+        <dd><table>
+            <tr><td>0</td><td>:</td><td>100%</td></tr>
+            <tr><td>1</td><td>:</td><td>50%</td></tr>
+            <tr><td>2</td><td>:</td><td>25%</td></tr>
+            <tr><td>3</td><td>:</td><td>F0</td></tr>
+        </table></dd>
+
+    <dt>jog_ovrd</dt>
+        <dd>Manual feedrate override signal is stored.</dd>
+        <dd><table>
+            <colgroup>
+            <colgroup>
+            <colgroup width="25%">
+            <colgroup>
+            <colgroup>
+            <colgroup width="25%">
+            <colgroup>
+            <colgroup>
+            <colgroup width="25%">
+            <tr><td>0</td><td>:</td><td>0%   </td>  <td>10</td><td>:</td><td>2.0% </td>  <td>20</td><td>:</td><td>52.0%</td></tr>
+            <tr><td>1</td><td>:</td><td>0.1% </td>  <td>11</td><td>:</td><td>2.7% </td>  <td>21</td><td>:</td><td>72.0%</td></tr>
+            <tr><td>2</td><td>:</td><td>0.14%</td>  <td>12</td><td>:</td><td>3.7% </td>  <td>22</td><td>:</td><td>100% </td></tr>
+            <tr><td>3</td><td>:</td><td>0.2% </td>  <td>13</td><td>:</td><td>5.2% </td>  <td>23</td><td>:</td><td>140% </td></tr>
+            <tr><td>4</td><td>:</td><td>0.27%</td>  <td>14</td><td>:</td><td>7.2% </td>  <td>24</td><td>:</td><td>200% </td></tr>
+            <tr><td>5</td><td>:</td><td>0.37%</td>  <td>15</td><td>:</td><td>10.0%</td>  <td>  </td><td> </td><td>     </td></tr>
+            <tr><td>6</td><td>:</td><td>0.52%</td>  <td>16</td><td>:</td><td>14.0%</td>  <td>  </td><td> </td><td>     </td></tr>
+            <tr><td>7</td><td>:</td><td>0.72%</td>  <td>17</td><td>:</td><td>20.0%</td>  <td>  </td><td> </td><td>     </td></tr>
+            <tr><td>8</td><td>:</td><td>1.0% </td>  <td>18</td><td>:</td><td>27.0%</td>  <td>  </td><td> </td><td>     </td></tr>
+            <tr><td>9</td><td>:</td><td>1.4% </td>  <td>19</td><td>:</td><td>37.0%</td>  <td>  </td><td> </td><td>     </td></tr>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+        </table></dd>
+
+    <dt>feed_ovrd</dt>
+        <dd>Feedrate override signal is stored.</dd>
+        <dd><table>
+            <colgroup>
+            <colgroup>
+            <colgroup width="25%">
+            <colgroup>
+            <colgroup>
+            <colgroup width="25%">
+            <colgroup>
+            <colgroup>
+            <colgroup width="25%">
+            <tr><td>0</td><td>:</td><td>0% </td>  <td>10</td><td>:</td><td>100%</td>  <td>20</td><td>:</td><td>200%</td></tr>
+            <tr><td>1</td><td>:</td><td>10%</td>  <td>11</td><td>:</td><td>110%</td>  <td>  </td><td> </td><td>    </td></tr>
+            <tr><td>2</td><td>:</td><td>20%</td>  <td>12</td><td>:</td><td>120%</td>  <td>  </td><td> </td><td>    </td></tr>
+            <tr><td>3</td><td>:</td><td>30%</td>  <td>13</td><td>:</td><td>130%</td>  <td>  </td><td> </td><td>    </td></tr>
+            <tr><td>4</td><td>:</td><td>40%</td>  <td>14</td><td>:</td><td>140%</td>  <td>  </td><td> </td><td>    </td></tr>
+            <tr><td>5</td><td>:</td><td>50%</td>  <td>15</td><td>:</td><td>150%</td>  <td>  </td><td> </td><td>    </td></tr>
+            <tr><td>6</td><td>:</td><td>60%</td>  <td>16</td><td>:</td><td>160%</td>  <td>  </td><td> </td><td>    </td></tr>
+            <tr><td>7</td><td>:</td><td>70%</td>  <td>17</td><td>:</td><td>170%</td>  <td>  </td><td> </td><td>    </td></tr>
+            <tr><td>8</td><td>:</td><td>80%</td>  <td>18</td><td>:</td><td>180%</td>  <td>  </td><td> </td><td>    </td></tr>
+            <tr><td>9</td><td>:</td><td>90%</td>  <td>19</td><td>:</td><td>190%</td>  <td>  </td><td> </td><td>    </td></tr>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+        </table></dd>
+
+    <dt>spdl_ovrd</dt>
+        <span class="xis">
+        <dd>Spindle override signal is stored. (only Series 15i)</dd>
+        <dd><table>
+            <colgroup>
+            <colgroup>
+            <colgroup width="25%">
+            <colgroup>
+            <colgroup>
+            <colgroup width="25%">
+            <colgroup>
+            <colgroup>
+            <colgroup width="25%">
+            <tr><td>0</td><td>:</td><td>0% </td>  <td>10</td><td>:</td><td>100%</td>  <td>20</td><td>:</td><td>200%</td></tr>
+            <tr><td>1</td><td>:</td><td>10%</td>  <td>11</td><td>:</td><td>110%</td>  <td>  </td><td> </td><td>    </td></tr>
+            <tr><td>2</td><td>:</td><td>20%</td>  <td>12</td><td>:</td><td>120%</td>  <td>  </td><td> </td><td>    </td></tr>
+            <tr><td>3</td><td>:</td><td>30%</td>  <td>13</td><td>:</td><td>130%</td>  <td>  </td><td> </td><td>    </td></tr>
+            <tr><td>4</td><td>:</td><td>40%</td>  <td>14</td><td>:</td><td>140%</td>  <td>  </td><td> </td><td>    </td></tr>
+            <tr><td>5</td><td>:</td><td>50%</td>  <td>15</td><td>:</td><td>150%</td>  <td>  </td><td> </td><td>    </td></tr>
+            <tr><td>6</td><td>:</td><td>60%</td>  <td>16</td><td>:</td><td>160%</td>  <td>  </td><td> </td><td>    </td></tr>
+            <tr><td>7</td><td>:</td><td>70%</td>  <td>17</td><td>:</td><td>170%</td>  <td>  </td><td> </td><td>    </td></tr>
+            <tr><td>8</td><td>:</td><td>80%</td>  <td>18</td><td>:</td><td>180%</td>  <td>  </td><td> </td><td>    </td></tr>
+            <tr><td>9</td><td>:</td><td>90%</td>  <td>19</td><td>:</td><td>190%</td>  <td>  </td><td> </td><td>    </td></tr>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+        </table></dd>
+        </span>
+        <span class="ois">
+            <dd>Not used</dd>
+        </span>
+
+    <dt>blck_del</dt>
+        <dd>Optional block skip signal (0/1) is stored.</dd>
+
+    <dt>sngl_blck</dt>
+        <dd>Single block signal (0/1) is stored.</dd>
+
+    <dt>machn_lock</dt>
+        <dd>Machine lock signal (0/1) is stored.</dd>
+
+    <dt>dry_run</dt>
+        <dd>Dry run signal (0/1) is stored.</dd>
+
+    <dt>mem_prtct</dt>
+        <dd>Memory protection signal (0/1) is stored.</dd>
+
+    <dt>feed_hold</dt>
+        <dd>Automatic operation halt signal (0/1) is stored.</dd>
+
+    <dt>manual_rpd</dt>
+        <dd>Not used.</dd>
+</dl>
+
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The software operator's panel function and the extended driver/library function are necessary.
+           </content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>The software operator's panel function is necessary.</need>
+        <add></add>
+    </option>
+
+
+
+    <parameter>
+        <add></add>
+    </parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_wropnlsgnl</name>
+            <file>misc/cnc_wropnlsgnl.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdopnlgnrl</name>
+            <file>misc/cnc_rdopnlgnrl.htm</file>
+        </item>
+        <item>
+            <name>cnc_wropnlgnrl</name>
+            <file>misc/cnc_wropnlgnrl.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdopnlgsname</name>
+            <file>misc/cnc_rdopnlgsname.htm</file>
+        </item>
+        <item>
+            <name>cnc_wropnlgsname</name>
+            <file>misc/cnc_wropnlgsname.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

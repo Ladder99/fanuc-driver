@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdlppfbdt</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdlppfbdt(unsigned short FlibHndl, IDBLPPFBFG *rflag, short *number, IODBLPPFBDT *lppfbdt); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p> Reads the data which the function of actual output estimation type pulse power feedback use.
+                The data is stored in each member of the IODBLPPFBDT structure.
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>  
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>rflag</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specifies a pointer to the structure in which to specify the kind and range of data to read.
+                            Sets the beginning / finish number which read, when you specify the command value of pulse frequency, the command value of duty cycle, and the actual power.
+<pre>
+typedef struct idblppfbfg {
+    short   s_no;           /* The group number of data to read.                  */
+    short   slct;           /* The kind of data to read.                          */
+    short   s_freq;         /* The pulse frequency number which begins to read.   */
+    short   e_freq;         /* The pulse frequency number which finishes to read. */
+    short   s_duty;         /* The duty cycle number which begins to read.        */
+    short   e_duty;         /* The duty cycle number which finishes to read.      */
+} IDBLPPFBFG ;
+</pre>
+                        </p>
+                        <p>
+                            <dl>
+                                <dt>s_no</dt>
+                                    <dd>The group number of command data at peak power to read is set.</dd>
+                                    <dd>[Setting range] 0 to 7 </dd>
+                                <dt>slct</dt>
+                                    <dd>The kind of data to read is set.</dd>
+                                    <dd>The meaning which correspond to each bit of this flag is as follows.</dd>
+                                    <dd>Each data can be acquired when the bit corresponding to data has been 1.</dd>
+                                    <dd>The data is invalid when the bit corresponding to data is 0.</dd>
+                                    <dd><table border="0" class="dd">
+                                        <tr> <td>bit 0</td><td>：</td><td>The command value of peak power</td> </tr>
+                                        <tr> <td>bit 1</td><td>：</td><td>The command value of pulse frequency</td> </tr>
+                                        <tr> <td>bit 2</td><td>：</td><td>The command value of duty cycle</td> </tr>
+                                        <tr> <td>bit 3</td><td>：</td><td>The actual power</td> </tr>
+                                        <tr> <td>bit 4,..,15</td><td>：</td><td>Unused.</td> </tr>                                   
+                                    </table></dd>
+
+                                <dt>s_freq</dt>
+                                    <dd>The pulse frequency number which begins to read is set.</dd>
+                                    <dd>When s_freq is -1, all the data of pulse frequency can be read.</dd>
+                                    <dd>[Setting range] -1, 0 to 9</dd>
+
+                                <dt>e_freq</dt>
+                                    <dd>The pulse frequency number which finishes to read is set.</dd>
+                                    <dd>When s_freq is -1, e_freq is invalid.(e_freq can be used, when s_freq is 0 to 9)</dd>
+                                    <dd>[Setting range] 0 to 9 </dd>
+
+                                <dt>s_duty</dt>
+                                    <dd>The duty cycle number which begins to read is set.</dd>
+                                    <dd>When s_duty is -1, all the data of duty cycle can be read.</dd>
+                                    <dd>[Setting range] -1, 0 to 9 </dd>
+
+                                <dt>e_duty</dt>
+                                    <dd>The duty cycle number which finishes to read is set.</dd>
+                                    <dd>When s_duty is -1, e_duty is invalid.(e_duty can be used, when s_duty is 0 to 9)</dd>
+                                    <dd>[Setting range] 0 to 9 </dd>
+                            </dl>
+                        The data within the range specified for actual output estimation type pulse power feedback by s_freq, e_freq, s_duty, and e_duty is read.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>number</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                         Specifies a pointer to the group number of data of actual output estimation type pulse power feedback to read.
+                         Specifies the number to read before calling the function. The number which actually read after calling the function is set. (specify 1 to 8 for the number)
+                        </p>
+                    </content>
+                </item>
+
+                <item>
+                    <name>lppfbdt</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            A pointer to the IODBLPPFBDT structure in which to return the group data of actual output estimation type pulse power feedback to read. 
+                            The data of this structure prepare the number specified by "number".
+                            The IODBLPPFBDT structure is as follows.
+
+<pre>
+typedef struct iodblppfbdt {
+    short   ppower;         /* The peak power.     */
+    short   dummy;          /* The dummy variable. */
+    short   freq[10];       /* The pulse frequency */
+    short   duty[10];       /* The duty cycle      */
+    short   rpower[10][10]; /* The actual power.   */
+} IODBLPPFBDT ;
+</pre>
+                        </p>
+                        <p>
+                            <dl>
+                                <dt>ppower</dt>
+                                    <dd>The command value of peak power is set.</dd>
+                                    <dd>[Unit] W </dd>
+                                    <dd>[Setting range] 0 to 9999 </dd>
+                                <dt>dummy</dt>
+                                    <dd>The dummy variable.</dd>
+                                <dt>freq[10]</dt>
+                                    <dd>The command value of pulse frequency is set.</dd>
+                                    <dd>[Unit] Hz </dd>
+                                    <dd>[Setting range] 1 to 32767 </dd>
+                                    <dd>When rflag.s_duty is 2 and rflag.e_duty is 4, the value is set from duty[2] to duty[4].</dd>
+
+                                <dt>duty[10]</dt>
+                                    <dd>The command value of duty cycle is set.</dd>
+                                    <dd>[Unit] % </dd>
+                                    <dd>[Setting range] 0 to 100 </dd>
+                                    <dd>When rflag.s_duty is 2 and rflag.e_duty is 4, the value is set from duty[2] to duty[4].</dd>
+
+                                <dt>rpower[10][10]</dt>
+                                    <dd>The actual power is set.</dd>
+                                    <dd>[Unit] W </dd>
+                                    <dd>[Setting range] -32768 to 32767 </dd>
+                                    <dd>[ i ][ j ] i : The number of duty cycle. , j : The number of pulse frequency.</dd>
+
+                            </dl>
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                Unavailable<br/>
+                This function cannot be used except 30i/31i-LB.
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                Data block length error<br/>
+                Number of data(number) is wrong.
+            </content>
+        </item>
+        <item>
+           <name>EW_NUMBER</name>
+            <content>
+                Data number error<br/>
+
+
+                In order to get more information for this err_no return value, execute 
+                <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.
+                The cutting data group number which an error occurred will be set onto the member
+                of err_no of ODBERR structure and the following detailed status will be set onto the member of
+                err_dtno of ODBERR structure.
+                <table border="0">
+                    <tr><td>1</td><td>：</td><td>Error in the group number of data (s_no) to read.</td></tr>
+                    <tr><td>2</td><td>：</td><td>Error in the kind of data (slct) to read.</td></tr>
+                    <tr><td>3</td><td>：</td><td>Error in the pulse frequency number which begins (s_freq) to read.</td></tr>
+                    <tr><td>4</td><td>：</td><td>Error in the pulse frequency number which finishes (e_freq) to read.</td></tr>
+                    <tr><td>5</td><td>：</td><td>Error in the duty cycle number which begins (s_duty) to read.</td></tr>
+                    <tr><td>6</td><td>：</td><td>Error in the duty cycle number which finishes (e_duty) to read.</td></tr>
+                </table>
+
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The extended driver/library function is necessary.
+            </content>
+        </item>
+        <item>
+             <name>EW_PARAM</name>
+            <content>
+                CNC parameter error(Series 30i/31i-LB only)<br/>
+                Mistake of laser oscillator (parameter No.15030)
+                The actual output estimation type pulse power feedback function is invalid.(Parameter PFB(No.29000#0) mistake)
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <li>Series 30i/31i-LB</li>
+            <div class="dd">No.15030</div>
+            <div class="dd">PFB(No.29000#0)</div>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>-</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>-</d>
+            <h>-</h>
+            <a>-</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_wrlppfbdt</name>
+            <file>Laser/cnc_wrlppfbdt.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

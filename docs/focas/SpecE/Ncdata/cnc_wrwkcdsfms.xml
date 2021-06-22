@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_wrwkcdsfms</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_wrwkcdsfms(unsigned short FlibHndl, short length, IODBWCSF *wkcdsfms);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+            Writes the work coordinate shift measured value specified by "type".
+            The work coordinate shift measured value must be stored in "data" array
+            of "IODBWCSF" with signed binary format.  The value for all axes can be
+            written at a time by specifying ALL_AXES for "type".
+            </p>
+
+            <p>The unit of work coordinate shift measured value is the same as "Read
+            work coordinate shift value( <a href="ncdata/cnc_rdwkcdshft.htm" target="_parent">cnc_rdwkcdshft</a> )".  See the description of <a href="ncdata/cnc_rdwkcdshft.htm" target="_parent">cnc_rdwkcdshft</a> function.</p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the data block length(size of IODBWCSF structure).</p>
+                        <p><b>IODBWCSF</b></p>
+                        <table>
+                            <colgroup align="left" valign="top"/>
+                            <colgroup align="left" valign="top"/>
+                            <tr>
+                                <th>1 axis</th>
+                                <th>all axes</th>
+                            </tr>
+                            <tr>
+                                <td><img src="ncdata/rpos.gif"/></td>
+                                <td><img src="ncdata/rposa.gif"/></td>
+                            </tr>
+                            <tr class="ois">
+                                <td></td>
+                                <td>n = Maximum controlled axes (The data for current controlled axes are valid.)</td>
+                            </tr>
+                        </table>
+                        <ul class="xis">
+                            <li>Series 30i, 0i-D/F</li><p/>
+                            <p>n = Maximum controlled axes (The data for current controlled axes are valid.)</p>
+                            <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C</li><p/>
+                            <p>n = Current controlled axes</p>
+                        </ul>
+                    </content>
+                </item>
+                <item>
+                    <name>wkcdsfms</name>
+                    <type>in</type>
+                    <content>
+                        <p>Pointer to the IODBWCSF structure for the work coordinate shift measured value.  The IODBWCSF structure is as follows.</p>
+<pre>
+typedef struct iodbwcsf {
+        short   dummy;         /* (not used)               */
+        short   type;          /* axis number              */
+        long    data[MAX_AXIS];/* work coordinate shift    */
+                               /*           measured value */
+} IODBWCSF ;            /* MAX_AXIS : max. controlled axes */
+</pre>
+                        <dl>
+                            <dt>type</dt>
+                            <dd>Specify the axis number.<br/>
+                                <table class="dd">
+                                <colgroup align="left" valign="top">
+                                    <tr>
+                                        <td>ALL_AXES</td>
+                                        <td>:</td>
+                                        <td>assigns all axes(ALL_AXES=-1)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1,..,m</td>
+                                        <td>:</td>
+                                        <td>assigns 1 axis(m=current controlled axes)</td>
+                                    </tr>
+                                </colgroup>
+                                </table>
+                            </dd>
+                            <dt>data</dt>
+                            <dd>Specify the work coordinate shift measured value to be written.<br/>
+                                <table class="dd">
+                                    <tr>
+                                        <td>data[0],..,data[m-1]</td>
+                                        <td>:</td>
+                                        <td>assigns all axes</td>
+                                    </tr>
+                                    <tr>
+                                        <td>data[0]</td>
+                                        <td>:</td>
+                                        <td>1assigns all axes</td>
+                                    </tr>
+                                </table>
+                            </dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>Unavailable<br/>This function cannot be used at M series.</content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>Data block length error<br/>Size of IODBWCSF structure(length) is wrong.</content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>Data attribute error<br/>Axis number(type) is wrong.</content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>Data error<br/>
+            Work coordinate shift measured value(data) is out of range.<br/>
+            In order to get more information for this err_no return value, execute <a href="misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.  The axis number(0 -) at which error occurred will be set onto the member, err_dtno of ODBERR structure.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>The extended driver/library function is necessary.</content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>Write protection<br/>CNC parameter '3290#3' must be 0.</content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>CNC parameter error<br/>CNC parameter '1201#6' must be 0.</content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>CNC execution rejected<br/>STL(DO) is on.</content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <type>
+            <li>Series 30i</li>
+            <p>
+                   IS-C,IS-D,IS-E<br/>
+            </p>
+        </type>
+
+        <is>
+            <hssb>The extended driver/library function is necessary.</hssb>
+            <type>              
+                IS-C,IS-D,IS-E
+            </type>
+        </is>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C</li><p/>
+                <p>
+                    1201#6=0 (must be set)<br/>
+                    3290#3=0 (must be set)
+                </p>
+            </ul>
+            <ul>
+                <li>Series 30i</li><p/>
+                <p>
+                    1013#3,#2,#1,#0<br/>
+                    1201#6=0 (must be set)<br/>
+                    3290#3=0 (must be set)
+                </p>
+            </ul>
+            <ul>
+                <li>Series 0i-D/F</li><p/>
+                <p>
+                    1013#1,#0<br/>
+                    1201#6=0 (must be set)<br/>
+                    3290#3=0 (must be set)
+                </p>
+            </ul>
+        </type>
+    </parameter>
+
+    <is_parameter>
+        <type>
+            <ul>
+                1013#3,#2,#1,#0<br/>
+                1201#6=0 (must be set)<br/>
+                3290#3=0 (must be set)
+            </ul>
+        </type>     
+    </is_parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <add><b></b></add>
+
+        <is>
+            <m>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdwkcdshft</name>
+            <file>ncdata/cnc_rdwkcdshft.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrwkcdshft</name>
+            <file>ncdata/cnc_wrwkcdshft.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdwkcdsfms</name>
+            <file>ncdata/cnc_rdwkcdsfms.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

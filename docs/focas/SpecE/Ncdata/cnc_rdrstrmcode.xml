@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdrstrmcode</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdrstrmcode(unsigned short FlibHndl, short s_no, short *num, ODBRSTRM *buf);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Reads specified number of executing or executed M codes, starting from the M code group with specified number.</p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify M code group number.</p>
+                    </content>
+                </item>
+                <item>
+                    <name>num</name>
+                    <type>in / out</type>
+                    <content>
+                        <p>Pointer to the number of M code groups to be read.<br/>
+                        Specify the number of M code groups to be read before function
+                    call and actual number of M code groups being read is stored
+                    after the function call.</p>
+                    </content>
+                </item>
+                <item>
+                    <name>buf</name>
+                    <type>out</type>
+                    <content>
+                        <p>Pointer to the ODBRSTRM structure where returned data are stored. The ODBRSTRM structure is as follows.</p>
+
+<pre>
+typedef struct odbrstrm {
+        short   grp_no;
+        short   mem_no;
+        struct{
+                long    no;
+                short   flag;
+        }m_code[5];
+} ODBRSTRM;
+</pre>
+                        <dl>
+                            <dt>grp_no</dt>
+                            <dd>
+                                M code group number<br/>
+                                M code group number is returned.
+                            </dd>
+                            <br/>
+                            <dt>mem_no</dt>
+                            <dd>
+                                The number of the M codes memorized.<br/>
+                                The number of the M codes memorized in the group is
+                            returned.
+                            </dd>
+                            <br/>
+                            <dt>m_code[N].no</dt>
+                            <dd>
+                                M code<br/>
+                                The latest five M codes in the group are returned.
+                             (N: 0,..,4)
+                            </dd>
+                            <br/>
+                            <dt>m_code[N].flag</dt>
+                            <dd>
+                                Executed / Executing / Program restart flag<br/>
+                                Flags to indicate whether above M codes in m_code[N].no are executed, executing or specified during Program restart operation.
+                                
+                                <table class="dd">
+                                    <tr>
+                                        <td>0</td><td>:</td><td>executed</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1</td><td>:</td><td>executing</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td><td>:</td><td>specified during Program restart operation</td>
+                                    </tr>
+                                </table>
+
+                                Executed / Executing / Program restart flags for latest
+                            five M codes in the group are returned.
+                             (N: 0,..,4)
+                            </dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>Data block length error<br/>The number indication(num) is wrong.</content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>Data number error<br/>The start number(s_no) is wrong.</content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>
+                The M code group option, the program restart
+                option and the extended driver/library function
+                are necessary.
+            </content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <need>
+            <p>The M code group option and the program restart option are necessary.</p>
+        </need>
+    </option>
+
+
+
+    <parameter>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdexecmcode</name>
+            <file>ncdata/cnc_rdexecmcode.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

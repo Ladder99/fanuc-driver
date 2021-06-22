@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>eth_wrdsmode</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI eth_wrdsmode(unsigned short FlibHndl, short path, short mode); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                Change the mode for DATA SERVER function.
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details. </p>
+                    </content>
+                </item>
+                <item>
+                    <name>path</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the channel number to change.</p>
+                        <p>It is able to change from 0 to 10.</p>
+                        <p>In case of setting 0(zero), all channel modes are changed.</p>
+                    </content>
+                </item>
+                <item>
+                    <name>mode</name>
+                    <type>in</type>
+                    <content>
+                        Specify the DATA SERVER function mode to change.<br/>
+                        Available DATA SERVER function mode is as follows. <br/>
+                        <dd><table border="0">
+                        <tr> <td>1   </td><td>:</td><td>Strage mode</td> </tr>
+                        <tr> <td>2   </td><td>:</td><td>Buffer mode</td> </tr>
+                        <tr> <td>3   </td><td>:</td><td>FTP mode</td> </tr>
+                        </table></dd>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a> function.<br/>
+                The following details status will be set onto the member, err_no of ODBERR structure.<br/>
+                <table class="dd">
+                    <tr> <td>22</td><td>:</td><td>The option board is nothing.</td> </tr>
+                    <tr> <td>24</td><td>:</td><td>The DATA SERVER function is nothing.</td> </tr>
+                    <tr> <td>25</td><td>:</td><td>Buffer Mode Function is nothing.</td> </tr>
+                    <tr> <td>26</td><td>:</td><td>The ATA Card is nothing.</td> </tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_FUNC</name>
+            <content>Function Error<br/>
+                Acquiring of parameter is failed.<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a> function.<br/>
+                The following details status will be set onto the member, err_no of ODBERR structure.<br/>
+                <table class="dd">
+                    <tr> <td>10</td><td>:</td><td>Reading from File SRAM is failed.</td> </tr>
+<!--                <tr> <td>14</td><td>:</td><td>Acquiring of Library Handle is failed.</td> </tr> -->
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>Write protection<br/>
+                Writing to the parameter is failed.<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a> function.<br/>
+                The following details status will be set onto the member, err_no of ODBERR structure.<br/>
+                <table class="dd">
+                    <tr> <td>11</td><td>:</td><td>Writing to the File SRAM is failed.</td> </tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>Data error<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a> function.<br/>
+                The following details status will be set onto the member, err_no of ODBERR structure.<br/>
+                <table class="dd">
+                    <tr> <td>2</td><td>:</td><td>Out of range.</td> </tr>
+                </table>
+                The following details status will be set onto the member, err_dtno of ODBERR structure.<br/>
+                <table class="dd">
+                    <tr> <td>302</td><td>:</td><td>Mode range error.</td> </tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_PATH</name>
+            <content>The channel number(path) is worng.<br/>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            <p> 
+                The DATA SERVER function and the extended driver/library function are necessary.
+            </p>
+        </hssb>
+    </option>
+
+
+
+    <parameter></parameter>
+    <!-- 30i(WinCE) -->
+    <is_parameter></is_parameter>
+
+
+
+    <mode></mode>
+    <!-- 30i(WinCE) -->
+    <is_mode></is_mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>eth_rddsmode</name>
+            <file>Data/eth_rddsmode.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

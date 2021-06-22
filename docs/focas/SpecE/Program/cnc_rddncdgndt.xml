@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_rddncdgndt</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rddncdgndt(unsigned short FlibHndl, ODBDNCDGN *dgndt);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                Diagnosis data regarding the output of downloading DNC program is returned.<br/>
+                The purpose of this function is the maintenance of DNC operation or 198 operation.
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle.
+                            See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>dgndt</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            The pointer to a structure 'ODBDNCDGN' that returns diagnosis data.<br/>
+                            The structure of ODBDNCDGN is as follows.
+                        </p>
+<pre>
+typedef struct odbdncdgn {
+        short          ctrl_word;
+        short          can_word;
+        char           nc_file[16];
+        unsigned short read_ptr;
+        unsigned short write_ptr;
+        unsigned short empty_cnt;
+        unsigned long  total_size;
+} ODBDNCDGN;
+</pre>
+
+                        <dl>
+                            <dt>ctrl_word</dt>
+                                <dd>Data that shows an operation demand from CNC is set.</dd>
+                            <dt>can_word</dt>
+                                <dd>Data that shows an operation stop demand from CNC is set.</dd>
+                            <dt>nc_file</dt>
+                                <dd>Program number/program name specified as an operation start demand is set.</dd>
+                                <dd>As for program name, 15 characters from the head are acquired.</dd>
+                            <dt>read_ptr</dt>
+                                <dd>Read pointer of buffer for DNC operation is set.</dd>
+                            <dt>write_ptr</dt>
+                                <dd>Write pointer of buffer for DNC operation is set.</dd>
+                            <dt>empty_cnt</dt>
+                                <dd>Number indicating how many times the read pointer caught up with the write pointer
+                                    at outputting the NC part program is set.<br/>
+                                    This count shows the total of the events from the power-up of CNC.</dd>
+                            <dt>total_size</dt>
+                                <dd>Total number of characters output as the NC part program after
+                                    <a href="Program/cnc_dncstart2.htm" target="_parent">cnc_dncstart2</a>
+                                    was executed is set.<br/>
+                                    This value is cleared by each <a href="Program/cnc_dncstart2.htm" target="_parent">
+                                    cnc_dncstart2</a> execution.</dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The extended driver/library function is necessary.
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                CNC parameter error<br/>
+                Following CNC parameter must be set.<br/>
+                Series 15/15i<br/>
+                <span class="dd">7713#0 = 1</span><br/>
+                Series 16/18/21, 16i/18i/21i, 0i-A/B/C<br/>
+                <span class="dd">8706#1 = 1</span>
+            </content>
+        </item>
+
+        <is>
+            <item>
+                <name>EW_NOOPT</name>
+                <content>
+                    No option<br/>
+                    The extended driver/library function is necessary.
+                </content>
+            </item>
+        </is>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <li>HSSB</li>
+                <ul>
+                    <li>Series 15</li>
+                        0000#0 (influenced by setting)<br/>
+                        7713#0 = 1  (must be set)<br/>
+                        0020   = 15 (must be set)<br/>
+                    <li>Series 15i</li>
+                        0000#0 (influenced by setting)<br/>
+                        0020   = 15 (must be set)<br/>
+                    <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C</li>
+                        0000#0 (influenced by setting)<br/>
+                        8706#0 (influenced by setting)<br/>
+                        8706#1 = 1  (must be set)<br/>
+                        0020   = 15 (must be set)<br/>
+                </ul>
+            <li>Ethernet</li>
+                <ul>
+                    This function is not related to CNC parameter. 
+                </ul>
+        </type>
+    </parameter>
+
+    <is_parameter>
+    </is_parameter>
+
+
+
+    <mode></mode>
+
+    <is_mode></is_mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>E</d>
+            <h>E</h>
+            <a>O</a>
+        </pw>
+        
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_dncstart2</name>
+            <file>Program/cnc_dncstart2.htm</file>
+        </item>
+        <item>
+            <name>cnc_dnc2</name>
+            <file>Program/cnc_dnc2.htm</file>
+        </item>
+        <item>
+            <name>cnc_dncend2</name>
+            <file>Program/cnc_dncend2.htm</file>
+        </item>
+
+        <is>
+            <item>
+                <name>cnc_dncstart2</name>
+                <file>Program/cnc_dncstart2.htm</file>
+            </item>
+            <item>
+                <name>cnc_dnc2</name>
+                <file>Program/cnc_dnc2.htm</file>
+            </item>
+            <item>
+                <name>cnc_dncend2</name>
+                <file>Program/cnc_dncend2.htm</file>
+            </item>
+        </is>
+    </reference>
+
+
+
+  </func>
+</root>

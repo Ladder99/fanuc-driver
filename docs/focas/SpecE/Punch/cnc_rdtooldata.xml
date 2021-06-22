@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdtooldata</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>
+            FWLIBAPI short WINAPI cnc_rdtooldata(unsigned short FlibHndl, short s_no, short *number, IODBTLDT *tldt);
+        </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            Reads the tool data.<br/>
+            The data is stored in each member of the IODBTLDT structure( user define type ).
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle.<br/>
+                            See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                           Specify the start tool registration number.
+                        </p>
+                        <p class="dd">
+                            1,..,(maximum tool registration number)
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>number</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                            Pointer to the number of tool data.<br/>
+                            Specify the number of tool data to be read before function call,
+                            and the number of tool data being read actually is stored after the function call.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>tldt</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the IODBTLDT structure including the tool data.<br/>
+                            The IODBTLDT structure is as follows.
+                        </p>
+<pre>
+・Series 16i/18i-P
+typedef struct iodbtldt {
+    short   slct;       /* Flag of valid data */
+    long    tool_no;    /* Tool number */
+    long    x_axis_ofs; /* X-axis offset */
+    long    y_axis_ofs; /* Y-axis offset */
+    long    turret_pos; /* Turret position */
+    long    chg_tl_no;  /* Tool number to be changed */
+    long    punch_count;/* Number of punch operation */
+    long    tool_life;  /* Tool life */
+    long    m_tl_radius;/* Radius of multiple tool */
+    long    m_tl_angle; /* Angle of multiple tool */
+    char    tl_shape;   /* Tool shape(C) */
+    long    tl_size_i;  /* Tool size(I) */
+    long    tl_size_j;  /* Tool size(J) */
+    long    tl_angle;   /* Tool angle(K) */
+    long    reserve[3]; /* (reserve) */
+} IODBTLDT ;
+・Series 0i-PD/PF, 30i/31i-LB, 30i/31i-PB
+typedef struct iodbtldt {
+    short   slct;         /* Flag of valid data        */
+    long    tool_no;      /* Tool number               */
+    long    x_axis_ofs;   /* X-axis offset             */
+    long    y_axis_ofs;   /* Y-axis offset             */
+    long    turret_pos;   /* Turret position           */
+    long    chg_tl_no;    /* Tool number to be changed */
+    long    punch_count;  /* Number of punch operation */
+    long    tool_life;    /* Tool life                 */
+    long    m_tl_radius;  /* Radius of multiple tool   */
+    long    m_tl_angle;   /* Angle of multiple tool    */
+    char    tl_shape;     /* Tool shape(C)             */
+    long    tl_size_i;    /* Tool size(I)              */
+    long    tl_size_j;    /* Tool size(J)              */
+    long    tl_angle;     /* Tool angle(K)             */
+    char    x_axis_dec;   /* Decimals places           */
+    char    y_axis_dec;   /* Decimals places           */
+    char    turret_dec;   /* Decimals places           */
+    char    m_radius_dec; /* Decimals places           */
+    char    m_angle_dec;  /* Decimals places           */
+    char    tl_size_i_dec;/* Decimals places           */
+    char    tl_size_j_dec;/* Decimals places           */
+    char    tl_angle_dec; /* Decimals places           */
+    short   reserve[2];   /* (reserve)                 */
+} IODBTLDT ;
+</pre>
+                        <dl>
+                            <dt>slct</dt>
+                                <dd>Flag of valid data is set.
+                                <table class="dd">
+                                    <tr><td>bit 0 </td><td>:</td><td>Tool number</td></tr>
+                                    <tr><td>bit 1 </td><td>:</td><td>X-axis offset</td></tr>
+                                    <tr><td>bit 2 </td><td>:</td><td>Y-axis offset</td></tr>
+                                    <tr><td>bit 3 </td><td>:</td><td>Turret position</td></tr>
+                                    <tr><td>bit 4 </td><td>:</td><td>Tool number to be changed</td></tr>
+                                    <tr><td>bit 5 </td><td>:</td><td>Number of punch operation</td></tr>
+                                    <tr><td>bit 6 </td><td>:</td><td>Tool life</td></tr>
+                                    <tr><td>bit 7 </td><td>:</td><td>Radius of multiple tool</td></tr>
+                                    <tr><td>bit 8 </td><td>:</td><td>Angle of multiple tool</td></tr>
+                                    <tr><td>bit 9 </td><td>:</td><td>Tool shape(C)</td></tr>
+                                    <tr><td>bit 10</td><td>:</td><td>size(I)</td></tr>
+                                    <tr><td>bit 11</td><td>:</td><td>Tool size(J)</td></tr>
+                                    <tr><td>bit 12</td><td>:</td><td>Tool angle(K)</td></tr>
+                                </table>
+                                <table class="dd">
+                                    <tr><td>bit 13,..,15</td><td>:</td><td>(reserve)</td></tr>
+                                </table>
+                                * When a bit is 0, it means the corresponding data has no meaning.</dd>
+                            <dt>tool_no</dt>
+                                <dd>
+                                    Tool number is set. (0,..)
+                                </dd>
+                            <dt>x_axis_ofs</dt>
+                                <dd>
+                                    X-axis offset is set.
+                                </dd>
+                            <dt>y_axis_ofs</dt>
+                                <dd>
+                                    Y-axis offset is set.
+                                </dd>
+                            <dt>turret_pos</dt>
+                                <dd>
+                                    Turret position is set.
+                                </dd>
+                            <dt>chg_tl_no</dt>
+                                <dd>
+                                    Tool number to be changed is set. (0,..)
+                                </dd>
+                            <dt>punch_count</dt>
+                                <dd>
+                                    Number of punch operation is set.(0,..,99999999)
+                                </dd>
+                            <dt>tool_life</dt>
+                                <dd>
+                                    Tool life is set.(valid with Tool life management function)
+                                </dd>
+                            <dt>m_tl_radius</dt>
+                                <dd>
+                                    Radius of multiple tool is set.<br/>
+                                     (valid with Multiple tool function &#38; Tool data setting function &#38; 16282#5=0)
+                                </dd>
+                            <dt>m_tl_angle</dt>
+                                <dd>
+                                    Angle of multiple tool is set.<br/>
+                                    (valid with Multiple tool function &#38; Tool data setting function &#38; 16282#5=0)
+                                </dd>
+                            <dt>tl_shape</dt>
+                                <dd>
+                                    Tool shape(C) is set. (valid with Graphic function)
+                                </dd>
+                            <dt>tl_size_i</dt>
+                                <dd>
+                                    Tool size(I) is set.(valid with Graphic function)
+                                </dd>
+                            <dt>tl_size_j</dt>
+                                <dd>
+                                    Tool size(J) is set.(valid with Graphic function)
+                                </dd>
+                            <dt>tl_angle</dt>
+                                <dd>
+                                    Tool angle(K) is set.(valid with Graphic function)
+                                </dd>
+
+                            <dt>x_axis_dec</dt>
+                                <dd>
+                                    ・Series 0i-PD/PF, 30i/31i-LB, 30i/31i-PB only
+                                </dd>
+                                <dd>
+                                    decimals places of X-axis offset is set.
+                                </dd>
+                            <dt>y_axis_dec</dt>
+                                <dd>
+                                    ・Series 0i-PD/PF, 30i/31i-LB, 30i/31i-PB only
+                                </dd>
+                                <dd>
+                                    decimals places of Y-axis offset is set.
+                                </dd>
+                            <dt>turret_dec</dt>
+                                <dd>
+                                    ・Series 0i-PD/PF, 30i/31i-LB, 30i/31i-PB only
+                                </dd>
+                                <dd>
+                                    decimals places of Turret position is set.
+                                </dd>
+                            <dt>m_radius_dec</dt>
+                                <dd>
+                                    ・Series 0i-PD/PF, 30i/31i-LB, 30i/31i-PB only
+                                </dd>
+                                <dd>
+                                    decimals places of Radius of multiple tool is set.
+                                </dd>
+                            <dt>m_angle_dec</dt>
+                                <dd>
+                                    ・Series 0i-PD/PF, 30i/31i-LB, 30i/31i-PB only
+                                </dd>
+                                <dd>
+                                    decimals places of Angle of multiple tool  is set.
+                                </dd>
+                            <dt>tl_size_i_dec</dt>
+                                <dd>
+                                    ・Series 0i-PD/PF, 30i/31i-LB, 30i/31i-PB only
+                                </dd>
+                                <dd>
+                                    decimals places of Tool size(I) tool  is set.
+                                </dd>
+                            <dt>tl_size_j_dec</dt>
+                                <dd>
+                                    ・Series 0i-PD/PF, 30i/31i-LB, 30i/31i-PB only
+                                </dd>
+                                <dd>
+                                    decimals places of Tool size(J) tool  is set.
+                                </dd>
+                            <dt>tl_angle_dec</dt>
+                                <dd>
+                                    ・Series 0i-PD/PF, 30i/31i-LB, 30i/31i-PB only
+                                </dd>
+                                <dd>
+                                    decimals places of Tool size(K) tool  is set.
+                                <dd>The corresponding data is as follows. </dd>
+                                <ul>
+                                <table border="1">
+                                    <colgroup>
+                                    <colgroup width="100">
+                                    <tr>
+                                        <th>decimals places</th> <th>corresponding data</th>
+                                    </tr>
+                                    <tr> <td >x_axis_dec</td><td>x_axis_ofs</td>  </tr>
+                                    <tr> <td >y_axis_dec</td><td>y_axis_ofs</td>  </tr>
+                                    <tr> <td >turret_dec</td><td>turret_pos</td>  </tr>
+                                    <tr> <td >m_radius_dec</td><td>m_tl_radius</td>  </tr>
+                                    <tr> <td >m_angle_dec</td><td>m_tl_angle</td>  </tr>
+                                    <tr> <td >tl_size_i_dec</td><td>tl_size_i</td>  </tr>
+                                    <tr> <td >tl_size_j_dec</td><td>tl_size_j</td>  </tr>
+                                    <tr> <td >tl_angle_dec</td><td>tl_angle</td>  </tr>
+                                </colgroup>
+                                </colgroup>
+                                </table>
+                                </ul>
+                            <br/>
+
+                                </dd>
+
+
+                            <dt>reserve</dt>
+                                <dd>
+                                    (reserve)
+                                </dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                Unavailable<br/>
+                This function cannot be used except 0i-PD/PF, 16i/18i-P, 30i/31i-LB, 30i/31i-PB.
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                Data block length error<br/>
+                Number of data(number) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                Data number error<br/>
+                Start number(s_no) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The extended driver/library function is necessary.<br/>
+                It is necessary to set Punch press function option and Parameter ALA(No.16242#0).(30i/31i-LB only)
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <type>
+                <li>Multiple tool function</li>
+                <li>Tool data setting function</li>
+                <li>Tool life management function</li>
+                <li>Graphic function</li>
+        </type>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <li>Series 16i/18i-P</li>
+            <div class="dd">16280#0,#1,#2,#3,#4,#5,#6,#7</div>
+            <div class="dd">16281#1,#2,#4</div>
+            <div class="dd">16282#5</div>
+            <div class="dd">16284</div>
+            <li>Series 0i-PD, 30i/31i-LB, 30i/31i-PB</li>
+            <div class="dd">16280#0,#1,#2,#3,#4,#5,#6,#7</div>
+            <div class="dd">16281#4</div>
+            <div class="dd">16282#5</div>
+            <div class="dd">16284</div>
+            <li>Series 0i-PF</li>
+            <div class="dd">16280#0,#1,#2,#3,#4,#5,#6,#7</div>
+            <div class="dd">16281#4</div>
+            <div class="dd">16282#5</div>
+            <div class="dd">16284</div>
+            <div class="dd">8132#0=1 (must be set)</div>
+        </type>
+        <add></add>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </m>
+        <t>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </w>
+        <pw>
+            <d>-</d>
+            <h>-</h>
+            <a>-</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdtlctldata</name>
+            <file>Punch/cnc_rdtlctldata.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrtlctldata</name>
+            <file>Punch/cnc_wrtlctldata.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrtooldata</name>
+            <file>Punch/cnc_wrtooldata.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdmultitldt</name>
+            <file>Punch/cnc_rdmultitldt.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrmultitldt</name>
+            <file>Punch/cnc_wrmultitldt.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdtoolinfo</name>
+            <file>Punch/cnc_rdtoolinfo.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

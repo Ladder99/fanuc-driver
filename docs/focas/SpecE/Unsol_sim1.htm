@@ -1,0 +1,70 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=x-sjis">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>When you use the PMC address for the control parameter(Simple method)(30i/31i/32i/35i, 0i-D, PMi-A only)</title>
+<link rel="stylesheet" type="text/css" href="fwlib32.css">
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<p><a href="fwlib32.htm">Top Page</a></p>
+
+<hr>
+
+<h2>When you use the PMC address for the control parameter(Simple method)(30i/31i/32i/35i, 0i-D, PMi-A only)</h2>
+
+<ul>
+
+<blockquote>
+
+   <p>In the simple method, the method to use the PMC address as the control data is explained.</p>
+            <table  border="2" bordercolorlight="Black" bordercolordark="Black">
+                <tr><td>Note) The macro variable can be also used for the transmission data.  In the following explanations, the PMC address is used as the transmission data.</td></tr>
+            </table>
+<br/>
+<li>Explanation of PMC address signal for control</li>
+
+    <p>Details of the PMC address signal for the control used for the unsolicited messaging function are shown.  The PMC address of one byte is necessary to control.</p>
+    <p>The example which uses "Rxxxx" as PMC address for the control data is shown.</p>
+
+
+<p><img src="unsol_sim1bit.gif"></p>
+<ul>
+	<dl compact>
+        <dt>REQ (Rxxxx#7)</dt>
+        <table>
+            <tr><td>[Name]     </td> <td>Transmission request signal for message</td></tr>
+            <tr><td>[Division] </td> <td>Input/output signal</td></tr>
+            <tr><td>[Function] </td> <td>The transmission of unsolicited message is requested.</td></tr>
+            <tr><td>[Operation]</td> <td>After preparing the transmission message to the PMC address for the transmission, the ladder program changes this signal to "1".  Then, the message is transmitted to the PC. After receiving the response of the message, CNC(communication board) changes this signal to "0".</td></tr>
+        </table>
+</ul>
+<br/>
+
+<li>Timing chart of signal of PMC address for control</li>
+
+<p><img src="unsol_sim1chat.gif"></p>
+
+<ul>
+        <table class="dt">
+            <tr><td>1</td> <td>:</td> <td>The ladder program prepares the transmission message after confirming REQ is "0", and REQ is changed to "1".</td></tr>
+            <tr><td>2</td> <td>:</td> <td>The comminucation board transmits the transmission message.</td></tr>
+            <tr><td>3</td> <td>:</td> <td>The communication board completes the transmission processing of the message. </td></tr>
+            <tr><td>4</td> <td>:</td> <td>The communication board completes the reception processing after receiving the response of the message.</td></tr>
+            <tr><td>5</td> <td>:</td> <td>After completing the reception processing, the communication board changes REQ to Åg0".</td></tr>
+        </table>
+
+</ul>
+<br/>
+</blockquote>
+
+</ul>
+
+<hr>
+
+<p><a href="fwlib32.htm">Top Page</a></p>
+</body>
+</html>

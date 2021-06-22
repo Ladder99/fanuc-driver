@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_dsrename</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_dsrename(unsigned short FlibHndl, char *dev_name, char *src_name, char *dst_name); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <ul class="dd">
+                <li>DATA SERVER</li>
+                Changing the file or folder name which exist in the current folder of the ATA card of DATA SERVER function.<br/><br/>
+                <li>DATA SERVER Host</li>
+                Changing the file or folder name which exist in the current folder of the present connection host of DATA SERVER function.<br/><br/>
+                <li>Embedded Ethernet</li>
+                Changing the file or folder name which exist in the current folder of the present connection host of an embedded Ethernet function.<br/>
+            </ul>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details. </p>
+                    </content>
+                </item>
+                <item>
+                    <name>dev_name</name>
+                    <type>in</type>
+                    <content>
+                        The pointer of the variable area where the device name to specify is stored specify.<br/>
+                        Specify the device name is as follows:<br/>
+                        <dl>
+                        <table border="0" class = "dd">
+                        <tr> <td>DATA SERVER      </td><td>:</td><td>"DATA_SV"   </td> </tr>
+                        <tr> <td>DATA SERVER Host </td><td>:</td><td>"DTSVR_HOST"</td> </tr>
+                        <tr> <td>Embedded Ethernet</td><td>:</td><td>"EMB_ETHER" </td> </tr>
+                        </table></dl>
+                    </content>
+                </item>
+                <item>
+                    <name>src_file</name>
+                    <type>in</type>
+                    <content>
+                    <ul class="dd">
+                    <li>DATA SERVER</li>
+                    The folrder or filename before change specify.<br/>
+                    Maximum of 33 characters of ASCII character string including NULL,the string must be NULL terminated. <br/><br/>
+
+                    <li>DATA SERVER Host, Embedded Ethernet</li>
+                    Specify the only the folrder or filename before change.<br/>
+                    Maximum of 128 characters of ASCII character string including NULL,the string must be NULL terminated. <br/>
+                    </ul>
+                    </content>
+                </item>
+                <item>
+                    <name>dst_file</name>
+                    <type>in</type>
+                    <content>
+                    <ul class="dd">
+                    <li>DATA SERVER</li>
+                    Specify the only the folder or filename after change.
+                    Maximum of 33 characters of ASCII character string including NULL,the string must be NULL terminated. <br/>
+                    It cannot change into the same name as the folder and and file which alreadty exist.<br/><br/>
+
+                   <li>DATA SERVER Host, Embedded Ethernet</li>
+                    Specify the only the folder or filename after change.
+                    Maximum of 128 characters of ASCII character string including NULL,the string must be NULL terminated. <br/>
+                    It cannot change into the same name as the folder and and file which alreadty exist.<br/>
+                    </ul>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a> function.<br/>
+                The following details status will be set onto the member, err_no of ODBERR structure.<br/>
+                <table class="dd">
+                    <tr> <td>22</td><td>:</td><td>The option board is nothing</td> </tr>
+                    <tr> <td>24</td><td>:</td><td>The DATA SERVER function is nothing. </td> </tr>
+                    <tr> <td>26</td><td>:</td><td>The ATA Card is nothing. </td> </tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_BUSY</name>
+            <content>
+                Busy<br/>
+                DATA SERVER or embedded Ethernet is processing. <br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>Data error<br/>
+                     Specification of dev_name is inaccuracy.<br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_DTSRVR</name>
+            <content>DATA SERVER error or Embedded Ethernet error<br/>
+                     In order to get more information for this err_no return value,In order to get more information for this err_no return value,<a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a> function.<br/>
+                     The following details status will be set onto the member, err_no of ODBERR structure.<br/>
+                     <li>DATA SERVER</li>
+                     <table class="dd">
+                         <tr> <td>464</td><td>:</td><td>The ATA card is not formated.</td> </tr>
+                         <tr> <td>491</td><td>:</td><td>Change of a file name / folder name went wrong.</td> </tr>
+                         <tr> <td>497</td><td>:</td><td>The ATA card is not formated.</td> </tr>
+                     </table>
+                     <li>DATA SERVER Host,Embedded Ethernet</li>
+                     <table class="dd">
+                         <tr> <td>468</td><td>:</td><td>Connection host is not found.</td> </tr>
+                         <tr> <td>491</td><td>:</td><td>Change of a file name / folder name went wrong.</td> </tr>
+                         <tr> <td>507</td><td>:</td><td>Change of a directory went wrong.</td> </tr>
+                         <tr> <td>508</td><td>:</td><td>Login to a connection host went wrong.</td> </tr>
+                         <tr> <td>509</td><td>:</td><td>Connection with a connection host went wrong.</td> </tr>
+                         <tr> <td>511</td><td>:</td><td>An error is in a connection host's parameter.</td> </tr>
+                     </table>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            <p> 
+                The DATA SERVER function and the extended driver/library function are necessary.
+            </p>
+        </hssb>
+    </option>
+
+
+
+    <parameter></parameter>
+    <!-- 30i(WinCE) -->
+    <is_parameter></is_parameter>
+
+
+
+    <mode></mode>
+    <!-- 30i(WinCE) -->
+    <is_mode></is_mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

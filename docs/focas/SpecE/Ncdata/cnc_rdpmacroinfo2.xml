@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_rdpmacroinfo2</title>
+
+
+    <declare>
+
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdpmacroinfo2(unsigned short FlibHndl, ODBPMINF2 *pminf2);</prottype>
+      </vc>
+
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Reads the available number of the P code macro variables (variable for the macro-executor) and the type of it. Those are stored in "ODBPMINF2" with signed binary format. </p>
+            <p>When the variable for a conversation macro and a high-speed cycle is coexistent, the information for variable of 20,000 or later cannot be acquired with cnc_rdpmacroinfo. So, please use this function.</p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>pminf</name>
+                    <type>out</type>
+                    <content>
+                        <p>Pointer to the ODBPMINF2 structure including the P code macro variable information. The ODBPMINF2 structure is as follows.</p>
+                        <p>The following parameters are not the CNC parameter, but the compile parameter of the macro-compiler.</p>
+                        <p>See the "PROGRAMING MANUAL" of the macro-executor for details of the compile parameter.</p>
+
+<pre>
+typedef struct odbpminf2 {
+    long    use_no1;  /*  number of variables(10000,...)       */
+    long    use_no2;  /*  number of variables(20000,...)       */
+    long    use_no20; /*  number of high-speed cycle variables */
+    short   v1_type;  /*  type of variables(10000,...)         */
+    short   v2_type;  /*  type of variables(20000,...)         */
+    short   v20_type; /*  type of high-speed cycle variables   */
+} ODBPMINF2;
+</pre>
+
+                            <dl>
+                                <dt>use_no1</dt>
+                                <dd>Number of usable P code macro variables(10000,...) <br/>
+                                    <p>'6000' is returned in case of some series/version of CNC control software, but the usable number is acquired as an above value.</p>
+                                    <p class="dd">(parameter No.9037 * 100)</p>
+                                </dd>
+
+                                <dt>use_no2</dt>
+                                <dd>Number of usable P code macro variables(20000,...) <br/>
+                                </dd>
+
+                                <dt>use_no20</dt>
+                                <dd>Number of variables for high-speed cycle. The variable for high-speed cycle indicates the following P code macro variable.</dd>
+                                <ul>
+                                     <li>Series 16i/18i</li>
+                                     <table>
+                                         <tr><td>#20000 </td><td>-</td><td>#85535 </td></tr>
+                                         <tr><td>#200000</td><td>-</td><td>#986432</td></tr>
+                                     </table>
+                                     <br/>
+                                     <li>Series 30i/31i/32i, 0i-D, PMi-A</li>
+                                     <table>
+                                         <tr><td>#20000  </td><td>-</td><td>#85535  </td></tr>
+                                         <tr><td>#200000 </td><td>-</td><td>#986432 </td></tr>
+                                         <tr><td>#2000000</td><td>-</td><td>#3999999</td></tr>
+                                     </table>
+                                </ul>
+
+                                <dt>v1_type</dt>
+                                <dd>Type of P code macro variables(10000,...)</dd>
+                                <ul>
+                                     <table>
+                                         <tr><td>0</td><td>:</td><td>Type A(floating-point type)</td></tr>
+                                         <tr><td>1</td><td>:</td><td>Type B(integer type)       </td></tr>
+                                     </table>
+                                </ul>
+                                <dd>In case of 'use_no1 = 0', this is invalid.</dd>
+
+                                <dt>v2_type</dt>
+                                <dd>Type of P code macro variables(20000,...)</dd>
+                                <ul>
+                                    <table>
+                                        <tr><td>0</td><td>:</td><td>Type A(floating-point type)</td></tr>
+                                        <tr><td>1</td><td>:</td><td>Type B(integer type)       </td></tr>
+                                        <tr><td>2</td><td>:</td><td>Type C (integer type)/high-speed cycle cutting 1</td></tr>
+                                        <tr><td>3</td><td>:</td><td>Type D (integer type)/high-speed cycle cutting 2</td></tr>
+                                    </table>
+                                </ul>
+                                <dd>In case of 'use_no2 = 0', this is invalid.</dd>
+
+                                <dt>v20_type</dt>
+                                <dd>Type of P code macro variables for high-speed cycle.</dd>
+                                <ul>
+                                    <table>
+                                        <tr><td>2</td><td>:</td><td>Type C (integer type)/high-speed cycle cutting 1</td></tr>
+                                        <tr><td>3</td><td>:</td><td>Type D (integer type)/high-speed cycle cutting 2</td></tr>
+                                    </table>
+                                </ul>
+                                <dd>In case of 'use_no20 = 0', this is invalid.</dd>
+
+                            </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>This function needs the macro-executor option.</content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <need>
+            The macro-executor function.
+        </need>
+        <type class="xis">
+            <li>Series 16i/18i, 30i/31i/32i</li>
+            This function is related to the high-speed cycle cutting option.
+        </type>
+    </option>
+
+
+
+    <parameter>
+    </parameter>
+
+
+
+    
+    <mode>
+    </mode>
+
+
+
+    
+    <support>
+        <m>
+             <fs0ia>X</fs0ia>
+             <fs0ib>X</fs0ib>
+             <fs0id>O</fs0id>
+              <fs0if>O</fs0if>
+              <fs15>X</fs15>
+             <fs15i>X</fs15i>
+              <fs16>X</fs16>
+              <fs18>X</fs18>
+              <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+             <fs0ia>X</fs0ia>
+             <fs0ib>X</fs0ib>
+             <fs0id>O</fs0id>
+              <fs0if>O</fs0if>
+              <fs15>X</fs15>
+             <fs15i>X</fs15i>
+              <fs16>X</fs16>
+              <fs18>X</fs18>
+              <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+             <fs0ia>X</fs0ia>
+             <fs0ib>X</fs0ib>
+             <fs0id>X</fs0id>
+              <fs0if>X</fs0if>
+              <fs15>X</fs15>
+             <fs15i>X</fs15i>
+              <fs16>X</fs16>
+              <fs18>X</fs18>
+              <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+        <add><b></b></add>
+
+
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdpmacro</name>
+            <file>ncdata/cnc_rdpmacro.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrpmacro</name>
+            <file>ncdata/cnc_wrpmacro.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdpmacror</name>
+            <file>ncdata/cnc_rdpmacror.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrpmacror</name>
+            <file>ncdata/cnc_wrpmacror.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdpmacror2</name>
+            <file>ncdata/cnc_rdpmacror2.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrpmacror2</name>
+            <file>ncdata/cnc_wrpmacror2.htm</file>
+        </item>
+        <item>
+            <name>cnc_getpmactype</name>
+            <file>ncdata/cnc_getpmactype.htm</file>
+        </item>
+        <item>
+            <name>cnc_setpmactype</name>
+            <file>ncdata/cnc_setpmactype.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

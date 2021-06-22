@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+    <title>cnc_exaxisname2</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_exaxisname2(unsigned short FlibHndl, short type, short absolute, short *num, char (*axname)[4]);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Reads the name of controlled axis and spindle name from 1st by the
+        specified (*num), with supporting "extended axis name".</p>
+
+            <p>After execution, "(*num)" will have the actual number of axes in case
+        that "(*num)" is specified with the number that is larger than the
+        current effective number of axes.  In case that "(*num)" is specified
+        with the number that is smaller than the current effective number of
+        axes, this function reads only the number of data specified by
+        "(*num)".</p>
+            <p>The acquisition method(absolute axis or relative axis) of name can specify by argument(absolute).</p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the kind of axis name to be read.</p>
+                        <table class="dd">
+                            <colgroup align="left" valign="top">
+                                <tr>
+                                    <td>0</td>
+                                    <td>:</td>
+                                    <td>Controlled axis name</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>:</td>
+                                    <td>Spindle name</td>
+                                </tr>
+                            </colgroup>
+                        </table>
+                    </content>
+                </item>
+                <item>
+                    <name>absolute</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify whether to acquire by a relative axis or an absolute axis.</p>
+                        <table class="dd">
+                            <colgroup align="left" valign="top">
+                                <tr> <td>0</td><td>:</td><td>Relative axis</td> </tr>
+                                <tr> <td>1</td><td>:</td><td>Absolute axis</td> </tr>
+                            </colgroup>
+                        </table>
+                    </content>
+                </item>
+                <item>
+                    <name>num</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>Specify the pointer for the variable that stores the number of
+                axes to be read.
+                This function will return the actual read number of axes after
+                the execution.</p>
+                    </content>
+                </item>
+                <item>
+                    <name>axname</name>
+                    <type>out</type>
+                    <content>
+                        <p>Specify the pointer for the array of char[4] type data.
+                4 byte area is required for each axis name.  The acquired axis
+                name is ASCII string and the string is NULL terminated.
+                The array of this char[4] is required by specified (*num).</p>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                Data block error<br/>Number of axis(*num) is less or equal 0.
+            </content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>Data attribute error<br/>Kind of data(type) is wrong.</content>        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 0i-F, 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>
+            <p>The spindle serial output function is necessary for spindle name.</p>
+            <p>And, This function is related to the multi spindle function.</p>
+        </need>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+                1020,1025,1026 (influenced by setting)<br/>
+                3131 (influenced by setting)
+            </ul>
+        </type>
+        <add></add>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+        <is>
+            <!-- M -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_exaxisname</name>
+            <file>position/cnc_exaxisname.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

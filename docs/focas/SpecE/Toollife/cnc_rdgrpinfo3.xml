@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdgrpinfo3</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdgrpinfo3(unsigned short FlibHndl,short s_grp,short e_grp,short length,IODBTGI3 *grpinfo3); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Reads the tool group information 3. The following information can be acquired.</p>
+            <ul type="disc">
+                 <li>Rest counter</li>
+            </ul>
+            <p>
+                This function is not available for T and TT series. 
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_grp</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the start tool group number.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>e_grp</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the end tool group number.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the length of the data block (size of IODBTGI3 structure)
+                            <p><b>IODBTGI3</b></p>
+                            <img src="Toollife/grpinfo3.gif"/>
+                            <p>N is the number of the tool group to be read.</p>
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>grpinfo3</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the IODBTGI3 structure including the tool group information.
+                            The IODBTGI3 structure is as follows.
+<pre>
+typedef struct iodbtgi {
+    short      s_grp;          /* start group number */
+    short      dummy;          /* unused */
+    short      e_grp;          /* end group number */
+    long       life_rest[N];   /* rest counter */
+} IODBTGI3 ;    /* N is the number of tool group to be read. */
+</pre>
+                            The following information are stored in "grpinfo3" with binary format.
+                        <dl>
+                            <dt>grpinfo3.s_grp</dt>
+                            <dd>start tool group number</dd>
+                            <dt>grpinfo3.e_grp</dt>
+                            <dd>end tool group number</dd>
+                            <dt>grpinfo3.life_rest[i]</dt>
+                            <dd>rest counter</dd>
+                        </dl>
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+           <name>EW_LENGTH</name>
+            <content>
+                data block length error<br/>
+                Size of IODBTGI3 structure(length) is wrong.
+            </content>
+        </item>
+        <item>
+           <name>EW_NUMBER</name>
+            <content>
+                data number error<br/>
+                The specification of tool group number (s_grp,e_grp) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                no option<br/>
+                <span class="xis">The tool life management B function and the extended driver/library function are necessary.(16i/18i only)<br/></span>
+                The tool life management function and the extended driver/library function is necessary.<span class="xis">(0i-F, 30i only)</span>
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                parameter error<span class="xis">(0i-F, 30i only)</span><br/>
+                The tool life management B function and reset counter are necessary.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            <p>The extended driver/library function are necessary.</p>
+        </hssb>
+
+        <ethr>
+            <p>The Ethernet function and the extended driver/library function are necessary.</p>
+            <p>However, in case of Series 16i/18i-B, 0i-F and 30i the required CNC option is as follows.</p>
+            <p>When Embedded Ethernet is used,</p>
+            <p><ul>above two optional functions are not required.</ul></p>
+            <p>When Ethernet board is used,</p>
+            <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>
+            <li>Series 16i/18i<br/>
+                <p>The tool life management B function.</p>
+            </li>
+            <li>Series 30i<br/>
+                <p>The tool life management function.</p>
+            </li>
+        </need>
+        <type>
+            <li>Series 16i/18i<br/>
+                <p>This function is influenced by 512(M Series) pairs of the tool life management.</p>
+            </li>
+            <li>Series 0i-F, 30i<br/>
+                <p>This function is influenced by additional pairs number of the tool life management.</p>
+                <table>
+                    <tr> <td>the tool life management</td>        <td>:</td><td>256 pairs of the tool life management on whole system with M Series</td></tr>
+                    <tr> <td>additional pairs number of the tool life management</td><td>:</td><td>1024 pairs of the tool life management on whole system with M Series</td></tr>
+                </table>
+            </li>
+        </type>
+
+        <is>
+        <hssb>
+            <p>The tool life management function and the extended driver/library function are necessary.</p>
+            <p>And this function is influenced by additional pairs number of the tool life management.</p>
+        <table>
+            <tr> <td>the tool life management</td><td>:</td>
+                 <td>256 pairs of the tool life management on whole system with M Series</td></tr>
+            <tr> <td>additional pairs number of the tool life management</td><td>:</td>
+                 <td>1024 pairs of the tool life management on whole system with M Series</td></tr>
+        </table>
+        </hssb>
+        </is>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul type="disc">
+                <li>Series 16i/18i</li>
+                    6800#0,#1,#2 (influenced by setting)
+                    6802#3 (Rest counter)<br/>
+                <li>Series 30i<br/>
+                    6800#0,#1,#2 (influenced by setting)<br/>
+                    6805#4 (Tool life management B)<br/>
+                    6802#3 (Rest counter)<br/>
+                </li>
+                <li>Series 0i-F<br/>
+                    6800#0,#1,#2 (influenced by setting)<br/>
+                    6805#4   (Tool life management B)<br/>
+                    6802#3   (Rest counter)<br/>
+                    8132#0=1 (must be set)<br/>
+                </li>
+            </ul>
+        </type>
+    </parameter>
+    <!-- 30i(WinCE) -->
+    <is_parameter>
+        <type>
+            <table>
+                <tr><td> </td><td>6800#0,#1,#2</td><td> </td><td>(influenced by setting)</td></tr>
+                <tr><td> </td><td>6805#4</td><td> </td><td>(Tool life management B)</td></tr>
+                <tr><td> </td><td>6802#3</td><td> </td><td>(Rest counter)</td></tr>
+            </table>
+        </type>
+    </is_parameter>
+
+
+
+    <mode></mode>
+    <!-- 30i(WinCE) -->
+    <is_mode></is_mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

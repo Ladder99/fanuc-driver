@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_vrfstart</title>
+
+
+    <declare>
+
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_vrfstart(unsigned short FlibHndl);</prottype>
+      </vc>
+
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                Requests CNC to start verification of NC program.<br/>
+                (This function must be executed before <a href="Program/cnc_verify.htm" target="_parent">cnc_verify</a>/<a href="Program/cnc_cverify.htm" target="_parent">cnc_cverify</a>.)
+            </p>
+            <p>It is possible to compare already registered NC program in CNC and a program which is output by the application program.</p>
+            <p>
+                <li>HSSB</li>
+                In the case of Series 15/15i, when the CNC side is in background edit processing,
+                this function waits the termination of background edit.
+            </p>
+            <p>The procedure of verify is as follows.</p>
+            <p><img src="Program/verify.gif"/></p>
+        </cmn>
+
+        <is>
+            <p>
+                Requests CNC to start verification of NC program.<br/>
+                (This function must be executed before <a href="Program/cnc_verify.htm" target="_parent">cnc_verify</a>/<a href="Program/cnc_cverify.htm" target="_parent">cnc_cverify</a>.)
+            </p>
+            <p>It is possible to compare already registered NC program in CNC and a program which is output by the application program.</p>
+            <p>The procedure of verify is as follows.</p>
+            <p><img src="Program/verify.gif"/></p>
+        </is>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle.
+                            See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_BUSY</name>
+            <content>
+                Busy<br/>
+                Series 15i<br/>
+                <ul style="margin-top:0">
+                    <li>cnc_vrfstart(<a href="Program/cnc_dwnstart3.htm" target="_parent">cnc_dwnstart3</a>)function has been executed.</li>
+                        Terminate a verifying (downloading) by using <a href="Program/cnc_vrfend.htm" target="_parent">cnc_vrfend</a>(<a href="Program/cnc_dwnend3.htm" target="_parent">cnc_dwnend3</a>)function. <br/>
+                    <br/>
+                    <li>Background edit processing in CNC side (Ethernet only)</li>
+                        Terminate background edit processing in CNC side. 
+                </ul>
+                Series 16i/18i/21i, 0i, 30i, Power Mate i, PMi-A<br/>
+                <ul style="margin-top:0">
+                    <li>cnc_vrfstart(<a href="Program/cnc_dwnstart3.htm" target="_parent">cnc_dwnstart3</a>) function has been executed.</li>
+                        Terminate a verifying (downloading) by using <a href="Program/cnc_vrfend.htm" target="_parent">cnc_vrfend</a>(<a href="Program/cnc_dwnend3.htm" target="_parent">cnc_dwnend3</a>) function.<br/>
+                    <br/>
+                    <li>Background edit processing in CNC side</li>
+                        Terminate background edit processing in CNC side. <br/>
+                    <br/>
+                    <li>Alarm (PS000, PS101) on CNC side</li>
+                        Reset the alarm on CNC. <br/>
+                    <br/>
+                    <li>MDI mode</li>
+                        Change CNC mode to any mode except MDI. 
+                </ul>
+            </content>
+        </item>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                Parameter (No.20,22:Input device) is wrong. (Series 15/15i)
+            </content>
+        </item>
+
+        <is>
+            <item>
+                <name>EW_BUSY</name>
+                <content>
+                    Busy<br/>
+                    <ul style="margin-top:0;margin-bottom:0">
+                        <li>cnc_vrfstart function has been executed.</li>
+                            Terminate a verifying(downloading) by using 
+                            <a href="Program/cnc_vrfend.htm" target="_parent">cnc_vrfend</a> function.
+                        <li>alarm (PW000) on CNC side</li>
+                            Reset the alarm on CNC.
+                    </ul>
+                </content>
+            </item>
+        </is>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/F and 30i, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+            <li>Series 15/15i</li>
+                0020=16(EDIT mode)        (must be set) (At HSSB connection)<br/>
+                0022=16(except EDIT mode) (must be set) (At HSSB connection)<br/>
+                0020=7 (EDIT mode)        (must be set) (At Ethernet connection)<br/>
+                0022=7 (except EDIT mode) (must be set) (At Ethernet connection)<br/>
+                0000#0<br/>
+                0011#0,2201#0<br/>
+                2210,2211,2212,2213<br/>
+            <br/>
+            <li>Series 16i/18i/21i, 0i, 30i, PMi-A</li>
+                0000#0<br/>
+                3202#0,#4<br/>
+                3204#3,#4<br/>
+                3210,3211<br/>
+            <br/>
+            <li>Series 16i/18i-W, Power Mate i</li>
+                0000#0<br/>
+                3202#0,#4<br/>
+                3204#3,#4
+            </ul>
+        </type>
+    </parameter>
+
+    <is_parameter>
+        <type>
+            <ul>
+                0000#0<br/>
+                3202#0,#4<br/>
+                3204#3,#4<br/>
+                3210,3211
+            </ul>
+        </type>
+    </is_parameter>
+
+
+
+    <mode>
+        <cmn>
+            <li>Series 15/15i</li>
+                <span class="dd">This function can be used in any CNC mode. 
+</span><br/>
+            <br/>
+            <li>Series 16/18/21, 16i/18i/21i, 0i, 30i, Power Mate i, PMi-A</li>
+                <span class="dd">It is possible to use in other than MDI mode.</span>
+        </cmn>
+    </mode>
+
+    <is_mode>
+    </is_mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>H</a>
+        </pw>
+        
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_verify</name>
+            <file>Program/cnc_verify.htm</file>
+        </item>
+        <item>
+            <name>cnc_cverify</name>
+            <file>Program/cnc_cverify.htm</file>
+        </item>
+        <item>
+            <name>cnc_vrfend</name>
+            <file>Program/cnc_vrfend.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

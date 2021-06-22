@@ -1,0 +1,955 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdcommand</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>
+            FWLIBAPI short WINAPI cnc_rdcommand(unsigned short FlibHndl, short type, short block, short *num_cmd, ODBCMD *command);
+        </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+Reads the commanded data of CNC. Various information is stored in each member of ODBCMD. <p/>
+The readable data are the modal data except G code, and the commanded data. <p/>
+This function cannot be used for Series 15, 16i/18i/21i, 0i-A/B/C and Power Mate i, so use <a href="Misc/cnc_modal.htm" target="_parent">cnc_modal</a> function instead of cnc_rdcommand function. <p/>
+        </cmn>
+    <is>
+        <cmn>
+Reads the commanded data of CNC. Various information is stored in each member of ODBCMD. <p/>
+The readable data are the modal data except G code, and the commanded data. <p/>
+        </cmn>
+    </is>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the commanded data.</p>
+                        <table class="dd">
+                            <tr> <td valign="top">0 to 29   </td> <td>:</td> <td valign="top">Read modal data except G code one by one.         </td> </tr>
+                            <tr> <td valign="top">-1        </td> <td>:</td> <td valign="top">Read all modal data except G code at a time.      </td> </tr>
+                            <tr> <td valign="top">100 to 129</td> <td>:</td> <td valign="top">Read commanded data one by one.                   </td> </tr>
+                            <tr> <td valign="top">-2        </td> <td>:</td> <td valign="top">Read all commanded data at a time.                </td> </tr>
+                            <tr> <td valign="top">200 to 223</td> <td>:</td> <td valign="top">Read commanded data concerning axis one by one.   </td> </tr>
+                            <tr> <td valign="top">-3        </td> <td>:</td> <td valign="top">Read all commanded data concerning axis at a time.</td> </tr>
+                        </table>
+                    </content>
+                </item>
+                <item>
+                    <name>block</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the block to be read.
+                        </p>
+                        <table class="dd">
+                            <tr><td valign="top">0</td><td valign="top">:</td><td>previous block</td></tr>
+                            <tr><td valign="top">1</td><td valign="top">:</td><td>active block  </td></tr>
+                            <tr><td valign="top">2</td><td valign="top">:</td><td>next block    </td></tr>
+                        </table>
+                    </content>
+                </item>
+                <item>
+                    <name>num_cmd</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+Pointer to the number of commanded data to be read. Specify the number of commanded data to be read before function call, and the number of commanded data which was/were read actually is stored after the function call.
+                        </p>
+                        
+                    </content>
+                </item>
+                <item>
+                    <name>command</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+Specify the address of the array of ODBCMD structure including the commanded data. The number of array must be 1 for reading data one by one. The number of array must be the number of commanded data to be read (*num_cmd) for reading all data at a time.
+                        </p>
+The ODBCMD structure is as follows.
+<pre>
+typedef struct odbcmd {
+    char  adrs ;          /* command address */
+    char  num ;           /* M code number or axis number */
+    short flag ;          /* additional information */
+    long  cmd_val ;       /* commanded data */
+    long  dec_val ;       /* decimal point of commanded data */
+} ODBCMD ;
+</pre>
+<p>Refer to the following explanation about the ODBCMD structure.</p>
+<p class="label">(1) Reading the modal data except G code</p>
+<ul>
+    <p>
+       The readable modal data are commanded data D, E, F, H, L, M, N, O, S, T, and second auxiliary function (A, B, C, U, V, or W). 
+    </p>
+    <li type="square">Reading data one by one<br/></li>
+    <div>
+    <p>Specify <b>1</b> for "num_cmd". Specify the commanded address in the following table for "type". Specify the block to be read for "block". Then modal data except G code in the objective block specified by "block" is set in the ODBCMD structure.</p>
+
+    <table border="1" rules="groups">
+        <colgroup>
+        <colgroup>
+        <colgroup>
+        <colgroup>
+        <thead>
+            <tr> <th>type</th>    <th>commanded address</th>        <th>type</th>    <th>commanded address</th>    </tr>
+        </thead>
+        <tbody>
+        <tr> <td>0 </td> <td>A (2nd auxiliary function)</td> <td>15</td> <td>P (not used)   </td> </tr>
+        <tr> <td>1 </td> <td>B (2nd auxiliary function)</td> <td>16</td> <td>Q (not used)   </td> </tr>
+        <tr> <td>2 </td> <td>C (2nd auxiliary function)</td> <td>17</td> <td>R (not used)   </td> </tr>
+        <tr> <td>3 </td> <td>D              </td> <td>18</td> <td>S              </td> </tr>
+        <tr> <td>4 </td> <td>E              </td> <td>19</td> <td>T              </td> </tr>
+        <tr> <td>5 </td> <td>F              </td> <td>20</td> <td>U (2nd auxiliary function)</td> </tr>
+        <tr> <td>6 </td> <td>G (not used)   </td> <td>21</td> <td>V (2nd auxiliary function)</td> </tr>
+        <tr> <td>7 </td> <td>H              </td> <td>22</td> <td>W (2nd auxiliary function)</td> </tr>
+        <tr> <td>8 </td> <td>I (not used)   </td> <td>23</td> <td>X (not used)   </td> </tr>
+        <tr> <td>9 </td> <td>J (not used)   </td> <td>24</td> <td>Y (not used)   </td> </tr>
+        <tr> <td>10</td> <td>K (not used)   </td> <td>25</td> <td>Z (not used)   </td> </tr>
+        <tr> <td>11</td> <td>L              </td> <td>26</td> <td>M (2nd M code) </td> </tr>
+        <tr> <td>12</td> <td>M              </td> <td>27</td> <td>M (3rd M code) </td> </tr>
+        <tr> <td>13</td> <td>N              </td> <td>28</td> <td>M (4th M code) </td> </tr>
+        <tr> <td>14</td> <td>O              </td> <td>29</td> <td>M (5th M code) </td> </tr>
+        </tbody>
+        </colgroup>
+        </colgroup>
+        </colgroup>
+        </colgroup>
+    </table>
+    <p>The following data are set in the ODBCMD structure.</p>
+    <dl>
+    <dt>adrs</dt>
+        <dd>The commanded address is stored in ASCII code.</dd>
+    <dt>num</dt>
+        <dd>The following values are stored when "adrs" is M (=77).</dd>
+        <ul>
+            <table class="dd">
+                <tr> <td valign="top">1</td>    <td valign="top">:</td>    <td valign="top">1st M code</td>    </tr>
+                <tr> <td valign="top">2</td>    <td valign="top">:</td>    <td valign="top">2nd M code</td>    </tr>
+                <tr> <td valign="top">3</td>    <td valign="top">:</td>    <td valign="top">3rd M code</td>    </tr>
+                <tr> <td valign="top">4</td>    <td valign="top">:</td>    <td valign="top">4th M code</td>    </tr>
+                <tr> <td valign="top">5</td>    <td valign="top">:</td>    <td valign="top">5th M code</td>    </tr>
+            </table>
+        </ul>
+    <dt>flag</dt>
+        <dd>The following flags are stored.</dd>
+        <ul>
+            <table class="dd">
+                <tr> <td valign="top">#3 </td> <td valign="top">=</td> <td valign="top">1</td> <td valign="top">:</td> <td>command differ from the previous block (only Series 30i, 0i-D/F, PMi-A)</td>    </tr>
+                <tr> <td valign="top">#4 </td> <td valign="top">=</td> <td valign="top">1</td> <td valign="top">:</td> <td>There is a command of a decimal point.   </td> </tr>
+                <tr> <td valign="top">#5 </td> <td valign="top">=</td> <td valign="top">1</td> <td valign="top">:</td> <td>Negative                                 </td> </tr>
+                <tr> <td valign="top">#6 </td> <td valign="top">=</td> <td valign="top">1</td> <td valign="top">:</td> <td>1 digit                                  </td> </tr>
+                <tr> <td valign="top">#11</td> <td valign="top">=</td> <td valign="top">1</td> <td valign="top">:</td> <td>There is a command after RESET.          </td> </tr>
+                <tr> <td valign="top">#15</td> <td valign="top">=</td> <td valign="top">1</td> <td valign="top">:</td> <td>There is a command in the present block. </td> </tr>
+            </table>
+        </ul>
+    <dt>cmd_val</dt>
+        <dd>The commanded data is stored.</dd>
+    <dt>dec_val</dt>
+        <dd>The number of places of decimals of commanded data is stored.</dd><p/>
+        <dd>The commanded data is calculated by the following expression.</dd>
+        <dd>&#160;&#160;&#160;Commanded data = cmd_val * 10 ** (-dec_val)</dd><p/>
+        <dd>(Example) The following data are read when "F1000.0" is commanded.</dd>
+        <ul>
+        <table class="dd">
+            <tr> <td>adrs   </td>    <td>=</td>    <td>F (=70)</td>    </tr>
+            <tr> <td>cmd_val</td>    <td>=</td>    <td>10000  </td>    </tr>
+            <tr> <td>dec_val</td>    <td>=</td>    <td>1      </td>    </tr>
+        </table>
+        </ul>
+    </dl>
+<br/>
+    </div>
+
+<li type="square">Reading all data at a time<br/></li>
+    <div>
+Specify the number of modal data to be read for "num_cmd". Specify -1 for "type". Specify the block to be read for "block". Then all modal data except G code in the objective block specified by "block" is set in the ODBCMD structure.Specify the number in the following table for "num_cmd" in order to read all modal data. The number of modal data which were read actually is stored in "num_cmd" after the function call. <p/>
+
+Some same M codes may be read at a time with "multiple M commands in a single block". 
+    <table class="dd" border="1" frame="hsides" rules="groups">
+        <colgroup>
+        <colgroup>
+        <colgroup>
+            <thead>
+                <tr> <th></th> <th>With "2nd auxiliary function"</th>    <th>Without "2nd auxiliary function"</th>    </tr>
+            </thead>
+            <tbody>
+                <tr> <td>With "multiple M commands in a single block"   </td>    <td>15</td>    <td>14</td>    </tr>
+                <tr> <td>Without "multiple M commands in a single block"</td>    <td>11</td>    <td>10</td>    </tr>
+            </tbody>
+        </colgroup>
+        </colgroup>
+        </colgroup>
+    </table>
+    </div>
+</ul>
+
+<p class="label">(2) Reading commanded data</p>
+<ul>
+<li type="square">Reading data one by one<br/></li>
+    <div>
+    <p>Specify 1 for "num_cmd". Specify the commanded address in the following table for "type". Specify the block to be read for "block". Then commanded data which is commanded in the objective block specified by "block" is set in the ODBCMD structure. When no data is commanded in the objective block specified by "block", zero is set in "num_cmd".</p>
+    <table border="1" rules="groups">
+        <colgroup>
+        <colgroup>
+        <colgroup>
+        <colgroup>
+            <thead>
+                <tr> <th>type</th>    <th>commanded address</th>        <th>type</th>    <th>commanded address</th>    </tr>
+            </thead>
+            <tbody>
+                <tr> <td>100</td>        <td>A</td>                    <td>115</td>        <td>P</td>                </tr>
+                <tr> <td>101</td>        <td>B</td>                    <td>116</td>        <td>Q</td>                </tr>
+                <tr> <td>102</td>        <td>C</td>                    <td>117</td>        <td>R</td>                </tr>
+                <tr> <td>103</td>        <td>D</td>                    <td>118</td>        <td>S</td>                </tr>
+                <tr> <td>104</td>        <td>E</td>                    <td>119</td>        <td>T</td>                </tr>
+                <tr> <td>105</td>        <td>F</td>                    <td>120</td>        <td>U</td>                </tr>
+                <tr> <td>106</td>        <td>G (not used)</td>        <td>121</td>        <td>V</td>                </tr>
+                <tr> <td>107</td>        <td>H</td>                    <td>122</td>        <td>W</td>                </tr>
+                <tr> <td>108</td>        <td>I</td>                    <td>123</td>        <td>X</td>                </tr>
+                <tr> <td>109</td>        <td>J</td>                    <td>124</td>        <td>Y</td>                </tr>
+                <tr> <td>110</td>        <td>K</td>                    <td>125</td>        <td>Z</td>                </tr>
+                <tr> <td>111</td>        <td>L</td>                    <td>126</td>        <td>M (2nd M code)</td>    </tr>
+                <tr> <td>112</td>        <td>M</td>                    <td>127</td>        <td>M (3rd M code)</td>    </tr>
+                <tr> <td>113</td>        <td>N</td>                    <td>128</td>        <td>M (4th M code)</td>    </tr>
+                <tr> <td>114</td>        <td>O</td>                    <td>129</td>        <td>M (5th M code)</td>    </tr>
+            </tbody>
+        </colgroup>
+        </colgroup>
+        </colgroup>
+        </colgroup>
+    </table>
+    <p>The following data are set in the ODBCMD structure.</p>
+    <dl>
+    <dt>adrs</dt>
+        <dd>The commanded address is stored in ASCII code.</dd>
+    <dt>num</dt>
+        <dd>The following values are stored when "adrs" is M (=77).</dd>
+        <ul>
+            <table class="dd">
+                <tr> <td valign="top">1</td>    <td valign="top">:</td>    <td>1st M code</td>    </tr>
+                <tr> <td valign="top">2</td>    <td valign="top">:</td>    <td>2nd M code</td>    </tr>
+                <tr> <td valign="top">3</td>    <td valign="top">:</td>    <td>3rd M code</td>    </tr>
+                <tr> <td valign="top">4</td>    <td valign="top">:</td>    <td>4th M code</td>    </tr>
+                <tr> <td valign="top">5</td>    <td valign="top">:</td>    <td>5th M code</td>    </tr>
+            </table>
+        </ul>
+    <dt>flag</dt>
+        <dd>The following flags are stored.</dd>
+        <ul>
+        <table class="dd">
+            <tr> <td valign="top">#4 </td> <td valign="top">=</td> <td valign="top">1</td> <td valign="top"></td>         <td valign="top">:</td> <td>There is a command of a decimal point.</td> </tr>
+            <tr> <td valign="top">#5 </td> <td valign="top">=</td> <td valign="top">1</td> <td valign="top"></td>         <td valign="top">:</td> <td>Negative</td> </tr>
+            <tr> <td valign="top">#6 </td> <td valign="top">=</td> <td valign="top">1</td> <td valign="top"></td>         <td valign="top">:</td> <td>1 digit</td> </tr>
+            <tr> <td valign="top">#11</td> <td valign="top">=</td> <td valign="top">(always)</td> <td valign="top">1</td> <td valign="top">:</td> <td>There is a command after RESET.</td> </tr>
+            <tr> <td valign="top">#15</td> <td valign="top">=</td> <td valign="top">(always)</td> <td valign="top">1</td> <td valign="top">:</td> <td>There is a command in the present block.</td> </tr>
+        </table>
+        </ul>
+    <dt>cmd_val</dt>
+        <dd>The commanded data is stored.</dd>
+    <dt>dec_val</dt>
+        <dd>The number of places of decimals of commanded data is stored.</dd><p/>
+        <ul>
+        <div>
+            The commanded data is calculated by the following expression.<br/>
+            &#160;&#160;&#160;Commanded data = cmd_val * 10 ** (-dec_val)
+            <p/>
+            (Example) The following data are read when "X200.00" is commanded.<br/>
+            <table class="dd">
+                <tr> <td valign="top">adrs</td>     <td valign="top">=</td> <td valign="top">X (=88)  </td>    </tr>
+                <tr> <td valign="top">cmd_val</td>  <td valign="top">=</td> <td valign="top">20000    </td>    </tr>
+                <tr> <td valign="top">dec_val</td>  <td valign="top">=</td> <td valign="top">2        </td>    </tr>
+            </table>
+        </div>
+        </ul>
+    </dl>
+    </div>
+<p/>
+<li type="square">Reading all data at a time</li><br/>
+    <div>
+    Specify the number of commanded data to be read for "num_cmd". Specify -2 for "type". Specify the block to be read for "block". Then all commanded data in the objective block specified by "block" is set in the ODBCMD structure. Specify the number in the following table for "num_cmd" in order to read all commanded data. The number of commanded data which were read actually is stored in "num_cmd" after the function call. 
+    <p/><ul>
+    <table class="dd">
+        <tr> <td>With "multiple M commands in a single block"   </td>    <td>:</td> <td>29</td>    </tr>
+        <tr> <td>Without "multiple M commands in a single block"</td>    <td>:</td> <td>25</td>    </tr>
+    </table>
+    </ul>
+    </div>
+</ul>
+<p class="label">(3) Reading commanded data concerning axis</p>
+<ul>
+<li type="square">Reading data one by one</li><br/>
+<ul>
+    <div>
+    Specify <b>1</b> for "num_cmd". Specify axis number (200 to 223) in the following table for "type". Specify the block to be read for "block". Then commanded data concerning axis which is commanded in the objective block specified by "block" is set in the ODBCMD structure. When no axis is commanded in the objective block specified by "block", zero is set in "num_cmd".<p/>
+    <li type="disc">Series 15i</li>
+    <table border="1" rules="groups">
+        <colgroup>
+        <colgroup>
+        <thead>
+            <tr> <th>type</th>    <th>axis</th>        </tr>
+        </thead>
+        <tbody>
+            <tr> <td>200</td>                  <td>1st axis</td>         </tr>
+            <tr> <td>201</td>                  <td>2nd axis</td>         </tr>
+            <tr> <td>&#160;&#160;:</td>        <td>&#160;&#160;:</td>    </tr>
+            <tr> <td>209</td>                  <td>10th axis</td>        </tr>
+            <tr> <td>210</td>                  <td>11th axis</td>        </tr>
+            <tr> <td>&#160;&#160;:</td>        <td>&#160;&#160;:</td>    </tr>
+            <tr> <td>222</td>                  <td>23th axis</td>        </tr>
+            <tr> <td>223</td>                  <td>24th axis</td>        </tr>
+        </tbody>
+        </colgroup>
+        </colgroup>
+    </table>
+    * When MAX_AXIS=15, type=215,..,223 are not used.<br/>
+    * When MAX_AXIS=10, type=210,..,223 are not used.<p/>
+    <li type="disc">Series 30i, 0i-D/F, PMi-A</li>
+    <table border="1" rules="groups">
+        <colgroup>
+        <colgroup>
+        <thead>
+            <tr> <th>type</th>    <th>axis</th>        </tr>
+        </thead>
+        <tbody>
+            <tr> <td>200</td>                  <td>1st axis</td>            </tr>
+            <tr> <td>201</td>                  <td>2nd axis</td>            </tr>
+            <tr> <td>&#160;&#160;:</td>        <td>&#160;&#160;:</td>    </tr>
+            <tr> <td>209</td>                  <td>10th axis</td>           </tr>
+            <tr> <td>210</td>                  <td>11th axis</td>           </tr>
+            <tr> <td>&#160;&#160;:</td>        <td>&#160;&#160;:</td>    </tr>
+            <tr> <td>230</td>                  <td>31th axis</td>           </tr>
+            <tr> <td>231</td>                  <td>32th axis</td>           </tr>
+        </tbody>
+        </colgroup>
+        </colgroup>
+    </table>
+    <p>The following data are set in the ODBCMD structure.</p>
+    <dl>
+    <dt>adrs</dt>
+        <dd>The commanded address is stored in ASCII code.</dd>
+    <dt>num</dt>
+        <dd>The axis number (1 to max. controlled axes) is stored in binary.</dd>
+    <dt>flag</dt>
+        <dd>The following flags are stored.</dd>
+        <ul>
+        <table class="dd">
+            <tr> <td valign="top">#4 </td> <td valign="top">=</td> <td valign="top">1</td> <td valign="top"></td>            <td valign="top">:</td> <td>There is a command of a decimal point.</td>    </tr>
+            <tr> <td valign="top">#5 </td> <td valign="top">=</td> <td valign="top">1</td> <td valign="top"></td>            <td valign="top">:</td> <td>Negative</td>    </tr>
+            <tr> <td valign="top">#6 </td> <td valign="top">=</td> <td valign="top">1</td> <td valign="top"></td>            <td valign="top">:</td> <td>1 digit </td>    </tr>
+            <tr> <td valign="top">#11</td> <td valign="top">=</td> <td valign="top">(always)</td> <td valign="top">1</td>    <td valign="top">:</td> <td>There is a command after RESET. </td>            </tr>
+            <tr> <td valign="top">#15</td> <td valign="top">=</td> <td valign="top">(always)</td> <td valign="top">1</td>    <td valign="top">:</td> <td>There is a command in the present block.</td>    </tr>
+        </table>
+        </ul>
+    <dt>cmd_val</dt>
+        <dd>The commanded data is stored.</dd>
+    <dt>dec_val</dt>
+        <dd>The number of places of decimals of commanded data is stored.</dd><p/>
+        <div>
+        <dd>The commanded data is calculated by the following expression.</dd>
+        <dd>&#160;&#160;&#160;Commanded data = cmd_val * 10 ** (-dec_val)</dd>
+        <dd><p/>(Example) The following data are read when 2nd axis is "Y" and "Y50.0" is commanded.</dd>
+        <ul>
+        <table class="dd">
+            <tr> <td valign="top">adrs</td>       <td valign="top">=</td>    <td valign="top">Y (=89)</td>    </tr>
+            <tr> <td valign="top">num</td>        <td valign="top">=</td>    <td valign="top">2</td>        </tr>
+            <tr> <td valign="top">cmd_val</td>    <td valign="top">=</td>    <td valign="top">500</td>        </tr>
+            <tr> <td valign="top">dec_val</td>    <td valign="top">=</td>    <td valign="top">1</td>        </tr>
+        </table>
+        </ul>
+        </div>
+    </dl>
+    <p/>
+    </div>
+
+</ul>
+<li type="square">Reading all data at a time</li><br/>
+<ul>
+    <div>
+    <p/>Specify the number of commanded data concerning axis to be read for "num_cmd". Specify -3 for "type". Specify the block to be read for "block". Then all commanded data concerning axis in the objective block specified by "block" is set in the ODBCMD structure. Specify the following values for "num_cmd" in order to read all commanded data concerning axis. The number of commanded data which were read actually is stored in "num_cmd" after the function call. 
+    <table class="dd">
+        <tr> <td>MAX_AXIS = 25 to 32</td>    <td>:</td> <td>25 to 32(only Series 30i, 0i-D/F, PMi-A)</td>    </tr>
+    </table>
+    <table class="dd">
+        <tr> <td>MAX_AXIS = 24</td>    <td>:</td> <td>24</td>    </tr>
+        <tr> <td>MAX_AXIS = 15</td>    <td>:</td> <td>15</td>    </tr>
+        <tr> <td>MAX_AXIS = 10</td>    <td>:</td> <td>10</td>    </tr>
+    </table>
+    </div>
+</ul>
+
+
+
+</ul>
+
+                    </content>
+                </item>
+            </vc>
+        </common>
+
+        <!-- is Argument Start -->
+        <is>
+            <hssb>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>type</name>
+                        <type>in</type>
+                        <content>
+                            <p>Specify the commanded data.</p>
+                            <table class="dd">
+                                <tr> <td valign="top">0 to 29   </td> <td>:</td> <td valign="top">Read modal data except G code one by one.         </td> </tr>
+                                <tr> <td valign="top">-1        </td> <td>:</td> <td valign="top">Read all modal data except G code at a time.      </td> </tr>
+                                <tr> <td valign="top">100 to 129</td> <td>:</td> <td valign="top">Read commanded data one by one.                   </td> </tr>
+                                <tr> <td valign="top">-2        </td> <td>:</td> <td valign="top">Read all commanded data at a time.                </td> </tr>
+                                <tr> <td valign="top">200 to 223</td> <td>:</td> <td valign="top">Read commanded data concerning axis one by one.   </td> </tr>
+                                <tr> <td valign="top">-3        </td> <td>:</td> <td valign="top">Read all commanded data concerning axis at a time.</td> </tr>
+                            </table>
+                        </content>
+                    </item>
+                    <item>
+                        <name>block</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Specify the block to be read.
+                            </p>
+                            <table class="dd">
+                                <tr><td valign="top">0</td><td valign="top">:</td><td>previous block</td></tr>
+                                <tr><td valign="top">1</td><td valign="top">:</td><td>active block  </td></tr>
+                                <tr><td valign="top">2</td><td valign="top">:</td><td>next block    </td></tr>
+                            </table>
+                        </content>
+                    </item>
+                    <item>
+                        <name>num_cmd</name>
+                        <type>in/out</type>
+                        <content>
+                            <p>
+    Pointer to the number of commanded data to be read. Specify the number of commanded data to be read before function call, and the number of commanded data which was/were read actually is stored after the function call.
+                            </p>
+                            
+                        </content>
+                    </item>
+                    <item>
+                        <name>command</name>
+                        <type>out</type>
+                        <content>
+                            <p>
+    Specify the address of the array of ODBCMD structure including the commanded data. The number of array must be 1 for reading data one by one. The number of array must be the number of commanded data to be read (*num_cmd) for reading all data at a time.
+                            </p>
+    The ODBCMD structure is as follows.
+<pre>
+typedef struct odbcmd {
+    char  adrs ;          /* command address */
+    char  num ;           /* M code number or axis number */
+    short flag ;          /* additional information */
+    long  cmd_val ;       /* commanded data */
+    long  dec_val ;       /* decimal point of commanded data */
+} ODBCMD ;</pre>
+    <p>Refer to the following explanation about the ODBCMD structure.</p>
+    <p class="label">(1) Reading the modal data except G code</p>
+    <ul>
+        <p>
+           The readable modal data are commanded data D, E, F, H, L, M, N, O, S, T, and second auxiliary function (A, B, C, U, V, or W). 
+        </p>
+        <li type="square">Reading data one by one<br/></li>
+        <div>
+        <p>Specify <b>1</b> for "num_cmd". Specify the commanded address in the following table for "type". Specify the block to be read for "block". Then modal data except G code in the objective block specified by "block" is set in the ODBCMD structure.</p>
+
+        <table border="1" rules="groups">
+            <colgroup>
+            <colgroup>
+            <colgroup>
+            <colgroup>
+            <thead>
+                <tr> <th>type</th>    <th>commanded address</th>        <th>type</th>    <th>commanded address</th>    </tr>
+            </thead>
+            <tbody>
+            <tr> <td>0 </td> <td>A (2nd auxiliary function)</td> <td>15</td> <td>P (not used)   </td> </tr>
+            <tr> <td>1 </td> <td>B (2nd auxiliary function)</td> <td>16</td> <td>Q (not used)   </td> </tr>
+            <tr> <td>2 </td> <td>C (2nd auxiliary function)</td> <td>17</td> <td>R (not used)   </td> </tr>
+            <tr> <td>3 </td> <td>D              </td> <td>18</td> <td>S              </td> </tr>
+            <tr> <td>4 </td> <td>E              </td> <td>19</td> <td>T              </td> </tr>
+            <tr> <td>5 </td> <td>F              </td> <td>20</td> <td>U (2nd auxiliary function)</td> </tr>
+            <tr> <td>6 </td> <td>G (not used)   </td> <td>21</td> <td>V (2nd auxiliary function)</td> </tr>
+            <tr> <td>7 </td> <td>H              </td> <td>22</td> <td>W (2nd auxiliary function)</td> </tr>
+            <tr> <td>8 </td> <td>I (not used)   </td> <td>23</td> <td>X (not used)   </td> </tr>
+            <tr> <td>9 </td> <td>J (not used)   </td> <td>24</td> <td>Y (not used)   </td> </tr>
+            <tr> <td>10</td> <td>K (not used)   </td> <td>25</td> <td>Z (not used)   </td> </tr>
+            <tr> <td>11</td> <td>L              </td> <td>26</td> <td>M (2nd M code) </td> </tr>
+            <tr> <td>12</td> <td>M              </td> <td>27</td> <td>M (3rd M code) </td> </tr>
+            <tr> <td>13</td> <td>N              </td> <td>28</td> <td>M (4th M code) </td> </tr>
+            <tr> <td>14</td> <td>O              </td> <td>29</td> <td>M (5th M code) </td> </tr>
+            </tbody>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+        </table>
+        <p>The following data are set in the ODBCMD structure.</p>
+        <dl>
+        <dt>adrs</dt>
+            <dd>The commanded address is stored in ASCII code.</dd>
+        <dt>num</dt>
+            <dd>The following values are stored when "adrs" is M (=77).</dd>
+            <ul>
+                <table class="dd">
+                    <tr> <td valign="top">1</td>    <td valign="top">:</td>    <td valign="top">1st M code</td>    </tr>
+                    <tr> <td valign="top">2</td>    <td valign="top">:</td>    <td valign="top">2nd M code</td>    </tr>
+                    <tr> <td valign="top">3</td>    <td valign="top">:</td>    <td valign="top">3rd M code</td>    </tr>
+                    <tr> <td valign="top">4</td>    <td valign="top">:</td>    <td valign="top">4th M code</td>    </tr>
+                    <tr> <td valign="top">5</td>    <td valign="top">:</td>    <td valign="top">5th M code</td>    </tr>
+                </table>
+            </ul>
+        <dt>flag</dt>
+            <dd>The following flags are stored.</dd>
+            <ul>
+                <table class="dd">
+                    <tr> <td valign="top">#3 </td> <td valign="top">=</td> <td valign="top">1</td> <td valign="top">:</td> <td>command differ from the previous block</td> </tr>
+                    <tr> <td valign="top">#4 </td> <td valign="top">=</td> <td valign="top">1</td> <td valign="top">:</td> <td>There is a command of a decimal point.   </td> </tr>
+                    <tr> <td valign="top">#5 </td> <td valign="top">=</td> <td valign="top">1</td> <td valign="top">:</td> <td>Negative                                 </td> </tr>
+                    <tr> <td valign="top">#6 </td> <td valign="top">=</td> <td valign="top">1</td> <td valign="top">:</td> <td>1 digit                                  </td> </tr>
+                    <tr> <td valign="top">#11</td> <td valign="top">=</td> <td valign="top">1</td> <td valign="top">:</td> <td>There is a command after RESET.          </td> </tr>
+                    <tr> <td valign="top">#15</td> <td valign="top">=</td> <td valign="top">1</td> <td valign="top">:</td> <td>There is a command in the present block. </td> </tr>
+                </table>
+            </ul>
+        <dt>cmd_val</dt>
+            <dd>The commanded data is stored.</dd>
+        <dt>dec_val</dt>
+            <dd>The number of places of decimals of commanded data is stored.</dd><p/>
+            <dd>The commanded data is calculated by the following expression.</dd>
+            <dd>&#160;&#160;&#160;Commanded data = cmd_val * 10 ** (-dec_val)</dd><p/>
+            <dd>(Example) The following data are read when "F1000.0" is commanded.</dd>
+            <ul>
+            <table class="dd">
+                <tr> <td>adrs   </td>    <td>=</td>    <td>F (=70)</td>    </tr>
+                <tr> <td>cmd_val</td>    <td>=</td>    <td>10000  </td>    </tr>
+                <tr> <td>dec_val</td>    <td>=</td>    <td>1      </td>    </tr>
+            </table>
+            </ul>
+        </dl>
+    <br/>
+        </div>
+
+    <li type="square">Reading all data at a time<br/></li>
+        <div>
+    Specify the number of modal data to be read for "num_cmd". Specify -1 for "type". Specify the block to be read for "block". Then all modal data except G code in the objective block specified by "block" is set in the ODBCMD structure.Specify the number in the following table for "num_cmd" in order to read all modal data. The number of modal data which were read actually is stored in "num_cmd" after the function call. <p/>
+
+    Some same M codes may be read at a time with "multiple M commands in a single block". 
+        </div>
+    <table class="dd" border="1" frame="hsides" rules="groups">
+        <colgroup>
+        <colgroup>
+        <colgroup>
+            <thead>
+                <tr> <th></th> <th>With "2nd auxiliary function"</th>    <th>Without "2nd auxiliary function"</th>    </tr>
+            </thead>
+            <tbody>
+                <tr> <td>With "multiple M commands in a single block"   </td>    <td>15</td>    <td>14</td>    </tr>
+                <tr> <td>Without "multiple M commands in a single block"</td>    <td>11</td>    <td>10</td>    </tr>
+            </tbody>
+        </colgroup>
+        </colgroup>
+        </colgroup>
+    </table>
+    </ul>
+
+    <p class="label">(2) Reading commanded data</p>
+    <ul>
+    <li type="square">Reading data one by one<br/></li>
+        <div>
+        <p>Specify 1 for "num_cmd". Specify the commanded address in the following table for "type". Specify the block to be read for "block". Then commanded data which is commanded in the objective block specified by "block" is set in the ODBCMD structure. When no data is commanded in the objective block specified by "block", zero is set in "num_cmd".</p>
+        <table border="1" rules="groups">
+            <colgroup>
+            <colgroup>
+            <colgroup>
+            <colgroup>
+                <thead>
+                    <tr> <th>type</th>    <th>commanded address</th>        <th>type</th>    <th>commanded address</th>    </tr>
+                </thead>
+                <tbody>
+                    <tr> <td>100</td>        <td>A</td>                    <td>115</td>        <td>P</td>                </tr>
+                    <tr> <td>101</td>        <td>B</td>                    <td>116</td>        <td>Q</td>                </tr>
+                    <tr> <td>102</td>        <td>C</td>                    <td>117</td>        <td>R</td>                </tr>
+                    <tr> <td>103</td>        <td>D</td>                    <td>118</td>        <td>S</td>                </tr>
+                    <tr> <td>104</td>        <td>E</td>                    <td>119</td>        <td>T</td>                </tr>
+                    <tr> <td>105</td>        <td>F</td>                    <td>120</td>        <td>U</td>                </tr>
+                    <tr> <td>106</td>        <td>G (not used)</td>        <td>121</td>        <td>V</td>                </tr>
+                    <tr> <td>107</td>        <td>H</td>                    <td>122</td>        <td>W</td>                </tr>
+                    <tr> <td>108</td>        <td>I</td>                    <td>123</td>        <td>X</td>                </tr>
+                    <tr> <td>109</td>        <td>J</td>                    <td>124</td>        <td>Y</td>                </tr>
+                    <tr> <td>110</td>        <td>K</td>                    <td>125</td>        <td>Z</td>                </tr>
+                    <tr> <td>111</td>        <td>L</td>                    <td>126</td>        <td>M (2nd M code)</td>    </tr>
+                    <tr> <td>112</td>        <td>M</td>                    <td>127</td>        <td>M (3rd M code)</td>    </tr>
+                    <tr> <td>113</td>        <td>N</td>                    <td>128</td>        <td>M (4th M code)</td>    </tr>
+                    <tr> <td>114</td>        <td>O</td>                    <td>129</td>        <td>M (5th M code)</td>    </tr>
+                </tbody>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+        </table>
+        <p>The following data are set in the ODBCMD structure.</p>
+        <dl>
+        <dt>adrs</dt>
+            <dd>The commanded address is stored in ASCII code.</dd>
+        <dt>num</dt>
+            <dd>The following values are stored when "adrs" is M (=77).</dd>
+            <ul>
+                <table class="dd">
+                    <tr> <td valign="top">1</td>    <td valign="top">:</td>    <td>1st M code</td>    </tr>
+                    <tr> <td valign="top">2</td>    <td valign="top">:</td>    <td>2nd M code</td>    </tr>
+                    <tr> <td valign="top">3</td>    <td valign="top">:</td>    <td>3rd M code</td>    </tr>
+                    <tr> <td valign="top">4</td>    <td valign="top">:</td>    <td>4th M code</td>    </tr>
+                    <tr> <td valign="top">5</td>    <td valign="top">:</td>    <td>5th M code</td>    </tr>
+                </table>
+            </ul>
+        <dt>flag</dt>
+            <dd>The following flags are stored.</dd>
+            <ul>
+            <table class="dd">
+                <tr> <td valign="top">#4 </td> <td valign="top">=</td> <td valign="top">1</td> <td valign="top"></td>         <td valign="top">:</td> <td>There is a command of a decimal point.</td> </tr>
+                <tr> <td valign="top">#5 </td> <td valign="top">=</td> <td valign="top">1</td> <td valign="top"></td>         <td valign="top">:</td> <td>Negative</td> </tr>
+                <tr> <td valign="top">#6 </td> <td valign="top">=</td> <td valign="top">1</td> <td valign="top"></td>         <td valign="top">:</td> <td>1 digit</td> </tr>
+                <tr> <td valign="top">#11</td> <td valign="top">=</td> <td valign="top">(always)</td> <td valign="top">1</td> <td valign="top">:</td> <td>There is a command after RESET.</td> </tr>
+                <tr> <td valign="top">#15</td> <td valign="top">=</td> <td valign="top">(always)</td> <td valign="top">1</td> <td valign="top">:</td> <td>There is a command in the present block.</td> </tr>
+            </table>
+            </ul>
+        <dt>cmd_val</dt>
+            <dd>The commanded data is stored.</dd>
+        <dt>dec_val</dt>
+            <dd>The number of places of decimals of commanded data is stored.</dd><p/>
+            <ul>
+            <div>
+                The commanded data is calculated by the following expression.<br/>
+                &#160;&#160;&#160;Commanded data = cmd_val * 10 ** (-dec_val)
+                <p/>
+                (Example) The following data are read when "X200.00" is commanded.<br/>
+                <table class="dd">
+                    <tr> <td valign="top">adrs</td>     <td valign="top">=</td> <td valign="top">X (=88)  </td>    </tr>
+                    <tr> <td valign="top">cmd_val</td>  <td valign="top">=</td> <td valign="top">20000    </td>    </tr>
+                    <tr> <td valign="top">dec_val</td>  <td valign="top">=</td> <td valign="top">2        </td>    </tr>
+                </table>
+            </div>
+            </ul>
+        </dl>
+        </div>
+    <p/>
+    <li type="square">Reading all data at a time</li><br/>
+        <div>
+        Specify the number of commanded data to be read for "num_cmd". Specify -2 for "type". Specify the block to be read for "block". Then all commanded data in the objective block specified by "block" is set in the ODBCMD structure. Specify the number in the following table for "num_cmd" in order to read all commanded data. The number of commanded data which were read actually is stored in "num_cmd" after the function call. 
+        <p/>
+        </div>
+    </ul>
+    <p class="label">(3) Reading commanded data concerning axis</p>
+    <ul>
+    <li type="square">Reading data one by one</li><br/>
+    <ul>
+        <div>
+        Specify <b>1</b> for "num_cmd". Specify axis number (200 to 223) in the following table for "type". Specify the block to be read for "block". Then commanded data concerning axis which is commanded in the objective block specified by "block" is set in the ODBCMD structure. When no axis is commanded in the objective block specified by "block", zero is set in "num_cmd".<p/>
+        <table border="1" rules="groups">
+            <colgroup>
+            <colgroup>
+            <thead>
+                <tr> <th>type</th>    <th>axis</th>        </tr>
+            </thead>
+            <tbody>
+                <tr> <td>200</td>                  <td>1st axis</td>            </tr>
+                <tr> <td>201</td>                  <td>2nd axis</td>            </tr>
+                <tr> <td>&#160;&#160;:</td>        <td>&#160;&#160;:</td>    </tr>
+
+                <tr> <td>&#160;&#160;:</td>        <td>&#160;&#160;:</td>    </tr>
+                <tr> <td>230</td>                  <td>31th axis</td>           </tr>
+                <tr> <td>231</td>                  <td>32th axis</td>           </tr>
+            </tbody>
+            </colgroup>
+            </colgroup>
+        </table>
+        <p>The following data are set in the ODBCMD structure.</p>
+        <dl>
+        <dt>adrs</dt>
+            <dd>The commanded address is stored in ASCII code.</dd>
+        <dt>num</dt>
+            <dd>The axis number (1 to max. controlled axes) is stored in binary.</dd>
+        <dt>flag</dt>
+            <dd>The following flags are stored.</dd>
+            <ul>
+            <table class="dd">
+                <tr> <td valign="top">#3 </td> <td valign="top">=</td> <td valign="top">1</td> <td valign="top"></td>            <td valign="top">:</td> <td>command differ from the previous block</td> </tr>
+                <tr> <td valign="top">#4 </td> <td valign="top">=</td> <td valign="top">1</td> <td valign="top"></td>            <td valign="top">:</td> <td>There is a command of a decimal point.</td>    </tr>
+                <tr> <td valign="top">#5 </td> <td valign="top">=</td> <td valign="top">1</td> <td valign="top"></td>            <td valign="top">:</td> <td>Negative</td>    </tr>
+                <tr> <td valign="top">#6 </td> <td valign="top">=</td> <td valign="top">1</td> <td valign="top"></td>            <td valign="top">:</td> <td>1 digit </td>    </tr>
+                <tr> <td valign="top">#11</td> <td valign="top">=</td> <td valign="top">(always)</td> <td valign="top">1</td>    <td valign="top">:</td> <td>There is a command after RESET. </td>            </tr>
+                <tr> <td valign="top">#15</td> <td valign="top">=</td> <td valign="top">(always)</td> <td valign="top">1</td>    <td valign="top">:</td> <td>There is a command in the present block.</td>    </tr>
+            </table>
+            </ul>
+        <dt>cmd_val</dt>
+            <dd>The commanded data is stored.</dd>
+        <dt>dec_val</dt>
+            <dd>The number of places of decimals of commanded data is stored.</dd><p/>
+            <div>
+            <dd>The commanded data is calculated by the following expression.</dd>
+            <dd>&#160;&#160;&#160;Commanded data = cmd_val * 10 ** (-dec_val)</dd>
+            <dd><p/>(Example) The following data are read when 2nd axis is "Y" and "Y50.0" is commanded.</dd>
+            <ul>
+            <table class="dd">
+                <tr> <td valign="top">adrs</td>       <td valign="top">=</td>    <td valign="top">Y (=89)</td>    </tr>
+                <tr> <td valign="top">num</td>        <td valign="top">=</td>    <td valign="top">2</td>        </tr>
+                <tr> <td valign="top">cmd_val</td>    <td valign="top">=</td>    <td valign="top">500</td>        </tr>
+                <tr> <td valign="top">dec_val</td>    <td valign="top">=</td>    <td valign="top">1</td>        </tr>
+            </table>
+            </ul>
+            </div>
+        </dl>
+        <p/>
+        </div>
+
+    </ul>
+    <li type="square">Reading all data at a time</li><br/>
+    <ul>
+        <div>
+        <p/>Specify the number of commanded data concerning axis to be read for "num_cmd". Specify -3 for "type". Specify the block to be read for "block". Then all commanded data concerning axis in the objective block specified by "block" is set in the ODBCMD structure. Specify the following values for "num_cmd" in order to read all commanded data concerning axis. The number of commanded data which were read actually is stored in "num_cmd" after the function call. 
+        </div>
+    </ul>
+
+
+    </ul>
+
+                        </content>
+                    </item>
+                </vc>
+            </hssb>
+        </is>
+        <!-- is Argument End -->
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>Data block length error<br/>The number of G code data to be read (num_cmd) is wrong.</content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>Data number error<br/>The specification of commanded data (type) is wrong.</content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>Data attribute error<br/>The specification of block (block) is wrong.</content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 0i-D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+
+<!--
+        <type>
+            <li type="dd">Series 15i</li>
+            Multiple M commands in a single block<br/>
+            2nd auxiliary function
+        </type>
+-->
+        <is>
+            <hssb>The extended driver/library function is necessary.</hssb>
+<!--
+            <type>
+                Multiple M commands in a single block<br/>
+                2nd auxiliary function
+            </type>
+-->
+        </is>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+            <li>Series 15i</li>
+                1030 (influenced by setting)
+            </ul>
+        </type>
+    </parameter>
+    <is_parameter></is_parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>O</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+        <add><b></b></add>
+        <is>
+            <!-- M -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_modal</name>
+            <file>Misc/cnc_modal.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdgcode</name>
+            <file>Misc/cnc_rdgcode.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

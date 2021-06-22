@@ -1,0 +1,2083 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_sysconfig</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_sysconfig(unsigned short FlibHndl, ODBSYSC *sysinfo);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+<p>
+ Reads the CNC system configuration information.
+</p>
+<p>
+ Various information is stored in each member of ODBSYSC.
+</p>
+<p>
+ This function cannot be used on Series 15i, 16i/18i/21i, 0i-B and 30i.
+</p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <hssb>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+
+                <item>
+                    <name>syssoft</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the ODBSYSC structure including the CNC configuration information.<br/>
+                            There is difference at the structure between Series 15, Series 16/18/21, 0i-A.
+                        </p>
+                        <p>
+                            <li>The ODBSYSC structure for Series 15 is as follows.</li>
+                        </p>
+
+<pre><![CDATA[
+typedef struct  odbsysc {
+    char    slot_no_p[16];    /* Physical slot number */
+    char    slot_no_l[16];    /* Logical slot number */
+    short   mod_id[16];       /* Module ID */
+    short   soft_id[16];      /* Software ID */
+    char    s_series[16][5];  /* Software series */
+    char    s_version[16][5]; /* Software version */
+    char    sys_id[16];       /* System ID of CNC(CNC series name)*/
+    char    sys_ser[5];       /* System series of CNC */
+    char    sys_ver[5];       /* System version of CNC */
+    char    basic_ver[5];     /* Version of CNC basic software */
+    char    opta1_ver[5];     /* Version of CNC option 1 software */
+    char    opta2_ver[5];     /* Version of CNC option 2 software */
+    char    opta3_ver[5];     /* Version of CNC option 3 software */
+    char    opta4_ver[5];     /* Version of CNC option 4 software */
+    char    sub_ver[5];       /* Version of CNC sub software */
+    char    opts1_ver[5];     /* Version of CNC sub option 1 soft.*/
+    char    tcopt_ver[5];     /* Version of TC option software */
+    char    axis_ser[5];      /* Series of axis software */
+    char    axis_ver[5];      /* Version of axis software */
+    char    help_ser[5];      /* Series of HELP ROM */
+    char    help_ver[5];      /* Version of HELP ROM */
+    char    boot_ser[5];      /* Series of BOOT ROM */
+    char    boot_ver[5];      /* Version of BOOT ROM */
+    char    servo_ser[5];     /* Series of servo software */
+    char    servo_ver[5];     /* Version of servo software */
+    char    cmpl_ser[5];      /* Series of macro compiler */
+    char    cmpl_ver[5];      /* Version of macro compiler */
+    char    sral1_ser[5];     /* Series of 1st serial spindle */
+    char    sral1_ver[5];     /* Version of 1st serial spindle */
+    char    sral2_ser[5];     /* Series of 2nd serial spindle */
+    char    sral2_ver[5];     /* Version of 2nd serial spindle */
+    char    sral3_ser[5];     /* Series of 3rd serial spindle */
+    char    sral3_ver[5];     /* Version of 3rd serial spindle */
+    char    sral4_ser[5];     /* Series of 4th serial spindle */
+    char    sral4_ver[5];     /* Version of 4th serial spindle */
+    short   pcb_info[20];     /* Information of each board */
+    short   pcb_note[20][16]; /* Modules built in each board */
+} ODBSYSC ;
+]]></pre>
+
+<dl>
+    <dt>slot_no_p</dt>
+    <dd>Physical slot number<br/>
+        The physical slot numbers of the modules which are built in the slots are stored in binary in order of their position.  This array is terminated with FFH.The data subsequent to FFH are invalid.</dd>
+    <dd><ul>
+            <table border="0">
+                <tr>    <td>00H to 0FH</td> <td>:</td>  <td>Primary slot number</td>    </tr>
+                <tr>    <td>80H to 8FH</td> <td>:</td>  <td>Secondary slot number</td>  </tr>
+            </table>
+        </ul></dd>
+    
+    <dt>slot_no_l</dt>
+    <dd>Logical slot number<br/>
+        The logical slot numbers of the modules which are built in the slots are stored in binary in order of their position.  This array is terminated with FFH. The data subsequent to FFH are invalid.</dd>
+    
+    <dd><ul>
+            <table border="0">
+                <tr>    <td>00H to 0FH</td> <td>:</td>  <td>logical slot number</td>        </tr>
+            </table>
+        </ul></dd>
+    
+    <dt>mod_id</dt>
+    <dd>Module ID<br/>
+        The module IDs of the modules which are built in the slots are stored in binary in order of their position. This array is terminated with FFH.<br/>
+        The data subsequent to FFH are invalid. 'XX' is internal information.</dd>
+    <dd><ul>
+            <table border="0">
+                <tr>    <td>XX3FH</td>  <td>:</td>  <td>Remote buffer           </td>   </tr>
+                <tr>    <td>XX45H</td>  <td>:</td>  <td>Graphic                 </td>   </tr>
+                <tr>    <td>XX62H</td>  <td>:</td>  <td>CNC MAIN (High speed)   </td>   </tr>
+                <tr>    <td>XX63H</td>  <td>:</td>  <td>Additional axis/CNC SUB </td>   </tr>
+                <tr>    <td>XX6BH</td>  <td>:</td>  <td>PMC-NB                  </td>   </tr>
+                <tr>    <td>XX6CH</td>  <td>:</td>  <td>FAPT/CAP                </td>   </tr>
+                <tr>    <td>XX71H</td>  <td>:</td>  <td>CNC MAIN (Standard)     </td>   </tr>
+                <tr>    <td>XX74H</td>  <td>:</td>  <td>ROM cassette adapter    </td>   </tr>
+                <tr>    <td>XX77H</td>  <td>:</td>  <td>PMC-NA                  </td>   </tr>
+                <tr>    <td>XX94H</td>  <td>:</td>  <td>MMC-IV                  </td>   </tr>
+            </table>
+        </ul>
+    </dd>
+    <dt>soft_id</dt>
+    <dd>Software ID<br/>
+        The software IDs of the modules which are built in the slots are stored in binary in order of their position. This array is terminated with FFH.<br/>
+        The data subsequent to FFH are invalid.</dd>
+    <dd><ul>
+            <table border="0">
+                <tr>    <td>37H</td>    <td>:</td>  <td>CNC MAIN            </td>   </tr>
+                <tr>    <td>39H</td>    <td>:</td>  <td>Additional axis     </td>   </tr>
+                <tr>    <td>3AH</td>    <td>:</td>  <td>CNC SUB             </td>   </tr>
+                <tr>    <td>3CH</td>    <td>:</td>  <td>Remote buffer/DNC11 </td>   </tr>
+                <tr>    <td>3DH</td>    <td>:</td>  <td>PMC-NA              </td>   </tr>
+                <tr>    <td>40H</td>    <td>:</td>  <td>Graphic             </td>   </tr>
+                <tr>    <td>41H</td>    <td>:</td>  <td>ROM cassette adapter</td>   </tr>
+                <tr>    <td>42H</td>    <td>:</td>  <td>PMC-NB              </td>   </tr>
+                <tr>    <td>44H</td>    <td>:</td>  <td>DNC1#2              </td>   </tr>
+                <tr>    <td>45H</td>    <td>:</td>  <td>FAPT                </td>   </tr>
+                <tr>    <td>4CH</td>    <td>:</td>  <td>TC                  </td>   </tr>
+                <tr>    <td>4DH</td>    <td>:</td>  <td>CAP                 </td>   </tr>
+                <tr>    <td>5EH</td>    <td>:</td>  <td>MMC-IV              </td>   </tr>
+            </table>
+        </ul>
+    </dd>
+    <dt>s_series</dt>
+    <dd>Software series<br/>
+        The software series of the modules which are built in the slots are stored in ASCII code in order of their position.</dd>
+    <dt>s_version</dt>
+    <dd>Software version<br/>
+        The software version of the modules which are built in the slots are stored in ASCII code in order of their position.</dd>
+    <dt>sys_id</dt>
+        <dd>CNCSystem ID of CNC (CNC series name)</dd>
+    <dt>sys_ser</dt>
+        <dd>System series of CNC</dd>
+    <dt>sys_ver</dt>
+        <dd>System version of CNC</dd>
+    <dt>basic_ver</dt>
+        <dd>Version of CNC basic software</dd>
+    <dt>opta1_ver</dt>
+        <dd>Version of CNC option 1 software</dd>
+    <dt>opta2_ver</dt>
+        <dd>Version of CNC option 2 software</dd>
+    <dt>opta3_ver</dt>
+        <dd>Version of CNC option 3 software</dd>
+    <dt>opta4_ver</dt>
+        <dd>Version of CNC option 4 software</dd>
+    <dt>sub_ver</dt>
+        <dd>Version of CNC sub software</dd>
+    <dt>opts1_ver</dt>
+        <dd>Version of CNC sub option 1 software</dd>
+    <dt>tcopt_ver</dt>
+        <dd>Version of TC option software</dd>
+    <dt>axis_ser </dt>
+        <dd>Series of axis software</dd>
+    <dt>axis_ver</dt>
+        <dd>Version of axis software</dd>
+    <dt>help_ser</dt>
+        <dd>Series of HELP ROM</dd>
+    <dt>help_ver</dt>
+        <dd>Version of HELP ROM</dd>
+    <dt>boot_ser</dt>
+        <dd>Series of BOOT ROM</dd>
+    <dt>boot_ver</dt>
+        <dd>Version of BOOT ROM</dd>
+    <dt>servo_ser</dt>
+        <dd>Series of servo software</dd>
+    <dt>servo_ver</dt>
+        <dd>Version of servo software</dd>
+    <dt>cmpl_ser</dt>
+        <dd>Series of macro compiler</dd>
+    <dt>cmpl_ver</dt>
+        <dd>Version of macro compiler</dd>
+    <dt>sral1_ser</dt>
+        <dd>Series of 1st serial spindle</dd>
+    <dt>sral1_ver</dt>
+        <dd>Version of 1st serial spindle</dd>
+    <dt>sral2_ser</dt>
+        <dd>Series of 2nd serial spindle</dd>
+    <dt>sral2_ver</dt>
+        <dd>Version of 2nd serial spindle</dd>
+    <dt>sral3_ser</dt>
+        <dd>Series of 3rd serial spindle</dd>
+    <dt>sral3_ver</dt>
+        <dd>Version of 3rd serial spindle</dd>
+    <dt>sral4_ser</dt>
+        <dd>Series of 4th serial spindle</dd>
+    <dt>sral4_ver</dt>
+        <dd>Version of 4th serial spindle</dd>
+<p>
+    The data from 's_series' to 'sral4_ver' are stored in ASCII code, and the last data of each member is 'NULL' code.
+</p>
+    <dt>pcb_info</dt>
+        <dd>The information of each board</dd>
+        <dd><img src="misc/cnc_sysconfig_pcb_info.gif"></img></dd>
+    <dd><ul>
+        pcb_info[0] (MAIN)
+        <dd><table border="0">
+            <tr>    <td>#0</td> <td>:</td>  <td>F-ROM               </td>   </tr>
+            <tr>    <td>#1</td> <td>:</td>  <td>D-RAM               </td>   </tr>
+            <tr>    <td>#2</td> <td>:</td>  <td>High Speed S-RAM    </td>   </tr>
+            <tr>    <td>#3</td> <td>:</td>  <td>File S-RAM          </td>   </tr>
+            <tr>    <td>#4</td> <td>:</td>  <td>Peripheral          </td>   </tr>
+            <tr>    <td>#5</td> <td>:</td>  <td>CRTC                </td>   </tr>
+            <tr>    <td>#6</td> <td>:</td>  <td>Spindle             </td>   </tr>
+            <tr>    <td>#7</td> <td>:</td>  <td>1st,2nd axis Servo  </td>   </tr>
+            <tr>    <td>#8</td> <td>:</td>  <td>3rd,4th axis Servo  </td>   </tr>
+        </table></dd>
+        <p/>
+        pcb_info[1] (SUB)
+        <dd><table border="0">
+            <tr>    <td>#0</td> <td>:</td>  <td>D-RAM               </td>   </tr>
+            <tr>    <td>#1</td> <td>:</td>  <td>High Speed S-RAM    </td>   </tr>
+            <tr>    <td>#2</td> <td>:</td>  <td>File S-RAM          </td>   </tr>
+            <tr>    <td>#3</td> <td>:</td>  <td>Spindle             </td>   </tr>
+            <tr>    <td>#4</td> <td>:</td>  <td>5th,6th axis Servo  </td>   </tr>
+            <tr>    <td>#5</td> <td>:</td>  <td>7th,8th axis Servo  </td>   </tr>
+            <tr>    <td>#6</td> <td>:</td>  <td>Analog I/O          </td>   </tr>
+        </table></dd>
+        <p/>
+        pcb_info[2] (ADDITIONAL AXIS 1)
+        <dd><table border="0">
+            <tr>    <td>#0</td> <td>:</td>  <td>Spindle             </td>   </tr>
+            <tr>    <td>#1</td> <td>:</td>  <td>5th,6th axis Servo  </td>   </tr>
+            <tr>    <td>#2</td> <td>:</td>  <td>7th,8th axis Servo  </td>   </tr>
+            <tr>    <td>#3</td> <td>:</td>  <td>Analog I/O          </td>   </tr>
+        </table></dd>
+        <p/>
+        pcb_info[3] (ADDITIONAL AXIS 2)
+        <dd><table border="0">
+            <tr>    <td>#0</td> <td>:</td>  <td>9th,10th axis Servo </td>   </tr>
+        </table></dd>
+        <p/>
+        pcb_info[4] (PMC-NA)
+        <dd><table border="0">
+            <tr>    <td>#0</td> <td>:</td>  <td>PMC CPU             </td>   </tr>
+            <tr>    <td>#1</td> <td>:</td>  <td>PMC Engine          </td>   </tr>
+            <tr>    <td>#2</td> <td>:</td>  <td>Option D-RAM        </td>   </tr>
+            <tr>            <td>#3</td> <td>:</td>  <td>F-ROM               </td>   </tr>
+        </table></dd>
+        <p/>
+        pcb_info[5] (PMC-NB)
+        <dd><table border="0">
+            <tr>    <td>#0</td> <td>:</td>  <td>PMC CPU             </td>   </tr>
+            <tr>    <td>#1</td> <td>:</td>  <td>PMC Engine          </td>   </tr>
+            <tr>    <td>#2</td> <td>:</td>  <td>Option D-RAM        </td>   </tr>
+            <tr>    <td>#3</td> <td>:</td>  <td>F-ROM               </td>   </tr>
+            <tr>    <td>#4</td> <td>:</td>  <td>EPROM               </td>   </tr>
+        </table></dd>
+        <p/>
+        pcb_info[6] (GRAPHIC)
+        <dd><table border="0">
+            <tr>    <td>#0</td> <td>:</td>  <td>Graphic CPU         </td>   </tr>
+            <tr>    <td>#1</td> <td>:</td>  <td>CRTC                </td>   </tr>
+            <tr>    <td>#2</td> <td>:</td>  <td>Graphic Engine 1    </td>   </tr>
+            <tr>    <td>#3</td> <td>:</td>  <td>Graphic Engine 2    </td>   </tr>
+        </table></dd>
+        <p/>
+        pcb_info[7] (REMOTE BUFFER/DNC2)
+        <dd><table border="0">
+            <tr>    <td>#0</td> <td>:</td>  <td>Communication       </td>   </tr>
+        </table></dd>
+        <p/>
+        pcb_info[8] (DNC1)
+        <dd><table border="0">
+            <tr>    <td>#0</td> <td>:</td>  <td>Communication       </td>   </tr>
+        </table></dd>
+        <p/>
+        pcb_info[9] (CAP/FAPT)
+        <dd><table border="0">
+            <tr>    <td>#0</td> <td>:</td>  <td>CAP/FAPT CPU        </td>   </tr>
+            <tr>    <td>#1</td> <td>:</td>  <td>EPROM               </td>   </tr>
+            <tr>    <td>#2</td> <td>:</td>  <td>S-RAM               </td>   </tr>
+            <tr>    <td>#3</td> <td>:</td>  <td>D-RAM               </td>   </tr>
+        </table></dd>
+        <p/>
+        pcb_info[10] (RISC R4000)
+        <dd><table border="0">
+            <tr>    <td>#0</td> <td>:</td>  <td>EPROM</td>  </tr>
+            <tr>    <td>#1</td> <td>:</td>  <td>S-RAM</td>  </tr>
+            <tr>    <td>#2</td> <td>:</td>  <td>D-RAM1</td> </tr>
+            <tr>    <td>#3</td> <td>:</td>  <td>D-RAM2</td> </tr>
+        </table></dd>
+        <p/>
+        pcb_info[11] (reserve)
+        <p/>
+        pcb_info[12] (reserve) 
+        <p/>
+        pcb_info[13] (reserve)
+        <p/>
+        pcb_info[14] (AXIS CPU 1)
+        <dd><table border="0">
+            <tr>    <td>#0</td> <td>:</td>  <td>D-RAM             </td> </tr>
+            <tr>    <td>#1</td> <td>:</td>  <td>Spindle           </td> </tr>
+            <tr>    <td>#2</td> <td>:</td>  <td>1st,2nd axis Servo</td> </tr>
+            <tr>    <td>#3</td> <td>:</td>  <td>3rd,4th axis Servo</td> </tr>
+            <tr>    <td>#4</td> <td>:</td>  <td>DBL 1             </td> </tr>
+            <tr>    <td>#5</td> <td>:</td>  <td>DBL 2             </td> </tr>
+        </table></dd>
+        <p/>
+        pcb_info[15] (AXIS CPU 2)
+        <dd><table border="0">
+            <tr>    <td>#0</td> <td>:</td>  <td>D-RAM</td>  </tr>
+            <tr>    <td>#1</td> <td>:</td>  <td>Spindle</td>    </tr>
+            <tr>    <td>#2</td> <td>:</td>  <td>5th,6th axis Servo</td> </tr>
+            <tr>    <td>#3</td> <td>:</td>  <td>7th,8th axis Servo</td> </tr>
+            <tr>    <td>#4</td> <td>:</td>  <td>DBL 1</td>  </tr>
+            <tr>    <td>#5</td> <td>:</td>  <td>DBL 2</td>  </tr>
+        </table></dd>
+        <p/>
+        pcb_info[16] (AXIS CPU 3)
+        <dd><table border="0">
+            <tr>    <td>#0</td> <td>:</td>  <td>D-RAM               </td>   </tr>
+            <tr>    <td>#1</td> <td>:</td>  <td>Spindle             </td>   </tr>
+            <tr>    <td>#2</td> <td>:</td>  <td>9th,10th axis Servo </td>   </tr>
+            <tr>    <td>#3</td> <td>:</td>  <td>11th,12th axis Servo</td>   </tr>
+            <tr>    <td>#4</td> <td>:</td>  <td>DBL 1               </td>   </tr>
+            <tr>    <td>#5</td> <td>:</td>  <td>DBL 2               </td>   </tr>
+        </table></dd>
+        <p/>
+        pcb_info[17] (AXIS CPU 4)
+        <dd><table border="0">
+            <tr>    <td>#0</td> <td>:</td>  <td>D-RAM</td>  </tr>
+            <tr>    <td>#1</td> <td>:</td>  <td>Spindle</td>    </tr>
+            <tr>    <td>#2</td> <td>:</td>  <td>13th,14th axis Servo</td>   </tr>
+            <tr>    <td>#3</td> <td>:</td>  <td>15th,16th axis Servo</td>   </tr>
+            <tr>    <td>#4</td> <td>:</td>  <td>DBL 1</td>  </tr>
+            <tr>    <td>#5</td> <td>:</td>  <td>DBL 2</td>  </tr>
+        </table></dd>
+        <p/>
+        pcb_info[18] (reserve)
+        <p/>
+        pcb_info[19] (reserve)
+        <p/>
+    </ul></dd>
+
+<dt>pcb_note</dt>
+    <dd> Modules built in each board</dd>
+<dd><ul>
+    <li type="square">CNC MAIN</li>
+    <ul>
+        pcb_note[0][0] --- Capacity of program memory module (F-ROM)
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>2MB   </td> </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>4MB   </td> </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>6MB</td>    </tr>
+            <tr>    <td align="right">4</td>    <td>:</td>  <td>8MB</td>    </tr>
+            <tr>    <td align="right">5</td>    <td>:</td>  <td>10MB</td>   </tr>
+            <tr>    <td align="right">6</td>    <td>:</td>  <td>12MB</td>   </tr>
+            <tr>    <td align="right">7</td>    <td>:</td>  <td>14MB</td>   </tr>
+        </table></dd>
+        <p/>
+        
+        pcb_note[0][1] --- Capacity of main memory module (D-RAM)
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>2MB   </td> </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>4MB</td>    </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>6MB</td>    </tr>
+            <tr>    <td align="right">4</td>    <td>:</td>  <td>8MB</td>    </tr>
+        </table></dd>
+        <p/>
+        pcb_note[0][2] --- Capacity of main memory module (HS-RAM)
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>TYPE-A</td> </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>TYPE-B</td> </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>TYPE-C</td> </tr>
+            <tr>    <td align="right">4</td>    <td>:</td>  <td>TYPE-D</td> </tr>
+            <tr>    <td align="right">5</td>    <td>:</td>  <td>TYPE-E</td> </tr>
+            <tr>    <td align="right">6</td>    <td>:</td>  <td>TYPE-F</td> </tr>
+            <tr>    <td align="right">7</td>    <td>:</td>  <td>TYPE-G</td> </tr>
+        </table></dd>
+        <p/>
+        pcb_note[0][3] --- Capacity of TAPE memory module (S-RAM)
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>64K   </td> </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>128K  </td> </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>256K</td>   </tr>
+            <tr>    <td align="right">4</td>    <td>:</td>  <td>320K</td>   </tr>
+            <tr>    <td align="right">5</td>    <td>:</td>  <td>512K</td>   </tr>
+            <tr>    <td align="right">6</td>    <td>:</td>  <td>1M</td> </tr>
+            <tr>    <td align="right">7</td>    <td>:</td>  <td>2M</td> </tr>
+        </table></dd>
+        <p/>
+        pcb_note[0][4] --- Existence of peripheral module
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist    </td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>(reserve)</td>  </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Exists</td> </tr>
+        </table></dd>
+        <p/>
+        pcb_note[0][5] --- Type of CRTC module
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist  </td>    </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others  </td>   </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>14"</td>    </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>9"</td> </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>10"</td>    </tr>
+        </table></dd>
+        <p/>
+        pcb_note[0][6] --- Type of spindle control module
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Serial</td> </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>Serial+High speed DI/DO</td>    </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>Analog</td> </tr>
+            <tr>    <td align="right">4</td>    <td>:</td>  <td>Analog+High speed DI/DO</td>    </tr>
+        </table></dd>
+        <p/>
+        pcb_note[0][7] --- Type of axis control module
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist      </td>    </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others      </td>   </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Piston lathe</td>   </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>Analog servo</td>   </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>Digital servo</td>  </tr>
+        </table></dd>
+        <p/>
+        pcb_note[0][8] --- Type of axis control module
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist      </td>    </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others      </td>   </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Piston lathe</td>   </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>Analog servo</td>   </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>Digital servo</td>  </tr>
+        </table></dd>
+        <p/>
+    </ul>
+        
+    <li type="square">CNC SUB</li>
+    <ul>
+        pcb_note[1][0] --- Capacity of SUB CPU memory module 1 (D-RAM)
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>1MB   </td> </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>1.25MB</td> </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>2MB</td>    </tr>
+            <tr>    <td align="right">4</td>    <td>:</td>  <td>4MB</td>    </tr>
+            <tr>    <td align="right">5</td>    <td>:</td>  <td>6MB</td>    </tr>
+            <tr>    <td align="right">6</td>    <td>:</td>  <td>8MB</td>    </tr>
+        </table></dd>
+        <p/>
+        pcb_note[1][1] --- Capacity of SUB CPU memory module 1 (HS-RAM)
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>TYPE-A</td> </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>TYPE-B</td> </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>TYPE-C</td> </tr>
+            <tr>    <td align="right">4</td>    <td>:</td>  <td>TYPE-D</td> </tr>
+            <tr>    <td align="right">5</td>    <td>:</td>  <td>TYPE-E</td> </tr>
+            <tr>    <td align="right">6</td>    <td>:</td>  <td>TYPE-F</td> </tr>
+            <tr>    <td align="right">7</td>    <td>:</td>  <td>TYPE-G</td> </tr>
+        </table></dd>
+        <p/>
+        pcb_note[1][2] --- Capacity of SUB CPU memory module 2 (S-RAM)
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>64K  </td>  </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>128K </td>  </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>256K</td>   </tr>
+            <tr>    <td align="right">4</td>    <td>:</td>  <td>320K</td>   </tr>
+            <tr>    <td align="right">5</td>    <td>:</td>  <td>512K</td>   </tr>
+            <tr>    <td align="right">6</td>    <td>:</td>  <td>1M</td> </tr>
+            <tr>    <td align="right">7</td>    <td>:</td>  <td>2M</td> </tr>
+        </table></dd>
+        <p/>
+        pcb_note[1][3] --- Type of spindle control module
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Serial</td> </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>Serial+High speed DI/DO</td>    </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>Analog</td> </tr>
+            <tr>    <td align="right">4</td>    <td>:</td>  <td>Analog+High speed DI/DO</td>    </tr>
+        </table></dd>
+        <p/>
+        pcb_note[1][4] --- Type of axis control module (5th, 6th axis)
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist      </td>    </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others      </td>   </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Piston lathe</td>   </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>Analog servo</td>   </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>Digital servo</td>  </tr>
+        </table></dd>
+        <p/>
+        pcb_note[1][5] --- Type of axis control module (7th, 8th axis)
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist      </td>    </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others      </td>   </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Piston lathe</td>   </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>Analog servo</td>   </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>Digital servo</td>  </tr>
+        </table></dd>
+        <p/>
+        pcb_note[1][6] --- Type of analog I/O module
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist    </td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others    </td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Port-B+I/O</td> </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>I/O       </td> </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>Port-B+Out</td> </tr>
+            <tr>    <td align="right">4</td>    <td>:</td>  <td>Out</td>    </tr>
+            <tr>    <td align="right">5</td>    <td>:</td>  <td>Port-B+In</td>  </tr>
+            <tr>    <td align="right">6</td>    <td>:</td>  <td>In</td> </tr>
+            <tr>    <td align="right">7</td>    <td>:</td>  <td>Port-B</td> </tr>
+        </table></dd>
+        <p/>
+    </ul>
+        
+    <li type="square">Additional axis 1</li>
+    <ul>
+        pcb_note[2][0] --- Type of spindle control module
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Serial</td> </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>Serial+High speed DI/DO</td>    </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>Analog</td> </tr>
+            <tr>    <td align="right">4</td>    <td>:</td>  <td>Analog+High speed DI/DO</td>    </tr>
+        </table></dd>
+        <p/>
+        pcb_note[2][1] --- Type of axis control module (5th, 6th axis)
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist      </td>    </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others      </td>   </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Piston lathe</td>   </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>Analog servo</td>   </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>Digital servo</td>  </tr>
+        </table></dd>
+        <p/>
+        pcb_note[2][2] --- Type of axis control module (7th, 8th axis)
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist      </td>    </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others      </td>   </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Piston lathe</td>   </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>Analog servo</td>   </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>Digital servo</td>  </tr>
+        </table></dd>
+        <p/>
+        pcb_note[2][3] --- Type of analog I/O module
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist    </td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others    </td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Port-B+I/O</td> </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>I/O       </td> </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>Port-B+Out</td> </tr>
+            <tr>    <td align="right">4</td>    <td>:</td>  <td>Out</td>    </tr>
+            <tr>    <td align="right">5</td>    <td>:</td>  <td>Port-B+In</td>  </tr>
+            <tr>    <td align="right">6</td>    <td>:</td>  <td>In</td> </tr>
+            <tr>    <td align="right">7</td>    <td>:</td>  <td>Port-B</td> </tr>
+        </table></dd>
+        <p/>
+    </ul>
+        
+    <li type="square">Additional axis 2</li>
+    <ul>
+        pcb_note[3][0] --- Type of axis control module (9th, 10th)
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist      </td>    </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others      </td>   </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Piston lathe</td>   </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>Analog servo</td>   </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>Digital servo</td>  </tr>
+        </table></dd>
+        <p/>
+    </ul>
+        
+    <li type="square">PMC-NA</li>
+    <ul>
+        pcb_note[4][0] --- Existence of CPU module
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist    </td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>(reserve)</td>  </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Exists</td> </tr>
+        </table></dd>
+        <p/>
+        pcb_note[4][1] --- Type of PMC engine module
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>BOC2</td>   </tr>
+        </table></dd>
+        <p/>
+        pcb_note[4][2] --- Option D-RAM module
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>512K</td>   </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>1M</td> </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>2M</td> </tr>
+        </table></dd>
+        <p/>
+        pcb_note[4][3] --- Capacity of program memory module (F-ROM)
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>1M</td> </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>1.5M</td>   </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>2M</td> </tr>
+        </table></dd>
+        <p/>
+    </ul>
+        
+    <li type="square">PMC-NB</li>
+    <ul>
+        pcb_note[5][0] --- Existence of CPU module
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist    </td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>(reserve)</td>  </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Exists</td> </tr>
+        </table></dd>
+        <p/>
+        pcb_note[5][1] --- Type of PMC engine module
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>PMP</td>    </tr>
+        </table></dd>
+        <p/>
+        pcb_note[5][2] --- Option D-RAM module
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>512K</td>   </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>1M</td> </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>2M</td> </tr>
+        </table></dd>
+        <p/>
+        pcb_note[5][3] --- Capacity of program memory module (F-ROM)
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>1M</td> </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>1.5M</td>   </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>2M</td> </tr>
+        </table></dd>
+        <p/>
+        pcb_note[5][4] --- Capacity of EPROM module
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>512K</td>   </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>768K</td>   </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>1M</td> </tr>
+        </table></dd>
+        <p/>
+    </ul>
+        
+    <li type="square">GRAPHIC</li>
+    <ul>
+        pcb_note[6][0] --- Existence of CPU module
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist    </td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>(reserve)</td>  </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Exists</td> </tr>
+        </table></dd>
+        <p/>
+        pcb_note[6][1] --- Type of character control module
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist    </td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>(reserve)</td>  </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>14"</td>    </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>9"</td> </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>10"</td>    </tr>
+        </table></dd>
+        <p/>
+        pcb_note[6][2] --- Existence of graphic engine module 1
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist    </td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>(reserve)</td>  </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Exists      </td>   </tr>
+        </table></dd>
+        <p/>
+        pcb_note[6][3] --- Existence of graphic engine module 2
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist    </td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>(reserve)</td>  </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Exists      </td>   </tr>
+        </table></dd>
+        <p/>
+    </ul>
+        
+    <li type="square">REMORT BUFFER/DNC2</li>
+    <ul>
+        pcb_note[7][0] --- Existence of communication module
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist    </td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>(reserve)</td>  </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Exists      </td>   </tr>
+        </table></dd>
+        <p/>
+    </ul>
+        
+    <li type="square">DNC1</li>
+    <ul>
+        pcb_note[8][0] --- Existence of communication module
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist    </td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>(reserve)</td>  </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Exists      </td>   </tr>
+        </table></dd>
+        <p/>
+    </ul>
+        
+    <li type="square">CAP/FAPT</li>
+    <ul>
+        pcb_note[9][0] --- Existence of CPU module
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist    </td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>(reserve)</td>  </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Exists      </td>   </tr>
+        </table></dd>
+        <p/>
+        pcb_note[9][1] --- Capacity of EPROM module
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>128K  </td> </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>256K</td>   </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>512K</td>   </tr>
+            <tr>    <td align="right">4</td>    <td>:</td>  <td>576K</td>   </tr>
+            <tr>    <td align="right">5</td>    <td>:</td>  <td>1M</td> </tr>
+        </table></dd>
+        <p/>
+        pcb_note[9][2] --- Capacity of S-RAM module
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>128K  </td> </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>256K</td>   </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>512K</td>   </tr>
+            <tr>    <td align="right">4</td>    <td>:</td>  <td>576K</td>   </tr>
+            <tr>    <td align="right">5</td>    <td>:</td>  <td>1M</td> </tr>
+        </table></dd>
+        <p/>
+        pcb_note[9][3] --- Capacity of D-RAM module
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>128K </td>  </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>256K</td>   </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>512K</td>   </tr>
+            <tr>    <td align="right">4</td>    <td>:</td>  <td>1M</td> </tr>
+        </table></dd>
+        <p/>
+    </ul>
+        
+    <li type="square">RISC</li>
+    <ul>
+        pcb_note[10][0] --- Capacity of EPROM module
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>512K</td>   </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>1M</td> </tr>
+        </table></dd>
+        <p/>
+        pcb_note[10][1] --- Capacity of S-RAM module
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>512K</td>   </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>1M</td> </tr>
+        </table></dd>
+        <p/>
+        pcb_note[10][2] --- Capacity of D-RAM module 1
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>1M</td> </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>2M</td> </tr>
+        </table></dd>
+        <p/>
+        pcb_note[10][3] --- Capacity of D-RAM module 2
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>1M</td> </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>2M</td> </tr>
+        </table></dd>
+        <p/>
+    </ul>
+        
+    <li type="square">AXIS CPU 1</li>
+    <ul>
+        pcb_note[14][0] --- Capacity of axis CPU memory module (D-RAM)
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>1M    </td> </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>1.25M</td>  </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>2M</td> </tr>
+            <tr>    <td align="right">4</td>    <td>:</td>  <td>4M</td> </tr>
+        </table></dd>
+        <p/>
+        pcb_note[14][1] --- Type of spindle control module
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Selial</td> </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>Serial+NZ</td>  </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>Analog</td> </tr>
+            <tr>    <td align="right">4</td>    <td>:</td>  <td>Analog+NZ</td>  </tr>
+        </table></dd>
+        <p/>
+        pcb_note[14][2] --- Type of axis control module (1st, 2nd axis)
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist      </td>    </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others      </td>   </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Piston lathe</td>   </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>Analog servo</td>   </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>Digital servo</td>  </tr>
+        </table></dd>
+        <p/>
+        pcb_note[14][3] --- Type of axis control module (3rd, 4th axis)
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist      </td>    </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others      </td>   </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Piston lathe</td>   </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>Analog servo</td>   </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>Digital servo</td>  </tr>
+        </table></dd>
+        <p/>
+        pcb_note[14][4] --- Type of error motion check module 1
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>2 Pos</td>  </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>4 Pos</td>  </tr>
+        </table></dd>
+        <p/>
+        pcb_note[14][5] --- Type of error motion check module 2
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>2 Pos</td>  </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>4 Pos</td>  </tr>
+        </table></dd>
+        <p/>
+    </ul>
+        
+    <li type="square">AXIS CPU 2</li>
+    <ul>
+        pcb_note[15][0] --- Capacity of axis CPU memory module (D-RAM)
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>1M    </td> </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>1.25M</td>  </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>2M</td> </tr>
+            <tr>    <td align="right">4</td>    <td>:</td>  <td>4M</td> </tr>
+        </table></dd>
+        <p/>
+        pcb_note[15][1] --- Type of spindle control module
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Selial</td> </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>Serial+NZ</td>  </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>Analog</td> </tr>
+            <tr>    <td align="right">4</td>    <td>:</td>  <td>Analog+NZ</td>  </tr>
+        </table></dd>
+        <p/>
+        pcb_note[15][2] --- Type of axis control module (1st, 2nd axis)
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist      </td>    </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others      </td>   </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Piston lathe</td>   </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>Analog servo</td>   </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>Digital servo</td>  </tr>
+        </table></dd>
+        <p/>
+        pcb_note[15][3] --- Type of axis control module (3rd, 4th axis)
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist      </td>    </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others      </td>   </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Piston lathe</td>   </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>Analog servo</td>   </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>Digital servo</td>  </tr>
+        </table></dd>
+        <p/>
+        pcb_note[15][4] --- Type of error motion check module 1
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>2 Pos</td>  </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>4 Pos</td>  </tr>
+        </table></dd>
+        <p/>
+        pcb_note[15][5] --- Type of error motion check module 2
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>2 Pos</td>  </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>4 Pos</td>  </tr>
+        </table></dd>
+        <p/>
+    </ul>
+        
+    <li type="square">AXIS CPU 3</li>
+    <ul>
+        pcb_note[16][0] --- Capacity of axis CPU memory module (D-RAM)
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>1M    </td> </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>1.25M</td>  </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>2M</td> </tr>
+            <tr>    <td align="right">4</td>    <td>:</td>  <td>4M</td> </tr>
+        </table></dd>
+        <p/>
+        pcb_note[16][1] --- Type of spindle control module
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Selial</td> </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>Serial+NZ</td>  </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>Analog</td> </tr>
+            <tr>    <td align="right">4</td>    <td>:</td>  <td>Analog+NZ</td>  </tr>
+        </table></dd>
+        <p/>
+        pcb_note[16][2] --- Type of axis control module (1st, 2nd axis)
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist      </td>    </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others      </td>   </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Piston lathe</td>   </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>Analog servo</td>   </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>Digital servo</td>  </tr>
+        </table></dd>
+        <p/>
+        pcb_note[16][3] --- Type of axis control module (3rd, 4th axis)
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist      </td>    </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others      </td>   </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Piston lathe</td>   </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>Analog servo</td>   </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>Digital servo</td>  </tr>
+        </table></dd>
+        <p/>
+        pcb_note[16][4] --- Type of error motion check module 1
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>2 Pos</td>  </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>4 Pos</td>  </tr>
+        </table></dd>
+        <p/>
+        pcb_note[16][5] --- Type of error motion check module 2
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>2 Pos</td>  </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>4 Pos</td>  </tr>
+        </table></dd>
+        <p/>
+    </ul>
+        
+    <li type="square">AXIS CPU 4</li>
+    <ul>
+        pcb_note[17][0] --- Capacity of axis CPU memory module (D-RAM)
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>1M    </td> </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>1.25M</td>  </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>2M</td> </tr>
+            <tr>    <td align="right">4</td>    <td>:</td>  <td>4M</td> </tr>
+        </table></dd>
+        <p/>
+        pcb_note[17][1] --- Type of axis control module
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Selial</td> </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>Serial+NZ</td>  </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>Analog</td> </tr>
+            <tr>    <td align="right">4</td>    <td>:</td>  <td>Analog+NZ</td>  </tr>
+        </table></dd>
+        <p/>
+        pcb_note[17][2] --- Type of axis control module (1st, 2nd axis)
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist      </td>    </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others      </td>   </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Piston lathe</td>   </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>Analog servo</td>   </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>Digital servo</td>  </tr>
+        </table></dd>
+        <p/>
+        pcb_note[17][3] --- Type of axis control module (3rd, 4th axis)
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist      </td>    </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others      </td>   </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>Piston lathe</td>   </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>Analog servo</td>   </tr>
+            <tr>    <td align="right">3</td>    <td>:</td>  <td>Digital servo</td>  </tr>
+        </table></dd>
+        <p/>
+        pcb_note[17][4] --- Type of error motion check module 1
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>2 Pos</td>  </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>4 Pos</td>  </tr>
+        </table></dd>
+        <p/>
+        pcb_note[17][5] --- Type of error motion check module 2
+        <dd><table border="0">
+            <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            <tr>    <td align="right">0</td>    <td>:</td>  <td>Others</td> </tr>
+            <tr>    <td align="right">1</td>    <td>:</td>  <td>2 Pos</td>  </tr>
+            <tr>    <td align="right">2</td>    <td>:</td>  <td>4 Pos</td>  </tr>
+        </table></dd>
+        <p/>
+    </ul>
+        
+    <li type="square">Reserved</li>
+    <ul>
+         'pcb_note[11][0]' to 'pcb_note[11][15]',<p/>
+         'pcb_note[12][0]' to 'pcb_note[12][15]',<p/>
+         'pcb_note[13][0]' to 'pcb_note[13][15]',<p/>
+         'pcb_note[18][0]' to 'pcb_note[18][15]',<p/>
+         'pcb_note[19][0]' to 'pcb_note[19][15]' are reserved.
+    </ul>
+    </ul></dd><br/><br/>
+</dl>
+                        <p>
+                            <li>The ODBSYSC structure for Series 16/18/21, 0i-A is as follows.</li>
+                        </p>
+<pre><![CDATA[
+typedef struct odbsysc {
+     char    slot_no_p[16];     /* Physical slot number */
+     char    slot_no_l[16];     /* Logical slot number */
+     short   mod_id[16];        /* Module ID */
+     short   soft_id[16];       /* Software ID */
+     char    s_series[16][5];   /* Software series */
+     char    s_version[16][5];  /* Software version */
+     char    dummy[16];         /* Not used */
+     short   m_rom;             /* Main-CPU CNC software installation status */
+     short   s_rom;             /* Sub-CPU CNC software installation status */
+     char    svo_soft[8];       /* Series and version of servo software */
+     char    pmc_soft[6];       /* Series and version of PMC management software */
+     char    lad_soft[6];       /* Series and version of Ladder software */
+     char    mcr_soft[8];       /* Series and version of macro executor */
+     char    spl1_soft[6];      /* Series and version of spindle software(1st spindle) */
+     char    spl2_soft[6];      /* Series and version of spindle software(2nd spindle) */
+     short   frmmin;            /* Capacity of FROM module (MAIN) */
+     short   drmmin;            /* Capacity of DRAM module (MAIN) */
+     short   srmmin;            /* Capacity of additional SRAM module (MAIN) */
+     short   pmcmin;            /* Type of PMC module (MAIN) */
+     short   crtmin;            /* Type of CRTC module (MAIN) */
+     short   sv1min;            /* Existence of servo module (axis 1,2) (MAIN) */
+     short   sv3min;            /* Existence of servo module (axis 3,4) (MAIN) */
+     short   sicmin;            /* Existence of SIC (MAIN) */
+     short   posmin;            /* Existence of position LSI (MAIN) */
+     short   drmmrc;            /* Extended DRAM for management software (PMC-SC) */
+     short   drmarc;            /* Capacity of DRAM for applications (PMC-SC) */
+     short   pmcmrc;            /* Type of PMC module (PMC-SC) */
+     short   dmaarc;            /* Existence of additional board for DMA (PMC-SC) */
+     short   iopt;              /* Number of DI/DO points (I/O card) */
+     short   hdiio;             /* Existence of LSI for high-speed skip (I/O card) */
+     short   frmsub;            /* Capacity of FROM module (SUB) */
+     short   drmsub;            /* Capacity of DRAM module (SUB) */
+     short   srmsub;            /* Capacity of added SRAM module (SUB) */
+     short   sv5sub;            /* Existence of servo module (axis 5,6) (SUB) */
+     short   sv7sub;            /* Existence of servo module (axis 7,8) (SUB) */
+     short   sicsub;            /* Existence of SIC (SUB) */
+     short   possub;            /* Existence of position LSI (SUB) */
+     short   hamsub;            /* Existence of high-speed skip and analog I/O (SUB) */
+     short   gm2gr1;            /* Existence of graphic engine 2 */
+     short   crtgr2;            /* Existence of CRTC module type (OPT-1)*/
+     short   gm1gr2;            /* Existence of graphic module 1 (OPT-1)*/
+     short   gm2gr2;            /* Existence of graphic module 2 (OPT-1)*/
+     short   cmmrb;             /* Existence of communication module (OPT-1)*/
+     short   sv5axs;            /* Existence of servo module (axis 5,6) (Axis card) */
+     short   sv7axs;            /* Existence of servo module (axis 7,8) (Axis card) */
+     short   sicaxs;            /* Existence of SIC (Axis card) */
+     short   posaxs;            /* Existence of position LSI (Axis card)*/
+     short   hanaxs;            /* Existence of high-speed skip and analog I/O (Axis card)*/
+     short   romr64;            /* Capacity of the system EPROM (64bitRISC)*/
+     short   srmr64;            /* Capacity of SRAM module   (64bitRISC)*/
+     short   dr1r64;            /* Capacity of DRAM module 1 (64bitRISC)*/
+     short   dr2r64;            /* Capacity of DRAM module 2 (64bitRISC)*/
+     short   iopio2;            /* Number of DI/DO points (I/O card #2) */
+     short   hdiio2;            /* Existence of LSI for high-speed skip (I/O card #2) */
+     short   cmmrb2;            /* Existence of communication module (OPT-1 #2) */
+     short   romfap;            /* Capacity of EPROM module (CAP2) */
+     short   srmfap;            /* Capacity of SRAM module (CAP2) */
+     short   drmfap;            /* Capacity of DRAM module (CAP2) */
+} ODBSYSC ;
+]]></pre>
+
+<dl>
+    <dt>slot_no_p</dt>
+    <dd>Physical slot number<br/>
+        The physical slot numbers of the modules which are built in the slots are stored in binary in order of their position.  This array is terminated with FFH.The data subsequent to FFH are invalid.</dd>
+    <dd><ul>
+            <table border="0">
+                <tr>    <td>00H to 0FH</td> <td>:</td>  <td>Primary slot number</td>    </tr>
+                <tr>    <td>80H to 8FH</td> <td>:</td>  <td>Secondary slot number</td>  </tr>
+            </table>
+        </ul></dd>
+    
+    <dt>slot_no_l</dt>
+    <dd>Logical slot number<br/>
+        The logical slot numbers of the modules which are built in the slots are stored in binary in order of their position.  This array is terminated with FFH. The data subsequent to FFH are invalid.</dd>
+    
+    <dd><ul>
+            <table border="0">
+                <tr>    <td>00H to 0FH</td> <td>:</td>  <td>logical slot number</td>        </tr>
+            </table>
+        </ul></dd>
+    
+    <dt>mod_id</dt>
+    <dd>Module ID<br/>
+        The module IDs of the modules which are built in the slots are stored in binary in order of their position. This array is terminated with FFH.<br/>
+        The data subsequent to FFH are invalid. 'XX' is internal information.</dd>
+    <dd><ul>
+            <table border="0">
+                <tr>    <td>XX3FH</td>  <td>:</td>  <td>Remote buffer       </td>       </tr>
+                <tr>    <td>XX45H</td>  <td>:</td>  <td>Graphic(CAP-II)     </td>       </tr>
+                <tr>    <td>XX46H</td>  <td>:</td>  <td>I/O card            </td>       </tr>
+                <tr>    <td>XX6DH</td>  <td>:</td>  <td>CAP-III             </td>       </tr>
+                <tr>    <td>XX7FH</td>  <td>:</td>  <td>RISC(64bit)         </td>       </tr>
+                <tr>    <td>XX94H</td>  <td>:</td>  <td>MMC-IVV             </td>       </tr>
+                <tr>    <td>XX9AH</td>  <td>:</td>  <td>Graphic(standard)   </td>       </tr>
+                <tr>    <td>XX9DH</td>  <td>:</td>  <td>PMC-SC              </td>       </tr>
+                <tr>    <td>XXA7H</td>  <td>:</td>  <td>FS16B/Main(6 axes)  </td>       </tr>
+                <tr>    <td>XXC4H</td>  <td>:</td>  <td>I/O Link-2          </td>       </tr>
+                <tr>    <td>XXDDH</td>  <td>:</td>  <td>Power Mate i        </td>       </tr>
+                <tr>    <td>XXADH</td>  <td>:</td>  <td>FS18B/Main(4 axes)  </td>       </tr>
+                <tr>    <td>XXAEH</td>  <td>:</td>  <td>FS18B/Main(6 axes)  </td>       </tr>
+                <tr>    <td>XXB0H</td>  <td>:</td>  <td>FS16B/SUB           </td>       </tr>
+                <tr>    <td>XXB2H</td>  <td>:</td>  <td>FS16B/Main(4 axes)  </td>       </tr>
+                <tr>    <td>XXB4H</td>  <td>:</td>  <td>PMC-SB5/SB6         </td>       </tr>
+                <tr>    <td>XXB7H</td>  <td>:</td>  <td>FS18B/SUB           </td>       </tr>
+                <tr>    <td>XXB9H</td>  <td>:</td>  <td>FS16C/Main(6 axes)  </td>       </tr>
+                <tr>    <td>XXBAH</td>  <td>:</td>  <td>FS16C,18C/SUB       </td>       </tr>
+                <tr>    <td>XXBDH</td>  <td>:</td>  <td>FS18C/Main(6 axes)  </td>       </tr>
+            </table>
+        </ul>
+    </dd>
+    <dt>soft_id</dt>
+    <dd>Software ID<br/>
+        The software IDs of the modules which are built in the slots are stored in binary in order of their position. This array is terminated with FFH.<br/>
+        The data subsequent to FFH are invalid.</dd>
+    <dd><ul>
+            <table border="0">
+                <tr>    <td>40H</td>    <td>:</td>  <td>CNC                 </td>   </tr>
+                <tr>    <td>41H</td>    <td>:</td>  <td>PMC-SC              </td>   </tr>
+                <tr>    <td>42H</td>    <td>:</td>  <td>Internal I/O card   </td>   </tr>
+                <tr>    <td>43H</td>    <td>:</td>  <td>CNC SUB             </td>   </tr>
+                <tr>    <td>45H</td>    <td>:</td>  <td>Graphic(standard)   </td>   </tr>
+                <tr>    <td>46H</td>    <td>:</td>  <td>Graphic(CAP-II)     </td>   </tr>
+                <tr>    <td>49H</td>    <td>:</td>  <td>CAP-II              </td>   </tr>
+                <tr>    <td>4AH</td>    <td>:</td>  <td>Remote buffer       </td>   </tr>
+                <tr>    <td>4FH</td>    <td>:</td>  <td>PMC-SE              </td>   </tr>
+                <tr>    <td>5EH</td>    <td>:</td>  <td>MMC-IV,HSSB I/F     </td>   </tr>
+                <tr>    <td>67H</td>    <td>:</td>  <td>PMC-SB5/SB6         </td>   </tr>
+            </table>
+        </ul>
+    </dd>
+    <dt>s_series</dt>
+    <dd>Software series<br/>
+        Software series information is stored in ASCII code in order of slot numbers, first four bytes being used for each slot number, and next one byte is NULL.</dd>
+    <dt>s_version</dt>
+    <dd>Software version<br/>
+        Software version information is stored in ASCII code in order of slot numbers, four bytes being used for each slot number, and next one byte is NULL.</dd>
+    <dt>m_rom</dt>
+    <dd>The relation between stored value and software installation is as follows.</dd>
+    <dd>
+        <ul>
+        <li>Series 16/18</li>
+            <table class="dd" border="0">
+                <tr>    <td>bit0 to 3</td>  <td>:</td>  <td>BASIC</td>  </tr>
+                <tr>    <td>bit4 to 7</td>  <td>:</td>  <td>OPTION-A1</td>  </tr>
+                <tr>    <td>bit8 to 11</td> <td>:</td>  <td>OPTION-A2</td>  </tr>
+                <tr>    <td>Other bits</td> <td>:</td>  <td>Not used</td>   </tr>
+            </table>
+<dd>- 0000FH → BASIC</dd>
+<dd>- 000FFH → BASIC + OPTION-A1</dd>
+<dd>- 00F0FH → BASIC + OPTION-A2</dd>
+<dd>- 00FFFH → BASIC + OPTION-A1 + OPTION-A2</dd>
+        <p/>
+        <li>Series 21</li>
+            <table class="dd" border="0">
+                <tr>    <td>bit0</td>   <td>:</td>  <td>BASIC</td>  </tr>
+                <tr>    <td>bit1</td>   <td>:</td>  <td>OPTION-A1</td>  </tr>
+                <tr>    <td>bit2</td>   <td>:</td>  <td>Macro library/application</td>  </tr>
+                <tr>    <td>bit3</td>   <td>:</td>  <td>Servo software</td> </tr>
+                <tr>    <td>Other bits</td> <td>:</td>  <td>Not used</td>   </tr>
+            </table>
+<dd>- 00009H → BASIC + Servo software</dd>
+<dd>- 0000BH → BASIC + Servo software + OPTION-A1</dd>
+<dd>- 0000DH → BASIC + Servo software + Macro library/application</dd>
+<dd>- 0000FH → BASIC + Servo software + OPTION-A1 + Macro library/application</dd>
+        <p/>
+        <li>Series 0i-A</li>
+            <table class="dd" border="0">
+                <tr>    <td>bit0</td>   <td>:</td>  <td>BASIC</td>  </tr>
+                <tr>    <td>bit1</td>   <td>:</td>  <td>OPTION-A1</td>  </tr>
+            </table>
+        </ul>
+    </dd>
+    <dt>s_rom</dt>
+        <dd>Sub-CPU CNC software installation status<br/>
+            For contents, see m_rom above.</dd>
+    <dt>svo_soft</dt>
+        <dd>Series and version of servo software<br/>
+            This information item is stored in ASCII code. The first four bytes indicate the series, and the remaining four bytes indicate the version. It is impossible that this software is absent.</dd>
+    <dt>pmc_soft</dt>
+        <dd>Series and version of PMC management software<br/>
+            This information item is stored in ASCII code. The first four bytes indicate the series, and the remaining two bytes indicate the version. It is impossible that this software is absent.</dd>
+    <dt>lad_soft</dt>
+        <dd>Series and version of Ladder software<br/>
+            This information item is stored in ASCII code. The first four bytes indicate the series, and the remaining two bytes indicate the version. If this software does not exist, all of the 6 bytes are space(20H).</dd>
+    <dt>mcr_soft</dt>
+        <dd>Series and version of macro executor<br/>
+            This information item is stored in ASCII.  The four bytes from second byte indicate the series, and the subsequent two bytes indicate the version. If this software exists, the first byte is 5AH. The last byte is not used.</dd>
+    <dt>spl1_soft</dt>
+        <dd>Series and version of spindle software (1st spindle)<br/>
+            This information item is stored in ASCII code. The first four bytes indicate the series, and the remaining two bytes indicate the version. If this software does not exist, all of the 6 bytes are space(20H).</dd>
+    <dt>spl2_soft</dt>
+        <dd>Series and version of spindle software (2nd sp.)<br/>
+            This information item is stored in ASCII code. The first four bytes indicate the series, and the remaining two bytes indicate the version. If this software does not exist, all of the 6 bytes are space(20H).</dd>
+    <dt>frmmin</dt>
+        <dd><br/>Capacity of FROM module (MAIN)</dd>
+        <dd>
+        <ul>
+        <li>Series 16/18</li>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>(reserve)</td>  </tr>
+                <tr>    <td align="right"> 1</td>   <td>:</td>  <td> 2 (MB)</td>    </tr>
+                <tr>    <td align="right"> 2</td>   <td>:</td>  <td> 4 (MB)</td>    </tr>
+                <tr>    <td align="right"> 3</td>   <td>:</td>  <td> 6 (MB)</td>    </tr>
+                <tr>    <td align="right"> 4</td>   <td>:</td>  <td> 8 (MB)</td>    </tr>
+                <tr>    <td align="right"> 5</td>   <td>:</td>  <td>10 (MB)</td>    </tr>
+                <tr>    <td align="right"> 6</td>   <td>:</td>  <td>12 (MB)</td>    </tr>
+                <tr>    <td align="right"> 7</td>   <td>:</td>  <td> 4 (MB)</td>    </tr>
+                <tr>    <td align="right"> 8</td>   <td>:</td>  <td> 3 (MB)</td>    </tr>
+                <tr>    <td align="right"> 9</td>   <td>:</td>  <td> 2 (MB)</td>    </tr>
+                <tr>    <td align="right">10</td>   <td>:</td>  <td> 6 (MB)</td>    </tr>
+                <tr>    <td align="right">11</td>   <td>:</td>  <td> 8 (MB)</td>    </tr>
+                <tr>    <td align="right">12</td>   <td>:</td>  <td>10 (MB)</td>    </tr>
+                <tr>    <td align="right">13</td>   <td>:</td>  <td>12 (MB)</td>    </tr>
+                <tr>    <td align="right">14</td>   <td>:</td>  <td>14 (MB)</td>    </tr>
+                <tr>    <td align="right">15</td>   <td>:</td>  <td> 1 (MB)</td>    </tr>
+                <tr>    <td align="right">16</td>   <td>:</td>  <td> 1 (MB)</td>    </tr>
+                <tr>    <td align="right">17</td>   <td>:</td>  <td>(reserve)</td>  </tr>
+                <tr>    <td align="right">18</td>   <td>:</td>  <td> 4 (MB)</td>    </tr>
+                <tr>    <td align="right">19</td>   <td>:</td>  <td> 8 (MB)</td>    </tr>
+            </table>
+        <p/>
+        <li>Series 21</li>
+            <table class="dd" border="0">
+                <tr>    <td align="right">0</td>    <td>:</td>  <td>128KB + 4MB</td>    </tr>
+                <tr>    <td align="right">1</td>    <td>:</td>  <td>(reserve) </td> </tr>
+                <tr>    <td align="right">2</td>    <td>:</td>  <td>128KB + 6MB</td>    </tr>
+                <tr>    <td align="right">3</td>    <td>:</td>  <td>128KB + 2MB</td>    </tr>
+                <tr>    <td align="right">4</td>    <td>:</td>  <td>256KB + 4MB</td>    </tr>
+                <tr>    <td align="right">5</td>    <td>:</td>  <td>(reserve)</td>  </tr>
+                <tr>    <td align="right">6</td>    <td>:</td>  <td>256KB + 6MB</td>    </tr>
+                <tr>    <td align="right">7</td>    <td>:</td>  <td>256KB + 2MB</td>    </tr>
+            </table>
+        <p/>
+        <li>Series 0i-A</li>
+            <table class="dd" border="0">
+                <tr>    <td align="right">0</td>    <td>:</td>  <td>4MB</td>    </tr>
+                <tr>    <td align="right">1</td>    <td>:</td>  <td>(reserve) </td> </tr>
+                <tr>    <td align="right">2</td>    <td>:</td>  <td>6MB</td>    </tr>
+                <tr>    <td align="right">3</td>    <td>:</td>  <td>2MB</td>    </tr>
+            </table>
+        </ul>
+        </dd>
+    <dt>drmmin</dt>
+        <dd>
+        <ul>
+        <li>Series 16/18</li>
+            Capacity of DRAM module (MAIN)
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist </td> </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td> 4 (MB)</td>    </tr>
+                <tr>    <td align="right"> 1</td>   <td>:</td>  <td> 2 (MB)</td>    </tr>
+                <tr>    <td align="right"> 2</td>   <td>:</td>  <td> 1 (MB)</td>    </tr>
+                <tr>    <td align="right"> 3</td>   <td>:</td>  <td> 6 (MB)</td>    </tr>
+                <tr>    <td align="right"> 4</td>   <td>:</td>  <td>16 (MB)</td>    </tr>
+                <tr>    <td align="right"> 5</td>   <td>:</td>  <td> 8 (MB)</td>    </tr>
+                <tr>    <td align="right"> 6</td>   <td>:</td>  <td> 4 (MB)</td>    </tr>
+                <tr>    <td align="right"> 7</td>   <td>:</td>  <td>24 (MB)</td>    </tr>
+            </table>
+        <p/>
+        <li>Series 21</li>
+            Capacity of SRAM module and SPINDLE TYPE (MAIN)
+            <table class="dd" border="0">
+                <tr>    <td align="right">0</td>    <td>:</td>  <td>SRAM 256KB + SIC</td>   </tr>
+                <tr>    <td align="right">1</td>    <td>:</td>  <td>SRAM 256KB + POSITION LSI</td>  </tr>
+                <tr>    <td align="right">2</td>    <td>:</td>  <td>SRAM 512KB + SIC</td>   </tr>
+                <tr>    <td align="right">3</td>    <td>:</td>  <td>SRAM 512KB + POSITION LSI</td>  </tr>
+                <tr>    <td align="right">4</td>    <td>:</td>  <td>SRAM 256KB + SIC + POSITION LSI</td>    </tr>
+                <tr>    <td align="right">5</td>    <td>:</td>  <td>(reserve)</td>  </tr>
+                <tr>    <td align="right">6</td>    <td>:</td>  <td>SRAM 512KB + SIC + POSITION LSI</td>    </tr>
+                <tr>    <td align="right">7</td>    <td>:</td>  <td>(reserve)</td>  </tr>
+            </table>
+        <p/>
+        <li>Series 0i-A</li>
+            Capacity of additional SRAM module (MAIN)
+            <table class="dd" border="0">
+                <tr>    <td align="right">0</td>    <td>:</td>  <td>SRAM 256KB + SIC</td>   </tr>
+                <tr>    <td align="right">1</td>    <td>:</td>  <td>SRAM 256KB + POSITION LSI</td>  </tr>
+                <tr>    <td align="right">2</td>    <td>:</td>  <td>SRAM 512KB + SIC</td>   </tr>
+                <tr>    <td align="right">3</td>    <td>:</td>  <td>SRAM 512KB + POSITION LSI</td>  </tr>
+            </table>
+            <table class="dd" border="0">
+                <tr>    <td align="right">4 to 7</td>   <td>:</td>  <td>(reserve)</td>  </tr>
+            </table>
+        </ul>
+        </dd>
+    <dt>srmmin</dt>
+        <dd>
+        <ul>
+        <li>Series 16/18</li>
+            Capacity of additional SRAM module (MAIN)
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist    </td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>  1 (MB)  </td> </tr>
+                <tr>    <td align="right"> 1</td>   <td>:</td>  <td>512 (KB)  </td> </tr>
+                <tr>    <td align="right"> 2</td>   <td>:</td>  <td>  2 (MB)  </td> </tr>
+                <tr>    <td align="right"> 3</td>   <td>:</td>  <td>(reserve)</td>  </tr>
+                <tr>    <td align="right"> 4</td>   <td>:</td>  <td>(reserve)</td>  </tr>
+                <tr>    <td align="right"> 5</td>   <td>:</td>  <td>768 (KB)</td>   </tr>
+                <tr>    <td align="right"> 6</td>   <td>:</td>  <td>(reserve)</td>  </tr>
+                <tr>    <td align="right"> 7</td>   <td>:</td>  <td>2.25(MB)</td>   </tr>
+                <tr>    <td align="right"> 5</td>   <td>:</td>  <td>(reserve)</td>  </tr>
+                <tr>    <td align="right"> 6</td>   <td>:</td>  <td>256 (KB)</td>   </tr>
+            </table>
+        <p/>
+        <li>Series 21</li>
+            Existence of MATRIX DI/DO (MAIN)
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+                <tr>    <td align="right">0</td>    <td>:</td>  <td>Exists</td> </tr>
+            </table>
+        <p/>
+        <li>Series 0i-A</li>
+            <dd>Not used.</dd>
+        </ul>
+        </dd>
+    <dt>pmcmin</dt>
+        <dd>Existence of MATRIX DI/DO (MAIN)</dd>
+        <dd>
+        <ul>
+        <li>Series 16/18</li>
+            <dd><table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist </td> </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>BOC2   </td>    </tr>
+                <tr>    <td align="right"> 1</td>   <td>:</td>  <td>BSI+SLC</td>    </tr>
+                <tr>    <td align="right"> 2</td>   <td>:</td>  <td>PMP2+SLC</td>   </tr>
+                <tr>    <td align="right"> 3</td>   <td>:</td>  <td>BSI</td>    </tr>
+                <tr>    <td align="right"> 4</td>   <td>:</td>  <td>PMP2</td>   </tr>
+            </table></dd>
+        <p/>
+        <li>Series 21, 0i-A</li>
+            <dd><table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist </td> </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>BOC2   </td>    </tr>
+                <tr>    <td align="right"> 1</td>   <td>:</td>  <td>BIT+SLC</td>    </tr>
+                <tr>    <td align="right"> 2</td>   <td>:</td>  <td>PMP+SLC</td>    </tr>
+                <tr>    <td align="right"> 3</td>   <td>:</td>  <td>BIT</td>    </tr>
+                <tr>    <td align="right"> 4</td>   <td>:</td>  <td>PMP</td>    </tr>
+            </table></dd>
+        </ul>
+        </dd>
+    <dt>crtmin</dt>
+        <dd>Type of CRTC module (MAIN)</dd>
+        <dd>
+        <ul>
+        <li>Series 16/18</li>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>14"CRT</td> </tr>
+                <tr>    <td align="right"> 1</td>   <td>:</td>  <td>9"CRT </td> </tr>
+                <tr>    <td align="right"> 2</td>   <td>:</td>  <td>VGA</td>    </tr>
+                <tr>    <td align="right"> 3</td>   <td>:</td>  <td>HSSB-VGA</td>   </tr>
+                <tr>    <td align="right"> 4</td>   <td>:</td>  <td>(reserve)</td>  </tr>
+                <tr>    <td align="right"> 5</td>   <td>:</td>  <td>9"VGA</td>  </tr>
+            </table>
+        <p/>
+        <li>Series 21</li>
+            <table class="dd" border="0">
+                <tr>    <td align="right">0</td>    <td>:</td>  <td>14"VGA</td> </tr>
+                <tr>    <td align="right">1</td>    <td>:</td>  <td>14"CRT</td> </tr>
+                <tr>    <td align="right">2</td>    <td>:</td>  <td>7.2"VGA</td>    </tr>
+                <tr>    <td align="right">3</td>    <td>:</td>  <td>9"CRT</td>  </tr>
+            </table>
+        <p/>
+        <li>Series 0i-A</li>
+            <dd>Not used.</dd>
+        </ul>
+        </dd>
+
+    <dt>sv1min</dt>
+        <dd>Existence of servo module (axis 1,2) (MAIN)</dd>
+        <dd>
+        <ul>
+        <li>Series 16/18</li>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>Exists</td> </tr>
+            </table>
+        <p/>
+        <li>Series 21, 0i-A</li>
+            <dd>Not used.</dd>
+        </ul>
+        </dd>
+    <dt>sv3min</dt>
+        <dd>
+        <ul>
+        <li>Series 16/18</li>
+            Existence of servo module (axis 3,4) (MAIN)
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>Exists</td> </tr>
+            </table>
+        <p/>
+        <li>Series 21,  0i-A</li>
+            Existence of servo module (axis 1+2,3+4) (MAIN)
+            <table class="dd" border="0">
+                <tr>    <td align="right">0</td>    <td>:</td>  <td>both axis 1+2 and 3+4</td>  </tr>
+                <tr>    <td align="right">1</td>    <td>:</td>  <td>only axis 1+2</td>  </tr>
+            </table>
+        </ul>
+        </dd>
+    <dt>sicmin</dt>
+        <dd>
+        <ul>
+        <li>Series 16/18</li>
+            Existence of SIC (MAIN)
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>Exists</td> </tr>
+            </table>
+        <p/>
+        <li>Series 21</li>
+            Existence of high-speed skip <![CDATA[&]]> analog I/O(MAIN)
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>Exists</td> </tr>
+            </table>
+        <p/>
+        <li>Series 0i-A</li>
+            Existence of high-speed skip LSI (MAIN)
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>Exists</td> </tr>
+            </table>
+        </ul>
+        </dd>
+    <dt>posmin</dt>
+        <dd>
+        <ul>
+        <li>Series 16/18</li>
+            Existence of position LSI (MAIN)
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>Exists</td> </tr>
+            </table>
+        <p/>
+        <li>Series 21, 0i-A</li>
+            Existence of graphic module (MAIN)
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>Exists</td> </tr>
+            </table>
+        </ul>
+        </dd>
+    <dt>drmmrc</dt>
+        <dd>Extended DRAM for management software (PMC-SC)</dd>
+        <dd><table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>Exists</td> </tr>
+            </table></dd>       <p/>
+    <dt>drmarc</dt>
+        <dd>Capacity of DRAM for applications (PMC-SC)</dd>
+        <dd><table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist    </td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>2(MB)     </td> </tr>
+                <tr>    <td align="right"> 1</td>   <td>:</td>  <td>(reserve)</td>  </tr>
+                <tr>    <td align="right"> 2</td>   <td>:</td>  <td>512(KB)</td>    </tr>
+                <tr>    <td align="right"> 3</td>   <td>:</td>  <td>  1(MB)</td>    </tr>
+            </table></dd>       <p/>
+    <dt>pmcmrc</dt>
+        <dd>Type of PMC module (PMC-SC)</dd>
+        <dd><table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist    </td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>2(MB)     </td> </tr>
+                <tr>    <td align="right"> 1</td>   <td>:</td>  <td>(reserve)</td>  </tr>
+                <tr>    <td align="right"> 2</td>   <td>:</td>  <td>512(KB)</td>    </tr>
+                <tr>    <td align="right"> 3</td>   <td>:</td>  <td>  1(MB)</td>    </tr>
+            </table></dd>       <p/>
+    <dt>dmaarc</dt>
+        <dd>Existence of additional board for DMA (PMC-SC)</dd>
+        <dd><table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>Exists</td> </tr>
+            </table></dd>
+        <dd>        <p/>
+    <dt>iopt</dt>
+        <dd>Number of DI/DO points (I/O card)</dd>
+        <dd>
+        <ul>
+        <li>Series 16/18</li>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist </td> </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>144/112</td>    </tr>
+                <tr>    <td align="right"> 1</td>   <td>:</td>  <td> 40/ 40</td>    </tr>
+                <tr>    <td align="right"> 2</td>   <td>:</td>  <td> 80/ 56</td>    </tr>
+                <tr>    <td align="right"> 3</td>   <td>:</td>  <td>104/ 72</td>    </tr>
+                <tr>    <td align="right"> 4</td>   <td>:</td>  <td>156/120</td>    </tr>
+            </table>
+        <p/>
+        <li>Series 21T</li>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist </td> </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td> 96/ 64</td>    </tr>
+                <tr>    <td align="right"> 1</td>   <td>:</td>  <td>(reserve)</td>  </tr>
+                <tr>    <td align="right"> 2</td>   <td>:</td>  <td> 48/ 32</td>    </tr>
+            </table>
+        <p/>
+        <li>Series 21M</li>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+            </table>
+        <p/>
+        <li>Series 0i-A</li>
+            <dd>Not used.</dd>
+        </ul>
+        </dd>
+        </dd>
+    <dt>hdiio</dt>
+        <dd>Existence of LSI for high-speed skip (I/O card)</dd>
+        <dd>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>Exists</td> </tr>
+            </table>
+        <p/>
+        </dd>
+    <dt>frmsub</dt>
+        <dd>Capacity of FROM module (SUB)</dd>
+        <dd>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist    </td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>(reserve)</td>  </tr>
+                <tr>    <td align="right"> 1</td>   <td>:</td>  <td> 2 (MB)   </td> </tr>
+                <tr>    <td align="right"> 2</td>   <td>:</td>  <td> 4 (MB)   </td> </tr>
+                <tr>    <td align="right"> 3</td>   <td>:</td>  <td> 6 (MB)   </td> </tr>
+                <tr>    <td align="right"> 4</td>   <td>:</td>  <td> 8 (MB)   </td> </tr>
+                <tr>    <td align="right"> 5</td>   <td>:</td>  <td>10 (MB)   </td> </tr>
+                <tr>    <td align="right"> 6</td>   <td>:</td>  <td>12 (MB)   </td> </tr>
+                <tr>    <td align="right"> 7</td>   <td>:</td>  <td> 4 (MB)   </td> </tr>
+                <tr>    <td align="right"> 8</td>   <td>:</td>  <td> 3 (MB)   </td> </tr>
+                <tr>    <td align="right"> 9</td>   <td>:</td>  <td> 2 (MB)</td>    </tr>
+                <tr>    <td align="right">10</td>   <td>:</td>  <td> 6 (MB)</td>    </tr>
+                <tr>    <td align="right">11</td>   <td>:</td>  <td> 8 (MB)</td>    </tr>
+                <tr>    <td align="right">12</td>   <td>:</td>  <td>10 (MB)</td>    </tr>
+                <tr>    <td align="right">13</td>   <td>:</td>  <td>12 (MB)</td>    </tr>
+                <tr>    <td align="right">14</td>   <td>:</td>  <td>14 (MB)</td>    </tr>
+                <tr>    <td align="right">15</td>   <td>:</td>  <td> 1 (MB)</td>    </tr>
+                <tr>    <td align="right">16</td>   <td>:</td>  <td> 1 (MB)</td>    </tr>
+                <tr>    <td align="right">17</td>   <td>:</td>  <td>(reserve)</td>  </tr>
+                <tr>    <td align="right">18</td>   <td>:</td>  <td> 4 (MB)</td>    </tr>
+                <tr>    <td align="right">19</td>   <td>:</td>  <td> 8 (MB)</td>    </tr>
+            </table>
+        <p/>
+        </dd>
+    <dt>drmsub</dt>
+        <dd>Capacity of DRAM module (SUB)</dd>
+        <dd>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist    </td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>  1 (MB)  </td> </tr>
+                <tr>    <td align="right"> 1</td>   <td>:</td>  <td>512 (KB)  </td> </tr>
+                <tr>    <td align="right"> 2</td>   <td>:</td>  <td>  2 (MB)  </td> </tr>
+                <tr>    <td align="right"> 3</td>   <td>:</td>  <td>(reserve)</td>  </tr>
+                <tr>    <td align="right"> 4</td>   <td>:</td>  <td>(reserve)</td>  </tr>
+                <tr>    <td align="right"> 5</td>   <td>:</td>  <td>768 (KB)</td>   </tr>
+                <tr>    <td align="right"> 6</td>   <td>:</td>  <td>(reserve)</td>  </tr>
+                <tr>    <td align="right"> 7</td>   <td>:</td>  <td>2.25(MB)</td>   </tr>
+                <tr>    <td align="right"> 8</td>   <td>:</td>  <td>(reserve)</td>  </tr>
+                <tr>    <td align="right"> 9</td>   <td>:</td>  <td>256 (KB)</td>   </tr>
+            </table>
+        <p/>
+        </dd>
+    <dt>srmsub</dt>
+        <dd>Capacity of additional SRAM module (SUB)</dd>
+        <dd>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist    </td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>  1 (MB)  </td> </tr>
+                <tr>    <td align="right"> 1</td>   <td>:</td>  <td>512 (KB)  </td> </tr>
+                <tr>    <td align="right"> 2</td>   <td>:</td>  <td>  2 (MB)  </td> </tr>
+                <tr>    <td align="right"> 3</td>   <td>:</td>  <td>(reserve)</td>  </tr>
+                <tr>    <td align="right"> 4</td>   <td>:</td>  <td>(reserve)</td>  </tr>
+                <tr>    <td align="right"> 5</td>   <td>:</td>  <td>768 (KB)</td>   </tr>
+                <tr>    <td align="right"> 6</td>   <td>:</td>  <td>(reserve)</td>  </tr>
+                <tr>    <td align="right"> 7</td>   <td>:</td>  <td>2.25(MB)</td>   </tr>
+                <tr>    <td align="right"> 8</td>   <td>:</td>  <td>(reserve)</td>  </tr>
+                <tr>    <td align="right"> 9</td>   <td>:</td>  <td>256 (KB)</td>   </tr>
+            </table>
+        <p/>
+        </dd>
+    <dt>sv5sub</dt>
+        <dd>Existence of servo module (axis 5,6) (SUB)</dd>
+        <dd>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>Exists</td> </tr>
+            </table>
+        <p/>
+        </dd>
+    <dt>sv7sub</dt>
+        <dd>Existence of servo module (axis 7,8) (SUB)</dd>
+        <dd>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>Exists</td> </tr>
+            </table>
+        <p/>
+        </dd>
+    <dt>sicsub</dt>
+        <dd>Existence of SIC (SUB)</dd>
+        <dd>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>Exists</td> </tr>
+            </table>
+        <p/>
+        </dd>
+    <dt>possub</dt>
+        <dd>Existence of position LSI (SUB)</dd>
+        <dd>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>Exists</td> </tr>
+            </table>
+        <p/>
+        </dd>
+    <dt>hamsub</dt>
+        <dd>Existence of high-speed skip <![CDATA[&]]> analog I/O (SUB)</dd>
+        <dd>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist           </td>   </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>Both exist          </td>   </tr>
+                <tr>    <td align="right"> 1</td>   <td>:</td>  <td>only high-speed skip</td>   </tr>
+                <tr>    <td align="right"> 2</td>   <td>:</td>  <td>only analog I/O     </td>   </tr>
+            </table>
+        <p/>
+        </dd>
+    <dt>gm2gr1</dt>
+        <dd>Existence of graphic engine 2</dd>
+        <dd>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>Exists</td> </tr>
+            </table>
+        <p/>
+        </dd>
+    <dt>crtgr2</dt>
+        <dd>Existence of CRTC module type (OPT-1)</dd>
+        <dd>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist  </td>    </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>14" CRT </td>   </tr>
+                <tr>    <td align="right"> 1</td>   <td>:</td>  <td> 9" CRT </td>   </tr>
+                <tr>    <td align="right"> 2</td>   <td>:</td>  <td>VGA MAIN</td>   </tr>
+                <tr>    <td align="right"> 3</td>   <td>:</td>  <td>(reserve)</td>  </tr>
+                <tr>    <td align="right"> 4</td>   <td>:</td>  <td>14" CRT GRPH</td>   </tr>
+                <tr>    <td align="right"> 5</td>   <td>:</td>  <td> 9" CRT GRPH</td>   </tr>
+                <tr>    <td align="right"> 6</td>   <td>:</td>  <td>VGA GRPH</td>   </tr>
+            </table>
+        <p/>
+        </dd>
+    <dt>gm1gr2</dt>
+        <dd>Existence of graphic module 1 (OPT-1)</dd>
+        <dd>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>Exists</td> </tr>
+            </table>
+        <p/>
+        </dd>
+    <dt>gm2gr2</dt>
+        <dd>Existence of graphic module 2 (OPT-1)</dd>
+        <dd>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>Exists</td> </tr>
+            </table>
+        <p/>
+        </dd>
+    <dt>cmmrb</dt>
+        <dd>Existence of communication module (OPT-1)</dd>
+        <dd>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>Exists</td> </tr>
+            </table>
+        <p/>
+        </dd>
+    <dt>sv5axs</dt>
+        <dd>Existence of servo module (axis 5,6) (Axis card)</dd>
+        <dd>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>Exists</td> </tr>
+            </table>
+        <p/>
+        </dd>
+    <dt>sv7axs</dt>
+        <dd>Existence of servo module (axis 7,8) (Axis card)</dd>
+        <dd>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>Exists</td> </tr>
+            </table>
+        <p/>
+        </dd>
+    <dt>sicaxs</dt>
+        <dd>Existence of SIC (Axis card)</dd>
+        <dd>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>Exists</td> </tr>
+            </table>
+        <p/>
+        </dd>
+    <dt>posaxs</dt>
+        <dd>Existence of a position LSI (Axis card)</dd>
+        <dd>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>Exists</td> </tr>
+            </table>
+        <p/>
+        </dd>
+    <dt>hanaxs</dt>
+        <dd>Existence of high-speed skip <![CDATA[&]]> analog I/O</dd>
+        <dd>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist           </td>   </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>Both exist          </td>   </tr>
+                <tr>    <td align="right"> 1</td>   <td>:</td>  <td>only high-speed skip</td>   </tr>
+                <tr>    <td align="right"> 2</td>   <td>:</td>  <td>only analog I/O     </td>   </tr>
+            </table>                                                
+        <p/>
+        </dd>
+    <dt>romr64</dt>
+        <dd>Capacity of system EPROM (64bitRISC)</dd>
+        <dd>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist </td> </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td> 4 (MB)</td>    </tr>
+                <tr>    <td align="right"> 1</td>   <td>:</td>  <td> 2 (MB)</td>    </tr>
+                <tr>    <td align="right"> 2</td>   <td>:</td>  <td> 1 (MB)</td>    </tr>
+                <tr>    <td align="right"> 3</td>   <td>:</td>  <td> 512 (KB)</td>  </tr>
+                <tr>    <td align="right"> 4</td>   <td>:</td>  <td> 256 (KB)</td>  </tr>
+                <tr>    <td align="right"> 5</td>   <td>:</td>  <td> 128 (KB)</td>  </tr>
+                <tr>    <td align="right"> 6</td>   <td>:</td>  <td> 768 (KB)</td>  </tr>
+            </table>
+        <p/>
+        </dd>
+    <dt>srmr64</dt>
+        <dd>Capacity of SRAM module (64bitRISC)</dd>
+        <dd>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>4 (MB)</td> </tr>
+                <tr>    <td align="right"> 1</td>   <td>:</td>  <td>2 (MB)</td> </tr>
+                <tr>    <td align="right"> 2</td>   <td>:</td>  <td>1 (MB)</td> </tr>
+                <tr>    <td align="right"> 3</td>   <td>:</td>  <td>512 (KB)</td>   </tr>
+                <tr>    <td align="right"> 4</td>   <td>:</td>  <td>256 (KB)</td>   </tr>
+                <tr>    <td align="right"> 5</td>   <td>:</td>  <td>128 (KB)</td>   </tr>
+                <tr>    <td align="right"> 6</td>   <td>:</td>  <td>768 (KB)</td>   </tr>
+            </table>
+        <p/>
+        </dd>
+    <dt>dr1r64</dt>
+        <dd>Capacity of DRAM module 1 (64bitRISC)</dd>
+        <dd>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist    </td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>(reserve)</td>  </tr>
+                <tr>    <td align="right"> 1</td>   <td>:</td>  <td>(reserve)</td>  </tr>
+                <tr>    <td align="right"> 2</td>   <td>:</td>  <td>2 (MB)</td> </tr>
+                <tr>    <td align="right"> 3</td>   <td>:</td>  <td>4 (MB)</td> </tr>
+            </table>
+        <p/>
+        </dd>
+    <dt>dr2r64</dt>
+        <dd>Capacity of DRAM module 2 (64bitRISC)</dd>
+        <dd>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist    </td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>(reserve)</td>  </tr>
+                <tr>    <td align="right"> 1</td>   <td>:</td>  <td>(reserve)</td>  </tr>
+                <tr>    <td align="right"> 2</td>   <td>:</td>  <td>2 (MB)</td> </tr>
+                <tr>    <td align="right"> 3</td>   <td>:</td>  <td>4 (MB)</td> </tr>
+            </table>
+        <p/>
+        </dd>
+    <dt>iopio2</dt>
+        <dd>Number of DI/DO points (I/O card #2)</dd>
+        <dd>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist </td> </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>144/112</td>    </tr>
+                <tr>    <td align="right"> 1</td>   <td>:</td>  <td> 40/ 40</td>    </tr>
+                <tr>    <td align="right"> 2</td>   <td>:</td>  <td> 80/ 56</td>    </tr>
+                <tr>    <td align="right"> 3</td>   <td>:</td>  <td>104/ 72</td>    </tr>
+                <tr>    <td align="right"> 4</td>   <td>:</td>  <td>156/120</td>    </tr>
+            </table>
+        <p/>
+        </dd>
+    <dt>hdiio2</dt>
+        <dd>Existence of LSI for high-speed skip</dd>
+        <dd>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>Exists</td> </tr>
+            </table>
+        <p/>
+        </dd>
+    <dt>cmmrb2</dt>
+        <dd>Existence of communication module (OPT-1 #2)</dd>
+        <dd>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist</td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>Exists</td> </tr>
+            </table>
+        <p/>
+        </dd>
+    <dt>romfap</dt>
+        <dd>Capacity of EPROM module (CAP2)</dd>
+        <dd>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist    </td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>(reserve)</td>  </tr>
+                <tr>    <td align="right"> 1</td>   <td>:</td>  <td>(reserve)</td>  </tr>
+                <tr>    <td align="right"> 2</td>   <td>:</td>  <td>1 (MB)   </td>  </tr>
+                <tr>    <td align="right"> 3</td>   <td>:</td>  <td>512 (KB)</td>   </tr>
+                <tr>    <td align="right"> 4</td>   <td>:</td>  <td>256 (KB)</td>   </tr>
+                <tr>    <td align="right"> 5</td>   <td>:</td>  <td>128 (KB)</td>   </tr>
+                <tr>    <td align="right"> 6</td>   <td>:</td>  <td>768 (KB)</td>   </tr>
+            </table>
+        <p/>
+        </dd>
+    <dt>srmfap</dt>
+        <dd>Capacity of DRAM module (CAP2)</dd>
+        <dd>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist    </td>  </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>(reserve)</td>  </tr>
+                <tr>    <td align="right"> 1</td>   <td>:</td>  <td>(reserve)</td>  </tr>
+                <tr>    <td align="right"> 2</td>   <td>:</td>  <td>1 (MB)   </td>  </tr>
+                <tr>    <td align="right"> 3</td>   <td>:</td>  <td>512 (KB)</td>   </tr>
+                <tr>    <td align="right"> 4</td>   <td>:</td>  <td>256 (KB)</td>   </tr>
+                <tr>    <td align="right"> 5</td>   <td>:</td>  <td>128 (KB)</td>   </tr>
+                <tr>    <td align="right"> 6</td>   <td>:</td>  <td>768 (KB)</td>   </tr>
+            </table>
+        <p/>
+        </dd>
+    <dt>drmfap</dt>
+        <dd>Capacity of DRAM module (CAP2)</dd>
+        <dd>
+            <table class="dd" border="0">
+                <tr>    <td align="right">-1</td>   <td>:</td>  <td>Not exist </td> </tr>
+                <tr>    <td align="right"> 0</td>   <td>:</td>  <td>2  (MB)</td>    </tr>
+                <tr>    <td align="right"> 1</td>   <td>:</td>  <td>1.5(MB)</td>    </tr>
+                <tr>    <td align="right"> 2</td>   <td>:</td>  <td>1  (MB)</td>    </tr>
+                <tr>    <td align="right"> 3</td>   <td>:</td>  <td>512 (KB)</td>   </tr>
+                <tr>    <td align="right"> 4</td>   <td>:</td>  <td>256 (KB)</td>   </tr>
+                <tr>    <td align="right"> 5</td>   <td>:</td>  <td>128 (KB)</td>   </tr>
+                <tr>    <td align="right"> 6</td>   <td>:</td>  <td>(reserve)</td>  </tr>
+            </table>
+        <p/>
+        </dd>
+
+</dl>
+
+                    </content>
+                </item>
+            </vc>
+        </hssb>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>The extended driver/library function is necessary.</content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <add></add>
+    </option>
+
+
+
+    <parameter></parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <!-- M -->
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>H</fs15>
+            <fs15i>X</fs15i>
+             <fs16>H</fs16>
+             <fs18>H</fs18>
+             <fs21>H</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </m>
+        <!-- T -->
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>H</fs15>
+            <fs15i>X</fs15i>
+             <fs16>H</fs16>
+             <fs18>H</fs18>
+             <fs21>H</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </t>
+        <!-- LC -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- add -->
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference></reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,1653 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdtofsr</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdtofsr(unsigned short FlibHndl, short s_number, short type, short e_number, short length, IODBTO *tofsr);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Reads the tool offset value specified by "s_number","e_number","type".
+               The offset value is stored in "IODBTO" with signed binary format.
+            </p>
+
+            <p>The unit of offset value is the same as "Read tool offset value(<a href="ncdata/cnc_rdtofs.htm" target="_parent">cnc_rdtofs</a>)".  See the description of <a href="ncdata/cnc_rdtofs.htm" target="_parent">cnc_rdtofs</a> function.
+</p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_number</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the start tool offset number.<br/>
+                           The available number of tool offset can be got by <a href="ncdata/cnc_rdtofsinfo.htm" target="_parent">cnc_rdtofsinfo</a> function.</p>
+                    </content>
+                </item>
+                <item>
+                    <name>e_number</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the end tool offset number.</p>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the tool offset type.(see the following table)</p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the data block length.(see the following table)</p>
+                    </content>
+                </item>
+                <item>
+                    <name>tofsr</name>
+                    <type>out</type>
+                    <content>
+                        <p>Pointer to the IODBTO structure including the tool offset value.<br/>
+                           The IODBTO structure is as follows.</p>
+<pre>
+typedef struct iodbto {
+    short datano_s;             /* start offset number */
+    short type;                 /* offset type */
+    short datano_e;             /* end offset number */
+    union {
+        long    m_ofs[N];       /* M series individual */
+        long    m_ofs_a[N];     /* M series Memory A all */
+        long    m_ofs_b[2*N];   /* M series Memory B all */
+        long    m_ofs_c[4*N];   /* M series Memory C all */
+        struct  {
+            short   tip ;
+            long    data[1] ;
+        } m_ofs_at[N] ;         /* M series Memory A all with direction of imaginary tool nose */
+        struct  {
+            short   tip ;
+            long    data[2] ;
+        } m_ofs_bt[N] ;         /* M series Memory B all with direction of imaginary tool nose */
+        struct  {
+            short   tip ;
+            long    data[4] ;
+        } m_ofs_ct[N] ;         /* M series Memory C all with direction of imaginary tool nose */
+        short   t_tip[N];       /* T series individual,direction of imaginary tool nose */
+        long    t_ofs[N];       /* T series individual */
+        struct  {
+            short   tip;
+            long    data[4];
+        } t_ofs_a[N];           /* T series Memory A all */
+        struct {
+            short   tip;
+            long    data[8];
+        } t_ofs_b[N];           /* T series Memory B all */
+        long    t_ofs_2g[3*N];  /* T series Second geometry all */
+        long    m_ofs_cnr[10];  /* M-CornerR */
+        struct  {
+            long    data[2];
+        } t_ofs_ex[N];          /* T series 4th/5th Axis Offset Function all */
+    } u ;
+} IODBTO ;      /* N is number of the offset value. */
+</pre>
+                        <p>The combinations of the value specified in "type", the data block length "length", the kind of offset value to be read and the member in which the result is stored are as follows.</p>
+
+                        <ul>
+                            <div class="xis"> <!-- attention -->
+                            <li>Machining Series(including Power Mate i, PMi-A)/Tool offset Memory A</li>
+                            <table border="1" valign="top">
+                                <colgroup width="10%"/>
+                                <colgroup width="15%"/>
+                                <colgroup width="10%"/>
+                                <colgroup width="30%"/>
+                                <colgroup width="35%"/>
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>Attribute</th>
+                                    <th>Offset type</th>
+                                    <th>Member to be stored in</th>
+                                </tr>
+
+                                <tr>
+                                    <td>0</td>
+                                    <td>8+4*N</td>
+                                    <td>individual</td>
+                                    <td>Tool offset</td>
+                                    <td>tofsr.u.m_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>-1</td>
+                                    <td>8+4*N</td>
+                                    <td>all</td>
+                                    <td>Tool offset</td>
+                                    <td>tofsr.u.m_ofs_a[i]</td>
+                                </tr>
+                            </table>
+                            <br/>
+                            </div> <!-- attention class="xis" -->
+
+                            <li>Machining Series<span class="xis">(Series 30i)</span>/Tool offset Memory A</li>
+                            <table border="1" valign="top">
+                                <colgroup width="10%"/>
+                                <colgroup width="15%"/>
+                                <colgroup width="10%"/>
+                                <colgroup width="30%"/>
+                                <colgroup width="35%"/>
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>Attribute</th>
+                                    <th>Offset type</th>
+                                    <th>Member to be stored in</th>
+                                </tr>
+
+                                <tr>
+                                    <td>0</td>
+                                    <td>8+4*N</td>
+                                    <td>individual</td>
+                                    <td>Tool offset</td>
+                                    <td>tofsr.u.m_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>9</td>
+                                    <td>8+2*N</td>
+                                    <td>individual</td>
+                                    <td>Direction of imaginary tool nose </td>
+                                    <td>tofsr.u.t_tip[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>-1</td>
+                                    <td>8+4*N</td>
+                                    <td>all</td>
+                                    <td>Tool offset</td>
+                                    <td>tofsr.u.m_ofs_a[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td rowspan="2">-4</td>
+                                    <td rowspan="2">8+8*N</td>
+                                    <td rowspan="2">all</td>
+                                    <td>Direction of imaginary tool nose </td>
+                                    <td>tofsr.u.m_ofs_at[i].tip</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Tool offset</td>
+                                    <td>tofsr.u.m_ofs_at[i].data[0]</td>
+                                </tr>
+                            </table>
+                            <br/>
+
+                            <div class="xis"> <!-- attention -->
+                            <li>Machining Series (including Power Mate i)/Tool offset Memory B</li>
+                            <table border="1" valign="top">
+                                <colgroup width="10%"/>
+                                <colgroup width="15%"/>
+                                <colgroup width="10%"/>
+                                <colgroup width="30%"/>
+                                <colgroup width="35%"/>
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>Attribute</th>
+                                    <th>Offset type</th>
+                                    <th>Member to be stored in</th>
+                                </tr>
+
+                                <tr>
+                                    <td>0</td>
+                                    <td>8+4*N</td>
+                                    <td>individual</td>
+                                    <td>Tool geometry offset</td>
+                                    <td>tofsr.u.m_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>1</td>
+                                    <td>8+4*N</td>
+                                    <td>individual</td>
+                                    <td>Tool wear offset</td>
+                                    <td>tofsr.u.m_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td rowspan="2">-2</td>
+                                    <td rowspan="2">8+8*N</td>
+                                    <td rowspan="2">all</td>
+                                    <td>Tool geometry offset</td>
+                                    <td>tofsr.u.m_ofs_b[2*i+0]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Tool wear offset</td>
+                                    <td>tofsr.u.m_ofs_b[2*i+1]</td>
+                                </tr>
+                            </table>
+                            <br/>
+                            </div> <!-- attention class="xis" -->
+
+                            <li>Machining Series<span class="xis">(Series 30i)</span>/Tool offset Memory B</li>
+                            <table border="1" valign="top">
+                                <colgroup width="10%"/>
+                                <colgroup width="15%"/>
+                                <colgroup width="10%"/>
+                                <colgroup width="30%"/>
+                                <colgroup width="35%"/>
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>Attribute</th>
+                                    <th>Offset type</th>
+                                    <th>Member to be stored in</th>
+                                </tr>
+
+                                <tr>
+                                    <td>0</td>
+                                    <td>8+4*N</td>
+                                    <td>individual</td>
+                                    <td>Tool geometry offset</td>
+                                    <td>tofsr.u.m_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>1</td>
+                                    <td>8+4*N</td>
+                                    <td>individual</td>
+                                    <td>Tool wear offset</td>
+                                    <td>tofsr.u.m_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>9</td>
+                                    <td>8+2*N</td>
+                                    <td>individual</td>
+                                    <td>Direction of imaginary tool nose</td>
+                                    <td>tofsr.u.t_tip[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td rowspan="2">-2</td>
+                                    <td rowspan="2">8+8*N</td>
+                                    <td rowspan="2">all</td>
+                                    <td>Tool geometry offset</td>
+                                    <td>tofsr.u.m_ofs_b[2*i+0]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Tool wear offset</td>
+                                    <td>tofsr.u.m_ofs_b[2*i+1]</td>
+                                </tr>
+
+                                <tr>
+                                    <td rowspan="3">-5</td>
+                                    <td rowspan="3">8+12*N</td>
+                                    <td rowspan="3">all</td>
+                                    <td>Direction of imaginary tool nose</td>
+                                    <td>tofsr.u.m_ofs_bt[i].tip</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Tool geometry offset</td>
+                                    <td>tofsr.u.m_ofs_bt[i].data[0]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Tool wear offset</td>
+                                    <td>tofsr.u.m_ofs_bt[i].data[1]</td>
+                                </tr>
+                            </table>
+                            <br/>
+
+                            <div class="xis"> <!-- attention -->
+                            <li>Machining Series (including Power Mate i)/Tool offset Memory C</li>
+                            <table border="1" valign="top">
+                                <colgroup width="10%"/>
+                                <colgroup width="15%"/>
+                                <colgroup width="10%"/>
+                                <colgroup width="30%"/>
+                                <colgroup width="35%"/>
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>Attribute</th>
+                                    <th>Offset type</th>
+                                    <th>Member to be stored in</th>
+                                </tr>
+
+                                <tr>
+                                    <td>0</td>
+                                    <td>8+4*N</td>
+                                    <td>individual</td>
+                                    <td>Tool length/geometry</td>
+                                    <td>tofsr.u.m_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>1</td>
+                                    <td>8+4*N</td>
+                                    <td>individual</td>
+                                    <td>Tool length/wear</td>
+                                    <td>tofsr.u.m_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>2</td>
+                                    <td>8+4*N</td>
+                                    <td>individual</td>
+                                    <td>Cutter radius/geometry</td>
+                                    <td>tofsr.u.m_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>3</td>
+                                    <td>8+4*N</td>
+                                    <td>individual</td>
+                                    <td>Cutter radius/wear</td>
+                                    <td>tofsr.u.m_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td rowspan="4">-3</td>
+                                    <td rowspan="4">8+16*N</td>
+                                    <td rowspan="4">all</td>
+                                    <td>Tool length/geometry</td>
+                                    <td>tofsr.u.m_ofs_c[4*i+0]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Tool length/wear</td>
+                                    <td>tofsr.u.m_ofs_c[4*i+1]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Cutter radius/geometry</td>
+                                    <td>tofsr.u.m_ofs_c[4*i+2]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Cutter radius/wear</td>
+                                    <td>tofsr.u.m_ofs_c[4*i+3]</td>
+                                </tr>
+                            </table>
+                            <br/>
+                            </div> <!-- attention class="xis" -->
+
+                            <li>Machining Series<span class="xis">(Series 30i)</span>/Tool offset Memory C</li>
+                             ･ When the tool offset for milling and turning function option is invalid.
+                            <table border="1" valign="top">
+                                <colgroup width="10%"/>
+                                <colgroup width="15%"/>
+                                <colgroup width="10%"/>
+                                <colgroup width="30%"/>
+                                <colgroup width="35%"/>
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>Attribute</th>
+                                    <th>Offset type</th>
+                                    <th>Member to be stored in</th>
+                                </tr>
+
+                                <tr>
+                                    <td>0</td>
+                                    <td>8+4*N</td>
+                                    <td>individual</td>
+                                    <td>Tool length/geometry</td>
+                                    <td>tofsr.u.m_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>1</td>
+                                    <td>8+4*N</td>
+                                    <td>individual</td>
+                                    <td>Tool length/wear</td>
+                                    <td>tofsr.u.m_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>2</td>
+                                    <td>8+4*N</td>
+                                    <td>individual</td>
+                                    <td>Cutter radius/geometry</td>
+                                    <td>tofsr.u.m_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>3</td>
+                                    <td>8+4*N</td>
+                                    <td>individual</td>
+                                    <td>Cutter radius/wear</td>
+                                    <td>tofsr.u.m_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>9</td>
+                                    <td>8+2*N</td>
+                                    <td>individual</td>
+                                    <td>Direction of imaginary tool nose</td>
+                                    <td>tofsr.u.t_tip[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td rowspan="4">-3</td>
+                                    <td rowspan="4">8+16*N</td>
+                                    <td rowspan="4">all</td>
+                                    <td>Tool length/geometry</td>
+                                    <td>tofsr.u.m_ofs_c[4*i+0]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Tool length/wear</td>
+                                    <td>tofsr.u.m_ofs_c[4*i+1]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Cutter radius/geometry</td>
+                                    <td>tofsr.u.m_ofs_c[4*i+2]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Cutter radius/wear</td>
+                                    <td>tofsr.u.m_ofs_c[4*i+3]</td>
+                                </tr>
+
+                                <tr>
+                                    <td rowspan="5">-6</td>
+                                    <td rowspan="5">8+20*N</td>
+                                    <td rowspan="5">all</td>
+                                    <td>Direction of imaginary tool nose</td>
+                                    <td>tofsr.u.m_ofs_ct[i].tip</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Tool length/geometry</td>
+                                    <td>tofsr.u.m_ofs_ct[i].data[0]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Tool length/wear</td>
+                                    <td>tofsr.u.m_ofs_ct[i].data[1]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Cutter radius/geometry</td>
+                                    <td>tofsr.u.m_ofs_ct[i].data[2]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Cutter radius/wear</td>
+                                    <td>tofsr.u.m_ofs_ct[i].data[3]</td>
+                                </tr>
+                            </table>
+                            <br/>
+                             ･ When the tool offset for milling and turning function option is valid.
+                            <table border="1" valign="top">
+                                <colgroup width="10%"/>
+                                <colgroup width="15%"/>
+                                <colgroup width="10%"/>
+                                <colgroup width="30%"/>
+                                <colgroup width="35%"/>
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>Attribute</th>
+                                    <th>Offset type</th>
+                                    <th>Member to be stored in</th>
+                                </tr>
+
+                                <tr><td>0</td><td>8+2*N</td><td>individual</td><td>Direction of imaginary tool nose    </td><td>tofsr.u.t_tip[i]</td></tr>
+                                <tr><td>1</td><td>8+4*N</td><td>individual</td><td>X-axis geometry offset   </td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>2</td><td>8+4*N</td><td>individual</td><td>Y-axis geometry offset   </td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>3</td><td>8+4*N</td><td>individual</td><td>Tool length/geometry</td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>4</td><td>8+4*N</td><td>individual</td><td>Cutter radius/geometry</td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>5</td><td>8+4*N</td><td>individual</td><td>X-axis wear offset   </td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>6</td><td>8+4*N</td><td>individual</td><td>Y-axis wear offset   </td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>7</td><td>8+4*N</td><td>individual</td><td>Tool length/wear</td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>8</td><td>8+4*N</td><td>individual</td><td>Cutter radius/wear</td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr>
+                                    <td rowspan="9">-2</td>
+                                    <td rowspan="9">8+36*N </td>
+                                    <td rowspan="9">all</td>
+                                    <td>Direction of imaginary tool nose</td><td>tofsr.u.t_ofs_b[i].tip</td>
+                                </tr>
+                                <tr><td>X-axis geometry offset   </td><td>tofsr.u.t_ofs_b[i].data[0]</td></tr>
+                                <tr><td>Y-axis geometry offset   </td><td>tofsr.u.t_ofs_b[i].data[1]</td></tr>
+                                <tr><td>Tool length/geometry</td><td>tofsr.u.t_ofs_b[i].data[2]</td></tr>
+                                <tr><td>Cutter radius/geometry</td><td>tofsr.u.t_ofs_b[i].data[3]</td></tr>
+                                <tr><td>X-axis wear offset   </td><td>tofsr.u.t_ofs_b[i].data[4]</td></tr>
+                                <tr><td>Y-axis wear offset   </td><td>tofsr.u.t_ofs_b[i].data[5]</td></tr>
+                                <tr><td>Tool length/wear</td><td>tofsr.u.t_ofs_b[i].data[6]</td></tr>
+                                <tr><td>Cutter radius/wear</td><td>tofsr.u.t_ofs_b[i].data[7]</td></tr>
+                            </table>
+                            <br/>
+
+                            <li>Lathe Series/Tool offset Memory A</li>
+                            <table border="1" valign="top">
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>Attribute</th>
+                                    <th>Offset type</th>
+                                    <th>Member to be stored in</th>
+                                </tr>
+
+                                <tr>
+                                    <td>0</td>
+                                    <td>8+2*N</td>
+                                    <td>individual</td>
+                                    <td>Direction of imaginary tool nose</td>
+                                    <td>tofsr.u.t_tip[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>1</td>
+                                    <td>8+4*N</td>
+                                    <td>individual</td>
+                                    <td>X-axis offset</td>
+                                    <td>tofsr.u.t_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>2</td>
+                                    <td>8+4*N</td>
+                                    <td>individual</td>
+                                    <td>Y-axis offset</td>
+                                    <td>tofsr.u.t_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>3</td>
+                                    <td>8+4*N</td>
+                                    <td>individual</td>
+                                    <td>Z-axis offset</td>
+                                    <td>tofsr.u.t_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>4</td>
+                                    <td>8+4*N</td>
+                                    <td>individual</td>
+                                    <td>Nose radius offset</td>
+                                    <td>tofsr.u.t_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td rowspan="5">-1</td>
+                                    <td rowspan="5">8+20*N</td>
+                                    <td rowspan="5">all</td>
+                                    <td>Direction of imaginary tool nose</td>
+                                    <td>tofsr.u.t_ofs_a[i].tip</td>
+                                </tr>
+
+                                <tr>
+                                    <td>X-axis offset</td>
+                                    <td>tofsr.u.t_ofs_a[i].data[0]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Y-axis offset</td>
+                                    <td>tofsr.u.t_ofs_a[i].data[1]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Z-axis offset</td>
+                                    <td>tofsr.u.t_ofs_a[i].data[2]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Nose radius offset</td>
+                                    <td>tofsr.u.t_ofs_a[i].data[3]</td>
+                                </tr>
+                            </table>
+                            <br/>
+
+                            <li>Lathe Series<span class="xis">(Series 30i)</span>/Tool offset Memory B</li>
+                            <table border="1" valign="top">
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>Attribute</th>
+                                    <th>Offset type</th>
+                                    <th>Member to be stored in</th>
+                                </tr>
+
+                                <tr>
+                                    <td>0</td>
+                                    <td>8+2*N</td>
+                                    <td>individual</td>
+                                    <td>Direction of imaginary tool nose</td>
+                                    <td>tofsr.u.t_tip[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>1</td>
+                                    <td>8+4*N</td>
+                                    <td>individual</td>
+                                    <td>X-axis geometry offset</td>
+                                    <td>tofsr.u.t_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>2</td>
+                                    <td>8+4*N</td>
+                                    <td>individual</td>
+                                    <td>Y-axis geometry offset</td>
+                                    <td>tofsr.u.t_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>3</td>
+                                    <td>8+4*N</td>
+                                    <td>individual</td>
+                                    <td>Z-axis geometry offset</td>
+                                    <td>tofsr.u.t_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>4</td>
+                                    <td>8+4*N</td>
+                                    <td>individual</td>
+                                    <td>Nose radius geometry offset</td>
+                                    <td>tofsr.u.t_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>5</td>
+                                    <td>8+4*N</td>
+                                    <td>individual</td>
+                                    <td>X-axis wear offset</td>
+                                    <td>tofsr.u.t_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>6</td>
+                                    <td>8+4*N</td>
+                                    <td>individual</td>
+                                    <td>Y-axis wear offset</td>
+                                    <td>tofsr.u.t_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>7</td>
+                                    <td>8+4*N</td>
+                                    <td>individual</td>
+                                    <td>Z-axis wear offset</td>
+                                    <td>tofsr.u.t_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>8</td>
+                                    <td>8+4*N</td>
+                                    <td>individual</td>
+                                    <td>Nose radius wear offset</td>
+                                    <td>tofsr.u.t_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td rowspan="9">-2</td>
+                                    <td rowspan="9">8+36*N</td>
+                                    <td rowspan="9">all</td>
+                                    <td>Direction of imaginary tool nose</td>
+                                    <td>tofsr.u.t_ofs_b[i].tip</td>
+                                </tr>
+
+                                <tr>
+                                    <td>X-axis geometry offset</td>
+                                    <td>tofsr.u.t_ofs_b[i].data[0]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Y-axis geometry offset</td>
+                                    <td>tofsr.u.t_ofs_b[i].data[1]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Z-axis geometry offset</td>
+                                    <td>tofsr.u.t_ofs_b[i].data[2]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Nose radius geometry offset</td>
+                                    <td>tofsr.u.t_ofs_b[i].data[3]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>X-axis wear offset</td>
+                                    <td>tofsr.u.t_ofs_b[i].data[4]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Y-axis wear offset</td>
+                                    <td>tofsr.u.t_ofs_b[i].data[5]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Z-axis wear offset</td>
+                                    <td>tofsr.u.t_ofs_b[i].data[6]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Nose radius wear offset</td>
+                                    <td>tofsr.u.t_ofs_b[i].data[7]</td>
+                                </tr>
+                            </table>
+                            <br/>
+
+                            <li>Lathe Series/Second geometry</li>
+                            <table border="1" valign="top">
+                                <colgroup width="10%"/>
+                                <colgroup width="15%"/>
+                                <colgroup width="10%"/>
+                                <colgroup width="30%"/>
+                                <colgroup width="35%"/>
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>Attribute</th>
+                                    <th>Offset type</th>
+                                    <th>Member to be stored in</th>
+                                </tr>
+
+                                <tr>
+                                    <td>100</td>
+                                    <td>8+4*N</td>
+                                    <td>individual</td>
+                                    <td>X-axis offset</td>
+                                    <td>tofsr.u.t_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>101</td>
+                                    <td>8+4*N</td>
+                                    <td>individual</td>
+                                    <td>Y-axis offset</td>
+                                    <td>tofsr.u.t_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>102</td>
+                                    <td>8+4*N</td>
+                                    <td>individual</td>
+                                    <td>Z-axis offset</td>
+                                    <td>tofsr.u.t_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td rowspan="3">-100</td>
+                                    <td rowspan="3">8+12*N</td>
+                                    <td rowspan="3">all</td>
+                                    <td>X-axis offset</td>
+                                    <td>tofsr.u.t_ofs_2g[3*i+0]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Y-axis offset</td>
+                                    <td>tofsr.u.t_ofs_2g[3*i+1]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Z-axis offset</td>
+                                    <td>tofsr.u.t_ofs_2g[3*i+2]</td>
+                                </tr>
+                            </table>
+                            <br/>
+                            <li>Machining Series<span class="xis">(Series 30i)</span>/Corner R</li>
+                            <table border="1" valign="top">
+                                <colgroup width="10%"/>
+                                <colgroup width="15%"/>
+                                <colgroup width="10%"/>
+                                <colgroup width="30%"/>
+                                <colgroup width="35%"/>
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>Attribute</th>
+                                    <th>Offset type</th>
+                                    <th>Member to be stored in</th>
+                                </tr>
+
+                                <tr><td>10</td><td>8+4*N</td><td>individual</td><td>Corner R/geometry</td><td>tofsr.u.m_ofs[i]</td></tr>
+                                <tr><td>11</td><td>8+4*N</td><td>individual</td><td>Corner R/wear    </td><td>tofsr.u.m_ofs[i]</td></tr>
+                                <tr>
+                                    <td rowspan="2">-10</td>
+                                    <td rowspan="2">8+8*N</td>
+                                    <td rowspan="2">all</td>
+                                    <td>Corner R/geometry</td><td>tofsr.u.m_ofs_cnr[2*i+0]</td>
+                                </tr>
+                                <tr><td>Corner R/wear    </td><td>tofsr.u.m_ofs_cnr[2*i+1]</td></tr>
+                            </table>
+                            <br/>
+
+                            <li>Lathe Series<span class="xis">(Series 30i)</span>/Without Geometory/wear offset(2nd coordinate)</li>
+                            <table border="1" valign="top">
+                                <colgroup width="10%"/>
+                                <colgroup width="15%"/>
+                                <colgroup width="10%"/>
+                                <colgroup width="30%"/>
+                                <colgroup width="35%"/>
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>Attribute</th>
+                                    <th>Offset type</th>
+                                    <th>Member to be stored in</th>
+                                </tr>
+
+                                <tr><td>20</td><td>8+2*N</td><td>individual</td><td>Direction of imaginary tool nose</td><td>tofsr.u.t_tip[i]</td></tr>
+                                <tr><td>21</td><td>8+4*N</td><td>individual</td><td>X-axis offset   </td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>22</td><td>8+4*N</td><td>individual</td><td>Y-axis offset   </td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>23</td><td>8+4*N</td><td>individual</td><td>Z-axis offset   </td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>24</td><td>8+4*N</td><td>individual</td><td>Nose radius offset </td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr>
+                                    <td rowspan="5">-21</td>
+                                    <td rowspan="5">8+20*N</td>
+                                    <td rowspan="5">all</td>
+                                    <td>Direction of imaginary tool nose</td><td>tofsr.u.t_ofs_a2[i].tip</td>
+                                </tr>
+                                <tr><td>X-axis offset  </td><td>tofsr.u.t_ofs_a2[i].data[0]</td></tr>
+                                <tr><td>Y-axis offset  </td><td>tofsr.u.t_ofs_a2[i].data[1]</td></tr>
+                                <tr><td>Z-axis offset  </td><td>tofsr.u.t_ofs_a2[i].data[2]</td></tr>
+                                <tr><td>Nose radius offset</td><td>tofsr.u.t_ofs_a2[i].data[3]</td></tr>
+                            </table>
+                            <br/>
+
+                            <li>Lathe Series<span class="xis">(Series 30i)</span>/Geometry/ware offset(2nd coordinate)</li>
+                            <table border="1" valign="top">
+                                <colgroup width="10%"/>
+                                <colgroup width="15%"/>
+                                <colgroup width="10%"/>
+                                <colgroup width="30%"/>
+                                <colgroup width="35%"/>
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>Attribute</th>
+                                    <th>Offset type</th>
+                                    <th>Member to be stored in</th>
+                                </tr>
+
+                                <tr><td>20</td><td>8+2*N</td><td>individual</td><td>Direction of imaginary tool nose   </td><td>tofsr.u.t_tip[i]</td></tr>
+                                <tr><td>21</td><td>8+4*N</td><td>individual</td><td>X-axis geometry offset  </td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>22</td><td>8+4*N</td><td>individual</td><td>Y-axis geometry offset   </td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>23</td><td>8+4*N</td><td>individual</td><td>Z-axis geometry offset  </td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>24</td><td>8+4*N</td><td>individual</td><td>Nose radius geometry offset</td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>25</td><td>8+4*N</td><td>individual</td><td>X-axis wear offset  </td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>26</td><td>8+4*N</td><td>individual</td><td>Y-axis wear offset  </td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>27</td><td>8+4*N</td><td>individual</td><td>Z-axis wear offset  </td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>28</td><td>8+4*N</td><td>individual</td><td>Nose radius wear offset</td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr>
+                                    <td rowspan="9">-22</td>
+                                    <td rowspan="9">8+36*N</td>
+                                    <td rowspan="9">all</td>
+                                    <td>Direction of imaginary tool nose</td><td>tofsr.u.t_ofs_b2[i].tip</td>
+                                </tr>
+                                <tr><td>X-axis geometry offset  </td><td>tofsr.u.t_ofs_b2[i].data[0]</td></tr>
+                                <tr><td>Y-axis geometry offset  </td><td>tofsr.u.t_ofs_b2[i].data[1]</td></tr>
+                                <tr><td>Z-axis geometry offset  </td><td>tofsr.u.t_ofs_b2[i].data[2]</td></tr>
+                                <tr><td>Nose radius geometry offset</td><td>tofsr.u.t_ofs_b2[i].data[3]</td></tr>
+                                <tr><td>X-axis wear offset  </td><td>tofsr.u.t_ofs_b2[i].data[4]</td></tr>
+                                <tr><td>Y-axis wear offset  </td><td>tofsr.u.t_ofs_b2[i].data[5]</td></tr>
+                                <tr><td>Z-axis wear offset  </td><td>tofsr.u.t_ofs_b2[i].data[6]</td></tr>
+                                <tr><td>Nose radius wear offset</td><td>tofsr.u.t_ofs_b2[i].data[7]</td></tr>
+                            </table>
+                            <br/>
+
+                            <li>Lathe Series<span class="xis">(Series 30i)</span>/Second geometry(2nd Coordinate)</li>
+                            <table border="1" valign="top">
+                                <colgroup width="10%"/>
+                                <colgroup width="15%"/>
+                                <colgroup width="10%"/>
+                                <colgroup width="30%"/>
+                                <colgroup width="35%"/>
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>Attribute</th>
+                                    <th>Offset type</th>
+                                    <th>Member to be stored in</th>
+                                </tr>
+
+                                <tr><td>120</td><td>8+4*N</td><td>individual</td><td>X-axis offset</td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>121</td><td>8+4*N</td><td>individual</td><td>Y-axis offset</td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>122</td><td>8+4*N</td><td>individual</td><td>Z-axis offset</td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr>
+                                    <td rowspan="5">-120</td>
+                                    <td rowspan="5">8+12*N</td>
+                                    <td rowspan="5">all</td>
+                                    <td>X-axis offset</td><td>tofsr.u.t_ofs_2g2[3*i+0]</td>
+                                </tr>
+                                <tr><td>Y-axis offset</td><td>tofsr.u.t_ofs_2g2[3*i+1]</td></tr>
+                                <tr><td>Z-axis offset</td><td>tofsr.u.t_ofs_2g2[3*i+2]</td></tr>
+                            </table>
+                            <br/>
+
+                            <li>Lathe Series<span class="xis">(Series 30i)</span>/4th/5th Axis Offset Function/Without Geometory/wear offset</li>
+                            <table border="1" valign="top">
+                                <colgroup width="10%"/>
+                                <colgroup width="15%"/>
+                                <colgroup width="10%"/>
+                                <colgroup width="30%"/>
+                                <colgroup width="35%"/>
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>Attribute</th>
+                                    <th>Offset type</th>
+                                    <th>Member to be stored in</th>
+                                </tr>
+                                <tr><td>12</td><td>8+4*N</td><td>individual</td><td>4th axis offset</td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>14</td><td>8+4*N</td><td>individual</td><td>5th axis offset</td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>-12</td><td>8+4*N</td><td>all</td><td>4th axis offset</td><td>tofsr.u.t_ofs_ex[i].data[0]</td></tr>
+                                <tr><td>-14</td><td>8+4*N</td><td>all</td><td>5th axis offset</td><td>tofsr.u.t_ofs_ex[i].data[0]</td></tr>
+
+                            </table>
+                            <br/>
+
+                            <li>Lathe Series<span class="xis">(Series 30i)</span>/4th/5th Axis Offset Function/Geometory/wear offset</li>
+                            <table border="1" valign="top">
+                                <colgroup width="10%"/>
+                                <colgroup width="15%"/>
+                                <colgroup width="10%"/>
+                                <colgroup width="30%"/>
+                                <colgroup width="35%"/>
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>Attribute</th>
+                                    <th>Offset type</th>
+                                    <th>Member to be stored in</th>
+                                </tr>
+                                <tr><td>12</td><td>8+4*N</td><td>individual</td><td>4th axis geometory offset</td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>13</td><td>8+4*N</td><td>individual</td><td>4th axis wear offset</td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>14</td><td>8+4*N</td><td>individual</td><td>5th axis geometory offset</td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>15</td><td>8+4*N</td><td>individual</td><td>5th axis wear offset</td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr>
+                                    <td rowspan="2">-13</td>
+                                    <td rowspan="2">8+8*N</td>
+                                    <td rowspan="2">all</td>
+                                    <td>4th axis geometory offset</td><td>tofsr.u.t_ofs_ex[i].data[0]</td>
+                                </tr>
+                                <tr><td>4th axis wear offset</td><td>tofsr.u.t_ofs_ex[i].data[1]</td></tr>
+                                <tr>
+                                    <td rowspan="2">-15</td>
+                                    <td rowspan="2">8+8*N</td>
+                                    <td rowspan="2">all</td>
+                                    <td>5th axis geometory offset</td><td>tofsr.u.t_ofs_ex[i].data[0]</td>
+                                </tr>
+                                <tr><td>5th axis wear offset</td><td>tofsr.u.t_ofs_ex[i].data[1]</td></tr>
+                            </table>
+                            <br/>
+                        </ul>
+
+                        <p>N is number of offset to be read, i = 0,..,(N-1).</p>
+
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>Data block length error<br/>Size of ODBTOFS structure(length) is wrong.</content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>Data number error<br/>Offset number(s_number, e_number) is wrong.</content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>Data attribute error<br/>Offset type(type) is wrong.</content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <type>
+            <li>Series 15</li>
+            <table>
+                <colgroup valign="top" width="30"/>
+                <colgroup valign="top" width="250"/>
+                <colgroup valign="top"/>
+                <tr>
+                    <td>M</td>
+                    <td>Tool offset extension</td>
+                    <td>(32)/99/200/499/999 sets</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Tool offset memory</td>
+                    <td>(A)/B/C</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="2">Extended tool offset value (number of offset is half of the above sets.)</td>
+                </tr>
+                <tr>
+                    <td>T</td>
+                    <td>Tool offset extension</td>
+                    <td>(32)/64/160 sets</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Tool offset memory</td>
+                    <td>(A)/B</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Cutter radius compensation</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="2">Extended tool offset value (number of offset is half of the above sets.)</td>
+                </tr>
+                <tr>
+                    <td>TT</td>
+                    <td>Tool offset extension</td>
+                    <td>(16)/32/80 sets(each path)</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Tool offset memory</td>
+                    <td>(A)/B</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Cutter radius compensation</td>
+                    <td></td>
+                </tr>
+            </table>
+            <br/>
+            <li>Series 15i</li>
+            <table>
+                <colgroup valign="top" width="30"/>
+                <colgroup valign="top" width="250"/>
+                <colgroup valign="top"/>
+                <tr>
+                    <td>M</td>
+                    <td>Tool offset extension</td>
+                    <td>(32)/99/200/499/999 sets</td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td>Tool offset memory</td>
+                    <td>(A)/B/C</td>
+                </tr>
+            </table>
+            <br/>
+            <li>Series 16/18/21, 16i/18i/21i</li>
+            <table>
+                <colgroup valign="top" width="30"/>
+                <colgroup valign="top" width="250"/>
+                <colgroup valign="top"/>
+                <tr>
+                    <td>M</td>
+                    <td>Tool offset extension</td>
+                    <td>(32)/64/99/200/400/499/999 sets</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Tool offset memory</td>
+                    <td>(A)/B/C</td>
+                </tr>
+                <tr>
+                    <td>T</td>
+                    <td>Tool offset extension</td>
+                    <td>(16)/32/64/99 sets</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Geometry/wear offset</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Cutter radius compensation</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Y-axis offset</td>
+                    <td></td>
+                </tr>
+            </table>
+            <br/>
+
+            <li>Series 0i-A/B/C</li>
+            <table>
+                <colgroup valign="top" width="30"/>
+                <colgroup valign="top" width="250"/>
+                <colgroup valign="top"/>
+                <tr>
+                    <td>M</td>
+                    <td>Tool offset extension</td>
+                    <td>32/(400) sets</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Tool offset memory</td>
+                    <td>A/(C)</td>
+                </tr>
+                <tr>
+                    <td>T</td>
+                    <td>Tool offset extension</td>
+                    <td>32/(64) sets</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Geometry/wear offset</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Cutter radius compensation</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Y axis offset</td>
+                    <td></td>
+                </tr>
+            </table>
+            <br/>
+
+            <li>Series 0i-D/F</li>
+            <table>
+                <colgroup valign="top" width="30"/>
+                <colgroup valign="top" width="250"/>
+                <colgroup valign="top"/>
+                <tr>
+                    <td>M</td>
+                    <td>Tool offset extension</td>
+                    <td>32/(400) sets</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Tool offset memory</td>
+                    <td>A/(C)</td>
+                </tr>
+                <tr>
+                    <td>T</td>
+                    <td>Tool offset extension</td>
+                    <td>32/(99) sets</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Geometry/wear offset</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Cutter radius compensation</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Y axis offset</td>
+                    <td></td>
+                </tr>
+            </table>
+            <br/>
+
+            <li>Series 30i</li>
+            <table>
+                <colgroup valign="top" width="30"/>
+                <colgroup valign="top" width="250"/>
+                <colgroup valign="top"/>
+                <tr>
+                    <td>M</td>
+                    <td>Tool offset extension</td>
+                    <td>(32)/64/99/200/400/499/999/2000 sets</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Tool offset memory</td>
+                    <td>(A)/B/C</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Cutter radius/nose radius offset</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Tool offset for Milling and Turning function</td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td>T</td>
+                    <td>Tool offset extension</td>
+                    <td>(32)/64/99/200/400/499/999/2000 sets</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Geometry/wear offset</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Cutter radius/nose radius offset</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Y-axis offset</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Second geometry tool offset</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>4th/5th Axis Offset Function</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>The changing active offset</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Tool offset for Milling and Turning function</td>
+                    <td></td>
+                </tr>
+            </table>
+            <br/>
+            <li>Power Motion i</li>
+            <table>
+                <colgroup valign="top" width="30"/>
+                <colgroup valign="top" width="250"/>
+                <colgroup valign="top"/>
+                <tr>
+                    <td> </td>
+                    <td>Tool offset extension</td>
+                    <td>(32)/99/200 sets</td>
+                </tr>
+            </table>
+            <br/>
+            <p>* ( ) : Basic</p>
+        </type>
+        <add></add>
+
+        <is>
+            <hssb>The extended driver/library function is necessary.</hssb>
+            <type>
+                <table>
+                    <colgroup valign="top" width="30"/>
+                    <colgroup valign="top" width="250"/>
+                    <colgroup valign="top"/>
+                    <tr>
+                        <td>M</td>
+                        <td>Tool offset extension</td>
+                        <td>(32)/64/99/200/400/499/999/2000 sets</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Tool offset memory</td>
+                        <td>(A)/B/C</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Cutter radius/nose radius offset</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Tool offset for Milling and Turning function</td>
+                        <td></td>
+                    </tr>
+
+                    <tr>
+                        <td>T</td>
+                        <td>Tool offset extension</td>
+                        <td>(32)/64/99/200/400/499/999/2000 sets</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Geometry/wear offset</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Cutter radius/nose radius offset</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Y-axis offset</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Second geometry tool offset</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>The changing active offset</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Tool offset for Milling and Turning function</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>* ( ) : Basic</td>
+                    </tr>
+                </table>
+                <br/>
+            </type>
+        </is>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <li>Series 15/15i</li>
+            <div class="dd">6002#0,#1, 6004#0, 6007#0</div><br/>
+            <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C</li>
+            <div class="dd">1004#0,#1</div><br/>
+            <li>Series 0i-D, PMi-A</li>
+            <div class="dd">5042#1,#0<br/>
+                            5009#5(M Series)<br/>
+                            5024</div><br/>
+            <li>Series 0i-F</li>
+            <div class="dd">5042#1,#0<br/>
+                            5009#5(M Series)<br/>
+                            5024<br/>
+                            8132#1=1 (must be set)</div><br/>
+            <li>Series 30i</li>
+            <div class="dd">5042#3,#2,#1,#0<br/>
+                            5009#5(M Series)<br/>
+                            5024</div><br/>
+            <li>Power Mate i</li>
+            <div class="dd">1004#0(In case of Power Mate i-H)<br/>
+                            1004#1(In case of Power Mate i-D)</div><br/>
+        </type>
+        <add></add>
+    </parameter>
+
+    <is_parameter>
+        <type>
+            <div class="dd">5042#3,#2,#1,#0<br/>
+                            5009#5(M Series)<br/>
+                            5024</div><br/>
+        </type>
+    </is_parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>E</fs16i>
+            <fs18i>E</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+        <add><b></b></add>
+
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdtofs</name>
+            <file>ncdata/cnc_rdtofs.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrtofs</name>
+            <file>ncdata/cnc_wrtofs.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrtofsr</name>
+            <file>ncdata/cnc_wrtofsr.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdtofsinfo</name>
+            <file>ncdata/cnc_rdtofsinfo.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+        <vc>
+<pre>
+The following program reads all offset values of Lathe-Series(Memory B/64 sets)
+and displays them.
+
+#include "fwlib32.h"
+#define MAXTOOL 64
+
+short example( void )
+{
+    IODBTO *tofsr ;
+    short ret, idx ;
+    tofsr = (IODBTO *)malloc( 8+36*MAXTOOL ) ;
+    ret = cnc_rdtofsr( h, 1, -2, MAXTOOL, 8+36*MAXTOOL, tofsr ) ;
+    if ( !ret ) {
+        printf( "No  X:wear  Z:wear  Y:wear  X:geom  "
+                "Z:geom  Y:geom  R:wear  R:geom T\n" ) ;
+        printf( "---+-------+-------+-------+-------+"
+                "-------+-------+-------+------+-\n" ) ;
+        for ( idx = 0 ; idx &#60; MAXTOOL ; idx++ ) {
+            printf( "%02d%8ld%8ld%8ld%8ld%8ld%8ld%8ld%8ld%2d\n",
+                    idx, tofsr->u.t_ofs_b[idx].data[4],
+                    tofsr->u.t_ofs_b[idx].data[5],
+                    tofsr->u.t_ofs_b[idx].data[6],
+                    tofsr->u.t_ofs_b[idx].data[0],
+                    tofsr->u.t_ofs_b[idx].data[1],
+                    tofsr->u.t_ofs_b[idx].data[2],
+                    tofsr->u.t_ofs_b[idx].data[7],
+                    tofsr->u.t_ofs_b[idx].data[3],
+                    tofsr->u.t_ofs_b[idx].tip ) ;
+        }
+    }
+    free( tofsr ) ;
+    return ( ret ) ;
+}
+</pre>
+        </vc>
+<vcs><![CDATA[
+The following program reads all offset values of Lathe-Series(Memory B/64 sets)
+and displays them.
+
+class example
+{
+    public const short MAXTOOL = 64;
+    
+    public short sample()
+    {
+        Focas1.T_OFS_B fsrData = new Focas1.T_OFS_B();
+        short ret, idx;
+
+        byte[] bytes = new byte[8 + 36 * MAXTOOL];
+        IntPtr ptrData = Marshal.AllocCoTaskMem(Marshal.SizeOf(fsrData));
+
+        ret = Focas1.cnc_rdtofsr(h, 1, -2, MAXTOOL, 8 + 36 * MAXTOOL, bytes);
+        if (ret == Focas1.EW_OK)
+        {
+            Console.WriteLine("No  X:wear  Z:wear  Y:wear  X:geom  Z:geom  Y:geom  R:wear  R:geom T");
+            Console.WriteLine("---+-------+-------+-------+-------+-------+-------+-------+------+-");
+            for (idx = 0; idx < MAXTOOL; idx++)
+            {
+                int pos = 8 + idx * Marshal.SizeOf(fsrData);
+                Marshal.Copy(bytes, pos, ptrData, Marshal.SizeOf(fsrData));
+                Marshal.PtrToStructure(ptrData, fsrData);
+
+                Console.WriteLine("{0:d2}{1,8}{2,8}{3,8}{4,8}{5,8}{6,8}{7,8}{8,8}{9,2}",
+                        idx, fsrData.data[4],
+                        fsrData.data[5],
+                        fsrData.data[6],
+                        fsrData.data[0],
+                        fsrData.data[1],
+                        fsrData.data[2],
+                        fsrData.data[7],
+                        fsrData.data[3],
+                        fsrData.tip);
+            }
+        }
+        Marshal.FreeCoTaskMem(ptrData);
+        return (ret);
+    }
+}]]></vcs>
+    </example>
+
+
+
+  </func>
+</root>

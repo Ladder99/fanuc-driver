@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+    <func>
+
+
+        <title>cnc_rdparam3</title>
+
+
+
+        <declare>
+            <vc>
+                <include>#include "fwlib32.h"</include>
+                <prottype>
+                FWLIBAPI short WINAPI cnc_rdparam3(unsigned short FlibHndl, short number, short axis, short length, short absolute, IODBPSD *param);
+                </prottype>
+            </vc>
+        </declare>
+
+
+
+        <doc>
+            <cmn>
+                <p>
+                    Reads the parameter specified by "number","axis"(only for the parameter with axis).<br/>
+                    In this function, the acquired information can specify a relative axis or an absolute axis by argument("absolute").<br/>
+                    The relative axis means the current path and the absolute axis means all CNC paths.<br/>
+                    The data format depends on each parameter.  The format of Byte/Word/2-Word parameter is generally signed binary format.
+                </p>
+                <p>
+                    Reads the parameter for all axes once by specifying 'ALL_AXES' in 'axis'.<br/>
+                    The parameter for each axis is stored in each array of "IODBPSD".
+                </p>
+                <p>
+                    The attribute of CNC parameter depends on the type and axis, and it is different for each parameter.<br/>
+                    It is as follows, and can be got by <a href="ncdata/cnc_rdparainfo.htm" target="_parent">cnc_rdparainfo</a> function.
+                </p>
+
+                <table class="dd" border="1">
+                    <colgroup valign="top"/>
+                    <colgroup valign="top"/>
+                    <colgroup valign="top"/>
+                    <tr>
+                        <th>Parameter type</th>
+                        <th>Meaning</th>
+                        <th>Byte size</th>
+                    </tr>
+                    <tr>
+                        <td>Bit parameter</td>
+                        <td>Every bits have each definition.</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>Bit parameter with axis</td>
+                        <td>Every bits have each definition. (each axis)</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>Byte parameter</td>
+                        <td>1-byte data is stored.</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>Byte parameter with axis</td>
+                        <td>1-byte data is stored. (each axis)</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>Word parameter</td>
+                        <td>2-byte data is stored.</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td>Word parameter with axis</td>
+                        <td>2-byte data is stored. (each axis)</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td>2-Word parameter</td>
+                        <td>4-byte data is stored.</td>
+                        <td>4</td>
+                    </tr>
+                    <tr>
+                        <td>2-Word parameter with axis</td>
+                        <td>4-byte data is stored. (each axis)</td>
+                        <td>4</td>
+                    </tr>
+                    <tr>
+                        <td>Real parameter</td>
+                        <td>4-byte data which indicates value of variable and 4-byte data which indicates number of places of decimals are stored.</td>
+                        <td>8</td>
+                    </tr>
+                    <tr>
+                        <td>Real parameter with axis</td>
+                        <td>4-byte data which indicates value of variable and 4-byte data which indicates number of places of decimals are stored. (each axis)</td>
+                        <td>8</td>
+                    </tr>
+                </table>
+
+                <p>It is impossible to read any bit parameter bit by bit. 8 bits(i.e. 1 byte) which belong to the same parameter number are read at the same time.</p>
+
+                <p>See the "PARAMETER MANUAL" of CNC for details of each parameter.</p>
+            </cmn>
+        </doc>
+
+
+
+        <argument>
+            <common>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>number</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Specify the parameter number.<br/>
+                                See the "PARAMETER MANUAL" of CNC about available parameter number.<br/>
+                                It can be got by <a href="ncdata/cnc_rdparanum.htm" target="_parent">cnc_rdparanum</a> function and <a href="ncdata/cnc_rdparainfo.htm" target="_parent">cnc_rdparainfo</a> function.
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>axis</name>
+                        <type>in</type>
+                        <content>
+                            <p>Specify the axis number.</p>
+                            <table class="dd">
+                                <colgroup align="left" valign="top">
+                                    <tr>
+                                        <td>0</td>
+                                        <td>:</td>
+                                        <td>assigns no axis</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1,..,m</td>
+                                        <td>:</td>
+                                        <td>assigns 1 axis(m=max. controlled axes)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ALL_AXES</td>
+                                        <td>:</td>
+                                        <td>assigns all axes(ALL_AXES=-1)</td>
+                                    </tr>
+                                </colgroup>
+                            </table>
+                        </content>
+                    </item>
+
+                    <item>
+                        <name>length</name>
+                        <type>in</type>
+                        <content>
+                            <p>Specify the data block length(size of IODBPSD structure).</p>
+                            <p class="dd">(4+(byte size of parameter)*(number of axis))</p>
+                            <p>In case that the size of parameter is 4 byte, the IODBPSD structure is as follows.  In case that its size is 1, 2, or 8 byte, the size of data part per 1 parameter or 1 axis is 1, 2, or 8 byte.</p>
+                            <p><b>IODBPSD</b></p>
+                            <table>
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                <tr>
+                                    <th>no axis/1 axis</th>
+                                    <th>all axes</th>
+                                </tr>
+                                <tr>
+                                    <td valign="top"><img src="ncdata/prm.gif"/></td>
+                                    <td valign="top"><img src="ncdata/prma.gif"/></td>
+                                </tr>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+                            <ul>
+                                <p>
+                                    n = Maximum controlled axes
+                                </p>
+                            </ul>
+                            <p class="info">
+                                The spindle parameters have an axis attribute, and the data for number of spindle are valid.
+                            </p>
+                        </content>
+                    </item>
+
+                    <item>
+                        <name>absolute</name>
+                        <type>in</type>
+                        <content>
+                       <p>Specify whether to acquire by a relative axis or an absolute axis at the parameter read.</p>
+                            <table class="dd">
+                                <colgroup align="left" valign="top">
+                                    <tr> <td>0</td><td>:</td><td>Relative axis</td> </tr>
+                                    <tr> <td>1</td><td>:</td><td>Absolute axis</td> </tr>
+                                </colgroup>
+                            </table>
+                        </content>
+                    </item>
+                    <item>
+                        <name>param</name>
+                        <type>out</type>
+                        <content>
+                            <p>Pointer to the IODBPSD structure including the parameter. The IODBPSD structure is as follows.</p>
+<pre>
+typedef struct realprm {     /* real parameter */
+   long prm_val;             /* value of variable */
+   long dec_val;             /* number of places of decimals */
+} REALPRM;
+
+typedef struct  iodbpsd {
+   short datano;               /* parameter number */
+   short type;                 /* upper byte:type */
+                               /* lower byte:axis */
+   union {
+      char    cdata;           /* bit/byte parameter */
+      short   idata;           /* word parameter */
+      long    ldata;           /* 2-word parameter */
+      REALPRM rdata;           /* real parameter */
+      char    cdatas[MAX_AXIS];/*bit/byte parameter with axis*/
+      short   idatas[MAX_AXIS];/* word parameter with axis */
+      long    ldatas[MAX_AXIS];/* 2-word parameter with axis */
+      REALPRM rdatas[MAX_AXIS];/* real parameter with axis */
+   } u;
+} IODBPSD ;               /* MAX_AXIS : max. controlled axes */
+</pre>
+                            <dl>
+                                <dt>datano</dt>
+                                <dd>Parameter number which was read is stored.</dd>
+                                <dt>type</dt>
+                                <dd>Attribute of parameter which was read is stored.</dd>
+                                <dd>Upper byte:type
+                                    <table class="dd">
+                                        <tr> <td>0</td><td>:</td><td>bit type   </td> </tr>
+                                        <tr> <td>1</td><td>:</td><td>byte type  </td> </tr>
+                                        <tr> <td>2</td><td>:</td><td>word type  </td> </tr>
+                                        <tr> <td>3</td><td>:</td><td>2-word type</td> </tr>
+                                        <tr> <td>4</td><td>:</td><td>real type  </td> </tr>
+                                    </table>
+                                </dd>
+                                <dd>Lower byte:axis
+                                    <table class="dd">
+                                        <tr> <td>0       </td><td>:</td><td>no axis                       </td> </tr>
+                                        <tr> <td>1,..,m  </td><td>:</td><td>1 axis(m=max. controlled axes)</td> </tr>
+                                        <tr> <td>ALL_AXES</td><td>:</td><td>all axes(ALL_AXES=-1)         </td> </tr>
+                                    </table>
+                                </dd>
+                                <dt>rdata, rdatas</dt>
+                                <dd>Real parameter is stored.<br/>The value of variable is stored in prm_val, and the number of places of decimals is stored in dec_val. </dd>
+                                <dd>
+                                    <div class="dd">
+                                        <p>Real parameter = prm_val * 10 ** (-dec_val)</p>
+                                        <p>(Example) When the value of real parameter is 12.345, prm_val and dec_val are read as follows.</p>
+                                        <p class="dd">prm_val = 12345<br/>dec_val = 3</p>
+                                    </div>
+                                </dd>
+                            </dl>
+                        </content>
+                    </item>
+                </vc>
+            </common>
+        </argument>
+
+
+
+        <errcode>
+            <item>
+                <name>EW_LENGTH</name>
+                <content>Data block length error<br/>Size of IODBPSD structure(length) is wrong.</content>
+            </item>
+            <item>
+                <name>EW_NUMBER</name>
+                <content>Data number error<br/>Parameter number(number) is wrong.</content>
+            </item>
+            <item>
+                <name>EW_ATTRIB</name>
+                <content>Data attribute error<br/>Axis number(axis) is wrong.</content>
+            </item>
+        </errcode>
+
+
+
+        <option>
+            <hssb>The extended driver/library function is necessary.</hssb>
+            <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+                  <p>However, in case of Series 0i-D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+                  <p>When Embedded Ethernet is used,</p>
+                  <p><ul>above two optional functions are not required.</ul></p>
+                  <p>When Ethernet board is used,</p>
+                  <p><ul>only Ethernet function is required.</ul></p>
+            </ethr>
+        </option>
+
+
+
+        <parameter></parameter>
+
+
+
+        <mode></mode>
+
+
+
+        <support>
+            <m>
+                <fs0ia>X</fs0ia>
+                <fs0ib>X</fs0ib>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs15>X</fs15>
+                <fs15i>X</fs15i>
+                <fs16>X</fs16>
+                <fs18>X</fs18>
+                <fs21>X</fs21>
+                <fs16ia>X</fs16ia>
+                <fs18ia>X</fs18ia>
+                <fs21ia>X</fs21ia>
+                <fs16ib>X</fs16ib>
+                <fs18ib>X</fs18ib>
+                <fs21ib>X</fs21ib>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </m>
+            <t>
+                <fs0ia>X</fs0ia>
+                <fs0ib>X</fs0ib>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs15>X</fs15>
+                <fs15i>X</fs15i>
+                <fs16>X</fs16>
+                <fs18>X</fs18>
+                <fs21>X</fs21>
+                <fs16ia>X</fs16ia>
+                <fs18ia>X</fs18ia>
+                <fs21ia>X</fs21ia>
+                <fs16ib>X</fs16ib>
+                <fs18ib>X</fs18ib>
+                <fs21ib>X</fs21ib>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </t>
+            <lc>
+                <fs0ia>X</fs0ia>
+                <fs0ib>X</fs0ib>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs15>X</fs15>
+                <fs15i>X</fs15i>
+                <fs16>X</fs16>
+                <fs18>X</fs18>
+                <fs21>X</fs21>
+                <fs16ia>X</fs16ia>
+                <fs18ia>X</fs18ia>
+                <fs21ia>X</fs21ia>
+                <fs16ib>X</fs16ib>
+                <fs18ib>X</fs18ib>
+                <fs21ib>X</fs21ib>
+                <fs30ia>X</fs30ia>
+                <fs30ib>X</fs30ib>
+            </lc>
+            <p>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs16i>X</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>O</fs30ib>
+            </p>
+            <l>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>X</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>O</fs30ib>
+            </l>
+            <w>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>X</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </w>
+            <pw>
+                <d>X</d>
+                <h>X</h>
+                <a>O</a>
+            </pw>
+            <!-- 30i(WinCE) -->
+            <is>
+                <m>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </m>
+                <t>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </t>
+                <w>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </w>
+            </is>
+        </support>
+
+
+
+        <reference>
+            <item>
+                <name>cnc_wrparam</name>
+                <file>ncdata/cnc_wrparam.htm</file>
+            </item>
+            <item>
+                <name>cnc_rdparar</name>
+                <file>ncdata/cnc_rdparar.htm</file>
+            </item>
+            <item>
+                <name>cnc_wrparas</name>
+                <file>ncdata/cnc_wrparas.htm</file>
+            </item>
+            <item>
+                <name>cnc_rdparam_ext</name>
+                <file>ncdata/cnc_rdparam_ext.htm</file>
+            </item>
+            <item>
+                <name>cnc_rdparainfo</name>
+                <file>ncdata/cnc_rdparainfo.htm</file>
+            </item>
+            <item>
+                <name>cnc_rdparanum</name>
+                <file>ncdata/cnc_rdparanum.htm</file>
+            </item>
+        </reference>
+
+
+
+        <example>
+        </example>
+
+
+
+    </func>
+</root>

@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_rewind</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rewind(unsigned short FlibHndl);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Sets cursor to the top of selected NC program in CNC.</p>
+
+            <br/>
+            <p>MEM, EDIT mode(Series 30i/31i/32i, 0i-D/F, PMi-A)</p>
+            <table border="1" class="dt">
+                <tr align="center"><td>Program select                      </td><td>none</td><td colspan='3'>exist</td></tr>
+                <tr align="center"><td>Availability of editing             </td><td>- </td><td colspan='2'>Prohibition</td><td>Permission</td></tr>
+                <tr align="center"><td>Availability of searching(No.3202#6)</td><td>- </td><td>Prohibition(=0)</td><td>Permission(=1)</td><td>-</td></tr>
+                <tr align="center"><td>Rewind                              </td><td colspan='2'>not available</td><td colspan='2'>available</td></tr>
+                <tr align="center"><td>Return value                        </td><td>EW_REJECT</td><td>EW_PROT</td><td colspan='2'>EW_OK</td></tr>
+            </table>
+            <br/>
+            <p>other than MDI mode(Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i)</p>
+            <table border="1" class="dt">
+                <tr align="center"><td>Program select                      </td><td>none</td><td colspan='3'>exist</td></tr>
+                <tr align="center"><td>Availability of editing             </td><td>- </td><td colspan='2'>Prohibition</td><td>Permission</td></tr>
+                <tr align="center"><td>Availability of searching(No.3202#6)</td><td>- </td><td>Prohibition(=0)</td><td>Permission(=1)</td><td>-</td></tr>
+                <tr align="center"><td>Rewind                              </td><td colspan='2'>not available</td><td colspan='2'>available</td></tr>
+                <tr align="center"><td>Return value                        </td><td colspan='4'>EW_OK</td></tr>
+            </table>
+            <br/>
+            <p>When this function is executed during the subprogram call(STOP mode).</p>
+            <p>Series 30i/31i/32i, 0i-D/F, PMi-A :</p>
+            <p class="dd">Subprogram is rewinded.</p>
+            <p>Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i :</p>
+            <p class="dd">Main program is rewinded. However when No.3204#1=1, EW_REJECT is returned.</p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle.
+                            See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_MODE</name>
+            <content>
+                CNC mode error<br/>
+                See the section of CNC mode.
+            </content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>
+                Program is protected from editing and searching. (Only Series 30i/31i/32i, 0i-D/F, PMi-A)
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                CNC execution denied
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The extended driver/library function is necessary.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter></parameter>
+
+    <is_parameter></is_parameter>
+
+
+
+    <mode>
+        <cmn>
+            <ul>
+                <li>Series 15/15i, 30i, 0i-D/F, PMi-A</li>
+                    It is possible to use in MEM, EDIT mode.
+                <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i</li>
+                    It is possible to use in other than MDI mode.
+            </ul>
+        </cmn>
+    </mode>
+
+    <is_mode>
+        <cmn>
+            It is possible to use in MEM, EDIT mode.
+        </cmn>
+    </is_mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+        
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference></reference>
+
+
+
+    <example>
+<vc>
+The following program rewinds the current NC program, and displays the result.
+
+#include "fwlib32.h"
+
+void example( )
+{
+        short ret ;
+        ret = cnc_rewind( h ) ;
+        switch ( ret ) {
+                case EW_OK:
+                        printf( "Program has been rewinded.\n" ) ;
+                        break;
+                case EW_MODE:
+                        printf( "ILLIGAL MODE.\n" ) ;
+                        break;
+                case EW_BUSY:
+                        printf( "REJECTED.\n" ) ;
+                        break;
+        }
+}
+</vc>
+<vcs><![CDATA[
+The following program rewinds the current NC program, and displays the result.
+
+class example
+{
+    public void sample()
+    {
+            short ret;
+            ret = Focas1.cnc_rewind(h);
+            switch (ret)
+            {
+                    case Focas1.EW_OK:
+                            Console.WriteLine("Program has been rewinded.");
+                            break;
+                    case (short)Focas1.focas_ret.EW_MODE:
+                            Console.WriteLine("ILLIGAL MODE.");
+                            break;
+                    case (short)Focas1.focas_ret.EW_BUSY:
+                            Console.WriteLine("REJECTED.");
+                            break;
+            }
+    }
+}]]></vcs>
+    </example>
+
+
+
+  </func>
+</root>

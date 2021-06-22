@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_rdspgear</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdspgear(unsigned short FlibHndl, short sp_no, ODBSPN *serialspindle);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+                <p>Reads the gear ratio of the serial spindle.
+          The gear ratio is stored in "data[0]" of "ODBSPN".</p>
+                <p>All spindle can be read at a time by specifying ALL_SPINDLES for
+          "sp_no". In that case, an gear ratio of each serial spindle is stored
+          in the data array of ODBSPN.</p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>sp_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify spindle number to read.</p>
+                        <table class="dd">
+                            <tr>
+                                <td>ALL_SPINDLES</td>
+                                <td>:</td>
+                                <td>for all spindles (ALL_SPINDLES: -1)</td>
+                            </tr>
+                            <tr>
+                                <td>1,..,MAX_SPINDLES</td>
+                                <td>:</td>
+                                <td>for each spindle</td>
+                            </tr>
+                        </table>
+                        <ul>
+                            <li>Series 15/15i, 16i/18i/21i, 16i/18i/21i, 0i-A/B/C</li>
+                            MAX_SPINDLES : 4<br/><br/>
+                            <li>Series 30i, 0i-D/F</li>
+                            MAX_SPINDLES : 8<br/><br/>
+                            <li>Power Mate i-D</li>
+                            MAX_SPINDLES : 1<br/><br/>
+                        </ul>
+                    </content>
+                </item>
+                <item>
+                    <name>serialspindle</name>
+                    <type>out</type>
+                    <content>
+                        <p>Pointer to the ODBSPN structure including the gear ratio of the
+                  serial spindle.
+                  The ODBSPN structure is as follows.</p>
+<pre>
+typedef struct odbspn {
+        short   datano;                 /* Spindle number. */
+        short   type;                   /* Not used. */
+        short   data[MAX_SPINDLES];     /* Spindle data. */
+} ODBSPN ;     /* MAX_SPINDLES is maximum number of spindle. */
+</pre>
+                    </content>
+                </item>
+            </vc>
+        </common>
+
+        <!-- is Argument Start -->
+        <is>
+            <hssb>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>sp_no</name>
+                        <type>in</type>
+                        <content>
+                            <p>Specify spindle number to read.</p>
+                            <table class="dd">
+                                <tr>
+                                    <td>ALL_SPINDLES</td>
+                                    <td>:</td>
+                                    <td>for all spindles (ALL_SPINDLES: -1)</td>
+                                </tr>
+                                <tr>
+                                    <td>1,..,MAX_SPINDLES</td>
+                                    <td>:</td>
+                                    <td>for each spindle</td>
+                                </tr>
+                            </table>
+                            <p>MAX_SPINDLES is maximum number of spindle. It becomes 8 in Series 30i.</p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>serialspindle</name>
+                        <type>out</type>
+                        <content>
+                            <p>Pointer to the ODBSPN structure including the gear ratio of the serial spindle. The ODBSPN structure is as follows.</p>
+<pre>
+typedef struct odbspn {
+    short   datano;                 /* Spindle number. */
+    short   type;                   /* Not used. */
+    short   data[MAX_SPINDLES];     /* Spindle data. */
+} ODBSPN ;     /* MAX_SPINDLES is maximum number of spindle. */
+</pre>
+                        </content>
+                    </item>
+                </vc>
+            </hssb>
+        </is>
+        <!-- is Argument End -->
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                data number error<br/>
+                The specification of spindle number (sp_no) is illegal.
+            </content>
+        </item>
+        <add></add>
+        <is>
+            <item>
+                <name>EW_NUMBER</name>
+                <content>
+                    data number error<br/>
+                    The specification of spindle number (sp_no) is illegal.
+                </content>
+            </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>
+                     The extended driver/library function is necessary.
+            </content>
+        </item>
+        </is>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <is>
+            <hssb>The extended driver/library function is necessary.</hssb>
+        </is>
+    </option>
+
+
+
+    <parameter>
+    </parameter>
+    <is_parameter></is_parameter>
+
+
+
+    <mode>
+    </mode>
+    <is_mode></is_mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <add><b></b></add>
+        <is>
+            <!-- M -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+    </reference>
+
+
+
+  </func>
+</root>

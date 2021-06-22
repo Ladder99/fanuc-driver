@@ -1,0 +1,1100 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_statinfo</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_statinfo(unsigned short FlibHndl, ODBST *statinfo);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            Reads the status information of CNC. The various information is stored in each member of "ODBST".
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>statinfo </name>
+                    <type>out</type>
+                    <content>
+                        Pointer to the ODBST structure including the status information of CNC. <p/>
+                        There is difference at the structure between Series 15/15i, Series 16/18/21/16i/18i/21i/0i/30i/Power Mate i/PMi-A. <p/>
+                        <ul>
+                            <li>Series 15/15i</li><p/>
+                            <p>
+<pre>
+typedef struct odbst {
+     short  dummy[2];  /* Not used                           */
+     short  aut;       /* AUTOMATIC mode selection           */
+     short  manual;    /* MANUAL mode selection              */
+     short  run;       /* Status of automatic operation      */
+     short  edit;      /* Status of program editing          */
+     short  motion;    /* Status of axis movement,dwell      */
+     short  mstb;      /* Status of M,S,T,B function         */
+     short  emergency; /* Status of emergency                */
+     short  write;     /* Status of writing backupped memory */
+     short  labelskip; /* Status of label skip               */
+     short  alarm;     /* Status of alarm                    */
+     short  warning;   /* Status of warning                  */
+     short  battery;   /* Status of battery                  */
+} ODBST ;
+</pre>
+                                <p>* In case of multi-path, there are difference of path for only Status of axis movement, dwell", and Status of M,S,T,B function". As for the other status, there is no difference.</p>
+                                <dl>
+                                    <dt>aut</dt>
+                                    <dd>AUTOMATIC mode selection
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>****(No selection)</td></tr>
+                                            <tr><td>1</td><td>:</td><td>MDI</td></tr>
+                                            <tr><td>2</td><td>:</td><td>TAPE(Series 15), DNC(Series 15i)</td></tr>
+                                            <tr><td>3</td><td>:</td><td>MEMory</td></tr>
+                                            <tr><td>4</td><td>:</td><td>EDIT</td></tr>
+                                            <tr><td>5</td><td>:</td><td>TeacH IN</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>manual</dt>
+                                    <dd>MANUAL mode selection
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>***(No selection)</td></tr>
+                                            <tr><td>1</td><td>:</td><td>REFerence</td></tr>
+                                            <tr><td>2</td><td>:</td><td>INC&#183;feed</td></tr>
+                                            <tr><td>3</td><td>:</td><td>HaNDle</td></tr>
+                                            <tr><td>4</td><td>:</td><td>JOG</td></tr>
+                                            <tr><td>5</td><td>:</td><td>AnGular Jog</td></tr>
+                                            <tr><td>6</td><td>:</td><td>Inc+Handl</td></tr>
+                                            <tr><td>7</td><td>:</td><td>Jog+Handl</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>run</dt>
+                                    <dd>Status of automatic operation
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>STOP</td></tr>
+                                            <tr><td>1</td><td>:</td><td>HOLD</td></tr>
+                                            <tr><td>2</td><td>:</td><td>STaRT</td></tr>
+                                            <tr><td>3</td><td>:</td><td>MSTR(jog mdi)</td></tr>
+                                            <tr><td>4</td><td>:</td><td>ReSTaRt(not blinking)<br/>
+                                                                        Except under manual mode and under cutter radius compensation outside corner</td></tr>
+                                            <tr><td>5</td><td>:</td><td>PRSR(program restart)</td></tr>
+                                            <tr><td>6</td><td>:</td><td>NSRC(sequence number search)</td></tr>
+                                            <tr><td>7</td><td>:</td><td>ReSTaRt(blinking)<br/>
+                                                                        Under manual mode or under cutter radius compensation outside corner</td></tr>
+                                            <tr><td>8</td><td>:</td><td>ReSET</td></tr>
+                                            <tr><td>9</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>10</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>11</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>12</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>13</td><td>:</td><td>HPCC(during RISC operation)</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>edit</dt>
+                                    <dd>Status of program editing
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>****(Not editing)</td></tr>
+                                            <tr><td>1</td><td>:</td><td>EDIT</td></tr>
+                                            <tr><td>2</td><td>:</td><td>SeaRCH</td></tr>
+                                            <tr><td>3</td><td>:</td><td>VeRiFY</td></tr>
+                                            <tr><td>4</td><td>:</td><td>CONDense</td></tr>
+                                            <tr><td>5</td><td>:</td><td>READ</td></tr>
+                                            <tr><td>6</td><td>:</td><td>PuNCH</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>motion</dt>
+                                    <dd>Status of axis movement,dwell
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>***</td></tr>
+                                            <tr><td>1</td><td>:</td><td>MoTioN</td></tr>
+                                            <tr><td>2</td><td>:</td><td>DWeLl</td></tr>
+                                            <tr><td>3</td><td>:</td><td>Wait (waiting:only TT)</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>mstb</dt>
+                                    <dd>Status of M,S,T,B function
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>***</td></tr>
+                                            <tr><td>1</td><td>:</td><td>FIN</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>emergency</dt>
+                                    <dd>Status of emergency
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>(Not emergency)</td></tr>
+                                            <tr><td>1</td><td>:</td><td>EMerGency</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>write</dt>
+                                    <dd>Status of writing backupped memory
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>(Not writing)</td></tr>
+                                            <tr><td>1</td><td>:</td><td>@(writing)</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>labelskip</dt>
+                                    <dd>Status of label skip
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>Label SKip</td></tr>
+                                            <tr><td>1</td><td>:</td><td>(Not label skip)</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>alarm</dt>
+                                    <dd>Status of alarm
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>(No alarm)</td></tr>
+                                            <tr><td>1</td><td>:</td><td>ALarM</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>warning</dt>
+                                    <dd>Status of warning
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>(No warning)</td></tr>
+                                            <tr><td>1</td><td>:</td><td>WaRNing</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>battery</dt>
+                                    <dd>Status of battery
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>(Normal)</td></tr>
+                                            <tr><td>1</td><td>:</td><td>BATtery low(backupped memory)</td></tr>
+                                            <tr><td>2</td><td>:</td><td>BATtery low(absolute position detector)</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+                                </dl>
+                            </p>
+                        </ul>
+                        <ul>
+                            <li>Series 16/18/21, 16i/18i/21i, 0i, 30i/31i/32i, Power Mate i, PMi-A</li><p/>
+                            <p>* In case of multi-path, all status exist for each path.</p>
+                            <p>
+<pre>
+typedef struct odbst {
+     short  hdck ;        /* Status of manual handle re-trace */
+     short  tmmode ;      /* T/M mode selection              */
+     short  aut ;         /* AUTOMATIC/MANUAL mode selection */
+     short  run ;         /* Status of automatic operation   */
+     short  motion ;      /* Status of axis movement,dwell   */
+     short  mstb ;        /* Status of M,S,T,B function      */
+     short  emergency ;   /* Status of emergency             */
+     short  alarm ;       /* Status of alarm                 */
+     short  edit ;        /* Status of program editing       */
+} ODBST ;
+</pre>
+                                <dl>
+                                    <dt>hdck (30i/31i/32i, 0i-D/F only)</dt>
+                                    <dd>Status of manual handle re-trace
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>Invalid of manual handle re-trace      </td></tr>
+                                            <tr><td>1</td><td>:</td><td>M.H.RTR.(Manual handle re-trace)       </td></tr>
+                                            <tr><td>2</td><td>:</td><td>NO RVRS.(Backward movement prohibition)</td></tr>
+                                            <tr><td>3</td><td>:</td><td>NO CHAG.(Direction change prohibition) </td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>tmmode</dt>
+                                    <dd>T/M mode selection (only with compound machining function) 
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>T mode</td></tr>
+                                            <tr><td>1</td><td>:</td><td>M mode</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>aut</dt>
+                                    <dd>AUTOMATIC/MANUAL mode selection
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>MDI</td></tr>
+                                            <tr><td>1</td><td>:</td><td>MEMory</td></tr>
+                                            <tr><td>2</td><td>:</td><td>****</td></tr>
+                                            <tr><td>3</td><td>:</td><td>EDIT</td></tr>
+                                            <tr><td>4</td><td>:</td><td>HaNDle</td></tr>
+                                            <tr><td>5</td><td>:</td><td>JOG</td></tr>
+                                            <tr><td>6</td><td>:</td><td>Teach in JOG</td></tr>
+                                            <tr><td>7</td><td>:</td><td>Teach in HaNDle</td></tr>
+                                            <tr><td>8</td><td>:</td><td>INC&#183;feed</td></tr>
+                                            <tr><td>9</td><td>:</td><td>REFerence</td></tr>
+                                            <tr><td>10</td><td>:</td><td>ReMoTe</td></tr>
+<!--                                        <tr><td>11</td><td>:</td><td>TEST(test operation mode)</td></tr> -->
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>run</dt>
+                                    <dd>Status of automatic operation
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>****(reset)</td></tr>
+                                            <tr><td>1</td><td>:</td><td>STOP</td></tr>
+                                            <tr><td>2</td><td>:</td><td>HOLD</td></tr>
+                                            <tr><td>3</td><td>:</td><td>STaRT</td></tr>
+                                            <tr><td>4</td><td>:</td><td>MSTR(during retraction and re-positioning of tool retraction and recovery, and operation of JOG MDI)</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>motion</dt>
+                                    <dd>Status of axis movement, dwell
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>***</td></tr>
+                                            <tr><td>1</td><td>:</td><td>MoTioN</td></tr>
+                                            <tr><td>2</td><td>:</td><td>DWeLl</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>mstb</dt>
+                                    <dd>Status of M,S,T,B function
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>***(Others)</td></tr>
+                                            <tr><td>1</td><td>:</td><td>FIN</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>emergency</dt>
+                                    <dd>Status of emergency
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>(Not emergency)</td></tr>
+                                            <tr><td>1</td><td>:</td><td>EMerGency</td></tr>
+                                            <tr><td>2</td><td>:</td><td>ReSET</td></tr>
+                                            <tr><td>3</td><td>:</td><td>WAIT(FS35i only)</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>alarm</dt>
+                                    <dd>Status of alarm
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>***(Others)</td></tr>
+                                            <tr><td>1</td><td>:</td><td>ALarM</td></tr>
+                                            <tr><td>2</td><td>:</td><td>BATtery low</td></tr>
+                                            <tr><td>3</td><td>:</td><td>FAN(NC or Servo amplifier)</td></tr>
+                                            <tr><td>4</td><td>:</td><td>PS Warning</td></tr>
+                                            <tr><td>5</td><td>:</td><td>FSsB warning</td></tr>
+                                            <tr><td>6</td><td>:</td><td>INSulate warning</td></tr>
+                                            <tr><td>7</td><td>:</td><td>ENCoder warning</td></tr>
+                                            <tr><td>8</td><td>:</td><td>PMC alarm</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>edit</dt>
+                                    <dd>Status of others
+                                    <p>In case of 0i-D, the meaning of status(16,21,23,42,44,46) is changed according to the parameter No.13104#0.(same as 30i)</p>
+                                    <ul>
+                                        <li>M series (including Power Mate i)
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>****(Not editing)</td></tr>
+                                            <tr><td>1</td><td>:</td><td>EDIT(during editing)</td></tr>
+                                            <tr><td>2</td><td>:</td><td>SeaRCH(during searching)</td></tr>
+                                            <tr><td>3</td><td>:</td><td>OUTPUT(during output)</td></tr>
+                                            <tr><td>4</td><td>:</td><td>INPUT(during input)</td></tr>
+                                            <tr><td>5</td><td>:</td><td>COMPARE((during comparing)</td></tr>
+                                            <tr><td>6</td><td>:</td><td>Label SKip(label skip status)(30i, 0i-D/F are unused.)</td></tr>
+                                            <tr><td>7</td><td>:</td><td>ReSTaRt(during program restart)</td></tr>
+                                            <tr><td>8</td><td>:</td><td>HPCC(during RISC operation)(FS16i/18i only)</td></tr>
+                                            <tr><td>9</td><td>:</td><td>PTRR(during tool retraction and recovery mode)</td></tr>
+                                            <tr><td>10</td><td>:</td><td>RVRS(during retracing)</td></tr>
+                                            <tr><td>11</td><td>:</td><td>RTRY(during reprogressing)</td></tr>
+                                            <tr><td>12</td><td>:</td><td>RVED(end of retracing)</td></tr>
+                                            <tr><td>13</td><td>:</td><td>HANDLE(during handle overlapping)(30i, 0i-D/F are unused.)</td></tr>
+                                            <tr><td>14</td><td>:</td><td>OFfSeT(during tool length measurement mode)</td></tr>
+                                            <tr><td>15</td><td>:</td><td>Work OFfSet(during work zero point measurement mode)</td></tr>
+                                            <tr><td>16</td><td>:</td><td>AICC(during AI coutour control)<br/>
+                                                                         AICC(during AI coutour control)(0i-D:No.13104#0=1)<br/>
+                                                                         AI APC(during AI advanced preview control)(0i-D:No.13104#0=0)</td></tr>
+                                            <tr><td>17</td><td>:</td><td>MEmory-CHecK(checking tape memory)(30i, 0i-D/F are unused.)</td></tr>
+                                            <tr><td>18</td><td>:</td><td>CusToMer&#180;s BoarD(during customer's board control)(30i, 0i-D/F are unused.)</td></tr>
+                                            <tr><td>19</td><td>:</td><td>SAVE(saving fine torque sensing data)(30i, 0i-D/F are unused.)</td></tr>
+                                            <tr><td>20</td><td>:</td><td>AI NANO(during AI nano contour control)(30i, 0i-D/F are unused.)</td></tr>
+                                            <tr><td>21</td><td>:</td><td>AI APC(during AI advanced preview control) (21i-MA)(0i-D:No.13104#0=1)</td></tr>
+                                            <tr><td>22</td><td>:</td><td>MBL APC(during multi blocks advanced preview control) (0i-MA only)</td></tr>
+                                            <tr><td>23</td><td>:</td><td>NANO HP(Running of AI High-precision Contour Control)<br/>
+                                                                         AICC 2(during AI coutour control II)(30i, 0i-F)<br/>
+                                                                         AICC 2(during AI coutour control II)(0i-D:No.13104#0=1)<br/>
+                                                                         AICC(during AI coutour control)(0i-D:No.13104#0=0)</td></tr>
+                                            <tr><td>24</td><td>:</td><td>AI HPCC(Running of AI Nano High-precision Contour Control)</td></tr>
+                                            <tr><td>25</td><td>:</td><td>5-AXIS(Running of 5-axes machining)</td></tr>
+                                            <tr><td>26</td><td>:</td><td>LEN(change the manual active offset value:length offset change mode)</td></tr>
+                                            <tr><td>27</td><td>:</td><td>RAD(change the manual active offset value:radius offset change mode)</td></tr>
+                                            <tr><td>28</td><td>:</td><td>WZR(change the manual active offset value:workpiece origin offset change mode)</td></tr>
+
+                                            <tr><td>39</td><td>:</td><td>TCP(during tool center point control of 5-axes machining)</td></tr>
+                                            <tr><td>40</td><td>:</td><td>TWP(during tilted working plane command)</td></tr>
+                                            <tr><td>41</td><td>:</td><td>TCP+TWP(during tool center point control of 5-axes machining and tilted working plane command)</td></tr>
+                                            <tr><td>42</td><td>:</td><td>APC(Advanced Preview Control)(16i/18i/21i,0i-C)<br/>
+                                                                         APC(Advanced Preview Control)(0i-D:No.13104#0=1)</td></tr>
+                                            <tr><td>43</td><td>:</td><td>PRG-CHK(High speed program check)</td></tr>
+                                            <tr><td>44</td><td>:</td><td>APC(Advanced Preview Control)(0i-D:No.13104#0=0)</td></tr>
+                                            <tr><td>45</td><td>:</td><td>S-TCP(during smooth TCP)(30i, 0i-F)</td></tr>
+                                            <tr><td>46</td><td>:</td><td>AICC 2(during AI coutour control II)(0i-D:No.13104#0=0)</td></tr>
+                                            <tr><td>59</td><td>:</td><td>ALLSAVE(High speed program management:the programs saving in progress)</td></tr>
+                                            <tr><td>60</td><td>:</td><td>NOTSAVE(High speed program management:by the programs not saved status)</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                        </li>
+
+                                        <li>T series
+
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>****(Not editing)</td></tr>
+                                            <tr><td>1</td><td>:</td><td>EDIT(during editing)</td></tr>
+                                            <tr><td>2</td><td>:</td><td>SeaRCH(during searching)</td></tr>
+                                            <tr><td>3</td><td>:</td><td>OUTPUT(during output)</td></tr>
+                                            <tr><td>4</td><td>:</td><td>INPUT(during input)</td></tr>
+                                            <tr><td>5</td><td>:</td><td>COMPARE(during comparing)</td></tr>
+                                            <tr><td>6</td><td>:</td><td>Label SKip(label skip status)(30i, 0i-D/F are unused.)</td></tr>
+                                            <tr><td>7</td><td>:</td><td>OFfSeT(during writing mode of tool length compensation amount)</td></tr>
+                                            <tr><td>8</td><td>:</td><td>Work ShiFT(during writing mode of work shift amount)</td></tr>
+                                            <tr><td>9</td><td>:</td><td>ReSTaRt(during program restart)</td></tr>
+                                            <tr><td>10</td><td>:</td><td>16i:(Not used), 30i, 0i-F:RVRS(during retracing)</td></tr>
+                                            <tr><td>11</td><td>:</td><td>16i:(Not used), 30i, 0i-F:RTRY(during reprogressing)</td></tr>
+                                            <tr><td>12</td><td>:</td><td>16i:(Not used), 30i, 0i-F:RVED(end of retracing)</td></tr>
+                                            <tr><td>13</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>14</td><td>:</td><td>PTRR(during tool retraction and recovery mode)</td></tr>
+                                            <tr><td>15</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>16</td><td>:</td><td>AICC(during AI coutour control)<br/>
+                                                                         AICC(during AI coutour control)(0i-D:No.13104#0=1)<br/>
+                                                                         AI APC(during AI advanced preview control)(0i-D:No.13104#0=0)</td></tr>
+                                            <tr><td>17</td><td>:</td><td>MEmory-CHecK(checking tape memory)(30i, 0i-D/F are unused.)</td></tr>
+                                            <tr><td>18</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>19</td><td>:</td><td>SAVE(saving fine torque sensing data)(30i, 0i-D/F are unused.)</td></tr>
+                                            <tr><td>20</td><td>:</td><td>AI NANO(during AI nano contour control)(30i, 0i-D/F are unused.)</td></tr>
+                                            <tr><td>21</td><td>:</td><td>HPCC(during RISC operation)</td></tr>
+                                            <tr><td>22</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>23</td><td>:</td><td>NANO HP(Running of AI High-precision Contour Control)<br/>
+                                                                         AICC 2(during AI coutour control II)(30i, 0i-F)<br/>
+                                                                         AICC 2(during AI coutour control II)(0i-D:No.13104#0=1)<br/>
+                                                                         AICC(during AI coutour control)(0i-D:No.13104#0=0)</td></tr>
+                                            <tr><td>24</td><td>:</td><td>AI HPCC(Running of AI Nano High-precision Contour Control)</td></tr>
+                                            <tr><td>25</td><td>:</td><td>5-AXIS(Running of 5-axes machining)</td></tr>
+                                            <tr><td>26</td><td>:</td><td>OFSX(change the manual active offset value:X-axis offset change mode)</td></tr>
+                                            <tr><td>27</td><td>:</td><td>OFSZ(change the manual active offset value:Z-axis offset change mode)</td></tr>
+                                            <tr><td>28</td><td>:</td><td>WZR(change the manual active offset value:workpiece origin offset change mode)</td></tr>
+                                            <tr><td>29</td><td>:</td><td>OFSY(change the manual active offset value:Y-axis offset change mode)</td></tr>
+                                            <tr><td>31</td><td>:</td><td>TOFS(change the manual active offset value:Tool offset change mode)</td></tr>
+
+                                            <tr><td>39</td><td>:</td><td>TCP(during tool center point control of 5-axes machining)</td></tr>
+                                            <tr><td>40</td><td>:</td><td>TWP(during tilted working plane command)</td></tr>
+                                            <tr><td>41</td><td>:</td><td>TCP+TWP(during tool center point control of 5-axes machining and tilted working plane command)</td></tr>
+                                            <tr><td>42</td><td>:</td><td>APC(Advanced Preview Control)(16i/18i/21i,0i-C)<br/>
+                                                                         APC(Advanced Preview Control)(0i-D:No.13104#0=1)</td></tr>
+                                            <tr><td>43</td><td>:</td><td>PRG-CHK(High speed program check)</td></tr>
+                                            <tr><td>44</td><td>:</td><td>APC(Advanced Preview Control)(0i-D:No.13104#0=0)</td></tr>
+                                            <tr><td>45</td><td>:</td><td>S-TCP(during smooth TCP)(30i, 0i-F)</td></tr>
+                                            <tr><td>59</td><td>:</td><td>ALLSAVE(High speed program management:the programs saving in progress)</td></tr>
+                                            <tr><td>60</td><td>:</td><td>NOTSAVE(High speed program management:by the programs not saved status)</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                        </li>
+                                    </ul>
+                                    </dd>
+
+                                </dl>
+                            </p>
+                        </ul>
+                        <ul>
+                            <li>Series 16i/18i-W</li><p/>
+                            <p>
+<pre>
+typedef struct odbst {
+     short  dummy[2] ;    /* Not used                        */
+     short  aut ;         /* AUTOMATIC/MANUAL mode selection */
+     short  run ;         /* Status of automatic operation   */
+     short  motion ;      /* Status of axis movement,dwell   */
+     short  mstb ;        /* Status of M,S,T,B function      */
+     short  emergency ;   /* Status of emergency             */
+     short  alarm ;       /* Status of alarm                 */
+     short  edit ;        /* Status of program editing       */
+} ODBST ;
+</pre>
+                                <dl>
+                                    <dt>aut</dt>
+                                    <dd>AUTOMATIC/MANUAL mode selection
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>MDI</td></tr>
+                                            <tr><td>1</td><td>:</td><td>MEM</td>        </tr>
+                                            <tr><td>3</td><td>:</td><td>EDT</td>        </tr>
+                                            <tr><td>4</td><td>:</td><td>HAND</td>        </tr>
+                                            <tr><td>5</td><td>:</td><td>JOG</td>        </tr>
+                                            <tr><td>10</td><td>:</td><td>TAPE</td>        </tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+                                    <dt>run</dt>
+                                    <dd>Status of automatic operation
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>NOT READY</td>        </tr>
+                                            <tr><td>1</td><td>:</td><td>M-READY</td>        </tr>
+                                            <tr><td>2</td><td>:</td><td>C-START</td>        </tr>
+                                            <tr><td>3</td><td>:</td><td>F-HOLD</td>        </tr>
+                                            <tr><td>4</td><td>:</td><td>B-STOP</td>        </tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+                                    <dt>motion</dt>
+                                    <dd>Status of axis movement, dwell
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>****</td>    </tr>
+                                            <tr><td>1</td><td>:</td><td>CMTN</td>    </tr>
+                                            <tr><td>2</td><td>:</td><td>CDWL</td>    </tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+                                    <dt>mstb</dt>
+                                    <dd>Status of M,S,T,B function
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>****</td>    </tr>
+                                            <tr><td>1</td><td>:</td><td>CFIN</td>    </tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+                                    <dt>emergency</dt>
+                                    <dd>(Not used)</dd>
+                                    <dt>alarm</dt>
+                                    <dd>Status of alarm
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>****(Not emergency)</td>    </tr>
+                                            <tr><td>1</td><td>:</td><td>ALARM</td>            </tr>
+                                            <tr><td>2</td><td>:</td><td>BATTERY LOW</td>    </tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+                                    <dt>edit</dt>
+                                    <dd>Status of program editing
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>****(Not editing)</td>                </tr>
+                                            <tr><td>1</td><td>:</td><td>EDITING(during search)</td>            </tr>
+                                            <tr><td>2</td><td>:</td><td>SEARCH(during search)</td>            </tr>
+                                            <tr><td>3</td><td>:</td><td>RESTART(during restart)</td>    </tr>
+                                            <tr><td>4</td><td>:</td><td>RETRACE(during retrace)</td>        </tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+                                </dl>
+                            </p>
+                        </ul>
+                    </content>
+                </item>
+            </vc>
+        </common>
+
+        <!-- is Argument Start -->
+        <is>
+            <hssb>
+                <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>statinfo </name>
+                    <type>out</type>
+                    <content>
+                        Pointer to the ODBST structure including the status information of CNC. <p/>
+                        <ul>
+            <p/>
+                            <p>* In case of multi-path, all status exist for each path.</p>
+                            <p>
+<pre>
+typedef struct odbst {
+     short  hdck ;        /* Status of manual handle re-trace */
+     short  tmmode ;      /* T/M mode selection              */
+     short  aut ;         /* AUTOMATIC/MANUAL mode selection */
+     short  run ;         /* Status of automatic operation   */
+     short  motion ;      /* Status of axis movement,dwell   */
+     short  mstb ;        /* Status of M,S,T,B function      */
+     short  emergency ;   /* Status of emergency             */
+     short  alarm ;       /* Status of alarm                 */
+     short  edit ;        /* Status of program editing       */
+} ODBST ;
+</pre>
+                                <dl>
+                                    <dt>hdck</dt>
+                                    <dd>Status of manual handle re-trace
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>Invalid of manual handle re-trace      </td></tr>
+                                            <tr><td>1</td><td>:</td><td>M.H.RTR.(Manual handle re-trace)       </td></tr>
+                                            <tr><td>2</td><td>:</td><td>NO RVRS.(Backward movement prohibition)</td></tr>
+                                            <tr><td>3</td><td>:</td><td>NO CHAG.(Direction change prohibition) </td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>tmmode</dt>
+                                    <dd>T/M mode selection (only with compound machining function) 
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>T mode</td></tr>
+                                            <tr><td>1</td><td>:</td><td>M mode</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>aut</dt>
+                                    <dd>AUTOMATIC/MANUAL mode selection
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>MDI</td></tr>
+                                            <tr><td>1</td><td>:</td><td>MEMory</td></tr>
+                                            <tr><td>2</td><td>:</td><td>****</td></tr>
+                                            <tr><td>3</td><td>:</td><td>EDIT</td></tr>
+                                            <tr><td>4</td><td>:</td><td>HaNDle</td></tr>
+                                            <tr><td>5</td><td>:</td><td>JOG</td></tr>
+                                            <tr><td>6</td><td>:</td><td>Teach in JOG</td></tr>
+                                            <tr><td>7</td><td>:</td><td>Teach in HaNDle</td></tr>
+                                            <tr><td>8</td><td>:</td><td>INC&#183;feed</td></tr>
+                                            <tr><td>9</td><td>:</td><td>REFerence</td></tr>
+                                            <tr><td>10</td><td>:</td><td>ReMoTe</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>run</dt>
+                                    <dd>Status of automatic operation
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>****(reset)</td></tr>
+                                            <tr><td>1</td><td>:</td><td>STOP</td></tr>
+                                            <tr><td>2</td><td>:</td><td>HOLD</td></tr>
+                                            <tr><td>3</td><td>:</td><td>STaRT</td></tr>
+                                            <tr><td>4</td><td>:</td><td>MSTR(during retraction and re-positioning of tool retraction and recovery, and operation of JOG MDI)</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>motion</dt>
+                                    <dd>Status of axis movement, dwell
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>***</td></tr>
+                                            <tr><td>1</td><td>:</td><td>MoTioN</td></tr>
+                                            <tr><td>2</td><td>:</td><td>DWeLl</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>mstb</dt>
+                                    <dd>Status of M,S,T,B function
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>***(Others)</td></tr>
+                                            <tr><td>1</td><td>:</td><td>FIN</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>emergency</dt>
+                                    <dd>Status of emergency
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>(Not emergency)</td></tr>
+                                            <tr><td>1</td><td>:</td><td>EMerGency</td></tr>
+                                            <tr><td>2</td><td>:</td><td>ReSET</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>alarm</dt>
+                                    <dd>Status of alarm
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>***(Others)</td></tr>
+                                            <tr><td>1</td><td>:</td><td>ALarM</td></tr>
+                                            <tr><td>2</td><td>:</td><td>BATtery low</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>edit</dt>
+                                    <dd>Status of others
+                                    <ul>
+                                        <li>M series (including Power Mate i)
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>****(Not editing)</td></tr>
+                                            <tr><td>1</td><td>:</td><td>EDIT(during editing)</td></tr>
+                                            <tr><td>2</td><td>:</td><td>SeaRCH(during searching)</td></tr>
+                                            <tr><td>3</td><td>:</td><td>OUTPUT(during output)</td></tr>
+                                            <tr><td>4</td><td>:</td><td>INPUT(during input)</td></tr>
+                                            <tr><td>5</td><td>:</td><td>COMPARE((during comparing)</td></tr>
+                                            <tr><td>6</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>7</td><td>:</td><td>ReSTaRt(during program restart)</td></tr>
+                                            <tr><td>8</td><td>:</td><td>HPCC(during RISC operation)</td></tr>
+                                            <tr><td>9</td><td>:</td><td>PTRR(during tool retraction and recovery mode)</td></tr>
+                                            <tr><td>10</td><td>:</td><td>RVRS(during retracing)</td></tr>
+                                            <tr><td>11</td><td>:</td><td>RTRY(during reprogressing)</td></tr>
+                                            <tr><td>12</td><td>:</td><td>RVED(end of retracing)</td></tr>
+                                            <tr><td>13</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>14</td><td>:</td><td>OFfSeT(during tool length measurement mode)</td></tr>
+                                            <tr><td>15</td><td>:</td><td>Work OFfSet(during work zero point measurement mode)</td></tr>
+                                            <tr><td>16</td><td>:</td><td>AICC(during AI coutour control)(30i)<br/>
+                                                                         AI APC(during AI advanced preview control)(0i-D)</td></tr>
+                                            <tr><td>17</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>18</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>19</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>20</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>21</td><td>:</td><td>AI APC(during AI advanced preview control)</td></tr>
+                                            <tr><td>22</td><td>:</td><td>MBL APC(during multi blocks advanced preview control)</td></tr>
+                                            <tr><td>23</td><td>:</td><td>AICC 2(during AI coutour control II)(30i)<br/>
+                                                                         AICC(during AI coutour control)(0i-D)</td></tr>
+                                            <tr><td>24</td><td>:</td><td>AI HPCC(Running of AI Nano High-precision Contour Control)</td></tr>
+                                            <tr><td>25</td><td>:</td><td>5-AXIS(Running of 5-AXIS machining)</td></tr>
+                                            <tr><td>26</td><td>:</td><td>LEN(change the manual active offset value:length offset change mode)</td></tr>
+                                            <tr><td>27</td><td>:</td><td>RAD(change the manual active offset value:radius offset change mode)</td></tr>
+                                            <tr><td>28</td><td>:</td><td>WZR(change the manual active offset value:workpiece origin offset change mode)</td></tr>
+
+                                            <tr><td>39</td><td>:</td><td>TCP(during tool center point control of 5-axes machining)</td></tr>
+                                            <tr><td>40</td><td>:</td><td>TWP(during tilted working plane command)</td></tr>
+                                            <tr><td>41</td><td>:</td><td>TCP+TWP(during tool center point control of 5-axes machining and tilted working plane command)</td></tr>
+                                            <tr><td>42</td><td>:</td><td>APC(Advanced Preview Control)(16i/18i/21i,0i-C)</td></tr>
+                                            <tr><td>43</td><td>:</td><td>PRG-CHK(High speed program check)</td></tr>
+                                            <tr><td>44</td><td>:</td><td>APC(Advanced Preview Control)(0i-D)</td></tr>
+                                            <tr><td>45</td><td>:</td><td>S-TCP(during smooth TCP)(30i)</td></tr>
+                                            <tr><td>46</td><td>:</td><td>AICC 2(during AI coutour control II)(0i-D)</td></tr>
+                                            <tr><td>59</td><td>:</td><td>ALLSAVE(High speed program management:the programs saving in progress)</td></tr>
+                                            <tr><td>60</td><td>:</td><td>NOTSAVE(High speed program management:by the programs not saved status)</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                        </li>
+
+                                        <li>T series
+
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>****(Not editing)</td></tr>
+                                            <tr><td>1</td><td>:</td><td>EDIT(during editing)</td></tr>
+                                            <tr><td>2</td><td>:</td><td>SeaRCH(during searching)</td></tr>
+                                            <tr><td>3</td><td>:</td><td>OUTPUT(during output)</td></tr>
+                                            <tr><td>4</td><td>:</td><td>INPUT(during input)</td></tr>
+                                            <tr><td>5</td><td>:</td><td>COMPARE(during comparing)</td></tr>
+                                            <tr><td>6</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>7</td><td>:</td><td>OFfSeT(during writing mode of tool length compensation amount)</td></tr>
+                                            <tr><td>8</td><td>:</td><td>Work ShiFT(during writing mode of work shift amount)</td></tr>
+                                            <tr><td>9</td><td>:</td><td>ReSTaRt(during program restart)</td></tr>
+                                            <tr><td>10</td><td>:</td><td>RVRS(during retracing)</td></tr>
+                                            <tr><td>11</td><td>:</td><td>RTRY(during reprogressing)</td></tr>
+                                            <tr><td>12</td><td>:</td><td>RVED(end of retracing)</td></tr>
+                                            <tr><td>13</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>14</td><td>:</td><td>PTRR(during tool retraction and recovery mode)</td></tr>
+                                            <tr><td>15</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>16</td><td>:</td><td>AICC1(during AI coutour control)(30i)</td></tr>
+                                            <tr><td>17</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>18</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>19</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>20</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>21</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>22</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>23</td><td>:</td><td>AICC 2(during AI coutour control II)(30i)</td></tr>
+                                            <tr><td>26</td><td>:</td><td>OFSX(change the manual active offset value:X-axis offset change mode)</td></tr>
+                                            <tr><td>27</td><td>:</td><td>OFSZ(change the manual active offset value:Z-axis offset change mode)</td></tr>
+                                            <tr><td>28</td><td>:</td><td>WZR(change the manual active offset value:workpiece origin offset change mode)</td></tr>
+                                            <tr><td>29</td><td>:</td><td>OFSY(change the manual active offset value:Y-axis offset change mode)</td></tr>
+                                            <tr><td>31</td><td>:</td><td>TOFS(change the manual active offset value:Tool offset change mode)</td></tr>
+
+                                            <tr><td>39</td><td>:</td><td>TCP(during tool center point control of 5-axes machining)</td></tr>
+                                            <tr><td>40</td><td>:</td><td>TWP(during tilted working plane command)</td></tr>
+                                            <tr><td>41</td><td>:</td><td>TCP+TWP(during tool center point control of 5-axes machining and tilted working plane command)</td></tr>
+                                            <tr><td>42</td><td>:</td><td>APC(Advanced Preview Control)(16i/18i/21i,0i-C)</td></tr>
+                                            <tr><td>43</td><td>:</td><td>PRG-CHK(High speed program check)</td></tr>
+                                            <tr><td>44</td><td>:</td><td>APC(Advanced Preview Control)(0i-D)</td></tr>
+                                            <tr><td>45</td><td>:</td><td>S-TCP(during smooth TCP)(30i)</td></tr>
+                                            <tr><td>59</td><td>:</td><td>ALLSAVE(High speed program management:the programs saving in progress)</td></tr>
+                                            <tr><td>60</td><td>:</td><td>NOTSAVE(High speed program management:by the programs not saved status)</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                        </li>
+                                    </ul>
+                                    </dd>
+                                </dl>
+                            </p>
+                        </ul>
+                    </content>
+                </item>
+                </vc>
+            </hssb>
+        </is>
+        <!-- is Argument End -->
+    </argument>
+
+
+
+    <errcode>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+        <add><b></b></add>
+
+        <is>
+            <!-- M -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item class="xis">
+            <name>cnc_statinfo2</name>
+            <file>Misc/cnc_statinfo2.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>pmc_rdpmcinfo</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI pmc_rdpmcinfo(unsigned short FlibHndl, short adr_type, ODBPMCINF *pmcif);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                Reads the data information about the attribute of each kind of PMC, the effective range of PMC address, etc.
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle.
+                            See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>adr_type</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the kind of PMC address.
+                            <table class="dd">
+                                <tr>
+                                    <td>0,...</td>
+                                    <td>:</td>
+                                    <td>refer to the table of <a href="Pmc/pmc_rdpmcrng.htm" target="_parent">pmc_rdpmcrng</a> function</td>
+                                </tr>
+                                <tr>
+                                    <td>-1</td>
+                                    <td>:</td>
+                                    <td>all address information</td>
+                                </tr>
+                            </table>
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>pmcif</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the ODBPMCINF structure including the PMC data information.<br/>
+                            The ODBPMCINF structure is as follows.
+                        </p>
+<pre>
+typedef struct odbpmcinf {
+    short        datano ;   /* number of PMC data information */
+    struct       {
+        char           pmc_adr ;  /* kind of PMC address */
+        char           adr_attr ; /* attribute of PMC address */
+        unsigned short top_num ;  /* top number of PMC address */
+        unsigned short last_num ;/* last number of PMC address */
+    } info[64] ;
+} ODBPMCINF ;
+</pre>
+                        <dl>
+                            <dt>datano</dt>
+                                <dd>Number of PMC data information (1 - 64)</dd>
+                                <dd>* Some PMC address may be separated into several parts.</dd>
+                            <dt>pmc_adr</dt>
+                                <dd>Type of PMC address (ASCII CODE)</dd>
+                            <dt>adr_attr</dt>
+                                <dd>Attribute of PMC address</dd>
+                                <dd>
+                                <table class="dd">
+                                    <colgroup valign="top">
+                                    <colgroup valign="top">
+                                    <colgroup valign="top">
+                                    <tr>
+                                        <td>bit 7</td>
+                                        <td>:</td>
+                                        <td>Write protection</td>
+                                            <table class="dd">
+                                                <tr>
+                                                    <td>0</td>
+                                                    <td>:</td>
+                                                    <td>enable</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>:</td>
+                                                    <td>disable</td>
+                                                </tr>
+                                            </table>
+                                    </tr>
+                                    <tr>
+                                        <td>bit 0,..,6</td>
+                                        <td>:</td>
+                                        <td>(Not used)</td>
+                                    </tr>
+                                    </colgroup>
+                                    </colgroup>
+                                    </colgroup>
+                                </table>
+                                </dd>
+                            <dt>top_num</dt>
+                                <dd>Top number of PMC address</dd>
+                            <dt>last_num</dt>
+                                <dd>Last number of PMC address</dd>
+                                <dd>* Refer to the table of <a href="Pmc/pmc_rdpmcrng.htm" target="_parent">pmc_rdpmcrng</a>                                        function.</dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>
+                data attribute error<br/>
+                Kind of data(adr_type) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                no option<br/>
+                The extended driver/library function is necessary.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter></parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>pmc_rdpmcrng</name>
+            <file>Pmc/pmc_rdpmcrng.htm</file>
+        </item>
+        <item>
+            <name>pmc_wrpmcrng</name>
+            <file>Pmc/pmc_wrpmcrng.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

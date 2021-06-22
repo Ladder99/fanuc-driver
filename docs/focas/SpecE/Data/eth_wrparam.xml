@@ -1,0 +1,844 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>eth_wrparam</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI eth_wrparam(unsigned short FlibHndl, short type, IN_ETHPRMFLAG *flag, IN_ETHPRM *param); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                Sets the parameters for Ethernet function : <!--Embedded Ethernet[Internal port ,PCMIA Card],--> Fast Ethernet board, Fast DATA SERVER board<!--, Windows CE Embedded Ethernet[Internal port ,PCMCIA Card]-->
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details. </p>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                        Specify the kind of parameters.<br/>
+                        Kind of parameter is as follows.<br/>
+                        <dl>
+                            <dd>Embedded Ethernet[Internal port]</dd>
+                            <dd><table border="0" class = "dd">
+                            <tr> <td>1   </td><td>:</td><td>Common parameter</td> </tr>
+                            <tr> <td>2   </td><td>:</td><td>FOCAS2/Ethernet parameter</td> </tr>
+                            <tr> <td>3   </td><td>:</td><td>FTP Transfer parameter</td> </tr>
+<!--                        <tr> <td>5   </td><td>:</td><td>Remote machine diagnose parameter</td> </tr> -->
+<!--                        <tr> <td>6   </td><td>:</td><td>FACTOLINK parameter</td> </tr>               -->
+<!--                        <tr> <td>7   </td><td>:</td><td>Maintenance parameter</td> </tr>             -->
+                            </table></dd>
+
+                            <dd>Embedded Ethernet[PCMCIA LAN Card]</dd>
+                            <dd><table border="0" class = "dd">
+                            <tr> <td>21   </td><td>:</td><td>Common parameter</td> </tr>
+                            <tr> <td>22   </td><td>:</td><td>FOCAS2/Ethernet parameter</td> </tr>
+                            <tr> <td>23   </td><td>:</td><td>FTP Transfer parameter</td> </tr>
+<!--                        <tr> <td>25   </td><td>:</td><td>Remote machine diagnose parameter</td> </tr> -->
+<!--                        <tr> <td>26   </td><td>:</td><td>FACTOLINK parameter</td> </tr>               -->
+<!--                        <tr> <td>27   </td><td>:</td><td>Maintenance parameter</td> </tr>             -->
+                            </table></dd>
+
+                            <dd>Fast Ethernet board or Fast DATA SERVER board</dd>
+                            <dd><table border="0" class = "dd">
+                            <tr> <td>41   </td><td>:</td><td>Common parameter</td> </tr>
+                            <tr> <td>42   </td><td>:</td><td>FOCAS2/Ethernet parameter</td> </tr>
+                            <tr> <td>44   </td><td>:</td><td>DATA SERVER parameter</td> </tr>
+<!--                        <tr> <td>45   </td><td>:</td><td>Remote machine diagnose parameter</td> </tr> -->
+<!--                        <tr> <td>46   </td><td>:</td><td>FACTOLINK parameter</td> </tr> -->
+<!--                        <tr> <td>47   </td><td>:</td><td>Maintenance parameter</td> </tr> -->
+                            </table></dd>
+<!--
+                            <dd>Embedded Ethernet(WinCE)[Internal port]</dd>
+                            <dd><table border="0" class = "dd">
+                            <tr> <td>61   </td><td>:</td><td>Common parameter</td> </tr>
+                            <tr> <td>62   </td><td>:</td><td>FOCAS2/Ethernet parameter</td> </tr>
+                            <tr> <td>63   </td><td>:</td><td>FTP Transfer parameter</td> </tr>
+                            <tr> <td>65   </td><td>:</td><td>Remote machine diagnose parameter</td> </tr>
+                            <tr> <td>66   </td><td>:</td><td>FACTOLINK parameter</td> </tr>
+                            <tr> <td>67   </td><td>:</td><td>Maintenance parameter</td> </tr>
+                            </table></dd>
+
+                            <dd>Embedded Ethernet(WinCE)[PCMCIA LAN Card]</dd>
+                            <dd><table border="0" class = "dd">
+                            <tr> <td>81   </td><td>:</td><td>Common parameter</td> </tr>
+                            <tr> <td>82   </td><td>:</td><td>FOCAS2/Ethernet parameter</td> </tr>
+                            <tr> <td>83   </td><td>:</td><td>FTP Transfer parameter</td> </tr>
+                            <tr> <td>85   </td><td>:</td><td>Remote machine diagnose parameter</td> </tr>
+                            <tr> <td>86   </td><td>:</td><td>FACTOLINK parameter</td> </tr>
+                            <tr> <td>87   </td><td>:</td><td>Maintenance parameter</td> </tr>
+                            </table></dd>
+-->
+                        </dl>
+                    </content>
+                </item>
+
+                <item>
+                    <name>flag</name>
+                    <type>in</type>
+                    <content>
+                        Specify a pointer to the IN_ETHPRMFLAG structure for that marks an element of the setting parameters.<br/>
+                        The IN_ETHPRMFLAG structure is as follows.<br/>
+<pre>
+typedef struct _in_ethprm_flag {
+    union {
+        COMMON_PRM_FLG      common;
+        FOCAS2_PRM_FLG      focas2;
+        FTPTRANS_PRM_FLG    ftpTrans;
+        DTSVR_PRM_FLG       dataServer;
+<!--    RMTDIAG_PRM_FLG     remoteDiag; -->
+<!--    FACTO_PRM_FLG       factolink; -->
+<!--    MAINTAIN_PRM_FLG    maintain; -->
+    } flg;
+} IN_ETHPRMFLAG;
+
+typedef struct _common_prm_flg {
+    char    OwnIpAddress;
+    char    SubNetmask;
+    char    RouterIpAddress;
+    char    DnsServer1IpAddress;
+    char    DnsServer2IpAddress;
+    char    OwnHostName;
+    char    OwnDomain;
+} COMMON_PRM_FLG;
+
+typedef struct _focas2_prm_flg {
+    char    TcpPort;
+    char    UdpPort;
+    char    TimeInterval;
+} FOCAS2_PRM_FLG;
+
+typedef struct _ftptrans_prm_flg {
+    FTP_CLIENT_PRM_FLG  opposite[3];
+} FTPTRANS_PRM_FLG;
+
+typedef struct _dtsvr_prm_flg {
+    FTP_CLIENT_PRM_FLG  opposite[3];
+    FTP_SERVER_PRM_FLG  own;
+} DTSVR_PRM_FLG;
+
+typedef struct _ftp_client_prm_flg {
+    char    HostName;
+    char    ControlPort;
+    char    Dummy;
+    char    UserName;
+    char    Password;
+    char    LoginDirectory;
+} FTP_CLIENT_PRM_FLG;
+
+typedef struct _ftp_server_prm_flg {
+    char    UserName;
+    char    Password;
+    char    LoginDirectory;
+} FTP_SERVER_PRM_FLG;
+<!--
+typedef sturct _rmtdiag_prm_flg {
+    char                    MtbInformation;
+    char                    MachineInformation;
+    RMTDIAG_CLIENT_PRM_FLG  opposite[3];
+} RMTDIAG_PRM_FLG;
+
+typedef struct _rmtdiag_client_prm_flg {
+    char    HostName;
+    char    Port;
+    char    InquiryName;
+} RMTDIAG_CLIENT_PRM_FLG;
+
+typedef struct _facto_prm_flg {
+    FACTO_CLIENT_PRM_FLG    opposite[3];
+} FACTO_PRM_FLG;
+
+typedef struct _facto_client_prm_flg {
+    char    HostName;
+    char    Port;
+} FACTO_CLIENT_PRM_FLG;
+
+typedef sturct _maintain_prm_flg {
+    PING_PRM_FLG    opposite;
+} MAINTAIN_PRM_FLG;
+
+typedef sturct _ping_prm_flg {
+    char    HostName;
+    char    Count;
+} PING_PRM_FLG;
+-->
+</pre>
+
+<dl>
+<dt>flg.common.OwnIpAddress</dt>
+<dt>flg.common.SubNetmask</dt>
+<dt>flg.common.RouterIpAddress</dt>
+<dt>flg.common.DnsServer1IpAddress</dt>
+<dt>flg.common.DncServer2IpAddress</dt>
+<dt>flg.common.OwnHostName</dt>
+<dt>flg.common.OwnDomain</dt>
+<dt>flg.focas2.TcpPort</dt>
+<dt>flg.focas2.UpdPort</dt>
+<dt>flg.focas2.TimeInterval</dt>
+<dt>flg.ftpTrans.opposite[n].HostName</dt>
+<dt>flg.ftpTrans.opposite[n].ControlPort</dt>
+<dt>flg.ftpTrans.opposite[n].UserName</dt>
+<dt>flg.ftpTrans.opposite[n].Password</dt>
+<dt>flg.ftpTrans.opposite[n].LoginDirectory</dt>
+<dt>flg.dataServer.opposite[n].HostName</dt>
+<dt>flg.dataServer.opposite[n].ControlPort</dt>
+<dt>flg.dataServer.opposite[n].UserName</dt>
+<dt>flg.dataServer.opposite[n].Password</dt>
+<dt>flg.dataServer.opposite[n].LoginDirectory</dt>
+<dt>flg.dataServer.own.UserName</dt>
+<dt>flg.dataServer.own.Password</dt>
+<dt>flg.dataServer.own.LoginDirectory</dt>
+<!--
+<dt>flg.remoteDiag.MtbInformation</dt>
+<dt>flg.remoteDiag.MachineInformation</dt>
+<dt>flg.remoteDiag.opposite[n].HostName</dt>
+<dt>flg.remoteDiag.opposite[n].Port</dt>
+<dt>flg.remoteDiag.opposite[n].InquiryName</dt>
+<dt>flg.factolink.opposite[n].HostName</dt>
+<dt>flg.factolink.opposite[n].Port</dt>
+<dt>flg.maintain.opposite.HostName</dt>
+<dt>flg.maintain.opposite.Count</dt>
+-->
+<dd>Set a substitue value to 1. If that valuses are 0(zero), it is not able to set on the IN_ETHPRM structure.</dd>
+</dl>
+                    </content>
+                </item>
+
+                <item>
+                    <name>param</name>
+                    <type>in</type>
+                    <content>
+                        Specify a pointer to IN_ETHPRM structure to store the setting parameter.<br/>
+                        The IN_ETHPRM structure is as follows.<br/>
+<pre>
+typedef struct _in_ethprm {
+    short   reserve01;
+    short   reserve02;
+    short   reserve03;
+    short   reserve04;
+    short   reserve05;
+    short   reserve06;
+    union {
+        COMMON_PRM      common;
+        FOCAS2_PRM      focas2;
+        FTPTRANS_PRM    ftpTrans;
+        DTSVR_PRM2      dataServer;
+<!--    RMTDIAG_PRM     remoteDiag; -->
+<!--    FACTO_PRM       factolink; -->
+<!--    MAINTAIN_PRM    maintain; -->
+    } prm;
+} IN_ETHPRM;
+
+typedef struct _common_prm {
+    char    OwnMacAddress[13];
+    char    OwnIpAddress[40];
+    char    SubNetmask[16];
+    char    RouterIpAddress[40];
+    char    DnsServer1IpAddress[40];
+    char    DnsServer2IpAddress[40];
+    char    OwnHostName[32];
+    char    OwnDomain[63];
+} COMMON_PRM;   /* Common parameter */
+
+typedef struct _focas2_prm {
+    unsigned long   TcpPort;
+    unsigned long   UdpPort;
+    unsigned long   TimeInterval;
+} FOCAS2_PRM;   /* Parameter for FOCAS2/Ethernet */
+
+typedef struct _ftptrans_prm {
+    FTP_CLIENT_PRM  opposite[3];
+} FTPTRANS_PRM; /* Parameter for FTP transfer */
+
+typedef struct _dtsvr_prm {
+    FTP_CLIENT_PRM  opposite[3];
+    FTP_SERVER_PRM  own;
+} DTSVR_PRM;    /* Parameter for DATA SERVER */
+
+typedef struct _ftp_client_prm {
+    char            HostName[64];
+    unsigned long   ControlPort;
+    unsigned long   Dummy;
+    char            UserName[32];
+    char            Password[32];
+    char            LoginDirectory[128];
+} FTP_CLIENT_PRM;
+
+typedef struct _ftp_server_prm {
+    char            UserName[32];
+    char            Password[32];
+    char            LoginDirectory[128];
+} FTP_SERVER_PRM
+<!--
+typedef struct _rmtdiag_prm {
+    char                MtbInformation[17];
+    char                MachineInformation[17];
+    RMTDIAG_CLIENT_PRM  opposite[3];
+} RMTDIAG_PRM;  /* Parameter for machine remote diagnose */
+
+typedef struct _rmtdiag_client_prm {
+    char            HostName[64];
+    unsigned long   Port;
+    char            InquiryName[64];
+} RMTDIAG_CLIENT_PRM;
+
+typedef struct _factolink_prm {
+    FACTOLINK_CLIENT_PRM    opposite[3];
+} FACTO_PRM;    /* Parameter for FACTOLINK */
+
+typedef struct _factolink_client_prm {
+    char            HostName[64];
+    unsigned long   Port;
+} FACTOLINK_CLIENT_PRM;
+
+typedef struct _maintenance_prm {
+    PING_PRM        opposite;
+} MAINTAIN_PRM; /* Parameter for maintenance */
+
+typedef struct _ping_prm {
+    char            HostName[64];
+    unsigned short  Count;
+} PING_PRM;
+-->
+</pre>
+                        <dl>
+                            <dt>reserve01,..,reserve06</dt>
+                            <dd>These variables are unable to use.</dd>
+                            <dd>The input values on these variables are ignored on this function.</dd>
+
+                            <dt>prm.common.OwnIpAddress</dt>
+                            <dd>IP Address</dd>
+                            <dd>The Ascii string less than 40 characters which is included NULL.</dd>
+                            <dd>Ex) "192.168.0.100"</dd>
+
+                            <dt>prm.common.SubNetmask</dt>
+                            <dd>Subnet mask</dd>
+                            <dd>The Ascii string less than 16 characters which is included NULL.</dd>
+                            <dd>Ex) "255.255.255.0"</dd>
+
+                            <dt>prm.common.RouterIpAddress</dt>
+                            <dd>Router's IP Address</dd>
+                            <dd>The Ascii string less than 40 characters which is included NULL.</dd>
+                            <dd>Ex) "192.168.0.253"</dd>
+
+                            <dt>prm.common.DnsServer1IpAddress</dt>
+                            <dd>Dns Server IP Address</dd>
+                            <dd>The Ascii string less than 40 characters which is included NULL.</dd>
+                            <dd>Ex) "192.168.0.252"</dd>
+
+                            <dt>prm.common.DnsServer2IpAddress</dt>
+                            <dd>Alternative Dns Server IP Address</dd>
+                            <dd>The Ascii string less than 40 characters whic ish included NULL.</dd>
+                            <dd>Ex) "192.168.0.251"</dd>
+
+                            <dt>prm.common.OwnHostName</dt>
+                            <dd>Host Name on CNC</dd>
+                            <dd>The Ascii string less than 32 characters which is included NULL.</dd>
+                            <dd>However, max size is 64 characters which is added OwnHostName length to OwnDomain length.</dd>
+                            <dd>Ex) "cnc"</dd>
+
+                            <dt>prm.common.OwnDomain</dt>
+                            <dd>Domain name</dd>
+                            <dd>The Ascii string less than 63 characters which is included NULL.</dd>
+                            <dd>However, max size is 64 characters which add OwnHostName length to OwnDomain length.</dd>
+                            <dd>Ex) "factory"</dd>
+
+                            <dt>prm.focas2.TcpPort</dt>
+                            <dd>Port number for TCP</dd>
+                            <dd>Used by FOCAS2/Ethernet<!-- or DNC1/Ethernet --></dd>
+                            <dd>Range 5001,..,65534 or 0</dd>
+                            <dd>Ex) 8193</dd>
+
+                            <dt>prm.focas2.UdpPort</dt>
+                            <dd>Port number for UDP</dd>
+<!--                        <dd>Used by DNC1/Ethernet</dd> -->
+                            <dd>Range 5001,..,65535 or 0</dd>
+                            <dd>Ex) 8192</dd>
+
+                            <dt>prm.focas2.TimeInterval</dt>
+                            <dd>Time interval which is transfered by broardcast frame (Unit:10ms)</dd>
+<!--                        <dd>Used by DNC1/Ethernet</dd> -->
+                            <dd>Range 10,..,65535 or 0</dd>
+                            <dd>Ex) 50</dd>
+
+                            <dt>prm.ftpTrans.opposite[n].HostName</dt>
+                            <dd>Host name or IP address which is assigned to FTP server.</dd>
+                            <dd>The Ascii string less than 64 characters which included NULL.</dd>
+                            <dd>n range(0,..,2)</dd>
+                            <dd><table border="0" class="dd">
+                                <tr> <td>0   </td><td>:</td><td>Connection one</td> </tr>
+                                <tr> <td>1   </td><td>:</td><td>Connection two</td> </tr>
+                                <tr> <td>2   </td><td>:</td><td>Connection three</td> </tr>
+                            </table></dd>
+                            <dd>Ex) "ftp.factory" or "192.168.0.250"</dd>
+
+                            <dt>prm.ftpTrans.opposite[n].ControlPort</dt>
+                            <dd>Control port number which is assigned to FTP server.</dd>
+                            <dd>n range(0,..,2)</dd>
+                            <dd><table border="0" class="dd">
+                                <tr> <td>0   </td><td>:</td><td>Connection one</td> </tr>
+                                <tr> <td>1   </td><td>:</td><td>Connection two</td> </tr>
+                                <tr> <td>2   </td><td>:</td><td>Connection three</td> </tr>
+                            </table></dd>
+                            <dd>Range 1,..,65535</dd>
+                            <dd>Ex) 21</dd>
+
+                            <dt>prm.ftpTrans.opposite[n].UserName</dt>
+                            <dd>User name to login the FTP server.</dd>
+                            <dd>The Ascii string less than 32 characters which is included NULL.</dd>
+                            <dd>n range(0,..,2)</dd>
+                            <dd><table border="0" class="dd">
+                                <tr> <td>0   </td><td>:</td><td>Connection one</td> </tr>
+                                <tr> <td>1   </td><td>:</td><td>Connection two</td> </tr>
+                                <tr> <td>2   </td><td>:</td><td>Connection three</td> </tr>
+                            </table></dd>
+                            <dd>Ex) "user"</dd>
+
+                            <dt>prm.ftpTrans.opposite[n].Password</dt>
+                            <dd>Password to login the FTP server.</dd>
+                            <dd>n range(0,..,2)</dd>
+                            <dd><table border="0" class="dd">
+                                <tr> <td>0   </td><td>:</td><td>Connection one</td> </tr>
+                                <tr> <td>1   </td><td>:</td><td>Connection two</td> </tr>
+                                <tr> <td>2   </td><td>:</td><td>Connection three</td> </tr>
+                            </table></dd>
+                            <dd>Ex) "user1234"</dd>
+
+                            <dt>prm.ftpTrans.opposite[n].LoginDirectory</dt>
+                            <dd>Folder name which is able to login the FTP server.</dd>
+                            <dd>The Ascii string less than 128 characters which is included NULL.</dd>
+                            <dd>n range 0,..,2</dd>
+                            <dd><table border="0" class="dd">
+                                <tr> <td>0   </td><td>:</td><td>Connection one</td> </tr>
+                                <tr> <td>1   </td><td>:</td><td>Connection two</td> </tr>
+                                <tr> <td>2   </td><td>:</td><td>Connection three</td> </tr>
+                            </table></dd>
+                            <dd>Ex) "/ncdata"</dd>
+
+                            <dt>prm.dataServer.opposite[n].HostName</dt>
+                            <dd>Host name or IP address which is assigned to DATA SERVER.</dd>
+                            <dd>The Ascii string less than 64 characters which is included NULL.</dd>
+                            <dd>n range(0,..,2)</dd>
+                            <dd><table border="0" class="dd">
+                                <tr> <td>0   </td><td>:</td><td>Connection one</td> </tr>
+                                <tr> <td>1   </td><td>:</td><td>Connection two</td> </tr>
+                                <tr> <td>2   </td><td>:</td><td>Connection three</td> </tr>
+                            </table></dd>
+                            <dd>Ex) "ftp.factory" or "192.168.0.250"</dd>
+
+                            <dt>prm.dataServer.opposite[n].ControlPort</dt>
+                            <dd>Control port number which is assigned to DATA SERVER.</dd>
+                            <dd>n range(0,..,2)</dd>
+                            <dd><table border="0" class="dd">
+                                <tr> <td>0   </td><td>:</td><td>Connection one</td> </tr>
+                                <tr> <td>1   </td><td>:</td><td>Connection two</td> </tr>
+                                <tr> <td>2   </td><td>:</td><td>Connection three</td> </tr>
+                            </table></dd>
+                            <dd>Range 1,..,65535</dd>
+                            <dd>Ex) 21</dd>
+
+                            <dt>prm.dataServer.opposite[n].UserName</dt>
+                            <dd>User name to login the DATA SERVER.</dd>
+                            <dd>The Ascii string less than 32 characters which is included NULL.</dd>
+                            <dd>n range(0,..,2)</dd>
+                            <dd><table border="0" class="dd">
+                                <tr> <td>0   </td><td>:</td><td>Connection one</td> </tr>
+                                <tr> <td>1   </td><td>:</td><td>Connection two</td> </tr>
+                                <tr> <td>2   </td><td>:</td><td>Connection three</td> </tr>
+                            </table></dd>
+                            <dd>Ex) "user"</dd>
+
+                            <dt>prm.dataServer.opposite[n].Password</dt>
+                            <dd>Password which is assigned to DATA SERVER.</dd>
+                            <dd>n range(0,..,2)</dd>
+                            <dd><table border="0" class="dd">
+                                <tr> <td>0   </td><td>:</td><td>Connection one</td> </tr>
+                                <tr> <td>1   </td><td>:</td><td>Connection two</td> </tr>
+                                <tr> <td>2   </td><td>:</td><td>Connection three</td> </tr>
+                            </table></dd>
+                            <dd>Ex) "user1234"</dd>
+
+                            <dt>prm.dataServer.opposite[n].LoginDirectory</dt>
+                            <dd>Folder name which can be able to login the DATA SERVER.</dd>
+                            <dd>The Ascii string less than 128 characters which is included NULL.</dd>
+                            <dd>n range(0,..,2)</dd>
+                            <dd><table border="0" class="dd">
+                                <tr> <td>0   </td><td>:</td><td>Connection one</td> </tr>
+                                <tr> <td>1   </td><td>:</td><td>Connection two</td> </tr>
+                                <tr> <td>2   </td><td>:</td><td>Connection three</td> </tr>
+                            </table></dd>
+                            <dd>Ex) "/ncdata"</dd>
+
+                            <dt>prm.dataServer.own.UserName</dt>
+                            <dd>User name which FTP client is able to login.</dd>
+                            <dd>The Ascii string less than 32 characters which is included NULL.</dd>
+                            <dd>Ex) "user"</dd>
+
+                            <dt>prm.dataServer.own.Password</dt>
+                            <dd>Password which FTP client is able to login.</dd>
+                            <dd>The Ascii string less than 32 characters which is included NULL.</dd>
+                            <dd>Ex) "user1234"</dd>
+
+                            <dt>prm.dataServer.own.LoginDirectory</dt>
+                            <dd>Folder name which FTP client is able to login.</dd>
+                            <dd>The Ascii string less than 128 characters which is included NULL.</dd>
+                            <dd>Ex) "/ncdata"</dd>
+<!--
+                            <dt>prm.remoteDiag.MtbInformation</dt>
+                            <dd>MTB information</dd>
+                            <dd>Used by machine remote diagnose.</dd>
+                            <dd>The Ascii string less than 17 characters which is included NULL.</dd>
+                            <dd>Ex) "FANUC"</dd>
+
+                            <dt>prm.remoteDiag.MachineInformation</dt>
+                            <dd>Machine information</dd>
+                            <dd>Used by machine remote diagnose.</dd>
+                            <dd>The Ascii string less than 17 characters which is included NULL.</dd>
+                            <dd>Ex) "Machine1234"</dd>
+
+                            <dt>prm.remoteDiag.opposite[n].HostName</dt>
+                            <dt>Host name or IP address which is assigned machine remote diagnose server .</dt>
+                            <dd>The Ascii string less than 64 characters which is included NULL.</dd>
+                            <dd>n range(0,..,2))</dd>
+                            <dd><table border="0" class="dd">
+                                <tr> <td>0   </td><td>:</td><td>Inquiry one</td> </tr>
+                                <tr> <td>1   </td><td>:</td><td>Inquiry two</td> </tr>
+                                <tr> <td>2   </td><td>:</td><td>Inquiry three</td> </tr>
+                            </table></dd>
+                            <dd>Ex) "rmtdiag.factory" or "192.168.0.249"</dd>
+
+                            <dt>prm.remoteDiag.opposite[n].Port</dt>
+                            <dd>Port number of machine remote diagnose server.</dd>
+                            <dd>n range(0,..,2)</dd>
+                            <dd><table border="0" class="dd">
+                                <tr> <td>0   </td><td>:</td><td>Inquiry one</td> </tr>
+                                <tr> <td>1   </td><td>:</td><td>Inquiry two</td> </tr>
+                                <tr> <td>2   </td><td>:</td><td>Inquiry three</td> </tr>
+                            </table></dd>
+                            <dd>Range 5001,..,65535</dd>
+                            <dd>Ex) 8194</dd>
+
+                            <dt>prm.remoteDiag.opposite[n].InquiryName</dt>
+                            <dd>Inquiry name which is assigned the machine remote diagnose server.</dd>
+                            <dd>The Ascii string less than 64 characters which is included NULL.</dd>
+                            <dd>n range(0,..,2)</dd>
+                            <dd><table border="0" class="dd">
+                                <tr> <td>0   </td><td>:</td><td>Inquiry one</td> </tr>
+                                <tr> <td>1   </td><td>:</td><td>Inquiry two</td> </tr>
+                                <tr> <td>2   </td><td>:</td><td>Inquiry three</td> </tr>
+                            </table></dd>
+                            <dd>Ex) "FANUC support center"</dd>
+
+                            <dt>prm.factolink.opposite[n].HostName</dt>
+                            <dd>Host name or IP address which is assigned the FACTOLINK server.</dd>
+                            <dd>The Ascii string less than 64 characters which is included NULL.</dd>
+                            <dd>n range 0,..,2</dd>
+                            <dd><table border="0" class="dd">
+                                <tr> <td>0   </td><td>:</td><td>Connection one</td> </tr>
+                                <tr> <td>1   </td><td>:</td><td>Connection two</td> </tr>
+                                <tr> <td>2   </td><td>:</td><td>Connection three</td> </tr>
+                            </table></dd>
+                            <dd>Ex) "factolink.factory" or "192.168.0.248"</dd>
+
+                            <dt>prm.factolink.opposite[n].Port</dt>
+                            <dd>Port number which is assigned the FACTOLINK server.</dd>
+                            <dd>n range 0,..,2</dd>
+                            <dd><table border="0" class="dd">
+                                <tr> <td>0   </td><td>:</td><td>Connection one</td> </tr>
+                                <tr> <td>1   </td><td>:</td><td>Connection two</td> </tr>
+                                <tr> <td>2   </td><td>:</td><td>Connection three</td> </tr>
+                            </table></dd>
+                            <dd>Range 5001,..,65535</dd>
+                            <dd>Ex) 9000</dd>
+
+                            <dt>prm.maintain.opposite.HostName</dt>   
+                            <dd>Host name or IP address to ping.</dd>
+                            <dd>The Ascii string less than 64 characters which is included NULL.</dd>
+
+                            <dt>prm.maintain.opposite.Count</dt> 
+                            <dd>Ping count</dd>
+                            <dd>Range 0,..,10</dd>
+                            <dd>If this variable is 0(zero), ping count is considered to three.</dd>
+-->
+                        </dl>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a> function.<br/>
+                The following details status will be set onto the member, err_no of ODBERR structure.<br/>
+                <table class="dd">
+                    <tr> <td>20</td><td>:</td><td>Embedded Ethernet is not available.</td> </tr>
+<!--                <tr> <td>21</td><td>:</td><td>Windows CE Embedded Ethernet is not available.</td> </tr> -->
+                    <tr> <td>22</td><td>:</td><td>The option board is not available.</td> </tr>
+                    <tr> <td>23</td><td>:</td><td>Ethernet Function is not available.</td> </tr>
+                    <tr> <td>24</td><td>:</td><td>The DATA SERVER function is not available.</td> </tr>
+                    <tr> <td>25</td><td>:</td><td>Buffer mode is not available.</td> </tr>
+                    <tr> <td>26</td><td>:</td><td>ATA card is not found.</td> </tr>
+<!--                <tr> <td>27</td><td>:</td><td>FACTOLINK Function is not available.</td> </tr> -->
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_FUNC</name>
+            <content>Function Error<br/>
+                The acquisition of the parameter etc. is failed.<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a> function.<br/>
+                The following details status will be set onto the member, err_no of ODBERR structure.<br/>
+                <table class="dd">
+                    <tr> <td>10</td><td>:</td><td>Reading from File SRAM is failed.</td> </tr>
+<!--                <tr> <td>14</td><td>:</td><td>Getting library handle is failed.</td> </tr> -->
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>Protection Error<br/>
+                The writing to the parameter is failed.<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a> function.<br/>
+                The following details status will be set onto the member, err_no of ODBERR structure.<br/>
+                <table class="dd">
+                    <tr> <td>11</td><td>:</td><td>Writing to File SRAM is failed.</td> </tr>
+                    <tr> <td>13</td><td>:</td><td>The DHCP function is effective.</td> </tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>Data error<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a> function.<br/>
+                The following details status will be set onto the member, err_no of ODBERR structure.<br/>
+                <table class="dd">
+                    <tr> <td>2</td><td>:</td><td>Out of range.     </td> </tr>
+                    <tr> <td>3</td><td>:</td><td>Data format error.</td> </tr>
+                </table>
+                The following details status will be set onto the member, err_dtno of ODBERR structure.<br/>
+                <table class="dd">
+                    <tr> <td>1      </td><td>:</td><td>The kind(type) of parameter is wrong.   </td> </tr>
+                    <tr> <td>101    </td><td>:</td><td>prm.common.OwnIpAddress is wrong.       </td> </tr>
+                    <tr> <td>102    </td><td>:</td><td>prm.common.SubNetmask is wrong.         </td> </tr>
+                    <tr> <td>103    </td><td>:</td><td>prm.common.RouterIpAddress is wrong.    </td> </tr>
+                    <tr> <td>104    </td><td>:</td><td>prm.common.DnsServer1IpAddress is wrong.</td> </tr>
+                    <tr> <td>105    </td><td>:</td><td>prm.common.DnsServer2IpAddress is wrong.</td> </tr>
+                    <tr> <td>106    </td><td>:</td><td>prm.common.OwnHostName is wrong.        </td> </tr>
+                    <tr> <td>107    </td><td>:</td><td>prm.common.OwnDomain is wrong.          </td> </tr>
+                    <tr> <td>201    </td><td>:</td><td>prm.focas2.TcpPort is wrong.            </td> </tr>
+                    <tr> <td>202    </td><td>:</td><td>prm.focas2.UdpPort is wrong.            </td> </tr>
+                    <tr> <td>203    </td><td>:</td><td>prm.focas2.TimeInterval is wrong.       </td> </tr>
+                    <tr> <td>301    </td><td>:</td><td>The range of host number is wrong.      </td> </tr>
+                    <tr> <td>302    </td><td>:</td><td>DATA SERVER mode is wrong.              </td> </tr>
+                    <tr> <td>3[i+1]1</td><td>:</td><td>prm.dataServer.opposite[i].HostName is wrong.</td> </tr>
+                    <tr> <td>       </td><td> </td><td>In case of i=0</td> </tr>
+                    <tr> <td>       </td><td> </td><td>311:The meaning of prm.dataServer.opposite[0](i=0-2)</td> </tr>
+                    <tr> <td>3[i+1]2</td><td>:</td><td>prm.dataServer.opposite[i].ControlPort is wrong.   </td> </tr>
+                    <tr> <td>3[i+1]3</td><td>:</td><td>prm.dataServer.opposite[i].Dummy is wrong.         </td> </tr>
+                    <tr> <td>3[i+1]4</td><td>:</td><td>prm.dataServer.opposite[i].UserName is wrong.      </td> </tr>
+                    <tr> <td>3[i+1]5</td><td>:</td><td>prm.dataServer.opposite[i].Password is wrong.      </td> </tr>
+                    <tr> <td>3[i+1]6</td><td>:</td><td>prm.dataServer.opposite[i].LoginDirectory is wrong.</td> </tr>
+                    <tr> <td>344    </td><td>:</td><td>prm.dataServer.own.UserName is wrong.              </td> </tr>
+                    <tr> <td>345    </td><td>:</td><td>prm.dataServer.own.Password is wrong.              </td> </tr>
+                    <tr> <td>346    </td><td>:</td><td>prm.dataServer.own.LoginDirectory is wrong.        </td> </tr>
+                    <tr> <td>3[i+5]1</td><td>:</td><td>prm.ftpTrans.opposite[i].HostName is wrong.        </td> </tr>
+                    <tr> <td>       </td><td> </td><td>In case of i=0</td> </tr>
+                    <tr> <td>       </td><td> </td><td>351:The meaning of prm.ftpTrans.opposite[0](i=0-2) </td> </tr>
+                    <tr> <td>3[i+5]2</td><td>:</td><td>prm.ftpTrans.opposite[i].ControlPort is wrong.     </td> </tr>
+                    <tr> <td>3[i+5]3</td><td>:</td><td>prm.ftpTrans.opposite[i].Dummy is worng.           </td> </tr>
+                    <tr> <td>3[i+5]4</td><td>:</td><td>prm.ftpTrans.opposite[i].UserName is wrong.        </td> </tr>
+                    <tr> <td>3[i+5]5</td><td>:</td><td>prm.ftpTrans.opposite[i].Password is wrong.        </td> </tr>
+                    <tr> <td>3[i+5]6</td><td>:</td><td>prm.ftpTrans.opposite[i].LoginDirectory is wrong.  </td> </tr>
+<!--
+                    <tr> <td>401    </td><td>:</td><td>prm.remoteDiag.MtbInformation is wrong.            </td> </tr>
+                    <tr> <td>402    </td><td>:</td><td>prm.remoteDiag.MachineInformation is wrong.        </td> </tr>
+                    <tr> <td>4[i+1]1</td><td>:</td><td>prm.remoteDiag.opposite[i].HostName is wrong.      </td> </tr>
+                    <tr> <td>4[i+1]2</td><td>:</td><td>prm.remoteDiag.opposite[i].Port is wrong.          </td> </tr>
+                    <tr> <td>4[i+1]3</td><td>:</td><td>prm.remoteDiag.opposite[i].InquiryName is wrong.   </td> </tr>
+                    <tr> <td>5[i+1]1</td><td>:</td><td>prm.factolink.opposite[i].HostName is wrong.       </td> </tr>
+                    <tr> <td>5[i+1]2</td><td>:</td><td>prm.factolink.opposite[i].Port is wrong.           </td> </tr>
+                    <tr> <td>601    </td><td>:</td><td>prm.maintain.opposite.HostName is wrong.           </td> </tr>
+                    <tr> <td>602    </td><td>:</td><td>prm.maintain.opposite.Count is wrong.              </td> </tr>
+-->
+                </table>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            <p> 
+                The DATA SERVER function and the extended driver/library function are necessary.
+            </p>
+        </hssb>
+    </option>
+
+
+
+    <parameter></parameter>
+    <!-- 30i(WinCE) -->
+    <is_parameter></is_parameter>
+
+
+
+    <mode></mode>
+    <!-- 30i(WinCE) -->
+    <is_mode></is_mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>H</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>H</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>eth_rdparam</name>
+            <file>Data/eth_rdparam.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

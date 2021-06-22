@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <title>pmc_prfwrdido</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI pmc_prfwrdido(unsigned short FlibHndl, short idx, IODBDIDO *idb) ;</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Writes the DI/DO address data allocated in the slot of each slave station.<br/>
+               When the parameters are changed, the restart of CNC is required for putting the change into effect.<br/>
+               This function is only for 6558 Series.
+            </p>
+            <p>* Please refer to "PROFIBUS-DP function manual" for details of the PROFIBUS-DP function.
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>idx</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the index number for DI/DO address data. (0 - 47)<br/>
+                            When "-1" is specified, slave_no and slot_no in the IODBDIDO structure are effective. (When the data of specified slave_no and slot_no exist, the following data is updated.)
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>idb</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                        <p>
+                            Pointer to the IODBDIDO structure including the DI/DO address data.<br/>
+                            The IODBDIDO structure is as follows.
+                        </p>
+<pre>
+typedef struct {
+    short          slave_no ;
+    short          slot_no ;
+    unsigned char  di_size ;
+    char           di_type ;
+    unsigned short di_addr ;
+    unsigned char  do_size ;
+    char           do_type ;
+    unsigned short do_addr ;
+    short          shift;
+    unsigned char  module_dlen ;
+    char           module_data[128] ;
+} IODBDIDO ;
+</pre>
+                            <dl>
+                                <dt>slave_no</dt>
+                                    <dd>Specify the slave station number of the DP-Slave. (0-125) (It is effective at only idx=-1.)</dd>
+
+                                <dt>slot_no</dt>
+                                    <dd>Specify the slot number. (0-23) (It is effective at only idx=-1.)</dd>
+
+                                <dt>di_size</dt>
+                                    <dd>Specify the size of area used as buffer for DI data. (0-244)</dd>
+
+                                <dt>di_type</dt>
+                                    <dd>Specify the kind of the PMC address used as a buffer for the DI data with ASCII CODE.</dd>
+
+                                <dt>di_addr</dt>
+                                    <dd>Specify the top number of the PMC address used as a buffer for the DI data.</dd>
+                                    <dd>When you want to initialize this data, please set "0xFFFF".</dd>
+
+                                <dt>do_size</dt>
+                                    <dd>Specify the size of area used as buffer for DO data. (0-244)</dd>
+
+                                <dt>do_type</dt>
+                                    <dd>Specify the kind of the PMC address used as a buffer for the DO data with ASCII CODE.</dd>
+
+                                <dt>do_addr</dt>
+                                    <dd>Specify the top number of the PMC address used as a buffer for the DO data.</dd>
+                                    <dd>When you want to initialize this data, please set "0xFFFF".</dd>
+
+                                <dt>shift</dt>
+                                    <dd>Sets the data that indicates if the area whose size is specified by "module_dlen" is newly allocated.</dd>
+                                    <dd><table border="0" class="dd">
+                                        <tr> <td>1 (ON) </td><td>：</td><td>allocated    </td></tr>
+                                        <tr> <td>0 (OFF)</td><td>：</td><td>not allocated</td></tr>
+                                    </table></dd>
+
+                                <dt>module_dlen</dt>
+                                    <dd>Specify the data length of "Module" keyword in GSD file. (0 - 128)</dd>
+                                    <dd>* Further, as for one slave, the total of every module size should be within 128 bytes.</dd>
+
+                                <dt>module_data</dt>
+                                    <dd>Sets the data for "Module" keyword in GSD file.</dd>
+                                    <dd>The data of the number of bytes returned to above-mentioned module_dlen is effective.</dd>
+                            </dl>
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_RANGE</name>
+            <content>data number error<br/>
+                    Index number(idx) is wrong.<br/>
+                    When "idx=-1" is specified, if idb->slave_no or idb->slot_no is wrong, this error occurs.
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>Data error<br/>
+                The specification of the address allocation is wrong.<br/>
+                In order to get more information for this err_no return value,
+                execute <a href="Pmc/pmc_getdtailerr.htm" target="_parent">pmc_getdtailerr</a> function. <br/>
+                The following details status will be set onto the member, err_no of ODBPMCERR structure.
+                <table border="0">
+                    <tr><td> 3</td><td>：</td><td>di_size is wrong.    </td></tr>
+                    <tr><td> 4</td><td>：</td><td>di_type is wrong.    </td></tr>
+                    <tr><td> 5</td><td>：</td><td>di_addr is wrong.    </td></tr>
+                    <tr><td> 6</td><td>：</td><td>do_size is wrong.    </td></tr>
+                    <tr><td> 7</td><td>：</td><td>do_type is wrong.    </td></tr>
+                    <tr><td> 8</td><td>：</td><td>do_addr is wrong.    </td></tr>
+                    <tr><td> 9</td><td>：</td><td>shift is wrong.      </td></tr>
+                    <tr><td>10</td><td>：</td><td>module_dlen is wrong.</td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>
+                    <li>The PROFIBUS-DP board(hardware) is necessary.     </li>
+                    <li>The PROFIBUS-DP control software is necessary.    </li>
+                    <li>The PROFIBUS-DP master function is necessary.     </li>
+                    <li>The extended driver/library function is necessary.</li>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>The PROFIBUS-DP master function is necessary.</need>
+    </option>
+
+
+
+    <parameter>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>pmc_prfrddido</name>
+            <file>Profibus/pmc_prfrddido.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_rdprogdir</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdprogdir(unsigned short FlibHndl,short type, short datano_s,short datano_e,unsigned short length, PRGDIR *prgdir);</prottype>
+        <prottype><br/><br/></prottype>
+        <prottype><br/>For the program number 8 digits :<br/><br/>
+                  FWLIBAPI short WINAPI cnc_rdprogdir(unsigned short FlibHndl,short type, long datano_s,long datano_e,unsigned short length, PRGDIR *prgdir);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Reads the list of program numbers (program directory) of all NC programs registered in CNC.</p>
+            <p>
+                Program numbers, comments and character numbers of programs included in specified program number range are read with ASCII string format.<br/>
+                Specify the start program number to be read in "datano_s" and the end one in "datano_e".<br/>
+                Store "datano_s=1" and "datano_e"=9999 to read all programs.
+            </p>
+            <p>As for type=1 in series 15/15i, the range specification is invalid and all programs are always read.</p>
+            <p>
+                In Series 16/18, 16i/18i, Power Mate i, it is possible to use this function for the program number 8 digits, however it is necessary to switch API to the one for the program number 8 digits.<br/>
+                In Series 15i, it is necessary to switch API to the one for the program number 8 digits.<br/>
+                See <a href="general.htm#O8" target="_parent">Program number 8 digits</a> for details.
+            </p>
+            <br/>
+            <b>Format of input data</b>
+            <p>The program directory list which is read from CNC is the string composed of ASCII characters as the following format.</p>
+            <ul>
+            type=0  Oxxxx Oxxxx ... %<br/>
+            <br/>
+            type=1  % LF Oxxxx (COMMENT) LF Oxxxx (COMMENT) LF ... LF %<br/>
+            <br/>
+            type=2  Oxxxx (COMMENT) CHAR_NUMBER Oxxxx (COMMENT) CHAR_NUMBER ... %<br/>
+            <br/>
+                where, 
+                <table border="1">
+                    <colgroup valign="top">
+                    <colgroup valign="top">
+                        <tr><td>LF</td><td>0x0A ('\n': EOB)</td></tr>
+                        <tr><td>Oxxxx</td><td>Program number. <br/>This is an ASCII string without the leading '0' at numeric part, and sorted in numeric order. ("O1" - "O9999")</td></tr>
+                        <tr><td>CHAR_NUMBER</td><td>Character number of the program.<br/>This is an ASCII string without the leading '0'.  The number is raised to 80-character unit.</td></tr>
+                        <tr><td>COMMENT</td><td>The comment which is written just after the program number is stored.<br/>The maximum character number of the comment body is 48. (50 including the before and the behind parentheses.) Only beginning 48 characters are stored for the comment in case that the length of the comment is longer than 48 characters. If the program has no comment, only parentheses ("()") are stored.
+</td></tr>
+                    </colgroup>
+                    </colgroup>
+                </table>
+            <br/>
+            For all cases, when no program is registered or there is no program in the specified range, only '%' is stored.<br/>
+            A null character('\0') is not added at the end of each strings stored in the buffer.<br/>
+            <br/>
+            For example, when the next programs are registered in CNC, the result of this function, in case that datano_s=1 and datano_e=9999, is as follows.<br/>
+            <table border="1">
+                <colgroup valign="top">
+                <colgroup valign="top">
+                    <tr><td>Program number (COMMENT)</td><td>Character number</td></tr>
+                    <tr><td>O0012 (TEST) ;</td><td>420</td></tr>
+                    <tr><td>O0200 (WORK1);</td><td>352</td></tr>
+                    <tr><td>O0201 ;</td><td>537</td></tr>
+                    <tr><td>O9001 (SUB-PRO1) ;</td><td>781</td></tr>
+                </colgroup>
+                </colgroup>
+            </table>
+            <br/>
+            <table border="1">
+                <colgroup valign="top">
+                <colgroup valign="top">
+                    <tr><td>type</td><td>Contents to be read</td></tr>
+                    <tr><td>0</td><td>"O12O200O201O9001%"</td></tr>
+                    <tr><td>1</td><td>"%\nO12(TEST)\nO200(WORK1)\nO201()\nO9001(SUB-PRO1)\n%"</td></tr>
+                    <tr><td>2</td><td>"O12(TEST)420O200(WORK1)352O201()537O9001(SUB-PRO1)781%"</td></tr>
+                </colgroup>
+                </colgroup>
+            </table>
+            <br/>
+            If the buffer size is not enough for the specified programs, the buffer is filled up to the specified size.<br/>
+            In case of 15 bytes, the result is  as follows.<br/>
+            <table border="1">
+                <colgroup valign="top">
+                <colgroup valign="top">
+                    <tr><td>type</td><td>Contents to be read</td></tr>
+                    <tr><td>0</td><td>"O12O200O201O900"</td></tr>
+                    <tr><td>1</td><td>"%\nO12(TEST)\nO20"</td></tr>
+                    <tr><td>2</td><td>"O12(TEST)420O20"</td></tr>
+                </colgroup>
+                </colgroup>
+            </table>
+            </ul>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <hssb>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle.<br/>
+                            See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                       <content>
+                            Specify the form of the read program list.
+                            <table class="dd">
+                                <tr>
+                                    <td>0</td><td>:</td><td>only the program number</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td><td>:</td><td>program number and comment</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td><td>:</td><td>program number, comment, and number of use characters.</td>
+                                </tr>
+                           </table>
+                        </content>
+                </item>
+                <item>
+                    <name>datano_s</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the start program number.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>datano_e</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the end program number.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the length of a block(buffer size).
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>prgdir</name>
+                    <type>out</type>
+                    <content>
+                         <p>
+                            Pointer to the PRGDIR structure including program directory.<br/>
+                            The PRGDIR structure is as follows.
+                         </p>
+<pre>
+typedef struct prgdir {
+    char    prg_data[MAX_PBUF] ;   /* Directory data. */
+} PRGDIR ;                      (MAX_PBUF : maximum character number to read)
+</pre>
+                    </content>
+                </item>
+            </vc>
+        </hssb>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                Unavailable (Series 15i,16/18, 16i/18i, Power Mate i)<br/>
+                This application is not customized for the program number 8 digits.<br/>
+                See <a href="general.htm#O8" target="_parent">Program number 8 digits</a> for details.
+
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                Data block length error<br/>
+                Length of the block (length) is illegal.
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                Data number error<br/>
+                Start program number (datano_s) or end program number (datano_e) is illegal.
+            </content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>
+                Data attribute error<br/>
+                Output format(type) is illegal.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            <p>The extended driver/library function is necessary.</p>
+        </hssb>
+
+       <type>
+            <li> Series 15/15i</li>
+                Program name 48 characters<br/>
+                If this option does not exist, the maximum program name is 16 characters.
+       </type>
+    </option>
+
+
+
+    <parameter></parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>H</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>H</d>
+            <h>H</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdprogdir2</name>
+            <file>Program/cnc_rdprogdir2.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdprogdir3</name>
+            <file>Program/cnc_rdprogdir2.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdprogdir4</name>
+            <file>Program/cnc_rdprogdir4.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

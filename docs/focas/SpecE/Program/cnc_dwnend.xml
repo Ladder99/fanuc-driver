@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_dwnend</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_dwnend(unsigned short FlibHndl);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                Notifies the end of downloading NC program to CNC.<br/>
+                (This function must be executed after <a href="Program/cnc_download.htm" target="_parent">cnc_download</a> /
+                <a href="Program/cnc_cdownload.htm" target="_parent">cnc_cdownload</a>.)
+            </p>
+            <p>
+                There are cases where errors(EW_DATA,EW_OVRFLOW, etc.) during execution
+                of downloading NC program are returned by this function.<br/>
+                Further, this function does not return until the registration
+                of the output data by <a href="Program/cnc_download.htm" target="_parent">cnc_download</a>(<a href="Program/cnc_cdownload.htm" target="_parent">cnc_cdownload</a>) is completed.
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle.<br/>
+                            See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                <a href="Program/cnc_dwnstart.htm" target="_parent">cnc_dwnstart</a> function has not been executed.
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                Data error<br/>
+                <li>The same program number has already been registered.</li>
+                <li>The same program number is selected on CNC.</li>
+                <li>A character which is unavailable for NC program is detected.</li>
+                <li>When TV check is effective, a block which includes odd number of characters(including 'LF' at the end of the block) is detected.</li>
+                See <a href="#disc">Description</a> about the timing of error.
+            </content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>
+                Write protected on CNC side<br/>
+                Tape memory is write-protected by the CNC parameter setting(O8000-/O9000- protection, encoding).<br/>
+                See <a href="#disc">Description</a> about the timing of error.
+            </content>
+        </item>
+        <item>
+            <name>EW_OVRFLOW</name>
+            <content>
+                Memory overflow<br/>
+                CNC tape memory shorts for the registration.<br/>
+                Make enough free area in CNC memory.<br/>
+                See <a href="#disc">Description</a> about the timing of error.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            <p>The extended driver/library function is necessary.</p>
+        </hssb>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <li>Series 15/15i</li>
+            <ul>
+                0020=16(EDIT mode) (must be set)<br/>
+                0022=16(except EDIT mode) (must be set)<br/>
+                0000#0 (influenced by setting)<br/>
+                2200#1,#3,#4 (influenced by setting)<br/>
+                0011#0,2201#0 (influenced by setting)<br/>
+                2210,2211,2212,2213 (influenced by setting)
+            </ul>
+            <li>Series 16/18/21, 16i/18i/21i, 0i, 30i, PMi-A</li>
+            <ul>
+                0000#0 (influenced by setting)<br/>
+                3201#2,#5,#6 (influenced by setting)<br/>
+                3202#0,#4 (influenced by setting)<br/>
+                3210,3211 (influenced by setting)<br/>
+                3290#7 (influenced by setting)
+            </ul>
+            <li>Series 16i/18i-W, Power Mate i</li>
+            <ul>
+                0000#0 (influenced by setting)<br/>
+                3201#2,#5,#6 (influenced by setting)<br/>
+                3202#0,#4 (influenced by setting)<br/>
+                3290#7 (influenced by setting)
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <mode>
+        <cmn>
+            <li>Series 15/15i This function is related to the following mode.</li><br/>
+            <span class="dd">(It is necessary to set the parameter according to the mode)</span><br/>
+            <br/>
+            <li>Series 16/18/21, 16i/18i/21i, 0i, 30i, Power Mate i, PMi-A</li><br/>
+            <span class="dd">It is possible to use in other than MDI mode.</span>
+        </cmn>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>H</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </w>
+        <pw>
+            <d>H</d>
+            <h>H</h>
+            <a>H</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_dwnstart</name>
+            <file>Program/cnc_dwnstart.htm</file>
+        </item>
+        <item>
+            <name>cnc_download</name>
+            <file>Program/cnc_download.htm</file>
+        </item>
+        <item>
+            <name>cnc_cdownload</name>
+            <file>Program/cnc_cdownload.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdomhistry2</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdomhistry2(unsigned short FlibHndl,
+                                unsigned short s_no,unsigned short e_no, unsigned short length,ODBOMHIS2 *his); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                Reads the external operator's message history data.
+                Please use this function for Series 30i, 0i-D/F and PMi-A.
+            </p>
+            <p>
+                The unit of one external operator's message history data is called a record.
+            </p>    
+            <p>
+                The operation history data and the alarm history data are automatically recorded on the CNC. 
+                When these data are accessed, it is necessary to temporarily stop sampling on the CNC. 
+                Therefore, it is necessary to execute 
+                "Stop logging operation history data"(<a href="History/cnc_stopophis.htm" target="_parent">cnc_stopophis</a>) 
+                before this function is used. <br/>
+                And it is necessary to execute 
+                "Restart logging operation history data" (<a href="History/cnc_startophis.htm" target="_parent">cnc_startophis</a>) 
+                after reading to make the sampling stop time of the history data as short as possible. 
+            </p>
+            <p>
+                The start/end record number means the relative number uesd at reading the alarm history data. 
+                These record numbers are valid only at the period from the execution of 
+                "Stop logging operation history data" until the execution of "Restart logging operation history data". 
+            </p>
+            <p>The message history data is acquired in old order.</p>
+        </cmn>
+        <is>
+        <cmn>
+            <p>
+                Reads the external operator's message history data.
+            </p>
+            <p>
+                The unit of one external operator's message history data is called a record.
+            </p>    
+            <p>
+                The operation history data and the alarm history data are automatically recorded on the CNC. 
+                When these data are accessed, it is necessary to temporarily stop sampling on the CNC. 
+                Therefore, it is necessary to execute 
+                "Stop logging operation history data"(<a href="History/cnc_stopophis.htm" target="_parent">cnc_stopophis</a>) 
+                before this function is used. <br/>
+                And it is necessary to execute 
+                "Restart logging operation history data" (<a href="History/cnc_startophis.htm" target="_parent">cnc_startophis</a>) 
+                after reading to make the sampling stop time of the history data as short as possible. 
+            </p>
+            <p>
+                The start/end record number means the relative number uesd at reading the alarm history data. 
+                These record numbers are valid only at the period from the execution of 
+                "Stop logging operation history data" until the execution of "Restart logging operation history data". 
+            </p>
+            <p>The message history data is acquired in old order.</p>
+        </cmn>
+        </is>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the start record number. (specify 1 or more.) 
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>e_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the end record number. (specify 1 or more.)
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the data block length. (size of ODBOMHIS2 structure)
+                        </p>
+                        <img src="History/rdomhistry2.gif"></img><br/>
+                    </content>
+                </item>
+                <item>
+                    <name>his</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the ODBOMHIS2 structure in which the alarm history data is stored. 
+                            The ODBOMHIS2 structure is as follows. 
+                        </p>
+<pre>
+typedef struct odbmhis2 {
+    unsigned short  s_no;       /* Start record number       */
+    unsigned short  e_no;       /* Most recently entered     */
+                                /* record number             */
+    struct {
+        short   dsp_flg;        /* Flag for displaying       */
+        short   om_no;          /* operator's message number */
+        short   year;           /* year                      */
+        short   month;          /* month                     */
+        short   day;            /* day                       */
+        short   hour;           /* hour                      */
+        short   minute;         /* minute                    */
+        short   second;         /* second                    */
+        char    ope_msg[256];   /* operator's message        */
+    } opm_his[N];               /* N : number of external operator's 
+                                       message history data to be read */
+} ODBOMHIS2;
+</pre>
+                        <dl>
+                            <dt>dsp_flg</dt>
+                            <dd>Flag for displaying</dd>
+                            <dd><table border="0" class="dd">
+                                <tr> <td>1</td><td>：</td><td>display "EXxxxx"</td> </tr>
+                                <tr> <td>0</td><td>：</td><td>display as it is</td> </tr>
+                            </table></dd>
+                            <dt>om_no</dt>
+                            <dd>operator's message number</dd>
+                            <dt>year</dt>
+                            <dd>year   (1995,...,2094)</dd>
+                            <dt>month</dt>
+                            <dd>month  (1,...,12)</dd>
+                            <dt>day</dt>
+                            <dd>day    (1,...,31)</dd>
+                            <dt>hour</dt>   
+                            <dd>hour   (0,...,23)</dd>
+                            <dt>minute</dt> 
+                            <dd>minute (0,...,59)</dd>
+                            <dt>second</dt> 
+                            <dd>second (0,...,59)</dd>
+                            <dt>ope_msg</dt>
+                            <dd>operator's message<br/>
+                                The last character is 'NULL(\0)'.
+                            </dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                <a href="History/cnc_stopophis.htm" target="_parent">cnc_stopophis</a> function has not been executed.
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                Data block length error<br/>
+                Size of ODBOMHIS2 structure(length) is wrong.<br/>
+                (e_no-s_no+1) * sizeof(data[0]) + 4 &gt; length    
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                Data number error<br/>
+                The specification of the record number (s_no, e_no) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The external message option or the external data input option, 
+                and the extended driver/ library function are necessary. 
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                CNC parameter error<br/>
+                CNC parameter '3112#2' must be 1.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            The extended driver/library function is necessary.
+        </hssb>
+        <need>
+            The external message option or the external data input option.
+        </need>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+                    3112#2=1, 3196#6=0 (must be set)<br/>
+                    6301#1 (influenced by setting)
+            </ul>
+        </type>
+    </parameter>
+    <!-- 30i(WinCE) -->
+    <is_parameter>
+        <type>
+            <ul>
+                3112#2=1, 3196#6=0 (must be set)<br/>
+                6301#1 (influenced by setting)
+            </ul>
+        </type>
+    </is_parameter>
+
+
+
+    <mode></mode>
+    <!-- 30i(WinCE) -->
+    <is_mode></is_mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_stopophis</name>
+            <file>History/cnc_stopophis.htm</file>
+        </item>
+        <item>
+            <name>cnc_startophis</name>
+            <file>History/cnc_startophis.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdomhisno</name>
+            <file>History/cnc_rdomhisno.htm</file>
+        </item>
+        <item>
+            <name>cnc_clearophis</name>
+            <file>History/cnc_clearophis.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

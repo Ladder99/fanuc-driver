@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_rdspdlname</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>
+            FWLIBAPI short WINAPI cnc_rdspdlname(unsigned short FlibHndl, short *data_num, ODBSPDLNAME *spdlname);
+        </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+Reads the spindle names from 1st spindle to the specified spindle number. <p/>
+
+In case that "*data_num" is bigger than all spindle number, this function sets the actual read spindle number (all spindle number) to "*data_num" variable after execution. And in case that "*data_num" is smaller than all spindle number, this function reads data for the specified spindle number which is specified by "*data_num". <p/>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>data_num</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+Specify the pointer to the number of data to be read. This function returns the number of data which was read actually.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>spdlname</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+Specify the pointer to the array of ODBSPDLNAME structure to store the spindle names. The number of array must be equal to "*data_num".
+                        </p>
+The ODBSPDLNAME structure is as follows.
+<pre>
+typedef struct odbspdlname {
+    char    name;   /* spindle name */
+    char    suff1;  /* subscript of spindle name 1 */
+    char    suff2;  /* subscript of spindle name 2 */
+    char    suff3;  /* reserved */
+} ODBSPDLNAME ;
+</pre>
+                        <dl>
+                            <dt>name</dt>
+                                <dd>Spindle name (ASCII)</dd>
+                                <dd>ASCII code 'S' is stored.</dd>
+                            <dt>suff1</dt>
+                                <dd>Subscript of spindle name 1(ASCII)</dd>
+                                <dd><span class="xis">In case of Series 16i/18i/21i, 0i, 30i and Power Mate i, </span>the spindle number ('1', '2', ...) is stored.</dd>
+                                <dd class="xis">In case of Series 15i, the value which is defined by parameter (No. 5845, 5846) is stored.</dd>
+                            <dt>suff2</dt>
+                                <dd>Subscript of spindle name 2(ASCII)</dd>
+                                <dd>When the spindle switching function is available, the following ASCII code is stored.
+                                    <table class="dd">
+                                        <tr> <td>In case of main spindle</td> <td>:</td> <td>'1'</td> </tr>
+                                        <tr> <td>In case of sub spindle</td>  <td>:</td> <td>'2'</td> </tr>
+                                    </table>
+                                </dd>
+                                <dd>When the spindle switching function is not available, NULL('\0') is stored.</dd>
+                                <dd class="xis">In case of Series 15i, data is stored. But it is invalid for the spindle name. </dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>Data block length error<br/>The spindle number (*data_num) is 0 or less.</content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <type>This function is related to the spindle switching control.</type>
+        <add></add>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <li>Series 15i</li>
+            <div class="dd">5845, 5846 (influenced by setting)</div>
+        </type>
+        <add></add>
+    </parameter>
+    <is_parameter>
+    </is_parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>O</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>H</h>
+            <a>X</a>
+        </pw>
+        <is>
+            <!-- M -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference></reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

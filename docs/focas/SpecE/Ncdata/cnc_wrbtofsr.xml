@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_wrbtofsr</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_wrbtofsr(unsigned short FlibHndl, short length, IODBBTO *btofsr);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Writes the tool offset value for B axis specified by "datano_s", "datano_e","type". The offset value must be stored in "IODBBTO" with signed binary format.</p>
+
+            <p>The unit of offset value is the same as "Write tool offset value( <a href="ncdata/cnc_wrtofs.htm" target="_parent">cnc_wrtofs</a> )".  See the description of <a href="ncdata/cnc_wrtofs.htm" target="_parent">cnc_wrtofs</a> function.</p>
+
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the data block length.</p>
+                    </content>
+                </item>
+                <item>
+                    <name>btofsr</name>
+                    <type>in</type>
+                    <content>
+                        <p>Pointer to the IODBBTO structure including the tool offset value.  The IODBBTO structure is as follows.</p>
+
+<pre>
+typedef struct  iodbbto {
+    short datano_s;     /* start offset number */
+    short type;         /* offset type         */
+    short datano_e;     /* end offset number   */
+    long  ofs[M];       /* offset value        */
+} IODBBTO ;     /* Individual, Memory A all               */
+                /*   M is number of the offset value.     */
+                /* Memory B all                           */
+                /*   M is number of the offset value x 2. */
+</pre>
+                        <dl>
+                            <dt>datano_s</dt>
+                            <dd>Specify the start tool offset number.<br/>
+                                The available number is 1,...,9.<br/>
+                                'This number + aux. function number which can be got by
+                            <a href="ncdata/cnc_rdbtofsinfo.htm" target="_parent">cnc_rdbtofsinfo</a> function + 1' means the tool offset
+                            number for B axis which is used by NC command or
+                            display.
+                            </dd>
+                            <br/>
+                            <dt>datano_e</dt>
+                            <dd>Specify the end tool offset number.<br/>
+                                The available number is 1,...,9.
+                            </dd>
+                            <br/>
+                            <dt>type</dt>
+                            <dd>Specify the tool offset type.</dd>
+                            <br/>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+
+        </common>
+    </argument>
+
+
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>Unavailable<br/>This function cannot be used at M series.</content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>Data block length error<br/>
+                Size of IODBBTO structure(length) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>Data number error<br/>
+                Offset number(datano_s, datano_e) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>Data attribute error<br/>
+                Offset type(type) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>The B axis control option and the extended
+                                    driver/library function are necessary.</content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+
+        <need>
+            <p>This function needs the B axis control option.</p>
+        </need>
+
+        <type>
+            <li>Series 16/18, 16i/18i/21i</li>
+            Tool geometry/wear compensation
+        </type>
+        <add></add>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 16/18, 16i/18i/21i</li>
+                1004#1
+            </ul>
+        </type>
+        <add></add>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdbtofsr</name>
+            <file>ncdata/cnc_rdbtofsr.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdbtofsinfo</name>
+            <file>ncdata/cnc_rdbtofsinfo.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

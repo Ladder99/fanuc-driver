@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <title>cnc_dtsvftpget</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_dtsvftpget(unsigned short FlibHndl, char *net_file,char *nc_file);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+Orders the DATA SERVER to get file from the host computer.<br/>
+Therefore, normal termination of this function shows that getting the file from the host computer has been started.<br/>
+The result of getting file must be got by <a href="data/cnc_dtsvftpstat.htm" target="_parent">cnc_dtsvftpstat</a>.
+<p/>
+Don't use the data sever function(except DNC operation) at the CNC side until either EW_OK or EW_DTSRVR as the completion status is got by <a href="data/cnc_dtsvftpstat.htm" target="_parent">cnc_dtsvftpstat</a> after this function was finished.
+
+            <ul>
+
+                <p><img src="data/cnc_dtsvftpget.gif"/></p>
+
+                <p>* "Req." shows the start request for getting file by this function.<br/>
+                * "ret=" is the completion status when <a href="data/cnc_dtsvftpstat.htm" target="_parent">cnc_dtsvftpstat</a> is done.</p>
+            </ul>
+
+            <p>Throughout the prohibition term, the completion status of the following function is EW_BUSY.</p>
+                <ul>
+                    cnc_dtsvftpget<br/>
+                    <a href="data/cnc_dtsvftpput.htm" target="_parent">cnc_dtsvftpput</a><br/>
+                    <a href="data/cnc_dtsvdelete.htm" target="_parent">cnc_dtsvdelete</a><br/>
+                    <a href="data/cnc_dtsvrdpgdir.htm" target="_parent">cnc_dtsvrdpgdir</a><br/>
+                    <a href="data/cnc_dtsvrdset.htm" target="_parent">cnc_dtsvrdset</a><br/>
+                    <a href="data/cnc_dtsvwrset.htm" target="_parent">cnc_dtsvwrset</a><br/>
+                    <a href="data/cnc_dtsvchkdsk.htm" target="_parent">cnc_dtsvchkdsk</a><br/>
+                    <a href="data/cnc_dtsvhdformat.htm" target="_parent">cnc_dtsvhdformat</a><br/>
+                </ul>
+
+            <p>Therefore, it is necessary to get either EW_OK or EW_DTSRVR as the completion status by <a href="data/cnc_dtsvftpstat.htm" target="_parent">cnc_dtsvftpstat</a> when this function was executed successfully.</p>
+
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>net_file</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the pointer to the file name in the host computer.<br/>
+                         The specification of the file name of the host computer is as follows:</p>
+                        <ul>
+                            <li>Use ASCII code.</li>
+                            <li>The last character of the file name must be 'NULL'.</li>
+                            <li>The maximum length of the file name is 256 including 'NULL'.</li>
+                            <li>It is impossible to specify the path.</li>
+                            (Specify the path by using <a href="data/cnc_dtsvwrset.htm" target="_parent">cnc_dtsvwrset</a>.)
+                            <li>The lowercase can be used.</li>
+                            <li>The wild-card('*','?') cannot be used.</li>
+                        </ul>
+                    </content>
+                </item>
+                <item>
+                    <name>nc_file</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the pointer to the file name in the DATA SERVER.<br/>
+                        The specification of the file name of the DATA SERVER is as follows:</p>
+                        <ul>
+                            <li>Use ASCII code.</li>
+                            <li>The last character of the file name must be 'NULL'.</li>
+                            <li>It is impossible to specify the path.</li>
+                                (The file is made in the directory "\PROG" of the DATA SERVER in case of the DATA SERVER board (10BASE-5), or in the directory "\NCDATA" of  the DATA SERVER in case of the DATA SERVER board(10BASE-T).)
+                            <li>The wild-card('*','?') cannot be used.</li>
+                            <li>Specify the MS-DOS form.</li>
+                                (file name 8 char.+'.'+extension 3 char.+'NULL', total is within 13 char.)
+                            <p class="dd"><![CDATA[<ex.>]]>      "XXXXXXXX.XXX" + NULL</p>
+                                However, the "O" number is managed as a file name now.
+                            <p class="dd"><![CDATA[<ex.>]]>      "O0001" + NULL</p>
+                        </ul>
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_BUSY</name>
+            <content>
+                Busy<br/>
+                Try again because DATA SERVER is processing. (There is a possibility of forgetting to call <a href="data/cnc_dtsvftpstat.htm" target="_parent">cnc_dtsvftpstat</a> function.)
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+No option
+<table>
+<tr> <td valign="top">-</td> <td valign="top">The extended driver/library function is necessary.</td> </tr>
+<tr> <td valign="top">-</td> <td valign="top">The DATA SERVER board(hardware) is necessary.</td> </tr>
+</table>
+             </content>
+        </item>
+
+
+        <item>
+            <name>EW_DTSRVR</name>
+            <content>
+                 DATA SERVER error<br/>
+                 In order to get more information for this err_no return value, execute <a href="misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.  The following details status will be set onto the member, err_no of ODBERR structure.
+                <table class="dd">
+                    <tr><td>1 <![CDATA[<-->]]>  498</td><td>:</td><td>DATA SERVER error</td></tr>
+                    <tr><td>499</td><td>:</td> <td>DATA SERVER system error</td></tr>
+                </table>
+            </content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+    </option>
+
+
+
+    <parameter>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_dtsvftpput</name>
+            <file>Data/cnc_dtsvftpput.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

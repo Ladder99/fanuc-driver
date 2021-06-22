@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>ds_rdhostdir</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI ds_rdhostdir(unsigned short FlibHndl, short type,
+                    long offset, short *number, ODBHOSTDIR *hostdir, long timeout); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            Get the file information of host computer.
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <hssb>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                        Specify the type of file information which wants to be acquired.
+                        Specify the following type.
+                        <table border="0" class="dd">
+                            <tr> <td>0</td><td>:</td><td>File name</td> </tr>
+                            <tr> <td>1</td><td>:</td><td>Detail information</td> </tr>
+                        </table>
+                    </content>
+                </item>
+                <item>
+                    <name>offset</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the number of offset files from top file of the file information which wants to be acquired.<br/>
+                            When the number of offsets which does not exist on the host computer side is given, the EW_NUMBER is returned.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>number</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                            Specify the pointer to the variable where the number of file
+                            information which wants to be acquired was setted.
+                            Specify the 1 to 32 for this data.
+                            This function returns the number of data which was acquired actually.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>hostdir</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Specify the pointer to the ODBHOSTDIR structure to store 
+                            the file information which is acquired.
+                            The ODBHOSTDIR structure is as follows.
+                        </p>
+<pre>
+typedef struct _odbhostdir {
+    char    host_file[128];
+} ODBHOSTDIR;
+</pre>
+<dl>
+                        hostdir.host_file[128]<br/>
+                        <dd>File name or detail information is set.</dd>
+                        <dd>The Ascii string less than 128 characters which included NULL is set.</dd>
+</dl>
+                    </content>
+                </item>
+                <item>
+                    <name>timeout</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the time for timeout by the second.
+                            When 0 or less is specified, the timeout processing is not done.
+                            In the timeout processing, the following two kinds of return
+                            values might be returned.
+                            <table border="0" class="dd">
+                                <tr> <td valign="top">EW_RESET</td><td>The timeout occurred while communicating to the host computer.</td> </tr>
+                                <tr> <td valign="top">EW_DTSRVR</td><td>The timeout occurred because the host computer was not found.</td> </tr>
+                            </table>
+                            When the power supply of the host computer is dropped at the
+                            time of communicating with the host, the timeout processing is executed.
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </hssb>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_RESET</name>
+            <content>
+                Execution interruption<br/>
+                The timeout processing was done while communicating with the host computer.
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                Data length error<br/>
+                The number of file information(*number) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>Data number error<br/>the number(offset) of offsets which does not exist is given.</content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>
+                Data attribute error<br/>
+                The type of file information(type) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option</content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                CNC execution rejection<br/>
+                The DATA SERVER is doing another processing.
+            </content>
+        </item>
+        <item>
+            <name>EW_DTSRVR</name>
+            <content>
+                DATA SERVER error<br/>
+                Error occurred in DATA SERVER.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            <p> 
+                The DATA SERVER function and the extended driver/library function are necessary.
+            </p>
+        </hssb>
+    </option>
+
+
+
+    <parameter>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

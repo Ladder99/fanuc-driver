@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_delprogline</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_delprogline(unsigned short FlibHndl, long prog_no, unsigned long line_no, unsigned long line_len);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Deletes the NC program by line basis.</p>
+            <p>When you specify the line including O number(ex.&quot;"Oxxxx"&quot;), this function deletes the character after O number, but doesn't delete O number.
+            </p>
+            <blockquote>Example)<br/>You have the following program you are going to delete by line basis.
+<pre>
+O1234(TEST  PROGRAM) ;
+G01 X0. F100 ;
+X20. ;
+M30 ;
+%
+</pre>
+                When you delete 3 lines from the line number 0 for the above program, then you get the following result.
+<pre>
+O1234 M30 ;
+%
+</pre>
+            </blockquote>
+            <p>
+                The conditions of the function about CNC mode and the kind of program are as follows.
+                <table border="1" class="dd">
+                    <tr><td></td><td>EDIT mode</td><td>MDI mode</td><td>Other mode</td></tr>
+                    <tr><td>MDI program</td>            <td>&#215;</td><td>O</td><td>&#215;</td></tr>
+                    <tr><td>Selected program</td>       <td>O</td><td>&#215;</td><td>&#215;</td></tr>
+                    <tr><td>Not selected program</td>   <td>O</td><td>O</td><td>O</td></tr>
+                </table>
+               <span class="dd">O: Available / &#215;: Not available (The return code is EW_MODE)</span>
+            </p>
+            <p>If you have the playback option, TJOG/THND mode is the same as EDIT.</p>
+            <p>This function works normally if OP signal is 1 but STL signal is 0
+               (for example, feed hold stopping, single block stopping, etc).</p>
+            <p>When you use this function for the MDI program or the selected program in the following situations, the execution pointer goes to the top of line specified by line_no.<br/>
+                <ul>
+                <li>MDI program in MDI mode.</li>
+                <li>Selected program in EDIT mode.</li>
+                <li>Selected program in TJOG/THND mode with the playback option.</li>
+                </ul>
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the library handle.
+                           See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>prog_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the program number to delete.<br/>
+                           When you delete the MDI program, you have to specify -1.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>line_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the line number to delete from.<br/>
+                           When you delete from the first line of a program, you have to specify 0.<br/>
+                           When you specify other than the existing line number, you get EW_DATA error as the return code.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>line_len</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the amount of lines to delete.<br/>
+                           If you specify the lines over the last one, the lines between the specified line and before the last one are deleted.<br/>
+                           The last line is never deleted.
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_BUSY</name>
+            <content>
+                Busy<br/>
+                <ul style="margin-top:0;margin-bottom:0">
+                    <li>except 30i/31i/32i, 0i-D/F, PMi-A</li>
+                    Some alarm has existed or CNC is searching the program text right now.
+                    <li>30i/31i/32i, 0i-D/F, PMi-A</li>
+                    CNC is searching the program text right now.
+                </ul>
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                Data error<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                The following detail status will be set onto the member, err_no of ODBERR structure.
+                <table>
+                    <tr><td>1</td><td>:</td><td>The program number(prog_no) error</td></tr>
+                    <tr><td>2</td><td>:</td><td>The line number(line_no) error</td></tr>
+                    <tr><td>3</td><td>:</td><td>The amount of lines(line_len) error</td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The extended driver/library function is necessary.
+            </content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>
+                Write protection in CNC side<br/>
+                CNC parameter is a state of write-protection(O8000-/O9000- protection, encoding).<br/>
+                Protect KEY signal was ON. (Deletion of the MDI program is excluded)(except 30i/31i/32i, 0i-D/F, PMi-A)
+            </content>
+        </item>
+        <item>
+            <name>EW_MODE</name>
+            <content>
+                CNC mode error
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                CNC execution denied<br/>
+                <ul style="margin-top:0;margin-bottom:0">
+                    <li>except 30i/31i/32i, 0i-D/F, PMi-A</li>
+                    MDI edit or Background edit processing in CNC side. 
+                    <li>30i/31i/32i, 0i-D/F, PMi-A</li>
+                    CNC is in the emergency stop.
+                </ul>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            <p>The extended driver/library function is necessary.</p>
+        </hssb>
+    </option>
+
+
+
+    <parameter></parameter>
+
+
+
+    <mode>
+        <cmn>
+            See the above description.
+        </cmn>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>H</a>
+        </pw>
+        
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdprogline</name>
+            <file>Program/cnc_rdprogline.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdprogline2</name>
+            <file>Program/cnc_rdprogline2.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrprogline</name>
+            <file>Program/cnc_wrprogline.htm</file>
+        </item>
+        <item>
+            <name>cnc_searchword</name>
+            <file>Program/cnc_searchword.htm</file>
+        </item>
+        <item>
+            <name>cnc_searchresult</name>
+            <file>Program/cnc_searchresult.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

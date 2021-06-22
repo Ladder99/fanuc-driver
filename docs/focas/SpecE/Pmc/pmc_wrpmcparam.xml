@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>pmc_wrpmcparam</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI pmc_wrpmcparam(unsigned short FlibHndl, long *length, char *buff);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            The PMC parameter(timer, counter, keep relay, and data) is downloaded by the tape format.<br/>
+            When you execute this function, set '1'  for PWE of the CNC parameter and make the state of CNC an emergency stop.<br/>
+            Refer to the description of <a href="Pmc/pmc_rdpmcparam.htm" target="_parent">pmc_rdpmcparam</a> for the format of PMC parameter.<br/>
+            When the last character of buffer is not "A" or "%", EW_DATA error occurs.
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle.<br/>
+                            See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in/out</type>
+                    <content>
+                         Specify the pointer to the variable where the character size which wants to write is set.<br/>
+                         The function returns the length of the character which was written actually.
+                    </content>
+                </item>
+                <item>
+                    <name>buff</name>
+                    <type>in</type>
+                    <content>
+                        Specify the pointer to the area where the PMC parameter which wants to be written is stored.
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_RESET</name>
+            <content>
+                Stop request<br/>
+                All PMC parameter already was written.
+            </content>
+        </item>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                <a href="Pmc/pmc_wrprmstart.htm" target="_parent">pmc_wrprmstart</a> function has not been executed.
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                Data length error<br/>
+                The value of 0 or less was specified for write size(*length).
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                Data error<br/>
+                The writing format is wrong.<br/>
+                <span class="xis">In case of 0i-F,30i/31i/32i,</span> in order to get more information for this err_no return value, execute
+                <a href="Pmc/pmc_getdtailerr.htm" target="_parent">pmc_getdtailerr</a>function.<br/>
+                The following detail status will be set onto the member, err_no of ODBERR structure.
+                <table>
+                    <tr><td> 1</td><td>:</td><td>The first character string was not "%;".                                                </td></tr>
+                    <tr><td> 2</td><td>:</td><td>The end of the character string was not ";(0x0A)" or "%".                               </td></tr>
+                    <tr><td> 3</td><td>:</td><td>The character string of second block was not the header information.                    </td></tr>
+                    <tr><td> 4</td><td>:</td><td>A model name of header information and an actual model are different.                   </td></tr>
+                    <tr><td> 5</td><td>:</td><td>The character by which header information and ID information were delimited was not ",".</td></tr>
+                    <tr><td> 6</td><td>:</td><td>The character string of ID information on header information was not "MSID =".          </td></tr>
+                    <tr><td> 7</td><td>:</td><td>The MSID number on header information and current PMC unit type are different.          </td></tr>
+                    <tr><td> 8</td><td>:</td><td>The last character of header information was not ")".                                   </td></tr>
+                    <tr><td> 9</td><td>:</td><td>The first character of parameter block was not "N".                                     </td></tr>
+                    <tr><td>10</td><td>:</td><td>The address number of parameter block was wrong. (no six digits)                        </td></tr>
+                    <tr><td>11</td><td>:</td><td>The address number of parameter block was wrong. (the head of N number is not "6")      </td></tr>
+                    <tr><td>12</td><td>:</td><td>The third character of the parameter block was not "0", "1", "2", "3", "4", or "9".     </td></tr>
+                    <tr><td>13</td><td>:</td><td>The block of larger group information than the total of the group was specified.        </td></tr>
+                    <tr><td>14</td><td>:</td><td>The data table control information was wrong. (number which cannot be specified)        </td></tr>
+                    <tr><td>15</td><td>:</td><td>The head of the character for the set value on the parameter block was not "P".         </td></tr>
+                    <tr><td>16</td><td>:</td><td>The character which was not the numerical value was included in the setting value. (format error of setting value) </td></tr>
+                    <tr><td>17</td><td>:</td><td>The number of characters of bit patterns was not eight characters. (format error of setting value) </td></tr>
+                    <tr><td>18</td><td>:</td><td>The range of address was wrong.                                                         </td></tr>
+                    <tr><td>19</td><td>:</td><td>The total number of data table control information was wrong.                           </td></tr>
+                    <tr><td>20</td><td>:</td><td>The data table control information was wrong.                                           </td></tr>
+                </table>
+                And the block number(0-) in which includ an incorrect data will be set onto the member, err_dtno of ODBPMCERR.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                no option
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                Parameter error<br/>
+                CNC parameter(PWE) is '0'.
+            </content>
+        </item>
+        <item>
+            <name>EW_PATH</name>
+            <content>
+                PMC unit type was wrong.<span class="xis">(only 0i-F,30i/31i/32i)</span><br/>
+                The PMC unit type was changed.
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                CNC execution rejection<br/>
+                CNC is not in "Emergency" state.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+                No.8900#0(PWE) (must be set)
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>pmc_rdprmstart</name>
+            <file>Pmc/pmc_rdprmstart.htm</file>
+        </item>
+        <item>
+            <name>pmc_rdpmcparam</name>
+            <file>Pmc/pmc_rdpmcparam.htm</file>
+        </item>
+        <item>
+            <name>pmc_rdprmend</name>
+            <file>Pmc/pmc_rdprmend.htm</file>
+        </item>
+        <item>
+            <name>pmc_wrprmstart</name>
+            <file>Pmc/pmc_wrprmstart.htm</file>
+        </item>
+        <item>
+            <name>pmc_wrprmend</name>
+            <file>Pmc/pmc_wrprmend.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

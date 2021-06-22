@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_wrpm_item</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_wrpm_item(unsigned short FlibHndl, short start_num, short type, short data_num, IODBPMAINTE* item);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            Writes all data specified by the item index.<br/>
+            The acquired data is as follows.
+            <dl>
+                <dd>- Name</dd>
+                <dd>- Life count type</dd>
+                <dd>- Life time data</dd>
+                <dd>- Life remained time data</dd>
+                <dd>- Life count state</dd>
+            </dl>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>start_num</name>
+                    <type>in</type>
+                    <content>
+                        Specify the starting item index to be written. (1..10)
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the written data type.
+                        </p>
+                        <table class="dd">
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>Clear all information</td> </tr>
+                               <tr> <td align="right"> 1</td> <td>:</td> <td>Name string</td> </tr>
+                               <tr> <td align="right"> 2</td> <td>:</td> <td>Life count type</td> </tr>
+                               <tr> <td align="right"> 3</td> <td>:</td> <td>Life time data</td> </tr>
+                               <tr> <td align="right"> 4</td> <td>:</td> <td>Life remained time data</td> </tr>
+                               <tr> <td align="right"> 5</td> <td>:</td> <td>Life count state</td> </tr>
+                               <tr> <td align="right">-1</td> <td>:</td> <td>All above data</td> </tr>
+                        </table>
+                    </content>
+                </item>
+                <item>
+                    <name>data_num</name>
+                    <type>in</type>
+                    <content>
+                        Specify the number of items to be written.
+                    </content>
+                </item>
+                <item>
+                    <name>item</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+Specify the pointer to the array of IODBPMAINTE structure.<br/>
+The array of the structure specified by data_num is required.
+                        </p>
+The IODBPMAINTE  structure is as follows.
+<pre>
+typedef struct tagIODBPMAINTE {
+    char  name[40];     /* Name string */
+    long  type;         /* Life count type */
+    long  total;        /* Life time (unit:minute) */
+    long  remain;       /* Life remained time */
+    long  stat;         /* Life count state */
+} IODBPMAINTE;
+</pre>
+            <dt>name</dt>
+            <dd>Specify Name string</dd>
+                        <dd>Please refer to <a href="misc/cnc_wrpm_mcnitem.htm" target="_parent">cnc_wrpm_mcnitem</a> for the method of specifying the name.</dd>
+
+            <dt>type</dt>
+            <dd>Specify Life count type</dd>
+            <dd>
+                        <table class="dd">
+                            <tr><td>0</td><td>:</td><td>Invalidity</td></tr>
+                            <tr><td>1</td><td>:</td><td>All time  </td></tr>
+                            <tr><td>2</td><td>:</td><td>Power on  </td></tr>
+                            <tr><td>3</td><td>:</td><td>Running   </td></tr>
+                            <tr><td>4</td><td>:</td><td>Cutting   </td></tr>
+                        </table>
+            </dd>
+
+            <dt>total</dt>
+            <dd>Specify Life time</dd>
+            <span class="xis">
+                <dd>In case of 16i/18i/21i, unit is "hour".</dd>
+                <dd>In case of 30i/31i/32i, 0i-D and PMi-A, unit is "minute".</dd>
+            </span>
+            <span class="ois">
+                <dd>unit is "hour".</dd>
+            </span>
+
+            <dt>remain</dt>
+            <dd>Specify Life remained time</dd>
+            <span class="xis">
+                <dd>In case of 16i/18i/21i, unit is "hour".</dd>
+                <dd>In case of 30i/31i/32i, 0i-D and PMi-A, unit is "minute".</dd>
+            </span>
+            <span class="ois">
+                <dd>unit is "hour".</dd>
+            </span>
+
+            <dt>stat</dt>
+            <dd>Specify Life count state</dd>
+            <span class="xis">
+                <dd>16i/18i/21i is unused.</dd>
+            </span>
+
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+             <name>EW_FUNC</name>
+         <content>
+        "Name" or "Life time data" is not set.<br/>
+                <span class="xis">Program is running. (only 16i18i/21i)</span>
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+        data block length error<br/>
+        The number of items to be written(data_num) is 0.
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+        data number error<br/>
+        The starting item index to be written (start_num) is invalid.
+            </content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>
+        data attribute error<br/>
+        The written data type(type) is invalid.</content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+data error<br/>
+In order to get more information for this return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.  The following details status will be set onto the member, err_no of ODBERR structure.<br/>
+0 : Completion status other than EW_DATA<br/>
+1 : Name string error<br/>
+2 : Life count type error<br/>
+3 : Life time data error<br/>
+4 : Life remained time data error<br/>
+5 : Life count state error<br/>
+Item index corresponding error data is acquired at err_dtno. 
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+CNC execution rejected<br/>
+CNC is on execution.
+            </content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-D, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <add></add>
+    </option>
+
+
+
+    <parameter></parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+             <fs0if>O</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>O</fs16ib>
+           <fs18ib>O</fs18ib>
+           <fs21ib>O</fs21ib>
+           <fs30ia>O</fs30ia>
+           <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+             <fs0if>O</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>O</fs16ib>
+           <fs18ib>O</fs18ib>
+           <fs21ib>O</fs21ib>
+           <fs30ia>O</fs30ia>
+           <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>O</fs16ib>
+           <fs18ib>O</fs18ib>
+           <fs21ib>O</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdpm_item</name>
+            <file>misc/cnc_rdpm_item.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

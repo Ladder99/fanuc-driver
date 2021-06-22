@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+
+    <title>cnc_allclibhndl2</title>
+
+
+
+    <declare>
+
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_allclibhndl2( long node_no, unsigned short *FlibHndl );</prottype>
+      </vc>
+
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                Allocates the library handle to the specified node number.
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the variable to which the library handle will be stored.<br/>
+                            See <a href="handle.htm" target="_parent">Library handle</a> for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>node_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the node number. (0,..,&#60;maximum node number&#62;)<br/>
+                            Maximum node number is 'the number of node - 1'.<br/>
+                            (The number of node is got by using <a href="Handle/cnc_rdnodenum.htm" target="_parent">cnc_rdnodenum</a> function.)
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NODLL</name>
+            <content>
+                There is no DLL file for each CNC series corresponding to specified node.
+            </content>
+        </item>
+        <item>
+            <name>EW_HSSB</name>
+            <content>
+                Communication error on HSSB<br/>
+                Check the power supply of CNC, HSSB I/F board, HSSB connection cable.
+            </content>
+        </item>
+        <item>
+            <name>EW_HANDLE</name>
+            <content>
+                Allocation of handle number is failed.
+            </content>
+        </item>
+        <item>
+            <name>EW_MMCSYS</name>
+            <content>
+                Access failure to the device driver<br/>
+                The device driver for HSSB multi-connection is not installed.
+            </content>
+        </item>
+        <item>
+            <name>EW_BUSY</name>
+            <content>
+                Initialization between MMC function and CNC/PMC is in progress<br/>
+                Retry this function until the initialization completes.
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                Node number(node_no) is wrong.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <cmn>The extended driver/library function is necessary.</cmn>
+    </option>
+
+
+
+    <parameter></parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs15>H</fs15>
+            <fs15i>H</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </w>
+        <pw>
+            <d>H</d>
+            <h>H</h>
+            <a>H</a>
+        </pw>
+    </support>
+
+
+
+  </func>
+</root>

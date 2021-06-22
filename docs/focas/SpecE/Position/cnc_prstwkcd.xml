@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_prstwkcd</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_prstwkcd(unsigned short FlibHndl, short length, IDBWRA *prstwkcd);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+                <p>Presets the word coordinate selecting in CNC(absolute position).<br/>
+                   Preset data is specified by "data[0]" in "IDBWRA".</p>
+                <p>It is possible to make preset to all axes at a time by specifying
+            ALL_AXES for "type".
+            In that case, an preset data of each axis is specified by the data
+            array in IDBWRA.</p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the length of the data block(size of IDBWRA structure)</p>
+                        <p><b>IDBWRA</b></p>
+                        <table>
+                            <colgroup align="left" valign="top">
+                            <colgroup align="left" valign="top">
+                            <colgroup align="left" valign="top">
+                            <tr>
+                                <th>for each axis</th>
+                                <th>for all axes</th>
+                            </tr>
+                            <tr>
+                                <td valign="top"><img src="position/rpos.gif"/></td>
+                                <td valign="top"><img src="position/rposa.gif"/></td>
+                            </tr>
+                            </colgroup>
+                            </colgroup>
+                            </colgroup>
+                        </table>
+                        <ul>
+                            <li>Series 15/15i, 30i, 0i-D/F</li><p/>
+                            <p>
+                                n = Maximum controlled axes<br/>
+                                (The data for current controlled axes are valid.)
+                            </p>
+                        </ul>
+                        <ul>
+                            <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i</li><p/>
+                            <p>
+                                n = Current controlled axes 
+                            </p>
+                        </ul>
+                    </content>
+                </item>
+                <item>
+                    <name>prstwkcd</name>
+                    <type>out</type>
+                    <content>
+                        <p>Pointer to the IDBWRA structure to be set work coordinate system of the controlled axes. The IDBWRA structure is as follows.</p>
+<pre>
+typedef struct idbwra {
+        short   datano;                 /* Not used. */
+        short   type;                   /* Axis number. */
+        long    data[MAX_AXIS];         /* Preset data. */
+} IDBWRA ;    /* MAX_AXIS is the maximum controlled axes. */
+</pre>
+                        <dl>
+                            <dt>type</dt>
+                            <dd>Specify axis number to make preset.
+                                <table class="dd">
+                                    <colgroup align="left" valign="top">
+                                    <colgroup align="left" valign="top">
+                                    <colgroup align="left" valign="top">
+                                    <tr>
+                                        <td>ALL_AXES</td>
+                                        <td>:</td>
+                                        <td>for all axes(ALL_AXES : -1)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1,..,m</td>
+                                        <td>:</td>
+                                        <td>for each axis(m : number of controlled axis)</td>
+                                    </tr>
+                                    </colgroup>
+                                    </colgroup>
+                                    </colgroup>
+                                </table>
+                            </dd>
+
+                            <dt>data</dt>
+                            <dd>Specify value to make preset.
+                                <table class="dd">
+                                    <tr>
+                                        <td>data[0],..,data[m-1]</td>
+                                        <td>:</td>
+                                        <td>for all axes</td>
+                                    </tr>
+                                    <tr>
+                                        <td>data[0]</td>
+                                        <td>:</td>
+                                        <td>for each axis</td>
+                                    </tr>
+                                </table>
+                            </dd>
+
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+
+        </common>
+
+        <!-- is Argument Start -->
+        <is>
+            <hssb>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>length</name>
+                        <type>in</type>
+                        <content>
+                            <p>Specify the length of the data block(size of IDBWRA structure)</p>
+                            <p><b>IDBWRA</b></p>
+                            <table>
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                <tr>
+                                    <th>for each axis</th>
+                                    <th>for all axes</th>
+                                </tr>
+                                <tr>
+                                    <td valign="top"><img src="position/rpos.gif"/></td>
+                                    <td valign="top"><img src="position/rposa.gif"/></td>
+                                </tr>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+                            <p>n = Maximum controlled axes (The data for current controlled axes are valid.)</p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>prstwkcd</name>
+                        <type>out</type>
+                        <content>
+                            <p>Pointer to the IDBWRA structure to be set work coordinate system of the controlled axes. The IDBWRA structure is as follows.</p>
+<pre>
+typedef struct idbwra {
+    short   datano;                 /* Not used. */
+    short   type;                   /* Axis number. */
+    long    data[MAX_AXIS];         /* Preset data. */
+} IDBWRA ;    /* MAX_AXIS is the maximum controlled axes. */
+</pre>
+                            <dl>
+                                <dt>type</dt>
+                                <dd>Specify axis number to make preset.
+                                    <table class="dd">
+                                        <colgroup align="left" valign="top">
+                                        <colgroup align="left" valign="top">
+                                        <colgroup align="left" valign="top">
+                                        <tr>
+                                            <td>ALL_AXES</td>
+                                            <td>:</td>
+                                            <td>for all axes(ALL_AXES : -1)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1,..,m</td>
+                                            <td>:</td>
+                                            <td>for each axis(m : number of controlled axis)</td>
+                                        </tr>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                    </table>
+                                </dd>
+
+                                <dt>data</dt>
+                                <dd>Specify value to make preset.
+                                    <table class="dd">
+                                        <tr>
+                                            <td>data[0],..,data[m-1]</td>
+                                            <td>:</td>
+                                            <td>for all axes</td>
+                                        </tr>
+                                        <tr>
+                                            <td>data[0]</td>
+                                            <td>:</td>
+                                            <td>for each axis</td>
+                                        </tr>
+                                    </table>
+                                </dd>
+                            </dl>
+                        </content>
+                    </item>
+                </vc>
+            </hssb>
+        </is>
+        <!-- is Argument End -->
+
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                data block length error<br/>
+                Size of ODBWRA structure(length) is illegal.
+            </content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>
+                data attribute error<br/>
+                The specification of axis number (type) is improper.
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                data error<br/>
+                The content of "data" is out of range which can be specified.<br/>
+                In order to get more information for this err_no return value, execute <a href="misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                The axis number(0 -) which error occurred will be set onto the member, err_dtno of ODBERR structure.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                no option<br/>
+                The work coordinate system preset function and the extended driver/library function are necessary.
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT<br/>(Series 16i/18i-W)</name>
+            <content>
+                CNC execution denied
+            </content>
+        </item>
+        <add></add>
+
+        <!-- is ERRORCODE Start -->
+        <is>
+
+            <item>
+                <name>EW_LENGTH</name>
+                <content>
+                    data block length error<br/>
+                    Size of ODBWRA structure(length) is illegal.
+                </content>
+            </item>
+            <item>
+                <name>EW_ATTRIB</name>
+                <content>
+                    data attribute error<br/>
+                    The specification of axis number (type) is improper.
+                </content>
+            </item>
+            <item>
+                <name>EW_DATA</name>
+                <content>
+                    data error<br/>
+                    The content of "data" is out of range which can be specified.<br/>
+                    In order to get more information for this err_no return value, execute <a href="misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                    The axis number(0 -) which error occurred will be set onto the member, err_dtno of ODBERR structure.
+                </content>
+            </item>
+            <item>
+                <name>EW_NOOPT</name>
+                <content>
+                    no option<br/>
+                    The work coordinate system preset function and the extended driver/library function are necessary.
+                </content>
+            </item>
+        </is>
+        <!-- is ERRORCODE End -->
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>
+            The work coordinate system preset function are necessary.
+        </need>
+
+        <is>
+            <hssb>
+                <p>The extended driver/library function is necessary.</p>
+                <p>The work coordinate system preset function are necessary.</p>
+            </hssb>
+        </is>
+
+    </option>
+
+
+
+    <parameter>
+    </parameter>
+    <is_parameter></is_parameter>
+
+
+
+    <mode>
+    </mode>
+    <is_mode></is_mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <add><b></b></add>
+        <is>
+            <!-- M -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+    </reference>
+
+
+
+    <example>
+<vc>
+The following program preset the work coordinate of first axis.
+
+#include "fwlib32.h"
+#define FIRST_AXIS      1
+#define ONE_AXIS_LEN    8
+
+    IDBWRA          prstwkcd ;
+    short           ret ;
+    prstwkcd.type = FIRST_AXIS ;
+    prstwkcd.data[0] = 0 ;
+    ret = cnc_prstwkcd(h, ONE_AXIS_LEN, &#38;prstwkcd);
+</vc>
+    </example>
+
+
+
+  </func>
+</root>

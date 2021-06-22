@@ -21,7 +21,7 @@ namespace l99.driver.fanuc.collectors
         {
             await apply(typeof(fanuc.veneers.SysInfo), "sys_info");
             
-            await apply(typeof(fanuc.veneers.StatInfo), "stat_info");
+            await apply(typeof(fanuc.veneers.StatInfoText), "stat_info");
 
             await apply(typeof(fanuc.veneers.Figures), "figures");
             

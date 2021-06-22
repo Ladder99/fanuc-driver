@@ -1,0 +1,427 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>FOCAS1/Ethernet Unsolicited Messaging Function</title>
+<link rel="stylesheet" type="text/css" href="fwlib32.css">
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<p><a href="fwlib32.htm">Top Page</a></p>
+
+<hr>
+
+<h2>Unsolicited Messaging Function</h2>
+
+<ol>
+
+<ol>
+    <li><a href="#General">Outline of unsolicited messaging function</a>
+    <li><a href="#Setting">Setting to use the unsolicited messaging</a>
+    <li><a href="#Trans">Control data and Message transfer mechanism for the unsolicited messaging</a>
+    <li><a href="#Func">Ethernet functions for the unsolicited messaging function</a>
+    <li><a href="#Make">Making method of application which uses the unsolicited messaging function</a>
+    <li><a href="#Vista">Notification of using with Windows Vista Business</a>
+</ol>
+<p>
+<br/>
+<br/>
+<!---------------------------------------------------------------------------->
+
+<li><a name="General">Outline of unsolicited messaging function
+
+<blockquote>
+<dl>
+<p>In the Unsolicited messaging function, the Message can be voluntarily notified from CNC to the personal computer according to the instruction of the ladder program or the NC program Note1).  So, in the PC application, the state of CNC can be observed without the polling process.  Arbitrary data of PMC or Macro variables Note1) can be transmitted as the Message.  In the PC application, the polling process to inquire the state of CNC regularly becomes unnecessary by using this function.
+
+<p>The unsolicited messaging issues the window message to the PC application internally and notifies the Message.  So, Visual C++ is necessary for making the application.
+
+<p>Note1) NC program and Macro variable can be used only by 30i/31i/32i/35i, 0i-D/F and PMi-A.
+<br/>
+<p>This function is supported at the following ethernet function.
+<li type="square">16i/18i/21i, 0i-B/C/D/F, Power Mate i (Not supported at Ethernet board/Embedded Ethernet)
+	<dd>Fast Ethernet board</dd>
+<li type="square">30i/31i/32i/35i, PMi-A
+	<dd>Fast Ethernet board</dd>
+	<dd>Embedded Ethernet</dd>
+</blockquote>
+
+
+<center>
+            <p><img src="Unsolic1.gif"></p>
+
+
+            <p><img src="Unsolic2.gif"></p>
+</center>
+
+
+<li><a name="Setting">Setting to use the unsolicited messaging
+
+<blockquote>
+<dl>
+<p>The following items are necessary to use the unsolicited messaging function.
+     <p>- CNC control software : to be registered onto FROM of CNC.
+<ul>
+	<dl compact>
+	<dt>16i	<dd>B0F4/12(M)  or later
+		<dd>B0F4/07(T)  or later
+		<dd>B0H1/17(M)  or later
+		<dd>B1H1/17(T)  or later
+	<dt>18i	<dd>BDF4/12(M)  or later
+		<dd>BEF4/07(T)  or later
+		<dd>BDH1/17(M)  or later
+		<dd>BEH1/17(T)  or later
+	<dt>21i	<dd>DDF4/12(M)  or later
+		<dd>DEF4/07(T)  or later
+		<dd>DDH1/17(M)  or later
+		<dd>DEH1/17(T)  or later
+	<dt>0i	<dd>D4A1/01(M)  or later
+		<dd>D6A1/01(T)  or later
+		<dd>D4F1/01(M)  or later
+		<dd>D6F1/01(T)  or later
+	<dt>PMi	<dd>88E0/21 or later
+		<dd>88F2/04     or later
+		<dd>88F1/12     or later
+	<dt>30i	<dd>G002/19.9   or later
+		<dd>G012/19.9   or later
+		<dd>G022/19.9   or later
+		<dd>G032/19.9   or later
+		<dd>* In case of using for Embedded Ethernet.
+		<dd>G002/23.0   or later
+		<dd>G002/23.0   or later
+		<dd>G012/23.0   or later
+		<dd>G022/23.0   or later
+		<dd>G032/23.0   or later
+		<dd>G003/6.0    or later
+		<dd>G013/6.0    or later
+		<dd>G023/6.0    or later
+		<dd>G033/6.0    or later
+	<dt>31i	<dd>G101/19.9   or later
+		<dd>G111/19.9   or later
+		<dd>G121/19.9   or later
+		<dd>G131/19.9   or later
+		<dd>* In case of using for Embedded Ethernet.
+		<dd>G101/23.0   or later
+		<dd>G111/23.0   or later
+		<dd>G121/23.0   or later
+		<dd>G131/23.0   or later
+		<dd>G103/6.0    or later
+		<dd>G113/6.0    or later
+		<dd>G123/6.0    or later
+		<dd>G133/6.0    or later
+	<dt>32i	<dd>G201/19.9   or later
+		<dd>* In case of using for Embedded Ethernet.
+		<dd>G201/23.0   or later
+		<dd>G203/6.0    or later
+	<dt>PMi-A<dd>88H0/1.0   or later
+	</dl>
+</ul>
+     <p>- CNC side(Fast Ethernet firmware) : to be registered onto F-ROM of CNC.
+<ul>
+	<dd>6567/06  or later(16i/18i/21i,Power Mate i)
+	<dd>6567/07  or later(0i-B)
+	<dd>656W/01  or later(0i-C)
+	<dd>658W/01  or later(0i-D)
+	<dd>658B/01  or later(0i-F)
+	<dd>6569/19  or later(30i/31i/32i)
+	<dd>658K/05  or later(PMi-A)
+</ul>
+     <p>- CNC side(Net control application software) : to be registered onto F-ROM of CNC.
+<ul>
+	<dd>656F/11  or later(30i/31i/32i)
+	<dd>656F/12  or later(In case of using for Embedded Ethernet of 30i/31i/32i)
+</ul>
+	<p>- CNC side(Embbeded Ethernet control software) : to be registered onto F-ROM of CNC.
+<ul>
+	<dd>656E/11  or later(In case of using for Embedded Ethernet of 30i/31i/32i)
+	<dd>658M/04  or later(In case of using for Embedded Ethernet of PMi-A)
+</ul>
+	<p>- CNC side(Graphic Function 1 for 15") : to be registered onto F-ROM of CNC.
+<ul>
+	<dd>60VB/01.8 or later(In case of using for Embedded Ethernet of 30i/31i/32i)
+</ul>
+     <p>- PC side(Ethernet library) : to be copied onto a suitable folder of the PC. (System32 etc.).
+<ul>
+	<dl>
+	<dt>Fwlib32.dll : <dd>FOCAS1/Ethernet Libraries(A02B-0207-K732) 1.7  or later(16i/18i/21i,Power Mate i)
+			  <dd>FOCAS1/Ethernet Libraries(A02B-0207-K732) 1.8  or later(0i)
+			  <dd>FOCAS1/2 Libraries(A02B-0207-K737) 2.5  or later(30i/31i/32i/35i, 0i-D)
+			  <dd>FOCAS1/2 Libraries(A02B-0207-K737) 3.9  or later(PMi-A)
+			  <dd>CNC Application Development Kit(A08B-9010-J5555#ZZ12) 1.1 or later(0i-F)
+	<dt>Fwlibe1.dll : <dd>FOCAS1/Ethernet Libraries(A02B-0207-K732) 1.7  or later(16i/18i/21i,Power Mate i)
+			  <dd>FOCAS1/Ethernet Libraries(A02B-0207-K732) 1.8  or later(0i)
+			  <dd>FOCAS1/2 Libraries(A02B-0207-K737) 2.5  or later(30i/31i/32i/35i, 0i-D)
+			  <dd>FOCAS1/2 Libraries(A02B-0207-K737) 3.9  or later(PMi-A)
+			  <dd>CNC Application Development Kit(A08B-9010-J5555#ZZ12) 1.1 or later(0i-F)
+	</dl>
+</ul>
+     <p>- PC side(Unsolicited messaging server) : to be installed into the PC.
+<ul>
+	<dt>UMsgServ.exe : <dd>FOCAS1/Ethernet Libraries(A02B-0207-K732) 1.7  or later
+			   <dd>FOCAS1/2 Libraries(A02B-0207-K737) 2.5  or later(30i/31i/32i/35i, 0i-D, PMi-A)
+			   <dd>CNC Application Development Kit(A08B-9010-J5555#ZZ12) 1.1 or later(0i-F)
+</ul>
+</blockquote>
+
+<blockquote>
+     <p>Install method of Unsolicited messaging server
+	    <ul>
+            <ol type=i>
+            <li>Copy the UMsgServ.exe onto the suitable folder.<br>
+            <li>Input the following command from the command prompt.<br>
+                    <dd> > UMsgServ.exe -Install [Enter]<br>
+            <br>
+            <dt>By the above operation, the Unsolicited messaging server will be started automatically. after the next reboot of the PC.<br>
+            </ol>
+            </ul>
+
+     <p>Uninstall method of Unsolicited messaging server
+            <ul>
+            <ol type=i>
+            <li>Right-click the icon of the "Unsolicited Messaging Server" on the system tray,  select "Exit" from the menu.
+                The Unsolicited messaging server terminates.  
+            <li>Input the following command from the command prompt.
+                    <dd> > UMsgServ.exe -Remove [Enter]
+            <li>Delete UMsgServ.exe from the installed folder.
+            </ol>
+            </ul>
+</blockquote>
+
+<blockquote>
+     <p>Setting method of data for Unsolicited messaging server
+            <ul>
+            <ol type=i>
+            <li>Right-click the icon of the "Unsolicited Messaging Server" on the system tray,  select "Setting" from the menu.
+                Following dialog screen for setting will be displayed.                   
+
+
+            <p><img src="unmsgset.gif"></p>
+
+
+            <li>Set necessary information for each item.
+                  <dl>
+                  <dt>Port Number : <dd>Specify the port number for the Unsolicited messaging server. (standard value is 8196)
+                  <dt>Timeout(sec): <dd>Specify the timeout time to detect an abnormal communication with CNC. (standard value is 30)
+                  <dt>Maximum CNC Number : <dd>Specify the maximum number of CNCs which can be observed at the same time by the Unsolicited messaging server.(standard value is 32) 
+                  </dl>
+            <br>
+
+            <li>The function of each button is as follows.
+                  <dl>
+                  <dt>[Standard] : <dd>resets the setting to the above standard value.
+                  <dt>[   OK   ] : <dd>saves the setting value and closes this screen.
+                                   <dd>The setting value will be effective after the restart of the Unsolicited messaging server.
+                  <dt>[ Cancel ] : <dd>closes this screen without saving the set value.
+                  </dl>
+            <br>
+            </ol>
+            </ul>
+</blockquote>
+
+<blockquote>
+   <p>The following setting is necessary to CNC beforehand, to use the unsolicited messaging function.</p>
+     <ul>
+     <dt>- IP address : <dd>IP address of destination PC.
+     <dt>- Port number : <dd>TCP/UDP port number of destination PC.(Note:The unsolicited messaging function uses TCP and UDP of the same port number.)
+
+     <dt>- Control parameter             <dd>It is PMC address or macro variable number to demand the data transmission by the ladder or the NC program.
+                                         <dd>Only PMC address ("R","E") can be set for Series 16i/18i/21i, 0i-B/C, and Power Mate i. 
+     <dt>- Transmission parameter        <dd>It is the PMC address and size or the macro number and numbers which becomes the content of the message.
+                                         <dd>Only PMC address can be set for Series 16i/18i/21i, 0i-B/C, and Power Mate i. 
+
+     <dt>- PMC address                 : <dd>R address for ladder program to demand data transmission
+     <dt>- Reading address of PMC data :<dd>R address for ladder program to demand data transmission
+
+     <dt>- Retry number : <dd>Number of transmission retry to observe communication board transmits data.
+     <dt>- Timeout time :<dd>imeout time to observe communication board transmits data.
+     <dt>- The interval time of the existence signal : <dd>The interval time of the existence signals which are transmitted while communication board operates.
+     <dt>- others : <dd>Please refer to the specification of function for details.
+     </ul>
+
+   <p>These data can be set from the PC application using cnc_wrunsolicprm() or cnc_wrunsolicprm2().</p>
+<!--<p>Refer to the following section 5 for details.</p>-->
+   <p>When you set these data in CNC, these data is saved in S-RAM area of CNC.</p>
+
+</blockquote>
+
+<li><a name="Trans">Control data and Message transfer mechanism for the unsolicited messaging
+<ul>
+<li type="square"><a href="./Unsol_res.htm">When you use the PMC address for the control parameter(Response Notice method)</a>
+<li type="square"><a href="./Unsol_sim1.htm">When you use the PMC address for the control parameter(Simple method)(30i/31i/32i/35i, 0i-D/F, PMi-A only)</a>
+<li type="square"><a href="./Unsol_sim2.htm">When you use the Macro variable for the control parameter(Simple method)(30i/31i/32i/35i, 0i-D/F, PMi-A only)</a>
+</ul>
+<blockquote>
+
+<!--- comment
+<li>PMC data and Message transfer mechanism for the unsolicited messaging
+<blockquote>
+
+   <p>PMC "R" or "E" address data is used to the control for transmitting the Message from CNC.
+      When the unsolicited messaging function is used, it is necessary to make the ladder program which controls the following signals.
+
+<p><img src="unmsgbit.gif"></p>
+
+<ul>
+	<dl compact>
+        <dt>REQ : <dd>When the Message is transmitted, the ladder program turns on this signal.
+                      It is necessary to set a necessary message before this signal is turned on.
+        <dt>COM : <dd>When the Message transmission is begun from CNC, this signal is turned on.
+                      This signal is turned on by communication board.
+                      And communication board turns off this signal immediately before "RES" is turned on after "RES_CODE" is set.
+        <dt>RES : <dd>This signal is turned on immediately after the Message transmission is completed and the PC completes the Message
+                      reception.  This signal is turned on by communication board.  Please turn off the "REQ" signal after processing
+                      according to RES_CODE by ladder program.
+                      After "REQ" signal is turned off, communication board clears RES_CODE and turns off this signal.
+
+        <dt>RES_CODE : <dd>The Message reception result is set according to "RES".
+                           The reception result is set by communication board.
+                           After the reception result is processed by ladder program, "REQ" must be turned off by ladder program.
+                           When "REQ" signal was turned off, CNC clears this area.
+</ul>
+
+        <p>0x00..0x3F are available for RES_CODE.  0x01..0x0F and 0x21..0x2F are fixed for system and the meaning is as follows.
+        <ul>
+	<dl compact>
+                <dt>= 0x00 <dd>Success. 
+                <dt>= 0x01 <dd>CNC has no parameter or CNC doesn't accept the start of the unsolicited messaging service.
+                <dt>= 0x02 <dd>here isn't "Unsolicited messaging server" or the sever doesn't run.
+                <dt>= 0x03 <dd>CNC fails to transmit.
+                <dt>= 0x04 <dd>CNC fails to receive.
+                <dt>= 0x05 <dd>Transmission retry on CNC side exceeds the maximum count of retry.
+                <dt>= 0x06 <dd>CNC fails to make the Message data.
+                <dt>= 0x07 <dd>CNC receives the invalid packet.
+                <dt>= 0x08 <dd>CNC accepts the termination of the unsolicited messaging session.
+                <dt>= 0x09..0x0F <dd>Reserved.
+
+                <dt>= 0x21 <dd>The PC application to receive the Message does not exist though the message has been received by the PC.
+                               (The PC application might be terminated abnormally.)
+                <dt>= 0x22 <dd>The PC application to receive the Message is not recognized to "Unsolicited messaging server" though the
+                               Message has been received by the PC. (only Unsolicited messaging server might be restarted.)
+                <dt>= 0x23 <dd>Failed in writing the received message to the PC side.
+                <dt>= 0x24 <dd>The timeout period (timeout * retry count) is expired.
+                <dt>= 0x25 <dd>Illegal data was included in the received message.
+                <dt>= 0x26..0x2F <dd>Reserved.
+        </dl>
+        </ul>
+        <p>0x00, 0x10..0x1F, 0x30..0x3F are available for the PC application.
+-->
+</blockquote>
+
+<li><a name="Func">Ethernet functions for the unsolicited messaging function
+<blockquote>
+
+   <p>In the PC side application, the following functions are provided to receive the Message from CNC.
+      (The function specification is described later.)
+
+     <ul>
+     <dt>- <a href="./Unsolic/cnc_wrunsolicprm.htm">cnc_wrunsolicprm</a>  Sets the unsolicited messaging parameters
+     <dt>- <a href="./Unsolic/cnc_wrunsolicprm2.htm">cnc_wrunsolicprm2</a>  Sets the unsolicited messaging parameters(2)
+     <dt>- <a href="./Unsolic/cnc_rdunsolicprm.htm">cnc_rdunsolicprm</a>  Gets the unsolicited messaging parameters
+     <dt>- <a href="./Unsolic/cnc_rdunsolicprm2.htm">cnc_rdunsolicprm2</a>  Gets the unsolicited messaging parameters(2)
+     <dt>- <a href="./Unsolic/cnc_unsolicstart.htm">cnc_unsolicstart</a> Initiates the unsolicited messaging session
+     <dt>- <a href="./Unsolic/cnc_unsolicstop.htm">cnc_unsolicstop</a>  Terminates the unsolicited messaging session
+     <dt>- <a href="./Unsolic/cnc_rdunsolicmsg.htm">cnc_rdunsolicmsg</a>   Reads the unsolicited messaging data
+     <dt>- <a href="./Unsolic/cnc_rdunsolicmsg2.htm">cnc_rdunsolicmsg2</a>   Reads the unsolicited messaging data(2)
+     </ul>
+
+</blockquote>
+
+
+<li><a name="Make">Making method of application which uses the unsolicited messaging function
+<blockquote>
+
+  <ol type=i>
+  <li>Set the parameter for the unsolicited messaging to CNC.
+
+      <p>The parameter for the unsolicited messaging function is set to CNC SRAM area using cnc_wrunsolicprm().
+         The parameter can be read by cnc_rdunsolicprm(), if necessary.
+
+  <li>Notify the completion of preparing the unsolicited messaging to CNC.
+
+      <p>The completion of preparing the unsolicited messaging is notified to CNC using cnc_unsolicstart().
+         After this call, CNC part can send the Message.
+
+  <li>Add the function to process the unsolicited messaging.
+
+<code><pre>
+     // Example of ON_MESSAGE
+     #define WM_MYMESSAGE (WM_APP + 1)
+     BEGIN_MESSAGE_MAP( CMyWnd, CMyParentWndClass )
+         //{{AFX_MSG_MAP( CMyWnd
+         ON_MESSAGE( WM_MYMESSAGE, OnMyMessage )
+         //}}AFX_MSG_MAP
+     END_MESSAGE_MAP( )
+
+     LRESULT CMyWnd::OnMyMessage(WPARAM wParam, LPARAM lParam)
+     {
+         LRESULT result;
+         // Process the Message from CNC using cnc_rdunsolicmsg(), etc.
+         return result;
+     }
+</pre></code>
+
+   <p>The arguments of the OnMyMessage() function are as follows.
+   <dl>
+   <dt>wParam
+          <dd> = -3 : The socket communication error occurred.
+          <dd> = -2 : The unsolicited message server has stopped.
+          <dd> = -1 : The CNC power was turned off.
+          <dd> =  0 : The Message from CNC arrived. (normal process)
+          <dd> =  1 : The CNC power was turned on.
+   <dt>lParam
+          <dd> =  "Handle for the Message data reading" : in case of wParam = 0 
+                  This value can be used as the argument for cnc_rdunsolicmsg().
+          <dd> =  0 : Other than wParam = 0
+   </dl>
+
+   <p>Note)
+   <ul>
+   <dl>
+   <dt>In case of "wParam = -3" : 
+       <dd>The "Handle for the Message data reading" on the CNC side becomes invalid, so call cnc_unsolicstart() again.
+           When the problem is not solved, investigate CNC power supply, Ethernet cable and I/F board. 
+
+   <dt>In case of "wParam = -2" :
+       <dd>The window message cannot be received at the application. 
+           So, both the restart of the application and the Unsolicited messaging server is necessary. 
+
+   <dt>In case of "wparam = -1" :
+       <dd>The application should wait for the wParam to become "1".
+           And it is necessary to execute the acquisition of the library handle again.
+   </dl>
+   </ul>
+
+   <p>And the OnMyMessage() function can set "RES_CODE" of the PMC data for
+     unsolicited messaging control by setting the return value in "result" when
+     wParam=0.
+     The value of "result" which can be set by the application is as follows.
+         <dd>result = 0x00, 0x10..0x1F, 0x30..0x3F
+
+         <p>
+
+  <li>Read the unsolicited messaging data.
+
+      <p>The transmitted message data at above OnMyMessage() routine is read by using cnc_rdunsolicmsg().
+
+  <li>Notify the termination of receiving the unsolicited messaging to CNC.
+
+      <p>The termination of receiving the unsolicited message from CNC is notified by cnc_unsolicstop() when the PC application finishes.
+  </ol>
+
+</blockquote>
+<li><a name="Vista">Notification of using with Windows Vista Business
+<blockquote>
+
+   <p>In Windows Vista, the CNC unsolicited message can not be received when the application for message receiving is executed as "Run as administrator".
+
+</blockquote>
+</ol>
+
+<hr>
+
+<p><a href="fwlib32.htm">Top Page</a></p>
+</body>
+</html>

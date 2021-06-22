@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <title>pbs_wr_param</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI pbs_wr_param( unsigned short FlibHndl, IN_PBSPRMFLG *flag, IN_PBSPRM *param );</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Sets the parameter of the PROFIBUS slave function.<br/>
+               (note) It is necessary to set slave_no specified in IN_PBSPRMFLG and IN_PBSPRM.
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>flag</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specifies the pointer to the IN_PBSPRMFLG structure to indicate the item of the setting parameter.<br/>
+                            The IN_PBSPRMFLG structure is as follows.
+<pre>
+typedef struct _IN_PBSPRMFLG {
+    char        slave_no;
+    char        pad;
+    char        di_size;
+    char        do_size;
+    char        di_path;
+    char        do_path;
+    char        di_kind;
+    char        do_kind;
+    char        di_top_address;
+    char        do_top_address;
+} IN_PBSPRMFLG;
+</pre>
+                            "1" is substituted for the set item. Even if the value is substituted for the IN_PBSPRM structure in case of "0", the paramter cannot be set.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>param</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specifies the pointer to the IN_PBSPRM structure to store the the setting parameter.<br/>
+                            The IN_PBSPRM structure is as follows.
+<pre>
+typedef struct _IN_PBSPRM{
+    unsigned char       slave_no;
+    unsigned char       pad;
+    unsigned char       di_size;
+    unsigned char       do_size;
+    unsigned char       di_path;
+    unsigned char       do_path;
+    unsigned char       di_kind;
+    unsigned char       do_kind;
+    unsigned short      di_top_address;
+    unsigned short      do_top_address;
+} IN_PBSPRM;
+</pre>
+                            <dl>
+                            <dt>slave_no</dt>
+                                <dd>Station number of slave</dd>
+                                <dd>range: from 0 to 125</dd>
+
+                            <dt>pad</dt>
+                                <dd>unused</dd>
+
+                            <dt>di_size</dt>
+                                <dd>size of DI data</dd>
+                                <dd>range: from 0 to 244</dd>
+                                <dd>unit:  byte</dd>
+
+                            <dt>do_size</dt>
+                                <dd>size of DO data</dd>
+                                <dd>range: from 0 to 244</dd>
+                                <dd>unit:  byte</dd>
+
+                            <dt>di_path</dt>
+                                <dd>PMC path number of DI data</dd>
+                                <dd>range: from 1 to 3</dd>
+
+                            <dt>do_path</dt>
+                                <dd>PMC path number of DO data</dd>
+                                <dd>range: from 1 to 3</dd>
+
+                            <dt>di_kind</dt>
+                                <dd>PMC address of DI data</dd>
+                                <dd>range: R or E</dd>
+
+                            <dt>do_kind</dt>
+                                <dd>PMC address of DO data</dd>
+                                <dd>range: R or E</dd>
+
+                            <dt>di_top_address</dt>
+                                <dd>top number of PMC address for DI data</dd>
+                                <dd>range: depends on the PMC address</dd>
+
+                            <dt>do_top_address</dt>
+                                <dd>top number of PMC address for DO data</dd>
+                                <dd>range: depends on the PMC address</dd>
+
+                            </dl>
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_DATA</name>
+            <content>data error<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                err_no of ODBERR structure.
+                <table border="0">
+                    <tr><td>2</td><td>:</td><td>out of range </td></tr>
+                </table>
+                err_dtno of ODBERR structure.
+                <table border="0">
+                    <tr><td>1100</td><td>:</td><td>slave_no      </td></tr>
+                    <tr><td>1101</td><td>:</td><td>di_path       </td></tr>
+                    <tr><td>1102</td><td>:</td><td>do_path       </td></tr>
+                    <tr><td>1103</td><td>:</td><td>di_kind       </td></tr>
+                    <tr><td>1104</td><td>:</td><td>do_kind       </td></tr>
+                    <tr><td>1105</td><td>:</td><td>di_top_address</td></tr>
+                    <tr><td>1106</td><td>:</td><td>do_top_address</td></tr>
+                    <tr><td>1107</td><td>:</td><td>di_size       </td></tr>
+                    <tr><td>1108</td><td>:</td><td>do_size       </td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                err_no of ODBERR structure.
+                <table border="0">
+                    <tr><td>43</td><td>:</td><td>There is no PROFIBUS slave board.           </td></tr>
+                    <tr><td>44</td><td>:</td><td>There is no PROFIBUS slave function.        </td></tr>
+                    <tr><td>45</td><td>:</td><td>There is no SRAM of PROFIBUS slave function.</td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>write protection<br/>
+                Write operation is prohibited.<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                err_no of ODBERR structure.
+                <table border="0">
+                    <tr><td>11</td><td>:</td><td>fail to write the parameter into SRAM </td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>CNC execution rejection<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                err_no of ODBERR structure.
+                <table border="0">
+                    <tr><td>10</td><td>:</td><td>fail to read the parameter from SRAM</td></tr>
+                </table>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <need>The PROFIBUS-DP slave function is necessary.</need>
+    </option>
+
+
+
+    <parameter>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>H</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>pbs_rd_param</name>
+            <file>Profibus/pbs_rd_param.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

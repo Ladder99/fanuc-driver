@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdrepeatval</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdrepeatval(unsigned short FlibHndl, long *rep_val);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+Get the counter of the subprogram call and the repeat for fixed cycle. 
+In case of subprogram call, the remainder counter is acquired.
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>rep_val</name>
+                    <type>out</type>
+                    <content>
+<dl>
+                            Specify the pointer to the variable to store the repeat counter which is acquired.<p/>
+                            The acquired value is as follows.<p/>
+                    <li>At power supply is turned on</li>
+                    <dd>Return value is '-1'.</dd><br/>
+
+                    <li>When the block where the repeat counter is specified is not executed.</li>
+                    <dd>Return value is '-1'.</dd><br/>
+
+                    <li>When the block where the subprogram call or the fixed cycle is specified is executed.</li>
+                    <dd>Specified counter is returned.</dd>
+                    <dd>* When the counter is not specified, the 0 is returned.</dd><br/>
+
+                    <li>While executing the specified repeat counter.</li>
+                    <dd>The rest counter is returned.</dd><br/>
+
+                    <li>When the block where the subprogram is called or the fixed  cycle is executed in the subprogram.</li>
+                    <dd>The repeat counter specified in this block is returned.</dd><br/>
+
+                    <li>When the repeat of subprogram ends, and the processing returns to the former program.</li>
+                    <dd>The repeat counter of former program is returned.</dd><br/>
+
+                    <li>When the first program where the repeat counter is specified ends.</li>
+                    <dd>Return value is '-1'.</dd><br/>
+
+                    <li>When the process is reset during the repeat.</li>
+                    <dd>Return value is '-1'.</dd><br/>
+
+                    <li>When the automatic running is stopped during the repeat and the CNC mode is changed.</li>
+                    <dd>The rest counter at the stopped is returned.</dd>
+</dl>
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>Unavailable<br/>This function is not supported by CNC.</content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option</content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <add></add>
+    </option>
+
+
+
+    <parameter>
+        <add></add>
+    </parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>O</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>H</fs16ia>
+           <fs18ia>H</fs18ia>
+           <fs21ia>H</fs21ia>
+           <fs16ib>H</fs16ib>
+           <fs18ib>H</fs18ib>
+           <fs21ib>H</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>O</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>H</fs16ia>
+           <fs18ia>H</fs18ia>
+           <fs21ia>H</fs21ia>
+           <fs16ib>H</fs16ib>
+           <fs18ib>H</fs18ib>
+           <fs21ib>H</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>H</fs16ia>
+           <fs18ia>H</fs18ia>
+           <fs21ia>H</fs21ia>
+           <fs16ib>H</fs16ib>
+           <fs18ib>H</fs18ib>
+           <fs21ib>H</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdrepeatval_ext</name>
+            <file>misc/cnc_rdrepeatval_ext.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

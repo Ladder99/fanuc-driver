@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdradofs</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdradofs(unsigned short FlibHndl, ODBROFS *radofs);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                Reads the mode and vector of the cutter compensation(tool nose radius compensation).<br/>
+                These are stored in each member of ODBROFS structure.<br/>
+                The places of decimal points can be got by <a href="misc/cnc_getfigure.htm" target="_parent">cnc_getfigure</a> function.
+            </p>
+      </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>radofs</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the ODBROFS structure for the data of the cutter compensation(tool nose radius compensation). The ODBROFS structure is as follows.
+                        </p>
+<pre>
+typedef struct odbrofs {
+    short   mode;         /* offset mode             */
+    short   pln_axes[2];  /* axis of plane selection */
+    long    ofsvct[2];    /* offset vector           */
+} ODBROFS ;
+</pre>
+<dl>
+    <dt>mode</dt>
+        <dd>Mode of the cutter compensation(tool nose radius compensation) is set.</dd>
+            <dd><table class="dd">
+            <tr> <td>0</td> <td>:</td> <td>cancel mode</td> </tr>
+            <tr> <td>1</td> <td>:</td> <td>offset mode</td> </tr>
+            </table></dd>
+        <dd>* In case of '0', the data except 'mode' is invalid.</dd>
+    <dt>pln_axes</dt>
+        <dd>Axis number of plane selection is set.</dd>
+        <dd>(0,..,MAX_AXIS-1) MAX_AXIS:max.controlled axes</dd>
+            <dd><table class="dd">
+            <tr> <td>pln_axes[0]</td> <td>:</td> <td>1st axis number</td> </tr>
+            <tr> <td>pln_axes[1]</td> <td>:</td> <td>2nd axis number</td> </tr>
+            </table></dd>
+    <dt>ofsvct</dt>
+        <dd>Vector of the cutter compensation(tool nose radius compensation) is set.</dd>
+</dl>
+<p/>'ofsvct' according to the G code of plane selection is as follows.
+    <table class="dd" border="1">
+    <thead>
+    <tr> <th></th> <th>ofsvct[0]</th> <th>ofsvct[1]</th> </tr>
+    </thead>
+    <tbody>
+    <tr> <td>G17</td> <td>X axis or parallel axis</td> <td>Y axis or parallel axis</td> </tr>
+    <tr> <td>G18</td> <td>Z axis or parallel axis</td> <td>X axis or parallel axis</td> </tr>
+    <tr> <td>G19</td> <td>Y axis or parallel axis</td> <td>Z axis or parallel axis</td> </tr>
+    </tbody>
+    </table>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>
+                <table>
+                        <tr> <td width="65" valign="top">Series 15</td>
+                             <td valign="top">:</td>
+                             <td>The cutter compensation(tool nose radius compensation) option and the extended driver/library option are necessary.</td>
+                        </tr>
+                        <tr> <td width="65" valign="top">Series 15i</td>
+                             <td valign="top">:</td>
+                             <td>This function needs the cutter compensation option and the extended driver/library function.</td>
+                        </tr>
+                </table>
+            </content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            The extended driver/library function is necessary.
+        </hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p></ethr>
+        <need>
+            <li>Series 15</li>
+                This function needs the cutter compensation(tool nose radius compensation) option.
+            <li>Series 15i</li>
+               This function needs the cutter compensation option.
+        </need>
+        <add></add>
+    </option>
+
+
+
+    <parameter></parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>H</fs15>
+            <fs15i>O</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>H</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdlenofs</name>
+            <file>misc/cnc_rdlenofs.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdfixcycle</name>
+            <file>misc/cnc_rdfixcycle.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdcdrotate</name>
+            <file>misc/cnc_rdcdrotate.htm</file>
+        </item>
+        <item>
+            <name>cnc_rd3dcdcnv</name>
+            <file>misc/cnc_rd3dcdcnv.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdmirimage</name>
+            <file>misc/cnc_rdmirimage.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdscaling</name>
+            <file>misc/cnc_rdscaling.htm</file>
+        </item>
+        <item>
+            <name>cnc_rd3dtofs</name>
+            <file>misc/cnc_rd3dtofs.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdposofs</name>
+            <file>misc/cnc_rdposofs.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

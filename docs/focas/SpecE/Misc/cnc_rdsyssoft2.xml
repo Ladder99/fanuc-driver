@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdsyssoft2</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdsyssoft2(unsigned short FlibHndl, ODBSYSS2 *syssoft2);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+Reads the series/version of CNC system software. These information are stored in each member of ODBSYSS2. <p/>
+
+This function can read data which <a href="misc/cnc_rdsyssoft.htm" target="_parent">cnc_rdsyssoft</a> cannot read. <p/>
+
+Reading the data which depends on the path needs exchanging the path using <a href="misc/cnc_setpath.htm" target="_parent">cnc_setpath</a> function. 
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>syssoft2</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the ODBSYSS2 structure for the data of the series/version of CNC system software.
+                        </p>
+The ODBSYSS2 structure is as follows.
+<pre><![CDATA[
+typedef struct odbsyss2 {
+     char    slot_no_p[16];        /* Physical slot number               */
+     char    slot_no_l[16];        /* Logical slot number                */
+     short   module_id[16];        /* Module ID                          */
+     short   soft_id[16];          /* Software ID                        */
+     char    soft_series[16][5];   /* Software series with CPU           */
+     char    soft_version[16][5];  /* Software version with CPU          */
+     short   soft_inst;            /* Software installation status       */
+     char    boot_ser[5];          /* Series of boot software            */
+     char    boot_ver[5];          /* Version of boot software           */
+     char    servo_ser[5];         /* Series of servo software           */
+     char    servo_ver[5];         /* Version of servo software          */
+     char    pmc_ser[5];           /* Series of PMC management software  */
+     char    pmc_ver[5];           /* Version of PMC management software */
+     char    ladder_ser[5];        /* Series of ladder software          */
+     char    ladder_ver[5];        /* Version of ladder software         */
+     char    mcrlib_ser[5];        /* Series of macro library            */
+     char    mcrlib_ver[5];        /* Version of macro library           */
+     char    mcrapl_ser[5];        /* Series of macro application        */
+     char    mcrapl_ver[5];        /* Version of macro application       */
+     char    spl1_ser[5];          /* Series of spindle software  (1st)  */
+     char    spl1_ver[5];          /* Version of spindle software (1st)  */
+     char    spl2_ser[5];          /* Series of spindle software  (2nd)  */
+     char    spl2_ver[5];          /* Version of spindle software (2nd)  */
+     char    spl3_ser[5];          /* Series of spindle software  (3rd)  */
+     char    spl3_ver[5];          /* Version of spindle software (3rd)  */
+     char    c_exelib_ser[5];      /* Series of C-executer library       */
+     char    c_exelib_ver[5];      /* Version of C-executer library      */
+     char    c_exeapl_ser[5];      /* Series of C-exe. application       */
+     char    c_exeapl_ver[5];      /* Version of C-exe. application      */
+     char    int_vga_ser[5];       /* Series of VGA software  (internal) */
+     char    int_vga_ver[5];       /* Version of VGA software (internal) */
+     char    out_vga_ser[5];       /* Series of VGA software  (external) */
+     char    out_vga_ver[5];       /* Version of VGA software (external) */
+     char    pmm_ser[5];           /* Series of power motion manager software  */
+     char    pmm_ver[5];           /* Version of power motion manager software */
+     char    pmc_mng_ser[5];       /* Series of PMC management software        */
+     char    pmc_mng_ver[5];       /* Version of PMC management software       */
+     char    pmc_shin_ser[5];      /* Series of PMC management software  (internal SH) */
+     char    pmc_shin_ver[5];      /* Version of PMC management software (internal SH) */
+     char    pmc_shout_ser[5];     /* Series of PMC management software  (external SH) */
+     char    pmc_shout_ver[5];     /* Version of PMC management software (external SH) */
+     char    pmc_c_ser[5];         /* Series of PMC management software  (C language)  */
+     char    pmc_c_ver[5];         /* Version of PMC management software (C language)  */
+     char    pmc_edit_ser[5];      /* Series of PMC management software  (edit card)   */
+     char    pmc_edit_ver[5];      /* Version of PMC management software (edit card)   */
+     char    lddr_mng_ser[5];      /* Series of ladder software          */
+     char    lddr_mng_ver[5];      /* Version of ladder software         */
+     char    lddr_apl_ser[5];      /* Series of ladder software  (C application) */
+     char    lddr_apl_ver[5];      /* Version of ladder software (C application) */
+     char    spl4_ser[5];          /* Series of spindle software  (4th)  */
+     char    spl4_ver[5];          /* Version of spindle software (4th)  */
+     char    mcr2_ser[5];          /* Series of 2nd macro-executer       */
+     char    mcr2_ver[5];          /* Version of 2nd macro-executer      */
+     char    mcr3_ser[5];          /* Series of 3rd macro-executer       */
+     char    mcr3_ver[5];          /* Version of 3rd macro-executer      */
+     char    eth_boot_ser[5];      /* Series of boot software of Ethernet Board  */
+     char    eth_boot_ver[5];      /* Version of boot software of Ethernet Board */
+     char    reserve[8][5];        /* (reserve) */
+     char    embEthe_ser[5];       /* Series of embedded Ethernet software     */
+     char    embEthe_ver[5];       /* Version of embedded Ethernet software    */
+     char    reserve2[38][5];      /* (reserve) */
+} ODBSYSS2 ;
+]]></pre>
+
+slot_no_p,...,reserve are the same as what cnc_rdsyssoft can read. See the explanation about <a href="misc/cnc_rdsyssoft.htm" target="_parent">cnc_rdsyssoft</a> in detail.
+<p/>
+However, you may not read the data after "reserve" according to the series/version of CNC control software.
+<dl>
+    <dt>embEthe_ser</dt>
+        <dd>Series of embedded Ethernet software</dd>
+    <dt>embEthe_ver</dt>
+        <dd>Version of embedded Ethernet software</dd>
+    <dt>reserve2</dt>
+        <dd>(reserve)</dd>
+</dl>
+<p>* Above series/version are stored in ASCII code(4 byte + 'NULL'). In case of no software, first character is 'NULL'.</p>
+
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <add></add>
+    </option>
+
+
+
+    <parameter></parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>O</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>O</fs16ia>
+           <fs18ia>O</fs18ia>
+           <fs21ia>O</fs21ia>
+           <fs16ib>O</fs16ib>
+           <fs18ib>O</fs18ib>
+           <fs21ib>O</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>O</fs16ia>
+           <fs18ia>O</fs18ia>
+           <fs21ia>O</fs21ia>
+           <fs16ib>O</fs16ib>
+           <fs18ib>O</fs18ib>
+           <fs21ib>O</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>X</a>
+        </pw>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdsyssoft</name>
+            <file>misc/cnc_rdsyssoft.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdsyssoft3</name>
+            <file>misc/cnc_rdsyssoft3.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

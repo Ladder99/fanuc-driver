@@ -9,13 +9,24 @@ namespace l99.driver.fanuc.veneers
         {
             _lastChangedValue = new
             {
-                aut = -1,
-                run = -1,
-                edit = -1,
-                motion = -1,
-                mstb = -1,
-                emergency = -1,
-                alarm = -1
+                mode = new
+                {
+                    automatic = -1,
+                    manual = -1
+                },
+                status = new
+                {
+                    run = -1,
+                    edit = -1,
+                    motion = -1,
+                    mstb = -1,
+                    emergency = -1,
+                    write = -1,
+                    label_skip = -1,
+                    alarm = -1,
+                    warning = -1,
+                    battery = -1
+                }
             };
         }
         
@@ -25,18 +36,24 @@ namespace l99.driver.fanuc.veneers
             {
                 var current_value = new
                 {
-                    input.response.cnc_statinfo.statinfo.aut,
-                    input.response.cnc_statinfo.statinfo.run,
-                    input.response.cnc_statinfo.statinfo.edit,
-                    input.response.cnc_statinfo.statinfo.motion,
-                    input.response.cnc_statinfo.statinfo.mstb,
-                    input.response.cnc_statinfo.statinfo.emergency,
-                    input.response.cnc_statinfo.statinfo.alarm
+                    mode = new
+                    {
+                        automatic = input.response.cnc_statinfo.statinfo.aut
+                    },
+                    status = new
+                    {
+                        input.response.cnc_statinfo.statinfo.run,
+                        input.response.cnc_statinfo.statinfo.edit,
+                        input.response.cnc_statinfo.statinfo.motion,
+                        input.response.cnc_statinfo.statinfo.mstb,
+                        input.response.cnc_statinfo.statinfo.emergency,
+                        input.response.cnc_statinfo.statinfo.alarm
+                    }
                 };
                 
                 await onDataArrivedAsync(input, current_value);
                 
-                if (!current_value.Equals(this._lastChangedValue))
+                if (current_value.IsDifferentString((object)_lastChangedValue))
                 {
                     await onDataChangedAsync(input, current_value);
                 }

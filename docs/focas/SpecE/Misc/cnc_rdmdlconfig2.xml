@@ -1,0 +1,1359 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdmdlconfig2</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdmdlconfig2(unsigned short FlibHndl, char *data); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+              <p>Reads the module configuration of CNC system.</p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>data</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the character array for the module configuration of CNC system.
+                        </p>
+                        <p>
+                            The 128 bytes array is necessary to store them, and if its size is less than 128 bytes, the behavior of this function is not guaranteed.
+                        </p>
+                        <p>
+                            Description of data as follows.
+                        </p>
+
+                        <ul>
+                            <br/>
+                            <li>Series 15i</li><p/>
+                            <p>
+                                As for description of each ID, see "Maintenance Manual" of the each CNC. If the value of ID is -1, it means that module does not exist.
+                            </p>
+                            <dl>
+                                <dt>data[0]</dt>
+                                    <dd>ID of FROM DIMM (MAIN)</dd>
+                                <dt>data[1]</dt>
+                                    <dd>ID of DRAM DIMM (MAIN)</dd>
+                                <dt>data[2]</dt>
+                                    <dd>ID of SRAM DIMM (MAIN)</dd>
+                                <dt>data[3]</dt>
+                                    <dd>ID of CPU card (MAIN)</dd>
+                                <dt>data[4]</dt>
+                                    <dd>ID of graphic card (MAIN)</dd>
+                                <dt>data[5]</dt>
+                                    <dd>ID of servo card (MAIN)</dd>
+                                <dt>data[6]</dt>
+                                    <dd>ID of PMC CPU (MAIN)</dd>
+                                <dt>data[7]</dt>
+                                    <dd>ID of servo card 1 (Additional axis)</dd>
+                                <dt>data[8]</dt>
+                                    <dd>ID of servo card 2 (Additional axis)</dd>
+                                <dt>data[9],..,data[127]</dt>
+                                    <dd>reserve</dd>
+                            </dl>
+                        </ul>
+                        <ul>
+                            <br/>
+                            <li>Series 16-B/18-B</li><p/>
+                            <dl>
+                                <dt>data[0]</dt>
+                                    <dd>Capacity of FROM module (MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1: Not exist</td>             <td>9  :  2 MB</td></tr>
+                                            <tr><td>0 : reserve</td>            <td>10 :  6 MB</td></tr>
+                                            <tr><td>1 :  2 MB</td>              <td>11 :  8 MB</td></tr>
+                                            <tr><td>2 :  4 MB</td>              <td>12 : 10 MB</td></tr>
+                                            <tr><td>3 :  6 MB</td>              <td>13 : 12 MB</td></tr>
+                                            <tr><td>4 :  8 MB</td>              <td>14 : 14 MB</td></tr>
+                                            <tr><td>5 : 10 MB</td>              <td>15 :  1 MB</td></tr>
+                                            <tr><td>6 : 12 MB</td>              <td>16 :  1 MB</td></tr>
+                                            <tr><td>7 :  4 MB</td>              <td>17 :  4 MB</td></tr>
+                                            <tr><td>8 :  3 MB</td>              <td>18 :  8 MB</td></tr>
+                                    </table>
+                                <dt>data[1]</dt>
+                                    <dd>Capacity of DRAM module (MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>4 : 16 MB</td></tr>
+                                             <tr><td>0 :  4 MB</td>              <td>5 :  8 MB</td></tr>
+                                             <tr><td>1 :  2 MB</td>              <td>6 :  4 MB</td></tr>
+                                             <tr><td>2 :  1 MB</td>              <td>7 : 24 MB</td></tr>
+                                             <tr><td>3 :  6 MB</td></tr>
+                                    </table>
+                                <dt>data[2]</dt>
+                                    <dd>Capacity of additional SRAM module (MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 :  Not exist</td>           <td>5 :  768 KB</td></tr>
+                                            <tr><td>0 :    1 MB</td>            <td>6 : reserve</td></tr>
+                                            <tr><td>1 :  512 KB</td>            <td>7 : 2.25 MB</td></tr>
+                                            <tr><td>2 :    2 MB</td>            <td>8 : reserve</td></tr>
+                                            <tr><td>3 : reserve</td>            <td>9 :  256 KB</td></tr>
+                                            <tr><td>4 : reserve</td></tr>
+                                    </table>
+                                <dt>data[3]</dt>
+                                    <dd>Type of PMC module (MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>2 : PMP2+SLC</td></tr>
+                                            <tr><td>0 : BOC2</td>               <td>3 : BSI</td></tr>
+                                            <tr><td>1 : BSI+SLC</td>            <td>4 : PMP2</td></tr>
+                                    </table>
+                                <dt>data[4]</dt>
+                                    <dd>Type of CRTC module (MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>3 : reserve</td></tr>
+                                            <tr><td>0 : 14"CRT</td>        <td>4 : reserve</td></tr>
+                                            <tr><td>1 : 9"CRT</td>        <td>5 : 9"VGA</td></tr>
+                                            <tr><td>2 : VGA</td></tr>
+                                    </table>
+                                <dt>data[5]</dt>
+                                    <dd>Existence of servo module(axis1,2)(MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[6]</dt>
+                                    <dd>Existence of servo module(axis3,4)(MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[7]</dt>
+                                    <dd>Existence of SIC(MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[8]</dt>
+                                    <dd>Existence of POSITION LSI(MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[9]</dt>
+                                    <dd>Existence of additional DRAM for management software(PMC-SC)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[10]</dt>
+                                    <dd>Existence of DRAM for application(PMC-SC)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>2 : 512 KB</td></tr>
+                                            <tr><td>0 :   2 MB</td>             <td>3 :   1 MB</td></tr>
+                                            <tr><td>1 : reserve</td></tr>
+                                    </table>
+                                <dt>data[11]</dt>
+                                    <dd>Type of PMC module(PMC-SC)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>2 : PMP2+SLC</td></tr>
+                                            <tr><td>0 : BOC2</td>               <td>3 : BSI</td></tr>
+                                            <tr><td>1 : BSI+SLC</td>            <td>4 : PMP2</td></tr>
+                                    </table>
+                                <dt>data[12]</dt>
+                                    <dd>Capacity of FROM module(PMC-SC)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[13]</dt>
+                                    <dd>Number of DI/DO points (I/O card)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>1 : reserve</td>            <td>2 :  80/56</td></tr>
+                                            <tr><td>0 : 144/112</td>            <td>3 : 104/72</td></tr>
+                                            <tr><td>1 :  40/40</td>             <td>4 : 156/120</td></tr>
+                                    </table>
+                                <dt>data[14]</dt>
+                                    <dd>Existence of LSI for high-speed skip (I/O card,M-NET)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[15]</dt>
+                                    <dd>Capacity of FROM moduleCapacity of FROM module (SUB)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td> 8 :  3 MB</td></tr>
+                                            <tr><td>0 : reserve</td>            <td> 9 :  2 MB</td></tr>
+                                            <tr><td>1 :  2 MB</td>              <td>10 :  6 MB</td></tr>
+                                            <tr><td>2 :  4 MB</td>              <td>11 :  8 MB</td></tr>
+                                            <tr><td>3 :  6 MB</td>              <td>12 : 10 MB</td></tr>
+                                            <tr><td>4 :  8 MB</td>              <td>13 : 12 MB</td></tr>
+                                            <tr><td>5 : 10 MB</td>              <td>14 : 14 MB</td></tr>
+                                            <tr><td>6 : 12 MB</td>              <td>15 :  1 MB</td></tr>
+                                            <tr><td>7 :  4 MB</td>              <td>16 :  1 MB</td></tr>
+                                    </table>
+                                <dt>data[16]</dt>
+                                    <dd>Capacity of DRAM module (SUB)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>4 : 16 MB</td></tr>
+                                            <tr><td>0 :  4 MB</td>              <td>5 :  8 MB</td></tr>
+                                            <tr><td>1 :  2 MB</td>              <td>6 :  4 MB</td></tr>
+                                            <tr><td>2 :  1 MB</td>              <td>7 : 24 MB</td></tr>
+                                            <tr><td>3 :  6 MB</td></tr>
+                                    </table>
+                                <dt>data[17]</dt>
+                                    <dd>Capacity of additional SRAM module (SUB)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 :  Not exist</td>           <td>5 :  768 KB</td></tr>
+                                            <tr><td>0 :    1 MB</td>            <td>6 : reserve</td></tr>
+                                            <tr><td>1 :  512 KB</td>            <td>7 : 2.25 MB</td></tr>
+                                            <tr><td>2 :    2 MB</td>            <td>8 : reserve</td></tr>
+                                            <tr><td>3 : reserve</td>            <td>9 :  256 KB</td></tr>
+                                            <tr><td>4 : reserve</td></tr>
+                                    </table>
+                                <dt>data[18]</dt>
+                                    <dd>Existence of servo module(axis1,2)(SUB)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[19]</dt>
+                                    <dd>Existence of servo module(axis3,4)(SUB)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[20]</dt>
+                                    <dd>Existence of SIC (SUB)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[21]</dt>
+                                    <dd>Existence of POSITION LSI(SUB)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[22]</dt>
+                                    <dd>Existence of high-speed skip &amp; analog I/O (SUB)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>1 : Not existし</td>           <td>1 : only high-speed skip</td></tr>
+                                            <tr><td>0 : Both exist</td>           <td>2 : only analog I/O</td></tr>
+                                    </table>
+                                <dt>data[23]</dt>
+                                    <dd>Existence of graphic engine 2(MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[24]</dt>
+                                    <dd>Type of CRTC module(OPT-1)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>3 : reserve</td></tr>
+                                            <tr><td>0 : 14"CRT MAIN</td>        <td>4 : 14"CRT GRPH</td></tr>
+                                            <tr><td>1 : 9"CRT MAIN</td>        <td>5 : 9"CRT GRPH</td></tr>
+                                            <tr><td>2 : VGA MAIN</td>           <td>6 : VGA GRPH</td></tr>
+                                    </table>
+                                <dt>data[25]</dt>
+                                    <dd>Existence of graphic module 1(OPT-1)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[26]</dt>
+                                    <dd>Existence of graphic module 2 (OPT-1)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[27]</dt>
+                                    <dd>Existence of communication module(OPT-1)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[28]</dt>
+                                    <dd>Existence of servo module(axis1,2) (axis card)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[29]</dt>
+                                    <dd>Existence of servo module(axis3,4) (axis card)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[30]</dt>
+                                    <dd>Existence of SIC (axis card)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[31]</dt>
+                                    <dd>Existence of POSITION LSI (axis card)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[32]</dt>
+                                    <dd>Existence of high-speed skip &amp; analog I/O (axis card)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>1 : Not exist</td>           <td>1 : only high-speed skip</td></tr>
+                                            <tr><td>0 : Both exist</td>           <td>2 : only analog I/O</td></tr>
+                                    </table>
+                                <dt>data[33],..,data[38]</dt>
+                                    <dd>reserved</dd>
+                                <dt>data[39]</dt>
+                                    <dd>Capacity of system EPROM module (64bitRISC)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>3 : 512 KB</td></tr>
+                                            <tr><td>0 :   4 MB</td>             <td>4 : 256 KB</td></tr>
+                                            <tr><td>1 :   2 MB</td>             <td>5 : 128 KB</td></tr>
+                                            <tr><td>2 :   1 MB</td>             <td>6 : 768 KB</td></tr>
+                                    </table>
+                                <dt>data[40]</dt>
+                                    <dd>Capacity of SRAM (64bitRISC)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>3 : 512 KB</td></tr>
+                                            <tr><td>0 :   4 MB</td>             <td>4 : 256 KB</td></tr>
+                                            <tr><td>1 :   2 MB</td>             <td>5 : 128 KB</td></tr>
+                                            <tr><td>2 :   1 MB</td>             <td>6 : 768 KB</td></tr>
+                                    </table>
+                                <dt>data[41]</dt>
+                                    <dd>Capacity of DRAM module 1 (64bitRISC)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>2 : 2 MB</td></tr>
+                                            <tr><td>0 : reserve</td>            <td>3 : 4 MB</td></tr>
+                                            <tr><td>1 : reserve</td></tr>
+                                    </table>
+                                <dt>data[42]</dt>
+                                    <dd>Capacity of DRAM module 2 (64bitRISC)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>2 : 2 MB</td></tr>
+                                            <tr><td>0 : reserve</td>            <td>3 : 4 MB</td></tr>
+                                            <tr><td>1 : reserve</td></tr>
+                                    </table>
+                                <dt>data[43]</dt>
+                                    <dd>Number of DI/DO points (I/O card#2)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>2 :  80/56</td></tr>
+                                            <tr><td>0 : 144/112</td>            <td>3 : 104/72</td></tr>
+                                            <tr><td>1 :  40/40</td>             <td>4 : 156/120</td></tr>
+                                    </table>
+                                <dt>data[44]</dt>
+                                    <dd>Existence of LSI for high-speed skip (I/O card#2)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[45]</dt>
+                                    <dd>Existence of communication module (OPT-1#2)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[46]</dt>
+                                    <dd>Capacity of system EPROM module (CAP2)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>3 : 512 KB</td></tr>
+                                            <tr><td>0 : reserve</td>            <td>4 : 256 KB</td></tr>
+                                            <tr><td>1 : reserve</td>            <td>5 : 128 KB</td></tr>
+                                            <tr><td>2 :   1 MB</td>             <td>6 : 768 KB</td></tr>
+                                    </table>
+                                <dt>data[47]</dt>
+                                    <dd>Capacity of SRAM module (CAP2)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>3 : 512 KB</td></tr>
+                                            <tr><td>0 : reserve</td>            <td>4 : 256 KB</td></tr>
+                                            <tr><td>1 : reserve</td>            <td>5 : 128 KB</td></tr>
+                                            <tr><td>2 :   1 MB</td>             <td>6 : 768 KB</td></tr>
+                                    </table>
+                                <dt>data[48]</dt>
+                                    <dd>Capacity of DRAM module (CAP2)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>3 : 512 KB</td></tr>
+                                            <tr><td>0 :   2 MB</td>             <td>4 : 256 KB</td></tr>
+                                            <tr><td>1 : 1.5 MB</td>             <td>5 : 128 KB</td></tr>
+                                            <tr><td>2 :   1 MB</td></tr>
+                                    </table>
+                                <dt>data[49]</dt>
+                                    <dd>Capacity of FROM module (LC)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td> 8 :  3 MB</td></tr>
+                                            <tr><td>0 : reserve</td>            <td> 9 :  2 MB</td></tr>
+                                            <tr><td>1 :  2 MB</td>              <td>10 :  6 MB</td></tr>
+                                            <tr><td>2 :  4 MB</td>              <td>11 :  8 MB</td></tr>
+                                            <tr><td>3 :  6 MB</td>              <td>12 : 10 MB</td></tr>
+                                            <tr><td>4 :  8 MB</td>              <td>13 : 12 MB</td></tr>
+                                            <tr><td>5 : 10 MB</td>              <td>14 : 14 MB</td></tr>
+                                            <tr><td>6 : 12 MB</td>              <td>15 :  1 MB</td></tr>
+                                            <tr><td>7 :  4 MB</td>              <td>16 :  1 MB</td></tr>
+                                    </table>
+                                <dt>data[50]</dt>
+                                    <dd>Capacity of DRAM module (LC)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>4 : 16 MB</td></tr>
+                                            <tr><td>0 :  4 MB</td>              <td>5 :  8 MB</td></tr>
+                                            <tr><td>1 :  2 MB</td>              <td>6 :  4 MB</td></tr>
+                                            <tr><td>2 :  1 MB</td>              <td>7 : 24 MB</td></tr>
+                                            <tr><td>3 :  6 MB</td></tr>
+                                    </table>
+                                <dt>data[51]</dt>
+                                    <dd>Type of PMC module (LC)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>2 : PMP2+SLC</td></tr>
+                                            <tr><td>0 : BOC2</td>               <td>3 : BSI</td></tr>
+                                            <tr><td>1 : BSI+SLC</td>            <td>4 : PMP2</td></tr>
+                                    </table>
+                                <dt>data[52]</dt>
+                                    <dd>Existence of servo module(axis1,2) (LC)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[53]</dt>
+                                    <dd>Existence of servo module(axis3,4) (LC)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[54]</dt>
+                                    <dd>Capacity of DRAM for application (PMC-SE)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>2 : 512 KB</td></tr>
+                                            <tr><td>0 :   2 MB</td>             <td>3 :   1 MB</td></tr>
+                                            <tr><td>1 : reserve</td></tr>
+                                    </table>
+                                <dt>data[55]</dt>
+                                    <dd>TYPE of PMC module (PMC-SE)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>2 : PMP2+SLC</td></tr>
+                                            <tr><td>0 : BOC2</td>               <td>3 : BSI</td></tr>
+                                            <tr><td>1 : BSI+SLC</td>            <td>4 : PMP2</td></tr>
+                                    </table>
+                                <dt>data[56]</dt>
+                                    <dd>Capacity of FROM module(PMC-SE)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[57]</dt>
+                                    <dd>Existence of servo module(axis5,6) (MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[58]</dt>
+                                    <dd>Capacity of FROM module (BG-GRAPH)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td> 8 :  3 MB</td></tr>
+                                            <tr><td>0 : reserve</td>            <td> 9 :  2 MB</td></tr>
+                                            <tr><td>1 :  2 MB</td>              <td>10 :  6 MB</td></tr>
+                                            <tr><td>2 :  4 MB</td>              <td>11 :  8 MB</td></tr>
+                                            <tr><td>3 :  6 MB</td>              <td>12 : 10 MB</td></tr>
+                                            <tr><td>4 :  8 MB</td>              <td>13 : 12 MB</td></tr>
+                                            <tr><td>5 : 10 MB</td>              <td>14 : 14 MB</td></tr>
+                                            <tr><td>6 : 12 MB</td>              <td>15 :  1 MB</td></tr>
+                                            <tr><td>7 :  4 MB</td>              <td>16 :  1 MB</td></tr>
+                                    </table>
+                                <dt>data[59]</dt>
+                                    <dd>Capacity of DRAM module (BG-GRAPH)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>4 : 16 MB</td></tr>
+                                            <tr><td>0 :  4 MB</td>              <td>5 :  8 MB</td></tr>
+                                            <tr><td>1 :  2 MB</td>              <td>6 :  4 MB</td></tr>
+                                            <tr><td>2 :  1 MB</td>              <td>7 : 24 MB</td></tr>
+                                            <tr><td>3 :  6 MB</td></tr>
+                                    </table>
+                                <dt>data[60]</dt>
+                                    <dd>Capacity of additional SRAM module (BG-GRPH)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 :  Not exist</td>           <td>5 :  768 KB</td></tr>
+                                            <tr><td>0 :    1 MB</td>            <td>6 : reserve</td></tr>
+                                            <tr><td>1 :  512 KB</td>            <td>7 : 2.25 MB</td></tr>
+                                            <tr><td>2 :    2 MB</td>            <td>8 : reserve</td></tr>
+                                            <tr><td>3 : reserve</td>            <td>9 :  256 KB</td></tr>
+                                            <tr><td>4 : reserve</td></tr>
+                                    </table>
+                                <dt>data[61]</dt>
+                                    <dd>Existence of servo module(axis5,6) (SUB)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[62],..,data[127]</dt>
+                                    <dd>reserved</dd>
+                            </dl>
+                        </ul>
+                        <ul>
+                            <br/>
+                            <li>Series 16-C/18-C</li><p/>
+                            <dl>
+                                <dt>data[0]</dt>
+                                    <dd>Capacity of FROM module (MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>10 : reserve</td></tr>
+                                            <tr><td>0 : reserve</td>            <td>11 : reserve</td></tr>
+                                            <tr><td>1 :  2 MB</td>              <td>12 : reserve</td></tr>
+                                            <tr><td>2 :  4 MB</td>              <td>13 : reserve</td></tr>
+                                            <tr><td>3 :  6 MB</td>              <td>14 : reserve</td></tr>
+                                            <tr><td>4 :  8 MB</td>              <td>15 : reserve</td></tr>
+                                            <tr><td>5 : reserve</td>            <td>16 : reserve</td></tr>
+                                            <tr><td>6 : reserve</td>            <td>17 : 12 MB</td></tr>
+                                            <tr><td>7 : reserve</td>            <td>18 :  4 MB</td></tr>
+                                            <tr><td>8 : reserve</td>            <td>19 :  8 MB</td></tr>
+                                            <tr><td>9 : reserve</td></tr>
+                                    </table>
+                                <dt>data[1]</dt>
+                                    <dd>Capacity of DRAM module (MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>4 : 16 MB</td></tr>
+                                            <tr><td>0 :  4 MB</td>              <td>5 :  8 MB</td></tr>
+                                            <tr><td>1 :  2 MB</td>              <td>6 :  4 MB</td></tr>
+                                            <tr><td>2 :  1 MB</td>              <td>7 : 24 MB</td></tr>
+                                            <tr><td>3 :  6 MB</td></tr>
+                                    </table>
+                                <dt>data[2]</dt>
+                                    <dd>Capacity of additional SRAM module (MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 :  Not exist</td>           <td>5 :  768 KB</td></tr>
+                                            <tr><td>0 : reserve</td>            <td>6 : reserve</td></tr>
+                                            <tr><td>1 : reserve</td>            <td>7 : 2.25 MB</td></tr>
+                                            <tr><td>2 : reserve</td>            <td>8 : reserve</td></tr>
+                                            <tr><td>3 : reserve</td>            <td>9 :  256 KB</td></tr>
+                                            <tr><td>4 : reserve</td></tr>
+                                    </table>
+                                <dt>data[3]</dt>
+                                    <dd>reserved</dd>
+                                <dt>data[4]</dt>
+                                    <dd>Type of CRTC module (MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>3 : HSSB-VGA</td></tr>
+                                            <tr><td>0 : 14"CRT</td>        <td>4 : reserve</td></tr>
+                                            <tr><td>1 : 9"CRT</td>         <td>5 : 9"VGA</td></tr>
+                                            <tr><td>2 : VGA</td></tr>
+                                    </table>
+                                <dt>data[5]</dt>
+                                    <dd>Existence of servo module(axis1,2) (MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[6]</dt>
+                                    <dd>Existence of servo module(axis3,4) (MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[7]</dt>
+                                    <dd>Existence of SIC (MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[8]</dt>
+                                    <dd>Existence of POSITION LSI (MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[9]</dt>
+                                    <dd>Existence of additional DRAM for management software (PMC-SC)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[10]</dt>
+                                    <dd>Capacity of DRAM for application (PMC-SC)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>2 : 512 KB</td></tr>
+                                            <tr><td>0 :   2 MB</td>             <td>3 :   1 MB</td></tr>
+                                            <tr><td>1 : reserve</td></tr>
+                                    </table>
+                                <dt>data[11]</dt>
+                                    <dd>Type of PMC module (PMC-SC)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>2 : PMP2+SLC</td></tr>
+                                            <tr><td>0 : BOC2</td>               <td>3 : BSI</td></tr>
+                                            <tr><td>1 : BSI+SLC</td>            <td>4 : PMP2</td></tr>
+                                    </table>
+                                <dt>data[12]</dt>
+                                    <dd>Capacity of FROM module (PMC-SC)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[13]</dt>
+                                    <dd>Existence of DI/DO points (I/O card)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td> 2 :  80/56</td></tr>
+                                            <tr><td>0 : 144/112</td>            <td>3 : 104/72</td></tr>
+                                            <tr><td>1 :  40/40</td>             <td> 4 : 156/120</td></tr>
+                                    </table>
+                                <dt>data[14]</dt>
+                                    <dd>Existence of LSI for high-speed skip (I/O card)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[15]</dt>
+                                    <dd>Capacity of FROM module (SUB)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1  : Not exist</td>           <td>10 : reserve</td></tr>
+                                            <tr><td>0 : reserve</td>            <td>11 : reserve</td></tr>
+                                            <tr><td>1 :  2 MB</td>              <td>12 : reserve</td></tr>
+                                            <tr><td>2 :  4 MB</td>              <td>13 : reserve</td></tr>
+                                            <tr><td>3 :  6 MB</td>              <td>14 : reserve</td></tr>
+                                            <tr><td>4 :  8 MB</td>              <td>15 : reserve</td></tr>
+                                            <tr><td>5 : reserve</td>            <td>16 : reserve</td></tr>
+                                            <tr><td>6 : reserve</td>            <td>17 : 12 MB</td></tr>
+                                            <tr><td>7 : reserve</td>            <td>18 :  4 MB</td></tr>
+                                            <tr><td>8 : reserve</td>            <td>19 :  8 MB</td></tr>
+                                            <tr><td>9 : reserve</td></tr>
+                                    </table>
+                                <dt>data[16]</dt>
+                                    <dd>Capacity of DRAM module (SUB)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>4 : 16 MB</td></tr>
+                                            <tr><td>0 :  4 MB</td>              <td>5 :  8 MB</td></tr>
+                                            <tr><td>1 :  2 MB</td>              <td>6 :  4 MB</td></tr>
+                                            <tr><td>2 :  1 MB</td>              <td>7 : 24 MB</td></tr>
+                                            <tr><td>3 :  6 MB</td></tr>
+                                    </table>
+                                <dt>data[17]</dt>
+                                    <dd>Capacity of additional SRAM module (SUB)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 :  Not exist</td>           <td>5 : 768KB</td></tr>
+                                            <tr><td>0 : reserve</td>            <td>6 : reserve</td></tr>
+                                            <tr><td>1 : reserve</td>            <td>7 : 2.25MB</td></tr>
+                                            <tr><td>2 : reserve</td>            <td>8 : reserve</td></tr>
+                                            <tr><td>3 : reserve</td>            <td>9 : 256KB</td></tr>
+                                            <tr><td>4 : reserve</td></tr>
+                                    </table>
+                                <dt>data[18]</dt>
+                                    <dd>Existence of servo module(axis1,2) (SUB)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[19]</dt>
+                                    <dd>Existence of servo module(axis3,4) (SUB)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[20]</dt>
+                                    <dd>Existence of SIC (SUB)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[21]</dt>
+                                    <dd>Existence of POSITION LSI (SUB)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[22]</dt>
+                                    <dd>Existence of high-speed skip &amp; analog I/O (SUB)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>          <td>1 : only high-speed skip</td></tr>
+                                            <tr><td>0 : Both exist</td>           <td>2 : only analog I/O</td></tr>
+                                    </table>
+                                <dt>data[23]</dt>
+                                    <dd>reserved</dd>
+                                <dt>data[24]</dt>
+                                    <dd>Type of CRTC module (OPT-1)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>3 : reserve</td></tr>
+                                            <tr><td>0 : 14"CRT MAIN</td>        <td>4 : 14"CRT GRPH</td></tr>
+                                            <tr><td>1 : 9"CRT MAIN</td>        <td>5 : 9"CRT GRPH</td></tr>
+                                            <tr><td>2 : VGA MAIN</td>           <td>6 : VGA GRPH</td></tr>
+                                    </table>
+                                <dt>data[25]</dt>
+                                    <dd>Existence of graphic module 1 (OPT-1)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[26]</dt>
+                                    <dd>Existence of graphic module 2 (OPT-1)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[27]</dt>
+                                    <dd>Existence of communication module (OPT-1)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[28]</dt>
+                                    <dd>Existence of servo module(axis1,2) (axis card)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[29]</dt>
+                                    <dd>Existence of servo module(axis3,4) (axis card)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[30]</dt>
+                                    <dd>Existence of SIC (axis card)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[31]</dt>
+                                    <dd>Existence of POSITION LSI</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[32]</dt>
+                                    <dd>Existence of high-speed skip &amp; analog I/O (axis card)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>          <td>1 : only high-speed skip</td></tr>
+                                            <tr><td>0 : Both exist</td>           <td>2 : only analog I/O</td></tr>
+                                    </table>
+                                <dt>data[33],..,data[38]</dt>
+                                    <dd>reserved</dd>
+                                <dt>data[39]</dt>
+                                    <dd>Capacity of system EPROM module (64bitRISC)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>3 : 512 KB</td></tr>
+                                            <tr><td>0 :   4 MB</td>             <td>4 : 256 KB</td></tr>
+                                            <tr><td>1 :   2 MB</td>             <td>5 : 128 KB</td></tr>
+                                            <tr><td>2 :   1 MB</td>             <td>6 : 768 KB</td></tr>
+                                    </table>
+                                <dt>data[40]</dt>
+                                    <dd>Capacity of SRAM module (64bitRISC)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>3 : 512 KB</td></tr>
+                                            <tr><td>0 :   4 MB</td>             <td>4 : 256 KB</td></tr>
+                                            <tr><td>1 :   2 MB</td>             <td>5 : 128 KB</td></tr>
+                                            <tr><td>2 :   1 MB</td>             <td>6 : 768 KB</td></tr>
+                                    </table>
+                                <dt>data[41]</dt>
+                                    <dd>Capacity of DRAM module 1 (64bitRISC)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>2 : 2 MB</td></tr>
+                                            <tr><td>0 : reserve</td>            <td>3 : 4 MB</td></tr>
+                                            <tr><td>1 : resreve</td></tr>
+                                    </table>
+                                <dt>data[42]</dt>
+                                    <dd>Capacity of DRAM module 2 (64bitRISC)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>2 : 2 MB</td></tr>
+                                            <tr><td>0 : reserve</td>            <td>3 : 4 MB</td></tr>
+                                            <tr><td>1 : reserve</td></tr>
+                                    </table>
+                                <dt>data[43]</dt>
+                                    <dd>Number of DI/DO points (I/O card#2)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>2 :  80/56</td></tr>
+                                            <tr><td>0 : 144/112</td>            <td>3 : 104/72</td></tr>
+                                            <tr><td>1 :  40/40</td>             <td>4 : 156/120</td></tr>
+                                    </table>
+                                <dt>data[44]</dt>
+                                    <dd>Existence of LSI for high-speed skip (I/O card#2)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[45]</dt>
+                                    <dd>Existence of communication module (OPT-1#2)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[46]</dt>
+                                    <dd>Capacity of system EPROM module (CAP2)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>3 : 512 KB</td></tr>
+                                            <tr><td>0 : reserve</td>            <td>4 : 256 KB</td></tr>
+                                            <tr><td>1 : reserve</td>            <td>5 : 128 KB</td></tr>
+                                            <tr><td>2 :   1 MB</td>             <td>6 : 768 KB</td></tr>
+                                    </table>
+                                <dt>data[47]</dt>
+                                    <dd>Capacity of SRAM module(CAP2)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>3 : 512 KB</td></tr>
+                                            <tr><td>0 : reserve</td>            <td>4 : 256 KB</td></tr>
+                                            <tr><td>1 : reserve</td>            <td>5 : 128 KB</td></tr>
+                                            <tr><td>2 :   1 MB</td>             <td>6 : 768 KB</td></tr>
+                                    </table>
+                                <dt>data[48]</dt>
+                                    <dd>Capacity of DRAM module(CAP2)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>3 : 512 KB</td></tr>
+                                            <tr><td>0 :   2 MB</td>             <td>4 : 256 KB</td></tr>
+                                            <tr><td>1 : 1.5 MB</td>             <td>5 : 128 KB</td></tr>
+                                            <tr><td>2 :   1 MB</td></tr>
+                                    </table>
+                                <dt>data[49]</dt>
+                                    <dd>Capacity of FROM module (LC)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td> 8 :  3 MB</td></tr>
+                                            <tr><td>0 : reserve</td>            <td> 9 :  2 MB</td></tr>
+                                            <tr><td>1 :  2 MB</td>              <td>10 :  6 MB</td></tr>
+                                            <tr><td>2 :  4 MB</td>              <td>11 :  8 MB</td></tr>
+                                            <tr><td>3 :  6 MB</td>              <td>12 : 10 MB</td></tr>
+                                            <tr><td>4 :  8 MB</td>              <td>13 : 12 MB</td></tr>
+                                            <tr><td>5 : 10 MB</td>              <td>14 : 14 MB</td></tr>
+                                            <tr><td>6 : 12 MB</td>              <td>15 :  1 MB</td></tr>
+                                            <tr><td>7 :  4 MB</td>              <td>16 :  1 MB</td></tr>
+                                    </table>
+                                <dt>data[50]</dt>
+                                    <dd>Capacity of DRAM module (LC)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>4 : 16 MB</td></tr>
+                                            <tr><td>0 :  4 MB</td>              <td>5 :  8 MB</td></tr>
+                                            <tr><td>1 :  2 MB</td>              <td>6 :  4 MB</td></tr>
+                                            <tr><td>2 :  1 MB</td>              <td>7 : 24 MB</td></tr>
+                                            <tr><td>3 :  6 MB</td></tr>
+                                    </table>
+                                <dt>data[51]</dt>
+                                    <dd>Type of PMC module (LC)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>2 : PMP2+SLC</td></tr>
+                                            <tr><td>0 : BOC2</td>               <td>3 : BSI</td></tr>
+                                            <tr><td>1 : BSI+SLC</td>            <td>4 : PMP2</td></tr>
+                                    </table>
+                                <dt>data[52]</dt>
+                                    <dd>Existence of servo module(axis1,2) (LC)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[53]</dt>
+                                    <dd>Existence of servo module(axis3,4) (LC)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[54]</dt>
+                                    <dd>Capacity of DRAM for application (PMC-SE)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>2 : 512 KB</td></tr>
+                                            <tr><td>0 :   2 MB</td>             <td>3 :   1 MB</td></tr>
+                                            <tr><td>1 : reserve</td></tr>
+                                    </table>
+                                <dt>data[55]</dt>
+                                    <dd>TYPE of PMC module (PMC-SE)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>2 : PMP2+SLC</td></tr>
+                                            <tr><td>0 : BOC2</td>               <td>3 : BSI</td></tr>
+                                            <tr><td>1 : BSI+SLC</td>            <td>4 : PMP2</td></tr>
+                                    </table>
+                                <dt>data[56]</dt>
+                                    <dd>Capacity of FROM module (PMC-SE)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[57]</dt>
+                                    <dd>Existence of servo module(axis5/6) (MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[58]</dt>
+                                    <dd>Capacity of FROM module (BG-GRAPH)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>10 : reserve</td></tr>
+                                            <tr><td>0 : reserve</td>            <td>11 : reserve</td></tr>
+                                            <tr><td>1 :  2 MB</td>              <td>12 : reserve</td></tr>
+                                            <tr><td>2 :  4 MB</td>              <td>13 : reserve</td></tr>
+                                            <tr><td>3 :  6 MB</td>              <td>14 : reserve</td></tr>
+                                            <tr><td>4 :  8 MB</td>              <td>15 : reserve</td></tr>
+                                            <tr><td>5 : reserve</td>            <td>16 : reserve</td></tr>
+                                            <tr><td>6 : reserve</td>            <td>17 : 12 MB</td></tr>
+                                            <tr><td>7 : reserve</td>            <td>18 :  4 MB</td></tr>
+                                            <tr><td>8 : reserve</td>            <td>19 :  8 MB</td></tr>
+                                            <tr><td>9 : reserve</td></tr>
+                                    </table>
+                                <dt>data[59]</dt>
+                                    <dd>Capacity of DRAM module (BG-GRAPH)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>4 : 16 MB</td></tr>
+                                            <tr><td>0 :  4 MB</td>              <td>5 :  8 MB</td></tr>
+                                            <tr><td>1 :  2 MB</td>              <td>6 :  4 MB</td></tr>
+                                            <tr><td>2 :  1 MB</td>              <td>7 : 24 MB</td></tr>
+                                            <tr><td>3 :  6 MB</td></tr>
+                                    </table>
+                                <dt>data[60]</dt>
+                                    <dd>Capacity of additional SRAM module (BG-GRPH)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>             <td>5 :  768 KB</td></tr>
+                                            <tr><td> 0 : reserve</td>            <td>6 : reserve</td></tr>
+                                            <tr><td> 1 : reserve</td>            <td>7 : 2.25 MB</td></tr>
+                                            <tr><td> 2 : reserve</td>            <td>8 : reserve</td></tr>
+                                            <tr><td> 3 : reserve</td>            <td>9 :  256 KB</td></tr>
+                                            <tr><td> 4 : reserve</td></tr>
+                                    </table>
+                                <dt>data[61]</dt>
+                                    <dd>Existence of servo module(axis5,6) (SUB)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td> 0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[62]</dt>
+                                    <dd>Version of module (PMC-SB5/SB6)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td> 0,..,15 : Version</td>         <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[63]</dt>
+                                    <dd>Existence of SLC (PMC-SB5/SB6)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td> 0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[64],..,data[127]</dt>
+                                    <dd>reserved</dd>
+
+                            </dl>
+                        </ul>
+                        <ul>
+                            <br/>
+                            <li>Series 16i/18i/21i, 0i-B, Power Mate i </li><p/>
+                            <p/>
+                                As for description of each ID, see "Maintenance Manual" of the each CNC.  If the value of ID is -1, it means that module does not exist.<p/>
+                            <p/>
+                            <dl>
+                                <dt>data[0]</dt>
+                                    <dd>ID of FROM DIMM (MAIN)</dd>
+                                <dt>data[1]</dt>
+                                    <dd>ID of DRAM DIMM (MAIN)</dd>
+                                <dt>data[2]</dt>
+                                    <dd>ID of SRAM DIMM (MAIN)</dd>
+                                <dt>data[3]</dt>
+                                    <dd>ID of CPU card (MAIN)</dd>
+                                <dt>data[4]</dt>
+                                    <dd>ID of graphic card (MAIN)</dd>
+                                <dt>data[5]</dt>
+                                    <dd>ID of servo card (MAIN)</dd>
+                                <dt>data[6]</dt>
+                                    <dd>ID of PMC CPU (MAIN)</dd>
+                                <dt>data[7]</dt>
+                                    <dd>ID of DRAM DIMM (SUB)</dd>
+                                <dt>data[8]</dt>
+                                    <dd>ID of CPU card (SUB)</dd>
+                                <dt>data[9]</dt>
+                                    <dd>ID of servo card (SUB)</dd>
+                                <dt>data[10]</dt>
+                                    <dd>ID of DRAM DIMM (LC)</dd>
+                                <dt>data[11]</dt>
+                                    <dd>ID of SRAM DIMM (LC)</dd>
+                                <dt>data[12]</dt>
+                                    <dd>ID of CPU card (LC)</dd>
+                                <dt>data[13]</dt>
+                                    <dd>ID of servo card (LC)</dd>
+                                <dt>data[14]</dt>
+                                    <dd>ID of DRAM DIMM (PMC-SC)</dd>
+                                <dt>data[15]</dt>
+                                    <dd>ID of CPU card (PMC-SC)</dd>
+                                <dt>data[16]</dt>
+                                    <dd>ID of SRAM DIMM (PMC-SE)</dd>
+                                <dt>data[17]</dt>
+                                    <dd>ID of DRAM DIMM (PMC-SE)</dd>
+                                <dt>data[18]</dt>
+                                    <dd>ID of CPU card (PMC-SE)</dd>
+                                <dt>data[19]</dt>
+                                    <dd>ID of SRAM DIMM (CAP2)</dd>
+                                <dt>data[20]</dt>
+                                    <dd>ID of DRAM DIMM (CAP2)</dd>
+                                <dt>data[21]</dt>
+                                    <dd>ID of CPU card (CAP2)</dd>
+                                <dt>data[22]</dt>
+                                    <dd>ID of DRAM DIMM (RMT-BF,DNC1)</dd>
+                                <dt>data[23]</dt>
+                                    <dd>ID of CPU card (RMT-BF,DNC1)</dd>
+                                <dt>data[24]</dt>
+                                    <dd>ID of DRAM DIMM (RMT-BF,DNC1#2)</dd>
+                                <dt>data[25]</dt>
+                                    <dd>ID of CPU card (RMT-BF,DNC1#2)</dd>
+                                <dt>data[26]</dt>
+                                    <dd>ID of I/O board type (I/O Card)</dd>
+                                <dt>data[27]</dt>
+                                    <dd>ID of I/O board type (I/O Card)</dd>
+                                <dt>data[28]</dt>
+                                    <dd>ID of DRAM DIMM (Ethernet Board) </dd>
+                                <dt>data[29]</dt>
+                                    <dd>ID of Hard disk (Ethernet Board) </dd>
+                                <dt>data[30]</dt>
+                                    <dd>ID2 of servo card (MAIN)</dd>
+                                <dt>data[31]</dt>
+                                    <dd>ID3 of servo card (MAIN)</dd>
+                                <dt>data[32]</dt>
+                                    <dd>ID2 of servo card (SUB)</dd>
+                                <dt>data[33]</dt>
+                                    <dd>ID3 of servo card (SUB)</dd>
+                                <dt>data[34]</dt>
+                                    <dd>ID2 of servo card (LC)</dd>
+                                <dt>data[35]</dt>
+                                    <dd>ID3 of servo card (LC)</dd>
+                                <dt>data[36],..,data[127]</dt>
+                                    <dd>reserved</dd>
+                            </dl>
+                        </ul>
+                        <ul>
+                            <br/>
+                            <li>Series 21-B</li><p/>
+                            <dl>
+                                <dt>data[0]</dt>
+                                    <dd>Capacity of FROM module (MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 :  128 KB + 4 MB</td>     <td>4 :  256 KB + 4 MB</td></tr>
+                                            <tr><td>1 :  reserve</td>           <td>5 :  reserve</td></tr>
+                                            <tr><td>2 :  128 KB + 6 MB</td>     <td>6 :  256 KB + 6 MB</td></tr>
+                                            <tr><td>3 :  128 KB + 2 MB</td>     <td>7 :  256 KB + 2 MB</td></tr>
+                                    </table>
+                                <dt>data[1]</dt>
+                                    <dd>Capacity of SRAM module and type of spindle (MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="300"/>
+                                            <tr><td>0 :  SRAM 256 KB + SIC exist</td></tr>
+                                            <tr><td>1 :                   SRAM 256 KB + POSITION LSI exist</td></tr>
+                                            <tr><td>2 :  SRAM 512 KB + SIC exist</td></tr>
+                                            <tr><td>3 :  SRAM 512 KB + POSITION LSI exist</td></tr>
+                                            <tr><td>4 :  SRAM 256 KB + SIC + POSITION LSIBoth exist</td></tr>
+                                            <tr><td>5 :  reserved</td></tr>
+                                            <tr><td>6 :  SRAM 512 KB + SIC + POSITION LSIBoth exist</td></tr>
+                                    </table>
+                                <dt>data[2]</dt>
+                                    <dd>Existence of MATRIX DI/DO (MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Not exist</td>                 <td>1 : Exists</td></tr>
+                                    </table>
+                                <dt>data[3]</dt>
+                                    <dd>Type of PMC module (MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>2 : PMP+SLC</td></tr>
+                                            <tr><td>0 : BOC2</td>               <td>3 : BIT</td></tr>
+                                            <tr><td>1 : BIT+SLC</td>            <td>4 : PMP</td></tr>
+                                    </table>
+                                <dt>data[4]</dt>
+                                    <dd>Type of CRTC module (MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : 14"VGA</td>        <td>2 : 7.2"VGA</td></tr>
+                                            <tr><td>1 : 14"CRT</td>        <td>3 : 9"CRT</td></tr>
+                                    </table>
+                                <dt>data[5]</dt>
+                                    <dd>reserved</dd>
+                                <dt>data[6]</dt>
+                                    <dd>Existence of servo module(axis1+2,3+4) (MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : axis1+2, axis3+4 exist</td></tr>
+                                            <tr><td>1 : axis1+2 exists</td></tr>
+                                    </table>
+                                <dt>data[7]</dt>
+                                    <dd>Existence of high-speed skip &amp; analog I/O (MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[8]</dt>
+                                    <dd>Existence of graphic module (MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[9],..,data[12]</dt>
+                                    <dd>reserved</dd>
+                                <dt>data[13]</dt>
+                                    <dd>Number of DI/DO points (MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>1 : reserve</td></tr>
+                                            <tr><td>0 : 96/64</td>              <td>2 : 48/32</td></tr>
+                                    </table>
+                                <dt>data[14],..,data[127]</dt>
+                                    <dd>reserved</dd>
+                            </dl>
+                        </ul>
+                        <ul>
+                            <br/>
+                            <li>Series 0i-A</li><p/>
+                            <dl>
+                                <dt>data[0]</dt>
+                                    <dd>Capacity of FROM module (MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 :  4 MB</td></tr>
+                                            <tr><td>1 :  reserve</td></tr>
+                                            <tr><td>2 :  6 MB</td></tr>
+                                            <tr><td>3 :  2 MB</td></tr>
+                                    </table>
+                                <dt>data[1]</dt>
+                                    <dd>Capacity of SRAM module and type of spindle (MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="300"/>
+                                            <tr><td>0 :  SRAM 256KB + SIC</td></tr>
+                                            <tr><td>1 :  SRAM 256KB + POSITION LSI</td></tr>
+                                            <tr><td>2 :  SRAM 512KB + SIC</td></tr>
+                                            <tr><td>3 :  SRAM 512KB + POSITION LSI</td></tr>
+                                            <tr><td>4..7 :  (reserved)</td></tr>
+                                    </table>
+                                <dt>data[2]</dt>
+                                    <dd>reserved</dd>
+                                <dt>data[3]</dt>
+                                    <dd>Type of PMC module (MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>2 : PMP+SLC</td></tr>
+                                            <tr><td>0 : BOC2</td>               <td>3 : BIT</td></tr>
+                                            <tr><td>1 : BIT+SLC</td>            <td>4 : PMP</td></tr>
+                                    </table>
+                                <dt>data[4],..,data[5]</dt>
+                                    <dd>reserved</dd>
+                                <dt>data[6]</dt>
+                                    <dd>Existence of servo module(axis1+2,3+4) (MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : axis1+2, axis3+4 exist</td></tr>
+                                            <tr><td>1 : axis1+2 exists</td></tr>
+                                    </table>
+                                <dt>data[7]</dt>
+                                    <dd>Existence of high-speed skip LSI (MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[8]</dt>
+                                    <dd>Existence of graphic module (MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>0 : Exists</td>                 <td>-1 : Not exist</td></tr>
+                                    </table>
+                                <dt>data[9],..,data[12]</dt>
+                                    <dd>reserved</dd>
+                                <dt>data[13]</dt>
+                                    <dd>Number of DI/DO points (MAIN)</dd>
+                                    <table class="dd">
+                                        <colgroup width="150em"/>
+                                            <tr><td>-1 : Not exist</td>            <td>1 : reserve</td></tr>
+                                            <tr><td>0 : 96/64</td>              <td>2 : 48/32</td></tr>
+                                    </table>
+                                <dt>data[14],..,data[127]</dt>
+                                    <dd>reserved</dd>
+                            </dl>
+                        </ul>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter></parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>X</a>
+        </pw>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference></reference>
+
+
+
+  </func>
+</root>

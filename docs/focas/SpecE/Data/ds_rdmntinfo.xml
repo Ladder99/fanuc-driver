@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>ds_rdmntinfo</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>
+            FWLIBAPI short WINAPI ds_rdmntinfo(unsigned short FlibHndl, short ch_no, DSMNTINFO *mnt_info);
+        </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                The data for troubleshooting is acquired as maintenance information for
+                the file transfer between the DATA SERVER and CNC.
+            </p>
+            <p>
+                The maximum channel number for the file transfer between the data
+                server and CNC is 8.   Which channel is used for each path of CNC can
+                be set in CNC parameter No.941-948.
+            </p>
+               The following maintenance information on each channel can be acquired.<br/>
+                <span class="dd">Number of data delay</span><br/>
+                <span class="dd">Number of transferring total bytes</span><br/>
+                <span class="dd">Read pointer</span><br/>
+                <span class="dd">Write pointer</span>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <hssb>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>ch_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the channel number of maintenance information which
+                            wants to be acquired.
+                            For this data, the number from 1 to number of channel can specify.
+                            The number of channels can be acquired by <a href="data/etb_rdparam.htm" target="_parent">etb_rdparam</a>.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>mnt_info</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Specify the pointer to DSMNTINFO structure to store the maintenance information which is acquired.
+                            The DSMNTINFO structure is as follows.
+
+<pre>
+typedef struct _dsmntinfo {
+    unsigned short  empty_cnt;
+    unsigned long   total_size;
+    unsigned short  ReadPtr;
+    unsigned short  WritePtr;
+} DSMNTINFO;
+</pre>
+                            <dl>
+                            <dt>
+                                mnt_info.empty_cnt
+                            </dt>
+                                <dd>
+                                    Number of data delay<br/>
+                                    The counter to which the data transfer from the DATA SERVER
+                                    to CNC was delayed is set.
+                                    When the power supply is turned on this value is
+                                    initialized to 0.  And when the requirement is filled, the
+                                    counter is incremented.
+                                </dd>
+                            <dt>
+                                mnt_info.total_size
+                            </dt>
+                                <dd>
+                                    Number of transferring total bytes<br/>
+                                    The number of total bytes of one NC program transferred
+                                    from the DATA SERVER to CNC is set.
+                                </dd>
+                            <dt>    
+                                mnt_info.ReadPtr
+                            </dt>
+                                <dd>
+                                    Read pointer<br/>
+                                    The read pointer is set.
+                                </dd>
+                            <dt>
+                                mnt_info.WritePtr
+                            </dt>
+                                <dd>
+                                    Write pointer<br/>
+                                    The write pointer is set.
+                                </dd>
+                            </dl>
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </hssb>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                Data number error<br/>
+                Channel number(ch_no) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option</content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                CNC execution rejection<br/>
+                The DATA SERVER is doing another processing.
+            </content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            The DATA SERVER function and the extended driver/library function are necessary.
+        </hssb>
+        <add></add>
+    </option>
+
+
+
+    <parameter>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <title>pmc_prfrdslvprm2</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI pmc_prfrdslvprm2(unsigned short FlibHndl, short idx, IODBSLVPRM3 *odb) ;</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Reads the slave parameter of the specified slave Index number.<br/>
+               This function is only for 6558 Series.
+            </p>
+            <p>* Please refer to "PROFIBUS-DP function manual" for details of the PROFIBUS-DP function.
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>idx</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the slave index number. (0 - 47)
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>odb</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the IODBSLVPRM3 structure storing the slave parameter.<br/>
+                            The IODBSLVPRM3 structure is as follows.
+<pre>
+typedef struct {
+    unsigned short ident_no ;
+    unsigned char  slv_flag ;
+    unsigned char  slv_type ;
+    char           reserve1[12] ;
+    unsigned char  slv_stat ;
+    unsigned char  wd_fact1 ;
+    unsigned char  wd_fact2 ;
+    unsigned char  min_tsdr ;
+    char           reserve2 ;
+    unsigned char  grp_ident ;
+    short          user_plen ;
+    char           user_pdata[206] ;
+    short          slv_ulen ;
+    char           slv_udata[30] ;
+} IODBSLVPRM3 ;
+</pre>
+                            <dl>
+                                <dt>ident_no</dt>
+                                    <dd>The identification number of DP-Slave is stored.</dd>
+
+                                <dt>slv_flag</dt>
+                                    <dd>The slave flag is stored. The meaning of each bit is as follows.</dd>
+                                    <table border="0" class="dd">
+                                        <tr> <td>BIT7</td> </tr>
+                                        <tr> <td></td><td>0</td><td>：</td><td>DP-Slave will not be activated.</td> </tr>
+                                        <tr> <td></td><td>1</td><td>：</td><td>DP-Slave will be activated.    </td> </tr>
+                                    </table>
+                                    <table border="0" class="dd">
+                                        <tr> <td>BIT6</td> </tr>
+                                        <tr> <td></td><td>0</td><td>：</td><td>New parameter data will not be transmitted.</td> </tr>
+                                        <tr> <td></td><td>1</td><td>：</td><td>New parameter data will be transmitted.    </td> </tr>
+                                    </table>
+                                    
+                                    <p><dd>* BIT0 to BIT5 are not used.</dd></p>
+
+                                <dt>slv_type</dt>
+                                    <dd>The slave type of the maker specification is stored.</dd>
+
+                                <dt>reserve1</dt>
+                                    <dd>not used</dd>
+
+                                <dt>slv_type</dt>
+                                    <dd>The slave type of the maker specification is stored.</dd>
+
+                                <dt>reserve1</dt>
+                                    <dd>not used</dd>
+
+                                <dt>slv_stat</dt>
+                                    <dd>The slave status is stored. The meaning of each bit is as follows.</dd>
+                                    <dl>
+                                        <dt>In case of BIT7=ON, BIT6=OFF</dt>
+                                            <dd>The DP-Slave cannot change the parameter from the DP-Master.</dd>
+                                        <dt>In case of BIT7=OFF, BIT6=ON</dt>
+                                            <dd>The DP-Slave can change the parameter from the DP-Master.</dd>
+                                    </dl>
+                                    <table border="0" class="dd">
+                                        <tr> <td>BIT5</td> </tr>
+                                        <tr> <td></td><td>0</td><td>:</td><td>OFF</td><td>The Sync control command can not be used.  </td> </tr>
+                                        <tr> <td></td><td>1</td><td>:</td><td>ON </td><td>The Sync control command can be used.      </td> </tr>
+                                        <tr> <td>BIT4</td> </tr>
+                                        <tr> <td></td><td>0</td><td>:</td><td>OFF</td><td>The Freeze control command can not be used.</td> </tr>
+                                        <tr> <td></td><td>1</td><td>:</td><td>ON </td><td>The Freeze control command can be used.    </td> </tr>
+                                        <tr> <td>BIT3</td> </tr>
+                                        <tr> <td></td><td>0</td><td>:</td><td>OFF</td><td>The Watchdog control is not done.          </td> </tr>
+                                        <tr> <td></td><td>1</td><td>:</td><td>ON </td><td>The Watchdog control is done.              </td> </tr>
+                                    </table>
+                                    <p><dd>* BIT0 to BIT2 are not used.</dd></p>
+
+                                <dt>wd_fact1</dt>
+                                    <dd>The coefficient to decide the time of the Watchdog control is stored.</dd>
+
+                                <dt>wd_fact2</dt>
+                                    <dd>The coefficient to decide the time of the Watchdog control is stored.</dd>
+
+                                <p></p>
+                                <dd>* The Watchdog control time, wd_fact1, and the wd_fact2</dd>
+                                <dl>
+                                    <dd>The Watchdog control time(msec) = 10 * wd_fact1 * wd_fact2</dd>
+                                </dl>
+
+                                <dt>min_tsdr</dt>
+                                    <dd>The minimum wait time to send the response to DP-Master is stored.</dd>
+
+                                <dt>reserve2</dt>
+                                    <dd>not used</dd>
+
+                                <dt>grp_ident</dt>
+                                    <dd>The group for the DDLM_Global_Control function is stored.</dd>
+
+                                <dt>user_plen</dt>
+                                    <dd>The number of bytes of specified data which is necessary for the slave parameter set from the maker is stored.</dd>
+
+                                <dt>user_pdata</dt>
+                                    <dd>The specified data which is necessary for the slave parameter set from the maker is stored.</dd>
+                                    <dd>The data of the number of bytes returned to above-mentioned user_plen is effective.</dd>
+
+                                <dt>slv_ulen</dt>
+                                    <dd>The number of bytes of specified data from the maker side to show the characteristic of the DP-Slave is stored.</dd>
+
+                                <dt>slv_udata</dt>
+                                    <dd>The specified data from the maker side to show the characteristic of the DP-Slave is stored.</dd>
+                                    <dd>The data of the number of bytes returned to above-mentioned slv_ulen is effective.</dd>
+                            </dl>
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_RANGE</name>
+            <content>data number error<br/>
+                    Index number(idx) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>
+                    <li>The PROFIBUS-DP board(hardware) is necessary.</li>
+                    <li>The PROFIBUS-DP control software is necessary.</li>
+                    <li>The PROFIBUS-DP master function is necessary.</li>
+                    <li>The extended driver/library function is necessary.</li>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>The PROFIBUS-DP master function is necessary.</need>
+    </option>
+
+
+
+    <parameter>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>pmc_prfwrslvprm2</name>
+            <file>Profibus/pmc_prfwrslvprm2.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

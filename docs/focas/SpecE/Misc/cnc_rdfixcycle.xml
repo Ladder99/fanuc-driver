@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdfixcycle</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdfixcycle(unsigned short FlibHndl, ODBFIX *fixcyc);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+        <p>Reads the mode and data of the canned cycle.</p>
+        <p>These are stored in each member of ODBFIX structure.</p>
+        The places of decimal points can be got by <a href="misc/cnc_getfigure.htm" target="_parent">cnc_getfigure</a> function.
+      </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>fixcyc</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the ODBFIX structure for the data of the canned cycle.  The ODBFIX structure is as follows.
+                        </p>
+<pre>
+typedef struct odbfix {
+    short   mode;       /* canned cycle mode                 */
+    short   pln_axes[2];/* axis of plane selection           */
+    short   drl_axes;   /* axis of drilling                  */
+    long    i_pos;      /* absolute position of Initial point*/
+    long    r_pos;      /* absolute position of R point      */
+    long    z_pos;      /* absolute position of Z point      */
+    long    cmd_cnt;    /* command of number of repeats      */
+    long    act_cnt;    /* current number of repeats         */
+    long    cut;        /* cut-in value                      */
+    long    shift[2];   /* shift value                       */
+} ODBFIX ;
+</pre>
+<dl>
+    <dt>mode</dt>
+        <dd>Mode of the canned cycle is set.</dd>
+            <dd><table class="dd">
+            <tr> <td>0</td> <td>:</td> <td>cancel mode</td> </tr>
+            <tr> <td>1</td> <td>:</td> <td>canned cycle mode</td> </tr>
+            </table></dd>
+        <dd>* In case of '0', the data except 'mode' is invalid.</dd>
+    <dt>pln_axes</dt>
+        <dd>Axis number of plane selection is set.</dd>
+        <dd>(0,..,MAX_AXIS-1) MAX_AXIS:max.controlled axes</dd>
+            <dd><table class="dd">
+            <tr> <td>pln_axes[0]</td> <td>:</td> <td>1st axis number</td> </tr>
+            <tr> <td>pln_axes[1]</td> <td>:</td> <td>2nd axis number</td> </tr>
+            </table></dd>
+    <dt>drl_axes</dt>
+        <dd>Axis number of drilling axis is set.</dd>
+        <dd>(0,..,MAX_AXIS-1) MAX_AXIS:max.controlled axes</dd>
+    <dt>i_pos</dt>
+        <dd>Absolute position of Initial point is set.</dd>
+    <dt>r_pos</dt>
+        <dd>Absolute position of R point is set.</dd>
+    <dt>z_pos</dt>
+        <dd>Absolute position of Z point is set.</dd>
+    <dt>cmd_cnt</dt>
+        <dd>Command of number of repeats is set.</dd>
+    <dt>act_cnt</dt>
+        <dd>Current number of repeats is set.</dd>
+    <dt>cut</dt>
+        <dd>Cut-in value of G73(High-speed peck drilling cycle), G83(Peck drilling cycle) is set.</dd>
+    <dt>shift</dt>
+        <dd>Shift value of G76(Fine boring cycle), G87(Boring cycle) is set.</dd>
+            <dd><table class="dd">
+            <tr> <td>shift[0]</td> <td>:</td> <td>1st axis</td> </tr>
+            <tr> <td>shift[1]</td> <td>:</td> <td>2nd axis</td> </tr>
+            </table></dd>
+        <dd>In case of CNC parameter 6200#2=0, shift[1] is not used.</dd>
+</dl>
+
+<p/>Each member of 'ODBFIX' according to CNC parameter and the G code of plane selection is as follows.
+<p/>* The basic axis of following table includes its parallel axis.
+
+<p/>CNC parameter 6200#2=1, 6200#0=1
+<table border="1">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <thead>
+        <tr> <th></th> <th>i_pos</th> <th>r_pos</th> <th>z_pos</th> <th>cut</th> <th>shift[0]</th> <th>shift[1]</th> </tr>
+    </thead>
+    <tbody>
+        <tr> <td>G17</td> <td colspan="4">Z axis</td> <td>X axis</td> <td>Y axis</td> </tr>
+        <tr> <td>G18</td> <td colspan="4">Y axis</td> <td>Z axis</td> <td>X axis</td> </tr>
+        <tr> <td>G19</td> <td colspan="4">X axis</td> <td>Y axis</td> <td>Z axis</td> </tr>
+    </tbody>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+</table>
+<p/>CNC parameter 6200#2=1, 6200#0=0
+<table border="1">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <thead>
+        <tr> <th></th> <th>i_pos</th> <th>r_pos</th> <th>z_pos</th> <th>cut</th> <th>shift[0]</th> <th>shift[1]</th> </tr>
+    </thead>
+    <tbody>
+        <tr> <td>G17</td> <td rowspan="3" colspan="4">Z axis</td> <td>X axis</td> <td>Y axis</td> </tr>
+        <tr> <td>G18</td> <td>Z axis</td> <td>X axis</td> </tr>
+        <tr> <td>G19</td> <td>Y axis</td> <td>Z axis</td> </tr>
+    </tbody>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+</table>
+<p/>CNC parameter 6200#2=0, 6200#0=1
+<table border="1">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <thead>
+        <tr> <th></th> <th>i_pos</th> <th>r_pos</th> <th>z_pos</th> <th>cut</th> <th>shift[0]</th> <th>shift[1]</th> </tr>
+    </thead>
+    <tbody>
+        <tr> <td>G17</td> <td colspan="4">Z axis</td> <td rowspan="3">Note)</td> <td rowspan="3">not used</td> </tr>
+        <tr> <td>G18</td> <td colspan="4">Y axis</td> </tr>
+        <tr> <td>G19</td> <td colspan="4">X axis</td> </tr>
+    </tbody>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+</table>
+<p/>CNC parameter 6200#2=0, 6200#0=0
+<table border="1">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <thead>
+    <tr> <th></th> <th>i_pos</th> <th>r_pos</th> <th>z_pos</th> <th>cut</th> <th>shift[0]</th> <th>shift[1]</th> </tr>
+    </thead>
+    <tbody>
+    <tr> <td>G17</td> <td rowspan="3" colspan="4">Z axis</td> <td rowspan="3">Note)</td> <td rowspan="3">not used</td> </tr>
+    <tr> <td>G18</td> </tr>
+    <tr> <td>G19</td> </tr>
+    </tbody>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+</table>
+<p/>Note) Axis indicated by CNC parameter 6240
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>The canned cycle option and the extended driver/library function are necessary.</content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p></ethr>
+        <need>This function needs the canned cycle option. </need>
+        <add></add>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 15/15i</li><p/>
+                <p>6200#0,#2, 6240 (influenced by setting) </p>
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>H</fs15>
+            <fs15i>O</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>H</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdradofs</name>
+            <file>misc/cnc_rdradofs.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdlenofs</name>
+            <file>misc/cnc_rdlenofs.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdcdrotate</name>
+            <file>misc/cnc_rdcdrotate.htm</file>
+        </item>
+        <item>
+            <name>cnc_rd3dcdcnv</name>
+            <file>misc/cnc_rd3dcdcnv.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdmirimage</name>
+            <file>misc/cnc_rdmirimage.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdscaling</name>
+            <file>misc/cnc_rdscaling.htm</file>
+        </item>
+        <item>
+            <name>cnc_rd3dtofs</name>
+            <file>misc/cnc_rd3dtofs.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdposofs</name>
+            <file>misc/cnc_rdposofs.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_rdpdf_alldir</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdpdf_alldir(unsigned short FlibHndl, short *num_prog, IDBPDFADIR *pdf_adir_in, ODBPDFADIR *pdf_adir_out);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                Reads the file information under the specified folder.<br/>
+                Execution of this function is kept waiting when CNC is in editing(including the background edit state).
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle.
+                            See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>num_prog</name>
+                    <type>in/out</type>
+                    <content>
+                        <table>
+                            <tr><td>in</td><td>:</td><td>Specify the maximum number of programs to be read.</td></tr>
+                            <tr><td>out</td><td>:</td><td>This function returns the number of programs that were actually read.</td></tr>
+                        </table>
+                    </content>
+                </item>
+                <item>
+                    <name>pdf_adir_in</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the pointer of the IDBPDFADIR structure that stores the folder setting value.<br/>
+                            The IDBPDFADIR structure is as follows.
+                        </p>
+<pre>
+typedef struct idbpdfadir {
+    /* input */
+    char        path[212];      /* Path name string */
+    short       req_num;        /* Request entry number */
+    short       size_kind;      /* Output size format */
+    short       type;           /* Program list format */
+    short       dummy;
+} IDBPDFADIR ;
+</pre>
+                        <dl>
+                            <dt>path</dt>
+                                <dd>Specify the string having "Drive name + folder name".</dd>
+                                <dd>The string must be NULL terminated.</dd>
+                                <dd>Please refer to <a href="general.htm#DriveName" target="_parent">&quot;General Description (Specifying the folder and file name for FS30i, 0i-D/F and PMi-A.)&quot;</a> for details of the folder name.</dd>
+
+                            <dt>req_num</dt>
+                                <dd>Specify the index of subfolder information.</dd>
+                                <dd>The first subfolder index is 0, this data should be incremented 1 by 1.</dd>
+                                
+                            <dt>size_kind</dt>
+                                <dd>Specify the output format of program size.</dd>
+                                <dd><table class="dd">
+                                <tr><td>0</td><td>:</td><td>Page</td></tr>
+                                <tr><td>1</td><td>:</td><td>Byte</td></tr>
+                                <tr><td>2</td><td>:</td><td>KByte(1KByte=1024Byte)</td></tr>
+                                <tr><td>3</td><td>:</td><td>MByte(1MByte=1024kByte)</td></tr>
+                                </table></dd>
+                            <dt>type</dt>
+                                <dd>Specify the output format of program list</dd>
+                                <dd><table class="dd">
+                                <tr><td>0</td><td>:</td><td>Size, comment, process time stamp are not acquired.</td></tr>
+                                <tr><td>1</td><td>:</td><td>Size, comment, process time stamp are acquired.</td></tr>
+                                </table></dd>
+                                <dd>(Specifying 0 is more rapidly processed.)</dd>
+                        </dl>
+                    </content>
+                </item>
+                <item>
+                    <name>pdf_adir_out</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Specify the pointer of ODBPDFADIR structure that stores the 
+                            program file information under the folder.<br/>
+                            The ODBPDFADIR structure is as follows.
+                        </p>
+<pre>
+typedef struct odbpdfadir {
+    /* output */
+    short       data_kind;      /* File data kind */
+    short       year;           /* Last edited date (year) */
+    short       mon;            /*                  (month) */
+    short       day;            /*                  (day) */
+    short       hour;           /* Last edited time (hour) */
+    short       min;            /*                  (minute) */
+    short       sec;            /*                  (second) */
+    short       dummy;
+    long        dummy2;
+    long        size;           /* file size */
+    unsigned long attr;         /* attribute */
+    char        d_f[36];        /* name string */
+    char        comment[52];    /* comment */
+    char        o_time;[12]     /* process time stamp */
+} ODBPDFADIR ;
+</pre>
+                        <dl>
+                            <dt>data_kind</dt>
+                                <dd>Indicates the kind of this file data.</dd>
+                                <dd><table class="dd">
+                                <tr><td>0</td><td>:</td><td>folder</td></tr>
+                                <tr><td>1</td><td>:</td><td>file</td></tr>
+                                </table></dd>
+
+                            <dt>year</dt>
+                                <dd>Indicates the year part of the last edited date of the file.</dd>
+                            
+                            <dt>mon</dt>
+                                <dd>Indicates the month part of the last edited date of the file.</dd>
+                                
+                            <dt>day</dt>
+                                <dd>Indicates the day part of the last edited date of the file.</dd>
+                                
+                            <dt>hour</dt>
+                                <dd>Indicates the hour part of the last edited time of the file.</dd>
+                                
+                            <dt>min</dt>
+                                <dd>Indicates the minute part of the last edited time of the file.</dd>
+
+                            <dt>sec</dt>
+                                <dd>Indicates the second part of the last edited time of the file.</dd>
+                            <dt><br/>Above date/time information is valid in case of "file" only.<br/><br/></dt>
+                            
+                            <dt>size</dt>
+                                <dd>File size (0..99999999)</dd>
+                                <dd>The data is valid in cas of "file" and "type = 1".</dd>
+
+                            <dt>attr</dt>
+                                <dd>Attribute of "file/folder", shown by bit switch.</dd>
+                                <dd>[attribute of folder]</dd>
+                                <dd>
+                                    <table class="dd">
+                                        <tr><td>#0</td><td>:</td><td>Editing</td><td>0:permitted</td><td>1:prohibited</td></tr>
+                                        <tr><td>#1</td><td>:</td><td>Editing/displaying</td><td>0:permitted</td><td>1:prohibited</td></tr>
+                                    </table>
+                                </dd>
+                                <dd>[attribute of file]</dd>
+                                <dd>
+                                    <table class="dd">
+                                        <tr><td>#0</td><td>:</td><td>Editing</td><td>0:permitted</td><td>1:prohibited</td></tr>
+                                        <tr><td>#1</td><td>:</td><td>Editing/displaying</td><td>0:permitted</td><td>1:prohibited</td></tr>
+                                        <tr><td>#2</td><td>:</td><td>Encryption</td><td>0:OFF</td><td>1:ON</td></tr>
+                                        <tr><td>#3</td><td>:</td><td>File type</td><td>0:Program file</td><td>1:Other data file</td></tr>
+                                    </table>
+                                    <table class="dd">
+                                        <tr><td>#8..#10</td><td>:</td><td>Modify protection level</td></tr>
+                                        <tr><td></td><td></td><td>Numerical value 0..7 by #10-MSB, #8-LSB</td></tr>
+                                        <tr><td>#12..#14</td><td>:</td><td>Output protection level</td></tr>
+                                        <tr><td></td><td></td><td>Numerical value 0..7 by #14-MSB, #12-LSB</td></tr>
+                                    </table>
+                                    Other bits that are described above are reserved.
+                                </dd>
+
+                            <dt>d_f</dt>
+                                <dd>folder/File name string, NULL terminated.</dd>
+                            
+                            <dt>comment</dt>
+                                <dd>The "Comment" stored next to the "Program number" in the CNC is returned.<br/>
+                                    The maximum length of the comment is 48 characters (50 characters including leading
+                                     "(" and trailing ")").<br/>
+                                    When the "Comment" is longer than 48 characters, the part after the 48th character is
+                                    ignored. When no "Comment" is registered, only parentheses ("()") are returned.<br/>
+                                    The "Comment" string is terminated with NULL character.<br/>
+                                    The data is valid in cas of "file" and "type = 1".
+                                </dd>
+                                
+                            <dt>o_time</dt>
+                                <dd>The process time stamp ("xxxHxxMxxS" format comment) stored
+                                    next to the "Program number" is returned.<br/>
+                                    The string is NULL terminated. The data is valid in cas of "file" and "type = 1".</dd>
+                         </dl>
+                         <table>
+                            <colgroup valign="top">
+                            <tr><td>This function returns the current folder/file state when called.<br/>
+                                    At the application, modification to the subfolder(path of IDBPDFADIR),
+                                    like creating more subfolder, file/deleting subfolder, file, should be avoided.</td></tr>                            </colgroup>
+                         </table>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_BUSY</name>
+            <content>
+                Busy<br/>
+                NC uses the current resource.
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                Data number error<br/>
+                Subfolder specified by (req_num) does not exist.
+            </content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>
+                Data attribute error
+                <ul style="margin-top:0;margin-bottom:0">
+                <li>output format of program size(size_kind) is invalid.</li>
+                <li>output format of program list(type) is invalid.</li>
+                </ul>
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                Data error<br/>
+                The format of folder name(path) is invalid.<br/>
+                Specified folder is not found.
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                CNC execution rejected
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 0i-D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter></parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+        <is>
+            <!-- M -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdpdf_subdir</name>
+            <file>Program/cnc_rdpdf_subdir.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdpdf_subdirn</name>
+            <file>Program/cnc_rdpdf_subdirn.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,618 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdophistry2</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdophistry2(unsigned short FlibHndl, unsigned short s_no, unsigned short *e_no, unsigned short *length, void *his); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Reads the operation history data.<br/>
+                Please use this function instead of <a href="History/cnc_rdophistry.htm" target="_parent">cnc_rdophistry</a> function for Series 15i.
+            </p>
+            <p>
+                It is necessary to execute <a href="History/cnc_stopophis.htm" target="_parent">cnc_stopophis</a> function before this function is used.<br/>
+                And it is necessary to execute <a href="History/cnc_startophis.htm" target="_parent">cnc_startophis</a> function after reading data as short as possible.
+            </p>
+            <p>
+                The structure of the operation history data is different according to the kind of the record(rec_type).
+                When the operation history data is accessed, it is necessary to use a structure corresponding to the kind.
+            </p>
+            <p>
+                The start/end record number means the relative number uesd at reading the operation history data.<br/>
+                These record numbers are valid only at the period from the execution of "Stop logging operation history
+                data"(<a href="History/cnc_stopophis.htm" target="_parent">cnc_stopophis</a> function) until the execution of
+                "Restart logging operation history data"(<a href="History/cnc_startophis.htm" target="_parent">cnc_startophis</a> function).
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the start record number.(more than 1)
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>e_no</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                            Specify the pointer to the end record number.(more than 1)<br/>
+                            The last record number which was read actually is returned.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                            Specify the data block length which is enough to store the
+                            specified operation history data.<br/>
+                            One operation history data is set in the ODBOPHIS structure and
+                            the size of the structure is represented by rec_len. 
+                            This structure is lined up in order of number of operation history data. 
+                            So, specify the sum of rec_len of these structures.<br/>
+                            Because the size of data which was read actually is returned,
+                            it is possible to specify the length more than the actual size.
+                        </p>
+                            <img src="History/recmdi15_vc.gif"></img><br/>
+                            <img src="History/recsig15_vc.gif"></img><br/>
+                            <img src="History/recalm15_vc.gif"></img><br/>
+                            <img src="History/rectim15_vc.gif"></img><br/>
+                    </content>
+                </item>
+                <item>
+                    <name>his</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the area to store the operation history data.
+                            Each operation history data can be referred by using the ODBOPHIS structure.
+                        </p>
+<pre>
+typedef struct odbophis {
+    short   rec_len;            /* Length             */
+    short   rec_type;           /* Record type        */
+    union {
+        struct {
+            char    key_code;   /* Key code           */
+            char    pw_flag;    /* Power-on flag      */
+            short   dummy;
+        } rec_mdi;
+        struct {
+            short   sig_name;   /* Signal name        */
+            short   sig_no;     /* Signal number      */
+            char    sig_old;    /* Bit pattern before */
+                                /* transition         */
+            char    sig_new;    /* Bit pattern after  */
+                                /* transition         */
+            short   dummy;
+        } rec_sgn;
+        struct {
+            short   alm_grp;    /* Alarm type         */
+            short   alm_no;     /* Alarm number       */
+            short   axis_no;    /* Axis number        */
+            short   year;       /* Year               */
+            short   month;      /* Month              */
+            short   day;        /* Day                */
+            short   hour;       /* Hour               */
+            short   minute;     /* Minute             */
+            short   second;     /* Second             */
+            short   dummy;
+        } rec_alm;
+        struct {
+            short   evnt_type;  /* Event type         */
+            short   year;       /* Year               */
+            short   month;      /* Month              */
+            short   day;        /* Day                */
+            short   hour;       /* Hour               */
+            short   minute;     /* Minute             */
+            short   second;     /* Second             */
+            short   dummy;
+        } rec_:;
+    } u;
+} ODBOPHIS;
+</pre>
+                        <dl>
+                        <dt>rec_len</dt>
+                            <dd>Length of the ODBOPHIS structure</dd>
+                        <dt>rec_type</dt>
+                            <dd>Record type</dd>
+                            <dd><table class="dd">
+                                <tr>
+                                    <td>0</td>
+                                    <td>:</td>
+                                    <td>MDI key</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>:</td>
+                                    <td>Signal</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>:</td>
+                                    <td>Alarm</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>:</td>
+                                    <td>Date/Time</td>
+                                </tr>
+                            </table></dd>
+                        <dt>key_code</dt>
+                            <dd>Key code</dd>
+                        <dt>pw_flag</dt>
+                            <dd>Power-on flag</dd><br/>
+                                <dd><table class="dd">
+                                    <tr>
+                                        <td>1</td>
+                                        <td>:</td>
+                                        <td>For power on</td>
+                                    </tr>
+                                    <tr>
+                                        <td>0</td>
+                                        <td>:</td>
+                                        <td>Usually, <b>0</b> is stored</td>
+                                    </tr>
+                                </table></dd>
+                        <dt>sig_name</dt>
+                            <dd>Signal name</dd><br/>
+                                <dd><table class="dd">
+                                    <tr>
+                                        <td>1</td>
+                                        <td>:</td>
+                                        <td>X</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>:</td>
+                                        <td>G</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>:</td>
+                                        <td>Y</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>:</td>
+                                        <td>F</td>
+                                    </tr>
+                                </table></dd>
+                        <dt>sig_no</dt>
+                            <dd>Signal number</dd><br/>
+                                <dd><table class="dd">
+                                    <tr>
+                                        <td>X</td>
+                                        <td>:</td>
+                                        <td>0,..,127, 1000,..,1063</td>
+                                    </tr>
+                                    <tr>
+                                        <td>G</td>
+                                        <td>:</td>
+                                        <td>0,..,255, 1000,..,1255</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Y</td>
+                                        <td>:</td>
+                                        <td>0,..,127, 1000,..,1063</td>
+                                    </tr>
+                                    <tr>
+                                        <td>F</td>
+                                        <td>:</td>
+                                        <td>0,..,255, 1000,..,1255</td>
+                                    </tr>
+                                </table></dd>
+                        <dt>sig_old</dt>
+                            <dd>Bit pattern before transition</dd>
+                        <dt>sig_new</dt>
+                            <dd>Bit pattern after transition</dd>
+                        <dt>alm_grp</dt>
+                            <dd>Alarm type</dd>
+                            <ul type="disc">
+                                 <li>Series 15i</li>
+                            </ul>
+                            <dd><table class="dd">
+                                    <tr>
+                                        <td>0</td>
+                                        <td>:</td>
+                                        <td>Background P/S</td>
+                                        <td>(BG)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>:</td>
+                                        <td>Foreground P/S</td>
+                                        <td>(PS)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>:</td>
+                                        <td>(Not used)</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>:</td>
+                                        <td>(Not used)</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>:</td>
+                                        <td>Syncronized error</td>
+                                        <td>(SN)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td>:</td>
+                                        <td>Parameter switch on</td>
+                                        <td>(SW)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>6</td>
+                                        <td>:</td>
+                                        <td>Over travel, External data</td>
+                                        <td>(OT)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>7</td>
+                                        <td>:</td>
+                                        <td>PMC error</td>
+                                        <td>(PC)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>8</td>
+                                        <td>:</td>
+                                        <td>External alarm message</td>
+                                        <td>(EX)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>9</td>
+                                        <td>:</td>
+                                        <td>(Not used)</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>10</td>
+                                        <td>:</td>
+                                        <td>Serious P/S</td>
+                                        <td>(SR)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>11</td>
+                                        <td>:</td>
+                                        <td>(Not used)</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>12</td>
+                                        <td>:</td>
+                                        <td>Servo alarm</td>
+                                        <td>(SV)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>13</td>
+                                        <td>:</td>
+                                        <td>I/O error</td>
+                                        <td>(IO)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>14</td>
+                                        <td>:</td>
+                                        <td>Power off parameter set</td>
+                                        <td>(PW)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>15</td>
+                                        <td>:</td>
+                                        <td>System alarm</td>
+                                        <td>(SY)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>16</td>
+                                        <td>:</td>
+                                        <td>External alarm message (2)</td>
+                                        <td>(EX)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>17</td>
+                                        <td>:</td>
+                                        <td>External alarm message (3)</td>
+                                        <td>(EX)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>18</td>
+                                        <td>:</td>
+                                        <td>External alarm message (4)</td>
+                                        <td>(EX)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>19</td>
+                                        <td>:</td>
+                                        <td>Macro alarm</td>
+                                        <td>(MC)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>20</td>
+                                        <td>:</td>
+                                        <td>Spindle alarm</td>
+                                        <td>(SP)</td>
+                                    </tr>
+                                </table></dd>
+                            <dt>alm_no</dt>
+                                <dd>Alarm number</dd>
+                            <dt>axis_no</dt>
+                                <dd>Axis number(from 1 to maximum controlled axis) or Spindle number(from 1 to maximum spindle number)
+                                    <b>0</b> is stored for an unrelated alarm to the axis and the spindle.<br/>
+                                </dd>
+                            <dt>year</dt>
+                                <dd>Year   (1995,..,2094)<br/></dd>
+                            <dt>month</dt>
+                                <dd>Month  (1,..,12)<br/></dd>
+                            <dt>day</dt>
+                                <dd>Day   (1,..,31)<br/></dd>
+                            <dt>hour</dt>
+                                <dd>Hour   (0,..,23)<br/></dd>
+                            <dt>minute</dt>
+                                <dd>Minute (0,..,59)<br/></dd>
+                            <dt>second</dt>
+                                <dd>Second (0,..,59)</dd>
+                            <dt>evnt_type</dt>
+                                <dd>Event type<br/>
+                            <table class="dd">
+                                <tr>
+                                    <td>0</td>
+                                    <td>:</td>
+                                    <td>Power off</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>:</td>
+                                    <td>Power on</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>:</td>
+                                    <td>Change date</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>:</td>
+                                    <td>Time stamp</td>
+                                </tr>
+                                <tr>
+                                     <td>4</td>
+                                     <td>:</td>
+                                     <td>Erace history data</td>
+                                 </tr>
+                             </table>
+                             </dd>
+                         </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                <a href="History/cnc_stopophis.htm" target="_parent">cnc_stopophis</a> function has not been executed.
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                Data block length error<br/>
+                Size of area to store the operation history data(length) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                Data number error<br/>
+                The specification of the record number (s_no, e_no) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The extended driver/library function is necessary.
+            </content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            This function needs the extended driver/library function.
+        </hssb>
+
+        <ethr>
+            <p>
+                The Ethernet function and the extended driver/library function are necessary.
+            </p>
+        </ethr>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 15i</li>
+                    0015#3=1 (influenced by setting)
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>O</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_stopophis</name>
+            <file>History/cnc_stopophis.htm</file>
+        </item>
+        <item>
+            <name>cnc_startophis</name>
+            <file>History/cnc_startophis.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdophisno</name>
+            <file>History/cnc_rdophisno.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdophistry</name>
+            <file>History/cnc_rdophistry.htm</file>
+        </item>
+        <item>
+            <name>cnc_clearophis</name>
+            <file>History/cnc_clearophis.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

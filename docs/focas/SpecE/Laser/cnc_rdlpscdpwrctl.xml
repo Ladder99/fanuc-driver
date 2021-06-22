@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+    <!-- 関数名 -->
+    <title>cnc_rdlpscdpwrctl</title>
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdlpscdpwrctl(unsigned short FlibHndl,short s_no, short *number, IODBPWRCTL *pwrctl); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p> Reads the item of setting screen at power control.
+                Each data is stored in the members within IODBPWRCTL.
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            The data group number to read is set.
+                            <table border="0" class="dd">
+                                <tr> <td>901 to  910</td><td>  power control data group number</td>   </tr>
+                            </table>
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>number</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                             A pointer to the number of data items in power control is set.
+                             Specifies the number to read before calling the function. 
+                             The number which actually read after calling the function is set.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>pwrctl</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            A pointer to the IODBPWRCTL structure in which to return the data group of power control.
+                            The IODBPWRCTL structure is as follows.
+                        </p>
+<pre>
+typedef struct iodbpwrctl {
+    short    slct;          /* Flag of valid data                       */
+    short    power_min;     /* Minimum peak power                       */
+    short    pwr_sp_zr;     /* Peak power at feed rate = 0              */
+    short    freq_min;      /* Minimum pulse frequency                  */
+    short    freq_sp_zr;    /* Frequency at feed rate = 0               */
+    short    duty_min;      /* Minimum pulse duty                       */
+    short    duty_sp_zr;    /* Pulse duty at feed rate = 0              */
+    char     feed_r_dec;    /* Decimals places                          */
+    char     reserve;       /* (reserve)                                */
+    long     feed_r;        /* Allowable width of feed rate fluctuation */
+    short    reserves[7];   /* (reserve)                                */
+} IODBPWRCTL ;
+</pre>
+                        <dl>
+                            <dt>slct</dt>
+                                <dd>Flag of valid data is set.</dd>
+                            <dd><table border ="0" class="dd">
+                                <tr> <td>bit 0</td><td>：</td><td>Minimum peak power</td> </tr>
+                                <tr> <td>bit 1</td><td>：</td><td>Peak power at feed rate = 0</td> </tr>
+                                <tr> <td>bit 2</td><td>：</td><td>Minimum pulse frequency</td> </tr>
+                                <tr> <td>bit 3</td><td>：</td><td>Frequency at feed rate = 0</td> </tr>
+                                <tr> <td>bit 4</td><td>：</td><td>Minimum pulse duty</td> </tr>
+                                <tr> <td>bit 5</td><td>：</td><td>Pulse duty at feed rate = 0</td> </tr>
+                                <tr> <td>bit 6</td><td>：</td><td>Allowable width of feed rate fluctuation</td> </tr>
+                                <tr> <td>bit 7,..,15</td><td>：</td><td>(reserve)</td> </tr>
+                            </table></dd>
+                            <dd>* When a bit is 0, it means the corresponding data hasno meaning.</dd>
+                            <dt>power_min</dt>
+                                <dd>The minimum peak power (clamp value) is set.</dd>
+                                <dd>(Setting range：0 to 9999，Unit：W)</dd>
+                            <dt>pwr_sp_zr</dt>
+                                <dd>The peak power at feed rate = 0 is set.</dd>
+                                <dd>(Setting range：0 to 9999，Unit：W)</dd>
+                            <dt>freq_min</dt>
+                                <dd>The minimum pulse frequency is set.</dd>
+                                <dd>(Setting range：1 to 32767，Unit：Hz)</dd>
+                            <dt>freq_sp_zr</dt>
+                                <dd>The pulse frequency at feed rate = 0 is set.</dd>
+                                <dd>(Setting range：1 to 32767，Unit：Hz)</dd>
+                            <dt>duty_min</dt>
+                                <dd>The minimum pulse duty is set.</dd>
+                                <dd>(Setting range：0 to 100，Unit：%)</dd>
+                            <dt>duty_sp_zr</dt>
+                                <dd>The pulse duty at feed rate = 0 is set.</dd>
+                                <dd>(Setting range：0 to 100，Unit：%)</dd>
+                            <dt>feed_r_dec</dt>
+                                <dd>The number of decimals places at allowable width of feed rate fluctuation is set.</dd>
+                                <dd>(Setting range：0 to 9)</dd>
+                                <dd>The corresponding data is as follows.</dd>
+                                <ul>
+                                <table border="1">
+                                    <colgroup>
+                                    <colgroup width="100">
+                                    <tr>
+                                        <th>decimals places</th> <th>corresponding data</th>
+                                    </tr>
+                                    <tr> <td >feed_r_dec</td><td>feed_r</td>  </tr>
+                                </colgroup>
+                                </colgroup>
+                                </table>
+                                </ul>
+
+                            <dt>reserve</dt>
+                                <dd>(reserve)</dd>
+                            <dt>feed_r</dt>
+                                <dd>The allowable width of feed rate fluctuation is set.</dd>
+                                <dd>(Setting range：0 to 999999999，Unit：mm、inch(input unit))</dd>
+                            <dt>reserves</dt>
+                                <dd>(reserve)</dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                Unavailable<br/>
+                This function cannot be used except 30i/31i-LB.
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                Data block length error<br/>
+                Number of data(number) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                Data number error<br/>
+                Start number(s_no) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The cutting condition setting function and the extended driver/library function are necessary.
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                CNC parameter error(Series 30i/31i-LB only)<br/>
+                Mistake of laser oscillator (parameter No.15030)
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>The cutting condition setting function is necessary.</need>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <li>Series 30i/31i-LB</li>
+            <span class="dd">No.15030</span>
+        </type>
+    </parameter>
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>-</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>-</d>
+            <h>-</h>
+            <a>-</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_wrlpscdpwrctl</name>
+            <file>Laser/cnc_wrlpscdpwrctl.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

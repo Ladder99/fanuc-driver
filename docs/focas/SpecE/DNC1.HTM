@@ -1,0 +1,145 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>Ethernet Communication with Ethernet Board</title>
+<link rel="stylesheet" type="text/css" href="fwlib32.css">
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<p><a href="fwlib32.htm">Top Page</a></p>
+
+<hr>
+
+<h2>Communication with Ethernet Board</h2>
+
+
+<p>
+Ethernet version is realized by the socket communication (TCP/IP communication) with FANUC Ethernet Board, or FANUC Fast Ethernet Board. And in case of Series 16i/18i/21i-MODEL B, Series 30i/31i/32i-MODEL A, Series 30i/31i/32i/35i-MODEL B, Series 0i-MODEL D, Series 0i-MODEL F and Power Motion i-A, Ethernet version can communicate with CNC side by the &quot;Embedded Ethernet function&quot;.
+<p>Before using, refer to the necessary manual, and confirm the following items.
+<ul>
+<li>Settings of TCP/IP in your personal computer side.
+<li>Settings of the Ethernet Board and Embedded Ethernet function in the CNC side.
+<li>Physical network connection between your personal computer and the CNC.
+</ul>
+
+<ul>
+<li>For Series 16i/18i/21i/Power Mate i, 0i-B, 0i-C, Series 15i
+<ul>&quot;FANUC Ethernet Board/DATA SERVER Board OPERATOR'S MANUAL (B-63354EN)&quot;</ul>
+<ul>&quot;FANUC FAST Ethernet Board/FAST DATA SERVER OPERATOR'S MANUAL (B-63644EN)&quot;</ul>
+<ul>&quot;FANUC Series 16i/160i/160is/18i/180i/180is/21i/210i/210is/20i-MODEL B CONNECTION MANUAL (FUNCTION) (B-63523-1EN)&quot;</ul>
+</ul>
+
+<ul>
+<li> For Series 30i/31i/32i-MODEL A
+<ul>&quot;FANUC FAST Ethernet/FAST Data Server For FANUC Series 30i-MODEL A/B, Series 31i-MODEL A/B, Series 32i-MODEL A/B, Series 35i-MODEL B OPERATOR'S MANUAL (B-64014EN)&quot;</ul>
+<ul>&quot;FANUC Series 30i-MODEL A, Series 31i-MODEL A, Series 32i-MODEL A CONNECTION MANUAL (HARDWARE) (B-63943EN)&quot;</ul>
+<ul>&quot;FANUC Series 30i-MODEL A, Series 31i-MODEL A, Series 32i-MODEL A MAINTENANCE MANUAL (B-63945EN)&quot;</ul>
+<ul>&quot;FANUC Series 30i-MODEL B, Series 31i-MODEL B, Series 32i-MODEL B CONNECTION MANUAL (HARDWARE) (B-64483EN)&quot;</ul>
+<ul>&quot;FANUC Series 30i-MODEL B, Series 31i-MODEL B, Series 32i-MODEL B MAINTENANCE MANUAL (B-64485EN)&quot;</ul>
+<ul>&quot;FANUC Series 35i-MODEL B MAINTENANCE MANUAL (B-64525EN)&quot;</ul>
+</ul>
+
+<ul>
+<li> For Series 0i-MODEL D
+<ul>&quot;FANUC FAST Ethernet/FAST Data Server OPERATOR'S MANUAL (B-64414EN)&quot;</ul>
+<ul>&quot;FANUC Series 0i-MODEL D, Series 0i Mate-MODEL D CONNECTION MANUAL (FUNCTION) (B-64303EN-1)&quot;</ul>
+</ul>
+</br>
+<p>The mechanism of Ethernet version is as follows.
+
+
+<p><img src="focas1.gif"></p>
+<!--- Delete DNC1 document('07.04.19) 
+<p>DNC1/Ethernet is based on FOCAS1/Ethernet. You can add an additional function by using FOCAS1/Ethernet into DNC1/Ethernet application.
+</p>
+
+<p>The following figure indicates the relationship of FOCAS1/Ethernet and DNC1/Ethernet.
+
+
+<p><img src="dnc1.gif"></p>
+
+<table border="1">
+    <tr>
+        <th>Interface</th>
+        <th>Function</th>
+        <th>Programming</th>
+        <th>Usage</th>
+        <th>Re-connect after disconnect</th>
+    </tr>
+    <tr>
+        <td>FOCAS1/Ethernet</td>
+        <td>Wide range functions<br>
+        like system call</td>
+        <td>Need to specify detail sequences and conditions</td>
+        <td>Cell control and operation screen development</td>
+        <td>Manual (Need to get the library handle again)</td>
+    </tr>
+    <tr>
+        <td>DNC1/Ethernet</td>
+        <td>Frequently used functions<br>
+        like macro</td>
+        <td>Easy</td>
+        <td>Cell control</td>
+        <td>Auto</td>
+    </tr>
+</table>
+-->
+<p></p>
+
+
+<div class="caution"><a name="limit">&lt;Restrictions&gt;</a><br>
+<br>
+The number of the application software(clients) that can connect to one CNC at the same time depends on the type of Ethernet interface as follows.
+
+<table border=1>
+    <tr>
+        <th></th>
+        <th>Fast Ethernet Board</th>
+        <th>Ethernet Board<br>Note 1)</th>
+        <th>Embedded Ethernet</th>
+    </tr>
+    <tr>
+        <td><b>Clients<br>at the same time</b></td>
+        <td align="center"><b>maximum 20</b></td>
+        <td align="center"><b>maximum 10</b></td>
+        <td align="center"><b>maximum 5</b></td>
+    </tr>
+    <tr>
+        <td><b>PCs<br>at the same time</b></td>
+        <td align="center"><b>maximum 20</b></td>
+        <td align="center"><b>maximum 10</b></td>
+        <td align="center"><b>1<br>(recommended)</b></td>
+    </tr>
+</table>
+
+<blockquote>Note 1) Maximum 3, in case of 6561/03, or 6561/04(for Series 16i/18i/21i, Power Mate i). Series 30i/31i/32i-A, Series 30i/31i/32i-B, Series 0i-D, Series 0i-MODEL F and Power Motion i-A does not support the Ethernet board.
+</blockquote>
+See the manual &quot;APPENDIX D RESTRICTIONS&quot; in &quot;FANUC Ethernet Board/DATA SERVER Board OPERATOR'S MANUAL (B-63354EN)&quot;, &quot;FANUC FAST Ethernet Board/FAST DATA SERVER OPERATOR'S MANUAL (B-63644EN)&quot; for details.
+
+
+<p>&lt;Notes for Embedded Ethernet&gt;</p>
+<ol>
+<li>The communication using the Embedded Ethernet is processed on the CNC CPU. This means that the running condition of CNC may affect the communication performance of the Embedded Ethernet, and conversely, the communication condition of the Embedded Ethernet may affect the process of CNC.<br>
+The Embedded Ethernet function is processed at lower priority than the process such as the automatic operation, or each axis process at the manual operation. Therefore, during the automatic operation, or in case that the CNC is configured so as to have many controlled axes, the communication speed may be slow.<br>
+The other way, the Embedded Ethernet function is processed at higher priority than the process such as screen display process of CNC, C-language executor(except the high level task), macro executor(except the execution macro). Therefore, the performance of these processes may go down by doing the communication of the Embedded Ethernet.
+<p>
+<li>The following Ethernet applications cannot be used because the adequate performance may not be acquired by the above reasons. 
+<ul>
+<li>CNC Screen Display Function
+<li>Application for the DNC operation
+</ul>
+<p>
+<li>In case that the Embedded Ethernet is connected to the Intranet that uses many broadcast data, it may take a long time to process the broadcast data. So, it may affect the performance of the process such as screen display of CNC.
+</ol>
+
+</div>
+
+<hr>
+
+<p><a href="fwlib32.htm">Top Page</a></p>
+</body>
+</html>

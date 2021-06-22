@@ -1,0 +1,31 @@
+<html>
+<head>
+<script language="JavaScript">
+      var dir = "Data";
+
+      var vbCheck = true;
+
+      function jumpPage(linkURL){
+          location.href=linkURL;
+      }
+
+      function getLinkId(){
+          return dir;
+      }
+
+      function getXMLFileName(){
+          return dir+ "/"+"ds_searchresult.xml";
+      }
+
+      function getVBCheck(){
+          return vbCheck;
+      }
+
+</script>
+<title>ds_searchresult</title>
+</head>
+      <frameset rows="55pt,*" frameborder="no" framespacing="0">
+      <frame src="../cnc_com_top.htm" name="frmtop" noresize scrolling="no">
+      <frame src="../cnc_com_main.htm" name="frmmain">
+      </frameset>
+</html>

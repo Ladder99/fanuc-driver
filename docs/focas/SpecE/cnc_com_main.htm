@@ -1,0 +1,132 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Script-Type" content="text/javascript">
+    <link rel="stylesheet" type="text/css" href="Fwlib32.css"></link>
+    <title>frmmain</title>
+
+<script language="JavaScript">
+<!--
+  var lang = -1;
+  var Connect = 0;
+
+  function remoteFunc( type ){
+
+    lang = type;
+
+    SetHtml();
+  }
+
+
+  function GetCookie() {
+
+    if( parent.frmtop.getLangType != null )
+    {
+        lang = parent.frmtop.getLangType();
+
+        Connect = parent.frmtop.getConnectType();
+
+        return true;
+    }
+    else
+    {
+       parent.frmmain.location.href="cnc_com_main.htm";
+       return false;
+    }
+
+  }
+
+
+  function SetHtml() {
+
+    var XSLFile = "Fmethod_xsl/fmethod_";
+
+    switch( Connect )
+    {
+
+      case 0:
+      case 3:
+
+        XSLFile = XSLFile + "he_";
+
+      break;
+
+
+      case 1:
+
+        XSLFile = XSLFile + "h_";
+
+      break;
+
+
+      case 2:
+
+        XSLFile = XSLFile + "e_";
+
+      break;
+
+
+      default:
+        here.innerHTML = "Error (Connect Select)";
+      return;
+    }
+
+    XSLFile = XSLFile + "c.xsl";
+//  switch( lang )
+//  {
+//
+//    case 0:
+//    case 3:
+//
+//      XSLFile = XSLFile + "cb.xsl";
+//    break;
+//
+//    case 1:
+//      XSLFile = XSLFile + "c.xsl";
+//    break;
+//
+//    case 2:
+//      XSLFile = XSLFile + "b.xsl";
+//    break;
+//
+//    default:
+//      here.innerHTML = "Error (Languege Select)";
+//    break;
+//  }
+
+
+    xslStyle = new ActiveXObject("MSXML2.DOMdocument");
+    xslStyle.async = false;
+    xslStyle.load(XSLFile);
+
+
+    var XMLFile = parent.getXMLFileName();
+    xmlSource = new ActiveXObject("MSXML2.DOMdocument");
+    xmlSource.async = false;
+    xmlSource.load(XMLFile);
+
+    here.innerHTML = xmlSource.transformNode( xslStyle.documentElement );
+
+  }
+
+// -->
+</script>
+
+  </head>
+
+  <body bgcolor="#FFFFFF">
+
+  <div id="here" align="left"></div>
+
+<script language="JavaScript">
+<!--
+  if( GetCookie() )
+  {
+    SetHtml();
+  }
+// -->
+</script>
+
+  </body>
+
+</html>
+

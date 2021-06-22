@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdctrldi</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdctrldi(unsigned short FlibHndl,ODBSPDI *spdi); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                Reads "control input signal for spindle monitor".
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                    <item>
+                    <name>spdi</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the ODBSPDI structure array including the control input signal for spindle monitor.
+                            The number of array must be equal to the following.
+                        </p>
+                        <table border="0" class="dd">
+                            <tr><td>Series 15</td><td>：</td><td>2</td></tr>
+                            <tr><td>Series 16/18/21</td><td>：</td><td>3</td></tr>
+                            <tr><td>Series 15i, 16i/18i/21i, 0i-A/B/C</td><td>：</td><td>4</td></tr>
+                            <tr><td>Series 30i, 0i-D/F</td><td>：</td><td>8</td></tr>
+                            <tr><td>Power Mate i</td><td>：</td><td>1</td></tr>
+                        </table>
+                        <p>
+                            The data within the number of spindles acquired by
+                            <a href="Motor/cnc_rdnspdl.htm" target="_parent">cnc_rdnspdl</a> function is valid.
+                        </p>
+<pre>
+    ODBSPDI spdi[N] ; /* N : maximum spindle number */
+</pre>
+                        <p>
+                            The ODBSPDI structure is as follows.
+                        </p>
+<pre>
+typedef struct odbspdi {
+    char    sgnl1 ;         /* control input signal 1 */
+    char    sgnl2 ;         /* control input signal 2 */
+    char    sgnl3 ;         /* control input signal 3 */
+    char    sgnl4 ;         /* control input signal 4 */
+} ODBSPDI ;
+</pre>
+                        <dl>
+                            <dt>sgnl1</dt>
+                            <dd>control input signal 1</dd>
+                            <dd><img src="Motor/dibit1.gif"/></dd>
+                        </dl>
+                        <table border="0" class="dd">
+                            <tr> <td>TLML</td><td>:</td><td>TORQUE LIMIT LOW</td>   <td>SRV</td><td>:</td><td>REVERSE ROTATION</td> </tr>
+                            <tr> <td>TLMH</td><td>:</td><td>TORQUE LIMIT HIGH</td>  <td>SFR</td><td>:</td><td>OBVERSE ROTATION</td> </tr>
+                            <tr> <td>CTH2</td><td>:</td><td>CLUTCH/GEAR RATIO</td>  <td>ORCM</td><td>:</td><td>ORIENTATION</td>     </tr>
+                            <tr> <td>CTH1</td><td>:</td><td>CLUTCH/GEAR RATIO</td>  <td>MRDY</td><td>:</td><td>MACHINE READY</td>   </tr>
+                        </table>
+                        <dl>
+                            <dt>sgnl2</dt>
+                            <dd>control input signal 2</dd>
+                            <dd><img src="Motor/dibit2.gif"/></dd>
+                        </dl>
+                        <table border="0" class="dd">
+                            <tr> <td>ARST</td><td>:</td><td>ALARM RESET SIGNAL</td>         <td>SOCN</td><td>:</td><td>SOFT START STOP CANCEL</td>           </tr>
+                            <tr> <td>*ESP</td><td>:</td><td>EMERGENCY STOP</td>             <td>INTG</td><td>:</td><td>SPEED INTEGRATION CONTROL SIGNAL</td> </tr>
+                            <tr> <td>SPSL</td><td>:</td><td>SPINDLE SELECT</td>             <td>RSL</td><td>:</td><td>OUTPUT SWITCH DEMAND SIGNAL</td>       </tr>
+                            <tr> <td>MCFN</td><td>:</td><td>POWER LINE SWITCH SIGNAL</td>   <td>RCH</td><td>:</td><td>POWER LINE STAT SIGNAL</td>            </tr>
+                        </table>
+                        <dl>
+                            <dt>sgnl3</dt>
+                            <dd>control input signal 3</dd>
+                            <dd><img src="Motor/dibit3.gif"/></dd>
+                        </dl>   
+                        <table border="0" class="dd">
+                            <tr> <td>INDX</td><td>:</td><td>ORIENTATION STOP POSITION CHANGE</td> </tr>
+                            <tr> <td>ROTA</td><td>:</td><td>ORIENTATION STOP POSITION CHANGE-ROTATION DIRECTION</td> </tr>
+                            <tr> <td>NRRO</td><td>:</td><td>ORIENTATION STOP POSITION CHANGE-NEAR ROTATE</td> </tr>
+                            <tr> <td>DEFM</td><td>:</td><td>DIFFERENCE VELOCITY MODE</td> </tr>
+                        </table>
+                        <dl>
+                            <dt>sgnl4</dt>
+                            <dd>control input signal 4</dd>
+                            <dd><img src="Motor/bitnull.gif"/></dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+
+        <is>
+            <hssb>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                            </p>
+                        </content>
+                    </item>
+                        <item>
+                        <name>spdi</name>
+                        <type>out</type>
+                        <content>
+                            <p>
+                                Pointer to the ODBSPDI structure array including the control input signal for spindle monitor.
+                                The number of array must be 8.
+                            </p>
+                            <p>
+                                The data within the number of spindles acquired by
+                                <a href="Motor/cnc_rdnspdl.htm" target="_parent">cnc_rdnspdl</a> function is valid.
+                            </p>
+<pre>
+    ODBSPDI spdi[N] ; /* N : maximum spindle number */
+</pre>
+                            <p>
+                                The ODBSPDI structure is as follows.
+                            </p>
+<pre>
+typedef struct odbspdi {
+    char    sgnl1 ;         /* control input signal 1 */
+    char    sgnl2 ;         /* control input signal 2 */
+    char    sgnl3 ;         /* control input signal 3 */
+    char    sgnl4 ;         /* control input signal 4 */
+} ODBSPDI ;
+</pre>
+                            <dl>
+                                <dt>sgnl1</dt>
+                                <dd>control input signal 1</dd>
+                                <dd><img src="Motor/dibit1.gif"/></dd>
+                            </dl>
+                            <table border="0" class="dd">
+                                <tr> <td>TLML</td><td>:</td><td>TORQUE LIMIT LOW</td>   <td>SRV</td><td>:</td><td>REVERSE ROTATION</td> </tr>
+                                <tr> <td>TLMH</td><td>:</td><td>TORQUE LIMIT HIGH</td>  <td>SFR</td><td>:</td><td>OBVERSE ROTATION</td> </tr>
+                                <tr> <td>CTH2</td><td>:</td><td>CLUTCH/GEAR RATIO</td>  <td>ORCM</td><td>:</td><td>ORIENTATION</td>     </tr>
+                                <tr> <td>CTH1</td><td>:</td><td>CLUTCH/GEAR RATIO</td>  <td>MRDY</td><td>:</td><td>MACHINE READY</td>   </tr>
+                            </table>
+                            <dl>
+                                <dt>sgnl2</dt>
+                                <dd>control input signal 2</dd>
+                                <dd><img src="Motor/dibit2.gif"/></dd>
+                            </dl>
+                            <table border="0" class="dd">
+                                <tr> <td>ARST</td><td>:</td><td>ALARM RESET SIGNAL</td>         <td>SOCN</td><td>:</td><td>SOFT START STOP CANCEL</td>           </tr>
+                                <tr> <td>*ESP</td><td>:</td><td>EMERGENCY STOP</td>             <td>INTG</td><td>:</td><td>SPEED INTEGRATION CONTROL SIGNAL</td> </tr>
+                                <tr> <td>SPSL</td><td>:</td><td>SPINDLE SELECT</td>             <td>RSL</td><td>:</td><td>OUTPUT SWITCH DEMAND SIGNAL</td>       </tr>
+                                <tr> <td>MCFN</td><td>:</td><td>POWER LINE SWITCH SIGNAL</td>   <td>RCH</td><td>:</td><td>POWER LINE STAT SIGNAL</td>            </tr>
+                            </table>
+                            <dl>
+                                <dt>sgnl3</dt>
+                                <dd>control input signal 3</dd>
+                                <dd><img src="Motor/dibit3.gif"/></dd>
+                            </dl>   
+                            <table border="0" class="dd">
+                                <tr> <td>INDX</td><td>:</td><td>ORIENTATION STOP POSITION CHANGE</td> </tr>
+                                <tr> <td>ROTA</td><td>:</td><td>ORIENTATION STOP POSITION CHANGE-ROTATION DIRECTION</td> </tr>
+                                <tr> <td>NRRO</td><td>:</td><td>ORIENTATION STOP POSITION CHANGE-NEAR ROTATE</td> </tr>
+                                <tr> <td>DEFM</td><td>:</td><td>DIFFERENCE VELOCITY MODE</td> </tr>
+                            </table>
+                            <dl>
+                                <dt>sgnl4</dt>
+                                <dd>control input signal 4</dd>
+                                <dd><img src="Motor/bitnull.gif"/></dd>
+                            </dl>
+                        </content>
+                    </item>
+                </vc>
+            </hssb>
+        </is>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                no option<br/>
+                The serial spindle function(only Series 15 , 15i) and the extended driver/library function are necessary.
+            </content>
+        </item>
+
+        <is>
+            <item>
+                <name>EW_NOOPT</name>
+                <content>
+                    no option<br/>
+                    The serial spindle function and the extended driver/library function are necessary.
+                </content>
+            </item>
+        </is>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            The extended driver/library function is necessary.
+        </hssb>
+        <ethr>
+                <p>The Ethernet function and the extended driver/library function are necessary.</p>
+                <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+                <p>When Embedded Ethernet is used,</p>
+                <p><ul>above two optional functions are not required.</ul></p>
+                <p>When Ethernet board is used,</p>
+                <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>
+            The serial spindle function
+        </need>
+        <type>
+            <li>The spindle orientation function</li>
+            <li>The rigid tapping function</li>
+            <li>The Cs contouring control function</li>
+            <li>The spindle positioning function (only Series 16T/18T/21T, 16iT/18iT/21iT, 0i-F, 30i)</li>
+            <li>The multi spindle control (only Series 16T/18T/21T, 16iT/18iT/21iT, 0i-F, 30i)</li>
+        </type>
+
+        <is>
+            <hssb>
+                The following functions are necessary for this function.
+                <ul type="disc">
+                    <li>The serial spindle function</li>
+                    <li>The extended driver/library function</li>
+                </ul><br/>
+                This function is related to the following CNC options.
+                <ul type="disc">
+                    <li>The spindle orientation function</li>
+                    <li>The rigid tapping function</li>
+                    <li>The Cs contouring control function</li>
+                    <li>The spindle positioning function</li>
+                    <li>The multi spindle control</li>
+                </ul>
+            </hssb>
+        </is>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul type="disc">
+                <li>Series 15/15i</li>
+                    Parameters concerning the serial spindle output function and the Cs contouring control function.<br/>
+                    Parameters concerning the spindle control function.
+                <li>Series 16/18/21, 16i/18i/21i, 0i, 30i, Power Mate i</li>
+                    Parameters concerning the spindle control function.
+            </ul>
+        </type>
+    </parameter>
+
+    <is_parameter>
+        <type>
+            <ul>
+                Parameters concerning the spindle control function.
+            </ul>
+        </type>
+    </is_parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <is_mode>
+    </is_mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdctrldo</name>
+            <file>motor/cnc_rdctrldo.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

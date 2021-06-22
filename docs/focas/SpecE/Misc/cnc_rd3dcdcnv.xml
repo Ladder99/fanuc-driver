@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rd3dcdcnv</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rd3dcdcnv(unsigned short FlibHndl, ODB3DCD *cdcnv);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+Reads the mode and data of the 3-dimensional coordinate conversion.
+
+<ul>
+  <dl>
+    <p>These are stored in each member of ODB3DCD structure.</p>
+  </dl>
+</ul>
+
+The places of decimal points can be got by <a href="misc/cnc_getfigure.htm" target="_parent">cnc_getfigure</a> function.<p/>
+
+The unit of angle follows CNC parameter 6400#2.<p/>
+
+<table class="dd">
+    <tr><td>6400#2=0</td> <td>:</td> <td>0.00001</td> <td>deg</td> <td>(1/100,000)</td> </tr>
+    <tr><td>6400#2=1</td> <td>:</td> <td>0.001  </td> <td>deg</td>     <td></td>        </tr>
+</table>
+      </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>cdcnv</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the ODB3DCD structure for the data of the 3-dimensional coordinate conversion.
+                        </p>
+<pre>
+typedef struct odb3dcd {
+    short   mode;         /* 3-D coordinate conversion mode  */
+    short   dno;          /* number of 3-D coordinate conv.  */
+    short   cd_axes[3];   /* axis of 3-D coordinate conv.    */
+    long    center[2][3]; /* center of rotation              */
+    long    direct[2][3]; /* direction of center             */
+    long    angle[2];     /* rotation angle                  */
+} ODB3DCD ;
+</pre>
+
+<dl>
+    <dt>mode</dt>
+        <dd>Mode of the 3-dimensional coordinate conversion is set.</dd>
+            <dd><table class="dd">
+            <tr> <td>0</td> <td>:</td> <td>cancel mode</td> </tr>
+            <tr> <td>1</td> <td>:</td> <td>conversion mode</td> </tr>
+            </table></dd>                  
+        <dd>* In case of '0', the data except 'mode' is invalid.</dd>
+    <dt>dno</dt>
+        <dd>Number of 3-D coordinate conversion is set. Valid number is 1 or 2.</dd>
+    <dt>cd_axes</dt>
+        <dd>Axis number of 3-D coordinate conversion is set.</dd>
+        <dd>(0,..,MAX_AXIS-1) MAX_AXIS:max.controlled axes</dd>
+            <dd><table class="dd">
+            <tr> <td>cd_axes[0]</td> <td>:</td> <td>1st axis number</td> </tr>
+            <tr> <td>cd_axes[1]</td> <td>:</td> <td>2nd axis number</td> </tr>
+            <tr> <td>cd_axes[2]</td> <td>:</td> <td>3rd axis number</td> </tr>
+            </table></dd>
+    <dt>center</dt>
+        <dd>Absolute position of center of rotation is set.</dd>
+            <dd><table class="dd">
+            <tr> <td>center[0][0] to center[0][2]</td> <td>:</td> <td>1st time</td> </tr>
+            <tr> <td>center[1][0] to center[1][2]</td> <td>:</td> <td>2nd time</td> </tr>
+            </table></dd>
+        <dd>In case of dno=1, center[1][0],..,center[1][2] are not used.</dd>
+    <dt>direct</dt>
+        <dd>Direction of center is set.</dd>
+            <dd><table class="dd">
+            <tr> <td>direct[0][0] to direct[0][2]</td> <td>:</td> <td>1st time</td> </tr>
+            <tr> <td>direct[1][0] to direct[1][2]</td> <td>:</td> <td>2nd time</td> </tr>
+            </table></dd>
+        <dd>In case of nDno=1, lDirect(1,0),..,lDirect(1,2) are not used.</dd>
+    <dt>angle</dt>
+        <dd>Rotation angle of coordinate rotation is set.</dd>
+            <dd><table class="dd">
+            <tr> <td>angle[0]</td> <td>:</td> <td>1st time</td> </tr>
+            <tr> <td>angle[1]</td> <td>:</td> <td>2nd time</td> </tr>
+            </table></dd>
+        <dd>In case of dno=1, angle[1] is not used.</dd>
+</dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>Unavailable<br/>This function cannot be used at 15T/15TT.</content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>The 3-dimensional coordinate system conversion option and the extended driver/library function are necessary.</content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p></ethr>
+        <need>This function needs the 3-dimensional coordinate system conversion option.</need>
+        <add></add>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 15/15i</li>
+                    6400#2 (influenced by setting)
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>H</fs15>
+            <fs15i>O</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdradofs</name>
+            <file>misc/cnc_rdradofs.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdlenofs</name>
+            <file>misc/cnc_rdlenofs.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdfixcycle</name>
+            <file>misc/cnc_rdfixcycle.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdcdrotate</name>
+            <file>misc/cnc_rdcdrotate.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdmirimage</name>
+            <file>misc/cnc_rdmirimage.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdscaling</name>
+            <file>misc/cnc_rdscaling.htm</file>
+        </item>
+        <item>
+            <name>cnc_rd3dtofs</name>
+            <file>misc/cnc_rd3dtofs.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdposofs</name>
+            <file>misc/cnc_rdposofs.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

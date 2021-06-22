@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>eth_rdlog</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI eth_rdlog(unsigned short FlibHndl, short type, short startMsgNumber short msgCount, OUT_ETHLOG *log); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+             Get the max 15 message Log of Ethernt Function. : Embedded Ethernet[Internal Port,PCMCIA Card],Fast Ethernet Board,Fast DATA SERVER Board,Windows CE Embedded Ethernet[Internal Port, PCMCIA Card]<br/>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details. </p>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                        Specify the kind of log to take out.<br/>
+                        The kind of log which can be taken out is as follows:<br/>
+                        <dl>
+                        <dd>Embedded Ethernet[Internal Port]</dd>
+                        <dd><table border="0" class = "dd">
+                        <tr> <td>0   </td><td>:</td><td>All</td> </tr>
+                        <tr> <td>1   </td><td>:</td><td>Common log</td> </tr>
+                        <tr> <td>2   </td><td>:</td><td>FOCAS2/Ethernet log</td> </tr>
+                        <tr> <td>3   </td><td>:</td><td>FTP Transfer log</td> </tr>
+                        <tr> <td>5   </td><td>:</td><td>Remote machine diagnose log</td> </tr>
+                        <tr> <td>6   </td><td>:</td><td>FACTOLINK log</td> </tr>
+                        </table></dd>
+
+                        <dd>Embedded Ethernet[PCMCIA Card]</dd>
+                        <dd><table border="0" class = "dd">
+                        <tr> <td>20   </td><td>:</td><td>All</td> </tr>
+                        <tr> <td>21   </td><td>:</td><td>Common Log</td> </tr>
+                        <tr> <td>22   </td><td>:</td><td>FOCAS2/Ethernet log</td> </tr>
+                        <tr> <td>23   </td><td>:</td><td>FTP Transfer log</td> </tr>
+                        <tr> <td>25   </td><td>:</td><td>Remote machine diagnose log</td> </tr>
+                        <tr> <td>26   </td><td>:</td><td>FACTOLINK log</td> </tr>
+                        </table></dd>
+
+                        <dd>Fast Ethernet Board or Fast DATA SERVER Board</dd>
+                        <dd><table border="0" class = "dd">
+                        <tr> <td>40   </td><td>:</td><td>All</td> </tr>
+                        <tr> <td>41   </td><td>:</td><td>Common log</td> </tr>
+                        <tr> <td>42   </td><td>:</td><td>FOCAS2/EthernetFunction log</td> </tr>
+                        <tr> <td>43   </td><td>:</td><td>FTP Transfer log</td> </tr>
+                        <tr> <td>45   </td><td>:</td><td>Remote machine diagnose log</td> </tr>
+                        <tr> <td>46   </td><td>:</td><td>FACTOLINK log</td> </tr>
+                        </table></dd>
+
+                        <dd>Embedded Ethernet(WinCE)[Internal Port]</dd>
+                        <dd><table border="0" class = "dd">
+                        <tr> <td>60   </td><td>:</td><td>All</td> </tr>
+                        <tr> <td>61   </td><td>:</td><td>Common log</td> </tr>
+                        <tr> <td>62   </td><td>:</td><td>FOCAS2/EthernetFunction log</td> </tr>
+                        <tr> <td>63   </td><td>:</td><td>FTP Transfer log</td> </tr>
+                        <tr> <td>65   </td><td>:</td><td>Remote machine diagnose log</td> </tr>
+                        <tr> <td>66   </td><td>:</td><td>FACTOLINK log</td> </tr>
+                        </table></dd>
+
+                        <dd>Embedded Ethernet(WinCE)[PCMCIA LAN Card]</dd>
+                        <dd><table border="0" class = "dd">
+                        <tr> <td>80   </td><td>:</td><td>All</td> </tr>
+                        <tr> <td>81   </td><td>:</td><td>Common log</td> </tr>
+                        <tr> <td>82   </td><td>:</td><td>FOCAS2/EthernetFunction log</td> </tr>
+                        <tr> <td>83   </td><td>:</td><td>FTP Transfer log</td> </tr>
+                        <tr> <td>85   </td><td>:</td><td>Remote machine diagnose log</td> </tr>
+                        <tr> <td>86   </td><td>:</td><td>FACTOLINK log</td> </tr>
+                        </table></dd>
+                    </content>
+                </item>
+                <item>
+                    <name>startMsgNumber</name>
+                    <type>in</type>
+                    <content>
+                        <p>First number of log message to take out</p>
+                        <p>The ethernet function has secured data which is 300 message in all.</p>
+                        <p>0 is latest log message. 299 is earliest log message.</p>
+                        <p>Range 0,..,299</p>
+                    </content>
+                </item>
+                <item>
+                    <name>msgCount</name>
+                    <type>in</type>
+                    <content>
+                        <p>Number of log message to take out</p>
+                        <p>Range 1,..,15</p>
+                    </content>
+                </item>
+                <item>
+                    <name>log</name>
+                    <type>out</type>
+                    <content>
+                        <p>Specify the pointer to the OUT_ETHLOG structure that stores getting log.</p>
+                        <p>The OUT_ETHLOG structure is as follows:<br/>
+<pre>
+typedef struct _out_ethlog {
+    short               Count;
+    char                reserve[14];
+    OUT_ETHLOG1SHOT     logData[15];
+} OUT_ETHLOG;
+
+typedef struct _out_ethlog1shot {
+    short           Type;
+    unsigned short  MsgId;
+    unsigned char   Year;
+    unsigned char   Month;
+    unsigned char   Day;
+    unsigned char   Hour;
+    unsigned char   Minute
+    unsigned char   Second;
+    char            reserve[2];
+    char            Text[84];
+} OUT_ETHLOG1SHOT;
+</pre>
+                        <dl>
+                            <dt>log.Count</dt>
+                            <dd>Number of the taken out log message</dd>
+                            <dd>Range 0,..,20</dd>
+
+                            <dt>log.logData[n].Type</dt>
+                            <dd>The kind of taken out log</dd>
+
+                            <dt>log.logData[n].MsgId</dt>
+                            <dd>Fixation log message ID</dd>
+                            <dd>Range 0,..,65535</dd>
+                            <dd>In the case of 0(zero), Fixation log message does not exist.
+
+                            <dt>log.logData[n].Year</dt>
+                            <dd>The 3 figures under A.D. when the log occurred.</dd>
+                            <dd>Range AD2000,..,AD2255 : 0 ,..,255</dd>
+                            <dd>Ex) AD2003  : 3</dd>
+
+                            <dt>log.logData[n].Month</dt>
+                            <dd>The month when the log occurred.</dd>
+                            <dd>Range) 1,..,12</dd>
+                            <dd>Ex) January     : 1</dd>
+
+                            <dt>log.logData[n].Day</dt>
+                            <dd>The day when the log occurred.</dd>
+                            <dd>Range 1,..,31</dd>
+                            <dd>Ex) thirty    : 30</dd>
+
+                            <dt>log.logData[n].Hour</dt>
+                            <dd>The hour when the log occurred.(24-hour system)</dd>
+                            <dd>Range 0,..,23</dd>
+                            <dd>Ex) twenty one   :21</dd>
+
+                            <dt>log.logData[n].Minute</dt>
+                            <dd>The minutes when the log occurred.</dd>
+                            <dd>Range 0,..,59</dd>
+                            <dd>Ex) three minute     :3</dd>
+
+                            <dt>log.logData[n].Second</dt>
+                            <dd>The second when the log occurred.</dd>
+                            <dd>Range 0,..,59</dd>
+                            <dd>Ex) twenty second    :20</dd>
+
+                            <dt>log.logData[n].Text</dt>
+                            <dd>Log Message</dd>
+                            <dd>When an effective string does not exist, head byte(log.logData[n].Text[0])is NULL.</dd>
+                        </dl>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a> function.<br/>
+                The following details status will be set onto the member, err_no of ODBERR structure.<br/>
+                <table class="dd">
+                    <tr> <td>20</td><td>:</td><td>Embedded Ethernet is nothing.</td> </tr>
+                    <tr> <td>21</td><td>:</td><td>Windows CE Embedded Ethernet is nothing.</td> </tr>
+                    <tr> <td>22</td><td>:</td><td>The option board is nothing.</td> </tr>
+                    <tr> <td>23</td><td>:</td><td>Ethernet Function is nothing.</td> </tr>
+                    <tr> <td>24</td><td>:</td><td>The DATA SERVER function is nothing.</td> </tr>
+                    <tr> <td>27</td><td>:</td><td>FACTOLINK Function is nothing.</td> </tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>Data error<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a> function.<br/>
+                The following details status will be set onto the member, err_no of ODBERR structure.<br/>
+                <table class="dd">
+                    <tr> <td>2</td><td>:</td><td>Out of data range</td> </tr>
+                </table>
+                The following details status will be set onto the member, err_dtno of ODBERR structure.<br/>
+                <table class="dd">
+                    <tr> <td>4</td><td>:</td><td>Kind of log error.</td> </tr>
+                    <tr> <td>5</td><td>:</td><td>Log number range error.</td> </tr>
+                    <tr> <td>6</td><td>:</td><td>Log data count error</td> </tr>
+                </table>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            <p> 
+                The DATA SERVER function and the extended driver/library function are necessary.
+            </p>
+        </hssb>
+    </option>
+
+
+
+    <parameter></parameter>
+    <!-- 30i(WinCE) -->
+    <is_parameter></is_parameter>
+
+
+
+    <mode></mode>
+    <!-- 30i(WinCE) -->
+    <is_mode></is_mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+        </p>
+        <l>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+        </l>
+        <w>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+        </pw>
+    </support>
+
+
+
+    <reference>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

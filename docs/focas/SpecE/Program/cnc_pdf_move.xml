@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_pdf_move</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_pdf_move(unsigned short FlibHndl, char *file_path, char *move_path);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Moves the specified program.</p>
+            <p>
+                The move process cannot be executed at the following conditions:
+                <ul>
+                    <li>Source program is protected by the attribute, Encryption,
+                        Prohibiting of Edit/display, Prohibiting of Edit, etc.</li>
+                    <li>The protection level of the source file is set higher than the
+                        operation level by the 8-level data protection.</li>
+                    <li>There is the same name program at the target directory.</li>
+                    <li>The attribute of the target directory has Prohibiting of Edit.</li>
+                    <li>Target file has been selected at CNC side.</li>
+                    <li>Source and target is the same program.</li>
+                    <li>Illegal device was specified.</li>
+                </ul>
+            </p>
+            <p>The directory cannot be moved.</p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle.
+                            See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>file_path</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the pointer for the string that stores the source program path in "drive + directory + file name" format.<br/>
+                            String length can be up to 242 characters.  The string must be NULL terminated.<br/>
+                            Please refer to <a href="general.htm#DriveName" target="_parent">&quot;General Description (Specifying the folder and file name for FS30i, 0i-D/F and PMi-A.)&quot;</a> for details of the folder name.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>move_path</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the pointer for the string that stores the target program path in "drive + directory + file name" format.<br/>
+                            String length can be up to 242 characters. The string must be NULL terminated.<br/>
+                            Please refer to <a href="general.htm#DriveName" target="_parent">&quot;General Description (Specifying the folder and file name for FS30i, 0i-D/F and PMi-A.)&quot;</a> for details of the folder name.
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                Data error<br/>
+                In order to get more information for this err_no return value, execute
+                <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                The following detail status will be set onto the member, err_no of ODBERR structure.<br/>
+                <table>
+                    <colgroup align="center" valign="top">
+                    <colgroup align="center" valign="top">
+                    <colgroup valign="top">
+                    <tr><td>1</td><td>:</td><td>Program/directory name format error</td></tr>
+                    <tr><td>2</td><td>:</td><td>Specified directory cannot be found.</td></tr>
+                    <tr><td>3</td><td>:</td><td>Registered number of program is overflow</td></tr>
+                    <tr><td>4</td><td>:</td><td>Same program name has been registered</td></tr>
+                    <tr><td>5</td><td>:</td><td>Specified program is selected on CNC side</td></tr>
+                    <tr><td>6</td><td>:</td><td>Source and target is the same program.</td></tr>
+                    <tr><td>7</td><td>:</td><td>The program copy to specified folder is prohibited by the template program function.</td></tr>
+                    <tr><td>9</td><td>:</td><td>The prohibited program name(.TEMPL) by the template program function is included in the specified folder.</td></tr>
+                    </colgroup>
+                    </colgroup>
+                    </colgroup>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>
+                Write protected<br/>
+                Specified file is prohibited from writing.<br/>
+                Specified directory has the write protedted setting.<br/>
+                Specified program is locked by cnc_setpdf_pglock.
+            </content>
+        </item>
+        <item>
+            <name>EW_OVRFLOW</name>
+            <content>
+                Program memory overflow.<br/>
+                Program registration area is full.
+            </content>
+        </item>
+        <item>
+            <name>EW_MODE</name>
+            <content>
+                CNC mode error
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                CNC execution rejected<br/>
+                CNC is on execution.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+         <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr>
+            <p>The Ethernet function and the extended driver/library function are necessary.</p>
+            <p>However, in case of Series 0i-D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+            <p>When Embedded Ethernet is used,</p>
+            <p><ul>above two optional functions are not required.</ul></p>
+            <p>When Ethernet board is used,</p>
+            <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <is>
+            <hssb>The extended driver/library function is necessary.</hssb>
+        </is>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul type="disc">
+                <li>Series 0i-D, 30i, PMi-A</li>
+                    3202#0,#4<br/>
+                <li>Series 0i-F</li>
+                    3202#0,#4<br/>
+                    8131#4=1 (must be set)<br/>
+            </ul>
+        </type>
+        <add>
+            This function is related to the following CNC function and parameter.<br/>
+            <br/>
+            <span class="dd">Key and program encryption</span><br/>
+            <span class="dd">8-level data protection</span>
+        </add>
+    </parameter>
+
+
+
+    <mode>
+        <cmn>
+            This function can be used only in EDIT mode.
+        </cmn>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+        <is>
+            <!-- M -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference></reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

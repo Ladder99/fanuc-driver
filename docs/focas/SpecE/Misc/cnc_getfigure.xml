@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+
+<root>
+  <func>
+
+
+    <title>cnc_getfigure</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_getfigure(unsigned short FlibHndl, short data_type,short *valid_fig, short *dec_fig_in, short *dec_fig_out);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+<p>
+  Reads the maximum valid figures and the number of decimal places under the input/output unit, which is related to various data of CNC.
+</p>
+<p>
+  The value which is read by the window library is binary data under the unit of the CNC side. Therefore, it is nesessary to display a decimal point, etc. in consideration of the unit.
+</p>
+      </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>>
+                <item>
+                    <name>data_type</name>
+                    <content>
+                        <p/>
+                            Specify the kind of the data.
+<table class="dd">
+    <tr>
+        <td>0</td>
+        <td>:</td>
+        <td>axis type data</td>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>:</td>
+        <td>tool offset</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>:</td>
+        <td>custom macro</td>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td>:</td>
+        <td>work zero offset (only for Series 16i-W/18i-W)(axis type data). Specify "data_type = 0" excluding Series 16i-W/18i-W.</td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>:</td>
+        <td>cutting feedrate (only for Series 16i-W/18i-W)</td>
+    </tr>
+</table>
+
+                    </content>
+                </item>
+                <item>
+                    <name>valid_fig</name>
+                    <content>
+                        <p>
+                            Specify the address of the variable to store the maximum valid figures.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>dec_fig_in</name>
+                    <content>
+                        <p>
+                            Specify the address of the array to store the number of decimal places under the input unit. The number of array must be equal to the number of maximum controlled axis. (Except axis type data, only the top of array is valid.)
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>dec_fig_out</name>
+                    <content>
+                        <p>
+                            Specify the address of the array to store the number of decimal places under the output unit. The number of array must be equal to the number of maximum controlled axis. (Except axis type data, only the top of array is valid.)
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+
+        <!-- is Argument Start -->
+        <is>
+            <hssb>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                            </p>
+                        </content>
+                    </item>>
+                    <item>
+                        <name>data_type</name>
+                        <content>
+                            <p/>
+                                Specify the kind of the data.
+    <table class="dd">
+        <tr>
+            <td>0</td>
+            <td>:</td>
+            <td>axis type data</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>:</td>
+            <td>tool offset</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>:</td>
+            <td>custom macro</td>
+        </tr>
+    </table>
+
+                        </content>
+                    </item>
+                    <item>
+                        <name>valid_fig</name>
+                        <content>
+                            <p>
+                                Specify the address of the variable to store the maximum valid figures.
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>dec_fig_in</name>
+                        <content>
+                            <p>
+                                Specify the address of the array to store the number of decimal places under the input unit. The number of array must be equal to the number of maximum controlled axis. (Except axis type data, only the top of array is valid.)
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>dec_fig_out</name>
+                        <content>
+                            <p>
+                                Specify the address of the array to store the number of decimal places under the output unit. The number of array must be equal to the number of maximum controlled axis. (Except axis type data, only the top of array is valid.)
+                            </p>
+                        </content>
+                    </item>
+
+
+                </vc>
+            </hssb>
+        </is>
+        <!-- is Argument End -->
+
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>
+                  Data attribute error<br/>
+                  Kind of data (data_type) is wrong.
+           </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The extended driver/library function is necessary.
+           </content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+                 <p class="dd">above two optional functions are not required.</p>
+              <p>When Ethernet board is used,</p>
+                  <p class="dd">only Ethernet function is required.</p>
+        </ethr>
+        <type>
+    <li>Series 15/15i</li>
+        inch/mm conversion function(influenced by setting)<br/>
+        increment system D function<br/>
+        increment system E function<br/>
+        special jig grinder function
+    <li>Series 16/18/21, 16i/18i/21i, 30i, 0i</li>
+        inch/mm conversion function (influenced by setting)<br/>
+        increment system 1/10 function
+    <li>Power Mate i</li>
+        None<br/>
+        </type>
+        <add></add>
+        <is>
+            <hssb>The extended driver/library function is necessary.</hssb>
+            <type>
+                inch/mm conversion function (influenced by setting)<br/>
+                increment system 1/10 function
+            </type>
+        </is>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 15</li>
+                    0010#0, 1002#1<br/>
+                    1004#0,#1,#3,#4,#5, 1009#1<br/>
+                    6002#0,#1, 6004#0, 6007#0
+                <p/>
+            </ul>
+        </type>
+        <type>
+            <ul>
+                <li>Series 15</li>
+                    0010#0, 1002#1<br/>
+                    1012#0,#1,#2,#3<br/>
+                    6002#0,#1, 6004#0, 6007#0
+                <p/>
+            </ul>
+        </type>
+        <type>
+            <ul>
+                <li>Series 30i</li>
+                     0000#2, 1001#0<br/>
+                     1006#0<br/>
+                     1013#0,#1,#2,#3<br/>
+                     5042#0,#1,#2,#3
+            </ul>
+        </type>
+        <type>
+            <ul>
+                <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C</li>
+                     0000#2, 1001#0<br/>
+                     1004#0,#1, 1006#0
+            </ul>
+        </type>
+        <type>
+            <ul>
+                <li>Series 0i-D/F</li>
+                     0000#2, 1001#0<br/>
+                     1006#0<br/>
+                     1013#0,#1<br/>
+                     5042#0,#1
+            </ul>
+        </type>
+        <type>
+            <ul>
+                <li>Series 16i/18i-W</li>
+                    0000#2, 1001#0<br/>
+                    1006#0, 1403#0, 3401#3
+            </ul>
+        </type>
+        <type>
+            <ul>
+                <li>Power Mate i</li>
+                    0000#2, 1001#0 <br/>
+                    1006#0<br/>
+                    1004#0(Power Mate i-H)<br/>
+                    1004#1(Power Mate i-D)
+            </ul>
+        </type>
+        <add></add>
+    </parameter>
+    <is_parameter>
+        <type>
+            <ul>
+                     0000#2, 1001#0<br/>
+                     1006#0<br/>
+                     1013#0,#1,#2,#3<br/>
+                     5042#0,#1,#2,#3
+            </ul>
+        </type>
+    </is_parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+             <fs0if>O</fs0if>
+             <fs15>H</fs15>
+            <fs15i>O</fs15i>
+             <fs16>H</fs16>
+             <fs18>H</fs18>
+             <fs21>H</fs21>
+           <fs16ia>O</fs16ia>
+           <fs18ia>O</fs18ia>
+           <fs21ia>O</fs21ia>
+           <fs16ib>O</fs16ib>
+           <fs18ib>O</fs18ib>
+           <fs21ib>O</fs21ib>
+           <fs30ia>O</fs30ia>
+           <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+             <fs0if>O</fs0if>
+             <fs15>H</fs15>
+            <fs15i>X</fs15i>
+             <fs16>H</fs16>
+             <fs18>H</fs18>
+             <fs21>H</fs21>
+           <fs16ia>O</fs16ia>
+           <fs18ia>O</fs18ia>
+           <fs21ia>O</fs21ia>
+           <fs16ib>O</fs16ib>
+           <fs18ib>O</fs18ib>
+           <fs21ib>O</fs21ib>
+           <fs30ia>O</fs30ia>
+           <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>H</fs16>
+             <fs18>H</fs18>
+             <fs21>H</fs21>
+           <fs16ia>H</fs16ia>
+           <fs18ia>H</fs18ia>
+           <fs21ia>H</fs21ia>
+           <fs16ib>H</fs16ib>
+           <fs18ib>H</fs18ib>
+           <fs21ib>H</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+        <add><b></b></add>
+        <is>
+            <!-- M -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference></reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_rdpmacroinfo</title>
+
+
+    <declare>
+
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdpmacroinfo(unsigned short FlibHndl, ODBPMINF *pminf);</prottype>
+      </vc>
+
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Reads the available number of the P code macro variables (variable for the macro-executor) and the type of it. Those are stored in "ODBPMINF" with signed binary format. </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>pminf</name>
+                    <type>out</type>
+                    <content>
+                        <p>Pointer to the ODBPMINF structure including the P code macro variable information. The ODBPMINF structure is as follows.</p>
+                        <p>The following parameters are not the CNC parameter, but the compile parameter of the macro-compiler.</p>
+                        <p> See the "PROGRAMING MANUAL" of the macro-executor for details of the compile parameter.</p>
+
+                        <p class="info">Please specify "PCD_UWORD" for "-D" option when compiling, if the number of variables whose number is <span class="xis">40,000 or greater for Series 15, or </span>20,000 or greater <span class="xis">for Series 16/18/21, 16i/18i/21i, 0i, Power Mate i</span> exceeds 32767.</p>
+
+                        <ul class="xis">
+                            <li>Series 15</li>
+<pre>
+typedef struct odbpminf {
+        short   use_no1; /* number of variables(30000,...) */
+#ifdef PCD_UWORD         /* When the number of variables whose number is 40,000
+                            or greater exceeds 32767 */
+        unsigned short  use_no2;
+                         /* number of variables(40000,...) */
+#else
+        short   use_no2; /* number of variables(40000,...) */
+#endif
+        short   v2_type1;/* type of variables(30000,...) */
+        short   v2_type2;/* type of variables(40000,...) */
+} ODBPMINF;
+</pre>
+                            <dl>
+                                <dt>use_no1</dt>
+                                <dd>Number of usable P code macro variables(30000,...)</dd>
+                                <br/>
+                                <dt>use_no2</dt>
+                                <dd>Number of usable P code macro variables(40000,...)</dd>
+                                <br/>
+                                <dt>v2_type1</dt>
+                                <dd>Type of P code macro variables(30000,...)<br/>This is always the integer type.<br/>In case of 'use_no1=0', this is invalid.<br/>
+                                    <table class="dd">
+                                        <tr>
+                                            <td>0</td>
+                                            <td>:</td>
+                                            <td>Type A(floating-point type)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>:</td>
+                                            <td>Type B(integer type)</td>
+                                        </tr>
+                                    </table>
+                                </dd>
+                                <br/>
+                                <dt>v2_type2</dt>
+                                <dd>Type of P code macro variables(40000,...)<br/>In case of 'use_no2=0', this is invalid.<br/>
+                                    <table class="dd">
+                                        <tr>
+                                            <td>0</td>
+                                            <td>:</td>
+                                            <td>Type A(floating-point type)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>:</td>
+                                            <td>Type B(integer type)</td>
+                                        </tr>
+                                    </table>
+                                </dd>
+                            </dl>
+                            <br/>
+                            <li>Series 16/18/21, 16i/18i/21i, 0i, Power Mate i</li>
+<pre>
+typedef struct odbpminf {
+        short   use_no1; /* number of variables(10000,...) */
+#ifdef PCD_UWORD         /* When the number of variables whose number is 20,000
+                            or greater exceeds 32767 */
+        unsigned short  use_no2;
+                         /* number of variables(20000,...) */
+#else
+        short   use_no2; /* number of variables(20000,...) */
+#endif
+        short   v2_type; /* type of variables(20000,...) */
+} ODBPMINF;
+</pre>
+                            <dl>
+                                <dt>use_no1</dt>
+                                <dd>Number of usable P code macro variables(10000,...) <br/>
+                                    <p class="dd">(parameter No.9037 * 100)</p>
+
+                                    <p>'6000' is returned in case of some series/version of CNC control software, but the usable number is acquired as an above value.</p>
+                                </dd>
+                                <dt>use_no2</dt>
+                                <dd>Number of usable P code macro variables(20000,...) <br/>However, use_no2 becomes the following meanings for Type C/D
+                                    <p class="dd">(use_no2(=1,2,4,...) * 65536)</p>
+                                </dd>
+                                <dt>v2_type</dt>
+                                <dd>Type of P code macro variables(20000,...) <br/>In case of 'use_no2=0', this is invalid.<br/>
+                                    <ul>
+                                        <br/>
+                                        <table>
+                                            <tr>
+                                                <td>0</td>
+                                                <td>:</td>
+                                                <td>Type A(floating-point type)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>:</td>
+                                                <td>Type B(integer type)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>2</td>
+                                                <td>:</td>
+                                                <td>Type C (integer type)/high-speed cycle cutting 1<br/>
+                                                    (except Series 21, 21i, 0i, Power Mate i)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>3</td>
+                                                <td>:</td>
+                                                <td>Type D (integer type)/high-speed cycle cutting 2<br/>
+                                                    (except Series 21, 21i, 0i, Power Mate i) </td>
+                                            </tr>
+                                        </table>
+                                    </ul>
+                                    <p>Type of P code macro variables(10000,...) is always the floating-point type.</p>
+                                </dd>
+                            </dl>
+                        </ul> <!-- class=xis -->
+
+                        <div class="ois">
+<pre>
+typedef struct odbpminf {
+        short   use_no1; /* number of variables(10000,...) */
+#ifdef PCD_UWORD         /* When the number of variables whose number is 20,000
+                            or greater exceeds 32767 */
+        unsigned short  use_no2;
+                         /* number of variables(20000,...) */
+#else
+        short   use_no2; /* number of variables(20000,...) */
+#endif
+        short   v2_type; /* type of variables(20000,...) */
+} ODBPMINF;
+</pre>
+                            <dl>
+                                <dt>use_no1</dt>
+                                <dd>Number of usable P code macro variables(10000,...) <br/>
+                                    <p class="dd">(parameter No.9037 * 100)</p>
+
+                                    <p>'6000' is returned in case of some series/version of CNC control software, but the usable number is acquired as an above value.</p>
+                                </dd>
+                                <dt>use_no2</dt>
+                                <dd>Number of usable P code macro variables(20000,...) <br/>However, use_no2 becomes the following meanings for Type C/D
+                                    <p class="dd">(use_no2(=1,2,4,...) * 65536)</p>
+                                </dd>
+                                <dt>v2_type</dt>
+                                <dd>Type of P code macro variables(20000,...) <br/>In case of 'use_no2=0', this is invalid.<br/>
+                                    <ul>
+                                        <br/>
+                                        <table>
+                                            <tr>
+                                                <td>0</td>
+                                                <td>:</td>
+                                                <td>Type A(floating-point type)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>:</td>
+                                                <td>Type B(integer type)</td>
+                                            </tr>
+                                        </table>
+                                    </ul>
+                                    <p>Type of P code macro variables(10000,...) is always the floating-point type.</p>
+                                </dd>
+                            </dl>
+                        </div> <!-- class=ois -->
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>This function needs the macro-executor option.</content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>The macro-executor function.</need>
+        <type class="xis">
+            <li>Series 16/18, 16i/18i</li>
+            This function is related to the high-speed cycle cutting option.
+        </type>
+    </option>
+
+
+
+    <parameter>
+    </parameter>
+
+
+
+    
+    <mode>
+    </mode>
+
+
+
+    
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>X</a>
+        </pw>
+        <add><b></b></add>
+
+
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdpmacro</name>
+            <file>ncdata/cnc_rdpmacro.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrpmacro</name>
+            <file>ncdata/cnc_wrpmacro.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdpmacror</name>
+            <file>ncdata/cnc_rdpmacror.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrpmacror</name>
+            <file>ncdata/cnc_wrpmacror.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdpmacror2</name>
+            <file>ncdata/cnc_rdpmacror2.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrpmacror2</name>
+            <file>ncdata/cnc_wrpmacror2.htm</file>
+        </item>
+        <item>
+            <name>cnc_getpmactype</name>
+            <file>ncdata/cnc_getpmactype.htm</file>
+        </item>
+        <item>
+            <name>cnc_setpmactype</name>
+            <file>ncdata/cnc_setpmactype.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

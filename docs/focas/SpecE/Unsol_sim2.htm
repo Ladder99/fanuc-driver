@@ -1,0 +1,68 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=x-sjis">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>When you use the Macro variable for the control parameter(Simple method)(30i/31i/32i/35i, 0i-D, PMi-A only)</title>
+<link rel="stylesheet" type="text/css" href="fwlib32.css">
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<p><a href="fwlib32.htm">Top Page</a></p>
+
+<hr>
+
+<h2>When you use the Macro variable for the control parameter(Simple method)(30i/31i/32i/35i, 0i-D, PMi-A only)</h2>
+
+<ul>
+
+<blockquote>
+
+   <p>In the Response Notice method, the method to use the macro variable as the control data is explained.  The custom macro variable and the RTM variable can be used to the control data.</p>
+            <table  border="2" bordercolorlight="Black" bordercolordark="Black">
+                <tr><td>Note) The PMC address can be also used for the transmission data.  In the following explanations, the macro variable is used as the transmission data.</td></tr>
+            </table>
+<br/>
+<li>Explanation of macro variable for control</li>
+
+    <p>Details of the Macro variable for the control used for the unsolicited messaging function are shown.  The one Macro variable  is necessary to control.</p>
+    <p>The example which uses "#xxxx" as Macro variable for the control data is shown.</p>
+
+<ul>
+	<dl compact>
+        <dt>REQ (#xxxx)</dt>
+        <table>
+            <tr><td>[Name]</td> <td>Transmission request variable for message</td></tr>
+            <tr><td>[Division]</td> <td>Inpit/output variavle</td></tr>
+            <tr><td>[Function]</td> <td>The transmission of unsolicited message is requested.</td></tr>
+            <tr><td>[Operation]</td> <td>After preparing the transmission message to the Macro variable for the transmission, the NC program changes this signal to "1".  Then, the message is transmitted to the PC. After receiving the response of the message, CNC(communication board) changes this signal to "0". </td></tr>
+        </table>
+</ul>
+<br/>
+
+<li>Timing chart of macro variable for control</li>
+
+<p><img src="unsol_sim2chat.gif"></p>
+
+<ul>
+        <table class="dt">
+            <tr><td>1</td> <td>:</td> <td>The NC program prepares the transmission message after confirming REQ is "0", and REQ is changed to "1".</td></tr>
+            <tr><td>2</td> <td>:</td> <td>The comminucation board transmits the transmission message.</td></tr>
+            <tr><td>3</td> <td>:</td> <td>The communication board completes the transmission processing of the message. </td></tr>
+            <tr><td>4</td> <td>:</td> <td>The communication board completes the reception processing after receiving the response of the message.</td></tr>
+            <tr><td>5</td> <td>:</td> <td>After completing the reception processing, the communication board changes REQ to Åg0".</td></tr>
+        </table>
+
+</ul>
+<br/>
+</blockquote>
+
+</ul>
+
+<hr>
+
+<p><a href="fwlib32.htm">Top Page</a></p>
+</body>
+</html>

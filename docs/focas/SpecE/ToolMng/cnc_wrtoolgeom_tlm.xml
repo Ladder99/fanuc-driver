@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_wrtoolgeom_tlm</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_wrtoolgeom_tlm(unsigned short FlibHndl, short snum, short *datanum, IODBTLGEOM *tool) ;</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>The tool geometry data of number specified by datanum is written from the tool geometry data number specified by snum.</p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>snum</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the writing start tool geometry data number.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>datanum</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                            Specify the pointer to the number(1-) of the writing data.<br/>
+                            The number shown by datanum is written from snum.  The registered number which was actually written is returned.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>tool</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            The pointer to the IODBTLGEOM structure which stored the tool geometry data.<br/>
+                            The IODBTLGEOM structure is as follows.<br/>
+<pre>
+typedef struct  tlmngtlgeom {
+    unsigned char l_pot_num;    /* Left pot occupation unit */
+    unsigned char r_pot_num;    /* Right pot occupation unit */
+    unsigned char u_pot_num;    /* Upper pot occupation unit <span class="xis">(0i-F, 30i/31i/32i only)</span> */
+    unsigned char d_pot_num;    /* Lower pot occupation unit <span class="xis">(0i-F, 30i/31i/32i only)</span> */
+    unsigned char tl_geom_num ; /* Geometry A or B <span class="xis">(0i-F, 30i/31i/32i only)</span> */
+} IODBTLGEOM;  
+</pre>
+                            Specify the value of range 0 to 4 for l_pot_num, r_pronum, u_pot_num and d_pot_num.(1 unit = 0.5 pot)<br/>
+                            specify 0 for figure A, or 1 for figure B for tl_geom_num.
+                        </p>
+                    </content>
+                </item>
+           </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+           <name>EW_BUSY</name>
+            <content>
+                Other users(such as PMC) have accessed to the same data window. 
+                Try this function again. 
+            </content>
+        </item>
+        <item>
+           <name>EW_NUMBER</name>
+            <content>
+                The value of snum is wrong.
+            </content>
+        </item>
+        <item>
+           <name>EW_LENGTH</name>
+            <content>
+                The value of datanum is wrong.
+            </content>
+        </item>
+        <item>
+           <name>EW_DATA</name>
+            <content>
+                The member in the IODBTLGEOM structure is wrong.<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.  The following detail status will be set onto the member, err_no of ODBERR
+                                structure.
+                <table border="0">
+                    <tr><td>0</td><td>：</td><td>error except EW_DATA</td></tr>
+                    <tr><td>1</td><td>：</td><td>Left pot occupation unit is wrong.</td></tr>
+                    <tr><td>2</td><td>：</td><td>Right pot occupation unit is wrong.</td></tr>
+                    <tr><td>3</td><td>：</td><td>Upper pot occupation unit is wrong.</td></tr>
+                    <tr><td>4</td><td>：</td><td>Lower pot occupation unit is wrong.</td></tr>
+                    <tr><td>5</td><td>：</td><td>Geometry A or B is wrong.</td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The Tool management function 64 pairs, or the Tool management function 240 pairs, or the Tool management function 1000 pairs and Tool management function oversize tools support option. 
+            </content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>
+                Write protection<br/>
+                The tool geometry data has already been registered in the tool stored in the pot.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            <p>The extended driver/library function are necessary.</p>
+        </hssb>
+
+        <ethr>
+            <p>The Ethernet function and the extended driver/library function are necessary.</p>
+            <p>However, in case of Series 16i/18i/21i-B, 0i-F and 30i, the required CNC option is as follows.</p>
+            <p>When Embedded Ethernet is used,</p>
+            <p><ul>above two optional functions are not required.</ul></p>
+            <p>When Ethernet board is used,</p>
+            <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>
+            The Tool management function 64 pairs, or the Tool management function 240 pairs, or the Tool management function 1000 pairs and Tool management function oversize tools support option.
+        </need>
+
+        <is>
+            <hssb>
+                <p>The extended driver/library function are necessary.</p>
+            </hssb>
+            <need>
+            The Tool management function 64 pairs, or the Tool management function 240 pairs, or the Tool management function 1000 pairs and Tool management function oversize tools support option.
+            </need>
+        </is>
+    </option>
+
+
+
+    <parameter>
+    </parameter>
+    <is_parameter>
+    </is_parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- is -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdtoolgeom_tlm</name>
+            <file>ToolMng/cnc_rdtoolgeom_tlm.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

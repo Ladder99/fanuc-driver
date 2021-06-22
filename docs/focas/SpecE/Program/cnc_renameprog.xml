@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_renameprog</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_renameprog(unsigned short FlibHndl, long old_no, long new_no);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Changes the program number.</p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the library handle.
+                           See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>old_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>Old program number</p>
+                    </content>
+                </item>
+                <item>
+                    <name>new_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>New Program number</p>
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_BUSY</name>
+            <content>
+                Busy<br/>
+                <li>Background edit processing in CNC side (except 30i/31i/32i, 0i-D/F, PMi-A)</li>
+                <li>Selected program(except EDIT mode, TJOG/THND mode with the playback option.)</li>
+                <li>CNC is in the emergency stop. (30i/31i/32i, 0i-D/F, PMi-A)</li>
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                Data error<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                The following detail status will be set onto the member, err_no of OBDERR structure.<br/>
+                <table>
+                    <colgroup valign="top"/>
+                    <colgroup valign="top"/>
+                    <colgroup valign="top"/>
+                    <tr><td>1</td><td>:</td><td>The old program number is not present.</td></tr>
+                    <tr><td>2</td><td>:</td><td>The new program number has been already present.</td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The extended driver/library function is necessary.
+            </content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>
+                Write protection in CNC side<br/>
+                <li>The old or new program number is protected.</li>
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                CNC execution rejection<br/>
+                <li>Alarm in CNC side (except 30i/31i/32i, 0i-D/F, PMi-A)</li>
+            </content>
+        </item>
+
+        <is>
+            <item>
+                <name>EW_BUSY</name>
+                <content>
+                    Busy<br/>
+                    <ul style="margin-top:0;margin-bottom:0">
+                    <li>Running in CNC side.</li>
+                    </ul>
+                </content>
+            </item>
+            <item>
+                <name>EW_DATA</name>
+                <content>
+                    Data error<br/>
+                    In order to get more information for this err_no return value,
+                    execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                    The following detail status will be set onto the member, err_no of OBDERR structure.<br/>
+                    <table>
+                        <colgroup valign="top"/>
+                        <colgroup valign="top"/>
+                        <colgroup valign="top"/>
+                        <tr><td>1</td><td>:</td><td>The old program number is not present.</td></tr>
+                        <tr><td>2</td><td>:</td><td>The new program number has been already present.</td></tr>
+                    </table>
+                </content>
+            </item>
+            <item>
+                <name>EW_NOOPT</name>
+                <content>
+                    No option<br/>
+                    The extended driver/library function is necessary.
+                </content>
+            </item>
+            <item>
+                <name>EW_PROT</name>
+                <content>
+                    Write protection in CNC side<br/>
+                    <ul style="margin-top:0;margin-bottom:0">
+                    <li>The old or new program number is protected.</li>
+                    </ul>
+                </content>
+            </item>
+        </is>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            <p>The extended driver/library function is necessary.</p>
+        </hssb>
+        <type>
+        <li>The playback option.</li>
+        </type>
+    </option>
+
+
+
+    <parameter></parameter>
+
+    <is_parameter></is_parameter>
+
+
+
+    <mode>
+        <cmn>
+        It is possible to use in EDIT/TJOG/THND mode.
+        </cmn>
+    </mode>
+
+    <is_mode>
+    </is_mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+        
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference></reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>ds_rdncfile2</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>
+            FWLIBAPI short WINAPI ds_rdncfile2(unsigned short FlibHndl, char *file_name);
+        </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            The NC program is inputted from the hard drive to the NC.<br/>
+            <br/>
+            <li>Storage mode :</li>
+                <dd>To CNC memory from hard disk(or ATA) of DATA SERVER</dd>
+            <li>FTP mode :</li>
+                <dd>To CNC memory from hard disk of host PC.</dd><br/>
+            When the O number of file name in the DATA SERVER and the O number in
+            contents of file is different, O number is registered according to the
+            ONS(No.900#1) of CNC parameter.
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>file_name</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the pointer to the string where the file name(file name
+                            in the DATA SERVER) which wants to be inputted to the NC is stored.
+                            The format of file name is as follows.
+                        <dl class="dd">
+                            <dt><li>In case of O 4 digits</li></dt>
+                            <dd>"O" +  string(program number) of 4 digits + NULL</dd>
+                            <dt><li>In case of O 8 digits</li></dt>
+                            <dd>"O" +  string(program number) of 7 digits + NULL</dd>
+                        </dl>
+                        </p>
+                        <p>
+                            So, the NC program registered by the file names other than the
+                            above-format cannot be input.
+                            The wild-card("*", "?") cannot be used to specify the name.
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_RESET</name>
+            <content>
+                Reset request<br/>
+                Process is canceled by [RESET].
+            </content>
+        </item>
+        <item>
+            <name>EW_BUSY</name>
+            <content>
+                Busy<br/>
+                The CNC state is as follows.<br/>
+                <li>Alarm(PS000, PS101) in CNC side</li>
+                <li>I/O channel number(CNC parameter) is wrong.</li>
+                <li>Background edit processing in CNC side.</li>
+                <li>MDI program is editing or running in CNC side.</li>
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                Number error<br/>
+                The file name(file_name) is wrong.
+                Specify the following format.
+                <table>
+                    <li>In case of O 4 digits</li>
+                    <dd>"O" +  string of 4 digits + NULL</dd>
+                    <li>In case of O 8 digits</li>
+                    <dd>"O" +  string of 7 digits + NULL</dd>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>Data error<br/>
+                <li>The specified file has already been registered.</li>
+                <li>The specified file does not exist in the DATA SERVER.</li>
+                <li>The selected program was about to be overwrited.</li>
+                <li>Specified program number is protected by
+                    <a href="program/cnc_setpglock.htm" target="_parent">cnc_setpglock</a> function.</li>
+            </content>
+        </item>
+      <item>
+            <name>EW_NOOPT</name>
+            <content>No option</content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>Write protection error<br/>
+                <li>Protection key in CNC is OFF.</li>
+                <li>Tape memory is write-protected by the CNC
+                    parameter setting(O8000-/O9000- protection, encoding).</li>
+            </content>
+        </item>
+        <item>
+            <name>EW_OVRFLOW</name>
+            <content>
+                Memory overflow<br/>
+                <li>CNC tape memory is overflowed.</li>
+                <li>The total number of program exceeded the
+                    limit of registrable programs in CNC.</li>
+            </content>
+        </item>
+        <item>
+            <name>EW_DTSRVR</name>
+            <content>
+                DATA SERVER error<br/>
+                Error occurred in DATA SERVER.
+            </content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            The DATA SERVER function and the extended driver/library function are necessary.
+        </hssb>
+        <add></add>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+            <li>Series 16i/18i/21i</li>
+                Parameter No.0020 = 5<br/>
+                Parameter No.0900#1(ONS) = 0
+            </ul>
+        </type>
+        <add></add>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+         <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>ds_rdncfile</name>
+            <file>Data/ds_rdncfile.htm</file>
+        </item>
+        <item>
+            <name>ds_wrncfile</name>
+            <file>Data/ds_wrncfile.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

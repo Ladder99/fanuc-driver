@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>pmc_prfrdbusprm</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI pmc_prfrdbusprm(unsigned short FlibHndl, IODBBUSPRM *odb) ; </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Reads the bus parameter of master function.</p>
+            <p>This function is available at the version 01-07 and 09 or later of the PROFIBUS-DP control software(6557 Series).  
+               In the control software in the version 08, the return value becomes EW_VERSION.<br/>
+               This function is also available at the 6558 Series.
+            </p>
+            <p>* Please refer to "PROFIBUS-DP function manual" for details of the PROFIBUS-DP function.
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>odb</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the IODBBUSPRM structure including the bus parameter.
+                            The IODBBUSPRM structure is as follows.
+<pre>
+typedef struct {
+    char           fdl_add ;
+    char           baudrate ;
+    unsigned short tsl ;
+    unsigned short min_tsdr ;
+    unsigned short max_tsdr ;
+    unsigned char  tqui ;
+    unsigned char  tset ;
+    long           ttr ;
+    char           gap ;
+    char           hsa ;
+    char           max_retry ;
+    unsigned char  bp_flag ;
+    unsigned short min_slv_int ;
+    unsigned short poll_tout ;
+    unsigned short data_cntl ;
+    char           reserve1[6] ;
+    char           cls2_name[32] ;
+    short          user_dlen ;
+    char           user_data[62] ;
+    char           reserve2[96] ;
+} IODBBUSPRM ;
+</pre>
+                            <dl>
+                                <dt>fdl_add</dt>
+                                    <dd>Station number of DP-Master is stored.</dd>
+                                <dt>baudrate</dt>
+                                    <dd>Code number of baudrate is stored.</dd>
+                                    <dd><table border="0" class="dd">
+                                        <tr>    <td>0</td><td>:</td><td>9.6Kbps</td>
+                                                <td>1</td><td>:</td><td>19.2Kbps</td>
+                                                <td>2</td><td>:</td><td>93.75Kbps</td>
+                                        </tr>
+                                        <tr>    <td>3</td><td>:</td><td>187.5Kbps</td>
+                                                <td>4</td><td>:</td><td>500Kbps</td>
+                                                <td>6</td><td>:</td><td>1.5Mbps</td>
+                                        </tr>
+                                        <tr>    <td>7</td><td>:</td><td>3Mbps</td>
+                                                <td>8</td><td>:</td><td>6Mbps</td>
+                                                <td>9</td><td>:</td><td>12Mbps</td>
+                                        </tr>
+                                    </table></dd>
+                                <dt>tsl</dt>
+                                    <dd>
+                                        The maximum time that the initiator waits forthe complete receipt of the first frame
+                                        character of the immediate acknowledgement or response, after transmitting a token frame is stored.
+                                    </dd>
+                                <dt>min_tsdr</dt>
+                                    <dd>
+                                        Minimum progress time from the final bit of the transmitting or receiving data 
+                                        to the top bit of the next transmitting or receiving data is stored.
+                                    </dd>
+                                <dt>max_tsdr</dt>
+                                    <dd>
+                                        Maximum progress time from the final bit of the transmitting or receiving data 
+                                        to the top bit of the next transmitting or receiving data is stored.
+                                    </dd>
+                                <dt>tqui</dt>
+                                    <dd>
+                                        After data were transmitted, the waiting time until the receiver is moved is stored.
+                                    </dd>
+                                <dt>tset</dt>
+                                    <dd>
+                                        The time after an event occurs until an action is carried out is stored.
+                                    </dd>
+                                <dt>ttr</dt>
+                                    <dd>
+                                        The anticipated time for one token to make a round on the PROFIBUS is stored.
+                                    </dd>
+                                <dt>gap</dt>
+                                    <dd>
+                                        The number of the token making the rounds between the GAP maintenance cycle is stored.
+                                    </dd>
+                                <dt>hsa</dt>
+                                    <dd>
+                                        The maximum node number set on PROFIBUS is stored.
+                                    </dd>
+                                <dt>max_retry</dt>
+                                    <dd>
+                                        The maximum number of retries is stored.
+                                    </dd>
+                                <dt>bp_flag</dt>
+                                    <dd>
+                                        The meaning of each bit is as follows.
+                                    </dd>
+                                    <dd>BIT7</dd>
+                                    <dd><table border="0" class="dd">
+                                        <colgroup align="left" valign="top" />
+                                        <colgroup align="left" valign="top" />
+                                        <colgroup align="left" valign="top" />
+                                        <tr> <td>0</td><td>:</td><td>The User-Interface will remain in the operation mode in the case of an error.</td> </tr>
+                                        <tr> <td>1</td><td>:</td><td>The operation mode will change from Operate to Clear in the case of an error.</td> </tr>
+                                    </table></dd>
+                                    <dd>* BIT0 to BIT6 are not used.</dd>
+                                <dt>min_slv_int</dt>
+                                    <dd>
+                                        Minimum time between two slave poll cycles is stored.
+                                    </dd>
+                                <dt>poll_tout</dt>
+                                    <dd>
+                                        In the case of master-master communication, the maximum waiting time 
+                                        to obtaining the response after request is sent is stored.
+                                    </dd>
+                                <dt>data_cntl</dt>
+                                    <dd>
+                                        The time during which the Data Transfer List will be updated at least once 
+                                        and will be made available to the user is stored.
+                                    </dd>
+                                <dt>reserve1</dt>
+                                    <dd>not used</dd>
+                                <dt>cls2_name</dt>
+                                    <dd>not used</dd>
+                                <dt>user_dlen</dt>
+                                    <dd>
+                                        The number of bytes of specific data which is neccesary 
+                                        for the bus parameter set from the maker is stored.
+                                    </dd>
+                                <dt>user_data</dt>
+                                    <dd>
+                                        The specific data which is neccesary for the bus parameter set from the maker is stored.
+                                        The data of the number of bytes returned to above-mentioned user_dlen is effective.
+                                    </dd>
+                                <dt>reserve2</dt>
+                                    <dd>not used</dd>
+                            </dl>
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>
+                    <li>The PROFIBUS-DP board(hardware) is necessary.</li>
+                    <li>The PROFIBUS-DP control software is necessary.</li>
+                    <li>The PROFIBUS-DP master function is necessary.</li>
+                    <li>The extended driver/library function is necessary.</li>
+            </content>
+        </item>
+        <item>
+            <name>EW_VERSION</name>
+            <content>Version of PROFIBUS-DP control software is wrong.<br/>
+                    This function was called by version 08 of the control software.  
+                    Exchange the control software besides the version 08.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>The PROFIBUS-DP master function is necessary.</need>
+    </option>
+
+
+
+    <parameter>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

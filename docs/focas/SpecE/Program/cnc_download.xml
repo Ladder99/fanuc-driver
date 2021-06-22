@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_download</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_download(unsigned short FlibHndl,char *data, short number);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Outputs NC program to be registered(downloading).</p>
+            <p>
+                When the data processing on the CNC side is delayed and the data cannot be transferred,
+                this function waits until it can be transferred.<br/>
+                If an application cannot wait, use the <a href="Program/cnc_cdownload.htm" target="_parent">cnc_cdownload</a> function.
+            </p>
+            <p>
+                The procedure of downloading is as follows.<br/>
+                <img src="Program/dwnload_1.gif"/>
+            </p>
+            <p>
+                For transferring the data, there are 4 buffers of 256 bytes.<br/>
+                One buffer is used at each cnc_download calling without any relationto the data size.<br/>
+                Therefore, the maximum size which can be transferred by one calling is 256 bytes.
+            </p>
+            <p><img src="Program/buff.gif"/></p>
+            <p>
+                Because importance is attached to the speed of data transfer to the CNC,
+                in general, return of errors(EW_DATA, EW_OVRFLOW, etc.) may be delayed.<br/>
+                Namely, an error status may refrect the result caused by the previously executed
+                cnc_download callings.<br/>
+                And the error status for some cnc_download callings just before the finish of
+                downloading is returned by "End of downloading NC program".<br/>
+            </p>
+                <b>NC program format</b>
+                <p>NC program to be registered to CNC is a string composed of ASCII characters as the following format.</p>
+            
+
+            <p class="dd">
+                LF Oxxxx LF Block1 LF Block2 LF ... LF Mxx LF %<br/>
+                <br/>
+                <table>
+                    <tr><td>where,</td><td>LF</td><td>0x0A ('\n': EOB)</td></tr>
+                    <tr><td></td><td>Oxxxx</td><td>Program number</td></tr>
+                    <tr><td></td><td>Mxx</td><td>M code at the end of the program(M02,M30,etc.)</td></tr>
+                </table>
+            </p>
+            <p>
+                'LF' must be placed at the top of the whole program, and '%' at the end.<br/>
+                Data before the first 'LF' are ignored.<br/>
+                Address 'O' and program number must be placed in the program to be registered.<br/>
+                For example, to register a program such as<br/>
+                <p class="dd">
+                    O1234 ;<br/>
+                    G1 F0.3 W10. ;<br/>
+                    M30 ;<br/>
+                    %<br/>
+                </p>
+                send a following string using cnc_download function.<br/>
+                <p class="dd">
+                    "\nO1234\nG1F0.3W10.\nM30\n%"<br/>
+                </p>
+                The string data can be sent by multiple cnc_download callings.<br/>
+                For above example, the program can be sent block by block like this.<br/>
+                <p class="dd">
+                    "\n"<br/>
+                    "O1234\n"<br/>
+                    "G1F0.3W10.\n"<br/>
+                    "M30\n"<br/>
+                    "%"<br/>
+                </p>
+                And more, it is possible to send one block by multiple cnc_download callings.
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle.<br/>
+                            See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>data</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the top address of NC program data.</p>
+                    </content>
+                </item>
+                <item>
+                    <name>number</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the number of characters of NC program data. (1 - 256)</p>
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_RESET</name>
+            <content>
+                Reset or stop request<br/>
+                CNC required to stop downloading.<br/>
+                'RESET or STOP' was pushed.(Series 15/15i)<br/>
+                Call the <a href="Program/cnc_dwnend.htm" target="_parent">cnc_dwnend</a> function.
+            </content>
+        </item>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                <a href="Program/cnc_dwnstart.htm" target="_parent">cnc_dwnstart</a> function has not been executed.
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                Data block length error<br/>
+                Length of data block(number) exceeds 256 bytes.
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                Data error<br/>
+                <li>The same program number has already been registered.</li>
+                <li>The same program number is selected on CNC.</li>
+                <li>A character which is unavailable for NC program is detected.</li>
+                <li>When TV check is effective, a block which includes odd number of characters(including 'LF' at the end of the block) is detected.</li>
+                See <a href="#disc">Description</a> about the timing of error.
+            </content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>
+                Write protected on CNC side<br/>
+                Tape memory is write-protected by the CNC parameter setting(O8000-/O9000- protection, encoding).<br/>
+                See <a href="#disc">Description</a> about the timing of error.
+            </content>
+        </item>
+        <item>
+            <name>EW_OVRFLOW</name>
+            <content>
+                Memory overflow<br/>
+                CNC tape memory shorts for the registration.<br/>
+                Make enough free area in CNC memory.<br/>
+                See <a href="#disc">Description</a> about the timing of error.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            <p>The extended driver/library function is necessary.</p>
+        </hssb>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <li>Series 15/15i</li>
+                <ul>
+                    0020=16(EDIT mode) (must be set)<br/>
+                    0022=16(except EDIT mode) (must be set)<br/>
+                    0000#0 (influenced by setting)<br/>
+                    2200#1,#3,#4 (influenced by setting)<br/>
+                    0011#0,2201#0 (influenced by setting)<br/>
+                    2210,2211,2212,2213
+                </ul>
+            
+            <li>Series 16/18/21, 16i/18i/21i, 0i, 30i, PMi-A</li>
+                <ul>
+                    0000#0 (influenced by setting)<br/>
+                    3201#2,#5,#6 (influenced by setting)<br/>
+                    3202#0,#4 (influenced by setting)<br/>
+                    3210,3211 (influenced by setting)<br/>
+                    3290#7 (influenced by setting)
+                </ul>
+            <li> 16i/18i-W, Power Mate i</li>
+                <ul>
+                    0000#0 (influenced by setting)<br/>
+                    3201#2,#5,#6 (influenced by setting)<br/>
+                    3202#0,#4 (influenced by setting)<br/>
+                    3290#7 (influenced by setting)
+                </ul>
+        </type>
+    </parameter>
+
+
+
+    <mode>
+        <cmn>
+            <li>Series 15/15i It is possible to use in any CNC mode.</li>
+            <span class="dd">(It is necessary to set the parameter according to the mode)</span><br/>
+            <br/>
+            <li>Series 16i/18i/21i, 16/18/21, 0i, 30i, Power Mate i, PMi-A</li>
+            <span class="dd">It is possible to use in other than MDI mode.</span>
+        </cmn>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>H</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </w>
+        <pw>
+            <d>H</d>
+            <h>H</h>
+            <a>H</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_dwnstart</name>
+            <file>Program/cnc_dwnstart.htm</file>
+        </item>
+        <item>
+            <name>cnc_cdownload</name>
+            <file>Program/cnc_cdownload.htm</file>
+        </item>
+        <item>
+            <name>cnc_dwnend</name>
+            <file>Program/cnc_dwnend.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

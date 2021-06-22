@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdpscdedge2</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdpscdedge2(unsigned short FlibHndl,short s_no, short *number, IODBEDGE2 *edge2); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p> Reads the edge cutting data in the cutting conditions file.
+                Each data is stored in the members within IODBEDGE2.
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            The data group number to read is set.
+                        </p>
+                        <p>
+                            When addition of the cutting condition data option is not provided.
+                            <table border="0" class="dd">
+                                <tr> <td>201 to  205</td><td>　edge cutting data group number</td>   </tr>
+                            </table>
+                        </p>
+                        <p>
+                            When addition of the cutting condition data option is provided.
+                            <table border="0" class="dd">
+                                <tr> <td>201 to  220</td><td>　edge cutting data group number</td>   </tr>
+                            </table>
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>number</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                            A pointer to the number of data items in edge cutting is set.
+                            Specifies the number to read before calling the function. The number which actually read after calling the function is set.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>edge2</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            A pointer to the IODBEDGE2 structure in which to return the data group of edge cutting.
+                            The IODBEDGE2 structure is as follows.
+                        </p>
+<pre>
+typedef struct iodbedge2 {
+    short    slct;          /* Flag of valid data              */
+    short    power;         /* Peak power in piercing          */
+    short    freq;          /* Frequency in piercing           */
+    short    duty;          /* Duty in piercing                */
+    short    g_press;       /* Assist gas pressure in piercing */
+    short    g_kind;        /* Assist gas type in piercing     */
+    long     pier_t;        /* Time in piercing                */
+    long     angle;         /* Edge operation angle            */
+    long     gap;           /* Standard displacement           */
+    long     r_len;         /* Return distance                 */
+    long     r_feed;        /* Return speed                    */
+    short    r_freq;        /* Return frequency                */
+    short    r_duty;        /* Return pulse duty               */
+    char     gap_axis；     /* Gap control axis                */
+    char     angle_dec;     /* Ddecimals places                */
+    char     gap_dec;       /* Ddecimals places                */
+    char     r_len_dec;     /* Ddecimals places                */
+    char     r_feed_dec;    /* Ddecimals places                */
+    char     reserve；      /* (reserve)                       */
+    short    reserves[3];   /* (reserve)                       */
+} IODBEDGE2 ;
+</pre>
+                        <dl>
+                            <dt>slct</dt>
+                                <dd>Flag of valid data is set.</dd>
+                            <dd><table border ="0" class="dd">
+                                <tr> <td>bit 0</td><td>：</td><td>Edge operation angle</td> </tr>
+                                <tr> <td>bit 1</td><td>：</td><td>Peak power in piercing</td> </tr>
+                                <tr> <td>bit 2</td><td>：</td><td>Frequency in piercing</td> </tr>
+                                <tr> <td>bit 3</td><td>：</td><td>Duty in piercing</td> </tr>
+                                <tr> <td>bit 4</td><td>：</td><td>Time in piercing</td> </tr>
+                                <tr> <td>bit 5</td><td>：</td><td>Assist gas pressure in piercing</td> </tr>
+                                <tr> <td>bit 6</td><td>：</td><td>Assist gas type in piercing</td> </tr>
+                                <tr> <td>bit 7</td><td>：</td><td>Return distance</td> </tr>
+                                <tr> <td>bit 8</td><td>：</td><td>Return speed</td> </tr>
+                                <tr> <td>bit 9</td><td>：</td><td>Return frequency</td> </tr>
+                                <tr> <td>bit10</td><td>：</td><td>Return pulse duty</td> </tr>
+                                <tr> <td>bit11</td><td>：</td><td>Standard displacement</td> </tr>
+                                <tr> <td>bit12</td><td>：</td><td>Gap control axis</td> </tr>
+                                <tr> <td>bit13,..,15</td><td>：</td><td>(reserve)</td> </tr>
+                            </table></dd>
+                            <dd>* When a bit is 0, it means the corresponding data hasno meaning.</dd>
+                            <dt>power</dt>
+                                <dd>The value of peak power in piercing is set.</dd>
+                                <dd>(Setting range：0 to 9999，Unit：W)</dd>
+                            <dt>freq</dt>
+                                <dd>The pulse frequency in piercing is set.</dd>
+                                <dd>(Setting range：1 to 32767，Unit：Hz)</dd>
+                            <dt>duty</dt>
+                                <dd>The pulse duty in piercing is set.</dd>
+                                <dd>(Setting range：0 to 100，Unit：%)</dd>
+                            <dt>g_press</dt>
+                                <dd>The assist gas pressure in piercing is set.</dd>
+                                <dd>(Setting range：0 to 9999，Unit：0.01MPa、0.1Kg/cm2)</dd>
+                            <dt>g_kind</dt>
+                                <dd>The assist gas type in piercing is set.</dd>
+                                <dd>(Setting range：0 to 15，Unit：kind)</dd>
+                            <dt>pier_t</dt>
+                                <dd>The time in piercing is set.</dd>
+                                <dd>(Setting range：0 to 999999，Unit：0.001sec)</dd>
+                            <dt>angle</dt>
+                                <dd>The edge operation angle is set.</dd>
+                                <dd>(Setting range：0 to 999999999，Unit：degree)</dd>
+                            <dt>gap</dt>
+                                <dd>The standard displacement is set.</dd>
+                                <dd>(Setting range：-999999999 to 999999999, Unit：mm/min(input unit))</dd>
+                            <dt>r_len</dt>
+                                <dd>The return distance is set.</dd>
+                                <dd>(Setting range：-999999999 to 999999999，Unit：mm、inch(input unit))</dd>
+                            <dt>r_feed</dt>
+                                <dd>The return speed is set.</dd>
+                                <dd>(Setting range：0 to 999999999，Unit：mm/min, inch/min(input unit))</dd>
+                            <dt>r_freq</dt>
+                                <dd>The return frequency is set.</dd>
+                                <dd>(Setting range：1 to 32767，Unit：Hz)</dd>
+                            <dt>r_duty</dt>
+                                <dd>The return pulse duty is set.</dd>
+                                <dd>(Setting range：0 to 100，Unit：%)</dd>
+                            <dt>gap_axis</dt>
+                                <dd>Whether The first gap control axis axis or The second gap control axis  axis is commanded as a gap control axis is set.</dd>
+                                <dd>The meaning of a set value of gap_axis is shown in the following table.</dd>
+                                <ul>
+                                <table border="1">
+                                    <colgroup>
+                                    <colgroup width="100">
+                                    <tr>
+                                        <th>gap_axis</th> <th>Setting of the gap control axis </th>
+                                    </tr>
+                                    <tr> <td >0</td><td>The second gap control axis.</td>  </tr>
+                                    <tr> <td >1</td><td>The first gap control axis.</td> </tr>
+                                    <tr> <td >-1</td><td>The gap control is invalid.</td> </tr>
+                                </colgroup>
+                                </colgroup>
+                                </table>
+                                </ul>
+                            <dt>angle_dec</dt>
+                                <dd>The number of decimals places at edge operation angle is set.</dd>
+                                <dd>(Setting range：0 to 9)</dd>
+                            <dt>gap_dec</dt>
+                                <dd>The number of decimals places at standard displacement is set.</dd>
+                                <dd>(Setting range：0 to 9)</dd>
+                            <dt>r_len_dec</dt>
+                                <dd>The number of decimals places at return distance is set.</dd>
+                                <dd>(Setting range：0 to 9)</dd>
+                            <dt>r_feed_dec</dt>
+                                <dd>The number of decimals places at return speed is set.</dd>
+                                <dd>(Setting range：0 to 9)</dd>
+                                <dd>The corresponding data is as follows.</dd>
+                                <ul>
+                                <table border="1">
+                                    <colgroup>
+                                    <colgroup width="100">
+                                    <tr>
+                                        <th>decimals places</th> <th>corresponding data</th>
+                                    </tr>
+                                    <tr> <td >angle_dec</td><td>angle</td>  </tr>
+                                    <tr> <td >gap_dec</td><td>gap</td> </tr>
+                                    <tr> <td >r_len_dec</td><td>r_len</td> </tr>
+                                    <tr> <td >r_feed_dec</td><td>r_feed</td> </tr>
+                                </colgroup>
+                                </colgroup>
+                                </table>
+                                </ul>
+                            <dt>reserve</dt>
+                                <dd>(reserve)</dd>
+                            <dt>reserves</dt>
+                                <dd>(reserve)</dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                Unavailable<br/>
+                This function cannot be used except 30i/31i-LB.
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                Data block length error<br/>
+                Number of data(number) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                Data number error<br/>
+                Start number(s_no) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The cutting condition setting function, the edge cutting function and the extended
+                driver/library function are necessary.
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                CNC parameter error(Series 30i/31i-LB only)<br/>
+                Mistake of laser oscillator (parameter No.15030)
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>
+                <li>The cutting condition setting function</li>
+                <li>The edge cutting function</li>
+        </need>
+    </option>
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <li>Series 30i/31i-LB</li>
+            <span class="dd">No.15030</span>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>-</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>○</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>-</d>
+            <h>-</h>
+            <a>-</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_wrpscdedge2</name>
+            <file>Laser/cnc_wrpscdedge2.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

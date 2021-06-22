@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_setpdf_pglock</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_setpdf_pglock(unsigned short FlibHndl, char *prog_name);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                The running by the subprogram call to the program in the CNC memory is prohibited.<br/>
+                And the following operations and the execution of function are prohibited.
+            </p>
+            CNC operation
+                <ul>
+                    1) Program edit and search<br/>
+                    2) O number search<br/>
+                    3) Program input/output from input-output device<br/>
+                </ul>
+            
+            Library
+                <ul>
+                    <p>
+                        1) Program search and delete<br/>
+                        <ul>
+                            cnc_search, cnc_pdf_del<br/>
+                            -> EW_PROT error occurs<br/>
+                            cnc_pdf_delall<br/>
+                            -> The program which was protected by the parameter or this function is not deleted, but other program are deleted.
+                        </ul>
+                    </p>
+                    <p>
+                        2) Program downloading and verifying<br/>
+                        <ul>
+                            cnc_download3, cnc_dwnend3, cnc_download4, cnc_dwnend4, cnc_verify4, cnc_vrfend4<br/>
+                            -> EW_PROT error occurs
+                        </ul>
+                    </p>
+                    <p> 
+                        3) Copy and rename of program.<br/>
+                        <ul>
+                            cnc_pdf_copy<br/>
+                            -> When the protected program number is specified for destination number, EW_PROT error occurs.<br/>
+                            cnc_pdf_rename<br/>
+                            -> When the protected program number is specified for old program number, EW_PROT error occurs.
+                        </ul>
+                    </p>
+                    <p>
+                        Note) Even if the program is protected by cnc_setpglock function, the edit by the line edit function is possible.
+                    </p>
+                </ul>
+            <p>
+                Setting of the protection of running/editing can be set to program of 12.
+            </p>
+            <p>
+                The setting by this function becomes effective until the setting is released by 
+                <a href="Program/cnc_resetpdf_pglock.htm" target="_parent">cnc_resetpdf_pglock</a> or the CNC is turned off.
+            </p>
+            <p>
+                The procedure to edit existing program by the application is shown as follows.
+                <ul>
+                    <table>
+                        <tr><td valign="top">1)</td><td>The protection of running/editing to the program which wants to be edited is set by cnc_setpdf_pglock.</td></tr>
+                        <tr><td valign="top">2)</td><td>The program is edited by the line editing function.</td></tr>
+                        <tr><td valign="top">3)</td><td>The protection of running/editing is released by 
+                            <a href="Program/cnc_resetpdf_pglock.htm" target="_parent">cnc_resetpdf_pglock</a> and editing is end.</td></tr>
+                        <tr></tr>
+                        <tr><td valign="top">*</td><td> If you want to edit the new program, it is necessary to register the new program before the procedure 1.</td></tr>
+                    </table>
+                </ul>
+                The protection of running/editing cannot be set to the following programs.<br/>
+                <ul>
+                    <li>O0000 (In case of program number eight digits : "O00000000")</li>
+                    <li>Selected program or running program (Main, nesting, executing)</li>
+                    <li>Program protected by parameter. (O9000 or later etc.)</li>
+                    <li>MDI program.</li>
+                </ul>
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle.<br/>
+                            See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>prog_name</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Program name<br/>
+                            Specify the program name(full path) which wants to set the protection of running/editing.
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                Unavailable<br/>
+                This function is not supported by CNC.
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                Program number is worng.<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                The following detail status will be set onto the member, err_no of ODBERR structure.<br/>
+                <table>
+                    <tr><td valign="top">2</td><td valign="top">:</td><td>The program specified by program name(prog_name) does not exist.</td></tr>
+                    <tr><td valign="top">3</td><td valign="top">:</td><td>The program specified by program name(prog_name) has already protection of running/editing.</td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                no option<br/>
+                The extended driver/library function is necessary.
+            </content>
+        </item>
+        <item>
+            <name>EW_OVRFLOW</name>
+            <content>
+                Overflow<br/>
+                The protection of running/editing has already been set to the program of 12.
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                CNC execution rejection<br/>
+                The selected program or running program(Main, nesting, executing) was specified for program name(prog_name).
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            <p>The extended driver/library function is necessary.</p>
+        </hssb>
+    </option>
+
+
+
+    <parameter></parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+     </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_resetpdf_pglock</name>
+            <file>Program/cnc_resetpdf_pglock.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdpdf_pglockstat</name>
+            <file>Program/cnc_rdpdf_pglockstat.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

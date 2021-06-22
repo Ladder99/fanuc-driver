@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_seqsrch2</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_seqsrch2(unsigned short FlibHndl, long seq_no);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Searches the specified sequence number of the selected program in CNC.</p>
+            <br/>
+            <p>The searching speed of this function is more than cnc_seqsrch.</p>
+            <p>The status of CNC does not change in this function though CNC becomes "STOP" mode by the cnc_search function after searches.</p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle.
+                            See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>seq_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify sequence number.</p>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                Data error<br/>
+                The specified sequence number does not exist.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The extended driver/library function is necessary.
+            </content>
+        </item>
+        <item>
+            <name>EW_MODE</name>
+            <content>
+                CNC mode error<br/>
+                See the section of CNC mode.
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                 CNC execution denied<br/>
+                <ul style="margin-top:0;margin-bottom:0">
+                    <li>30i/31i/32i</li>
+                    CNC is in the emergency stop.
+                </ul>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+    </option>
+
+
+
+    <parameter>
+    </parameter>
+
+
+
+    <mode>
+        <cmn>
+            <ul>
+                <li>Series 16i/18i/21i</li>
+                    It is possible to use in MEM mode.
+            </ul>
+        </cmn>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_seqsrch</name>
+            <file>Program/cnc_seqsrch.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+<vc>
+The following program searches the specified sequence number,
+and displays the result.
+
+#include "fwlib32.h"
+
+/* no is sequence number to be searched. */
+void example( long no )
+{
+        short ret ;
+        ret = cnc_seqsrch2( h, no ) ;
+        switch ( ret ) {
+                case EW_OK:
+                        printf( "N%ld has been searched.\n", no ) ;
+                        break;
+                case EW_DATA:
+                        printf( "N%ld doesn't exist.\n", no ) ;
+                        break;
+                case EW_MODE:
+                        printf( "ILLIGAL MODE.\n" ) ;
+                        break;
+                case EW_REJECT:
+                        printf( "REJECTED.\n" ) ;
+                        break;
+        }
+}
+</vc>
+<vcs><![CDATA[
+The following program searches the specified sequence number,
+and displays the result.
+
+class example
+{
+    /* no is sequence number to be searched. */
+    public void sample(int no)
+    {
+            short ret;
+            ret = Focas1.cnc_seqsrch2(h, no);
+            switch (ret)
+            {
+                    case Focas1.EW_OK:
+                            Console.WriteLine("N{0} has been searched.", no);
+                            break;
+                    case (short)Focas1.focas_ret.EW_DATA:
+                            Console.WriteLine("N{0} doesn't exist.", no);
+                            break;
+                    case (short)Focas1.focas_ret.EW_MODE:
+                            Console.WriteLine("ILLIGAL MODE.");
+                            break;
+                    case (short)Focas1.focas_ret.EW_REJECT:
+                            Console.WriteLine("REJECTED.");
+                            break;
+            }
+    }
+}]]></vcs>
+    </example>
+
+
+
+  </func>
+</root>

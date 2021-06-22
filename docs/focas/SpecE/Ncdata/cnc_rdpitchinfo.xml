@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdpitchinfo</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdpitchinfo(unsigned short FlibHndl, short* use_no);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Reads the available number of pitch error compensation data. It is stored in "*use_no" with signed binary format.</p>
+
+            <p>In case of Series 16i/18i-W, the data is stored in the array, use_no[8].</p>
+
+        </cmn>
+
+        <is>
+            <p>Reads the available number of pitch error compensation data. It is stored in "*use_no" with signed binary format.</p>
+        </is>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>use_no</name>
+                    <type>out</type>
+                    <content>
+                        <p>Pointer to the available number of pitch error compensation data</p>
+                        <ul>
+                            <li>Series 15/15i</li>
+                            1280<br/>
+                            <br/>
+                                <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C/D, Power Mate i</li>
+                                <table>
+                                    <tr><td>Pitch error compensation                        </td> <td>:</td> <td>1024 points(0-1023)</td></tr>
+                                    <tr><td>Bi-directional pitch error compensation         </td> <td>:</td> <td>1024 points(An actual number is twice.)(0-1023, 3000-4023)</td></tr>
+                                    <tr><td>Extended bi-directional pitch error compensation</td> <td>:</td> <td>2560 points(An actual number is twice.)(0-2559, 3000-5559)</td></tr>
+                                </table>
+                                <br/>
+                                <li>Series 0i-F, 30i/31i/32i, PMi-A</li>
+                                <table>
+                                    <tr><td>pitch error compensation                        </td> <td>:</td> <td>1536 points(0-1535)</td></tr>
+                                    <tr><td>Bi-directional pitch error compensation         </td> <td>:</td> <td>1536 points(An actual number is twice.)(0-1535, 3000-4535)</td></tr>
+                                    <tr><td>Extended bi-directional pitch error compensation</td> <td>:</td> <td>2560 points(An actual number is twice.)(0-2559, 3000-5559)</td></tr>
+                                </table>
+                            <br/>
+                            <li>Series 16i/18i-W</li>
+                            (Specify the starting pointer of contiunous 8 words.)
+                            <table>
+                                <tr>
+                                    <td>use_no[0]</td>
+                                    <td>:</td>
+                                    <td>number of pitch error compensation data of 1000th</td>
+                                </tr>
+                                <tr>
+                                    <td>use_no[1]</td>
+                                    <td>:</td>
+                                    <td>number of pitch error compensation data of 2000th</td>
+                                </tr>
+                                <tr>
+                                    <td>use_no[2]</td>
+                                    <td>:</td>
+                                    <td>number of pitch error compensation data of 3000th</td>
+                                </tr>
+                                <tr>
+                                    <td>use_no[3]</td>
+                                    <td>:</td>
+                                    <td>number of pitch error compensation data of 4000th</td>
+                                </tr>
+                                <tr>
+                                    <td>use_no[4]</td>
+                                    <td>:</td>
+                                    <td>number of pitch error compensation data of 5000th</td>
+                                </tr>
+                                <tr>
+                                    <td>use_no[5]</td>
+                                    <td>:</td>
+                                    <td>number of pitch error compensation data of 6000th</td>
+                                </tr>
+                                <tr>
+                                    <td>use_no[6]</td>
+                                    <td>:</td>
+                                    <td>number of pitch error compensation data of 7000th</td>
+                                </tr>
+                                <tr>
+                                    <td>use_no[7]</td>
+                                    <td>:</td>
+                                    <td>number of pitch error compensation data of 8000th</td>
+                                </tr>
+                            </table>
+                        </ul>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+
+        <is>
+            <hssb>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>use_no</name>
+                        <type>out</type>
+                        <content>
+                            <p>Pointer to the available number of pitch error compensation data</p>
+                            <p>In case of bi-directional pitch error compensation, the available number is twice.</p>
+                        </content>
+                    </item>
+                </vc>
+            </hssb>
+        </is>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>This function needs the pitch error compensation option.</content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The the extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>The pitch error compensation option.</need>
+        <type>
+            <p>Bi-directional pitch error compensation<br/>
+               Extended bi-directional pitch error compensation</p>
+        </type>
+
+        <is>
+            <hssb>
+                The pitch error compensation option and the extended driver/library function are necessary.
+            </hssb>
+            <type>
+                <p>Bi-directional pitch error compensation<br/>
+                   Extended bi-directional pitch error compensation</p>
+            </type>
+        </is>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <add>
+                When you use the Bi-directional pitch error compensation : No.3605#0
+            </add>
+        </type>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+        <add><b></b></add>
+
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdpitchr</name>
+            <file>ncdata/cnc_rdpitchr.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrpitchr</name>
+            <file>ncdata/cnc_wrpitchr.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

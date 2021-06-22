@@ -1,0 +1,830 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+    <title>cnc_rdaxisdata</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdaxisdata(unsigned short FlibHndl,
+                        short cls, short* type, short num, short* len, 
+                        ODBAXDT* axdata);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Reads various data relating servo axis/spindle axis that is got by <a href="position/cnc_rdposition.htm" target="_parent">cnc_rdposition</a>, <a href="position/cnc_rdspeed.htm" target="_parent">cnc_rdspeed</a>, <a href="position/cnc_rdsvmeter.htm" target="_parent">cnc_rdsvmeter</a>, <a href="position/cnc_rdspmeter.htm" target="_parent">cnc_rdspmeter</a>, <a href="position/cnc_rdhndintrpt.htm" target="_parent">cnc_rdhndintrpt</a>, with supporting "extended axis name".</p>
+
+            <p>You have to specify the argument "cls" with the data class to be read,
+        array of short, "type[]" with the kind of data to be read.  The number
+        of the array must be specified by the argument "num".
+        The data kind that can be read once is up to 4.  If "num" exceeds 4,
+        this function will return the error, EW_ATTRIB.</p>
+
+            <p>The argument "(*len)" should be specified with the number of axes to be
+        read.  According to "cls", "(*len)" should be specified as follows.</p>
+
+            <ul>
+                <p>1. In case that "cls" is specified with Position(=1), Servo(=2), Spindle(=3):</p>
+                <div class="dd">
+              This function reads the data from first axis by the specified
+                number of axes.  After execution, "(*len)" will have the actual
+                number of axes in case that "(*len)" is specified with the
+                number that is larger than the current effective number of
+                axes.  In case that "(*len)" is specified with the number that
+                is smaller than the current effective number of axes, this
+                function reads only the number of data specified by "(*len)".
+                </div>
+                <p>2. In case that "cls" is specified with Selected spindle(=4), Speed(=5):</p>
+                <div class="dd">
+              This function always reads only one axis data.
+                In case that Selected spindle is specified but there is not a
+                selected spindle, this function will set "(*len)" with 0.
+                </div>
+            </ul>
+
+            <p>The read data will be stored on the array of ODBAXDATA structure
+        specified by the argument "axdata[]".  The number of members of this
+        array must be "num" x "(*len)".  The read data will be stored on the
+        array, by the number of specified "(*len)" and order of specified
+        "type[]" like as follows:</p>
+
+            <table class="dd">
+                <colgroup align="left" valign="top">
+                <tr>
+                    <td>Data of type[0]</td>
+                    <td>:</td>
+                    <td>axdata[</td>
+                    <td align="right">0]</td>
+                    <td align="right">,..,axdata[</td>
+                    <td align="right">(*len)-1]</td>
+                </tr>
+                <tr>
+                    <td>Data of type[1]</td>
+                    <td>:</td>
+                    <td>axdata[</td>
+                    <td align="right">(*len)]</td>
+                    <td align="right">,..,axdata[</td>
+                    <td align="right">2 x (*len)-1]</td>
+                </tr>
+                <tr>
+                    <td>Data of type[2]</td>
+                    <td>:</td>
+                    <td>axdata[</td>
+                    <td align="right">2 x (*len)]</td>
+                    <td align="right">,..,axdata[</td>
+                    <td align="right">3 x (*len)-1]</td>
+                </tr>
+                <tr>
+                    <td>Data of type[3]</td>
+                    <td>:</td>
+                    <td>axdata[</td>
+                    <td align="right">3 x (*len)]</td>
+                    <td align="right">,..,axdata[</td>
+                    <td align="right">4 x (*len)-1]</td>
+                </tr>
+                </colgroup>
+            </table>
+
+            <p>Even in case that specified "(*len)" is smaller than the actual number
+        of axes, the data will be stored on the array according to the "(*len)"
+        that was specified at calling of this function.</p>
+
+            <p><b>Example of arguments)</b></p>
+
+            <ul>
+                <p>In case of reading Absolute position, Machine position, Relative
+            position:</p>
+
+<pre><![CDATA[
+short types[3] = {0, 1, 2}; /* Absolute, Machine, Relative */
+len = 3;                    /* Specify 3 axes */
+ODBAXDT axdata[3*3];
+cnc_rdaxisdata(h, 1, types, 3, &len, axdata);
+]]></pre>
+
+                <p>The contents of the array "axdata" will be as follows.</p>
+
+                <div class="dd"><img src="position/cnc_rdaxisdata.gif"/></div>
+
+                <p>If the current effective number of axes is 2, (*len) will be
+            returned 2 and array for 3rd axis(axdata[2], [5], [8]) will have
+            no data after the execution.</p>
+
+            </ul>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>cls</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the class of data to be read.</p>
+                        <table class="dd">
+                            <colgroup align="left" valign="top">
+                                <tr><td>1</td><td>:</td><td>Position value</td></tr>
+                                <tr><td>2</td><td>:</td><td>Servo</td></tr>
+                                <tr><td>3</td><td>:</td><td>Spindle</td></tr>
+                                <tr><td>4</td><td>:</td><td>Selected spindle</td></tr>
+                                <tr><td>5</td><td>:</td><td>Speed</td></tr>
+                            </colgroup>
+                        </table>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the pointer for the array that specifies the kind of
+                data to be read.
+                The following value can be specified according to "cls".</p>
+
+                        <ul>
+                            cls = 1 (Position value)
+                            <dd/><table>
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                    <tr><td>0</td><td>:</td><td>Absolute position</td></tr>
+                                    <tr><td>1</td><td>:</td><td>Machine position</td></tr>
+                                    <tr><td>2</td><td>:</td><td>Relative position</td></tr>
+                                    <tr><td>3</td><td>:</td><td>Distance to go</td></tr>
+                                    <tr><td>4</td><td>:</td><td>Handle interruption(Input unit)</td></tr>
+                                    <tr><td>5</td><td>:</td><td>Handle interruption(Output unit)</td></tr>
+                                    <tr><td>6</td><td>:</td><td>Start point of program restart</td></tr>
+                                    <tr><td>7</td><td>:</td><td>Distance to go of program restart</td></tr>
+                                    <tr><td>8</td><td>:</td><td>Start point of block restart</td></tr>
+                                    <tr><td>9</td><td>:</td><td>Distance to go of block restart</td></tr>
+<!--
+                                    <tr><td>10</td><td>:</td><td>Absolute position(for offset, graphic screen)</td></tr>
+                                    <tr><td>11</td><td>:</td><td>Relative position(for offset, graphic screen)</td></tr>
+                                    <tr>
+                                        <td>Note)</td>
+                                        <td colspan="2">
+                                             Data by 0, 2 will be influenced by 8163#0.<br/>
+                                             Data by 10, 11 will not be influenced by 8163#0, always got as 8163#0 = 0.
+                                        </td>
+                                    </tr>
+-->
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+
+                            <br/>
+                            cls = 2 (Servo)
+                            <dd/><table>
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                    <tr><td>0</td><td>:</td><td>Servo load meter</td></tr>
+                                    <tr><td>1</td><td>:</td><td>Load current (% unit)</td></tr>
+                                    <tr><td>2</td><td>:</td><td>Load current (Ampere unit)</td></tr>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+
+                            <br/>
+                            cls = 3 (Spindle) and cls = 4 (Selected spindle)
+                            <dd/><table>
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                    <tr><td>0</td><td>:</td><td>Spindle load meter</td></tr>
+                                    <tr><td>1</td><td>:</td><td>Spindle motor speed</td></tr>
+                                    <tr><td>2</td><td>:</td><td>Spindle speed (according to parameter 3799#2)</td></tr>
+                                    <tr><td>3</td><td>:</td><td>Spindle speed (got from Spindle motor speed)</td></tr>
+                                    <tr><td>4</td><td>:</td><td>Spindle load meter (average of each 250ms)</td></tr>
+                                    <tr><td>5</td><td>:</td><td>Spindle load meter(maximum value)</td></tr>
+                                    <tr><td>6</td><td>:</td><td>Spindle load meter(maximum value)(average of each 250ms)</td></tr>
+                                    <tr><td>7</td><td>:</td><td>Time that spindle can continue processing</td></tr>
+                                    <tr>
+                                        <td>※</td>
+                                        <td colspan="2">
+                                             Data by 5, 6, 7 will be influenced by parameter No.4542#7.<br/>
+                                             So, the value of road meter (type = 0) might exceed maximum value (type = 5,6) depending on timing in which data is acquired.
+                                        </td>
+                                    </tr>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+
+                            <br/>
+                            cls = 5 (Speed)
+                            <dd/><table>
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                    <tr><td>0</td><td>:</td><td>Feed rate(F)(Feed per minute)</td></tr>
+                                    <tr><td>1</td><td>:</td><td>Spindle speed(S)</td></tr>
+                                    <tr><td>2</td><td>:</td><td>Jog speed/Dry run speed</td></tr>
+                                    <tr><td>3</td><td>:</td><td>Tool tip speed</td></tr>
+                                    <tr><td>4</td><td>:</td><td>Rotation speed of servo motor</td></tr>
+                                    <tr><td>5</td><td>:</td><td>Feed rate(F/S) Note</td></tr>
+                                    <tr>
+                                        <td>Note)</td>
+                                        <td colspan="2">
+                                             The unit follow the value of parameter No.3107#3 and No.3191#5.<br/>
+                                             Judge the unit by "unit". 
+                                        </td>
+                                    </tr>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+
+                        </ul>
+                    </content>
+                </item>
+                <item>
+                    <name>num</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the number of array "type".</p>
+                    </content>
+                </item>
+                <item>
+                    <name>len</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>Specify the pointer that stores the number of axes to be read.<br/>
+                        This function returns the actual read number of axes after the
+                execution.</p>
+                    </content>
+                </item>
+                <item>
+                    <name>axdata</name>
+                    <type>out</type>
+                    <content>
+                        <p>Specify the pointer of the array of ODBAXDT structure.
+                Number of "num" x "(*len)" must be required.
+                The ODBAXDT structure is as follows.</p>
+
+<pre>
+typedef struct odbaxdt {
+        char    name[4];        /* axis name */
+        long    data;           /* data */
+        short   dec;            /* decimal point */
+        short   unit;           /* unit of data */
+        short   flag;           /* flags */
+        short   reserve;        /* reserved */
+} ODBAXDT ;
+</pre>
+
+                        <dl>
+                            <dt>name</dt>
+                            <dd>Axis name will be stored in ASCII code.<br/>
+                            The string is NULL terminated.</dd>
+                            <br/>
+
+                            <dt>data</dt>
+                            <dd>Data to be read</dd>
+                            <br/>
+
+                            <dt>dec</dt>
+                            <dd>Decimal point of data<br/>
+                                In case that following "unit" is "rpm" or "%", this
+                        data is always 0.</dd>
+                            <br/>
+
+                            <dt>unit</dt>
+                            <dd>Unit of data<br/>
+                                <table class="dd">
+                                    <colgroup align="left" valign="top">
+                                    <colgroup align="left" valign="top">
+                                    <colgroup align="left" valign="top">
+                                    <colgroup align="left" valign="top">
+                                        <tr><td>0</td><td>:</td><td>mm</td><td>(Position value)</td></tr>
+                                        <tr><td>1</td><td>:</td><td>inch</td><td>(Position value)</td></tr>
+                                        <tr><td>2</td><td>:</td><td>degree</td><td>(Position value)</td></tr>
+                                        <tr><td>3</td><td>:</td><td>mm/minute</td><td>(Feed rate(Feed per minute), jog/dry run speed, Tool tip speed)</td></tr>
+                                        <tr><td>4</td><td>:</td><td>inch/minute</td><td>(Feed rate(Feed per minute), jog/dry run speed, Tool tip speed))</td></tr>
+                                        <tr><td>5</td><td>:</td><td>rpm</td><td>(Spindle speed, spindle motor speed)</td></tr>
+                                        <tr><td>6</td><td>:</td><td>mm/round</td><td>(Feed rate(Feed per revolution), jog/dry run speed, Tool tip speed))</td></tr>
+                                        <tr><td>7</td><td>:</td><td>inch/round</td><td>(Feed rate(Feed per revolution), jog/dry run speed, Tool tip speed))</td></tr>
+                                        <tr><td>8</td><td>:</td><td>%</td><td>(Load meter, load current)</td></tr>
+                                        <tr><td>9</td><td>:</td><td>Ampere</td><td>(Load current)</td></tr>
+                                        <tr><td>10</td><td>:</td><td>Second</td><td>(Time)</td></tr>
+                                    </colgroup>
+                                    </colgroup>
+                                    </colgroup>
+                                    </colgroup>
+                                </table>
+                            </dd>
+                            <br/>
+
+                            <dt>flag</dt>
+                            <dd>Flags<br/>
+                                According to "cls", following value will be set.<br/>
+                                <ul>cls = 1 (Position value)
+                                    <table class="dd">
+                                        <colgroup align="left" valign="top">
+                                        <colgroup align="left" valign="top">
+                                        <colgroup align="left" valign="top">
+                                        <colgroup align="left" valign="top">
+                                            <tr><td>bit</td><td>0</td><td>:</td><td>Display state</td><td></td></tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>1</td>
+                                                <td>=</td>
+                                                <td>Displayed on CNC screen</td>
+                                                <td>: 0 = Not displayed on CNC screen</td>
+                                            </tr>
+                                            <tr><td>bit</td><td>1</td><td>:</td><td>Axis detaching state</td><td></td></tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>1</td>
+                                                <td>=</td>
+                                                <td>enabled</td>
+                                                <td>: 0 = disabled</td>
+                                            </tr>
+                                            <tr><td>bit</td><td>2</td><td>:</td><td>Interlock state</td><td></td></tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>1</td>
+                                                <td>=</td>
+                                                <td>enabled</td>
+                                                <td>: 0 = disabled</td>
+                                            </tr>
+                                            <tr><td>bit</td><td>3</td><td>:</td><td>Machine lock state</td><td></td></tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>1</td>
+                                                <td>=</td>
+                                                <td>enabled</td>
+                                                <td>: 0 = disabled</td>
+                                            </tr>
+                                            <tr><td>bit</td><td>4</td><td>:</td><td>Servo off state</td><td></td></tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>1</td>
+                                                <td>=</td>
+                                                <td>enabled</td>
+                                                <td>: 0 = disabled</td>
+                                            </tr>
+                                            <tr><td>bit</td><td>5</td><td>:</td><td>In-position check</td><td></td></tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>1</td>
+                                                <td>=</td>
+                                                <td>Not in-position</td>
+                                                <td>: 0 = In-position</td>
+                                            </tr>
+                                            <tr><td>bit</td><td>6</td><td>:</td><td>Mirror image state</td><td></td></tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>1</td>
+                                                <td>=</td>
+                                                <td>enabled</td>
+                                                <td>: 0 = disabled</td>
+                                            </tr>
+                                            <tr><td>bit</td><td>7</td><td>:</td><td>Diameter and radius setting switching function</td><td></td></tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>1</td>
+                                                <td>=</td>
+                                                <td>switching</td>
+                                                <td>: 0 = not switching</td>
+                                            </tr>
+                                            <tr><td>bit</td><td>8</td><td>:</td><td>High speed program check mode(only machine coordinate)</td><td></td></tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>1</td>
+                                                <td>=</td>
+                                                <td>enabled</td>
+                                                <td>: 0 = disabled</td>
+                                            </tr>
+                                            <tr><td>bit</td><td>9</td><td>:</td><td>Optional one axis approach by program restart</td><td></td></tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>1</td>
+                                                <td>=</td>
+                                                <td>executing</td>
+                                                <td>: 0 = not executing</td>
+                                            </tr>
+                                            <tr><td>bit</td><td>10</td><td>:</td><td>Restart coordinates display on the program restart screen(except machine coordinate)</td><td></td></tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>1</td>
+                                                <td>=</td>
+                                                <td>possible</td>
+                                                <td>: 0 = impossible (display "***********")</td>
+                                            </tr>
+                                            <tr><td>bit</td><td>11</td><td>:</td><td>Release state of axis(Flexible path axis assignment function)</td><td></td></tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>1</td>
+                                                <td>=</td>
+                                                <td>enabled</td>
+                                                <td>: 0 = disabled</td>
+                                            </tr>
+                                            <tr>
+                                                <td>bit</td>
+                                                <td colspan="3">12,..,15 : not used</td>
+                                                <td></td>
+                                            </tr>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                    </table>
+                                    <br/>
+
+                                    cls = 3, 4(Spindle, Selected spindle)
+                                    <tr><br/>
+                                        <td>※</td>
+                                        <td colspan="2">
+                                             type = 5,6,7(Spindle load meter(maximum value), Spindle load meter(maximum value)(average of each 250ms), Time that spindle can continue processing) <br/>
+                                        </td>
+                                    </tr>
+                                    <table class="dd">
+                                        <colgroup align="left" valign="top">
+                                        <colgroup align="left" valign="top">
+                                        <colgroup align="left" valign="top">
+                                        <colgroup align="left" valign="top">
+                                            <tr><td>bit</td><td>0</td><td>:</td><td>Data judgment result</td><td></td></tr>
+                                            <tr><td>   </td><td>1</td><td>=</td><td>It has judged.</td><td>: 0 = Unjudgment</td></tr>
+                                            <tr><td>bit</td><td>1</td><td>:</td><td>Presence of data</td><td></td></tr>
+                                            <tr><td>   </td><td>1</td><td>=</td><td>Exist</td><td>: 0 = None</td></tr>
+                                            <tr><td>bit</td><td colspan="3">12,..,15 : not used</td><td></td></tr>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                    </table>
+                                    <br/>
+
+                                    cls = 5 (Speed)
+                                    <table class="dd">
+                                        <colgroup align="left" valign="top">
+                                        <colgroup align="left" valign="top">
+                                        <colgroup align="left" valign="top">
+                                        <colgroup align="left" valign="top">
+                                            <tr><td>bit</td><td>0</td><td>:</td><td>Spindle speed</td><td></td></tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>1</td>
+                                                <td>=</td>
+                                                <td>spindle exists</td>
+                                                <td>: 0 = spindle not exist</td>
+                                            </tr>
+                                            <tr><td>bit</td><td>1</td><td>:</td><td>Jog speed/Dry run speed</td><td></td></tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>1</td>
+                                                <td>=</td>
+                                                <td>Dry run speed</td>
+                                                <td>: 0 = Jog speed</td>
+                                            </tr>
+                                            <tr>
+                                                <td>bit</td>
+                                                <td colspan="3">2,..,15 : not used</td>
+                                                <td></td>
+                                            </tr>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                    </table>
+                                    <br/>
+                                    Others
+                                    <table class="dd">
+                                        <tr>
+                                            <td>not used</td>
+                                        </tr>
+                                    </table>
+                                </ul>
+                            </dd>
+                            <br/>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                Data block error<br/>Number of axis(*len) is less or equal 0.
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>Data number error<br/>Data class(cls) is wrong.</content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>Data attribute error<br/>Kind of data(type) is wrong, or
+                                The number of kind(num) exceeds 4.</content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>Required option to read data is not specified.</content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 0i-D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <type>
+            The option that corresponds to the data to be read is required.
+        </type>
+        <is>
+            <hssb>
+            The extended driver/library function is necessary.<br/>
+            The option that corresponds to the data to be read is required.
+            </hssb>
+        </is>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+                <table>
+                    <tr>
+                        <td>1020,1025,1026</td>
+                        <td>(influenced by setting)</td>
+                    </tr>
+                    <tr>
+                        <td>3131,3132,3133</td>
+                        <td>(influenced by setting)</td>
+                    </tr>
+                    <tr>
+                        <td>3104#0,#4,#5,#6,#7</td>
+                        <td>(influenced by setting)</td>
+                    </tr>
+                    <tr>
+                        <td>3115#0,#1,#2</td>
+                        <td>(influenced by setting)</td>
+                    </tr>
+                    <tr>
+                        <td>3799#2</td>
+                        <td>(influenced by setting)</td>
+                    </tr>
+                    <tr>
+                        <td>8163#0</td>
+                        <td>(influenced by setting)</td>
+                    </tr>
+                    <tr>
+                        <td>4542#7</td>
+                        <td>(influenced by setting)</td>
+                    </tr>
+                </table>
+            </ul>
+        </type>
+        <add></add>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+    <is_mode></is_mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+        <add><b></b></add>
+        <is>
+            <!-- M -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+
+    </support>
+
+
+
+    <reference>
+    </reference>
+
+
+
+    <example>
+<vc>
+Absolute position, machine position, relative position, distance to go,
+of all axes are got and displayed.
+
+#include "fwlib32.h"
+
+void example( void )
+{
+    ODBAXDT pos[4*MAX_AXIS];
+    short types[4] = {0, 1, 2, 3};
+    short num = sizeof(types) / sizeof(types[0]);
+    short len = MAX_AXIS;
+    short ret = cnc_rdaxisdata(h, 1, types, 4, &#38;len, pos);
+    if(!ret) {
+        int i;
+        printf("ABSOLUTE:\n");
+        for(i = 0 * MAX_AXIS ; i &#60; 0 * MAX_AXIS + len ; i++) {
+            printf("%s = %d\n", pos[i].name, pos[i].data);
+        }
+        printf("MACHINE:\n");
+        for(i = 1 * MAX_AXIS ; i &#60; 1 * MAX_AXIS + len ; i++) {
+            printf("%s = %d\n", pos[i].name, pos[i].data);
+        }
+        printf("RELATIVE:\n");
+        for(i = 2 * MAX_AXIS ; i &#60; 2 * MAX_AXIS + len ; i++) {
+            printf("%s = %d\n", pos[i].name, pos[i].data);
+        }
+        printf("DISTANCE TO GO:\n");
+        for(i = 3 * MAX_AXIS ; i &#60; 3 * MAX_AXIS + len ; i++) {
+            printf("%s = %d\n", pos[i].name, pos[i].data);
+        }
+    }
+}
+</vc>
+<vcs><![CDATA[
+Absolute position, machine position, relative position, distance to go,
+of all axes are got and displayed.
+
+class example
+{
+    public void sample()
+    {
+        Focas1.ODBAXDT_data pos = new Focas1.ODBAXDT_data();
+        short[] types = { 0, 1, 2, 3 };
+        short len = Focas1.MAX_AXIS;
+
+        byte[] bytes = new byte[Marshal.SizeOf(pos) * 4 * Focas1.MAX_AXIS];
+        IntPtr ptrWork = Marshal.AllocCoTaskMem(Marshal.SizeOf(pos));
+
+        short ret = Focas1.cnc_rdaxisdata(h, 1, types, 4, ref len, bytes);
+        if (ret == Focas1.EW_OK)
+        {
+            int i;
+            Console.WriteLine("ABSOLUTE:");
+            for (i = 0 * Focas1.MAX_AXIS; i < 0 * Focas1.MAX_AXIS + len; i++)
+            {
+                Marshal.Copy(bytes, i * Marshal.SizeOf(pos), ptrWork, Marshal.SizeOf(pos));
+                Marshal.PtrToStructure(ptrWork, pos);
+                Console.WriteLine("{0} = {1}", pos.name, pos.data);
+            }
+            Console.WriteLine("MACHINE:");
+            for (i = 1 * Focas1.MAX_AXIS; i < 1 * Focas1.MAX_AXIS + len; i++)
+            {
+                Marshal.Copy(bytes, i * Marshal.SizeOf(pos), ptrWork, Marshal.SizeOf(pos));
+                Marshal.PtrToStructure(ptrWork, pos);
+                Console.WriteLine("{0} = {1}", pos.name, pos.data);
+            }
+            Console.WriteLine("RELATIVE:");
+            for (i = 2 * Focas1.MAX_AXIS; i < 2 * Focas1.MAX_AXIS + len; i++)
+            {
+                Marshal.Copy(bytes, i * Marshal.SizeOf(pos), ptrWork, Marshal.SizeOf(pos));
+                Marshal.PtrToStructure(ptrWork, pos);
+                Console.WriteLine("{0} = {1}", pos.name, pos.data);
+            }
+            Console.WriteLine("DISTANCE TO GO:");
+            for (i = 3 * Focas1.MAX_AXIS; i < 3 * Focas1.MAX_AXIS + len; i++)
+            {
+                Marshal.Copy(bytes, i * Marshal.SizeOf(pos), ptrWork, Marshal.SizeOf(pos));
+                Marshal.PtrToStructure(ptrWork, pos);
+                Console.WriteLine("{0} = {1}", pos.name, pos.data);
+            }
+        }
+        Marshal.FreeCoTaskMem(ptrWork);
+    }
+}]]></vcs>
+    </example>
+
+
+
+  </func>
+</root>

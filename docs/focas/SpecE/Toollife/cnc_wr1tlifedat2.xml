@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_wr1tlifedat2</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_wr1tlifedat2(unsigned short FlibHndl,IODBTD2 *tld1); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                Writes the various tool information of the specified tool group and tool number.
+                The following information can be modified.
+            </p>
+            <p>
+            <ul type="disc">
+                <li>Tool number.</li>
+                <li>Tool length compensation number.</li>
+                <li>Cutter radius compensation number.</li>
+                <li>Tool information<br/></li>
+                <table border="0" class="dd">
+                     <tr><td>1</td><td>:</td><td>This tool is registered(available).</td></tr>
+                     <tr><td>2</td><td>:</td><td>This tool has expired.</td></tr>
+                     <tr><td>3</td><td>:</td><td>This tool was skipped.</td></tr>
+                 </table>
+             </ul>
+             </p>
+             <p>This function is not available for T/TT system. (except 30i series, 0i-D/F)</p>
+             <span class="xis">
+             <p>Please use this function because the <a href="Toollife/cnc_wr1tlifedata.htm" target="_parent">cnc_wr1tlifedata</a>
+                function cannot be used when the option, "Tool life management B" function is used with Series 16i, 18i, 0i-F and 30i/31i/32i.</p>
+             </span>
+             <span class="ois">
+             <p>Please use this function because the <a href="Toollife/cnc_wr1tlifedata.htm" target="_parent">cnc_wr1tlifedata</a>
+                function cannot be used when the option, "Tool life management B" function is used.</p>
+             </span>
+<!--
+            <p>
+                <br/>
+                In case of calling this function with Series 30i, display calling and usual calling exist.<br/>
+                It is usual calling that cnc_wr1tlifedat2 function calls direct, however display calling has to proceed as follows.<br/>
+                <table border="0" class="dd">
+                    <tr><td>1</td><td>.</td><td>First, it calls <a href="Handle/cnc_setlibopt.htm" target="_parent">cnc_setlibopt</a> function which sets the option kind to TLIFE_OPTION and sets the value to 1.</td></tr>
+                    <tr><td>2</td><td>.</td><td>Next, it calls cnc_wr1tlifedat2 function.</td></tr>
+                    <tr><td>3</td><td>.</td><td>Last, it calls <a href="Handle/cnc_setlibopt.htm" target="_parent">cnc_setlibopt</a> function which sets the option kind to TLIFE_OPTION and sets the value to 0.</td></tr>
+                </table>
+                <br/>
+                In usual calling, if entire terms is as follows, return value becomes EW_REJECT(13).
+                <ul type="disc">
+                    <li>Automatic operation (OP=1)</li>
+                    <li>Target tool group number is currently used or next using group.</li>
+                    <li>TCO(6802#1)=0</li>
+                </ul>
+                <br/>
+                In usual calling, if entire terms is as follows, tool status cannot clear.
+                <ul type="disc">
+                    <li>Automatic operation (OP=1)</li>
+                    <li>Target tool group number is currently used or next using group.</li>
+                    <li>Target tool number is currently used.</li>
+                    <li>TCO(6802#1)=1</li>
+                    <li>E17(6802#2)=2</li>
+                </ul>
+                <br/>
+                In display calling, if terms is as follows, return value becomes EW_DATA(5).
+                <ul type="disc">
+                    <li>Automatic operation (OP=1) and TCI(6804#1)=0 for editing operation.</li>
+                    <li>Automatic operation (OP=1) and TCI(6804#1)=1 for editing operation and tool group number is currently used or next using group.</li>
+                </ul>
+            </p>
+-->
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>tld1</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Pointer to the IODBTD2 structure to set the various tool information.
+                            The IODBTD2 structure is as follows.
+<pre>
+typedef struct iodbtd2 {
+    short   datano;   /* Tool group number. */
+    short   dummy;    /* Not used. */
+    long    type;     /* Tool number(present). */
+    long    tool_num; /* Tool number(update). */
+    long    h_code;   /* Tool length compensation number. */
+    long    d_code;   /* Cutter radius compensation number. */
+    long    tool_inf; /* Tool information. */
+} IODBTD2 ;
+</pre>
+                            <dl>
+                                <dt>datano</dt>
+                                <dd>Specify the tool group number.</dd>
+                                <dt>type</dt>
+                                <dd>Specify the present tool number to be modified.</dd>
+                                <dt>tool_num</dt>
+                                <dd>Specify the new tool number.</dd>
+                                <dt>h_code</dt>
+                                <dd>Specify the tool length compensation number.</dd>
+                                <dt>d_code</dt>
+                                <dd>Specify the cutter radius compensation number.</dd>
+                                <dt>tool_inf</dt>
+                                <dd>Specify the tool information.</dd>
+                                <dd><table boder="0" class="dd">
+                                    <tr><td>1</td><td>:</td><td>This tool is registered(available).</td></tr>
+                                    <tr><td>2</td><td>:</td><td>This tool has expired.</td></tr>
+                                    <tr><td>3</td><td>:</td><td>This tool was skipped.</td></tr>
+                                </table></dd>
+                            </dl>
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+           <name>EW_NUMBER</name>
+            <content>
+                data number error<br/>
+                The specification of tool group number(datano) is wrong.
+            </content>
+        </item>
+        <item>
+           <name>EW_ATTRIB</name>
+            <content>
+                data attribute error<br/>
+                The specification of (present) tool number (type) is wrong.
+            </content>
+        </item>
+        <item>
+           <name>EW_DATA</name>
+            <content>
+                data error<br/>
+                In order to get more information for this err_no return value,
+                execute  <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.
+                The following details status will be set onto the member, err_no of ODBERR structure.
+                <table border="0">
+                    <tr><td>0</td><td>:</td><td>Completion status other than EW_DATA</td></tr>
+                    <tr><td>1</td><td>:</td><td>The new tool number(tool_num) error</td></tr>
+                    <tr><td>2</td><td>:</td><td>Tool length compensation number(h_code) error</td></tr>
+                    <tr><td>3</td><td>:</td><td>Cutter compensation number(d_code) error</td></tr>
+                    <tr><td>4</td><td>:</td><td>Tool information(tool_inf) error</td></tr>
+                </table>
+            </content>
+        </item>
+        <item class="xis">
+            <name>EW_NOOPT</name>
+            <content>
+                no option<br/>
+                <li>Series 15i, 16/18/21/120i, 0i, 30i/31i/32i</li>
+                    The tool life management function and the extended driver/library function are necessary.
+                <li>Series 16i/18i</li>
+                    The tool life management function, 
+                    the tool life management B function and the extended driver/library function are necessary.
+            </content>
+        </item>
+        <item class="ois">
+            <name>EW_NOOPT</name>
+            <content>
+                no option<br/>
+                    The tool life management function and the extended driver/library function are necessary.
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                CNC execution rejected<br/>
+                Cannot write as the executing, selecting or buffering group. <br/>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            <p>The extended driver/library function are necessary.</p>
+        </hssb>
+
+        <ethr>
+            <p>The Ethernet function and the extended driver/library function are necessary.</p>
+            <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F and 30i the required CNC option is as follows.</p>
+            <p>When Embedded Ethernet is used,</p>
+            <p><ul>above two optional functions are not required.</ul></p>
+            <p>When Ethernet board is used,</p>
+            <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>
+            <li>Series 15i, 16/18/21/21i, 0i, 30i/31i/32i</li>
+                The tool life management function.<br/>
+            <li>Series 16i/18i</li>
+                The tool life management function or the tool life management B function.
+        </need>
+        <type>
+            <li>Series 15i<br/>
+                <p>This function is influenced by 1024/512 pairs of the tool life management.</p>
+            </li>
+            <li>Series 16/18/21, 16i/18i/21i<br/>
+                <p>This function is influenced by 512(M Series) pairs of the tool life management.</p>
+            </li>
+            <li>Series 0i-F, 30i/31i/32i<br/>
+                <p>This function is influenced by additional pairs number of the tool life management.</p>
+                <table>
+                    <tr> <td>the tool life management</td>        <td>:</td><td>256 pairs of the tool life management on whole system, both of M and T Series</td></tr>
+                    <tr> <td>additional pairs number of the tool life management</td><td>:</td><td>1024 pairs of the tool life management on whole system, both of M and T Series</td></tr>
+                </table>
+            </li>
+        </type>
+
+        <is>
+        <hssb>
+            <p>The tool life management function and the extended driver/library function are necessary.</p>
+            <p>And this function is influenced by additional pairs number of the tool life management.</p>
+        <table>
+            <tr> <td>the tool life management</td><td>:</td>
+                 <td>256 pairs of the tool life management on whole system, both of M and T Series</td></tr>
+            <tr> <td>additional pairs number of the tool life management</td><td>:</td>
+                 <td>1024 pairs of the tool life management on whole system, both of M and T Series</td></tr>
+        </table>
+        </hssb>
+        </is>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul type="disc">
+                <li>Series 15i</li>
+                    7400#0,#1
+                <li>Series 16/18/21, 16i/18i/21i</li>
+                    6800#0,#1
+                <li>Series 30i</li>
+                    6800#0,#1<br/>
+                    6805#4 (Tool life management B)<br/>
+                    6813<br/>
+                <li>Series 0i-A/B/C</li>
+                    6800#0,#1<br/>
+                    8132#0=1 (must be set)
+                <li>Series 0i-D</li>
+                    6800#0,#1<br/>
+                    6813<br/>
+                    8132#0=1 (must be set)
+                <li>Series 0i-F</li>
+                    6800#0,#1<br/>
+                    6805#4 (Tool life management B)<br/>
+                    6813<br/>
+                    8132#0=1 (must be set)
+            </ul>
+        </type>
+    </parameter>
+    <!-- 30i(WinCE) -->
+    <is_parameter>
+        <type>
+            <table>
+                <tr><td> </td><td>6800#0,#1</td><td> </td><td>(influenced by setting)</td></tr>
+            </table>
+        </type>
+    </is_parameter>
+
+
+
+    <mode></mode>
+    <!-- 30i(WinCE) -->
+    <is_mode></is_mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_wr1tlifedata</name>
+            <file>Toollife/cnc_wr1tlifedata.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

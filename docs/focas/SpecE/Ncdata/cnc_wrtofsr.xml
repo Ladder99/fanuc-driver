@@ -1,0 +1,728 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_wrtofsr</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_wrtofsr(unsigned short FlibHndl, short length, IODBTO *tofsr);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Writes the tool offset value specified by "datano_s","datano_e","type".
+               The offset value must be stored in "IODBTO" with signed binary format.
+            </p>
+            <p>The unit of offset value is the same as "Write tool offset value(<a href="ncdata/cnc_wrtofs.htm" target="_parent">cnc_wrtofs</a>)". See the description of <a href="ncdata/cnc_wrtofs.htm" target="_parent">cnc_wrtofs</a> function.
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the data block length.</p>
+                    </content>
+                </item>
+                <item>
+                    <name>tofsr</name>
+                    <type>in</type>
+                    <content>
+                        <p>Pointer to the IODBTO structure including the tool offset value.  The IODBTO structure is as follows.</p>
+<pre>
+typedef struct iodbto {
+    short datano_s;             /* start offset number */
+    short type;                 /* offset type */
+    short datano_e;             /* end offset number */
+    union {
+        long    m_ofs[N];       /* M series individual */
+        long    m_ofs_a[N];     /* M series Memory A all */
+        long    m_ofs_b[2*N];   /* M series Memory B all */
+        long    m_ofs_c[4*N];   /* M series Memory C all */
+        struct  {
+            short   tip ;
+            long    data[1] ;
+        } m_ofs_at[N] ;         /* M series Memory A all with direction of imaginary tool nose */
+        struct  {
+            short   tip ;
+            long    data[2] ;
+        } m_ofs_bt[N] ;         /* M series Memory B all with direction of imaginary tool nose */
+        struct  {
+            short   tip ;
+            long    data[4] ;
+        } m_ofs_ct[N] ;         /* M series Memory C all with direction of imaginary tool nose */
+        short   t_tip[N];       /* T series individual,direction of imaginary tool nose */
+        long    t_ofs[N];       /* T series individual */
+        struct  {
+            short   tip;
+            long    data[4];
+        } t_ofs_a[N];           /* T series Memory A all */
+        struct {
+            short   tip;
+            long    data[8];
+        } t_ofs_b[N];           /* T series Memory B all */
+        long    t_ofs_2g[3*N];  /* T series Second geometry all */
+        long    m_ofs_cnr[10];  /* M-CornerR */
+        struct  {
+            long    data[2];
+        } t_ofs_ex[N];          /* T series 4th/5th Axis Offset Function all */
+    } u ;
+} IODBTO ;      /* N is number of the offset value. */
+</pre>
+                        <dl>
+                            <dt>datano_s</dt>
+                            <dd>Specify the start tool offset number.<br/>
+                                The available number of tool offset can be got by <a href="ncdata/cnc_rdtofsinfo.htm" target="_parent">cnc_rdtofsinfo</a> function.</dd>
+                        </dl>
+                        <dl>
+                            <dt>datano_e</dt>
+                            <dd>Specify the end tool offset number.</dd>
+                        </dl>
+                        <dl>
+                            <dt>type</dt>
+                            <dd>Specify the tool offset type.</dd>
+                        </dl>
+
+                        <p>The combinations of the value specified in "type", the data block length "length", the kind of offset value to be written and the member in  which the offset value must be stored are the same as "Read tool offset value(area specified)(<a href="ncdata/cnc_rdtofsr.htm" target="_parent">cnc_rdtofsr</a>)".  See the description of <a href="ncdata/cnc_rdtofsr.htm" target="_parent">cnc_rdtofsr</a> function.</p>
+
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>Data block length error<br/>Size of ODBTOFS structure(length) is wrong.</content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>Data number error<br/>Offset number(datano_s,datano_e) is wrong.</content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>Data attribute error<br/>Offset type(type) is wrong.</content>
+        </item>
+        <item>
+            <name>EW_ALARM</name>
+            <content>Data error<br/>Offset data is out of range of the wrong operation prevention functions.</content>
+        </item>
+        <item class="xis">
+            <name>EW_DATA</name>
+            <content>Data error (Series 15)<br/>Offset data(data,etc.) is out of range.</content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <type>
+            <li>Series 15</li>
+            <table>
+                <colgroup valign="top" width="30"/>
+                <colgroup valign="top" width="250"/>
+                <colgroup valign="top"/>
+                <tr>
+                    <td>M</td>
+                    <td>Tool offset extension</td>
+                    <td>(32)/99/200/499/999 sets</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Tool offset memory</td>
+                    <td>(A)/B/C</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="2">Extended tool offset value (number of offset is half of the above sets.)</td>
+                </tr>
+                <tr>
+                    <td>T</td>
+                    <td>Tool offset extension</td>
+                    <td>(32)/64/160 sets</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Tool offset memory</td>
+                    <td>(A)/B</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Cutter radius compensation</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="2">Extended tool offset value (number of offset is half of the above sets.)</td>
+                </tr>
+                <tr>
+                    <td>TT</td>
+                    <td>Tool offset extension</td>
+                    <td>(16)/32/80 sets</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Tool offset memory</td>
+                    <td>(A)/B</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Cutter radius compensation</td>
+                    <td></td>
+                </tr>
+            </table>
+            <br/>
+            <li>Series 15i</li>
+            <table>
+                <colgroup valign="top" width="30"/>
+                <colgroup valign="top" width="250"/>
+                <colgroup valign="top"/>
+                <tr>
+                    <td>M</td>
+                    <td>Tool offset extension</td>
+                    <td>(32)/99/200/499/999 sets</td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td>Tool offset memory</td>
+                    <td>(A)/B/C</td>
+                </tr>
+            </table>
+            <br/>
+            <li>Series 16/18/21, 16i/18i/21i</li>
+            <table>
+                <colgroup valign="top" width="30"/>
+                <colgroup valign="top" width="250"/>
+                <colgroup valign="top"/>
+                <tr>
+                    <td>M</td>
+                    <td>Tool offset extension</td>
+                    <td>(32)/64/99/200/400/499/999 sets</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Tool offset memory</td>
+                    <td>(A)/B/C</td>
+                </tr>
+                <tr>
+                    <td>T</td>
+                    <td>Tool offset extension</td>
+                    <td>(16)/32/64/99 sets</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Geometry/wear offset</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Cutter radius compensation</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Y axis offset</td>
+                    <td></td>
+                </tr>
+            </table>
+            <br/>
+
+            <li>Series 0i-A/B/C</li>
+            <table>
+                <colgroup valign="top" width="30"/>
+                <colgroup valign="top" width="250"/>
+                <colgroup valign="top"/>
+                <tr>
+                    <td>M</td>
+                    <td>Tool offset extension</td>
+                    <td>32/(400) sets</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Tool offset memory</td>
+                    <td>A/(C)</td>
+                </tr>
+                <tr>
+                    <td>T</td>
+                    <td>Tool offset extension</td>
+                    <td>32/(64) sets</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Geometry/wear offset</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Cutter radius compensation</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Y axis offset</td>
+                    <td></td>
+                </tr>
+            </table>
+            <br/>
+
+            <li>Series 0i-D/F</li>
+            <table>
+                <colgroup valign="top" width="30"/>
+                <colgroup valign="top" width="250"/>
+                <colgroup valign="top"/>
+                <tr>
+                    <td>M</td>
+                    <td>Tool offset extension</td>
+                    <td>32/(400) sets</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Tool offset memory</td>
+                    <td>A/(C)</td>
+                </tr>
+                <tr>
+                    <td>T</td>
+                    <td>Tool offset extension</td>
+                    <td>32/(99) sets</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Geometry/wear offset</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Cutter radius compensation</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Y axis offset</td>
+                    <td></td>
+                </tr>
+            </table>
+            <br/>
+
+            <li>Series 30i</li>
+            <table>
+                <colgroup valign="top" width="30"/>
+                <colgroup valign="top" width="250"/>
+                <colgroup valign="top"/>
+                <tr>
+                    <td>M</td>
+                    <td>Tool offset extension</td>
+                    <td>(32)/64/99/200/400/499/999/2000 sets</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Tool offset memory</td>
+                    <td>(A)/B/C</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Cutter radius/Nose R offset</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Tool offset for Milling and Turning function</td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td>T</td>
+                    <td>Tool offset extension</td>
+                    <td>(32)/64/99/200/400/499/999/2000 sets</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Geometry/wear offset</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Cutter radius/Nose R offset</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Y axis offset</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Second geometry offset</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>4th/5th Axis Offset Function</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>The changing active offset</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Tool offset for Milling and Turning function</td>
+                    <td></td>
+                </tr>
+            </table>
+            <br/>
+            <li>Power Motion i</li>
+            <table>
+                <colgroup valign="top" width="30"/>
+                <colgroup valign="top" width="250"/>
+                <colgroup valign="top"/>
+                <tr>
+                    <td> </td>
+                    <td>Tool offset extension</td>
+                    <td>(32)/99/200 sets</td>
+                </tr>
+            </table>
+            <br/>
+            <p>* ( ) : Basic</p>
+        </type>
+        <add></add>
+
+        <is>
+            <hssb>The extended driver/library function is necessary.</hssb>
+            <type>
+                <table>
+                    <colgroup valign="top" width="30"/>
+                    <colgroup valign="top" width="250"/>
+                    <colgroup valign="top"/>
+                    <tr>
+                        <td>M</td>
+                        <td>Tool offset extension</td>
+                        <td>(32)/64/99/200/400/499/999/2000 sets</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Tool offset memory</td>
+                        <td>(A)/B/C</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Cutter radius/Nose R offset</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Tool offset for Milling and Turning function</td>
+                        <td></td>
+                    </tr>
+
+                    <tr>
+                        <td>T</td>
+                        <td>Tool offset extension</td>
+                        <td>(32)/64/99/200/400/499/999/2000 sets</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Geometry/wear offset</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Cutter radius/Nose R offset</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Y axis offset</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Second geometry offset</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>The changing active offset</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Tool offset for Milling and Turning function</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>* ( ) : Basic</td>
+                    </tr>
+                </table>
+            </type>
+        </is>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <li>Series 15/15i</li>
+            <div class="dd">6002#0,#1, 6004#0, 6007#0</div><br/>
+            <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C</li>
+            <div class="dd">1004#0,#1</div><br/>
+            <li>Series 0i-D, PMi-A</li>
+            <div class="dd">5042#1,#0<br/>
+                            5009#5(M Series)<br/>
+                            5024</div><br/>
+            <li>Series 0i-F</li>
+            <div class="dd">5042#1,#0<br/>
+                            5009#5(M Series)<br/>
+                            5024<br/>
+                            8132#1=1 (must be set)</div><br/>
+            <li>Series 30i</li>
+            <div class="dd">5042#3,#2,#1,#0<br/>
+                            5009#5(M Series)<br/>
+                            5024</div><br/>
+            <li>Power Mate i</li>
+            <div class="dd">1004#0(In case of Power Mate i-H)<br/>
+                            1004#1(In case of Power Mate i-D)</div><br/>
+        </type>
+        <add></add>
+    </parameter>
+
+    <is_parameter>
+        <type>
+            <ul>
+                5042#3,#2,#1,#0<br/>
+                5009#5(M Series)<br/>
+                5024<br/>
+            </ul>
+        </type>
+    </is_parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>E</fs16i>
+            <fs18i>E</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+        <add><b></b></add>
+
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdtofs</name>
+            <file>ncdata/cnc_rdtofs.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrtofs</name>
+            <file>ncdata/cnc_wrtofs.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdtofsr</name>
+            <file>ncdata/cnc_rdtofsr.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdtofsinfo</name>
+            <file>ncdata/cnc_rdtofsinfo.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+<vc>
+The following program writes all tool offset values of Machining-Series
+(Memory A/64 sets).
+
+#include "fwlib32.h"
+#define MAXTOOL 64
+
+/* offset is array of new offset value. */
+short example( long *offset )
+{
+    IODBTO *tofsr ;
+    short ret ;
+    tofsr = (IODBTO *)malloc( 8+4*MAXTOOL ) ;
+    tofsr-&#62;datano_s = 1 ;
+    tofsr-&#62;datano_e = MAXTOOL ;
+    tofsr-&#62;type = -1 ;
+    memcpy( &#38;(tofsr-&#62;u.m_ofs_a[0]), offset, 4*MAXTOOL ) ;
+    ret = cnc_wrtofsr( h, 8+4*MAXTOOL, tofsr ) ;
+    free( tofsr ) ;
+    return ( ret ) ;
+}
+</vc>
+<vcs><![CDATA[
+The following program writes all tool offset values of Machining-Series
+(Memory A/64 sets).
+
+class example
+{
+    public const short MAXTOOL = 64;
+    
+    /* offset is array of new offset value. */
+    public short sample(int[] offset)
+    {
+        Focas1.IODBTO_1_1 fsrHead = new Focas1.IODBTO_1_1();
+        short ret;
+
+        byte[] bytes = new byte[8 + 4 * MAXTOOL];
+        IntPtr ptrHead = Marshal.AllocCoTaskMem(Marshal.SizeOf(fsrHead));
+
+        fsrHead.datano_s = 1;
+        fsrHead.datano_e = MAXTOOL;
+        fsrHead.type = -1;
+        Marshal.StructureToPtr(fsrHead, ptrHead, false);
+        Marshal.Copy(ptrHead, bytes, 0, 8);
+        Buffer.BlockCopy(offset, 0, bytes, 8, 4 * MAXTOOL);
+        ret = Focas1.cnc_wrtofsr(h, 8 + 4 * MAXTOOL, bytes);
+        Marshal.FreeCoTaskMem(ptrHead);
+        return (ret);
+    }
+}]]></vcs>
+    </example>
+
+
+
+  </func>
+</root>

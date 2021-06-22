@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+    <func>
+
+
+        <title>cnc_sysinfo_ex</title>
+
+
+
+        <declare>
+            <vc>
+                <include>#include "fwlib32.h"</include>
+                <prottype>FWLIBAPI short WINAPI cnc_sysinfo_ex(unsigned short FlibHndl, ODBSYSEX *sys); </prottype>
+            </vc>
+        </declare>
+
+
+
+        <doc>
+            <cmn>
+                <p>
+                    Reads system information such as distinction of Machining(M) or Turning(T), number of path and number of the controlled axes.
+                </p>
+                <p>
+                    Use this function to confirm compatibility of CNC's system software and PMC's software or to get the number of controllable axes before reading axis coordinate data such as absolute, machine position.
+                </p>
+            </cmn>
+        </doc>
+
+
+
+        <argument>
+            <common>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                             Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                           </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>sys</name>
+                        <type>out</type>
+                        <content>
+                            <p/>Pointer to the ODBSYSEX structure including CNC system information.
+                            <p/>The ODBSYSEX structure is as follows.
+<pre>
+typedef struct odbsysex {
+    short max_axis;       /* maximum controlled axes        */
+    short max_spdl;       /* maximum spundle number         */
+    short max_path;       /* maximum path number            */
+    short max_mchn;       /* maximum machining group number */
+    short ctrl_axis;      /* controlled axes number         */
+    short ctrl_srvo;      /* servo axis number              */
+    short ctrl_spdl;      /* spindle number                 */
+    short ctrl_path;      /* path number                    */
+    short ctrl_mchn;      /* number of control machines     */
+    short reserved[3];
+
+    struct {
+        short system;     /* kind of system             */
+        short group;      /* kind of system group       */
+        short attrib;     /* path attribute             */
+        short ctrl_axis;  /* control axes per path      */
+        short ctrl_srvo;  /* servo axis number per path */
+        short ctrl_spdl;  /* spindle number per path    */
+        short mchn_no;    /* machine group number       */
+        short reserved;
+    } path[MAX_PATH];
+} ODBSYSEX;
+</pre>
+                            <dl>
+                                <dt>max_axis</dt>
+                                    <dd>Maximum controlled axes number per all CNC system.</dd>
+                                <dt>max_spdl</dt>
+                                    <dd>Maximum spindle number per all CNC system.</dd>
+                                <dt>max_path</dt>
+                                    <dd>Maximum path number per all CNC system.</dd>
+                                <dt>max_mchn</dt>
+                                    <dd>Maximum machining group number per all CNC system.</dd>
+                                <br/>
+                                <dt>ctrl_axis</dt>
+                                    <dd>Controlled axes number per all CNC system.</dd>
+                                <dt>ctrl_srvo</dt>
+                                    <dd>Servo axis number per all CNC system.<br/>
+                                        * This data is same as ctrl_axis.</dd>
+                                <dt>ctrl_spdl</dt>
+                                    <dd>Spindle number per all CNC system.</dd>
+                                <dt>ctrl_path</dt>
+                                    <dd>Path number.</dd>
+                                <dt>ctrl_mchn</dt>
+                                    <dd>Machine group number.</dd>
+
+                                <dt>path</dt>
+                                    <dd>Information in each system is stored in the array of number of max_path.</dd>
+                                    <dl>
+                                        <dt>system</dt>
+                                        <dd>Kind of system</dd>
+                                        <dd><table>
+                                            <tr> <td>0x0000</td> <td>:</td> <td>None              </td> </tr>
+                                            <tr> <td>0x204D</td> <td>:</td> <td>(= ' M') Machining</td> </tr>
+                                            <tr> <td>0x2054</td> <td>:</td> <td>(= ' T') Turning  </td> </tr>
+<!--                                        <tr> <td>0x2050</td> <td>:</td> <td>(= ' P') Punch    </td> </tr> -->
+<!--                                        <tr> <td>0x204C</td> <td>:</td> <td>(= ' L') Laser    </td> </tr> -->
+                                            <tr> <td>0x2057</td> <td>:</td> <td>(= ' W') Wirecut  </td> </tr>
+                                        </table></dd>
+                                        <dt>group</dt>
+                                        <dd>Kind of system group</dd>
+                                        <dd><table>
+                                            <tr> <td>0</td> <td>:</td> <td>None              </td> </tr>
+                                            <tr> <td>1</td> <td>:</td> <td>Group of machining</td> </tr>
+                                            <tr> <td>2</td> <td>:</td> <td>Group of turning  </td> </tr>
+                                        </table></dd>
+                                        <dt>attrib</dt>
+                                        <dd>Path attribute</dd>
+                                        <dd><table>
+                                            <tr> <td>0</td> <td>:</td> <td>CNC   </td> </tr>
+                                            <tr> <td>1</td> <td>:</td> <td>Loader</td> </tr>
+                                        </table></dd>
+                                        <dt>ctrl_axis</dt>
+                                        <dd>Control axes per path</dd>
+                                        <dt>ctrl_srvo</dt>
+                                          <dd>Servo axis number per path<br/>
+                                              * This data is same as ctrl_axis.</dd>
+                                        <dt>ctrl_spdl</dt>
+                                          <dd>Spindle number per path</dd>
+                                        <dt>mchn_no</dt>
+                                          <dd>Machine group number</dd>
+                                     </dl>
+                            </dl>
+                        </content>
+                    </item>
+                </vc>
+            </common>
+        </argument>
+
+
+
+        <errcode>
+            <add></add>
+        </errcode>
+
+
+
+        <option>
+            <hssb>In this function, CNC option is unnecessary.</hssb>
+            <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+                  <p>However, in case of Series 0i-D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+                  <p>When Embedded Ethernet is used,</p>
+                  <p><ul>above two optional functions are not required.</ul></p>
+                  <p>When Ethernet board is used,</p>
+                  <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        </option>
+
+
+
+        <parameter>
+        </parameter>
+        <is_parameter>
+        </is_parameter>
+
+
+
+        <mode></mode>
+        <is_mode></is_mode>
+
+
+
+        <support>
+            <m>
+                <fs0ia>X</fs0ia>
+                <fs0ib>X</fs0ib>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs15>X</fs15>
+                <fs15i>X</fs15i>
+                <fs16>X</fs16>
+                <fs18>X</fs18>
+                <fs21>X</fs21>
+                <fs16ia>X</fs16ia>
+                <fs18ia>X</fs18ia>
+                <fs21ia>X</fs21ia>
+                <fs16ib>X</fs16ib>
+                <fs18ib>X</fs18ib>
+                <fs21ib>X</fs21ib>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </m>
+            <t>
+                <fs0ia>X</fs0ia>
+                <fs0ib>X</fs0ib>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs15>X</fs15>
+                <fs15i>X</fs15i>
+                <fs16>X</fs16>
+                <fs18>X</fs18>
+                <fs21>X</fs21>
+                <fs16ia>X</fs16ia>
+                <fs18ia>X</fs18ia>
+                <fs21ia>X</fs21ia>
+                <fs16ib>X</fs16ib>
+                <fs18ib>X</fs18ib>
+                <fs21ib>X</fs21ib>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </t>
+            <lc>
+                <fs0ia>X</fs0ia>
+                <fs0ib>X</fs0ib>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs15>X</fs15>
+                <fs15i>X</fs15i>
+                <fs16>X</fs16>
+                <fs18>X</fs18>
+                <fs21>X</fs21>
+                <fs16ia>X</fs16ia>
+                <fs18ia>X</fs18ia>
+                <fs21ia>X</fs21ia>
+                <fs16ib>X</fs16ib>
+                <fs18ib>X</fs18ib>
+                <fs21ib>X</fs21ib>
+                <fs30ia>X</fs30ia>
+                <fs30ib>X</fs30ib>
+            </lc>
+            <p>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs16i>X</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>O</fs30ib>
+            </p>
+            <l>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>X</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>O</fs30ib>
+            </l>
+            <w>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>X</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </w>
+            <pw>
+                <d>X</d>
+                <h>X</h>
+                <a>O</a>
+            </pw>
+            <!-- 30i(WinCE) -->
+            <is>
+                <m>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </m>
+                <t>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </t>
+                <w>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </w>
+            </is>
+        </support>
+
+
+
+        <reference>
+            <item>
+                <name>cnc_sysinfo</name>
+                <file>misc/cnc_sysinfo.htm</file>
+            </item>
+        </reference>
+
+
+
+    </func>
+</root>

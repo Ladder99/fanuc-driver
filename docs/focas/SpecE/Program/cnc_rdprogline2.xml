@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_rdprogline2</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdprogline2(unsigned short FlibHndl, long prog_no, unsigned long line_no, char *prog_data, unsigned long *line_len, unsigned long *data_len);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Reads the NC program by line basis.</p>
+            <p>This function cannot be used to MDI program.</p><br/>
+            <p>This function tries to read the amount of lines which is specified by (*line_len), but when the actual read character size reaches to the number of (*data_len) in this function, the reading process is aborted.<br/>
+               And if the end character of the last line (EOB('\n')) is not finished to read, the last line is not counted as the read line count.
+            </p>
+            <blockquote>Example)<br/>
+                When you read from 1st to 3rd line of the following program, you have to specify more than 33 as the read character size. If you specify 30 as the character size, the read line count would be 2 because the 3rd line had not been read completely. Then 30 characters would be set in the specified buffer.
+<pre>
+O1234 ;
+N001 G01 X0. F100 ;
+N002 X20. ;
+N003 X50. ;
+N004 X80. ;
+N005 M30 ;
+%
+</pre>
+            </blockquote>
+            <p>The conditions of the function about CNC mode and the kind of program are as follows.<br/>
+               <table border="1" class="dd">
+                    <tr><td></td><td>MDI mode</td><td>Other mode</td></tr>
+                    <tr><td>MDI program</td>            <td>(*1)</td><td>&#215;(*2)</td></tr>
+                    <tr><td>Selected program</td>       <td>O</td><td>O</td></tr>
+                    <tr><td>Not selected program</td>   <td>O</td><td>O</td></tr>
+               </table>
+               <span class="dd">O: Available</span><br/>
+               <span class="dd">(*1) 16i:The return code is EW_DATA and the detail status is 1. 30i,0i-D/F,PMi-A:Available</span><br/>
+               <span class="dd">(*2) The return code is EW_MODE</span>
+            </p>
+            <p>This function works normally if OP signal is 1 but STL signal is 0
+               (for example, feed hold stopping, single block stopping, etc).
+            </p>
+            <p>When you use this function for the MDI program or the selected program in the following situations, the execution pointer goes to the top of the specified line by line_no.
+            <p>In this function, the execution pointer never moves like <a href="Program/cnc_rdprogline.htm" target="_parent">cnc_rdprogline</a>.</p>
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the library handle.
+                           See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>prog_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the program number to read.</p>
+                    </content>
+                </item>
+                <item>
+                    <name>line_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the line number to read from.<br/>
+                           When you read from the first line of a program, you have tospecify 0.<br/>
+                           When you specify other than the existing line number, you get EW_DATA error as the return code.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>prog_data</name>
+                    <type>out</type>
+                    <content>
+                        <p>Specify the address to the buffer to read the program text.</p>
+                    </content>
+                </item>
+                <item>
+                    <name>line_len</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>Specify the amount of lines to read.<br/>
+                           After calling this function, the actual read line count is set.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>data_len</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>Specify the size of character to read.<br/>
+                           After calling this function, the actual read character size is set.
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <errcode>
+        <item class="xis">
+            <name>EW_BUSY</name>
+            <content>
+                Busy<br/>
+                <ul style="margin-top:0;margin-bottom:0">
+                    <li>except 30i/31i/32i, 0i-D/F, PMi-A</li>
+                    Some alarm has existed or CNC is searching the program text right now.
+                    <li>30i/31i/32i, 0i-D/F, PMi-A</li>
+                    CNC is searching the program text right now.
+                </ul>
+            </content>
+        </item>
+        <item class="ois">
+            <name>EW_BUSY</name>
+            <content>
+                Busy<br/>
+                CNC is searching the program text right now.
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                Data error<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                The following detail status will be set onto the member, err_no of ODBERR structure.
+                <table>
+                    <tr><td>1</td><td>:</td><td>The program number(prog_no) error</td></tr>
+                    <tr><td>2</td><td>:</td><td>The start line number(line_no) error</td></tr>
+                    <tr><td>3</td><td>:</td><td>The amount of lines(*line_len) error</td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The extended driver/library function is necessary.
+            </content>
+        </item>
+        <item>
+            <name>EW_MODE</name>
+            <content>
+                CNC mode error<br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>
+                Write protection in CNC side<br/>
+                CNC parameter is a state of write-protection (O8000-/O9000- protection, encoding). 
+            </content>
+        </item>
+        <item class="xis">
+            <name>EW_REJECT</name>
+            <content>
+                 CNC execution denied<br/>
+                <ul style="margin-top:0;margin-bottom:0">
+                    <li>except 30i/31i/32i, 0i-D/F, PMi-A</li>
+                    MDI edit or Background edit processing in CNC side. 
+                    <li>30i/31i/32i, 0i-D/F, PMi-A</li>
+                    CNC is in the emergency stop.
+                </ul>
+            </content>
+        </item>
+        <item class="ois">
+            <name>EW_REJECT</name>
+            <content>
+                 CNC execution denied<br/>
+                 CNC is in the emergency stop.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            <p>The extended driver/library function is necessary.</p>
+        </hssb>
+    </option>
+
+
+
+    <parameter></parameter>
+
+
+
+    <mode>
+        <cmn>
+            See the above description.
+        </cmn>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>H</a>
+        </pw>
+        
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdprogline</name>
+            <file>Program/cnc_rdprogline.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrprogline</name>
+            <file>Program/cnc_wrprogline.htm</file>
+        </item>
+        <item>
+            <name>cnc_delprogline</name>
+            <file>Program/cnc_delprogline.htm</file>
+        </item>
+        <item>
+            <name>cnc_searchword</name>
+            <file>Program/cnc_searchword.htm</file>
+        </item>
+        <item>
+            <name>cnc_searchresult</name>
+            <file>Program/cnc_searchresult.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

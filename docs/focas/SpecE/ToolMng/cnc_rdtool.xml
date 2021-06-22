@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdtool</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdtool(unsigned short FlibHndl,short s_number, short *data_num,IODBTLMNG *tool); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn><p>
+                Reads the Tool management data which is specified by the start data number 
+                and the number of the data from the Tool management data table.
+             </p>
+             <p>
+                Reading by this function is done sequentially one by one.
+                Once the error occurs, succeeding reading is aborted.
+             </p>
+             <p class="xis">
+                Note) This function is only for "Fast Ethernet board" and "Embedded Ethernet". So, this function is not supported at "Ethernet board".
+             </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_number</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                           Specify the start data number for reading from the Tool management data table.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>data_num</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                            Specify the pointer to the number of the reading data for reading from the Tool management data table.
+                            Set the number of the reading data(1...) to the pointed data before calling this function.
+                        </p>
+                        <p>
+                            This function reads the number of Tool management data specified by "*data_num",
+                            from the index specified by "s_number".
+                            After the execution of this function, *data_num holds the real read number of data.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>tool</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Specify the pointer to IODBTLMNG structure including the Tool management data to be read.  
+                            As for the IODBTLMNG structure, refer to the explanation of arguments of 
+                            <a href="ToolMng/cnc_regtool.htm" target="_parent">cnc_regtool</a> function.
+                        </p>
+                    </content>
+                </item>
+           </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_BUSY</name>
+            <content>
+                Other users(such as PMC) have accessed to the same data window.
+                Try this function again.
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                The start data number for the Tool management data table(s_number) is invalid.
+                Or, valid number of the data on the Tool management data table exceeds.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The Tool management function 64 pairs, or the Tool management function 240 pairs, or the Tool management function 1000 pairs.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            <p>The extended driver/library function are necessary.</p>
+        </hssb>
+
+        <ethr>
+            <p>The Ethernet function and the extended driver/library function are necessary.</p>
+            <p>However, in case of Series 16i/18i/21i-B, 0i-F and 30i, the required CNC option is as follows.</p>
+            <p>When Embedded Ethernet is used,</p>
+            <p><ul>above two optional functions are not required.</ul></p>
+            <p>When Ethernet board is used,</p>
+            <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>
+            The Tool management function 64 pairs, or the Tool management function 240 pairs, or the Tool management function 1000 pairs.
+        </need>
+        <type>
+            <p>
+            This function is influenced by the additional customized data on tool management function option(5-20).<br/>
+            </p>
+        </type>
+
+        <is>
+            <hssb>
+                <p>The extended driver/library function are necessary.</p>
+            </hssb>
+            <need>
+                The Tool management function 64 pairs, or the Tool management function 240 pairs, or the Tool management function 1000 pairs.
+            </need>
+            <type>
+                This function is influenced by the additional customized data on tool management function option(5-20).<br/>
+            </type>
+        </is>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul type="disc">
+                <dl>
+                    13220 (Valid number of Tool management data)<br/>
+                    13222 (Number of data for the 1st magazine)<br/>
+                    13223 (Starting pot number for the 1st magazine)<br/>
+                    13227 (Number of data for the 2nd magazine)<br/>
+                    13228 (Starting pot number for the 2nd magazine)<br/>
+                    13232 (Number of data for the 3rd magazine)<br/>
+                    13233 (Starting pot number for the 3rd magazine)<br/>
+                    13237 (Number of data for the 4th magazine)<br/>
+                    13238 (Starting pot number for the 4th magazine)<br/>
+                </dl>
+            </ul>
+        </type>
+    </parameter>
+
+    <is_parameter>
+        <type>
+            <ul>
+                13220 (valid number of Tool management data)
+            </ul>
+        </type>
+    </is_parameter>
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_regtool</name>
+            <file>ToolMng/cnc_regtool.htm</file>
+        </item>
+        <item>
+            <name>cnc_regtool_f2</name>
+            <file>ToolMng/cnc_regtool_f2.htm</file>
+        </item>
+        <item>
+            <name>cnc_deltool</name>
+            <file>ToolMng/cnc_deltool.htm</file>
+        </item>
+<!--
+        <item>
+            <name>cnc_rdtool</name>
+            <file>ToolMng/cnc_rdtool.htm</file>
+        </item>
+-->
+        <item>
+            <name>cnc_rdtool_f2</name>
+            <file>ToolMng/cnc_rdtool_f2.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrtool</name>
+            <file>ToolMng/cnc_wrtool.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrtool_f2</name>
+            <file>ToolMng/cnc_wrtool_f2.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrtool2</name>
+            <file>ToolMng/cnc_wrtool2.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

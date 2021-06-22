@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_accdecdly</title>
+
+
+    <declare>
+
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_accdecdly(unsigned short FlibHndl, short axis, short length, ODBAXIS *accdecdly);</prottype>
+      </vc>
+
+    </declare>
+
+
+
+
+
+    <doc>
+        <cmn>
+            <p>Reads the acceleration/deceleration delay amount of axis specified with "axis". The acceleration/deceleration delay amount is stored in "data[0]" of "ODBAXIS".</p>
+
+            <p>All axes can be read at a time by specifying ALL_AXES for "axis".
+            In that case, an acceleration/deceleration delay amount of each axis is
+            stored in the data array of ODBAXIS.</p>
+
+            <p>The decimal point position of the acceleration/deceleration delay
+            amount can be acquired in the <a href="misc/cnc_getfigure.htm" target="_parent">cnc_getfigure</a> function.</p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>axis</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify axis number to read.</p>
+                        <table class="dd">
+                            <colgroup align="left" valign="top">
+                                <tr>
+                                    <td>ALL_AXES</td>
+                                    <td>:</td>
+                                    <td>for all axes(ALL_AXES : -1)</td>
+                                </tr>
+                                <tr>
+                                    <td>1,..,m</td>
+                                    <td>:</td>
+                                    <td>for each axis(m : number of controlled axis)</td>
+                                </tr>
+                            </colgroup>
+                        </table>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the length of the data block(size of ODBAXIS structure)</p>
+                        <p><b>ODBAXIS</b></p>
+                        <table>
+                            <colgroup align="left" valign="top">
+                            <colgroup align="left" valign="top">
+                            <colgroup align="left" valign="top">
+                            <tr>
+                                <th>for each axis</th>
+                                <th>for all axes</th>
+                            </tr>
+                            <tr>
+                                <td valign="top"><img src="position/rpos.gif"/></td>
+                                <td valign="top"><img src="position/rposa.gif"/></td>
+                            </tr>
+                            </colgroup>
+                            </colgroup>
+                            </colgroup>
+                        </table>
+                        <ul>
+                            <li>Series 15/15i, 30i, 0i-D/F, PMi-A</li>
+                            <p>
+                                n = Maximum controlled axes<br/>
+                                (The data for current controlled axes are valid)
+                            </p>
+                        </ul>
+                        <ul>
+                            <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i</li><p/>
+                            <p>
+                                n = Current controlled axes
+                            </p>
+                        </ul>
+                    </content>
+                </item>
+                <item>
+                    <name>accdecdly</name>
+                    <type>out</type>
+                    <content>
+                        <p>Pointer to the ODBAXIS structure including the acceleration/deceleration delay amount of the controlled axes. The ODBAXIS structure is as follows.</p>
+<pre>
+typedef struct odbaxis {
+    short   dummy ;           /* Not used. */
+    short   type ;            /* Axis number. */
+    long    data[MAX_AXIS] ;  /* Acceleration/deceleration delay amount of controlled axis. */
+} ODBAXIS ;          /* MAX_AXIS is the maximum controlled axes. */
+</pre>
+                    </content>
+                </item>
+            </vc>
+
+        </common>
+
+        <!-- is Argument Start -->
+        <is>
+            <hssb>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>axis</name>
+                        <type>in</type>
+                        <content>
+                            <p>Specify axis number to read.</p>
+                            <table class="dd">
+                                <colgroup align="left" valign="top">
+                                    <tr>
+                                        <td>ALL_AXES</td>
+                                        <td>:</td>
+                                        <td>for all axes(ALL_AXES : -1)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1,..,m</td>
+                                        <td>:</td>
+                                        <td>for each axis(m : number of controlled axis)</td>
+                                    </tr>
+                                </colgroup>
+                            </table>
+                        </content>
+                    </item>
+                    <item>
+                        <name>length</name>
+                        <type>in</type>
+                        <content>
+                            <p>Specify the length of the data block(size of ODBAXIS structure)</p>
+                            <p><b>ODBAXIS</b></p>
+                            <table>
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                <tr>
+                                    <th>for each axis</th>
+                                    <th>for all axes</th>
+                                </tr>
+                                <tr>
+                                    <td valign="top"><img src="position/rpos.gif"/></td>
+                                    <td valign="top"><img src="position/rposa.gif"/></td>
+                                </tr>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+                            n = Maximum controlled axes (The data for current controlled axes are valid.)
+                    </content>
+                    </item>
+                    <item>
+                        <name>accdecdly</name>
+                        <type>out</type>
+                        <content>
+                            <p>Pointer to the ODBAXIS structure including the acceleration/deceleration delay amount of the controlled axes. The ODBAXIS structure is as follows.</p>
+<pre>
+typedef struct odbaxis {
+    short   dummy ;           /* Not used. */
+    short   type ;            /* Axis number. */
+    long    data[MAX_AXIS] ;  /* Acceleration/deceleration delay amount of controlled axis. */
+} ODBAXIS ;          /* MAX_AXIS is the maximum controlled axes. */
+</pre>
+                        </content>
+                    </item>
+
+                </vc>
+            </hssb>
+        </is>
+        <!-- is Argument End -->
+
+    </argument>
+
+
+
+
+
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                data block length error<br/>
+                Size of ODBAXIS structure(length) is illegal.
+            </content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>data attribute error<br/>The specification of axis number (axis) is improper.</content>
+        </item>
+        <add></add>
+        <is>
+            <item>
+                <name>EW_LENGTH</name>
+                <content>
+                    data block length error<br/>
+                    Size of ODBAXIS structure(length) is illegal.
+                </content>
+            </item>
+            <item>
+                <name>EW_ATTRIB</name>
+                <content>data attribute error<br/>The specification of axis number (axis) is improper.</content>
+            </item>
+    </is>
+
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <is>
+            <hssb>The extended driver/library function is necessary.</hssb>
+        </is>
+    </option>
+
+
+
+    <parameter>
+    </parameter>
+    <is_parameter></is_parameter>
+
+
+
+    <mode>
+    </mode>
+    <is_mode></is_mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+        <add><b></b></add>
+        <is>
+            <!-- M -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+    </reference>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,630 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_rddynamic</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rddynamic( unsigned short FlibHndl, short axis, short length, ODBDY *rddynamic );</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Read various data which changes at CNC operation at a time. The data which can be read is as follows.</p>
+
+            <table border="1">
+                <tr>
+                    <th>Data</th>
+                    <th>Function used for reading individually</th>
+                </tr>
+                <tr>
+                    <td>Alarm status</td>
+                    <td><a href="misc/cnc_alarm.htm" target="_parent">cnc_alarm</a></td>
+                </tr>
+                <tr>
+                    <td>Program number in executing</td>
+                    <td><a href="program/cnc_rdprgnum.htm" target="_parent">cnc_rdprgnum</a></td>
+                </tr>
+                <tr>
+                    <td>Program number of the main program </td>
+                    <td><a href="program/cnc_rdprgnum.htm" target="_parent">cnc_rdprgnum</a></td>
+                </tr>
+                <tr>
+                    <td>Sequence number </td>
+                    <td><a href="program/cnc_rdseqnum.htm" target="_parent">cnc_rdseqnum</a></td>
+                </tr>
+                <tr>
+                    <td>Actual feed rate</td>
+                    <td><a href="position/cnc_actf.htm" target="_parent">cnc_actf</a></td>
+                </tr>
+                <tr>
+                    <td>Actual spindle speed </td>
+                    <td><a href="position/cnc_acts.htm" target="_parent">cnc_acts</a></td>
+                </tr>
+                <tr>
+                    <td>Absolute position data of controlled axis (2)</td>
+                    <td><a href="position/cnc_absolute2.htm" target="_parent">cnc_absolute2</a></td>
+                </tr>
+                <tr>
+                    <td>Machine position data of controlled axis </td>
+                    <td><a href="position/cnc_machine.htm" target="_parent">cnc_machine</a></td>
+                </tr>
+                <tr>
+                    <td>Relative position data of controlled axis (2)</td>
+                    <td><a href="position/cnc_relative2.htm" target="_parent">cnc_relative2</a></td>
+                </tr>
+                <tr>
+                    <td>Amount of distance to go of controlled axis </td>
+                    <td><a href="position/cnc_distance.htm" target="_parent">cnc_distance</a></td>
+                </tr>
+            </table>
+
+            <p>The formats of each data are same as "Function used for reading individually". Refer to each function for details.</p>
+
+                The data concerning the axis is read by specified with axis.
+          Each data is stored in oaxis structure in ODBDY.<br/><br/>
+  
+          All axes can be read at a time by specifying ALL_AXES for "axis".
+          In that case, various data concerning the axis is stored in each array
+          of faxis inside of ODBDY.<br/><br/>
+  
+          The decimal point position of the various data concerning the axis
+          can be acquired in the <a href="misc/cnc_getfigure.htm" target="_parent">cnc_getfigure</a> function.
+            <br/>
+
+            <span class="xis">
+            <p>
+                <li>Series 15i</li>
+                <ul>This function cannot read all alarm status.<br/>Please use <a href="position/cnc_rddynamic2.htm" target="_parent">cnc_rddynamic2</a> function in order to read all alarm status.</ul>
+                <ul>
+            it is
+            necessary to switch API to the one for the program number 8 digits.
+            See "<a href="general.htm#O8">Program number 8 digits</a>" for details.</ul>
+            </p>
+
+            <p>
+                <li>Series 16/18/16i/18i, Power Mate i</li>
+                <ul>it is possible to use this function for
+            the program number 8 digits, however it is necessary to switch API to
+            the one for the program number 8 digits. See "<a href="general.htm#O8">Program number 8 digits</a>" for details.</ul>
+            </p>
+
+            <p>
+                <li>Series 16i/18i-W</li>
+                <ul>the data corresponding to "Actual spindle
+            speed", "Amount of distance to go of controlled axis" cannot be got.</ul>
+            </p>
+            </span>
+
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <hssb>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>axis</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify axis number to read.
+                            <table class="dd">
+                                <tr>
+                                    <td>ALL_AXES</td>
+                                    <td>:</td>
+                                    <td>for all axes(ALL_AXES : -1)</td>
+                                </tr>
+                                <tr>
+                                    <td>1,..,m</td>
+                                    <td>:</td>
+                                    <td>for each axis(m : number of controlled axis)</td>
+                                </tr>
+                            </table>
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the length of the data block(size of ODBDY structure)</p>
+                        <p><b>ODBDY</b>
+                            <table>
+                            <colgroup align="left" valign="top"/>
+                            <colgroup align="left" valign="top"/>
+                                <tr>
+                                    <th>for each axis</th>
+                                    <th></th>
+                                </tr>
+                                <tr>
+                                    <td><b>for program number 4 digits</b></td>
+                                    <td><b>for program number 8 digits</b></td>
+                                </tr>
+                                <tr>
+                                    <td valign="top"><img src="position/dyn.gif"/></td>
+                                    <td valign="top"><img src="position/dyn8.gif"/></td>
+                                </tr>
+                                <tr>
+                                    <th>for all axes</th>
+                                    <th></th>
+                                </tr>
+                                <tr>
+                                    <td><b>for program number 4 digits</b></td>
+                                    <td><b>for program number 8 digits</b></td>
+                                </tr>
+                                <tr>
+                                    <td valign="top"><img src="position/dyna.gif"/></td>
+                                    <td valign="top"><img src="position/dyna8.gif"/></td>
+                                </tr>
+                            </table>
+                        </p>
+                        <p>n = Maximum controlled axes (The data for current controlled axes are valid)</p>
+                    </content>
+                </item>
+                <item>
+                    <name>rddynamic</name>
+                    <type>out</type>
+                    <content>
+                        <p>Pointer to the ODBDY structure including various data. The ODBDY structure is as follows.</p>
+<pre>
+For program number 4 digits
+
+typedef struct odbdy {
+        short  dummy ;     /* not used                */
+        short  axis ;      /* axis number             */
+        short  alarm ;     /* alarm status            */
+        short  prgnum ;    /* current program number  */
+        short  prgmnum ;   /* main program number     */
+        long   seqnum ;    /* current sequence number */
+        long   actf ;      /* actual feedrate         */
+        long   acts ;      /* actual spindle speed    */
+        union {
+            struct {
+                long  absolute[MAX_AXIS] ; /* absolute */
+                long  machine[MAX_AXIS] ;  /* machine  */
+                long  relative[MAX_AXIS] ; /* relative */
+                long  distance[MAX_AXIS] ; /* distance to go */
+            } faxis ; /* In case of all axes */
+            struct {
+                long  absolute ; /* absolute */
+                long  machine ;  /* machine  */
+                long  relative ; /* relative */
+                long  distance ; /* distance to go */
+            } oaxis ; /* In case of 1 axis */
+        } pos ;
+} ODBDY ;              /* MAX_AXIS is the maximum controlled axes. */
+
+
+For program number 8 digits
+
+typedef struct odbdy {
+        short  dummy ;     /* not used                */
+        short  axis ;      /* axis number             */
+        short  alarm ;     /* alarm status            */
+        long   prgnum ;    /* current program number  */
+        long   prgmnum ;   /* main program number     */
+        long   seqnum ;    /* current sequence number */
+        long   actf ;      /* actual feedrate         */
+        long   acts ;      /* actual spindle speed    */
+        union {
+            struct {
+                long  absolute[MAX_AXIS] ; /* absolute */
+                long  machine[MAX_AXIS] ;  /* machine  */
+                long  relative[MAX_AXIS] ; /* relative */
+                long  distance[MAX_AXIS] ; /* distance to go */
+            } faxis ; /* In case of all axes */
+            struct {
+                long  absolute ; /* absolute */
+                long  machine ;  /* machine  */
+                long  relative ; /* relative */
+                long  distance ; /* distance to go */
+            } oaxis ; /* In case of 1 axis */
+        } pos ;
+} ODBDY ;                       /* MAX_AXIS is the maximum controlled axes. */
+</pre>
+                        <ul>
+                            <dl>
+                                <dt>dummy</dt>
+                                <dd>Not used</dd>
+                                <dt>axis</dt>
+                                <dd>Axis number<br/>The read axis number is returned.</dd>
+                                <dt>alarm</dt>
+                                <dd>Alarm status<br/>The meaning of each bit is as follows.
+                                <span class="xis">
+                                    <ul><br/><li>Series 15/15i</li>
+                                        <table>
+                                            <tr><td>#00</td><td>:</td><td>Background P/S</td></tr>
+                                            <tr><td>#01</td><td>:</td><td>Foreground P/S</td></tr>
+                                            <tr><td>#02</td><td>:</td><td>Overheat alarm (Only Series 15)</td></tr>
+                                            <tr><td>#03</td><td>:</td><td>Sub-CPU error (Only Series 15)</td></tr>
+                                            <tr><td>#04</td><td>:</td><td>Syncronized error</td></tr>
+                                            <tr><td>#05</td><td>:</td><td>Parameter switch on</td></tr>
+                                            <tr><td>#06</td><td>:</td><td>Overtravel,Ext. data</td></tr>
+                                            <tr><td>#07</td><td>:</td><td>PMC error</td></tr>
+                                            <tr><td>#08</td><td>:</td><td>External alarm message</td></tr>
+                                            <tr><td>#09</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>#10</td><td>:</td><td>Serious P/S</td></tr>
+                                            <tr><td>#11</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>#12</td><td>:</td><td>Servo alarm</td></tr>
+                                            <tr><td>#13</td><td>:</td><td>I/O error</td></tr>
+                                            <tr><td>#14</td><td>:</td><td>Power off parameter set</td></tr>
+                                            <tr><td>#15</td><td>:</td><td>System error</td></tr>
+                                        </table>
+                                    </ul><br/>
+                                    <ul><li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i</li>
+                                        <table>
+                                            <tr><td>#00</td><td>:</td><td>P/S alarm 100 </td></tr>
+                                            <tr><td>#01</td><td>:</td><td>P/S alarm 000 </td></tr>
+                                            <tr><td>#02</td><td>:</td><td>P/S alarm 101 </td></tr>
+                                            <tr><td>#03</td><td>:</td><td>P/S alarm except above</td></tr>
+                                            <tr><td>#04</td><td>:</td><td>Overtravel alarm</td></tr>
+                                            <tr><td>#05</td><td>:</td><td>Overheat alarm</td></tr>
+                                            <tr><td>#06</td><td>:</td><td>Servo alarm</td></tr>
+                                            <tr><td>#07</td><td>:</td><td>System alarm</td></tr>
+                                            <tr><td>#08</td><td>:</td><td>APC alarm</td></tr>
+                                            <tr><td>#09</td><td>:</td><td>Spindle alarm</td></tr>
+                                            <tr><td>#10</td><td>:</td><td>P/S alarm 5000, Punch press alarm</td></tr>
+                                            <tr><td>#11</td><td>:</td><td>Laser alarm</td></tr>
+                                            <tr><td>#12</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>#13</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>#14</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>#15</td><td>:</td><td>External alarm message</td></tr>
+                                        </table>
+                                    </ul><br/>
+                                    <ul><li>Series 16i/18i-W</li>
+                                        <table>
+                                            <tr><td>#00</td><td>:</td><td>P/S alarm</td></tr>
+                                            <tr><td>#01</td><td>:</td><td>Overtravel alarm</td></tr>
+                                            <tr><td>#02</td><td>:</td><td>Servo alarm</td></tr>
+                                            <tr><td>#03</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>#04</td><td>:</td><td>Overheat alarm</td></tr>
+                                            <tr><td>#05</td><td>:</td><td>Stroke limit - 1</td></tr>
+                                            <tr><td>#06</td><td>:</td><td>Stroke limit - 2</td></tr>
+                                            <tr><td>#07</td><td>:</td><td>Edit alarm</td></tr>
+                                            <tr><td>#08</td><td>:</td><td>APC alarm</td></tr>
+                                            <tr><td>#09</td><td>:</td><td>System alarm</td></tr>
+                                            <tr><td>#10</td><td>:</td><td>P/S 5000 ... alarm</td></tr>
+                                            <tr><td>#11</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>#12</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>#13</td><td>:</td><td>(Not used)</td></tr>
+                                            <tr><td>#14</td><td>:</td><td>External alarm</td></tr>
+                                            <tr><td>#15</td><td>:</td><td>Reverse control alarm</td></tr>
+                                        </table>
+                                    </ul><br/>
+                                    </span>
+                                    <ul><span class="xis"><li>Series 30i, 0i-D/F, PMi-A</li></span>
+                                    <table>
+                                            <tr><td>#00</td> <td>:</td> <td>Parameter switch on</td>          <td>(SW)</td> </tr>
+                                            <tr><td>#01</td> <td>:</td> <td>Power off parameter set</td>      <td>(PW)</td> </tr>
+                                            <tr><td>#02</td> <td>:</td> <td>I/O error</td>                    <td>(IO)</td> </tr>
+                                            <tr><td>#03</td> <td>:</td> <td>Foreground P/S</td>               <td>(PS)</td> </tr>
+                                            <tr><td>#04</td> <td>:</td> <td>Overtravel,External data</td>     <td>(OT)</td> </tr>
+                                            <tr><td>#05</td> <td>:</td> <td>Overheat alarm</td>               <td>(OH)</td> </tr>
+                                            <tr><td>#06</td> <td>:</td> <td>Servo alarm </td>                 <td>(SV)</td> </tr>
+                                            <tr><td>#07</td> <td>:</td> <td>Data I/O error</td>               <td>(SR)</td> </tr>
+                                            <tr><td>#08</td> <td>:</td> <td>Macro alarm</td>                  <td>(MC)</td> </tr>
+                                            <tr><td>#09</td> <td>:</td> <td>Spindle alarm</td>                <td>(SP)</td> </tr>
+                                            <tr><td>#10</td> <td>:</td> <td>Other alarm(DS)</td>              <td>(DS)</td> </tr>
+                                            <tr><td>#11</td> <td>:</td> <td>Alarm concerning Malfunction prevent functions</td> <td>(IE)</td> </tr>
+                                            <tr><td>#12</td> <td>:</td> <td>Background P/S</td>               <td>(BG)</td> </tr>
+                                            <tr><td>#13</td> <td>:</td> <td>Syncronized error</td>            <td>(SN)</td> </tr>
+                                            <tr><td>#14</td> <td>:</td> <td>(reserved)</td>                   <td>    </td> </tr>
+                                            <tr><td>#15</td> <td>:</td> <td>External alarm message</td>       <td>(EX)</td> </tr>
+                                    </table>
+                                    </ul><br/>
+                                </dd>
+                                <dt>prgnum</dt>
+                                <dd>Program number under execution<br/>
+                                    (It is the selected program number while
+                                     automatic operation stopping)</dd>
+                                <dt>prgmnum</dt>
+                                <dd>Main program number <span class="xis">(It is invalid in Series 15)</span></dd>
+                                <dt>seqnum</dt>
+                                <dd>Current sequence number</dd>
+                                <dt>actf</dt>
+                                <dd>Actual feed rate of the controlled axes</dd>
+                                <dt>acts</dt>
+                                <dd>Actual spindle speed data<span class="xis">(It is invalid in Series 16i/18i-W, Power Mate i-H)</span></dd>
+                                <dt>absolute</dt>
+                                <dd>Absolute position of the controlled axes</dd>
+                                <dt>machine</dt>
+                                <dd>Machine position of the controlled axes</dd>
+                                <dt>relative</dt>
+                                <dd>Relative position of the controlled axes</dd>
+                                <dt>distance</dt>
+                                <dd>Amount of distance to go of the controlled axes <span class="xis">(It is invalid in Series 16i/18i-W)</span></dd>
+                            </dl>
+                        </ul>
+                    </content>
+                </item>
+            </vc>
+        </hssb>
+    </argument>
+
+
+
+    <errcode>
+        <span class="xis">
+        <item>
+            <name>EW_FUNC<br/>(Series 15i, 16/18, 16i/18i)</name>
+            <content>
+                Unavailable<br/>This application is not customized for the program number 8 digits. See "<a href="general.htm#O8">Program number 8 digits</a>" for details.
+            </content>
+        </item>
+        </span>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                data block length error<br/>
+                Size of ODBDY structure(length) is illegal.
+            </content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>
+                data attribute error<br/>The specification of axis number (axis) is improper.
+            </content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+    </option>
+
+
+
+    <parameter>
+        <span class="xis">
+        <type>
+            <ul>
+            <li>Series 15</li>
+            2204#1, 7613#0,#1,#2  (must be set)<br/>
+            2202#2,#3,#4,#5,#6,#7 (influenced by setting)<br/>
+            <br/>
+            <li>Series 15i</li>
+            2202#2,#3,#4,#5,#6,#7 (influenced by setting)
+            </ul>
+        </type>
+        </span>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rddynamic2</name>
+            <file>position/cnc_rddynamic2.htm</file>
+        </item>
+        <item>
+            <name>cnc_alarm</name>
+            <file>misc/cnc_alarm.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdprgnum</name>
+            <file>program/cnc_rdprgnum.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdseqnum</name>
+            <file>program/cnc_rdseqnum.htm</file>
+        </item>
+        <item>
+            <name>cnc_actf</name>
+            <file>position/cnc_actf.htm</file>
+        </item>
+        <item>
+            <name>cnc_acts</name>
+            <file>position/cnc_acts.htm</file>
+        </item>
+        <item>
+            <name>cnc_absolute</name>
+            <file>position/cnc_absolute.htm</file>
+        </item>
+        <item>
+            <name>cnc_machine</name>
+            <file>position/cnc_machine.htm</file>
+        </item>
+        <item>
+            <name>cnc_relative</name>
+            <file>position/cnc_relative.htm</file>
+        </item>
+        <item>
+            <name>cnc_distance</name>
+            <file>position/cnc_distance.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+<vc><![CDATA[
+The following program reads the dynamic data of all axes (number of axes =
+MAX_AXIS) and displays them on the screen.
+
+#include "fwlib32.h"
+
+void example( void )
+{
+    ODBDY buf ;
+    unsigned int idx ;
+    cnc_rddynamic( h, -1, sizeof(buf), &buf ) ;
+    printf( "Current program = %d   Main program = %d\n",
+                    buf.prgnum, buf.prgmnum ) ;
+    printf( "Sequence number = %ld\n", buf.seqnum ) ;
+    printf( "actf = %ld   acts = %ld\n", buf.actf, buf.acts ) ;
+    printf( "Alarm status = %d\n", buf.alarm ) ;
+    printf( "AXIS Absolute  Relative  Machine   Distance\n" ) ;
+    printf( "----+---------+---------+---------+--------\n" ) ;
+    for ( idx = 0 ; idx < MAX_AXIS ; idx++ )
+        printf( "  %u  %8ld  %8ld  %8ld  %8ld\n", idx,
+            buf.pos.faxis.absolute[idx],
+            buf.pos.faxis.relative[idx],
+            buf.pos.faxis.machine[idx],
+            buf.pos.faxis.distance[idx] ) ;
+}
+]]></vc>
+<vcs><![CDATA[
+The following program reads the dynamic data of all axes (number of axes =
+MAX_AXIS) and displays them on the screen.
+
+class example
+{
+    public void sample()
+    {
+        Focas1.ODBDY_1 buf = new Focas1.ODBDY_1();
+        uint idx;
+        Focas1.cnc_rddynamic(h, -1, (short)Marshal.SizeOf(buf), buf);
+        Console.WriteLine("Current program = {0}   Main program = {1}",
+                        buf.prgnum, buf.prgmnum);
+        Console.WriteLine("Sequence number = {0}", buf.seqnum);
+        Console.WriteLine("actf = {0}   acts = {1}", buf.actf, buf.acts);
+        Console.WriteLine("Alarm status = {0}", buf.alarm);
+        Console.WriteLine("AXIS Absolute  Relative  Machine   Distance");
+        Console.WriteLine("----+---------+---------+---------+--------");
+        for (idx = 0; idx < Focas1.MAX_AXIS; idx++)
+        {
+            Console.WriteLine("  {0}  {1,8}  {2,8}  {3,8}  {4,8}", idx,
+                buf.pos.absolute[idx],
+                buf.pos.relative[idx],
+                buf.pos.machine[idx],
+                buf.pos.distance[idx]);
+        }
+    }
+}]]></vcs>
+    </example>
+
+
+
+  </func>
+</root>

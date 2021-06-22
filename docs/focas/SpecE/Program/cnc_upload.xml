@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_upload</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_upload(unsigned short FlibHndl,ODBUP *upld,unsigned short *number);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Read NC program registered on the tape memory in CNC (program memory).</p>
+            <p>The procedure of uploading is as follows.</p>
+            <p><img src="Program/upload_pro.gif"/></p>
+            <b>Format of input data</b>
+            <p>NC program which is read from CNC is the string composed of ASCII characters as following format.</p>
+
+            <p class="dd">
+                % LF Oxxxx LF Block1 LF Block2 LF ... LF Mxx LF %<br/>
+                <br/>
+                where,
+                <table>
+                    <tr><td>LF</td><td>0x0A ('\n': EOB)</td></tr>
+                    <tr><td>Oxxxx</td><td>Program number</td></tr>
+                    <tr><td>Mxx</td><td>M code at the end of the program(M02,M30,etc.)</td></tr>
+                </table>
+                <br/>
+                A null character('0x00') is not added at the end of each string stored in the buffer.<br/>
+                The last character of read NC program is '%'.<br/>
+                If the application keeps reading by using this function after reading the last '%',
+                only '%' can be read for Series 15/15i, nothing can be read for Series 16/18/21,
+                 16i/18i/21i, 0i, 30i, Power Mate i, PMi-A.<br/>
+                <br/>
+            </p>
+                <span class="dd">For example, when you read the following NC program using this
+            function,</span><br/>
+                <span class="dd"></span><span class="dd">O1234 ;</span><br/>
+                <span class="dd"></span><span class="dd">G1 F0.3 W10. ;</span><br/>
+                <span class="dd"></span><span class="dd">M30 ;</span><br/>
+                <span class="dd"></span><span class="dd">%</span><br/>
+            <p class="dd">
+                <ul>
+                    you will get the following strings.<br/>
+                    <br/>
+                    <li>In case of fully large buffer.</li>
+                        Series 15/15i<br/>
+                        <table>
+                            <tr><td><span class="dd"></span></td><td>1st time</td><td>"%\nO1234\nG1F0.3W10.\nM30\n%"</td><td>(24 characters)</td></tr>
+                            <tr><td><span class="dd"></span></td><td>2nd and after</td><td>"%"</td><td>(1 character)</td></tr>
+                        </table>
+                        Series Series 16/18/21, 16i/18i/21i, 0i, 30i, Power Mate i, PMi-A<br/>
+                        <table>
+                            <tr><td><span class="dd"></span></td><td>1st time</td><td>"%\nO1234\nG1F0.3W10.\nM30\n%"</td><td>(24 characters)</td></tr>
+                            <tr><td><span class="dd"></span></td><td>2nd and after</td><td>""</td><td>(0 character)</td></tr>
+                        </table>
+                        <br/>
+                    <li>And in case that the buffer size is less than 24 bytes, you will get the following strings.</li><br/>
+                    In case that the buffer size is 10 bytes.
+                        Series 15/15i<br/>
+                        <table>
+                            <tr><td><span class="dd"></span></td><td>1st time</td><td>"%\nO1234\nG1"</td><td>(10 characters)</td></tr>
+                            <tr><td><span class="dd"></span></td><td>2nd time</td><td>"F0.3W10.\nM"</td><td>(10 characters)</td></tr>
+                            <tr><td><span class="dd"></span></td><td>3rd time</td><td>"30\n%"</td><td>(4 characters)</td></tr>
+                            <tr><td><span class="dd"></span></td><td>4th and after</td><td>"%"</td><td>(1 characters)</td></tr>
+                        </table>
+                        Series Series 16/18/21, 16i/18i/21i, 0i, 30i, Power Mate i, PMi-A<br/>
+                        <table>
+                            <tr><td><span class="dd"></span></td><td>1st time</td><td>"%\nO1234\nG1"</td><td>(10 characters)</td></tr>
+                            <tr><td><span class="dd"></span></td><td>2nd time</td><td>"F0.3W10.\nM"</td><td>(10 characters)</td></tr>
+                            <tr><td><span class="dd"></span></td><td>3rd time</td><td>"30\n%"</td><td>(4 characters)</td></tr>
+                            <tr><td><span class="dd"></span></td><td>4th and after</td><td>""</td><td>(0 characters)</td></tr>
+                        </table>
+                </ul>
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <hssb>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle.<br/>
+                            See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>upld</name>
+                    <type>out</type>
+                    <content>
+                        <p>Pointer to the ODBUP structure including the NC program.</p>
+                        <p>The ODBUP structure is as follows.</p>
+<pre>
+typedef struct odbup {
+    short   dummy[2] ;              /* Not used. */
+    char    data[MAX_RBUF] ;        /* NC program data. */
+} ODBUP ;                       (MAX_RBUF : maximum character number to read)
+</pre>
+                        <p>
+                            The default value of read buffer size (MAX_RBUF) with ODBUP structure is 256.<br/>
+                            In order to read more characters at a time, it is necessary to customize.
+                        </p>
+                        <p><img src="Program/upload_odbup_vc.gif"/></p>
+                    </content>
+                </item>
+                <item>
+                    <name>number </name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                            Specify the address of the variable which shows number of characters to be read.<br/>
+                            Set read number of characters by one time to this variable(*number).<br/>
+                            After reading,the number of characters actually read is set in this variable(*number) again.
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </hssb>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                <a href="Program/cnc_upstart.htm" target="_parent">cnc_upstart</a> function has not been executed.
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                Data block length error<br/>
+                The read number of characters of NC program number(*number) is 0.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            <p>The extended driver/library function is necessary.</p>
+        </hssb>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 15i</li>
+                    0021=16(EDIT mode) (must be set)<br/>
+                    0023=16(except EDIT mode) (must be set)<br/>
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>H</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </w>
+        <pw>
+            <d>H</d>
+            <h>H</h>
+            <a>H</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_upstart</name>
+            <file>Program/cnc_upstart.htm</file>
+        </item>
+        <item>
+            <name>cnc_cupload</name>
+            <file>Program/cnc_cupload.htm</file>
+        </item>
+        <item>
+            <name>cnc_upend</name>
+            <file>Program/cnc_upend.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

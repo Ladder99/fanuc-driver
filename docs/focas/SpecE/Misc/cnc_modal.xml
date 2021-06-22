@@ -1,0 +1,2044 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+<func>
+
+
+<title>cnc_modal</title>
+
+
+
+<declare>
+<vc>
+<include>#include "fwlib32.h"</include>
+<prottype>FWLIBAPI short WINAPI cnc_modal(unsigned short FlibHndl, short type, short block, ODBMDL *modal);</prottype>
+</vc>
+</declare>
+
+
+
+<doc>
+<cmn>
+Reads the modal information of CNC. Various information is stored in each member of ODBMDL. 
+<p/>
+The readable modal data are modal G code or commanded data such as M,S,T,F. 
+<p/>
+ <p>The union type which stores the data depends on the type of modal data (type). Therefore, in case of accessing data, use the union corresponding to the type.
+ </p>
+This function cannot be used for Series 15i, so use <a href="Misc/cnc_rdgcode.htm" target="_parent">cnc_rdgcode</a> function and <a href="Misc/cnc_rdcommand.htm" target="_parent">cnc_rdcommand</a> function instead of cnc_modal function. 
+<p/>
+In Series 30i, 0i-D/F and PMi-A, the modal data that were assigned for Series 16i can be got by this function.<br/>
+As for the data that are added at Series 30i, 0i-D/F and PMi-A, please use <a href="misc/cnc_rdgcode.htm" target="_parent">cnc_rdgcode</a> and <a href="misc/cnc_rdcommand.htm" target="_parent">cnc_rdcommand</a> functions. 
+
+</cmn>
+
+<!-- is Doc Start-->
+    <is>
+        <cmn>
+        Reads the modal information of CNC. Various information is stored in each member of ODBMDL. 
+        <p/>
+        The readable modal data are modal G code or commanded data such as M,S,T,F. 
+        <p/>
+         The union type which stores the data depends on the type of modal data (type). Therefore, in case of accessing data, use the union corresponding to the type.
+         <p/>
+        The modal data that were assgined for Series 16i can be got by this function.<br/>
+        As for the data that are added at Series 30i, please use <a href="misc/cnc_rdgcode.htm" target="_parent">cnc_rdgcode</a> and <a href="misc/cnc_rdcommand.htm" target="_parent">cnc_rdcommand</a> functions. 
+
+        </cmn>
+    </is>
+<!-- is Doc End -->
+</doc>
+
+
+
+<argument>
+<common><vc>
+<item>
+<name>FlibHndl</name><type>in</type>
+<content>
+Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+</content>
+</item>
+
+<item>
+<name>type</name><type>in</type>
+<content>
+<p>Type of data is stored. (refer to the following)</p>
+<li>Series 15</li>
+<table class="dd">
+    <tr> <td>-4</td>           <td>:</td> <td>Read all data of 1 shot G code at a time.</td>                  </tr>
+    <tr> <td>-3</td>           <td>:</td> <td>Read all data concerning axis other than G code at a time.</td> </tr>
+    <tr> <td>-2</td>           <td>:</td> <td>Read all data other than G code at a time.</td>                 </tr>
+    <tr> <td>-1</td>           <td>:</td> <td>Read all data of G code at a time.</td>                         </tr>
+    <tr> <td>0  to  17</td>    <td>:</td> <td>Read the data of G code one by one.</td>                        </tr>
+    <tr> <td>100  to  126</td> <td>:</td> <td>Read the data other than G code one by one.</td>                </tr>
+    <tr> <td>200  to  223</td> <td>:</td> <td>Read the data concerning axis other than G code one by one.</td></tr>
+    <tr> <td>300  to  303</td> <td>:</td> <td>1 shot Read the data of G code one by one.</td>                 </tr>
+</table>
+<br/>
+<li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i (In case of HSSB connection)</li>
+<table class="dd">
+    <tr> <td>-4</td>         <td>:</td> <td>Read all data of 1 shot G code at a time.</td> </tr>
+    <tr> <td>-3</td>         <td>:</td> <td>Read all data concerning axis other than G code at a time. (except 16i/18i-W)</td> </tr>
+    <tr> <td>-2</td>         <td>:</td> <td>Read all data other than G code at a time.</td> </tr>
+    <tr> <td>-1</td>         <td>:</td> <td>Read all data of G code at a time. (type = 1 to 20, 31 to 34 (Only Series 16L) )</td> </tr>
+    <tr> <td>0 to 20,<br/>31 to 34 (Only Series 16L)</td> <td>:</td> <td>Read the data of G code one by one.</td>  </tr>
+    <tr> <td>100 to 126</td> <td>:</td> <td>Read the data other than G code one by one.</td> </tr>
+    <tr> <td>200 to 207</td> <td>:</td> <td>Read the data concerning axis other than G code one by one.</td> </tr>
+    <tr> <td>300</td>        <td>:</td> <td>Read the data of 1 shot G code one by one.</td> </tr>
+</table>
+<br/>
+<li>Series 16i/18i/21i, 0i-A/B/C, Power Mate i (In case of Ethernet connection)</li>
+<table class="dd">
+    <tr> <td>-5</td>         <td>:</td> <td>Read all data of G code at a time. (type = 1 to 34)</td> </tr>
+    <tr> <td>-4</td>         <td>:</td> <td>Read all data of 1 shot G code at a time.</td> </tr>
+    <tr> <td>-3</td>         <td>:</td> <td>Read all data concerning axis other than G code at a time. (except 16i/18i-W)</td> </tr>
+    <tr> <td>-2</td>         <td>:</td> <td>Read all data other than G code at a time.</td> </tr>
+    <tr> <td>-1</td>         <td>:</td> <td>Read all data of G code at a time. (type = 1 to 20, 31 to 34 (Only Series 16L) )</td> </tr>
+    <tr> <td>0 to 24,<br/>31 to 34 (Only Series 16L)</td> <td>:</td> <td>Read the data of G code one by one.</td>  </tr>
+    <tr> <td>100 to 126</td> <td>:</td> <td>Read the data other than G code one by one.</td> </tr>
+    <tr> <td>200 to 207</td> <td>:</td> <td>Read the data concerning axis other than G code one by one.</td> </tr>
+    <tr> <td>300</td>        <td>:</td> <td>Read the data of 1 shot G code one by one.</td> </tr>
+</table>
+<br/>
+<li>Series 30i, 0i-D/F, PMi-A</li>
+<table class="dd">
+    <tr> <td>-4</td>         <td>:</td> <td>Read all data of 1 shot G code at a time.</td>                  </tr>
+    <tr> <td>-3</td>         <td>:</td> <td>Read all data concerning axis other than G code at a time. (Only the axis number in a path is 8 axes or less.)</td> </tr>
+    <tr> <td>-2</td>         <td>:</td> <td>Read all data other than G code at a time.</td>                 </tr>
+    <tr> <td>-1</td>         <td>:</td> <td>Read all data of G code at a time. (type = 0 to 20)</td>        </tr>
+    <tr> <td>0 to 20</td>    <td>:</td> <td>Read the data of G code one by one.</td>                        </tr>
+    <tr> <td>100 to 126</td> <td>:</td> <td>Read the data other than G code one by one.</td>                </tr>
+    <tr> <td>200 to 207</td> <td>:</td> <td>Read the data concerning axis other than G code one by one.</td></tr>
+    <tr> <td>300</td>        <td>:</td> <td>Read the data of 1 shot G code one by one.</td>                 </tr>
+</table>
+</content>
+</item>
+
+<item>
+<name>block</name><type>in</type>
+<content>
+<p>Assigned block in stored.</p>
+
+<li>Series 15</li>
+<table class="dd">
+<tr> <td>0</td> <td>:</td> <td>previous block</td> </tr>
+    <tr> <td>1</td> <td>:</td> <td>active block</td> </tr>
+    <tr> <td>2</td> <td>:</td> <td>next block</td> </tr>
+</table>
+<br/>
+<li>Series 16/18/21, 16i/18i/21i, 0i, 30i, Power Mate i, PMi-A</li>
+<table class="dd">
+    <tr> <td>0</td> <td>:</td> <td>active block</td> </tr>
+    <tr> <td>1</td> <td>:</td> <td>next block</td> </tr>
+    <tr> <td>2</td> <td>:</td> <td>block after next block (30i, 0i-D/F, PMi-A:unsupport)</td></tr>
+</table>
+<br/>
+<li>Series 16i/18i-W</li>
+<table class="dd">
+    <tr><td>0</td> <td>:</td> <td>active block</td> </tr>
+    <tr><td>1</td> <td>:</td> <td>next block</td> </tr>
+    <tr><td>2</td> <td>:</td> <td>block after next block</td> </tr>
+    <tr><td>3</td> <td>:</td> <td>previous block</td> </tr>
+</table>
+</content>
+</item>
+
+<item>
+<name>modal</name><type>out</type>
+<content>
+<p>Pointer to the ODBMDL structure including the modal data.</p>
+The ODBMDL structure is as follows.
+<pre>
+typedef struct odbmdl {
+     short datano;              /* Kind of modal data */
+     short type;                /* Objective block */
+     union {
+          char  g_data;         /* Modal data of G code */
+          char  g_rdata[35];    /* Modal data of G code */
+          char  g_1shot[4];    /* Modal data of 1 shot G code*/
+          struct {
+                long    aux_data;
+                        /* Modal data other than G code */
+                char    flag1;          /* Flag 1 */
+                char    flag2;          /* Flag 2 */
+          }aux;
+          struct {
+                long    aux_data;
+                        /* Modal data other than G code */
+                char    flag1;          /* Flag 1 */
+                char    flag2;          /* Flag 2 */
+          }raux1[27];
+          struct {
+                long    aux_data;
+                        /* Modal data other than G code */
+                char    flag1;          /* Flag 1 */
+                char    flag2;          /* Flag 2 */
+          }raux2[MAX_AXIS];
+     }modal;    /* MAX_AXIS : max. controlled axes. */
+} ODBMDL ;
+</pre>
+<dl>
+    <dt>datano</dt>
+    <dd>Kind of modal data is stored.</dd>
+    <dt>type</dt>
+    <dd>Target block to be read is stored.</dd>
+    <dt>g_data</dt>
+    <dd>Use for an individual reading G code (and 1 shot G code). Modal G code in the corresponding G code group is stored.</dd>
+    <dt>g_rdata</dt>
+    <dd>Use for reading G code at a time. Modal G code in the all G code group is stored.</dd>
+    <dt>g_1shot</dt>
+    <dd>Use for reading 1 shot G code at a time. (In case of individual reading, use "g_data".)</dd>
+    <dt>aux</dt>
+    <dd>Use for an individual reading other than G code (include axis data).</dd>
+    <dt>raux1</dt>
+    <dd>Use for reading other than G code at a time.</dd>
+    <dt>raux2</dt>
+    <dd>Use for reading concerning axis other than G code at a time.</dd>
+    <dt>aux_data</dt>
+    <dd>Modal data other than G code is stored.</dd>
+    <dt>flag1</dt>
+    <dd>Supplementary information is stored.</dd>
+    <dt>flag2</dt>
+    <dd>Supplementary information is stored.</dd>
+</dl>
+
+<p class="label">(1) Reading modal G code.</p>
+<ul>
+    <li>Series 15 (only HSSB)<br/>
+        Specify G code group number in following table for "type".</li>
+ <table border="1">
+    <thead>
+    <tr> <th>    </th> <th>      </th> <th>M series</th>                 <th colspan="3">T series</th> </tr>
+    <tr> <th>type</th> <th>g_data</th> <th>G code     </th> <th>G code<br/>System A </th> <th>G code<br/>System B</th> <th>G code<br/>System C</th> </tr>
+    </thead>
+
+    <tbody>
+    <tr>
+        <td rowspan="23">0</td>
+         <td>0 </td> <td>G00   </td> <td>G00   </td> <td>G00   </td> <td>G00   </td> </tr>
+    <tr> <td>1 </td> <td>G01   </td> <td>G01   </td> <td>G01   </td> <td>G01   </td> </tr>
+    <tr> <td>2 </td> <td>G02   </td> <td>G02   </td> <td>G02   </td> <td>G02   </td> </tr>
+    <tr> <td>3 </td> <td>G03   </td> <td>G03   </td> <td>G03   </td> <td>G03   </td> </tr>
+    <tr> <td>4 </td> <td>G33   </td> <td>G32   </td> <td>G33   </td> <td>G33   </td> </tr>
+    <tr> <td>5 </td> <td>G34   </td> <td>G34   </td> <td>G34   </td> <td>G34   </td> </tr>
+    <tr> <td>6 </td> <td>G35   </td> <td>G35   </td> <td>G35   </td> <td>G35   </td> </tr>
+    <tr> <td>7 </td> <td>G36   </td> <td>G36   </td> <td>G36   </td> <td>G36   </td> </tr>
+    <tr> <td>8 </td> <td>&#160;</td> <td>G90   </td> <td>G77   </td> <td>G20   </td> </tr>
+    <tr> <td>9 </td> <td>&#160;</td> <td>G92   </td> <td>G78   </td> <td>G21   </td> </tr>
+    <tr> <td>10</td> <td>&#160;</td> <td>G94   </td> <td>G79   </td> <td>G24   </td> </tr>
+    <tr> <td>11</td> <td>&#160;</td> <td>G32.2 </td> <td>G32.2 </td> <td>G32.2 </td> </tr>
+    <tr> <td>12</td> <td>G02.3 </td> <td>&#160;</td> <td>G02.3 </td> <td>&#160;</td> </tr>
+    <tr> <td>13</td> <td>G03.3 </td> <td>&#160;</td> <td>G03.3 </td> <td>&#160;</td> </tr>
+    <tr> <td>14</td> <td>G02.1 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+    <tr> <td>15</td> <td>G03.1 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+    <tr> <td>16</td> <td>G60   </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+    <tr> <td>17</td> <td>G02.2 </td> <td>G02.2 </td> <td>G02.2 </td> <td>G02.2 </td> </tr>
+    <tr> <td>18</td> <td>G03.2 </td> <td>G03.2 </td> <td>G03.2 </td> <td>G03.2 </td> </tr>
+    <tr> <td>19</td> <td>G06.1 </td> <td>G06.1 </td> <td>G06.1 </td> <td>G06.1 </td> </tr>
+    <tr> <td>20</td> <td>G02.4 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+    <tr> <td>21</td> <td>G03.4 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+    <tr> <td>22</td> <td>G06.2 </td> <td>G06.2 </td> <td>G06.2 </td> <td>G06.2 </td> </tr>
+    <tr>
+        <td rowspan="4">1</td>
+         <td>0 </td> <td>G17   </td> <td>G97   </td> <td>G97   </td> <td>G97   </td> </tr>
+    <tr> <td>1 </td> <td>G18   </td> <td>G96   </td> <td>G96   </td> <td>G96   </td> </tr>
+    <tr> <td>2 </td> <td>G19   </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+    <tr> <td>3 </td> <td>G17.1 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+    <tr>
+        <td rowspan="2">2</td>
+        <td>0 </td> <td>G91    </td> <td>G91   </td> <td>G91   </td> <td>G91   </td> </tr>
+    <tr><td>1 </td> <td>G90    </td> <td>G90   </td> <td>G90   </td> <td>G90   </td> </tr>
+    <tr>
+        <td rowspan="2">3</td>
+        <td>0 </td> <td>G22    </td> <td>G22    </td> <td>G22    </td> <td>G22    </td> </tr>
+    <tr><td>1 </td> <td>G23    </td> <td>G23    </td> <td>G23    </td> <td>G23    </td> </tr>
+    <tr>
+        <td rowspan="3">4</td>
+        <td>0 </td> <td>G94    </td> <td>G98    </td> <td>G94    </td> <td>G94    </td> </tr>
+    <tr><td>1 </td> <td>G95    </td> <td>G99    </td> <td>G95    </td> <td>G95    </td> </tr>
+    <tr><td>2 </td> <td>G93    </td> <td>G93    </td> <td>G93    </td> <td>G93    </td> </tr>
+    <tr>
+        <td rowspan="2">5</td>
+        <td>0 </td> <td>G21    </td> <td>G21    </td> <td>G21    </td> <td>G71    </td> </tr>
+    <tr><td>1 </td> <td>G20    </td> <td>G20    </td> <td>G20    </td> <td>G70    </td> </tr>
+    <tr>
+        <td rowspan="7">6</td>
+        <td>0 </td> <td>G40    </td> <td>G40    </td> <td>G40    </td> <td>G40    </td> </tr>
+    <tr><td>1 </td> <td>G41    </td> <td>G41    </td> <td>G41    </td> <td>G41    </td> </tr>
+    <tr><td>2 </td> <td>G42    </td> <td>G42    </td> <td>G42    </td> <td>G42    </td> </tr>
+    <tr><td>3 </td> <td>G40.3  </td> <td>G40.3  </td> <td>G40.3  </td> <td>G40.3  </td> </tr>
+    <tr><td>4 </td> <td>G41.2  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>5 </td> <td>G42.2  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>6 </td> <td>G41.3  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td rowspan="7">7</td>
+        <td>0 </td> <td>G49    </td> <td>G49    </td> <td>G49    </td> <td>G49    </td> </tr>
+    <tr><td>1 </td> <td>G43    </td> <td>G43    </td> <td>G43    </td> <td>G43    </td> </tr>
+    <tr><td>2 </td> <td>G44    </td> <td>G44    </td> <td>G44    </td> <td>G44    </td> </tr>
+    <tr><td>3 </td> <td>G43.1  </td> <td>G43.1  </td> <td>G43.1  </td> <td>G43.1  </td> </tr>
+    <tr><td>4 </td> <td>G43.2  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>5 </td> <td>G43.3  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>6 </td> <td>G43.4  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td rowspan="19">8</td>
+        <td>0 </td> <td>G80    </td> <td>G80    </td> <td>G80    </td> <td>G80    </td> </tr>
+    <tr><td>1 </td> <td>G81    </td> <td>G81    </td> <td>G81    </td> <td>G81    </td> </tr>
+    <tr><td>2 </td> <td>G82    </td> <td>G82    </td> <td>G82    </td> <td>G82    </td> </tr>
+    <tr><td>3 </td> <td>G83    </td> <td>G83    </td> <td>G83    </td> <td>G83    </td> </tr>
+    <tr><td>4 </td> <td>G84    </td> <td>G84    </td> <td>G84    </td> <td>G84    </td> </tr>
+    <tr><td>5 </td> <td>G85    </td> <td>G85    </td> <td>G85    </td> <td>G85    </td> </tr>
+    <tr><td>6 </td> <td>G86    </td> <td>G86    </td> <td>G86    </td> <td>G86    </td> </tr>
+    <tr><td>7 </td> <td>G87    </td> <td>G87    </td> <td>G87    </td> <td>G87    </td> </tr>
+    <tr><td>8 </td> <td>G88    </td> <td>G88    </td> <td>G88    </td> <td>G88    </td> </tr>
+    <tr><td>9 </td> <td>G89    </td> <td>G89    </td> <td>G89    </td> <td>G89    </td> </tr>
+    <tr><td>10</td> <td>G73    </td> <td>G83.1  </td> <td>G83.1  </td> <td>G83.1  </td> </tr>
+    <tr><td>11</td> <td>G74    </td> <td>G84.1  </td> <td>G84.1  </td> <td>G84.1  </td> </tr>
+    <tr><td>12</td> <td>G76    </td> <td>G86.1  </td> <td>G84.1  </td> <td>G84.1  </td> </tr>
+    <tr><td>13</td> <td>G81    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>14</td> <td>G84.2  </td> <td>G84.2  </td> <td>G84.2  </td> <td>G84.2  </td> </tr>
+    <tr><td>15</td> <td>G84.3  </td> <td>G84.3  </td> <td>G84.3  </td> <td>G84.3  </td> </tr>
+    <tr><td>16</td> <td>G85&#160;&#160; Multi axis only </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>17</td> <td>G81.4 Multi axis only </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>18</td> <td>G85.4 Multi axis only </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td rowspan="6">9</td>
+        <td>0 </td> <td>G98    </td> <td>G98    </td> <td>G98    </td> <td>G98    </td> </tr>
+    <tr><td>1 </td> <td>G99    </td> <td>G99    </td> <td>G99    </td> <td>G99    </td> </tr>
+    <tr><td>2 </td> <td>G82    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>3 </td> <td>G83    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>4 </td> <td>G86 Multi axis only</td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>5 </td> <td>G87 Multi axis only</td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td rowspan="2">10</td>
+        <td>0 </td> <td>G50    </td> <td>G50    </td> <td>G50    </td> <td>G50    </td> </tr>
+    <tr><td>1 </td> <td>G51    </td> <td>G51    </td> <td>G51    </td> <td>G51    </td> </tr>
+    <tr><td rowspan="3">11</td>
+        <td>0 </td> <td>G67    </td> <td>G67    </td> <td>G67    </td> <td>G67    </td> </tr>
+    <tr><td>1 </td> <td>G66    </td> <td>G66    </td> <td>G66    </td> <td>G66    </td> </tr>
+    <tr><td>2 </td> <td>G66.1  </td> <td>G66.1  </td> <td>G66.1  </td> <td>G66.1  </td> </tr>
+    <tr><td rowspan="2">12</td>
+        <td>0 </td> <td>G97    </td> <td>G69    </td> <td>G69    </td> <td>G69    </td> </tr>
+    <tr><td>1 </td> <td>G96    </td> <td>G68    </td> <td>G68    </td> <td>G68    </td> </tr>
+    <tr><td rowspan="7">13</td>
+        <td>0 </td> <td>G54    </td> <td>G54    </td> <td>G54    </td> <td>G54    </td> </tr>
+    <tr><td>1 </td> <td>G55    </td> <td>G55    </td> <td>G55    </td> <td>G55    </td> </tr>
+    <tr><td>2 </td> <td>G56    </td> <td>G56    </td> <td>G56    </td> <td>G56    </td> </tr>
+    <tr><td>3 </td> <td>G57    </td> <td>G57    </td> <td>G57    </td> <td>G57    </td> </tr>
+    <tr><td>4 </td> <td>G58    </td> <td>G58    </td> <td>G58    </td> <td>G58    </td> </tr>
+    <tr><td>5 </td> <td>G59    </td> <td>G59    </td> <td>G59    </td> <td>G59    </td> </tr>
+    <tr><td>6 to 53</td> <td>G54.1</td> <td>&#160;</td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td rowspan="5">14</td>
+        <td>0 </td> <td>G64    </td> <td>G64    </td> <td>G64    </td> <td>G64    </td> </tr>
+    <tr><td>1 </td> <td>G61    </td> <td>G61    </td> <td>G61    </td> <td>G61    </td> </tr>
+    <tr><td>2 </td> <td>G62    </td> <td>G62    </td> <td>G62    </td> <td>G62    </td> </tr>
+    <tr><td>3 </td> <td>G63    </td> <td>G63    </td> <td>G63    </td> <td>G63    </td> </tr>
+    <tr><td>4 </td> <td>G62.1  </td> <td>G62.1  </td> <td>G62.1  </td> <td>G62.1  </td> </tr>
+    <tr><td rowspan="3">15</td>
+        <td>0 </td> <td>G69    </td> <td>G17    </td> <td>G17    </td> <td>G17    </td> </tr>
+    <tr><td>1 </td> <td>G68    </td> <td>G18    </td> <td>G18    </td> <td>G18    </td> </tr>
+    <tr><td>2 </td> <td>&#160; </td> <td>G19    </td> <td>G19    </td> <td>G19    </td> </tr>
+    <tr><td rowspan="2">16</td>
+        <td>0 </td> <td>G15    </td> <td>G15    </td> <td>G15    </td> <td>G15    </td> </tr>
+    <tr><td>1 </td> <td>G16    </td> <td>G16    </td> <td>G16    </td> <td>G16    </td> </tr>
+    <tr><td rowspan="2">17</td>
+        <td>0 </td> <td>G50.1  </td> <td>G50.1  </td> <td>G50.1  </td> <td>G50.1  </td> </tr>
+    <tr><td>1 </td> <td>G51.1  </td> <td>G51.1  </td> <td>G51.1  </td> <td>G51.1  </td> </tr>
+    </tbody>
+ </table>
+ <br/>
+
+    <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i <br/>
+        Specify G code group number in following table for "type". (M series includes Punch press, Power Mate i.) </li>
+ <table border="1">
+    <thead>
+    <tr> <th>    </th> <th>       </th> <th>M series</th> <th colspan="3">T series</th> <th>Laser</th> </tr>
+    <tr> <th>type</th> <th>g_data </th> <th>G code</th> <th>G code<br/>System A  </th> <th>G code<br/>System B  </th> <th>G code<br/>System C  </th> <th>G code</th> </tr>
+    </thead>
+
+                            <tbody>
+                            <tr>
+                            <td rowspan="26">0</td>
+                                 <td>0 </td> <td>G00   </td> <td>G00   </td> <td>G00   </td> <td>G00   </td> <td>G00   </td> </tr>
+                            <tr> <td>1 </td> <td>G01   </td> <td>G01   </td> <td>G01   </td> <td>G01   </td> <td>G01   </td> </tr>
+                            <tr> <td>2 </td> <td>G02   </td> <td>G02   </td> <td>G02   </td> <td>G02   </td> <td>G02   </td> </tr>
+                            <tr> <td>3 </td> <td>G03   </td> <td>G03   </td> <td>G03   </td> <td>G03   </td> <td>G03   </td> </tr>
+                            <tr> <td>4 </td> <td>G33   </td> <td>G32   </td> <td>G33   </td> <td>G33   </td> <td>&#160;</td> </tr>
+                            <tr> <td>5 </td> <td>G75   </td> <td>G90   </td> <td>G77   </td> <td>G20   </td> <td>&#160;</td> </tr>
+                            <tr> <td>6 </td> <td>G77   </td> <td>G92   </td> <td>G78   </td> <td>G21   </td> <td>&#160;</td> </tr>
+                            <tr> <td>7 </td> <td>G78   </td> <td>G94   </td> <td>G79   </td> <td>G24   </td> <td>&#160;</td> </tr>
+                            <tr> <td>8 </td> <td>G79   </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                            <tr> <td>9 </td> <td>&#160;</td> <td>G34   </td> <td>G34   </td> <td>G34   </td> <td>&#160;</td> </tr>
+                            <tr> <td>10</td> <td>G02.2 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                            <tr> <td>11</td> <td>G03.2 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                            <tr> <td>12</td> <td>G02.3 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                            <tr> <td>13</td> <td>G03.3 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                            <tr> <td>14</td> <td>G06.2 </td> <td>G35   </td> <td>G35   </td> <td>G35   </td> <td>&#160;</td> </tr>
+                            <tr> <td>15</td> <td>G02.4 </td> <td>G36   </td> <td>G36   </td> <td>G36   </td> <td>&#160;</td> </tr>
+                            <tr> <td>16</td> <td>G03.4 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                            <tr> <td>17</td> <td>&#160;</td> <td>G06.2 </td> <td>G06.2 </td> <td>G06.2 </td> <td>&#160;</td> </tr>
+                            <tr> <td>18</td> <td>&#160;</td> <td>G02.4 </td> <td>G02.4 </td> <td>G02.4 </td> <td>&#160;</td> </tr>
+                            <tr> <td>19</td> <td>&#160;</td> <td>G03.4 </td> <td>G03.4 </td> <td>G03.4 </td> <td>&#160;</td> </tr>
+                            <tr> <td>20</td> <td>&#160;</td> <td>G02.2 </td> <td>G02.2 </td> <td>G02.2 </td> <td>G12   </td> </tr>
+                            <tr> <td>21</td> <td>&#160;</td> <td>G03.2 </td> <td>G03.2 </td> <td>G03.2 </td> <td>&#160;</td> </tr>
+                            <tr> <td>22</td> <td>&#160;</td> <td>G02.3 </td> <td>G02.3 </td> <td>G02.3 </td> <td>&#160;</td> </tr>
+                            <tr> <td>23</td> <td>&#160;</td> <td>G03.3 </td> <td>G03.3 </td> <td>G03.3 </td> <td>&#160;</td> </tr>
+                            <tr> <td>24</td> <td>&#160;</td> <td>G06.1 </td> <td>G06.1 </td> <td>G06.1 </td> <td>&#160;</td> </tr>
+                            <tr> <td>25</td> <td>&#160;</td> <td>G32.2 </td> <td>G32.2 </td> <td>G32.2 </td> <td>&#160;</td> </tr>
+                            <tr>
+                                <td rowspan="5">1</td>
+                                 <td>0 </td> <td>G17    </td> <td>G97    </td> <td>G97    </td> <td>G97    </td> <td>G17    </td> </tr>
+                            <tr> <td>1 </td> <td>&#160; </td> <td>G96    </td> <td>G96    </td> <td>G96    </td> <td>&#160; </td> </tr>
+                            <tr> <td>4 </td> <td>G19    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>G19    </td> </tr>
+                            <tr> <td>8 </td> <td>G18    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>G18    </td> </tr>
+                            <tr> <td>10</td> <td>G17.1  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr>
+                                <td rowspan="2">2</td>
+                                <td>0 </td> <td>G90    </td> <td>&#160; </td> <td>G90   </td> <td>G90   </td> <td>G90   </td> </tr>
+                            <tr><td>1 </td> <td>G91    </td> <td>&#160; </td> <td>G91   </td> <td>G91   </td> <td>G91   </td> </tr>
+                            <tr>
+                                <td rowspan="2">3</td>
+                                <td>0 </td> <td>G23    </td> <td>G69   </td> <td>G69   </td> <td>G69   </td> <td>G23   </td> </tr>
+                            <tr><td>1 </td> <td>G22    </td> <td>G68   </td> <td>G68   </td> <td>G68   </td> <td>G22   </td> </tr>
+                            <tr>
+                                <td rowspan="3">4</td>
+                                <td>0 </td> <td>G94    </td> <td>G98   </td> <td>G94   </td> <td>G94   </td> <td>&#160; </td> </tr>
+                            <tr><td>1 </td> <td>G95    </td> <td>G99   </td> <td>G95   </td> <td>G95   </td> <td>&#160; </td> </tr>
+                            <tr><td>2 </td> <td>G93    </td> <td>G93   </td> <td>G93   </td> <td>G93   </td> <td>&#160; </td> </tr>
+                            <tr>
+                                <td rowspan="2">5</td>
+                                <td>0 </td> <td>G20    </td> <td>G20   </td> <td>G20   </td> <td>G70   </td> <td>G20   </td> </tr>
+                            <tr><td>1 </td> <td>G21    </td> <td>G21   </td> <td>G21   </td> <td>G71   </td> <td>G21   </td> </tr>
+                            <tr>
+                                <td rowspan="11">6</td>
+                                <td>0 </td> <td>G40    </td> <td>G40    </td> <td>G40    </td> <td>G40    </td> <td>G40    </td> </tr>
+                            <tr><td>1 </td> <td>G41    </td> <td>G41    </td> <td>G41    </td> <td>G41    </td> <td>G41    </td> </tr>
+                            <tr><td>2 </td> <td>G42    </td> <td>G42    </td> <td>G42    </td> <td>G42    </td> <td>G42    </td> </tr>
+                            <tr><td>3 </td> <td>G41.2  </td> <td>G41.2  </td> <td>G41.2  </td> <td>G41.2  </td> <td>&#160; </td> </tr>
+                            <tr><td>4 </td> <td>G42.2  </td> <td>G42.2  </td> <td>G42.2  </td> <td>G42.2  </td> <td>&#160; </td> </tr>
+                            <tr><td>5 </td> <td>G41.3  </td> <td>G41.3  </td> <td>G41.3  </td> <td>G41.3  </td> <td>&#160; </td> </tr>
+                            <tr><td>6 </td> <td>G41.4  </td> <td>G41.4  </td> <td>G41.4  </td> <td>G41.4  </td> <td>&#160; </td> </tr>
+                            <tr><td>7 </td> <td>G42.4  </td> <td>G42.4  </td> <td>G42.4  </td> <td>G42.4  </td> <td>&#160; </td> </tr>
+                            <tr><td>8 </td> <td>G41.5  </td> <td>G41.5  </td> <td>G41.5  </td> <td>G41.5  </td> <td>&#160; </td> </tr>
+                            <tr><td>9 </td> <td>G42.5  </td> <td>G42.5  </td> <td>G42.5  </td> <td>G42.5  </td> <td>&#160; </td> </tr>
+                            <tr><td>10</td> <td>&#160; </td> <td>G40.3  </td> <td>G40.3  </td> <td>G40.3  </td> <td>&#160; </td> </tr>
+                            <tr><td rowspan="9">7</td>
+                                <td>0 </td> <td>G49    </td> <td>G25    </td> <td>G25    </td> <td>G25    </td> <td>G49    </td> </tr>
+                            <tr><td>1 </td> <td>G43    </td> <td>G26    </td> <td>G26    </td> <td>G26    </td> <td>G43    </td> </tr>
+                            <tr><td>2 </td> <td>G44    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>G44    </td> </tr>
+                            <tr><td>3 </td> <td>G43.1  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>4 </td> <td>G43.4  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>5 </td> <td>G43.5  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>6 </td> <td>G43.2  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>7 </td> <td>G43.3  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>8 </td> <td>G43.6  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td rowspan="16">8</td>
+                                <td>0 </td> <td>G80    </td> <td>G23    </td> <td>G23    </td> <td>G23    </td> <td>&#160; </td> </tr>
+                            <tr><td>1 </td> <td>G81    </td> <td>G22    </td> <td>G22    </td> <td>G22    </td> <td>&#160; </td> </tr>
+                            <tr><td>2 </td> <td>G82    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>3 </td> <td>G83    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>4 </td> <td>G84    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>5 </td> <td>G85    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>6 </td> <td>G86    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>7 </td> <td>G87    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>8 </td> <td>G88    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>9 </td> <td>G89    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>10</td> <td>G73    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>11</td> <td>G74    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>12</td> <td>G76    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>13</td> <td>G84.2  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>14</td> <td>G84.3  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>15</td> <td>G81.2  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td rowspan="8">9</td>
+                                <td>0 </td> <td>G98    </td> <td>G80    </td> <td>G80    </td> <td>G80    </td> <td>&#160; </td> </tr>
+                            <tr><td>1 </td> <td>G99    </td> <td>G83    </td> <td>G83    </td> <td>G83    </td> <td>&#160; </td> </tr>
+                            <tr><td>2 </td> <td>&#160; </td> <td>G84    </td> <td>G84    </td> <td>G84    </td> <td>&#160; </td> </tr>
+                            <tr><td>3 </td> <td>&#160; </td> <td>G85    </td> <td>G85    </td> <td>G85    </td> <td>&#160; </td> </tr>
+                            <tr><td>4 </td> <td>&#160; </td> <td>G86    </td> <td>G86    </td> <td>G86    </td> <td>&#160; </td> </tr>
+                            <tr><td>5 </td> <td>&#160; </td> <td>G87    </td> <td>G87    </td> <td>G87    </td> <td>&#160; </td> </tr>
+                            <tr><td>6 </td> <td>&#160; </td> <td>G88    </td> <td>G88    </td> <td>G88    </td> <td>&#160; </td> </tr>
+                            <tr><td>7 </td> <td>&#160; </td> <td>G89    </td> <td>G89    </td> <td>G89    </td> <td>&#160; </td> </tr>
+                            <tr><td rowspan="2">10</td>
+                                <td>0 </td> <td>G50    </td> <td>&#160; </td> <td>G98    </td> <td>G98    </td> <td>G50    </td> </tr>
+                            <tr><td>1 </td> <td>G51    </td> <td>&#160; </td> <td>G99    </td> <td>G99    </td> <td>G51    </td> </tr>
+                            <tr><td rowspan="3">11</td>
+                                <td>0 </td> <td>G67    </td> <td>G67    </td> <td>G67    </td> <td>G67    </td> <td>G67    </td> </tr>
+                            <tr><td>1 </td> <td>G66    </td> <td>G66    </td> <td>G66    </td> <td>G66    </td> <td>G66    </td> </tr>
+                            <tr><td>2 </td> <td>G66.1  </td> <td>G66.1  </td> <td>G66.1  </td> <td>G66.1  </td> <td>&#160; </td> </tr>
+                            <tr><td rowspan="2">12</td>
+                                <td>0 </td> <td>G97    </td> <td>G49    </td> <td>G49    </td> <td>G49    </td> <td>&#160; </td> </tr>
+                            <tr><td>1 </td> <td>G96    </td> <td>G43    </td> <td>G43    </td> <td>G43    </td> <td>&#160; </td> </tr>
+                            <tr><td rowspan="6">13</td>
+                                <td>0 </td> <td>G54(G54.1)</td> <td>G54 </td> <td>G54    </td> <td>G54    </td> <td>G54    </td> </tr>
+                            <tr><td>1 </td> <td>G55    </td> <td>G55    </td> <td>G55    </td> <td>G55    </td> <td>G55    </td> </tr>
+                            <tr><td>2 </td> <td>G56    </td> <td>G56    </td> <td>G56    </td> <td>G56    </td> <td>G56    </td> </tr>
+                            <tr><td>3 </td> <td>G57    </td> <td>G57    </td> <td>G57    </td> <td>G57    </td> <td>G57    </td> </tr>
+                            <tr><td>4 </td> <td>G58    </td> <td>G58    </td> <td>G58    </td> <td>G58    </td> <td>G58    </td> </tr>
+                            <tr><td>5 </td> <td>G59    </td> <td>G59    </td> <td>G59    </td> <td>G59    </td> <td>G59    </td> </tr>
+                            <tr><td rowspan="4">14</td>
+                                <td>0 </td> <td>G64    </td> <td>G64    </td> <td>G64    </td> <td>G64    </td> <td>G64    </td> </tr>
+                            <tr><td>1 </td> <td>G61    </td> <td>G61    </td> <td>G61    </td> <td>G61    </td> <td>G61    </td> </tr>
+                            <tr><td>2 </td> <td>G62    </td> <td>G62    </td> <td>G62    </td> <td>G62    </td> <td>G62    </td> </tr>
+                            <tr><td>3 </td> <td>G63    </td> <td>G63    </td> <td>G63    </td> <td>G63    </td> <td>&#160; </td> </tr>
+                            <tr><td rowspan="6">15</td>
+                                <td>0 </td> <td>G69    </td> <td>G17    </td> <td>G17    </td> <td>G17    </td> <td>G85    </td> </tr>
+                            <tr><td>1 </td> <td>G68    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>G84    </td> </tr>
+                            <tr><td>2 </td> <td>G68.2  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>4 </td> <td>&#160; </td> <td>G18    </td> <td>G18    </td> <td>G18    </td> <td>&#160; </td> </tr>
+                            <tr><td>8 </td> <td>&#160; </td> <td>G19    </td> <td>G19    </td> <td>G19    </td> <td>&#160; </td> </tr>
+                            <tr><td>10</td> <td>&#160; </td> <td>G17.1  </td> <td>G17.1  </td> <td>G17.1  </td> <td>&#160; </td> </tr>
+                            <tr><td rowspan="3">16</td>
+                                <td>0 </td> <td>G15    </td> <td>G69.1  </td> <td>G69.1  </td> <td>G69.1  </td> <td>G15    </td> </tr>
+                            <tr><td>1 </td> <td>G16    </td> <td>G68.1  </td> <td>G68.1  </td> <td>G68.1  </td> <td>G16    </td> </tr>
+                            <tr><td>2 </td> <td>&#160; </td> <td>G68.2  </td> <td>G68.2  </td> <td>G68.2  </td> <td>&#160; </td> </tr>
+                            <tr><td rowspan="3">17</td>
+                                <td>0 </td> <td>G40.1(G150)</td> <td>&#160;</td> <td>G50 </td> <td>G50    </td> <td>G40.1  </td> </tr>
+                            <tr><td>1 </td> <td>G41.1(G151)</td> <td>&#160;</td> <td>G51 </td> <td>G51    </td> <td>G41.1  </td> </tr>
+                            <tr><td>2 </td> <td>G42.1(G152)</td> <td>&#160;</td> <td>&#160;  </td> <td>&#160; </td> <td>G42.1  </td> </tr>
+                            <tr><td rowspan="2">18</td>
+                                <td>0 </td> <td>G25    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>1 </td> <td>G26    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td rowspan="2">19</td>
+                                <td>0 </td> <td>G160   </td> <td>G50.2  </td> <td>G50.2  </td> <td>G50.2  </td> <td>&#160; </td> </tr>
+                            <tr><td>1 </td> <td>G161   </td> <td>G51.2  </td> <td>G51.2  </td> <td>G51.2  </td> <td>&#160; </td> </tr>
+                            <tr><td rowspan="2">20</td>
+                                <td>0 </td> <td>G13.1(G113)</td> <td>G13.1</td> <td>G13.1    </td> <td>G13.1  </td> <td>G13.1  </td> </tr>
+                            <tr><td>1 </td> <td>G12.1(G112)</td> <td>G12.1</td> <td>G12.1    </td> <td>G12.1  </td> <td>G12.1  </td> </tr>
+                            <tr><td rowspan="2">21</td>
+                                <td>0 </td> <td>G50.1  </td> <td>G50.1  </td> <td>G50.1  </td> <td>G50.1  </td> <td>&#160; </td> </tr>
+                            <tr><td>1 </td> <td>G51.1  </td> <td>G51.1  </td> <td>G51.1  </td> <td>G51.1  </td> <td>&#160; </td> </tr>
+                            <tr><td rowspan="5">22</td>
+                                <td>0 </td> <td>G54.2  </td> <td>G49.1  </td> <td>G49.1  </td> <td>G49.1  </td> <td>&#160;</td>    </tr>
+                            <tr><td>2 </td> <td>&#160; </td> <td>G44    </td> <td>G44    </td> <td>G44    </td> <td>&#160; </td> </tr>
+                            <tr><td>3 </td> <td>&#160; </td> <td>G43.1  </td> <td>G43.1  </td> <td>G43.1  </td> <td>&#160; </td> </tr>
+                            <tr><td>4 </td> <td>&#160; </td> <td>G43.4  </td> <td>G43.4  </td> <td>G43.4  </td> <td>&#160; </td> </tr>
+                            <tr><td>5 </td> <td>&#160; </td> <td>G43.5  </td> <td>G43.5  </td> <td>G43.5  </td> <td>&#160; </td> </tr>
+                            <tr><td rowspan="2">23</td>
+                                <td>0 </td> <td>G80.5  </td> <td>G15    </td> <td>G15    </td> <td>G15    </td> <td>&#160; </td> </tr>
+                            <tr><td>1 </td> <td>G81.5  </td> <td>G16    </td> <td>G16    </td> <td>G16    </td> <td>&#160; </td> </tr>
+                            <tr><td rowspan="2">31</td>
+                                <td>0 </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>G14    </td> </tr>
+                            <tr><td>1 </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>G13    </td> </tr>
+                            <tr><td rowspan="2">32</td>
+                                <td>0 </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>G69    </td> </tr>
+                            <tr><td>1 </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>G68    </td> </tr>
+                            <tr><td rowspan="2">33</td>
+                                <td>0 </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>G99    </td> </tr>
+                            <tr><td>1 </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>G98    </td> </tr>
+                            <tr><td rowspan="2">34</td>
+                                <td>0 </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>G34    </td> </tr>
+                            <tr><td>1 </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>G33    </td> </tr>
+                            </tbody>
+ </table>
+<br/>
+
+<li>Series 30i, 0i-D/F, PMi-A<br/>
+Specify G code group number in following table for "type".</li>
+<table border="1">
+<thead>
+    <tr> <th>    </th> <th>      </th> <th>M series</th>                 <th colspan="3">T series</th> </tr>
+    <tr> <th>type</th> <th>g_data</th> <th>G code     </th> <th>G code<br/>System A </th> <th>G code<br/>System B</th> <th>G code<br/>System C</th> </tr>
+    </thead>
+
+    <tbody>
+    <tr>
+        <td rowspan="26">0</td>
+         <td>0 </td> <td>G00   </td> <td>G00   </td> <td>G00   </td> <td>G00   </td> </tr>
+    <tr> <td>1 </td> <td>G01   </td> <td>G01   </td> <td>G01   </td> <td>G01   </td> </tr>
+    <tr> <td>2 </td> <td>G02   </td> <td>G02   </td> <td>G02   </td> <td>G02   </td> </tr>
+    <tr> <td>3 </td> <td>G03   </td> <td>G03   </td> <td>G03   </td> <td>G03   </td> </tr>
+    <tr> <td>4 </td> <td>G33   </td> <td>G32   </td> <td>G33   </td> <td>G33   </td> </tr>
+    <tr> <td>5 </td> <td>G75   </td> <td>G90   </td> <td>G77   </td> <td>G20   </td> </tr>
+    <tr> <td>6 </td> <td>G77   </td> <td>G92   </td> <td>G78   </td> <td>G21   </td> </tr>
+    <tr> <td>7 </td> <td>G78   </td> <td>G94   </td> <td>G79   </td> <td>G24   </td> </tr>
+    <tr> <td>8 </td> <td>G79   </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+    <tr> <td>9 </td> <td>&#160;</td> <td>G34   </td> <td>G34   </td> <td>G34   </td> </tr>
+    <tr> <td>10</td> <td>G02.2 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+    <tr> <td>11</td> <td>G03.2 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+    <tr> <td>12</td> <td>G02.3 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+    <tr> <td>13</td> <td>G03.3 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+    <tr> <td>14</td> <td>G06.2 </td> <td>G35   </td> <td>G35   </td> <td>G35   </td> </tr>
+    <tr> <td>15</td> <td>G02.4 </td> <td>G36   </td> <td>G36   </td> <td>G36   </td> </tr>
+    <tr> <td>16</td> <td>G03.4 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+    <tr> <td>17</td> <td>&#160;</td> <td>G06.2 </td> <td>G06.2 </td> <td>G06.2 </td> </tr>
+    <tr> <td>18</td> <td>&#160;</td> <td>G02.4 </td> <td>G02.4 </td> <td>G02.4 </td> </tr>
+    <tr> <td>19</td> <td>&#160;</td> <td>G03.4 </td> <td>G03.4 </td> <td>G03.4 </td> </tr>
+    <tr> <td>20</td> <td>&#160;</td> <td>G02.2 </td> <td>G02.2 </td> <td>G02.2 </td> </tr>
+    <tr> <td>21</td> <td>&#160;</td> <td>G03.2 </td> <td>G03.2 </td> <td>G03.2 </td> </tr>
+    <tr> <td>22</td> <td>G35   </td> <td>G02.3 </td> <td>G02.3 </td> <td>G02.3 </td> </tr>
+    <tr> <td>23</td> <td>G36   </td> <td>G03.3 </td> <td>G03.3 </td> <td>G03.3 </td> </tr>
+    <tr> <td>24</td> <td>G34   </td> <td>G06.1 </td> <td>G06.1 </td> <td>G06.1 </td> </tr>
+    <tr> <td>25</td> <td>&#160;</td> <td>G32.2 </td> <td>G32.2 </td> <td>G32.2 </td> </tr>
+    <tr>
+        <td rowspan="5">1</td>
+         <td>0 </td> <td>G17    </td> <td>G97    </td> <td>G97    </td> <td>G97    </td> </tr>
+    <tr> <td>1 </td> <td>&#160; </td> <td>G96    </td> <td>G96    </td> <td>G96    </td> </tr>
+    <tr> <td>4 </td> <td>G19    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr> <td>8 </td> <td>G18    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr> <td>10</td> <td>G17.1  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr>
+        <td rowspan="2">2</td>
+        <td>0 </td> <td>G90    </td> <td>&#160; </td> <td>G90    </td> <td>G90    </td> </tr>
+    <tr><td>1 </td> <td>G91    </td> <td>&#160; </td> <td>G91    </td> <td>G91    </td> </tr>
+    <tr>
+        <td rowspan="2">3</td>
+        <td>0 </td> <td>G23    </td> <td>G69    </td> <td>G69    </td> <td>G69    </td> </tr>
+    <tr><td>1 </td> <td>G22    </td> <td>G68    </td> <td>G68    </td> <td>G68    </td> </tr>
+    <tr>
+        <td rowspan="4">4</td>
+        <td>0 </td> <td>G94    </td> <td>G98    </td> <td>G94    </td> <td>G94    </td> </tr>
+    <tr><td>1 </td> <td>G95    </td> <td>G99    </td> <td>G95    </td> <td>G95    </td> </tr>
+    <tr><td>2 </td> <td>G93    </td> <td>G93    </td> <td>G93    </td> <td>G93    </td> </tr>
+    <tr><td>3 </td> <td>G93.2  </td> <td>G93    </td> <td>G93    </td> <td>G93    </td> </tr>
+    <tr>
+        <td rowspan="2">5</td>
+        <td>0 </td> <td>G20(G70)</td> <td>G20    </td> <td>G20    </td> <td>G70    </td> </tr>
+    <tr><td>1 </td> <td>G21(G71)</td> <td>G21    </td> <td>G21    </td> <td>G71    </td> </tr>
+    <tr>
+        <td rowspan="13">6</td>
+        <td>0 </td> <td>G40    </td> <td>G40    </td> <td>G40    </td> <td>G40    </td> </tr>
+    <tr><td>1 </td> <td>G41    </td> <td>G41    </td> <td>G41    </td> <td>G41    </td> </tr>
+    <tr><td>2 </td> <td>G42    </td> <td>G42    </td> <td>G42    </td> <td>G42    </td> </tr>
+    <tr><td>3 </td> <td>G41.2  </td> <td>G41.2  </td> <td>G41.2  </td> <td>G41.2  </td> </tr>
+    <tr><td>4 </td> <td>G42.2  </td> <td>G42.2  </td> <td>G42.2  </td> <td>G42.2  </td> </tr>
+    <tr><td>5 </td> <td>G41.3  </td> <td>G41.3  </td> <td>G41.3  </td> <td>G41.3  </td> </tr>
+    <tr><td>6 </td> <td>G41.4  </td> <td>G41.4  </td> <td>G41.4  </td> <td>G41.4  </td> </tr>
+    <tr><td>7 </td> <td>G42.4  </td> <td>G42.4  </td> <td>G42.4  </td> <td>G42.4  </td> </tr>
+    <tr><td>8 </td> <td>G41.5  </td> <td>G41.5  </td> <td>G41.5  </td> <td>G41.5  </td> </tr>
+    <tr><td>9 </td> <td>G42.5  </td> <td>G42.5  </td> <td>G42.5  </td> <td>G42.5  </td> </tr>
+    <tr><td>10</td> <td>G41.6  </td> <td>G40.3  </td> <td>G40.3  </td> <td>G40.3  </td> </tr>
+    <tr><td>11</td> <td>G42.6  </td> <td>G41.6  </td> <td>G41.6  </td> <td>G41.6  </td> </tr>
+    <tr><td>12</td> <td>&#160; </td> <td>G42.6  </td> <td>G42.6  </td> <td>G42.6  </td> </tr>
+    <tr><td rowspan="8">7</td>
+        <td>0 </td> <td>G49(G49.1)</td> <td>G25    </td> <td>G25    </td> <td>G25    </td> </tr>
+    <tr><td>1 </td> <td>G43    </td> <td>G26    </td> <td>G26    </td> <td>G26    </td> </tr>
+    <tr><td>2 </td> <td>G44    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>3 </td> <td>G43.1  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>4 </td> <td>G43.4  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>5 </td> <td>G43.5  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>6 </td> <td>G43.2  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>7 </td> <td>G43.3  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td rowspan="16">8</td>
+        <td>0 </td> <td>G80    </td> <td>G23    </td> <td>G23    </td> <td>G23    </td> </tr>
+    <tr><td>1 </td> <td>G81    </td> <td>G22    </td> <td>G22    </td> <td>G22    </td> </tr>
+    <tr><td>2 </td> <td>G82    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>3 </td> <td>G83    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>4 </td> <td>G84    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>5 </td> <td>G85    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>6 </td> <td>G86    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>7 </td> <td>G87    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>8 </td> <td>G88    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>9 </td> <td>G89    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>10</td> <td>G73    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>11</td> <td>G74    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>12</td> <td>G76    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>13</td> <td>G84.2  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>14</td> <td>G84.3  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>15</td> <td>G81.2  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td rowspan="8">9</td>
+        <td>0 </td> <td>G98    </td> <td>G80    </td> <td>G80    </td> <td>G80    </td> </tr>
+    <tr><td>1 </td> <td>G99    </td> <td>G83    </td> <td>G83    </td> <td>G83    </td> </tr>
+    <tr><td>2 </td> <td>&#160; </td> <td>G84    </td> <td>G84    </td> <td>G84    </td> </tr>
+    <tr><td>3 </td> <td>&#160; </td> <td>G85    </td> <td>G85    </td> <td>G85    </td> </tr>
+    <tr><td>4 </td> <td>&#160; </td> <td>G86    </td> <td>G86    </td> <td>G86    </td> </tr>
+    <tr><td>5 </td> <td>&#160; </td> <td>G87    </td> <td>G87    </td> <td>G87    </td> </tr>
+    <tr><td>6 </td> <td>&#160; </td> <td>G88    </td> <td>G88    </td> <td>G88    </td> </tr>
+    <tr><td>7 </td> <td>&#160; </td> <td>G89    </td> <td>G89    </td> <td>G89    </td> </tr>
+    <tr><td rowspan="2">10</td>
+        <td>0 </td> <td>G50    </td> <td>&#160; </td> <td>G98    </td> <td>G98    </td> </tr>
+    <tr><td>1 </td> <td>G51    </td> <td>&#160; </td> <td>G99    </td> <td>G99    </td> </tr>
+    <tr><td rowspan="3">11</td>
+        <td>0 </td> <td>G67    </td> <td>G67    </td> <td>G67    </td> <td>G67    </td> </tr>
+    <tr><td>1 </td> <td>G66    </td> <td>G66    </td> <td>G66    </td> <td>G66    </td> </tr>
+    <tr><td>2 </td> <td>G66.1  </td> <td>G66.1  </td> <td>G66.1  </td> <td>G66.1  </td> </tr>
+    <tr><td rowspan="2">12</td>
+        <td>0 </td> <td>G97    </td> <td>G49    </td> <td>G49    </td> <td>G49    </td> </tr>
+    <tr><td>1 </td> <td>G96    </td> <td>G43    </td> <td>G43    </td> <td>G43    </td> </tr>
+    <tr><td rowspan="6">13</td>
+        <td>0 </td> <td>G54(G54.1)</td> <td>G54 </td> <td>G54    </td> <td>G54    </td> </tr>
+    <tr><td>1 </td> <td>G55    </td> <td>G55    </td> <td>G55    </td> <td>G55    </td> </tr>
+    <tr><td>2 </td> <td>G56    </td> <td>G56    </td> <td>G56    </td> <td>G56    </td> </tr>
+    <tr><td>3 </td> <td>G57    </td> <td>G57    </td> <td>G57    </td> <td>G57    </td> </tr>
+    <tr><td>4 </td> <td>G58    </td> <td>G58    </td> <td>G58    </td> <td>G58    </td> </tr>
+    <tr><td>5 </td> <td>G59    </td> <td>G59    </td> <td>G59    </td> <td>G59    </td> </tr>
+    <tr><td rowspan="4">14</td>
+        <td>0 </td> <td>G64    </td> <td>G64    </td> <td>G64    </td> <td>G64    </td> </tr>
+    <tr><td>1 </td> <td>G61    </td> <td>G61    </td> <td>G61    </td> <td>G61    </td> </tr>
+    <tr><td>2 </td> <td>G62    </td> <td>G62    </td> <td>G62    </td> <td>G62    </td> </tr>
+    <tr><td>3 </td> <td>G63    </td> <td>G63    </td> <td>G63    </td> <td>G63    </td> </tr>
+    <tr><td rowspan="7">15</td>
+        <td>0 </td> <td>G69    </td> <td>G17    </td> <td>G17    </td> <td>G17    </td> </tr>
+    <tr><td>1 </td> <td>G68    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>2 </td> <td>G68.2  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>3 </td> <td>G68.3  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>4 </td> <td>&#160; </td> <td>G18    </td> <td>G18    </td> <td>G18    </td> </tr>
+    <tr><td>8 </td> <td>&#160; </td> <td>G19    </td> <td>G19    </td> <td>G19    </td> </tr>
+    <tr><td>10</td> <td>&#160; </td> <td>G17.1  </td> <td>G17.1  </td> <td>G17.1  </td> </tr>
+    <tr><td rowspan="3">16</td>
+        <td>0 </td> <td>G15    </td> <td>G69.1  </td> <td>G69.1  </td> <td>G69.1  </td> </tr>
+    <tr><td>1 </td> <td>G16    </td> <td>G68.1  </td> <td>G68.1  </td> <td>G68.1  </td> </tr>
+    <tr><td>2 </td> <td>&#160; </td> <td>G68.2  </td> <td>G68.2  </td> <td>G68.2  </td> </tr>
+    <tr><td rowspan="3">17</td>
+        <td>0 </td> <td>G40.1(G150)</td> <td>&#160;</td> <td>G50   </td> <td>G50   </td> </tr>
+    <tr><td>1 </td> <td>G41.1(G151)</td> <td>&#160;</td> <td>G51   </td> <td>G51   </td> </tr>
+    <tr><td>2 </td> <td>G42.1(G152)</td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+    <tr><td rowspan="2">18</td>
+        <td>0 </td> <td>G25    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>1 </td> <td>G26    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td rowspan="2">19</td>
+        <td>0 </td> <td>G160   </td> <td>G50.2  </td> <td>G50.2  </td> <td>G50.2  </td> </tr>
+    <tr><td>1 </td> <td>G161   </td> <td>G51.2  </td> <td>G51.2  </td> <td>G51.2  </td> </tr>
+    <tr><td rowspan="2">20</td>
+        <td>0 </td> <td>G13.1(G113)</td> <td>G13.1(G113)</td> <td>G13.1(G113)</td> <td>G13.1(G113)</td> </tr>
+    <tr><td>1 </td> <td>G12.1(G112)</td> <td>G12.1(G112)</td> <td>G12.1(G112)</td> <td>G12.1(G112)</td> </tr>
+</tbody>
+</table>
+<br/>
+
+<li>Series 16i/18i-W<br/>
+Specify G code group number in following table for "type".</li>
+ <table border="1">
+    <thead>
+    <tr> <th>type</th> <th>g_data </th> <th>G code</th> </tr>
+    </thead>
+
+    <tbody>
+    <tr>
+        <td rowspan="4">0</td>
+        <td>0   </td> <td>G00        </td> </tr>
+    <tr><td>1   </td> <td>G01        </td> </tr>
+    <tr><td>2   </td> <td>G02        </td> </tr>
+    <tr><td>3   </td> <td>G03        </td> </tr>
+    <tr>
+        <td rowspan="3">1</td>
+        <td>0   </td> <td>G17        </td> </tr>
+    <tr><td>1   </td> <td>G18        </td> </tr>
+    <tr><td>2   </td> <td>G19        </td> </tr>
+    <tr>
+        <td rowspan="2">2</td>
+        <td>0   </td> <td>G90        </td> </tr>
+    <tr><td>1   </td> <td>G91        </td> </tr>
+    <tr>
+        <td rowspan="2">3</td>
+        <td>0   </td> <td>G23        </td> </tr>
+    <tr><td>1   </td> <td>G22        </td> </tr>
+    <tr>
+        <td rowspan="2">4</td>
+        <td>0   </td> <td>G94        </td> </tr>
+    <tr><td>1   </td> <td>G95        </td> </tr>
+    <tr>
+        <td rowspan="2">5</td>
+        <td>0   </td> <td>G20        </td> </tr>
+    <tr><td>1   </td> <td>G21        </td> </tr>
+    <tr>
+        <td rowspan="3">6</td>
+        <td>0   </td> <td>G40        </td> </tr>
+    <tr><td>1   </td> <td>G41        </td> </tr>
+    <tr><td>2   </td> <td>G42        </td> </tr>
+    <tr>
+        <td rowspan="3">7</td>
+        <td>0   </td> <td>G50        </td> </tr>
+    <tr><td>1   </td> <td>G51        </td> </tr>
+    <tr><td>2   </td> <td>G52        </td> </tr>
+    <tr>
+        <td rowspan="4">8</td>
+        <td>0   </td> <td>G60        </td> </tr>
+    <tr><td>1   </td> <td>G61        </td> </tr>
+    <tr><td>2   </td> <td>G62        </td> </tr>
+    <tr><td>3   </td> <td>G63        </td> </tr>
+    <tr>
+        <td rowspan="2">9</td>
+        <td>0   </td> <td>G49        </td> </tr>
+    <tr><td>1   </td> <td>G48        </td> </tr>
+    <tr>
+        <td rowspan="2">10</td>
+        <td>0   </td> <td>G66        </td> </tr>
+    <tr><td>1   </td> <td>G67        </td> </tr>
+    <tr>
+        <td rowspan="2">11</td>
+        <td>0   </td> <td>G47        </td> </tr>
+    <tr><td>1   </td> <td>G46        </td> </tr>
+    <tr>
+        <td rowspan="2">12</td>
+        <td>0   </td> <td>G68        </td> </tr>
+    <tr><td>1   </td> <td>G69        </td> </tr>
+    </tbody>
+</table>
+</ul>
+
+<p/>
+The numerical value of "g_data" mentioned in the above table is stored in the bit 0,..,bit 6 of "g_data" with binary format. Whether this G code is commanded in the target block specified by "block" or not is stored in the bit 7 of "g_data".
+<p/>
+<img src="misc/gcode.gif"></img>
+<p/>
+For example, the following result is gotten by calling this function during executing N100's block of the next machining program. (for M of Series 16i/18i/21i, 0i-A/B/C, Power Mate i)
+<p/>
+
+<blockquote>
+<pre>
+N090 G18 ;
+N100 G1 Z100. ;
+N110 G17 G2 X10. Y-20. R12. ;
+</pre>
+<table frame="hsides" rules="groups">
+<colgroup width="20%">
+<colgroup width="20%">
+<colgroup width="20%">
+<colgroup width="40%">
+<thead> <tr> <th>type</th> <th>block</th> <th>g_data</th> <th>Modal status</th> </tr> </thead>
+<tbody>
+    <tr> <td>0</td> <td>0</td> <td>0x81</td> <td>G1 is commanded.</td> </tr>
+    <tr> <td>0</td> <td>1</td> <td>0x82</td> <td>G2 is commanded.</td> </tr>
+    <tr> <td>1</td> <td>0</td> <td>0x08</td> <td>G18 mode. (not commanded)</td> </tr>
+    <tr> <td>1</td> <td>1</td> <td>0x80</td> <td>G17 is commanded.</td> </tr>
+</tbody>
+</colgroup>
+</colgroup>
+</colgroup>
+</colgroup>
+</table>
+</blockquote>
+
+<p>
+To read all "type" concerning G code at a time, -1 is specified. The array of g_data is stored in g_rdata.</p>
+<p class="label">(2) Reading modal data other than G code.</p>
+
+<ul>
+<li>Series 15</li>
+<table border="1">
+<colgroup width="20%">
+<thead>
+    <tr> <th>type</th> <th>Address</th> </tr>
+</thead>
+<tbody>
+    <tr><td>100 </td> <td>B (2nd auxiliary function)</td> </tr>
+    <tr><td>101 </td> <td>D</td> </tr>
+    <tr><td>102 </td> <td>E</td> </tr>
+    <tr><td>103 </td> <td>F</td> </tr>
+    <tr><td>104 </td> <td>H</td> </tr>
+    <tr><td>105 </td> <td>L</td> </tr>
+    <tr><td>106 </td> <td>M</td> </tr>
+    <tr><td>107 </td> <td>S</td> </tr>
+    <tr><td>108 </td> <td>T</td> </tr>
+    <tr><td>109 </td> <td>R</td> </tr>
+    <tr><td>110 </td> <td>P</td> </tr>
+    <tr><td>111 </td> <td>Q</td> </tr>
+    <tr><td>112 </td> <td>A</td> </tr>
+    <tr><td>113 </td> <td>C</td> </tr>
+    <tr><td>114 </td> <td>I</td> </tr>
+    <tr><td>115 </td> <td>J</td> </tr>
+    <tr><td>116 </td> <td>K</td> </tr>
+    <tr><td>117 </td> <td>N</td> </tr>
+    <tr><td>118 </td> <td>O</td> </tr>
+    <tr><td>119 </td> <td>U</td> </tr>
+    <tr><td>120 </td> <td>V</td> </tr>
+    <tr><td>121 </td> <td>W</td> </tr>
+    <tr><td>122 </td> <td>X</td> </tr>
+    <tr><td>123 </td> <td>Y</td> </tr>
+    <tr><td>124 </td> <td>Z</td> </tr>
+    <tr><td>125 </td> <td>M (2nd M code)</td> </tr>
+    <tr><td>126 </td> <td>M (3rd M code)</td> </tr>
+    </tbody>
+</colgroup>
+</table>
+
+<table border="1">
+<colgroup width="20%">
+<thead>
+    <tr> <th>type</th> <th>Address</th> </tr>
+</thead>
+<tbody>
+    <tr><td>200</td> <td>1st axis</td> </tr>
+    <tr><td>201</td> <td>2nd axis</td> </tr>
+    <tr><td>&#160; :</td> <td>&#160; &#160; :</td> </tr>
+    <tr><td>209</td> <td>10th axis</td> </tr>
+    <tr><td>210</td> <td>11th axis</td> </tr>
+    <tr><td>&#160; :</td> <td>&#160; &#160; :</td> </tr>
+    <tr><td>214</td> <td>15th axis</td> </tr>
+    <tr><td>215</td> <td>16th axis</td> </tr>
+    <tr><td>&#160; :</td> <td>&#160; &#160; :</td> </tr>
+    <tr><td>222</td> <td>23th axis</td> </tr>
+    <tr><td>223</td> <td>24th axis</td> </tr>
+</tbody>
+</colgroup>
+</table>
+
+<li type="square">When MAX_AXIS=15, type=215,..,223 are not used.</li>
+<li type="square">When MAX_AXIS=10, type=210,..,223 are not used.</li>
+<p>
+To read "type" concerning 100's at a time, -2 is specified. The data is stored in the user define type of ODBMDL4.<br/>
+To read "type" concerning 200's at a time, -3 is specified. The data is stored in the user define type of ODBMDL5.
+</p>
+<p><img src="misc/com15.gif"></img></p>
+</ul>
+
+<ul>
+    <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i</li>
+<table border="1">
+<colgroup width="20%">
+<thead>
+    <tr> <th>type</th> <th>Address</th> </tr>
+</thead>
+<tbody>
+    <tr><td>100 </td> <td>B (2nd auxiliary function)</td> </tr>
+    <tr><td>101 </td> <td>D</td> </tr>
+    <tr><td>102 </td> <td>- (reserved)</td> </tr>
+    <tr><td>103 </td> <td>F</td> </tr>
+    <tr><td>104 </td> <td>H [M]</td> </tr>
+    <tr><td>105 </td> <td>L</td> </tr>
+    <tr><td>106 </td> <td>M</td> </tr>
+    <tr><td>107 </td> <td>S</td> </tr>
+    <tr><td>108 </td> <td>T</td> </tr>
+    <tr><td>109 </td> <td>R [M]</td> </tr>
+    <tr><td>110 </td> <td>P [M]</td> </tr>
+    <tr><td>111 </td> <td>Q [M]</td> </tr>
+    <tr><td>112 </td> <td>A</td> </tr>
+    <tr><td>113 </td> <td>C</td> </tr>
+    <tr><td>114 </td> <td>I</td> </tr>
+    <tr><td>115 </td> <td>J</td> </tr>
+    <tr><td>116 </td> <td>K</td> </tr>
+    <tr><td>117 </td> <td>N</td> </tr>
+    <tr><td>118 </td> <td>O</td> </tr>
+    <tr><td>119 </td> <td>U</td> </tr>
+    <tr><td>120 </td> <td>V</td> </tr>
+    <tr><td>121 </td> <td>W</td> </tr>
+    <tr><td>122 </td> <td>X</td> </tr>
+    <tr><td>123 </td> <td>Y</td> </tr>
+    <tr><td>124 </td> <td>Z</td> </tr>
+    <tr><td>125 </td> <td>M (2nd M code)</td> </tr>
+    <tr><td>126 </td> <td>M (3rd M code)</td> </tr>
+</tbody>
+</colgroup>
+</table>
+
+<table border="1">
+<colgroup width="20%">
+<thead>
+    <tr> <th>type</th> <th>Address</th> </tr>
+</thead>
+<tbody>
+    <tr><td>200 </td> <td>1st axis</td> </tr>
+    <tr><td>201 </td> <td>2nd axis</td> </tr>
+    <tr><td>202 </td> <td>3rd axis</td> </tr>
+    <tr><td>203 </td> <td>4th axis</td> </tr>
+    <tr><td>204 </td> <td>5th axis</td> </tr>
+    <tr><td>205 </td> <td>6th axis</td> </tr>
+    <tr><td>206 </td> <td>7th axis</td> </tr>
+    <tr><td>207 </td> <td>8th axis</td> </tr>
+</tbody>
+</colgroup>
+</table>
+</ul>
+
+<p>[M] is read as a modal data on M series and a commanded data on T series.</p>
+
+<p>To read "type" concerning 100's at a time, -2 is specified. The data is stored in the array of raux1.</p>
+
+<p>To read "type" concerning 200's at a time, -3 is specified. The data is stored in the array of raux2.</p>
+
+<p><img src="misc/com16.gif"></img></p>
+
+<ul type="square">
+<li>
+ The command of a decimal point in 'FLAG1' and the number of places of decimals in 'FLAG2' are valid in the case of 'F code'.<br/>
+ And, when the command in the present block is '1', the command of a decimal point in 'FLAG1' is only effective.<br/>
+ So, the number of places of decimal is always effective.
+</li>
+<li>The number of input place of M,S,T,B is digits granted by NC parameter.</li>
+<table>
+    <tr> <td>M code</td> <td>:</td> <td>parameter No.3030</td> </tr>
+    <tr> <td>S code</td> <td>:</td> <td>parameter No.3031</td> </tr>
+    <tr> <td>T code</td> <td>:</td> <td>parameter No.3032</td> </tr>
+    <tr> <td>B code</td> <td>:</td> <td>parameter No.3033</td> </tr>
+</table>
+</ul>
+<p></p>
+<ul>
+    <li>Series 30i, 0i-D/F, PMi-A</li>
+<table border="1">
+    <colgroup width="20%">
+    <thead>
+    <tr> <th>type</th> <th>Address</th> </tr>
+    </thead>
+    <tbody>
+    <tr><td>100 </td> <td>B (2nd auxiliary function)</td> </tr>
+    <tr><td>101 </td> <td>D</td> </tr>
+    <tr><td>102 </td> <td>- (reserved)</td> </tr>
+    <tr><td>103 </td> <td>F</td> </tr>
+    <tr><td>104 </td> <td>H [M]</td> </tr>
+    <tr><td>105 </td> <td>L</td> </tr>
+    <tr><td>106 </td> <td>M</td> </tr>
+    <tr><td>107 </td> <td>S</td> </tr>
+    <tr><td>108 </td> <td>T</td> </tr>
+    <tr><td>109 </td> <td>R [M]</td> </tr>
+    <tr><td>110 </td> <td>P [M]</td> </tr>
+    <tr><td>111 </td> <td>Q [M]</td> </tr>
+    <tr><td>112 </td> <td>A</td> </tr>
+    <tr><td>113 </td> <td>C</td> </tr>
+    <tr><td>114 </td> <td>I</td> </tr>
+    <tr><td>115 </td> <td>J</td> </tr>
+    <tr><td>116 </td> <td>K</td> </tr>
+    <tr><td>117 </td> <td>N</td> </tr>
+    <tr><td>118 </td> <td>O</td> </tr>
+    <tr><td>119 </td> <td>U</td> </tr>
+    <tr><td>120 </td> <td>V</td> </tr>
+    <tr><td>121 </td> <td>W</td> </tr>
+    <tr><td>122 </td> <td>X</td> </tr>
+    <tr><td>123 </td> <td>Y</td> </tr>
+    <tr><td>124 </td> <td>Z</td> </tr>
+    <tr><td>125 </td> <td>M (2nd M code)</td> </tr>
+    <tr><td>126 </td> <td>M (3rd M code)</td> </tr>
+    </tbody>
+</colgroup>
+</table>
+
+<table border="1">
+    <colgroup width="20%">
+    <thead>
+    <tr> <th>type</th> <th>Address</th> </tr>
+    </thead>
+    <tbody>
+    <tr><td>200 </td> <td>1st axis</td> </tr>
+    <tr><td>201 </td> <td>2nd axis</td> </tr>
+    <tr><td>202 </td> <td>3rd axis</td> </tr>
+    <tr><td>203 </td> <td>4th axis</td> </tr>
+    <tr><td>204 </td> <td>5th axis</td> </tr>
+    <tr><td>205 </td> <td>6th axis</td> </tr>
+    <tr><td>206 </td> <td>7th axis</td> </tr>
+    <tr><td>207 </td> <td>8th axis</td> </tr>
+    </tbody>
+</colgroup>
+</table>
+</ul>
+
+<p>[M] is read as a modal data on M series and a commanded data on T series.</p>
+
+<p>To read "type" concerning 100's at a time, -2 is specified. The data is stored in the array of raux1.</p>
+
+<p>To read "type" concerning 200's at a time, -3 is specified. The data is stored in the array of raux2.</p>
+
+<p><img src="misc/com30.gif"></img></p>
+
+<ul type="square">
+    <li>Sometimes the number of places of decimals is 'not zero' without the command of a decimal point.</li>
+    <li>The number of input place of M,S,T,B is digits granted by NC parameter.</li>
+<table>
+    <tr> <td>M code</td> <td>:</td> <td>parameter No.3030</td> </tr>
+    <tr> <td>S code</td> <td>:</td> <td>parameter No.3031</td> </tr>
+    <tr> <td>T code</td> <td>:</td> <td>parameter No.3032</td> </tr>
+    <tr> <td>B code</td> <td>:</td> <td>parameter No.3033</td> </tr>
+</table>
+</ul>
+
+<p></p>
+
+<ul>
+    <li>Series 16i/18i-W</li>
+<table border="1">
+    <colgroup width="20%">
+    <thead>
+    <tr> <th>type</th> <th>Address</th> </tr>
+    </thead>
+    <tbody>
+    <tr><td>100 </td> <td>B</td> </tr>
+    <tr><td>101 </td> <td>D</td> </tr>
+    <tr><td>102 </td> <td>- (reserved)</td> </tr>
+    <tr><td>103 </td> <td>F</td> </tr>
+    <tr><td>104 </td> <td>H</td> </tr>
+    <tr><td>105 </td> <td>L</td> </tr>
+    <tr><td>106 </td> <td>M</td> </tr>
+    <tr><td>107 </td> <td>S</td> </tr>
+    <tr><td>108 </td> <td>T</td> </tr>
+    <tr><td>109 </td> <td>R</td> </tr>
+    <tr><td>110 </td> <td>P</td> </tr>
+    <tr><td>111 </td> <td>Q</td> </tr>
+    <tr><td>112 </td> <td>A</td> </tr>
+    <tr><td>113 </td> <td>C</td> </tr>
+    <tr><td>114 </td> <td>I</td> </tr>
+    <tr><td>115 </td> <td>J</td> </tr>
+    <tr><td>116 </td> <td>K</td> </tr>
+    <tr><td>117 </td> <td>N</td> </tr>
+    <tr><td>118 </td> <td>O</td> </tr>
+    <tr><td>119 </td> <td>U</td> </tr>
+    <tr><td>120 </td> <td>V</td> </tr>
+    <tr><td>121 </td> <td>W</td> </tr>
+    <tr><td>122 </td> <td>X</td> </tr>
+    <tr><td>123 </td> <td>Y</td> </tr>
+    <tr><td>124 </td> <td>Z</td> </tr>
+    </tbody>
+</colgroup>
+</table>
+</ul>
+
+<p>To read "type" concerning 100's at a time, -2 is specified.</p>
+<p>The data is stored in the array of raux1.</p>
+
+<p><img src="misc/com16w.gif"></img></p>
+
+<ul type="square">
+<li>
+ The command of a decimal point in 'FLAG1' and the number of places of decimals in 'FLAG2' are valid in the case of 'F code'.<br/>
+ And, when the command in the present block is '1', the command of a decimal point in 'FLAG1' is only effective.<br/>
+ So, the number of places of decimal is always effective.
+</li>
+</ul>
+<p class="label">(3) Read modal data of one shot G code</p>
+
+<ul>
+<li>Series 15 (only HSSB)</li>
+<table border="1">
+<thead>
+    <tr> <th>    </th> <th>       </th> <th>M series</th> <th colspan="3">T series</th> </tr>
+    <tr> <th>type</th> <th>g_data </th> <th>G code     </th> <th>G code<br/>System A</th> <th>G code<br/>System B</th> <th>G code<br/>System C</th> </tr>
+</thead>
+
+<tbody>
+    <tr><td rowspan="73">300</td>
+         <td> 0   </td> <td>G04        </td> <td>G04        </td> <td>G04        </td> <td>G04        </td> </tr>
+    <tr> <td> 1   </td> <td>G10        </td> <td>G10        </td> <td>G10        </td> <td>G10        </td> </tr>
+    <tr> <td> 2   </td> <td>G10.1      </td> <td>G10.1      </td> <td>G10.1      </td> <td>G10.1      </td> </tr>
+    <tr> <td> 3   </td> <td>G27        </td> <td>G27        </td> <td>G27        </td> <td>G27        </td> </tr>
+    <tr> <td> 4   </td> <td>G28        </td> <td>G28        </td> <td>G28        </td> <td>G28        </td> </tr>
+    <tr> <td> 5   </td> <td>G29        </td> <td>G29        </td> <td>G29        </td> <td>G29        </td> </tr>
+    <tr> <td> 6   </td> <td>G30        </td> <td>G30        </td> <td>G30        </td> <td>G30        </td> </tr>
+    <tr> <td> 7   </td> <td>G30.1      </td> <td>G30.1      </td> <td>G30.1      </td> <td>G30.1      </td> </tr>
+    <tr> <td>8 (*)</td> <td>G31<br/>(G31.1)</td> <td>G31<br/>(G31.1)</td> <td>G31<br/>(G31.1)</td> <td>G31<br/>(G31.1)</td> </tr>
+    <tr> <td> 9   </td> <td>G31.2      </td> <td>G31.2      </td> <td>G31.2      </td> <td>G31.2      </td> </tr>
+    <tr> <td> 10  </td> <td>G31.3      </td> <td>G31.3      </td> <td>G31.3      </td> <td>G31.3      </td> </tr>
+    <tr> <td> 11  </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td>12 (*)</td> <td>G37<br/>(G37.1)</td> <td>G37<br/>(G37.1)</td> <td>G37<br/>(G37.1)</td> <td>G37<br/>(G37.1)</td> </tr>
+    <tr> <td> 13  </td> <td>&#160;     </td> <td>G37.2      </td> <td>G37.2      </td> <td>G37.2      </td> </tr>
+    <tr> <td> 14  </td> <td>&#160;     </td> <td>G37.3      </td> <td>G37.3      </td> <td>G37.3      </td> </tr>
+    <tr> <td> 15  </td> <td>G39        </td> <td>G39        </td> <td>G39        </td> <td>G39        </td> </tr>
+    <tr> <td> 16  </td> <td>G52        </td> <td>G52        </td> <td>G52        </td> <td>G52        </td> </tr>
+    <tr> <td> 17  </td> <td>G60        </td> <td>G60        </td> <td>G60        </td> <td>G60        </td> </tr>
+    <tr> <td> 18  </td> <td>G65        </td> <td>G65        </td> <td>G65        </td> <td>G65        </td> </tr>
+    <tr> <td> 19  </td> <td>G92        </td> <td>G92        </td> <td>G92        </td> <td>G92        </td> </tr>
+    <tr> <td> 20  </td> <td>&#160;     </td> <td>G70        </td> <td>G70        </td> <td>G70        </td> </tr>
+    <tr> <td> 21  </td> <td>&#160;     </td> <td>G71        </td> <td>G71        </td> <td>G71        </td> </tr>
+    <tr> <td> 22  </td> <td>&#160;     </td> <td>G72        </td> <td>G72        </td> <td>G72        </td> </tr>
+    <tr> <td> 23  </td> <td>&#160;     </td> <td>G73        </td> <td>G73        </td> <td>G73        </td> </tr>
+    <tr> <td> 24  </td> <td>&#160;     </td> <td>G74        </td> <td>G74        </td> <td>G74        </td> </tr>
+    <tr> <td> 25  </td> <td>&#160;     </td> <td>G75        </td> <td>G75        </td> <td>G75        </td> </tr>
+    <tr> <td> 26  </td> <td>&#160;     </td> <td>G76        </td> <td>G76        </td> <td>G76        </td> </tr>
+    <tr> <td> 27  </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 28  </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 29  </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 30  </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 31  </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 32  </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 33  </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 34  </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 35  </td> <td>G11        </td> <td>G11        </td> <td>G11        </td> <td>G11        </td> </tr>
+    <tr> <td> 36  </td> <td>G07        </td> <td>G07        </td> <td>G07        </td> <td>G07        </td> </tr>
+    <tr> <td> 37  </td> <td>&#160;     </td> <td>G10.2      </td> <td>G10.2      </td> <td>G10.2      </td> </tr>
+    <tr> <td> 38  </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 39  </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 40  </td> <td>G10.3      </td> <td>G10.3      </td> <td>G10.3      </td> <td>G10.3      </td> </tr>
+    <tr> <td> 41  </td> <td>G11.3      </td> <td>G11.3      </td> <td>G11.3      </td> <td>G11.3      </td> </tr>
+    <tr> <td> 42  </td> <td>G65.3      </td> <td>G65.3      </td> <td>G65.3      </td> <td>G65.3      </td> </tr>
+    <tr> <td> 43  </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 44  </td> <td>G05.1      </td> <td>G05.1      </td> <td>G05.1      </td> <td>G05.1      </td> </tr>
+    <tr> <td> 45  </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 46  </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 47  </td> <td>G07.1      </td> <td>G07.1      </td> <td>G07.1      </td> <td>G07.1      </td> </tr>
+    <tr> <td> 48  </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 49  </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 50  </td> <td>G81.1      </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 51  </td> <td>G72.2      </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 52  </td> <td>G10.6      </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 53  </td> <td>G92.1      </td> <td>G50.3      </td> <td>G92.1      </td> <td>G92.1      </td> </tr>
+    <tr> <td> 54  </td> <td>G72.2      </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 55  </td> <td>G05.2      </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 56  </td> <td>G12.2      </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 57  </td> <td>G13.2      </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 58  </td> <td>&#160;     </td> <td>G10.7      </td> <td>G10.7      </td> <td>G10.7      </td> </tr>
+    <tr> <td> 59  </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 60  </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 61  </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 62  </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 63  </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 64  </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 65  </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 66  </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 67  </td> <td>G31.9      </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 68  </td> <td>G10.9      </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 69  </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 70  </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 71  </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 72  </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    </tbody>
+    <tbody>
+    <tr> <td rowspan="3">301</td>
+         <td> 0   </td> <td>G09        </td> <td>G09        </td> <td>G09        </td> <td>G09        </td> </tr>
+    <tr> <td> 1   </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 2   </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    </tbody>
+    <tbody>
+    <tr> <td rowspan="3">302</td>
+         <td> 0   </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 1   </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 2   </td> <td>G53        </td> <td>G53        </td> <td>G53        </td> <td>G53        </td> </tr>
+    </tbody>
+    <tbody>
+    <tr> <td rowspan="5">303</td>
+         <td> 0   </td> <td>G38        </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 1   </td> <td>G45        </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 2   </td> <td>G46        </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 3   </td> <td>G47        </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 4   </td> <td>G48        </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+</tbody>
+</table>
+<table class="dd">
+  <tr><td>(*)</td> <td> </td> <td>G31 and G31.1 are the same function.</td></tr>
+  <tr><td>   </td> <td> </td> <td>G37 and G37.1 are the same function.</td></tr>
+</table>
+
+</ul>
+
+<ul>
+<li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i</li>
+<table border="1">
+<thead>
+    <tr> <th>    </th> <th>       </th> <th>M series</th> <th colspan="3">T series</th> <th>Laser</th> </tr>
+    <tr> <th>type</th> <th>g_data </th> <th>G code</th> <th>G code<br/>System A  </th> <th>G code<br/>System B  </th> <th>G code<br/>System C  </th> <th>G code</th> </tr>
+</thead>
+
+                                    <tbody>
+                                        <tr><td rowspan="56">300</td>
+                                            <td>0  </td> <td>G04    </td><td>G04   </td><td>G04   </td><td>G04   </td><td>G04   </td></tr>
+                                        <tr><td>1  </td> <td>G10    </td><td>G27   </td><td>G27   </td><td>G27   </td><td>G10   </td></tr>
+                                        <tr><td>2  </td> <td>&#160; </td><td>G28   </td><td>G28   </td><td>G28   </td><td>&#160;</td></tr>
+                                        <tr><td>3  </td> <td>&#160; </td><td>G29   </td><td>G29   </td><td>G29   </td><td>&#160;</td></tr>
+                                        <tr><td>4  </td> <td>G27    </td><td>G30   </td><td>G30   </td><td>G30   </td><td>G27   </td></tr>
+                                        <tr><td>5  </td> <td>G28    </td><td>G50   </td><td>G92   </td><td>G92   </td><td>G28   </td></tr>
+                                        <tr><td>6  </td> <td>G29    </td><td>G70   </td><td>G70   </td><td>G72   </td><td>G29   </td></tr>
+                                        <tr><td>7  </td> <td>G30    </td><td>G71   </td><td>G71   </td><td>G73   </td><td>G30   </td></tr>
+                                        <tr><td>8  </td> <td>G38    </td><td>G72   </td><td>G72   </td><td>G74   </td><td>&#160;</td></tr>
+                                        <tr><td>9  </td> <td>G39    </td><td>G73   </td><td>G73   </td><td>G75   </td><td>&#160;</td></tr>
+                                        <tr><td>10 </td> <td>G45    </td><td>G74   </td><td>G74   </td><td>G76   </td><td>G45   </td></tr>
+                                        <tr><td>11 </td> <td>G46    </td><td>G75   </td><td>G75   </td><td>G77   </td><td>G46   </td></tr>
+                                        <tr><td>12 </td> <td>G47    </td><td>G76   </td><td>G76   </td><td>G78   </td><td>G47   </td></tr>
+                                        <tr><td>13 </td> <td>G48    </td><td>G10   </td><td>G10   </td><td>G10   </td><td>G48   </td></tr>
+                                        <tr><td>14 </td> <td>G92    </td><td>G37.1 </td><td>G37.1 </td><td>G37.1 </td><td>G92   </td></tr>
+                                        <tr><td>15 </td> <td>G09    </td><td>G37   </td><td>G37   </td><td>G37   </td><td>G09   </td></tr>
+                                        <tr><td>16 </td> <td>G31(G31.1) </td><td>G31 </td><td>G31 </td><td>G31   </td><td>G31   </td></tr>
+                                        <tr><td>17 </td> <td>G60    </td><td>G65   </td><td>G65   </td><td>G65   </td><td>G60   </td></tr>
+                                        <tr><td>18 </td> <td>G65    </td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>G65   </td></tr>
+                                        <tr><td>19 </td> <td>&#160; </td><td>G05   </td><td>G05   </td><td>G05   </td><td>&#160;</td></tr>
+                                        <tr><td>20 </td> <td>G05    </td><td>G11   </td><td>G11   </td><td>G11   </td><td>G05   </td></tr>
+                                        <tr><td>21 </td> <td>G11    </td><td>G07.1 </td><td>G07.1 </td><td>G07.1 </td><td>G11   </td></tr>
+                                        <tr><td>22 </td> <td>G52    </td><td>G52   </td><td>G52   </td><td>G52   </td><td>G52   </td></tr>
+                                        <tr><td>23 </td> <td>G53    </td><td>G53   </td><td>G53   </td><td>G53   </td><td>G53   </td></tr>
+                                        <tr><td>24 </td> <td>G37    </td><td>G30.1 </td><td>G30.1 </td><td>G30.1 </td><td>&#160;</td></tr>
+                                        <tr><td>25 </td> <td>G07.1(G107)</td><td>G10.6</td><td>G10.6</td><td>G10.6</td><td>G07.1</td></tr>
+                                        <tr><td>26 </td> <td>G30.1  </td><td>G50.3 </td><td>G92.1 </td><td>G92.1 </td><td>G30.1 </td></tr>
+                                        <tr><td>27 </td> <td>G10.6  </td><td>G08   </td><td>G08   </td><td>G08   </td><td>&#160;</td></tr>
+                                        <tr><td>28 </td> <td>G72.1  </td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>G72.1 </td></tr>
+                                        <tr><td>29 </td> <td>G72.2  </td><td>G39   </td><td>G39   </td><td>G39   </td><td>G72.2 </td></tr>
+                                        <tr><td>30 </td> <td>G92.1  </td><td>G60   </td><td>G60   </td><td>G60   </td><td>G92.1 </td></tr>
+                                        <tr><td>31 </td> <td>G08    </td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>G08   </td></tr>
+                                        <tr><td>32 </td> <td>&#160; </td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>G71   </td></tr>
+                                        <tr><td>80 </td> <td>&#160; </td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>G24   </td></tr>
+                                        <tr><td>81 </td> <td>&#160; </td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>G32   </td></tr>
+                                        <tr><td>100</td> <td>G81.1  </td><td>G07   </td><td>G07   </td><td>G07   </td><td>&#160;</td></tr>
+                                        <tr><td>101</td> <td>&#160; </td><td>G09   </td><td>G09   </td><td>G09   </td><td>&#160;</td></tr>
+                                        <tr><td>102</td> <td>&#160; </td><td>G73.1 </td><td>G73.1 </td><td>G73.1 </td><td>&#160;</td></tr>
+                                        <tr><td>103</td> <td>&#160; </td><td>G73.2 </td><td>G73.2 </td><td>G73.2 </td><td>&#160;</td></tr>
+                                        <tr><td>104</td> <td>G05.1  </td><td>G74.1 </td><td>G74.1 </td><td>G74.1 </td><td>&#160;</td></tr>
+                                        <tr><td>105</td> <td>G07    </td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td></tr>
+                                        <tr><td>106</td> <td>G31.8  </td><td>G80.4 </td><td>G80.4 </td><td>G80.4 </td><td>&#160;</td></tr>
+                                        <tr><td>107</td> <td>G31.9  </td><td>G81.4 </td><td>G81.4 </td><td>G81.4 </td><td>&#160;</td></tr>
+                                        <tr><td>108</td> <td>G12.4  </td><td>G82.4 </td><td>G82.4 </td><td>G82.4 </td><td>&#160;</td></tr>
+                                        <tr><td>109</td> <td>G13.4  </td><td>G83.4 </td><td>G83.4 </td><td>G83.4 </td><td>&#160;</td></tr>
+                                        <tr><td>110</td> <td>G05.4  </td><td>G84.4 </td><td>G84.4 </td><td>G84.4 </td><td>&#160;</td></tr>
+                                        <tr><td>111</td> <td>G10.9  </td><td>G05.1 </td><td>G05.1 </td><td>G05.1 </td><td>&#160;</td></tr>
+                                        <tr><td>112</td> <td>G31.2  </td><td>G72.1 </td><td>G72.1 </td><td>G72.1 </td><td>&#160;</td></tr>
+                                        <tr><td>113</td> <td>G31.3  </td><td>G72.2 </td><td>G72.2 </td><td>G72.2 </td><td>&#160;</td></tr>
+                                        <tr><td>114</td> <td>G31.4  </td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td></tr>
+                                        <tr><td>115</td> <td>G53.1  </td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td></tr>
+                                        <tr><td>116</td> <td>&#160; </td><td>G38   </td><td>G38   </td><td>G38   </td><td>&#160;</td></tr>
+                                        <tr><td>117</td> <td>G28.2  </td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td></tr>
+                                        <tr><td>118</td> <td>G30.2  </td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td></tr>
+                                        <tr><td>126</td> <td>&#160; </td><td>G28.2 </td><td>G28.2 </td><td>G28.2 </td><td>&#160;</td></tr>
+                                        <tr><td>127</td> <td>&#160; </td><td>G30.2 </td><td>G30.2 </td><td>G30.2 </td><td>&#160;</td></tr>
+                                    </tbody>
+</table>
+</ul>
+
+<ul>
+<li>Series 30i, 0i-D/F, PMi-A</li>
+<table border="1">
+<thead>
+    <tr> <th>    </th> <th>       </th> <th>M series</th> <th colspan="3">T series</th> </tr>
+    <tr> <th>type</th> <th>g_data </th> <th>G code     </th> <th>G code<br/>System A</th> <th>G code<br/>System B</th> <th>G code<br/>System C</th> </tr>
+</thead>
+
+<tbody>
+    <tr><td rowspan="59">300</td>
+         <td> 0   </td> <td>G04        </td> <td>G04        </td> <td>G04        </td> <td>G04        </td> </tr>
+    <tr> <td> 1   </td> <td>G10        </td> <td>G27        </td> <td>G27        </td> <td>G27        </td> </tr>
+    <tr> <td> 2   </td> <td>&#160;     </td> <td>G28        </td> <td>G28        </td> <td>G28        </td> </tr>
+    <tr> <td> 3   </td> <td>&#160;     </td> <td>G29        </td> <td>G29        </td> <td>G29        </td> </tr>
+    <tr> <td> 4   </td> <td>G27        </td> <td>G30        </td> <td>G30        </td> <td>G30        </td> </tr>
+    <tr> <td> 5   </td> <td>G28        </td> <td>G50        </td> <td>G92        </td> <td>G92        </td> </tr>
+    <tr> <td> 6   </td> <td>G29        </td> <td>G70        </td> <td>G70        </td> <td>G72        </td> </tr>
+    <tr> <td> 7   </td> <td>G30        </td> <td>G71        </td> <td>G71        </td> <td>G73        </td> </tr>
+    <tr> <td> 8   </td> <td>&#160;     </td> <td>G72        </td> <td>G72        </td> <td>G74        </td> </tr>
+    <tr> <td> 9   </td> <td>G39        </td> <td>G73        </td> <td>G73        </td> <td>G75        </td> </tr>
+    <tr> <td> 10  </td> <td>&#160;     </td> <td>G74        </td> <td>G74        </td> <td>G76        </td> </tr>
+    <tr> <td> 11  </td> <td>&#160;     </td> <td>G75        </td> <td>G75        </td> <td>G77        </td> </tr>
+    <tr> <td> 12  </td> <td>&#160;     </td> <td>G76        </td> <td>G76        </td> <td>G78        </td> </tr>
+    <tr> <td> 13  </td> <td>&#160;     </td> <td>G10        </td> <td>G10        </td> <td>G10        </td> </tr>
+    <tr> <td> 14  </td> <td>G92        </td> <td>G37.1      </td> <td>G37.1      </td> <td>G37.1      </td> </tr>
+    <tr> <td> 15  </td> <td>&#160;     </td> <td>G37(G37.2) </td> <td>G37(G37.2) </td> <td>G37(G37.2) </td> </tr>
+    <tr> <td> 16  </td> <td>G31(G31.1) </td> <td>G31        </td> <td>G31        </td> <td>G31        </td> </tr>
+    <tr> <td> 17  </td> <td>G60        </td> <td>G65        </td> <td>G65        </td> <td>G65        </td> </tr>
+    <tr> <td> 18  </td> <td>G65        </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 19  </td> <td>&#160;     </td> <td>G05        </td> <td>G05        </td> <td>G05        </td> </tr>
+    <tr> <td> 20  </td> <td>G05        </td> <td>G11        </td> <td>G11        </td> <td>G11        </td> </tr>
+    <tr> <td> 21  </td> <td>G11        </td> <td>G07.1(G107)</td> <td>G07.1(G107)</td> <td>G07.1(G107)</td> </tr>
+    <tr> <td> 22  </td> <td>G52        </td> <td>G52        </td> <td>G52        </td> <td>G52        </td> </tr>
+    <tr> <td> 23  </td> <td>&#160;     </td> <td>G53        </td> <td>G53        </td> <td>G53        </td> </tr>
+    <tr> <td> 24  </td> <td>G37        </td> <td>G30.1      </td> <td>G30.1      </td> <td>G30.1      </td> </tr>
+    <tr> <td> 25  </td> <td>G07.1(G107)</td> <td>G10.6      </td> <td>G10.6      </td> <td>G10.6      </td> </tr>
+    <tr> <td> 26  </td> <td>G30.1      </td> <td>G50.3      </td> <td>G92.1      </td> <td>G92.1      </td> </tr>
+    <tr> <td> 27  </td> <td>G10.6      </td> <td>G08        </td> <td>G08        </td> <td>G08        </td> </tr>
+    <tr> <td> 28  </td> <td>G72.1      </td> <td>G100       </td> <td>G110       </td> <td>G101       </td> </tr>
+    <tr> <td> 29  </td> <td>G72.2      </td> <td>G39        </td> <td>G39        </td> <td>G39        </td> </tr>
+    <tr> <td> 30  </td> <td>G92.1      </td> <td>G60        </td> <td>G60        </td> <td>G60        </td> </tr>
+    <tr> <td> 31  </td> <td>G08        </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 96  </td> <td>&#160;     </td> <td>G31.8      </td> <td>G31.8      </td> <td>G31.8      </td> </tr>
+    <tr> <td> 97  </td> <td>&#160;     </td> <td>G37.3      </td> <td>G37.3      </td> <td>G37.3      </td> </tr>
+    <tr> <td> 99  </td> <td>&#160;     </td> <td>G10.9      </td> <td>G10.9      </td> <td>G10.9      </td> </tr>
+    <tr> <td> 100 </td> <td>G81.1      </td> <td>G07        </td> <td>G07        </td> <td>G07        </td> </tr>
+    <tr> <td> 102 </td> <td>&#160;     </td> <td>G73.1      </td> <td>G73.1      </td> <td>G73.1      </td> </tr>
+    <tr> <td> 103 </td> <td>&#160;     </td> <td>G73.2      </td> <td>G73.2      </td> <td>G73.2      </td> </tr>
+    <tr> <td> 104 </td> <td>G05.1      </td> <td>G74.1      </td> <td>G74.1      </td> <td>G74.1      </td> </tr>
+    <tr> <td> 105 </td> <td>G07        </td> <td>G05.4      </td> <td>G05.4      </td> <td>G05.4      </td> </tr>
+    <tr> <td> 106 </td> <td>G31.8      </td> <td>G80.4      </td> <td>G80.4      </td> <td>G80.4      </td> </tr>
+    <tr> <td> 107 </td> <td>G31.9      </td> <td>G81.4      </td> <td>G81.4      </td> <td>G81.4      </td> </tr>
+    <tr> <td> 108 </td> <td>G12.4      </td> <td>G82.4      </td> <td>G82.4      </td> <td>G82.4      </td> </tr>
+    <tr> <td> 109 </td> <td>G13.4      </td> <td>G83.4      </td> <td>G83.4      </td> <td>G83.4      </td> </tr>
+    <tr> <td> 110 </td> <td>G05.4      </td> <td>G84.4      </td> <td>G84.4      </td> <td>G84.4      </td> </tr>
+    <tr> <td> 111 </td> <td>G10.9      </td> <td>G05.1      </td> <td>G05.1      </td> <td>G05.1      </td> </tr>
+    <tr> <td> 112 </td> <td>G31.2      </td> <td>G72.1      </td> <td>G72.1      </td> <td>G72.1      </td> </tr>
+    <tr> <td> 113 </td> <td>G31.3      </td> <td>G72.2      </td> <td>G72.2      </td> <td>G72.2      </td> </tr>
+    <tr> <td> 114 </td> <td>G31.4      </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 116 </td> <td>G91.1      </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 119 </td> <td>&#160;     </td> <td>G43.6      </td> <td>G43.6      </td> <td>G43.6      </td> </tr>
+    <tr> <td> 120 </td> <td>&#160;     </td> <td>G50.4      </td> <td>G50.4      </td> <td>G50.4      </td> </tr>
+    <tr> <td> 121 </td> <td>&#160;     </td> <td>G50.5      </td> <td>G50.5      </td> <td>G50.5      </td> </tr>
+    <tr> <td> 122 </td> <td>&#160;     </td> <td>G50.6      </td> <td>G50.6      </td> <td>G50.6      </td> </tr>
+    <tr> <td> 123 </td> <td>&#160;     </td> <td>G51.4      </td> <td>G51.4      </td> <td>G51.4      </td> </tr>
+    <tr> <td> 124 </td> <td>&#160;     </td> <td>G51.5      </td> <td>G51.5      </td> <td>G51.5      </td> </tr>
+    <tr> <td> 125 </td> <td>G37.1      </td> <td>G51.6      </td> <td>G91.1      </td> <td>G91.1      </td> </tr>
+    <tr> <td> 126 </td> <td>G37.2      </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 127 </td> <td>G37.3      </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+</tbody>
+</table>
+</ul>
+
+<ul>
+<li>Series 16i/18i-W</li>
+<table border="1">
+<thead>
+    <tr> <th>type</th> <th>g_data </th> <th>G code</th> </tr>
+</thead>
+
+<tbody>
+    <tr>
+        <td rowspan="31">300</td>
+        <td>0   </td> <td>G04</td> </tr>
+    <tr><td>1   </td> <td>G10</td> </tr>
+    <tr><td>2   </td> <td>G11</td> </tr>
+    <tr><td>3   </td> <td>G09</td> </tr>
+    <tr><td>4   </td> <td>G27</td> </tr>
+    <tr><td>5   </td> <td>G28</td> </tr>
+    <tr><td>6   </td> <td>G29</td> </tr>
+    <tr><td>7   </td> <td>G30</td> </tr>
+    <tr><td>13  </td> <td>G93</td> </tr>
+    <tr><td>14  </td> <td>G92</td> </tr>
+    <tr><td>15  </td> <td>G31</td> </tr>
+    <tr><td>16  </td> <td>G70</td> </tr>
+    <tr><td>17  </td> <td>G71</td> </tr>
+    <tr><td>18  </td> <td>G72</td> </tr>
+    <tr><td>19  </td> <td>G73</td> </tr>
+    <tr><td>20  </td> <td>G74</td> </tr>
+    <tr><td>21  </td> <td>G75</td> </tr>
+    <tr><td>22  </td> <td>G76</td> </tr>
+    <tr><td>23  </td> <td>G77</td> </tr>
+    <tr><td>24  </td> <td>G78</td> </tr>
+    <tr><td>25  </td> <td>G79</td> </tr>
+    <tr><td>26  </td> <td>G65</td> </tr>
+    <tr><td>27  </td> <td>G32</td> </tr>
+    <tr><td>28  </td> <td>G33</td> </tr>
+    <tr><td>31  </td> <td>G53</td> </tr>
+    <tr><td>32  </td> <td>G80</td> </tr>
+    <tr><td>33  </td> <td>G81</td> </tr>
+    <tr><td>34  </td> <td>G86</td> </tr>
+    <tr><td>35  </td> <td>G87</td> </tr>
+    <tr><td>36  </td> <td>G88</td> </tr>
+    <tr><td>37  </td> <td>G89</td> </tr>
+    </tbody>
+</table>
+</ul>
+
+<p>The numerical value of "g_1shot" mentioned in the above table is stored in the bit 0,..,bit 6 of each array in "g_1shot" with binary format. Whether this G code is commanded in the objective block specified by "block" or not is stored in the bit 7 of "</p>
+
+<p><img src="misc/gcode.gif"></img></p>
+
+<p>To read "type" concerning 1 shot G code at a time, -4 is specified.<br/>
+In case of Series 15, the data of type=300,..,303 is stored in g_1shot[0],..,g_1shot[3].<br/>
+In case of Series 16/18/21/0i, 30i, Power Mate i and PMi-A, the data of type=300 is stored in g_1shot[0].
+</p>
+
+</content>
+</item>
+</vc>
+</common>
+
+
+        <!-- is Argument Start -->
+        <is>
+            <hssb>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name><type>in</type>
+                            <content>
+                                <p>Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.</p>
+                            </content>
+                    </item>
+
+                    <item>
+                        <name>type</name><type>in</type>
+                            <content>
+                            <p>Type of data is stored. (refer to the following)</p>
+                            <table class="dd">
+                                <tr> <td>-4</td> <td>:</td> <td>Read all data of 1 shot G code at a time.</td> </tr>
+                                <tr> <td>-3</td> <td>:</td> <td>Read all data concerning axis other than G code at a time.</td> </tr>
+                                <tr> <td>-2</td> <td>:</td> <td>Read all data other than G code at a time.</td> </tr>
+                                <tr> <td>-1</td> <td>:</td> <td>Read all data of G code at a time. (type = 0 to 20)</td> </tr>
+                                <tr> <td>0 to 20</td> <td>:</td> <td>Read the data of G code one by one.</td> </tr>
+                                <tr> <td>100 to 126</td> <td>:</td> <td>Read the data other than G code one by one.</td> </tr>
+                                <tr> <td>200 to 207</td> <td>:</td> <td>Read the data concerning axis other than G code one by one.</td> </tr>
+                                <tr> <td>300</td> <td>:</td> <td>Read the data of 1 shot G code one by one.</td> </tr>
+                    </table>
+                    </content>
+                    </item>
+
+                    <item>
+                        <name>block</name><type>in</type>
+                        <content>
+                            <p>Assigned block in stored.</p>
+                            <table class="dd">
+                                <tr> <td>0</td> <td>:</td> <td>active block</td> </tr>
+                                <tr> <td>1</td> <td>:</td> <td>next block</td> </tr>
+                                <tr> <td>2</td> <td>:</td> <td>block after next block</td> </tr>
+                            </table>
+                            <br/>
+                        </content>
+                    </item>
+
+                    <item>
+                    <name>modal</name><type>out</type>
+                    <content>
+                    <p>Pointer to the ODBMDL structure including the modal data.</p>
+                    The ODBMDL structure is as follows.
+<pre>
+typedef struct odbmdl {
+    short datano;              /* Kind of modal data */
+    short type;                /* Objective block */
+    union {
+        char  g_data;         /* Modal data of G code */
+        char  g_rdata[35];    /* Modal data of G code */
+        char  g_1shot[4];     /* Modal data of 1 shot G code*/
+        struct {
+            long    aux_data;
+                            /* Modal data other than G code */
+            char    flag1;          /* Flag 1 */
+            char    flag2;          /* Flag 2 */
+        }aux;
+        struct {
+            long    aux_data;
+                            /* Modal data other than G code */
+            char    flag1;          /* Flag 1 */
+            char    flag2;          /* Flag 2 */
+        }raux1[27];
+        struct {
+            long    aux_data;
+                            /* Modal data other than G code */
+            char    flag1;          /* Flag 1 */
+            char    flag2;          /* Flag 2 */
+        }raux2[MAX_AXIS];             /* MAX_AXIS : max. controlled axes. */
+    }modal;    
+} ODBMDL ;
+</pre>
+                    <dl>
+                        <dt>datano</dt>
+                        <dd>Kind of modal data is stored.</dd>
+                        <dt>type</dt>
+                        <dd>Target block to be read is stored.</dd>
+                        <dt>g_data</dt>
+                        <dd>Use for an individual reading G code (and 1 shot G code). Modal G code in the corresponding G code group is stored.</dd>
+                        <dt>g_rdata</dt>
+                        <dd>Use for reading G code at a time. Modal G code in the all G code group is stored.</dd>
+                        <dt>g_1shot</dt>
+                        <dd>Use for reading 1 shot G code at a time. (In case of individual reading, use "g_data".)</dd>
+                        <dt>aux</dt>
+                        <dd>Use for an individual reading other than G code (include axis data).</dd>
+                        <dt>raux1</dt>
+                        <dd>Use for reading other than G code at a time.</dd>
+                        <dt>raux2</dt>
+                        <dd>Use for reading concerning axis other than G code at a time.</dd>
+                        <dt>aux_data</dt>
+                        <dd>Modal data other than G code is stored.</dd>
+                        <dt>flag1</dt>
+                        <dd>Supplementary information is stored.</dd>
+                        <dt>flag2</dt>
+                        <dd>Supplementary information is stored.</dd>
+                     </dl>
+
+ <p class="label">(1) Reading modal G code.</p>
+ <ul>
+ <br/>
+
+
+<li>Specify G code group number in following table for "type".</li>
+<table border="1">
+<thead>
+    <tr> <th>    </th> <th>      </th> <th>M series</th>                 <th colspan="3">T series</th> </tr>
+    <tr> <th>type</th> <th>g_data</th> <th>G code     </th> <th>G code<br/>System A </th> <th>G code<br/>System B</th> <th>G code<br/>System C</th> </tr>
+</thead>
+
+<tbody>
+    <tr>
+        <td rowspan="25">0</td>
+         <td>0 </td> <td>G00   </td> <td>G00   </td> <td>G00   </td> <td>G00   </td> </tr>
+    <tr> <td>1 </td> <td>G01   </td> <td>G01   </td> <td>G01   </td> <td>G01   </td> </tr>
+    <tr> <td>2 </td> <td>G02   </td> <td>G02   </td> <td>G02   </td> <td>G02   </td> </tr>
+    <tr> <td>3 </td> <td>G03   </td> <td>G03   </td> <td>G03   </td> <td>G03   </td> </tr>
+    <tr> <td>4 </td> <td>G33   </td> <td>G32   </td> <td>G33   </td> <td>G33   </td> </tr>
+    <tr> <td>5 </td> <td>G75   </td> <td>G90   </td> <td>G77   </td> <td>G20   </td> </tr>
+    <tr> <td>6 </td> <td>G77   </td> <td>G92   </td> <td>G78   </td> <td>G21   </td> </tr>
+    <tr> <td>7 </td> <td>G78   </td> <td>G94   </td> <td>G79   </td> <td>G24   </td> </tr>
+    <tr> <td>9 </td> <td>G79   </td> <td>G34   </td> <td>G34   </td> <td>G34   </td> </tr>
+    <tr> <td>10</td> <td>G02.2 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+    <tr> <td>11</td> <td>G03.2 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+    <tr> <td>12</td> <td>G02.3 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+    <tr> <td>13</td> <td>G03.3 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+    <tr> <td>14</td> <td>G06.2 </td> <td>G35   </td> <td>G35   </td> <td>G35   </td> </tr>
+    <tr> <td>15</td> <td>G02.4 </td> <td>G36   </td> <td>G36   </td> <td>G36   </td> </tr>
+    <tr> <td>16</td> <td>G03.4 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+    <tr> <td>17</td> <td>&#160;</td> <td>G06.2 </td> <td>G06.2 </td> <td>G06.2 </td> </tr>
+    <tr> <td>18</td> <td>&#160;</td> <td>G02.4 </td> <td>G02.4 </td> <td>G02.4 </td> </tr>
+    <tr> <td>19</td> <td>&#160;</td> <td>G03.4 </td> <td>G03.4 </td> <td>G03.4 </td> </tr>
+    <tr> <td>20</td> <td>&#160;</td> <td>G02.2 </td> <td>G02.2 </td> <td>G02.2 </td> </tr>
+    <tr> <td>21</td> <td>&#160;</td> <td>G03.2 </td> <td>G03.2 </td> <td>G03.2 </td> </tr>
+    <tr> <td>22</td> <td>G35   </td> <td>G02.3 </td> <td>G02.3 </td> <td>G02.3 </td> </tr>
+    <tr> <td>23</td> <td>G36   </td> <td>G03.3 </td> <td>G03.3 </td> <td>G03.3 </td> </tr>
+    <tr> <td>24</td> <td>G34   </td> <td>G06.1 </td> <td>G06.1 </td> <td>G06.1 </td> </tr>
+    <tr> <td>25</td> <td>&#160;</td> <td>G32.2 </td> <td>G32.2 </td> <td>G32.2 </td> </tr>
+    <tr>
+        <td rowspan="5">1</td>
+         <td>0 </td> <td>G17    </td> <td>G97    </td> <td>G97    </td> <td>G97    </td> </tr>
+    <tr> <td>1 </td> <td>&#160; </td> <td>G96    </td> <td>G96    </td> <td>G96    </td> </tr>
+    <tr> <td>4 </td> <td>G19    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr> <td>8 </td> <td>G18    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr> <td>10</td> <td>G17.1  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr>
+        <td rowspan="2">2</td>
+        <td>0 </td> <td>G90    </td> <td>&#160; </td> <td>G90    </td> <td>G90    </td> </tr>
+    <tr><td>1 </td> <td>G91    </td> <td>&#160; </td> <td>G91    </td> <td>G91    </td> </tr>
+    <tr>
+        <td rowspan="2">3</td>
+        <td>0 </td> <td>G23    </td> <td>G69    </td> <td>G69    </td> <td>G69    </td> </tr>
+    <tr><td>1 </td> <td>G22    </td> <td>G68    </td> <td>G68    </td> <td>G68    </td> </tr>
+    <tr>
+        <td rowspan="4">4</td>
+        <td>0 </td> <td>G94    </td> <td>G98    </td> <td>G94    </td> <td>G94    </td> </tr>
+    <tr><td>1 </td> <td>G95    </td> <td>G99    </td> <td>G95    </td> <td>G95    </td> </tr>
+    <tr><td>2 </td> <td>G93    </td> <td>G93    </td> <td>G93    </td> <td>G93    </td> </tr>
+    <tr><td>3 </td> <td>G93.2  </td> <td>G93    </td> <td>G93    </td> <td>G93    </td> </tr>
+    <tr>
+        <td rowspan="2">5</td>
+        <td>0 </td> <td>G20(G70)</td> <td>G20    </td> <td>G20    </td> <td>G70    </td> </tr>
+    <tr><td>1 </td> <td>G21(G71)</td> <td>G21    </td> <td>G21    </td> <td>G71    </td> </tr>
+    <tr>
+        <td rowspan="11">6</td>
+        <td>0 </td> <td>G40    </td> <td>G40    </td> <td>G40    </td> <td>G40    </td> </tr>
+    <tr><td>1 </td> <td>G41    </td> <td>G41    </td> <td>G41    </td> <td>G41    </td> </tr>
+    <tr><td>2 </td> <td>G42    </td> <td>G42    </td> <td>G42    </td> <td>G42    </td> </tr>
+    <tr><td>3 </td> <td>G41.2  </td> <td>G41.2  </td> <td>G41.2  </td> <td>G41.2  </td> </tr>
+    <tr><td>4 </td> <td>G42.2  </td> <td>G42.2  </td> <td>G42.2  </td> <td>G42.2  </td> </tr>
+    <tr><td>5 </td> <td>G41.3  </td> <td>G41.3  </td> <td>G41.3  </td> <td>G41.3  </td> </tr>
+    <tr><td>6 </td> <td>G41.4  </td> <td>G41.4  </td> <td>G41.4  </td> <td>G41.4  </td> </tr>
+    <tr><td>7 </td> <td>G42.4  </td> <td>G42.4  </td> <td>G42.4  </td> <td>G42.4  </td> </tr>
+    <tr><td>8 </td> <td>G41.5  </td> <td>G41.5  </td> <td>G41.5  </td> <td>G41.5  </td> </tr>
+    <tr><td>9 </td> <td>G42.5  </td> <td>G42.5  </td> <td>G42.5  </td> <td>G42.5  </td> </tr>
+    <tr><td>10</td> <td>&#160; </td> <td>G40.3  </td> <td>G40.3  </td> <td>G40.3  </td> </tr>
+    <tr><td rowspan="8">7</td>
+        <td>0 </td> <td>G49(G49.1)</td> <td>G25    </td> <td>G25    </td> <td>G25    </td> </tr>
+    <tr><td>1 </td> <td>G43    </td> <td>G26    </td> <td>G26    </td> <td>G26    </td> </tr>
+    <tr><td>2 </td> <td>G44    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>3 </td> <td>G43.1  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>4 </td> <td>G43.4  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>5 </td> <td>G43.5  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>6 </td> <td>G43.2  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>7 </td> <td>G43.3  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td rowspan="16">8</td>
+        <td>0 </td> <td>G80    </td> <td>G23    </td> <td>G23    </td> <td>G23    </td> </tr>
+    <tr><td>1 </td> <td>G81    </td> <td>G22    </td> <td>G22    </td> <td>G22    </td> </tr>
+    <tr><td>2 </td> <td>G82    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>3 </td> <td>G83    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>4 </td> <td>G84    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>5 </td> <td>G85    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>6 </td> <td>G86    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>7 </td> <td>G87    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>8 </td> <td>G88    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>9 </td> <td>G89    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>10</td> <td>G73    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>11</td> <td>G74    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>12</td> <td>G76    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>13</td> <td>G84.2  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>14</td> <td>G84.3  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>15</td> <td>G81.2  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td rowspan="8">9</td>
+        <td>0 </td> <td>G98    </td> <td>G80    </td> <td>G80    </td> <td>G80    </td> </tr>
+    <tr><td>1 </td> <td>G99    </td> <td>G83    </td> <td>G83    </td> <td>G83    </td> </tr>
+    <tr><td>2 </td> <td>&#160; </td> <td>G84    </td> <td>G84    </td> <td>G84    </td> </tr>
+    <tr><td>3 </td> <td>&#160; </td> <td>G85    </td> <td>G85    </td> <td>G85    </td> </tr>
+    <tr><td>4 </td> <td>&#160; </td> <td>G86    </td> <td>G86    </td> <td>G86    </td> </tr>
+    <tr><td>5 </td> <td>&#160; </td> <td>G87    </td> <td>G87    </td> <td>G87    </td> </tr>
+    <tr><td>6 </td> <td>&#160; </td> <td>G88    </td> <td>G88    </td> <td>G88    </td> </tr>
+    <tr><td>7 </td> <td>&#160; </td> <td>G89    </td> <td>G89    </td> <td>G89    </td> </tr>
+    <tr><td rowspan="2">10</td>
+        <td>0 </td> <td>G50    </td> <td>&#160; </td> <td>G98    </td> <td>G98    </td> </tr>
+    <tr><td>1 </td> <td>G51    </td> <td>&#160; </td> <td>G99    </td> <td>G99    </td> </tr>
+    <tr><td rowspan="3">11</td>
+        <td>0 </td> <td>G67    </td> <td>G67    </td> <td>G67    </td> <td>G67    </td> </tr>
+    <tr><td>1 </td> <td>G66    </td> <td>G66    </td> <td>G66    </td> <td>G66    </td> </tr>
+    <tr><td>2 </td> <td>G66.1  </td> <td>G66.1  </td> <td>G66.1  </td> <td>G66.1  </td> </tr>
+    <tr><td rowspan="2">12</td>
+        <td>0 </td> <td>G97    </td> <td>G49    </td> <td>G49    </td> <td>G49    </td> </tr>
+    <tr><td>1 </td> <td>G96    </td> <td>G43    </td> <td>G43    </td> <td>G43    </td> </tr>
+    <tr><td rowspan="6">13</td>
+        <td>0 </td> <td>G54(G54.1)</td> <td>G54 </td> <td>G54    </td> <td>G54    </td> </tr>
+    <tr><td>1 </td> <td>G55    </td> <td>G55    </td> <td>G55    </td> <td>G55    </td> </tr>
+    <tr><td>2 </td> <td>G56    </td> <td>G56    </td> <td>G56    </td> <td>G56    </td> </tr>
+    <tr><td>3 </td> <td>G57    </td> <td>G57    </td> <td>G57    </td> <td>G57    </td> </tr>
+    <tr><td>4 </td> <td>G58    </td> <td>G58    </td> <td>G58    </td> <td>G58    </td> </tr>
+    <tr><td>5 </td> <td>G59    </td> <td>G59    </td> <td>G59    </td> <td>G59    </td> </tr>
+    <tr><td rowspan="4">14</td>
+        <td>0 </td> <td>G64    </td> <td>G64    </td> <td>G64    </td> <td>G64    </td> </tr>
+    <tr><td>1 </td> <td>G61    </td> <td>G61    </td> <td>G61    </td> <td>G61    </td> </tr>
+    <tr><td>2 </td> <td>G62    </td> <td>G62    </td> <td>G62    </td> <td>G62    </td> </tr>
+    <tr><td>3 </td> <td>G63    </td> <td>G63    </td> <td>G63    </td> <td>G63    </td> </tr>
+    <tr><td rowspan="6">15</td>
+        <td>0 </td> <td>G69    </td> <td>G17    </td> <td>G17    </td> <td>G17    </td> </tr>
+    <tr><td>1 </td> <td>G68    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>2 </td> <td>G68.2  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>4 </td> <td>&#160; </td> <td>G18    </td> <td>G18    </td> <td>G18    </td> </tr>
+    <tr><td>8 </td> <td>&#160; </td> <td>G19    </td> <td>G19    </td> <td>G19    </td> </tr>
+    <tr><td>10</td> <td>&#160; </td> <td>G17.1  </td> <td>G17.1  </td> <td>G17.1  </td> </tr>
+    <tr><td rowspan="3">16</td>
+        <td>0 </td> <td>G15    </td> <td>G69.1  </td> <td>G69.1  </td> <td>G69.1  </td> </tr>
+    <tr><td>1 </td> <td>G16    </td> <td>G68.1  </td> <td>G68.1  </td> <td>G68.1  </td> </tr>
+    <tr><td>2 </td> <td>&#160; </td> <td>G68.2  </td> <td>G68.2  </td> <td>G68.2  </td> </tr>
+    <tr><td rowspan="3">17</td>
+        <td>0 </td> <td>G40.1(G150)</td> <td>&#160;</td> <td>G50   </td> <td>G50   </td> </tr>
+    <tr><td>1 </td> <td>G41.1(G151)</td> <td>&#160;</td> <td>G51   </td> <td>G51   </td> </tr>
+    <tr><td>2 </td> <td>G42.1(G152)</td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+    <tr><td rowspan="2">18</td>
+        <td>0 </td> <td>G25    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td>1 </td> <td>G26    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+    <tr><td rowspan="2">19</td>
+        <td>0 </td> <td>G160   </td> <td>G50.2  </td> <td>G50.2  </td> <td>G50.2  </td> </tr>
+    <tr><td>1 </td> <td>G161   </td> <td>G51.2  </td> <td>G51.2  </td> <td>G51.2  </td> </tr>
+    <tr><td rowspan="2">20</td>
+        <td>0 </td> <td>G13.1(G113)</td> <td>G13.1 </td> <td>G13.1 </td> <td>G13.1 </td> </tr>
+    <tr><td>1 </td> <td>G12.1(G112)</td> <td>G12.1 </td> <td>G12.1 </td> <td>G12.1 </td> </tr>
+    </tbody>
+</table>
+<br/>
+
+</ul>
+<p/>
+The numerical value of "g_data" mentioned in the above table is stored in the bit 0,..,bit 6 of "g_data" with binary format. Whether this G code is commanded in the target block specified by "block" or not is stored in the bit 7 of "g_data".
+<p/>
+
+ <p><img src="misc/gcode.gif"></img></p>
+
+<p>For example, the following result is gotten by calling this function during executing N100's block of the next machining program. (for M of Series 30is)</p>
+
+
+<blockquote>
+<pre>
+N090 G18 ;
+N100 G1 Z100. ;
+N110 G17 G2 X10. Y-20. R12. ;
+</pre>
+<table frame="hsides" rules="groups">
+<colgroup width="20%">
+<colgroup width="20%">
+<colgroup width="20%">
+<colgroup width="40%">
+<thead>
+    <tr> <th>type</th> <th>block</th> <th>g_data</th> <th>Modal status</th> </tr>
+</thead>
+<tbody>
+    <tr> <td>0</td> <td>0</td> <td>0x81</td> <td>G1 is commanded.</td> </tr>
+    <tr> <td>0</td> <td>1</td> <td>0x82</td> <td>G2 is commanded.</td> </tr>
+    <tr> <td>1</td> <td>0</td> <td>0x08</td> <td>G18 mode. (not commanded)</td> </tr>
+    <tr> <td>1</td> <td>1</td> <td>0x80</td> <td>G17 is commanded.</td> </tr>
+</tbody>
+</colgroup>
+</colgroup>
+</colgroup>
+</colgroup>
+</table>
+</blockquote>
+
+<p>To read all "type" concerning G code at a time, -1 is specified. <br/>
+The array of g_data is stored in g_rdata.<br/>
+</p>
+
+<p class="label">(2) Reading modal data other than G code.</p>
+
+<ul>
+<table border="1">
+<colgroup width="20%">
+<thead>
+    <tr> <th>type</th> <th>Address</th> </tr>
+</thead>
+<tbody>
+    <tr><td>100 </td> <td>B (2nd auxiliary function)</td> </tr>
+    <tr><td>101 </td> <td>D</td> </tr>
+    <tr><td>102 </td> <td>- (reserved)</td> </tr>
+    <tr><td>103 </td> <td>F</td> </tr>
+    <tr><td>104 </td> <td>H [M]</td> </tr>
+    <tr><td>105 </td> <td>L</td> </tr>
+    <tr><td>106 </td> <td>M</td> </tr>
+    <tr><td>107 </td> <td>S</td> </tr>
+    <tr><td>108 </td> <td>T</td> </tr>
+    <tr><td>109 </td> <td>R [M]</td> </tr>
+    <tr><td>110 </td> <td>P [M]</td> </tr>
+    <tr><td>111 </td> <td>Q [M]</td> </tr>
+    <tr><td>112 </td> <td>A</td> </tr>
+    <tr><td>113 </td> <td>C</td> </tr>
+    <tr><td>114 </td> <td>I</td> </tr>
+    <tr><td>115 </td> <td>J</td> </tr>
+    <tr><td>116 </td> <td>K</td> </tr>
+    <tr><td>117 </td> <td>N</td> </tr>
+    <tr><td>118 </td> <td>O</td> </tr>
+    <tr><td>119 </td> <td>U</td> </tr>
+    <tr><td>120 </td> <td>V</td> </tr>
+    <tr><td>121 </td> <td>W</td> </tr>
+    <tr><td>122 </td> <td>X</td> </tr>
+    <tr><td>123 </td> <td>Y</td> </tr>
+    <tr><td>124 </td> <td>Z</td> </tr>
+    <tr><td>125 </td> <td>M (2nd M code)</td> </tr>
+    <tr><td>126 </td> <td>M (3rd M code)</td> </tr>
+</tbody>
+</colgroup>
+</table>
+
+<table border="1">
+<colgroup width="20%">
+<thead>
+    <tr> <th>type</th> <th>Address</th> </tr>
+</thead>
+<tbody>
+    <tr><td>200 </td> <td>1st axis</td> </tr>
+    <tr><td>201 </td> <td>2nd axis</td> </tr>
+    <tr><td>202 </td> <td>3rd axis</td> </tr>
+    <tr><td>203 </td> <td>4th axis</td> </tr>
+    <tr><td>204 </td> <td>5th axis</td> </tr>
+    <tr><td>205 </td> <td>6th axis</td> </tr>
+    <tr><td>206 </td> <td>7th axis</td> </tr>
+    <tr><td>207 </td> <td>8th axis</td> </tr>
+</tbody>
+</colgroup>
+</table>
+</ul>
+
+<p>[M] is read as a modal data on M series and a commanded data on T series.</p>
+
+<p>To read "type" concerning 100's at a time, -2 is specified. The data is stored in the array of raux1.</p>
+
+<p>To read "type" concerning 200's at a time, -3 is specified. The data is stored in the array of raux2.</p>
+
+<p><img src="misc/com30.gif"></img></p>
+
+<ul type="square">
+<li>Sometimes the number of places of decimals is 'not zero' without the command of a decimal point.</li>
+<li>The number of input place of M,S,T,B is digits granted by NC parameter.</li>
+<table>
+    <tr> <td>M code</td> <td>:</td> <td>parameter No.3030</td> </tr>
+    <tr> <td>S code</td> <td>:</td> <td>parameter No.3031</td> </tr>
+    <tr> <td>T code</td> <td>:</td> <td>parameter No.3032</td> </tr>
+    <tr> <td>B code</td> <td>:</td> <td>parameter No.3033</td> </tr>
+</table>
+</ul>
+
+<p/>
+
+<p class="label">(3) Read modal data of one shot G code</p>
+
+<ul>
+<table border="1">
+<thead>
+    <tr> <th>    </th> <th>       </th> <th>M series</th> <th colspan="3">T series</th> </tr>
+    <tr> <th>type</th> <th>g_data </th> <th>G code     </th> <th>G code<br/>System A</th> <th>G code<br/>System B</th> <th>G code<br/>System C</th> </tr>
+</thead>
+
+<tbody>
+    <tr><td rowspan="60">300</td>
+         <td> 0   </td> <td>G04        </td> <td>G04        </td> <td>G04        </td> <td>G04        </td> </tr>
+    <tr> <td> 1   </td> <td>G10        </td> <td>G27        </td> <td>G27        </td> <td>G27        </td> </tr>
+    <tr> <td> 2   </td> <td>&#160;     </td> <td>G28        </td> <td>G28        </td> <td>G28        </td> </tr>
+    <tr> <td> 3   </td> <td>&#160;     </td> <td>G29        </td> <td>G29        </td> <td>G29        </td> </tr>
+    <tr> <td> 4   </td> <td>G27        </td> <td>G30        </td> <td>G30        </td> <td>G30        </td> </tr>
+    <tr> <td> 5   </td> <td>G28        </td> <td>G50        </td> <td>G92        </td> <td>G92        </td> </tr>
+    <tr> <td> 6   </td> <td>G29        </td> <td>G70        </td> <td>G70        </td> <td>G72        </td> </tr>
+    <tr> <td> 7   </td> <td>G30        </td> <td>G71        </td> <td>G71        </td> <td>G73        </td> </tr>
+    <tr> <td> 8   </td> <td>G38        </td> <td>G72        </td> <td>G72        </td> <td>G74        </td> </tr>
+    <tr> <td> 9   </td> <td>G39        </td> <td>G73        </td> <td>G73        </td> <td>G75        </td> </tr>
+    <tr> <td> 10  </td> <td>&#160;     </td> <td>G74        </td> <td>G74        </td> <td>G76        </td> </tr>
+    <tr> <td> 11  </td> <td>&#160;     </td> <td>G75        </td> <td>G75        </td> <td>G77        </td> </tr>
+    <tr> <td> 12  </td> <td>&#160;     </td> <td>G76        </td> <td>G76        </td> <td>G78        </td> </tr>
+    <tr> <td> 13  </td> <td>&#160;     </td> <td>G10        </td> <td>G10        </td> <td>G10        </td> </tr>
+    <tr> <td> 14  </td> <td>G92        </td> <td>G37.1      </td> <td>G37.1      </td> <td>G37.1      </td> </tr>
+    <tr> <td> 15  </td> <td>&#160;     </td> <td>G37        </td> <td>G37        </td> <td>G37        </td> </tr>
+    <tr> <td> 16  </td> <td>G31(G31.1) </td> <td>G31        </td> <td>G31        </td> <td>G31        </td> </tr>
+    <tr> <td> 17  </td> <td>G60        </td> <td>G65        </td> <td>G65        </td> <td>G65        </td> </tr>
+    <tr> <td> 18  </td> <td>G65        </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 19  </td> <td>&#160;     </td> <td>G05        </td> <td>G05        </td> <td>G05        </td> </tr>
+    <tr> <td> 20  </td> <td>G05        </td> <td>G11        </td> <td>G11        </td> <td>G11        </td> </tr>
+    <tr> <td> 21  </td> <td>G11        </td> <td>G07.1      </td> <td>G07.1      </td> <td>G07.1      </td> </tr>
+    <tr> <td> 22  </td> <td>G52        </td> <td>G52        </td> <td>G52        </td> <td>G52        </td> </tr>
+    <tr> <td> 23  </td> <td>G53        </td> <td>G53        </td> <td>G53        </td> <td>G53        </td> </tr>
+    <tr> <td> 24  </td> <td>G37        </td> <td>G30.1      </td> <td>G30.1      </td> <td>G30.1      </td> </tr>
+    <tr> <td> 25  </td> <td>G07.1(G107)</td> <td>G10.6      </td> <td>G10.6     </td> <td>G10.6       </td> </tr>
+    <tr> <td> 26  </td> <td>G30.1      </td> <td>G50.3      </td> <td>G92.1      </td> <td>G92.1      </td> </tr>
+    <tr> <td> 27  </td> <td>G10.6      </td> <td>G08        </td> <td>G08        </td> <td>G08        </td> </tr>
+    <tr> <td> 28  </td> <td>G72.1      </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 29  </td> <td>G72.2      </td> <td>G39        </td> <td>G39        </td> <td>G39        </td> </tr>
+    <tr> <td> 30  </td> <td>G92.1      </td> <td>G60        </td> <td>G60        </td> <td>G60        </td> </tr>
+    <tr> <td> 31  </td> <td>G08        </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 32  </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 80  </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 81  </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 100 </td> <td>G81.1      </td> <td>G07        </td> <td>G07        </td> <td>G07        </td> </tr>
+    <tr> <td> 101 </td> <td>&#160;     </td> <td>G09        </td> <td>G09        </td> <td>G09        </td> </tr>
+    <tr> <td> 102 </td> <td>&#160;     </td> <td>G73.1      </td> <td>G73.1      </td> <td>G73.1      </td> </tr>
+    <tr> <td> 103 </td> <td>&#160;     </td> <td>G73.2      </td> <td>G73.2      </td> <td>G73.2      </td> </tr>
+    <tr> <td> 104 </td> <td>G05.1      </td> <td>G74.1      </td> <td>G74.1      </td> <td>G74.1      </td> </tr>
+    <tr> <td> 105 </td> <td>G07        </td> <td>&#160;     </td> <td>&#160;     </td> <td>&#160;     </td> </tr>
+    <tr> <td> 106 </td> <td>G31.8      </td> <td>G80.4      </td> <td>G80.4      </td> <td>G80.4      </td> </tr>
+    <tr> <td> 107 </td> <td>G31.9      </td> <td>G81.4      </td> <td>G81.4      </td> <td>G81.4      </td> </tr>
+    <tr> <td> 108 </td> <td>G12.4      </td> <td>G82.4      </td> <td>G82.4      </td> <td>G82.4      </td> </tr>
+    <tr> <td> 109 </td> <td>G13.4      </td> <td>G83.4      </td> <td>G83.4      </td> <td>G83.4      </td> </tr>
+    <tr> <td> 110 </td> <td>G05.4      </td> <td>G84.4      </td> <td>G84.4      </td> <td>G84.4      </td> </tr>
+    <tr> <td> 111 </td> <td>G10.9      </td> <td>G05.1      </td> <td>G05.1      </td> <td>G05.1      </td> </tr>
+    <tr> <td> 112 </td> <td>G31.2      </td> <td>G72.1      </td> <td>G72.1      </td> <td>G72.1      </td> </tr>
+    <tr> <td> 113 </td> <td>G31.3      </td> <td>G72.2      </td> <td>G72.2      </td> <td>G72.2      </td> </tr>
+    <tr> <td> 114 </td> <td>G31.4      </td> <td>G53.1      </td> <td>G53.1      </td> <td>G53.1      </td> </tr>
+    <tr> <td> 116 </td> <td>G91.1      </td> <td>G38        </td> <td>G38        </td> <td>G38        </td> </tr>
+    <tr> <td> 119 </td> <td>&#160;     </td> <td>G43.6      </td> <td>G43.6      </td> <td>G43.6      </td> </tr>
+    <tr> <td> 120 </td> <td>&#160;     </td> <td>G50.4      </td> <td>G50.4      </td> <td>G50.4      </td> </tr>
+    <tr> <td> 121 </td> <td>&#160;     </td> <td>G50.5      </td> <td>G50.5      </td> <td>G50.5      </td> </tr>
+    <tr> <td> 122 </td> <td>&#160;     </td> <td>G50.6      </td> <td>G50.6      </td> <td>G50.6      </td> </tr>
+    <tr> <td> 123 </td> <td>&#160;     </td> <td>G51.4      </td> <td>G51.4      </td> <td>G51.4      </td> </tr>
+    <tr> <td> 124 </td> <td>&#160;     </td> <td>G51.5      </td> <td>G51.5      </td> <td>G51.5      </td> </tr>
+    <tr> <td> 125 </td> <td>&#160;     </td> <td>G51.6      </td> <td>G91.1      </td> <td>G91.1      </td> </tr>
+    <tr> <td> 126 </td> <td>&#160;     </td> <td>G28.2      </td> <td>G28.2      </td> <td>G28.2      </td> </tr>
+    <tr> <td> 127 </td> <td>&#160;     </td> <td>G30.2      </td> <td>G30.2      </td> <td>G30.2      </td> </tr>
+</tbody>
+</table>
+</ul>
+
+
+<p>The numerical value of "g_1shot" mentioned in the above table is stored in the bit 0,..,bit 6 of each array in "g_1shot" with binary format. Whether this G code is commanded in the objective block specified by "block" or not is stored in the bit 7 of "</p>
+
+<p><img src="misc/gcode.gif"></img></p>
+
+
+
+
+
+<p>To read "type" concerning 1 shot G code at a time, -4 is specified.<br/>
+ The data of type=300 is stored in g_1shot[0].
+</p>
+
+</content>
+</item>
+                </vc>
+            </hssb>
+        </is>
+        <!-- is Argument End -->
+</argument>
+
+
+
+<errcode>
+<item>
+<name>EW_NUMBER</name>
+<content>Data number error<br/>The specification of modal data (type) is wrong.</content>
+</item>
+
+<item>
+<name>EW_ATTRIB</name>
+<content>Data attribute error<br/>The specification of block (block)is wrong.</content>
+</item>
+</errcode>
+
+
+
+<option>
+<hssb>The extended driver/library function is necessary.</hssb>
+<ethr>
+<p>The Ethernet function and the extended driver/library function are necessary.</p>
+<p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+<p>When Embedded Ethernet is used,</p>
+<p><ul>above two optional functions are not required.</ul></p>
+<p>When Ethernet board is used,</p>
+<p><ul>only Ethernet function is required.</ul></p>
+</ethr>
+</option>
+
+
+
+    <parameter></parameter>
+    <is_parameter></is_parameter>
+
+
+
+    <mode></mode>
+    <is_mode></is_mode>
+
+
+
+<support>
+  <m>
+      <fs0ia>H</fs0ia>
+      <fs0ib>O</fs0ib>
+      <fs0id>O</fs0id>
+      <fs0if>O</fs0if>
+      <fs15>H</fs15>
+      <fs15i>X</fs15i>
+      <fs16>H</fs16>
+      <fs18>H</fs18>
+      <fs21>H</fs21>
+      <fs16ia>O</fs16ia>
+      <fs18ia>O</fs18ia>
+      <fs21ia>O</fs21ia>
+      <fs16ib>O</fs16ib>
+      <fs18ib>O</fs18ib>
+      <fs21ib>O</fs21ib>
+      <fs30ia>O</fs30ia>
+      <fs30ib>O</fs30ib>
+  </m>
+  <t>
+      <fs0ia>H</fs0ia>
+      <fs0ib>O</fs0ib>
+      <fs0id>O</fs0id>
+      <fs0if>O</fs0if>
+      <fs15>H</fs15>
+      <fs15i>X</fs15i>
+      <fs16>H</fs16>
+      <fs18>H</fs18>
+      <fs21>H</fs21>
+      <fs16ia>O</fs16ia>
+      <fs18ia>O</fs18ia>
+      <fs21ia>O</fs21ia>
+      <fs16ib>O</fs16ib>
+      <fs18ib>O</fs18ib>
+      <fs21ib>O</fs21ib>
+      <fs30ia>O</fs30ia>
+      <fs30ib>O</fs30ib>
+  </t>
+  <lc>
+      <fs0ia>X</fs0ia>
+      <fs0ib>X</fs0ib>
+      <fs0id>X</fs0id>
+      <fs0if>X</fs0if>
+      <fs15>X</fs15>
+      <fs15i>X</fs15i>
+      <fs16>H</fs16>
+      <fs18>H</fs18>
+      <fs21>H</fs21>
+      <fs16ia>H</fs16ia>
+      <fs18ia>H</fs18ia>
+      <fs21ia>H</fs21ia>
+      <fs16ib>H</fs16ib>
+      <fs18ib>H</fs18ib>
+      <fs21ib>H</fs21ib>
+      <fs30ia>X</fs30ia>
+      <fs30ib>X</fs30ib>
+  </lc>
+  <p>
+      <fs0id>O</fs0id>
+      <fs0if>O</fs0if>
+      <fs16i>O</fs16i>
+      <fs18i>O</fs18i>
+      <fs30ia>X</fs30ia>
+      <fs30ib>O</fs30ib>
+  </p>
+  <l>
+      <fs0id>X</fs0id>
+      <fs0if>X</fs0if>
+      <fs16i>O</fs16i>
+      <fs18i>X</fs18i>
+      <fs30ia>X</fs30ia>
+      <fs30ib>O</fs30ib>
+  </l>
+  <w>
+      <fs0id>X</fs0id>
+      <fs0if>X</fs0if>
+      <fs16i>O</fs16i>
+      <fs18i>O</fs18i>
+      <fs30ia>O</fs30ia>
+      <fs30ib>O</fs30ib>
+  </w>
+  <pw>
+      <d>O</d>
+      <h>O</h>
+      <a>O</a>
+  </pw>
+        <is>
+            <!-- M -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+</support>
+
+
+
+<reference>
+    <item>
+        <name>cnc_rdgcode</name>
+        <file>Misc/cnc_rdgcode.htm</file>
+    </item>
+    <item>
+        <name>cnc_rdcommand</name>
+        <file>Misc/cnc_rdcommand.htm</file>
+    </item>
+</reference>
+
+
+
+<example></example>
+
+
+
+</func>
+</root>

@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_rdpdf_inf</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdpdf_inf(unsigned short FlibHndl, char *drive, short size_kind, ODBPDFINF *pdf_inf);</prottype>      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                Reads the information Program memory file on the specified drive.<br/>
+                Execution of this function is kept waiting when CNC is in editing(including the background edit state).
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle.
+                            See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>drive</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the drive name string.<br/>
+                            Drive name string is up to 8 characters, NULL terminated.<br/>
+                            Drive name can be acquired by <a href="./Program/cnc_rdpdf_drive.htm" target="_parent">cnc_rdpdf_drive</a> function.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>size_kind</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the data unit, used_page and all_page.<br/>
+                            <table class="dd">
+                                <tr><td>0</td><td>:</td><td>Page</td></tr>
+                                <tr><td>1</td><td>:</td><td>Byte</td></tr>
+                                <tr><td>2</td><td>:</td><td>KByte(1KByte=1024Byte)</td></tr>
+                                <tr><td>3</td><td>:</td><td>MByte(1MByte=1024kByte)</td></tr>
+                            </table>
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>pdf_inf</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Specify the pointer of the ODBPDFINF structure that stores the Program memory drive information.<br/>
+                            The ODBPDFINF structure is as follows.
+                        </p>
+<pre>
+typedef struct odbpdfinf {
+    long        used_page;      /* Used capacity */
+    long        all_page;       /* Total capacity */
+    long        used_dir;       /* Number of folders in use */
+    long        all_dir;        /* Total number of folders */
+} ODBPDFINF;
+</pre>
+                        <dl>
+                            <dt>used_page</dt>
+                                <dd>Used capacity of the drive.</dd>
+
+                            <dt>all_page</dt>
+                                <dd>Total capacity of the drive.<br/>
+                                    Unused program capacity is (all_page - used_page).</dd>
+
+                            <dt>used_dir</dt>
+                                <dd>Number of folders in use.</dd>
+
+                            <dt>all_dir</dt>
+                                <dd>Total number of folders.<br/>
+                                    Unused folder number is (all_dir - used_dir).</dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                data error<br/>
+                The drive specified by (drive) does not exist.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 0i-D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter></parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+        
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference></reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdophisno</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdophisno(unsigned short FlibHndl, unsigned short *hisno); </prottype>
+      </vc>
+    </declare>
+
+    <doc>
+        <cmn><p>Reads the number of operation history data.</p>
+             <p>It is necessary to stop sampling the operation history data by using <a href="History/cnc_stopophis.htm" target="_parent">cnc_stopophis</a> function before this function is used. </p>
+             <p><b>(Example)</b></p>
+             <ul>
+                 <li>Series 15, 16i/18i/21i, 0i-A/B/C, Power Mate i</li>
+                    When the operation history screen of CNC displays the following data, this function reads that the number of operation history data equals 6.<br/>
+                 <table class="dd" border="1">
+                    <colgroup valign="top"></colgroup>
+                    <colgroup></colgroup>
+                     <colgroup></colgroup>
+                    <thead>
+                         <tr><th>Number</th><th>Data</th>     <th>Kind</th>          </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1</td> <td>99/11/22</td> <td rowspan="2">Power-on time</td> </tr>
+                        <tr><td>2</td> <td>12:34:56</td> </tr>
+                        <tr><td>3</td> <td>PS0181  </td> <td rowspan="3">Alarm</td> </tr>
+                        <tr><td>4</td> <td>99/11/22</td> </tr>
+                        <tr><td>5</td> <td>13:00:00</td> </tr>
+                        <tr><td>6</td> <td>[SOFT 1]</td> <td>MDI key</td> </tr>
+                    </tbody>
+                 </table>
+                 <li>Series 15i, 30i, 0i-D/F, PMi-A</li>
+                    When the operation history screen of CNC displays the following data, this function reads that the number of operation history data equals 3.<br/>
+                 <table class="dd" border="1">
+                    <colgroup valign="top"></colgroup>
+                    <colgroup></colgroup>
+                    <colgroup></colgroup>
+                    <thead>
+                        <tr><th>Number</th><th>Data</th>     <th>Kind</th>          </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td rowspan="2">1</td> <td>99/11/22</td> <td rowspan="2">Power-on time</td> </tr>
+                        <tr>                       <td>12:34:56</td> </tr>
+                        <tr><td rowspan="3">2</td> <td>PS0181</td> <td rowspan="3">Alarm</td> </tr>
+                        <tr>                       <td>99/11/22</td> </tr>
+                        <tr>                       <td>13:00:00</td> </tr>
+                        <tr><td>3</td>             <td>[SOFT 1]</td> <td>MDI key</td> </tr>
+                    </tbody>
+                 </table>
+             </ul>
+        </cmn>
+        <is>
+        <cmn><p>Reads the number of operation history data.</p>
+             <p>It is necessary to stop sampling the operation history data by using <a href="History/cnc_stopophis.htm" target="_parent">cnc_stopophis</a> function before this function is used. </p>
+             <p><b>(Example)</b></p>
+             <ul>
+                    When the operation history screen of CNC displays the following data, this function reads that the number of operation history data equals 3.<br/>
+                 <table class="dd" border="1">
+                    <colgroup valign="top"></colgroup>
+                    <colgroup></colgroup>
+                    <colgroup></colgroup>
+                    <thead>
+                        <tr><th>Number</th><th>Data</th>     <th>Kind</th>          </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td rowspan="2">1</td> <td>99/11/22</td> <td rowspan="2">Power-on time</td> </tr>
+                        <tr>                       <td>12:34:56</td> </tr>
+                        <tr><td rowspan="3">2</td> <td>PS0181</td> <td rowspan="3">Alarm</td> </tr>
+                        <tr>                       <td>99/11/22</td> </tr>
+                        <tr>                       <td>13:00:00</td> </tr>
+                        <tr><td>3</td>             <td>[SOFT 1]</td> <td>MDI key</td> </tr>
+                    </tbody>
+                 </table>
+             </ul>
+        </cmn>
+        </is>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>hisno</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the variable in which the number of operation history data is stored.
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                <a href="History/cnc_stopophis.htm" target="_parent">cnc_stopophis</a> function has not been executed. <br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The extended driver/library function are necessary.
+            </content>
+        </item>
+    </errcode>
+
+
+
+
+
+    <option>
+        <hssb>
+            The extended driver/library function are necessary.
+        </hssb>
+        <ethr>
+            <p>The Ethernet function and the extended driver/library function is necessary.</p>
+            <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+            <p>When Embedded Ethernet is used,</p>
+            <p><ul>above two optional functions are not required.</ul></p>
+            <p>When Ethernet board is used,</p>
+            <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 15/15i<br/>
+                    0015#3=1 (must be set)
+                </li>
+                <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i<br/>
+                    3112#5=0 (must be set) 
+                </li>
+                <li>Series 16i/18i-W<br/>
+                    3112#5=1 (must be set) 
+                </li>
+            </ul>
+        </type>
+    </parameter>
+    <is_parameter>
+        <type>
+        </type>
+    </is_parameter>
+
+
+
+    <mode></mode>
+    <!-- 30i(WinCE) -->
+    <is_mode></is_mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_stopophis</name>
+            <file>History/cnc_stopophis.htm</file>
+        </item>
+        <item>
+            <name>cnc_startophis</name>
+            <file>History/cnc_startophis.htm</file>
+        </item>
+        <item class="xis">
+            <name>cnc_rdophistry</name>
+            <file>History/cnc_rdophistry.htm</file>
+        </item>
+        <item class="xis">
+            <name>cnc_rdophistry2</name>
+            <file>History/cnc_rdophistry2.htm</file>
+        </item>
+        <item class="xis">
+            <name>cnc_rdophistry4</name>
+            <file>History/cnc_rdophistry4.htm</file>
+        </item>
+        <item>
+            <name>cnc_clearophis</name>
+            <file>History/cnc_clearophis.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

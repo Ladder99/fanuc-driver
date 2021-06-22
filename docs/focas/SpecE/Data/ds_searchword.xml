@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>ds_searchword</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI ds_searchword(unsigned short FlibHndl, char *prog_data);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+              The string of the NC program in DATA SERVER at the running of M198/DNC in MEM/RMT mode is searched.<br/>
+              The result of search can be confirmed by ds_searchresult.<br/>
+              When the specified string is found, the pointer moves to the found line.<br/><br/>
+            </p>
+            <p>The basic order to search is as follows.</p>
+
+            <p><img src="Data/dssrchword.gif"/></p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>prog_data</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the pointer to the buffer holding the target string to search.<br/>
+                            It is a NULL terminated ASCII string. The size of string, including NULL character, must be within 16. If it were more than 16, this function would return EW_DATA error.
+                        </p>
+                        <p>
+                            The top of search string should be the following characters.<br/>
+                            When the top character is not the following characters, the string cannot be searched. The return value is EW_DATA.<br/>
+                            <ul>
+                                <li>A～Z(except "O")  "("   "/"  "#"  ";"(EOB)</li>
+                            </ul>
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_BUSY</name>
+            <content>
+                Busy<br/>
+                Some alarm has existed or CNC is searching the program text right now.
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                Data error<br/>
+                 In order to get more information for this err_no return value, execute <a href="misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.  The following details status will be set onto the member, err_no of ODBERR structure.
+                <table>
+                    <tr><td>0</td><td>:</td><td>Error except EW_DATA           </td></tr>
+                    <tr><td>1</td><td>:</td><td>The size of string error       </td></tr>
+                    <tr><td>2</td><td>:</td><td>The content of the string error</td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                Parameter error<br/>
+                Parameter No.900#2 is off.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The extended driver/library function and the DATA SERVER function are necessary.
+            </content>
+        </item>
+        <item>
+            <name>EW_MODE</name>
+            <content>
+                CNC mode error<br/>
+                CNC mode is not MEM or RMT mode.
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                CNC execution rejection<br/>
+                - The DATA SERVER is not mounted.<br/>
+                - It is not the program within the DATA SERVER.<br/>
+                - CNC is running.
+            </content>
+        </item>
+        <item>
+            <name>EW_STOP</name>
+            <content>
+                STOP<br/>
+                CNC is in the emergency stop or feed fold is ON.
+
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            <p>This function needs the extended driver/library function and DATA SERVER function.</p>
+        </hssb>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul type="disc">
+                    No.0020 = 5(must be set)<br/>
+                    No.900#2 :High-speed search function of string in NC program in DATA SERVER(must be set)<br/>
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <mode>
+        <cmn>
+            It is possible to use in MEM and RMT mode.
+        </cmn>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>ds_searchresult</name>
+            <file>Data/ds_searchresult.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

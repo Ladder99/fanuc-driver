@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <title>pbm_chg_mode</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI pbm_chg_mode( unsigned short FlibHndl, unsigned char chg_mode, OUT_CHGMODERESULT *chg_mode_result ); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Changes the operation mode</p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>chg_mode</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            operation mode
+                        </p>
+                        <table border="0" >
+                            <tr><td>  0</td><td>:</td><td>change it to "OFFLINE" mode</td></tr>
+                            <tr><td> 64</td><td>:</td><td>change it to "STOP" mode   </td></tr>
+                            <tr><td>128</td><td>:</td><td>change it to "CLEAR" mode  </td></tr>
+                            <tr><td>192</td><td>:</td><td>change it to "OPERATE" mode</td></tr>
+                        </table>
+
+                    </content>
+                </item>
+
+                <item>
+                    <name>chg_mode_result</name>
+                    <type>out</type>
+                    <content>
+                        <p>Specifies the pointer to the OUT_CHGMODERESULT structure to store the acquired parameter.<br/>
+                           The OUT_CHGMODERESULT structure is as follows.
+<pre>
+typedef struct _OUT_CHGMODERESULT{
+    unsigned char   crnt_mode;
+    unsigned char   pad;
+    unsigned short  result;
+} OUT_CHGMODERESULT;
+</pre>
+                            <dl>
+                            <dt>crnt_mode</dt>
+                            <dd>Operation mode after changing</dd>
+                            <dd><table border="0" >
+                                <tr><td>  0</td><td>:</td><td>"OFFLINE" mode</td></tr>
+                                <tr><td> 64</td><td>:</td><td>"STOP" mode   </td></tr>
+                                <tr><td>128</td><td>:</td><td>"CLEAR" mode  </td></tr>
+                                <tr><td>192</td><td>:</td><td>"OPERATE" mode</td></tr>
+                            </table></dd>
+
+                            <dt>pad</dt>
+                            <dd>unused</dd>
+
+                            <dt>result</dt>
+                            <dd>Result</dd>
+                            <dd><table border="0" >
+                                <tr><td> 0</td><td>:</td><td>normally                                     </td></tr>
+                                <tr><td>10</td><td>:</td><td>error occurs                                 </td></tr>
+                                <tr><td>11</td><td>:</td><td>change in operation mode by the illegal order</td></tr>
+                                <tr><td>12</td><td>:</td><td>power must be off                            </td></tr>
+                            </table></dd>
+
+                            </dl>
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_DATA</name>
+            <content>data error<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                err_no of ODBERR structure.
+                <table border="0">
+                    <tr><td>2</td><td>:</td><td>out of range</td></tr>
+                </table>
+                err_dtno of ODBERR structure.
+                <table border="0">
+                    <tr><td>7</td><td>:</td><td>a kind of operation mode is invalid</td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                err_no of ODBERR structure.
+                <table border="0">
+                    <tr><td>40</td><td>:</td><td>There is no PROFIBUS master board.           </td></tr>
+                    <tr><td>41</td><td>:</td><td>There is no PROFIBUS master function.        </td></tr>
+                    <tr><td>42</td><td>:</td><td>There is no SRAM of PROFIBUS master function.</td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>CNC execution rejection<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                err_no of ODBERR structure.
+                <table border="0">
+                    <tr><td>10</td><td>:</td><td>fail to read the parameter from SRAM</td></tr>
+                </table>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <need>The PROFIBUS-DP master function is necessary.</need>
+    </option>
+
+
+
+    <parameter>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

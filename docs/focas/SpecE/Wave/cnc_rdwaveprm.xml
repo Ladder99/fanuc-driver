@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdwaveprm</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdwaveprm(unsigned short FlibHndl, IODBWAVE *wave);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+         Reads the waveform diagnosis parameter setting.<br/>
+         <BR/>
+         <a href="Wave/Cnc_rdwaveprm2.htm" target="_parent">Cnc_rdwaveprm2</a> supports Series 15i
+         and expanded the function.<br/>
+         Please use <a href="Wave/cnc_rdwaveprm2.htm" target="_parent">cnc_rdwaveprm2</a> better than cnc_rdwaveprm.<br/>
+        <BR/>
+        In case of using this function, the waveform diagnosis screen of CNC must not be used.<br/>
+        If used, the behavior of this function is not guaranteed.
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle.<br/>
+                            See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>wave</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the IODBWAVE structure including the waveform diagnosis parameter.<br/>
+                            The IODBWAVE structure is as follows.
+                        </p>
+<pre>
+typedef struct iodbwave {
+    short   condition ; /* condition */
+    char    trg_adr ;   /* trigger address */
+    char    trg_bit ;   /* trigger bit */
+    short   trg_no ;    /* trigger number */
+    short   delay ;     /* delay time */
+    short   t_range ;   /* sampling time */
+    struct {
+        short   kind ;  /* kind of waveform data */
+        union {
+#ifdef M_AXIS2  /* Series 15 : maximum axis=24 */
+            long        axis ;  /* axis information */
+#else
+            short       axis ;  /* axis information */
+#endif
+            struct {            /* machine signal */
+                char    adr ;   /*   kind of PMC address */
+                char    bit ;   /*   bit number */
+                short   no ;    /*   number of PMC address */
+            } io ;
+        } u ;
+    } ch[12] ;
+} IODBWAVE ;
+</pre>
+
+                    <dl>
+                        <dt>condition</dt>
+                            <dd>data sampling condition</dd>
+                            <dd>One of the following condition is stored.</dd>
+                            <dd>
+                            <table class="dd" width="80%">
+                                <colgroup valign="top">
+                                <colgroup valign="top">
+                                <colgroup valign="top">
+                                <tr>
+                                    <td>0   </td>
+                                    <td>The sampling of the data is started by <a href="Wave/cnc_wavestart.htm" target="_parent">cnc_wavestart</a> function, and stopped after the specified sampling time.</td>
+                                </tr>
+                                <tr>
+                                    <td>1   </td>
+                                    <td>The sampling of the data is started when the trigger specified by the next item rises after calling <a href="Wave/cnc_wavestart.htm" target="_parent">cnc_wavestart</a> function, and stopped after the specified sampling time.</td>
+                                </tr>
+                                <tr>
+                                    <td>2   </td>
+                                    <td>The sampling of the data is started when the trigger specified by the next item falls after calling <a href="Wave/cnc_wavestart.htm" target="_parent">cnc_wavestart</a> function, and stopped after the specified sampling time.</td>
+                                </tr>
+                                <tr>
+                                    <td>100 </td>
+                                    <td>The sampling of the data is started by <a href="Wave/cnc_wavestart.htm" target="_parent">cnc_wavestart</a> function, and stopped when a servo alarm occurrs.</td>
+                                </tr>
+                                <tr>
+                                    <td>101 </td>
+                                    <td>The sampling of the data is started by <a href="Wave/cnc_wavestart.htm" target="_parent">cnc_wavestart</a> function, and stopped when a servo alarm occurrs or the trigger rises.</td>
+                                </tr>
+                                <tr>
+                                    <td>102 </td>
+                                    <td>The sampling of the data is started by <a href="Wave/cnc_wavestart.htm" target="_parent">cnc_wavestart</a> function, and stopped when a servo alarm occurrs or the trigger falls.</td>
+                                </tr>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+                            </dd>
+                            <dd>
+                                <table>
+                                    <tr><td valign="top">*</td><td>In case of Series 16/18, 16i/18i/21i, 0i the waveform data under the condition 100,101,102 is backupped even if the power is off.</td></tr>
+                                    <tr><td valign="top">*</td><td>In case of Series 16i/18i-W, there is not the setting for condition 100,101,102.</td></tr>
+                                </table>
+                          </dd>
+
+                        <dt>trg_adr</dt>
+                            <dd>trigger address</dd>
+                            <dd>The kind of PMC address which corresponds to machine signal for a trigger is stored with ASCII code.<br/>
+                                It is valid when condition is 1/2/101/102.<br/>
+                                Kind of stored PMC address : "G","F","Y","X"</dd>
+
+                        <dt>trg_bit</dt>
+                            <dd>trigger bit</dd>
+                            <dd>The bit number of PMC address which corresponds to machine signal for a trigger is stored.<br/>
+                                It is valid when condition is 1/2/101/102.<br/>
+                                Range of stored bit number : 0,..,7
+                            </dd>
+
+                        <dt>trg_no</dt>
+                            <dd>trigger number</dd>
+                            <dd>The PMC address number which corresponds to machine signal for a trigger is stored.<br/>
+                                It is valid when condition is 1/2/101/102.<br/>
+                                Range of stored number is shown in <a href="Pmc/pmc_rdpmcrng.htm" target="_parent">pmc_rdpmcrng</a> function reference.</dd>
+
+                        <dt>delay</dt>
+                            <dd>delay time</dd>
+                            <dd>After the stop condition is satisfied and this delay time has passed, the sampling is stopped.</dd>
+                            <dd>range</dd>
+                            <dd>
+                            <table class="dd">
+                                <tr><td>Series 15</td><td>0,..,32000</td></tr>
+                                <tr><td>Series 16/18, 16i/18i/21i, 0i</td><td>0,..,32760</td></tr>
+                            </table>
+                            </dd>
+                            <dd>unit  1 msec</dd>
+                            <dd>It is valid when the condition is 100/101/102.</dd>
+
+                        <dt>t_range</dt>
+                            <dd>sampling time</dd>
+                            <dd>sampling time is stored.</dd>
+                            <dd>range</dd>
+                            <dd>
+                                <ul>Series 15<br/>
+                                    <span class="dd">25/50/100/200/400/800 show the following time respectively.</span><br/>
+                                    <span class="dd">500/1000/2000/4000/8000/16000</span>
+                                </ul>
+                            </dd>
+                            <dd>
+                                <ul>Series 16/18, 16i/18i/21i, 0i<br/>
+                                    <span class="dd">10,..,8192</span>
+                                </ul>
+                            </dd>
+                            <dd>unit  1 msec</dd>
+                            <dd>It is valid when the condition is 0/1/2.</dd>
+
+                        <dt>ch[n].kind</dt>
+                            <dd>(n is channel number 0,..,11)</dd>
+                            <dd>An available channel and the kind of the waveform data are as follows according to the CNC MODEL and the condition.</dd>
+
+                            <dd>condition : 100/101/102</dd>
+                            <dd>
+                            <table class="dd" border="1">
+                                <tr>
+                                    <th rowspan="2">channel No (n)</th>
+                                    <th colspan="2">ch[n].kind<br/>
+                                    (kind of waveform data)
+                                    </th>
+                                </tr>
+                                <tr><th>Series 16/18, 16i/18i/21i, 0i </th><th>Series 15</th></tr>
+                                <tr><td>0</td><td>0</td><td>0,..,2, 4,..,7</td></tr>
+                                <tr><td>1</td><td>1</td><td>0,..,2, 4,..,7</td></tr>
+                                <tr><td>2</td><td>2</td><td>0,..,2, 4,..,7</td></tr>
+                                <tr><td>3</td><td>5</td><td>0,..,2, 4,..,7</td></tr>
+                                <tr><td>4</td><td>6</td><td>not used</td></tr>
+                                <tr><td>5</td><td>7</td><td>not used</td></tr>
+                            </table>
+                            </dd>
+                            
+                            <dd>condition : 0/1/2</dd>
+                            <dd>
+                            <table class="dd" border="1">
+                                <tr>
+                                    <th rowspan="2">channel No (n)</th>
+                                    <th colspan="2">ch[n].kind<br/>
+                                    (kind of waveform data)
+                                    </th>
+                                </tr>
+                                <tr><th>Series 16/18, 16i/18i/21i, 0i </th><th>Series 15</th></tr>
+                                <tr><td>6</td><td>0,..,3, 5,..,7, 9,..,13</td><td>0,..,2, 4,..,7, 9,..,11</td></tr>
+                                <tr><td>7</td><td>0,..,3, 5,..,7, 9,..,13</td><td>0,..,2, 4,..,7, 9,..,11</td></tr>
+                                <tr><td>8</td><td>not used</td><td>13</td></tr>
+                                <tr><td>9</td><td>not used</td><td>13</td></tr>
+                                <tr><td>10</td><td>not used</td><td>13</td></tr>
+                                <tr><td>11</td><td>not used</td><td>13</td></tr>
+                            </table>
+                            </dd>
+                            <dd>
+                                <table>
+                                    <tr><td valign="top">*</td><td>If "-1" is stored in ch[n].kind, the data of its channel is invalid. (The value of "kind" concerning an unused channel is indefinite.)</td></tr>
+                                    <tr><td valign="top">*</td><td>Select a following member of union properly according to the value of ch[n].kind.</td></tr>
+                                </table>
+                                <table class="dd">
+                                    <tr><td>ch[n].u.axis    </td><td>kind : except '13'</td></tr>
+                                    <tr><td>ch[n].u.io      </td><td>kind : '13'</td></tr>
+                                </table>
+                            </dd>
+                            <dd>* In case of Series 16i/18i-W, 10-12 does not exist as the value of ch[n].kind. </dd>
+                            <dd><br/></dd>
+                            <dd>Kind of waveform data (O:available,X:not available)</dd>
+                            <dd>
+                            <table border="1">
+                                <colgroup width="10%">
+                                <colgroup width="30%">
+                                <colgroup width="20%">
+                                <colgroup align="center" width="10%">
+                                <colgroup align="center" width="10%">
+                                <colgroup align="center" width="10%">
+                                <colgroup align="center" width="10%">
+                                <colgroup align="center" width="10%">
+                                <tr>
+                                    <th rowspan="2">number</th>
+                                    <th rowspan="2">meaning</th>
+                                    <th rowspan="2">unit</th>
+                                    <th colspan="2">Series 16/18,16i/18i/21i,0i</th>
+                                    <th colspan="2">Series 15</th>
+                                </tr>
+                                <tr>
+                                    <th>0/1/2</th>
+                                    <th>100/101/102</th>
+                                    <th>0/1/2</th>
+                                    <th>100/101/102</th>
+                                </tr>
+                                <tr>
+                                    <td>-1</td><td>No data</td><td>-</td>
+                                    <td>O</td><td>O</td><td>O</td><td>O</td>
+                                </tr>
+                                <tr>
+                                    <td>0</td><td>Servo error(8msec)</td><td>Pulse(detection unit)</td>
+                                    <td>O</td><td>O</td><td>O</td><td>O</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td><td>Number of servo pulses to be generated</td><td>Pulse(detection unit)</td>
+                                    <td>O</td><td>O</td><td>O</td><td>O</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td><td>Servo torque</td><td>%(max. current ratio)</td>
+                                    <td>O</td><td>O</td><td>O</td><td>O</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td><td>Servo error(2msec)</td><td>Pulse(detection unit)</td>
+                                    <td>O</td><td>X</td><td>X</td><td>X</td>
+                                </tr>
+                                <tr>
+                                    <td>4</td><td>Number of servo pulses after acceleration,deceleration</td><td>Pulse(detection unit)</td>
+                                    <td>X</td><td>X</td><td>O</td><td>O</td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="2">5</td><td rowspan="2">Actual speed</td><td>RPM</td>
+                                    <td>O</td><td>O</td><td>X</td><td>X</td>
+                                </tr>
+                                <tr>
+                                    <td>Pulse(detection unit)</td>
+                                    <td>X</td><td>X</td><td>O</td><td>O</td>
+                                </tr>
+                                <tr>
+                                    <td>6</td><td>Value of the electric current command for servo</td><td>%(max. current ratio)</td>
+                                    <td>O</td><td>O</td><td>O</td><td>O</td>
+                                </tr>
+                                <tr>
+                                    <td>7</td><td>Data during heat simulation</td><td>%(OVC alarm ratio)</td>
+                                    <td>O</td><td>O</td><td>O</td><td>O</td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="2">9</td><td>Composite speed for for 1st,2nd,3rd axis</td><td>Pulse(detection unit)</td>
+                                    <td>O</td><td>X</td><td>X</td><td>X</td>
+                                </tr>
+                                <tr>
+                                    <td>Composite speed for all axes</td><td>MM/MIN or RPM</td>
+                                    <td>X</td><td>X</td><td>O</td><td>X</td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="2">10</td><td rowspan="2">Spindle speed</td><td>%(max. spin ratio)</td>
+                                    <td>O</td><td>X</td><td>X</td><td>X</td>
+                                </tr>
+                                <tr>
+                                    <td>rpm</td>
+                                    <td>X</td><td>X</td><td>O</td><td>X</td>
+                                </tr>
+                                <tr>
+                                    <td>11</td><td>Load meter for spindle</td><td>%(max. output ratio)</td>
+                                    <td>O</td><td>X</td><td>O</td><td>X</td>
+                                </tr>
+                                <tr>
+                                    <td>12</td><td>Difference of spindle conversion error</td><td>Pulse(detection unit)</td>
+                                    <td>O</td><td>X</td><td>X</td><td>X</td>
+                                </tr>
+                                <tr>
+                                    <td>13</td><td>on/off state of specified machine signal</td><td>-</td>
+                                    <td>O</td><td>X</td><td>O</td><td>X</td>
+                                </tr>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+                            </dd>
+
+
+                    <dt>ch[n].u.axis</dt>
+                        <dd>axis information of waveform data</dd>
+                        <dd>Axis information of waveform data is stored.<br/>
+                            It is valid when the kind of waveform data is expect '13'.</dd>
+                        <dd><br/></dd>
+                        <dd>Axis information of Series 15, 16/18, 16i/18i/21i, 0i are as follows.</dd>
+                        <dd><br/></dd>
+
+                        <dd>Series 15</dd>
+                        <dd><span class="dd">Each bit according to the kind of waveform data is as follows.</span></dd>
+                        <dd>
+                        <ul>
+                            <li>Maximum axis &#60;= 15</li>
+                            <table border="1">
+                                <tr><th>kind of waveform data</th><th></th></tr>
+                                <tr><td>0,..,7</td>
+                                    <td><table>
+                                        <tr><td>bit 0 ON</td><td>:</td><td>first axis designation</td></tr>
+                                        <tr><td>bit 1 ON</td><td>:</td><td>second axis designation</td></tr>
+                                        <tr><td>&#160;&#160;&#160;:</td><td></td><td></td></tr>
+                                        <tr><td>bit 14 ON</td><td>:</td><td>15th axis designation</td></tr>
+                                        <tr><td>bit 15</td><td>:</td><td>not used</td></tr>
+                                    </table></td>
+                                </tr>
+                                <tr>
+                                    <td>9</td>
+                                        <td><table>
+                                        <tr><td>bit 0 ON</td><td>:</td><td>first path designation</td></tr>
+                                        <tr><td>bit 1 ON</td><td>:</td><td>second path designation(only 15TT)</td></tr>
+                                        <tr><td>bit 2,..,15</td><td>:</td><td>not used</td></tr>
+                                    </table></td>
+                                </tr>
+                                <tr>
+                                    <td>10,..,11</td>
+                                    <td><table>
+                                        <tr><td>bit 0 ON</td><td>:</td><td>first spindle designation</td></tr>
+                                        <tr><td>bit 1 ON</td><td>:</td><td>second spindle designation</td></tr>
+                                        <tr><td>bit 2,..,15</td><td>:</td><td>not used</td></tr>
+                                    </table></td>
+                                </tr>
+                            </table>
+
+                            <li>Maximum axis = 24</li>
+                            <table border="1">
+                                <tr><th>kind of waveform data</th><th></th></tr>
+                                <tr><td>0,..,7</td>
+                                    <td><table>
+                                        <tr><td>bit 0 ON</td><td>:</td><td>first axis designation</td></tr>
+                                        <tr><td>bit 1 ON</td><td>:</td><td>second axis designation</td></tr>
+                                        <tr><td>&#160;&#160;&#160;:</td><td></td><td></td></tr>
+                                        <tr><td>bit 22 ON</td><td>:</td><td>23rd axis designation</td></tr>
+                                        <tr><td>bit 23 ON</td><td>:</td><td>bit23 ON  : 24th axis designation</td></tr>
+                                        <tr><td>bit 24,..,31</td><td>:</td><td>not used</td></tr>
+                                    </table></td>
+                                </tr>
+                                <tr>
+                                    <td>9</td>
+                                        <td><table>
+                                        <tr><td>bit 0 ON</td><td>:</td><td>first path designation</td></tr>
+                                        <tr><td>bit 1 ON</td><td>:</td><td>second path designation(only 15TT)</td></tr>
+                                        <tr><td>bit 2,..,31</td><td>:</td><td>not used</td></tr>
+                                    </table></td>
+                                </tr>
+                                <tr>
+                                    <td>10,..,11</td>
+                                    <td><table>
+                                        <tr><td>bit 0 ON</td><td>:</td><td>first spindle designation</td></tr>
+                                        <tr><td>bit 1 ON</td><td>:</td><td>second spindle designation</td></tr>
+                                        <tr><td>bit 2,..,31</td><td>:</td><td>not used</td></tr>
+                                    </table></td>
+                                </tr>
+                            </table>
+                        </ul>
+                        </dd>
+
+                        <dd>Series 16/18, 16i/18i/21i, 0i</dd>
+                        <dd><span class="dd">Each bit according to channel number is as follows.</span></dd>
+                        <dd>
+                        <ul>
+                            <li>channel 0,..,5</li>
+                            <table border="1">
+                                <tr><th>kind of waveform data</th><th></th></tr>
+                                <tr><td>0,..,3, 5,..,7 </td>
+                                    <td><table>
+                                        <tr><td>bit 0 ON</td><td>:</td><td>first axis designation</td></tr>
+                                        <tr><td>bit 1 ON</td><td>:</td><td>second axis designation</td></tr>
+                                        <tr><td>&#160;&#160;&#160;:</td><td></td><td></td></tr>
+                                        <tr><td>bit 7 ON</td><td>:</td><td>eighth axis designation</td></tr>
+                                        <tr><td>bit 8,..,15</td><td>:</td><td>not used</td></tr>
+                                    </table></td>
+                                </tr>
+                            </table>
+
+                            <li>channel 6, 7</li>
+                            <table border="1">
+                                <tr><th>The kind of waveform data</th><th></th></tr>
+                                <tr><td>0,..,3, 5,..,7</td>
+                                    <td><table>
+                                        <tr><td>bit 0 ON</td><td>:</td><td>first axis designation</td></tr>
+                                        <tr><td>bit 1 ON</td><td>:</td><td>second axis designation</td></tr>
+                                        <tr><td>&#160;&#160;&#160;:</td><td></td><td></td></tr>
+                                        <tr><td>bit 7 ON</td><td>:</td><td>eighth axis designation</td></tr>
+                                        <tr><td>bit 8,..,15</td><td>:</td><td>not used</td></tr>
+                                    </table></td>
+                                </tr>
+                                <tr>
+                                    <td>10,..,11</td>
+                                    <td><table>
+                                        <tr><td>bit 0 ON</td><td>:</td><td>first spindle designation</td></tr>
+                                        <tr><td>bit 1 ON</td><td>:</td><td>second spindle designation</td></tr>
+                                        <tr><td>bit 2 ON</td><td>:</td><td>third spindle designation</td></tr>
+                                        <tr><td>bit 3 ON</td><td>:</td><td>4th spindle designation</td></tr>
+                                        <tr><td>bit 4,..,15</td><td>:</td><td>not used </td></tr>
+                                    </table></td>
+                                </tr>
+                            </table>
+                        </ul>
+                        </dd>
+
+
+                        <dt>ch[n].u.io.adr</dt>
+                            <dd>Kind of PMC address of machine signal</dd>
+                            <dd>The kind of PMC address which corresponds to machine signal to trace is stored with ASCII code.<br/>
+                                It is valid only when condition is 0/1/2 and the kind of waveform data is 13.<br/>
+                                Kind of stored PMC address : "G","F","Y","X"</dd>
+
+                        <dt>ch[n].u.io.bit</dt>
+                            <dd>bit number of machine signal</dd>
+                            <dd>The bit number of PMC address which corresponds to machine signal to trace is stored.<br/>
+                                It is valid only when condition is 0/1/2 and the kind of waveform data is 13.<br/>
+                                Range of stored bit number : 0,..,7</dd>
+
+                        <dt>ch[n].u.io.no</dt>
+                            <dd>number of PMC address of machine signal</dd>
+                            <dd>The PMC address number which corresponds to machine signal to trace is stored.<br/>
+                                It is valid only when condition is 0/1/2 and the kind of waveform data is 13.<br/>
+                                Range of stored number is shown in <a href="Pmc/pmc_rdpmcrng.htm" target="_parent">pmc_rdpmcrng</a> function reference.</dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The extended driver/library function is necessary. 
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM<BR/>(Series16/18, 16i/18i/21i, 0i)</name>
+            <content>
+                CNC parameter error <BR/>
+                3112#0=0 when CNC is turned on. Set 3112#0=1 and reboot.  
+            </content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+                <li>16/18, 16i/18i/21i, 0i</li>
+                <p>3112#0=1 (must be set) </p>
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdwaveprm2</name>
+            <file>Wave/cnc_rdwaveprm2.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrwaveprm</name>
+            <file>Wave/cnc_wrwaveprm.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrwaveprm2</name>
+            <file>Wave/cnc_wrwaveprm2.htm</file>
+        </item>
+        <item>
+            <name>cnc_wavestart</name>
+            <file>Wave/cnc_wavestart.htm</file>
+        </item>
+        <item>
+            <name>cnc_wavestop</name>
+            <file>Wave/cnc_wavestop.htm</file>
+        </item>
+        <item>
+            <name>cnc_wavestat</name>
+            <file>Wave/cnc_wavestat.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdwavedata</name>
+            <file>Wave/cnc_rdwavedata.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

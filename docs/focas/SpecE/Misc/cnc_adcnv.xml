@@ -1,0 +1,766 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_adcnv</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_adcnv(unsigned short FlibHndl, short inp_type, short av_type, ODBAD *adcnv);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn><p>Reads the A/D conversion data. The A/D conversion data is stored in "data" of "ODBAD".</p></cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>inp_type</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            <div class="dd">
+<p>
+Specify the type of analog voltage input.
+</p>
+<li>Series 15/15i</li>
+    <table class="dd">
+        <tr>
+            <td>0, 1</td>
+            <td>:</td>
+            <td>Analog for general purpose</td>
+        </tr>
+        <tr>
+            <td>100, 101</td>
+            <td>:</td>
+            <td>Load current of analog spindle</td>
+        </tr>
+        <tr>
+            <td>200</td>
+            <td>:</td>
+            <td>Load current of CNC controlled axis</td>
+        </tr>
+    </table>
+<p/>
+<li>Series 16/18, 16i/18i, 0i, 30i, Power Mate i, PMi-A</li>
+    <table class="dd">
+        <tr>
+            <td>0</td>
+            <td>:</td>
+            <td>Analog for general purpose(4 channel) -- only 16/18 MODEL B/C</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>:</td>
+            <td>CNC controlled axis load current</td>
+        </tr>
+    </table>
+</div>
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>av_type</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the kind of analog voltage(specification of connector).
+                        </p>
+<li>Series 15/15i</li>
+<ol>
+    <li>Specification of analog for general purpose</li>
+        <table border="1" frame="hsides" rules="groups">
+            <thead>
+            <tr>
+                <th>inp_type</th>
+                <th>av_type</th>
+                <th>Input channel</th>
+                <th>Signal</th>
+                <th>Connector</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>0</td>
+                <td>0</td>
+                <td>Channel1</td>
+                <td>AIN2</td>
+                <td>JA6</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>0</td>
+                <td>Channel2</td>
+                <td>AIN3</td>
+                <td>JA6</td>
+            </tr>
+            </tbody>
+        </table>
+        <br/>
+
+    <li>Specification of load current of analog spindle.</li>
+        <table border="1" frame="hsides" rules="groups">
+            <thead>
+            <tr>
+                <th>inp_type</th>
+                <th>av_type</th>
+                <th>Analog spindle</th>
+                <th>Signal</th>
+                <th>Connector</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>100</td>
+                <td>0</td>
+                <td>1st spindle</td>
+                <td>AIN0</td>
+                <td>JA6</td>
+            </tr>
+            <tr>
+                <td>101</td>
+                <td>0</td>
+                <td>2nd spindle</td>
+                <td>AIN1</td>
+                <td>JA6</td>
+            </tr>
+            </tbody>
+        </table>
+        <br/>
+
+    <li>Specification of Load current of CNC controlled axis.</li>
+        <table border="1" frame="hsides" rules="groups">
+            <thead>
+            <tr>
+                <th>inp_type</th>
+                <th>av_type</th>
+                <th>Servo axis</th>
+                <th>Signal</th>
+                <th>Connector</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>200</td>
+                <td>1</td>
+                <td>1st axis</td>
+                <td>AMP1</td>
+                <td>JV1</td>
+            </tr>
+            <tr>
+                <td>200</td>
+                <td>2</td>
+                <td>2nd axis</td>
+                <td>AMP2</td>
+                <td>JV2</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>&#160;&#160;&#160;:</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>200</td>
+                <td>10</td>
+                <td>10th axis</td>
+                <td>AMP10</td>
+                <td>JV10</td>
+            </tr>
+            <tr>
+                <td>200</td>
+                <td>11</td>
+                <td>11th axis</td>
+                <td>AMP11</td>
+                <td>JV11</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>&#160;&#160;&#160;:</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>200</td>
+                <td>23</td>
+                <td>23th axis</td>
+                <td>AMP23</td>
+                <td>JV23</td>
+            </tr>
+            <tr>
+                <td>200</td>
+                <td>24</td>
+                <td>24th axis</td>
+                <td>AMP24</td>
+                <td>JV24</td>
+            </tr>
+            </tbody>
+        </table>
+        <ul type="square">
+            <li>When MAX_AXIS=15, av_type=16,..,24 are not used.</li>
+            <li>When MAX_AXIS=10, av_type=11,..,24 are not used.</li>
+        </ul>
+
+</ol>
+
+<p>
+<li>Series 16/18, 16i/18i, 30i 0i, Power Mate i, PMi-A</li>
+</p>
+<ol>
+    <li>Specification of analog for general purpose(16/18 MODEL B/C)</li>
+        <table border="1" frame="hsides" rules="groups">
+            <thead>
+            <tr>
+                <th>inp_type</th>
+                <th>av_type</th>
+                <th>Servo axis</th>
+                <th>Signal</th>
+                <th>Connector</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>0</td>
+                <td>0</td>
+                <td>Channel1</td>
+                <td>AIN0</td>
+                <td>JA6</td>
+            </tr>
+            <tr>
+                <td>0</td>
+                <td>1</td>
+                <td>Channel2</td>
+                <td>AIN1</td>
+                <td>JA6</td>
+            </tr>
+            <tr>
+                <td>0</td>
+                <td>2</td>
+                <td>Channel3</td>
+                <td>AIN2</td>
+                <td>JA6</td>
+            </tr>
+            <tr>
+                <td>0</td>
+                <td>3</td>
+                <td>Channel4</td>
+                <td>AIN3</td>
+                <td>JA6</td>
+            </tr>
+            </tbody>
+        </table><p/>
+    <li>Specification of Load current of CNC controlled axis.</li>
+        <table border="1" frame="hsides" rules="groups">
+            <thead>
+            <tr>
+                <th>inp_type</th>
+                <th>av_type</th>
+                <th>Servo axis</th>
+                <th>Signal</th>
+                <th>Connector</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>2</td>
+                <td>1</td>
+                <td>1st axis</td>
+                <td>AMP1</td>
+                <td>JV1</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>2</td>
+                <td>2nd axis</td>
+                <td>AMP2</td>
+                <td>JV2</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>3</td>
+                <td>3rd axis</td>
+                <td>AMP3</td>
+                <td>JV3</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>4</td>
+                <td>4th axis</td>
+                <td>AMP4</td>
+                <td>JV4</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>5</td>
+                <td>5th axis</td>
+                <td>AMP5</td>
+                <td>JV5</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>6</td>
+                <td>6th axis</td>
+                <td>AMP6</td>
+                <td>JV6</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>7</td>
+                <td>7th axis</td>
+                <td>AMP7</td>
+                <td>JV7</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>8</td>
+                <td>8th axis</td>
+                <td>AMP8</td>
+                <td>JV8</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>&#160;&#160;&#160;:</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>31</td>
+                <td>31th axis</td>
+                <td>AMP31</td>
+                <td>JV31</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>32</td>
+                <td>32th axis</td>
+                <td>AMP32</td>
+                <td>JV32</td>
+            </tr>
+            </tbody>
+        </table>
+            <ul type="square">
+                <li>9axis-32axis are effective for Series 30i.</li>
+            </ul>
+</ol>
+                    </content>
+                </item>
+                <item>
+                    <name>adcnv</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the ODBAD structure including A/D conversion data. The ODBAD structure is as follows.
+                        </p>
+
+<pre>
+<li>Series 15B</li>
+typedef struct odbad {
+     short  datano ;     /* type of analog voltage input */
+     short  type ;       /* kind of analog voltage
+                                (specification of connector) */
+     char  data ;        /* digital voltage */
+} ODBAD ;</pre>
+<p/>
+<pre>
+<li>Series 15i, 16/18, 16i/18i/21i, 30i, 0i, Power Mate i, PMi-A</li>
+typedef struct odbad {
+     short  datano ;     /* type of analog voltage input */
+     short  type ;       /* kind of analog voltage
+                                (specification of connector) */
+     short  data ;       /* digital voltage */
+} ODBAD ;
+</pre>
+
+<dl>
+    <dt>datano</dt>
+        <dd>The type of analog voltage input is stored.</dd>
+    <dt>type</dt>
+        <dd>The kind of analog voltage(specification of connector) is stored.</dd>
+    <dt>data</dt>
+    <dd>The analog voltage data is set, which is input in A/D converter of the CNC, with conversion into digital value.</dd>
+    <dd>&#160;</dd>
+    <dd><li>Series 15/15i</li></dd>
+    <dd><div class="dd">
+    The A/D conversion data (0,..,255) which is converted from input voltage data is stored with binary format.
+    The digital data is linearly proportional to the input voltage as follows.
+        <table border="1" frame="hsides" rules="groups">
+            <thead>
+            <tr>
+                <th>Input voltage</th>
+                <th>data</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>-10V</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>0V</td>
+                <td>128 (half - adjust value)</td>
+            </tr>
+            <tr>
+                <td>10V</td>
+                <td>255</td>
+            </tr>
+            </tbody>
+        </table>
+        <br/>
+    </div></dd>
+    <dd><li>Series 16/18, 16i/18i/21i, 30i, 0i, Power Mate i, PMi-A</li></dd>
+    <dd><div class="dd">
+    <li type="square">Specification of analog for general purpose(16/18 MODEL B/C)</li>
+        The A/D conversion data (0,..,255) which is converted from input voltage data is stored with binary format.
+        The digital data is linearly proportional to the input voltage as follows.
+        <table border="1" frame="hsides" rules="groups">
+            <thead>
+            <tr>
+                <th>Input voltage</th>
+                <th>data</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>-10V</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>0V</td>
+                <td>128 (half - adjust value)</td>
+            </tr>
+            <tr>
+                <td>10V</td>
+                <td>255</td>
+            </tr>
+            </tbody>
+        </table>
+    <p/>
+    <li type="square">Specification of Load current of CNC controlled axis.</li>
+        The digital value which is converted from the load current is stored with binary format.
+        It is possible to get the load current using this value as following formula.
+        <blockquote>
+            <p/>The load current (A) = adcnv.data * N / 6554
+            <p/>N : the value read from Parameter No.2086
+        </blockquote>
+    </div></dd>
+</dl>
+
+                    </content>
+                </item>
+            </vc>
+        </common>
+
+        <!-- is Argument Start -->
+        <is>
+            <hssb>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                            </p>
+                        </content>
+                    </item>
+                    
+                    <item>
+                        <name>inp_type</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                            Specify the type of analog voltage input.
+                            </p>
+                            <table class="dd">
+                                <tr>
+                                    <td>2</td>
+                                    <td>:</td>
+                                    <td>CNC controlled axis load current</td>
+                                </tr>
+                            </table>
+                        </content>
+                    </item>
+
+                    <item>
+                        <name>av_type</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Specify the kind of analog voltage(specification of connector).
+                            </p>
+                            <table border="1" frame="hsides" rules="groups">
+                                <thead>
+                                <tr>
+                                    <th>inp_type</th>
+                                    <th>av_type</th>
+                                    <th>Servo axis</th>
+                                    <th>Signal</th>
+                                    <th>Connector</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>1st axis</td>
+                                    <td>AMP1</td>
+                                    <td>JV1</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>2</td>
+                                    <td>2nd axis</td>
+                                    <td>AMP2</td>
+                                    <td>JV2</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td>&#160;&#160;&#160;:</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>31</td>
+                                    <td>31th axis</td>
+                                    <td>AMP31</td>
+                                    <td>JV31</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>32</td>
+                                    <td>32th axis</td>
+                                    <td>AMP32</td>
+                                    <td>JV32</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </content>
+                    </item>
+
+                    <item>
+                        <name>adcnv</name>
+                        <type>out</type>
+                        <content>
+                            <p>
+                                Pointer to the ODBAD structure including A/D conversion data. The ODBAD structure is as follows.
+                            </p>
+
+    <pre>
+typedef struct odbad {
+     short  datano ;     /* type of analog voltage input */
+     short  type ;       /* kind of analog voltage
+                                (specification of connector) */
+     short  data ;       /* digital voltage */
+} ODBAD ;</pre>
+
+    <dl>
+        <dt>datano</dt>
+            <dd>The type of analog voltage input is stored.</dd>
+        <dt>type</dt>
+            <dd>The kind of analog voltage(specification of connector) is stored.</dd>
+        <dt>data</dt>
+        <dd>The analog voltage data is set, which is input in A/D converter of the CNC, with conversion into digital value.</dd>
+        <dd>&#160;</dd>
+        <dd><div class="dd">
+            The digital value which is converted from the load current is stored with binary format.
+            It is possible to get the load current using this value as following formula.
+            <blockquote>
+                <p/>The load current (A) = adcnv.data * N / 6554
+                <p/>N : the value read from Parameter No.2086
+                <p/>(If N is 20 or more, round down the place of one.) 
+            </blockquote>
+        </div></dd>
+    </dl>
+
+                        </content>
+                    </item>
+                    
+                </vc>
+            </hssb>
+        </is>
+        <!-- is Argument End -->
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>Data number error<br/>The type of analog voltage input (inp_type) is wrong.</content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>Data attribute error<br/>The kind of analog voltage (av_type) is wrong.</content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter></parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>E</fs16i>
+            <fs18i>E</fs18i>
+            <fs30ia>E</fs30ia>
+            <fs30ib>E</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+        <add><b></b></add>
+        <is>
+            <!-- M -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference></reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

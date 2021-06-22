@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdmag_property</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdmag_property( unsigned short FlibHndl, short *data_num, IODBMAGPRTY * magprty ); </prottype>
+      </vc>
+    </declare>
+
+
+    <doc>
+        <cmn><p>
+             Reads the magazine property data.
+             </p>
+        </cmn>
+    </doc>
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>data_num</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                           The pointer to the number of reading data. ("1"-"8")<br/>
+                           When all data is read, "-1" is set.
+                        </p>
+                        <p>
+                           The magazine property data that belongs to one magazine number is counted by the set with one reading number.<br/>
+                           Set the number of reading data to the data specified with the pointer beforehand.<br/>
+                           The number of data actually read is returned to "*data_num" when the execution of this function ends.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>magprty</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                            The pointer to the structure that storage the magazine property data.<br/>
+                            IODBMAGPRTY structure is as follows.<br/>
+                            When the number of reading data ("data_num") is not "-1", set the reading magazine numberto the structure data of "mag" beforehand.<br/>
+
+                        </p>
+<pre>
+typedef struct  iodbmagprty {
+    short           mag ;           /* Magazine number           */
+    short           reserve ;       /* Reserved                  */
+    unsigned char   mag_info ;      /* Magazine information data */
+    char            reserve[3] ;    /* Reserved                  */
+    short           mt_line ;       /* Matrix line number        */
+    short           mt_row ;        /* Matrix line number        */
+    long            cstm[4] ;       /* Customize data            */
+} IODBMAGPRTY;
+</pre>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+    <errcode>
+        <item>
+           <name>EW_BUSY</name>
+            <content>
+                Wait until the completion of CNC processing, or retry. <br/>
+            </content>
+        </item>
+        <item>
+           <name>EW_LENGTH</name>
+            <content>
+                Reading number(data_num) is wrong.
+            </content>
+        </item>
+        <item>
+           <name>EW_NUMBER</name>
+            <content>
+                Magazine number(magprty.mag) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The Tool management function 64-pairs, 240-pairs or 1000 pairs and the tool management extension B function are necessary.
+            </content>
+        </item>
+    </errcode>
+
+
+    <option>
+        <hssb>
+            <p>The extended driver/library function are necessary.</p>
+        </hssb>
+
+        <ethr>
+            <p>The Ethernet function and the extended driver/library function are necessary.</p>
+            <p>However, in case of Series 16i/18i/21i-B, 0i-F and 30i, the required CNC option is as follows.</p>
+            <p>When Embedded Ethernet is used,</p>
+            <p><ul>above two optional functions are not required.</ul></p>
+            <p>When Ethernet board is used,</p>
+            <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>
+            <p>
+            The Tool management function 64-pairs, 240-pairs or 1000 pairs and the tool management extension B function are necessary.
+            </p>
+        </need>
+    </option>
+
+
+    <parameter>
+        <type>
+            Magazine property / pot property (No.13210#1=1)
+        </type>
+    </parameter>
+
+
+    <mode>
+    </mode>
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+    <reference>
+        <item>
+            <name>cnc_wrmag_property</name>
+            <file>ToolMng/cnc_wrmag_property.htm</file>
+        </item>
+        <item>
+            <name>cnc_delmag_property</name>
+            <file>ToolMng/cnc_delmag_property.htm</file>
+        </item>
+    </reference>
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

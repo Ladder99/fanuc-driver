@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdtoolinfo</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>
+            FWLIBAPI short WINAPI cnc_rdtoolinfo(unsigned short FlibHndl, ODBPTLINF *tlinf);
+        </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            Reads the tool information data(Maximum tool registration number and each size of tool data).<br/>
+            The data is stored in each member of the ODBPTLINF structure( user define type ).
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle.<br/>
+                            See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>tlinf</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                           Pointer to the ODBPTLINF structure including the tool information.<br/>
+                           The ODBPTLINF structure is as follows.
+                        </p>
+<pre>
+typedef struct odbptlinf {
+    short   tld_max;     /* Maximun tool registration number of the tool data */
+    short   mlt_max;     /* Maximun tool registration number of the multiple tool data */
+    short   reserve      /* (reserve) */
+    short   tld_size[16] /*  Size of the tool data */
+    short   mlt_size[16] /*  Size of the multiple tool data */
+    short   reserves[16] /* (reserve) */
+} ODBPTLINF ;
+</pre>
+                        <dl>
+                            <dt>tld_max</dt>
+                                <dd>Maximun tool registration number of the tool data is set.</dd>
+                            <dt>mlt_max</dt>
+                                <dd>Maximun tool registration number of the multiple tool data is set.</dd>
+                            <dt>reserve</dt>
+                                <dd>(reserve)</dd>
+                            <dt>tld_size</dt>
+                                <dd>Each size of the tool data(0,1,2,4 byte) is set as follows.
+                                <table class="dd" border="1" rules="groups">
+                                    <colgroup valign="top">
+                                    <colgroup valign="top">
+                                    <thead>
+                                        <tr><th>tld_size        </th><th>Items of data size</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>tld_size[0]         </td><td>Tool number</td></tr>
+                                        <tr><td>tld_size[1]         </td><td>X-axis offset</td></tr>
+                                        <tr><td>tld_size[2]         </td><td>Y-axis offset</td></tr>
+                                        <tr><td>tld_size[3]         </td><td>Turret position</td></tr>
+                                        <tr><td>tld_size[4]         </td><td>Tool number to be changed</td></tr>
+                                        <tr><td>tld_size[5]         </td><td>Number of punch operation</td></tr>
+                                        <tr><td>tld_size[6]         </td><td>Tool life</td></tr>
+                                        <tr><td>tld_size[7]         </td><td>Radius of multiple tool</td></tr>
+                                        <tr><td>tld_size[8]         </td><td>Angle of multiple tool</td></tr>
+                                        <tr><td>tld_size[9]         </td><td>Tool shape(C)</td></tr>
+                                        <tr><td>tld_size[10]        </td><td>Tool size(I)</td></tr>
+                                        <tr><td>tld_size[11]        </td><td>Tool size(J)</td></tr>
+                                        <tr><td>tld_size[12]        </td><td>Tool angle(K)</td></tr>
+                                        <tr><td>tld_size[13],..,[15]</td><td>(reserve)</td></tr>
+                                    </tbody>
+                                    </colgroup>
+                                    </colgroup>
+                                </table>
+                                </dd>
+
+                            <dt>mlt_size</dt>
+                                <dd>Each size of the multiple tool data is set as follows. (0,1,2,4)
+                                <table class="dd" border="1" rules="groups">
+                                    <colgroup valign="top">
+                                    <colgroup valign="top">
+                                    <thead>
+                                        <tr><th>mlt_size        </th><th>Items of data size</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>mlt_size[0]         </td><td>Sub-Tool number</td></tr>
+                                        <tr><td>mlt_size[1]         </td><td>Radius of multiple tool</td></tr>
+                                        <tr><td>mlt_size[2]         </td><td>Angle of multiple tool</td></tr>
+                                        <tr><td>mlt_size[3]         </td><td>X-axis offset</td></tr>
+                                        <tr><td>mlt_size[4]         </td><td>YY-axis offset</td></tr>
+                                        <tr><td>mlt_size[5]         </td><td>Tool shape(C)</td></tr>
+                                        <tr><td>mlt_size[6]         </td><td>Tool size(I)</td></tr>
+                                        <tr><td>mlt_size[7]         </td><td>Tool size(J)</td></tr>
+                                        <tr><td>mlt_size[8]         </td><td>Tool angle(K)</td></tr>
+                                        <tr><td>mlt_size [9],..,[15]</td><td>(reserve)</td></tr>
+                                    </tbody>
+                                    </colgroup>
+                                    </colgroup>
+                                </table>
+                                </dd>
+                        </dl>
+                        <p class="info">
+                            See the "OPERATOR'S MANUAL" and the "PARAMETER MANUAL" of CNC for details 
+                            of the tool data setting function. 
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                Unavailable<br/>
+                This function cannot be used except 0i-PD/PF, 16i/18i-P, 30i/31i-LB, 30i/31i-PB.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The extended driver/library function are necessary.<br/>
+                It is necessary to set Punch press function option and Parameter ALA(No.16242#0).(30i/31i-LB only)
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <li>Series 16i/18i-P</li>
+            <div class="dd">16280#0,#1,#2,#3,#4,#5,#6,#7</div>
+            <div class="dd">16281#1,#2,#4</div>
+            <div class="dd">16282#1,#2,#3,#5,#6</div>
+            <div class="dd">16283#1,#2</div>
+            <div class="dd">16276, 16284, 16285, 16286 </div>
+            <li>Series 0i-PD, 30i/31i-LB, 30i/31i-PB</li>
+            <div class="dd">16280#0,#1,#2,#3,#4,#5,#6,#7</div>
+            <div class="dd">16281#4</div>
+            <div class="dd">16282#1,#2,#3,#5,#6</div>
+            <div class="dd">16284, 16285, 16286 </div>
+            <li>Series 0i-PF</li>
+            <div class="dd">16280#0,#1,#2,#3,#4,#5,#6,#7</div>
+            <div class="dd">16281#4</div>
+            <div class="dd">16282#1,#2,#3,#5,#6</div>
+            <div class="dd">16284, 16285, 16286 </div>
+            <div class="dd">8132#0=1 (must be set)</div>
+        </type>
+    </parameter>
+
+    <mode>
+    </mode>
+
+    <support>
+        <m>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </m>
+        <t>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </w>
+        <pw>
+            <d>-</d>
+            <h>-</h>
+            <a>-</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdtlctldata</name>
+            <file>Punch/cnc_rdtlctldata.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrtlctldata</name>
+            <file>Punch/cnc_wrtlctldata.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdtooldata</name>
+            <file>Punch/cnc_rdtooldata.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrtooldata</name>
+            <file>Punch/cnc_wrtooldata.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdmultitldt</name>
+            <file>Punch/cnc_rdmultitldt.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrmultitldt</name>
+            <file>Punch/cnc_wrmultitldt.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

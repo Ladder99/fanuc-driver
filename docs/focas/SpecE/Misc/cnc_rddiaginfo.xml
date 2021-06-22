@@ -1,0 +1,561 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rddiaginfo</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>
+            FWLIBAPI short WINAPI cnc_rddiaginfo(unsigned short FlibHndl, short s_number, unsigned short read_no, ODBDIAGIF *diagif);
+        </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+Reads the CNC diagnosis data information specified by "s_number" and "read_no".<p/>
+
+The CNC diagnosis data is basically non-continuous, and the attribute like the type and the size, etc. is different in each number. Use this function for such as displaying the diagnosis data.
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_number</name>
+                    <type>in</type>
+                    <content>
+                        Specify the start diagnosis data number.
+                    </content>
+                </item>
+                <item>
+                    <name>read_no</name>
+                    <type>in</type>
+                    <content>
+                        Specify the number of the diagnosis data information to be read.
+                    </content>
+                </item>
+                <item>
+                    <name>diagif</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the ODBDIAGIF structure including the diagnosis data information.
+                        </p>
+The ODBDIAGIF structure is as follows.
+<pre>
+typedef struct odbdiagif {
+   unsigned short info_no ;
+                /* number of diagnosis data information */
+   short        prev_no ; /* previous diagnosis data number */
+   short        next_no ; /* next diagnosis data number */
+   struct {
+        short   diag_no ; /* diagnosis data number */
+        short   diag_type ; /* attribute of diagnosis data */
+   } info[N] ;  /* N is number of diagnosis data information */
+} ODBDIAGIF ;
+</pre>
+                        <dl>
+                            <dt>info_no</dt>
+                                <dd>Number of diagnosis data information</dd>
+                                <dd>Number of the diagnosis data information which was read actually.</dd>
+                            <dt>prev_no</dt>
+                                <dd>Previous diagnosis data number</dd>
+                                <dd>Previous effective number of the diagnosis data information which was read first.</dd>
+                            <dt>next_no</dt>
+                                <dd>Next diagnosis data number</dd>
+                                <dd>Next effective number of the diagnosis data information which was read lastly.</dd>
+                            <dt>info[N].diag_no</dt>
+                                <dd>Setting data number</dd>
+                                <dd>The setting data number which exists actually.</dd>
+                            <dt>info[N].diag_type</dt>
+                                <dd>Attribute of diagnosis data</dd>
+                                <dd>The following attributes are set.</dd>
+                                <dd><ul>
+                                    <li>For Series 15, 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i</li>
+                                        <table>
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr>
+                                                <td>bit 0, 1</td><td valign="top">:</td><td>type attribute (It is effective when bit 3 = 0)
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>bit type (8 bit)</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>byte type</td></tr>
+                                                    <tr><td>2</td><td>:</td><td>word type</td></tr>
+                                                    <tr><td>3</td><td>:</td><td>2-word type</td></tr>
+                                                </table></td>
+                                            </tr>
+                                            <tr>
+                                                <td>bit 2</td><td valign="top">:</td><td>axis attribute
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>without axis</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>with axis</td></tr>
+                                                </table></td>
+                                            </tr>
+                                            <tr>
+                                                <td>bit 3</td><td valign="top">:</td><td>type attribute
+                                                <table class="dd">
+                                                    <tr><td>1</td><td>:</td><td>bit type (1 bit)</td></tr>
+                                                </table></td>
+                                            </tr>
+                                            <tr>
+                                                <td>bit 4,11,12</td><td valign="top">:</td><td>display attribute (only 16i/18i/21i)
+                                                <table class="dd">
+                                                    <tr><td>#04=1</td><td>:</td><td>10 digits display</td></tr>
+                                                    <tr><td>#11=1</td><td>:</td><td>date format(yyyy/mm/dd)</td></tr>
+                                                    <tr><td>#12=1</td><td>:</td><td>time format(hh:mm:ss)</td></tr>
+                                                </table></td>
+                                            </tr>
+                                            <tr>
+                                                <td>bit 5,..,10,13,..,15</td><td valign="top">:</td><td>(reserve)</td>
+                                            </tr>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    <br/>
+                                    <li>For Series 15i</li>
+                                        <table>
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr>
+                                                <td>bit 0, 1</td><td valign="top">:</td><td>(reserve)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>bit 2</td><td valign="top">:</td><td>axis attribute
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>without axis</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>with axis</td></tr>
+                                                </table></td>
+                                            </tr>
+                                            <tr>
+                                                <td>bit 3</td><td valign="top">:</td><td>(reserve)</td>
+                                          </tr>
+                                            <tr>
+                                                <td>bit 4,..,6</td><td valign="top">:</td><td>type attribute
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>byte type</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>word type</td></tr>
+                                                    <tr><td>2</td><td>:</td><td>2-word type</td></tr>
+                                                    <tr><td>3</td><td>:</td><td>bit type (8 bit)</td></tr>
+                                                    <tr><td>4</td><td>:</td><td>(reserve)</td></tr>
+                                                    <tr><td>5</td><td>:</td><td>real type</td></tr>
+                                                </table></td>
+                                            </tr>
+                                            <tr>
+                                                <td>bit 7</td><td valign="top">:</td><td>integer without sign (It is effective when type attribute = 0, 1, 2)
+                                                <table class="dd">
+                                                    <tr><td>1</td><td>:</td><td>without sign</td></tr>
+                                                    <tr><td>0</td><td>:</td><td>with sign</td></tr>
+                                                </table></td>
+                                            </tr>
+                                            <tr>
+                                                <td>bit 8,..,11</td><td valign="top">:</td><td>array type
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>not array</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>array of axis</td></tr>
+                                                    <tr><td>2</td><td>:</td><td>array of spindle</td></tr>
+                                                </table></td>
+                                            </tr>
+                                            <tr>
+                                                <td>bit 12,..,15</td><td valign="top">:</td><td>data unit
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>no unit</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>%</td></tr>
+                                                    <tr><td>2</td><td>:</td><td>RPM</td></tr>
+                                                </table></td>
+                                            </tr>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    <br/>
+                                    <li>For Series 30i, 0i-D/F, PMi-A</li>
+                                        <table>
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr>
+                                                <td>bit 0, 1</td><td valign="top">:</td><td>axis attribute (It is effective when bit 3 = 0)
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>bit type (8 bit)</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>byte type</td></tr>
+                                                    <tr><td>2</td><td>:</td><td>word type</td></tr>
+                                                    <tr><td>3</td><td>:</td><td>2-word type or real type</td></tr>
+                                                </table></td>
+                                            </tr>
+                                            <tr>
+                                                <td>bit 2</td><td valign="top">:</td><td>axis attribute
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>without axis</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>with axis</td></tr>
+                                                </table></td>
+                                                
+                                            </tr>
+                                            <tr>
+                                                <td>bit 3</td><td valign="top">:</td><td>type attribute
+                                                <table class="dd">
+                                                    <tr><td>1</td><td>:</td><td>bit type (1 bit)</td></tr>
+                                                </table></td>
+                                                
+                                            </tr>
+                                            <tr>
+                                                <td>bit 7</td><td valign="top">:</td><td>sign
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>without sign</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>with sign</td></tr>
+                                                </table></td>
+                                            </tr>
+                                            <tr>
+                                                <td>bit 8</td><td valign="top">:</td><td>spindle parameter
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>no spindle</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>spindle</td></tr>
+                                                </table></td>
+                                            </tr>
+                                            <tr>
+                                                <td>bit 9,..,11</td><td valign="top">:</td><td>(reserve)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>bit 12</td><td valign="top">:</td><td>in case that type attribute = 3
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>except real type</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>real type</td></tr>
+                                                </table></td>
+                                            </tr>
+                                            <tr>
+                                                <td>bit 13,..,15</td><td valign="top">:</td><td>(reserve)</td>
+                                            </tr>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                </ul></dd>
+                            </dl>
+                    </content>
+                </item>
+            </vc>
+
+        </common>
+
+        <!-- is Argument Start -->
+        <is>
+            <hssb>
+                <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_number</name>
+                    <type>in</type>
+                    <content>
+                        Specify the start diagnosis data number.
+                    </content>
+                </item>
+                <item>
+                    <name>read_no</name>
+                    <type>in</type>
+                    <content>
+                        Specify the number of the diagnosis data information to be read.
+                    </content>
+                </item>
+                <item>
+                    <name>diagif</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the ODBDIAGIF structure including the diagnosis data information.
+                        </p>
+The ODBDIAGIF structure is as follows.
+<pre>
+typedef struct odbdiagif {
+   unsigned short info_no ;
+                /* number of diagnosis data information */
+   short        prev_no ; /* previous diagnosis data number */
+   short        next_no ; /* next diagnosis data number */
+   struct {
+        short   diag_no ; /* diagnosis data number */
+        short   diag_type ; /* attribute of diagnosis data */
+   } info[N] ;  /* N is number of diagnosis data information */
+} ODBDIAGIF ;
+</pre>
+                        <dl>
+                            <dt>info_no</dt>
+                                <dd>Number of diagnosis data information</dd>
+                                <dd>Number of the diagnosis data information which was read actually.</dd>
+                            <dt>prev_no</dt>
+                                <dd>Previous diagnosis data number</dd>
+                                <dd>Previous effective number of the diagnosis data information which was read first.</dd>
+                            <dt>next_no</dt>
+                                <dd>Next diagnosis data number</dd>
+                                <dd>Next effective number of the diagnosis data information which was read lastly.</dd>
+                            <dt>info[N].diag_no</dt>
+                                <dd>Setting data number</dd>
+                                <dd>The setting data number which exists actually.</dd>
+                            <dt>info[N].diag_type</dt>
+                                <dd>Attribute of diagnosis data</dd>
+                                <dd>The following attributes are set.</dd>
+                                <dd><ul>
+                                        <table>
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr>
+                                                <td>bit 0, 1</td><td valign="top">:</td><td>axis attribute (It is effective when bit 3 = 0)
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>bit type (8 bit)</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>byte type</td></tr>
+                                                    <tr><td>2</td><td>:</td><td>word type</td></tr>
+                                                    <tr><td>3</td><td>:</td><td>2-word type or real type</td></tr>
+                                                </table></td>
+                                            </tr>
+                                            <tr>
+                                                <td>bit 2</td><td valign="top">:</td><td>axis attribute
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>without axis</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>with axis</td></tr>
+                                                </table></td>
+                                                
+                                            </tr>
+                                            <tr>
+                                                <td>bit 3</td><td valign="top">:</td><td>type attribute
+                                                <table class="dd">
+                                                    <tr><td>1</td><td>:</td><td>bit type (1 bit)</td></tr>
+                                                </table></td>
+                                                
+                                            </tr>
+                                            <tr>
+                                                <td>bit 7</td><td valign="top">:</td><td>sign
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>without sign</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>with sign</td></tr>
+                                                </table></td>
+                                            </tr>
+                                            <tr>
+                                                <td>bit 8</td><td valign="top">:</td><td>spindle parameter
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>no spindle</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>spindle</td></tr>
+                                                </table></td>
+                                            </tr>
+                                            <tr>
+                                                <td>bit 9,..,11</td><td valign="top">:</td><td>(reserve)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>bit 12</td><td valign="top">:</td><td>in case that type attribute = 3
+                                                <table class="dd">
+                                                    <tr><td>0</td><td>:</td><td>except real type</td></tr>
+                                                    <tr><td>1</td><td>:</td><td>real type</td></tr>
+                                                </table></td>
+                                            </tr>
+                                            <tr>
+                                                <td>bit 13,..,15</td><td valign="top">:</td><td>(reserve)</td>
+                                            </tr>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                </ul></dd>
+                            </dl>
+                    </content>
+                </item>
+
+                </vc>
+            </hssb>
+        </is>
+        <!-- is Argument End -->
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                Data number error<BR/>
+                Start diagnosis data number (s_number) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                no option<BR/>
+                The extended driver/library function is necessary.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter></parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+        <is>
+            <!-- M -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_diagnoss</name>
+            <file>Misc/cnc_diagnoss.htm</file>
+        </item>
+        <item>
+            <name>cnc_diagnosr</name>
+            <file>Misc/cnc_diagnosr.htm</file>
+        </item>
+        <item>
+            <name>cnc_rddiag_ext</name>
+            <file>Misc/cnc_rddiag_ext.htm</file>
+        </item>
+        <item>
+            <name>cnc_rddiagnum</name>
+            <file>Misc/cnc_rddiagnum.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

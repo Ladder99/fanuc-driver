@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>pmc_prfrdslvstat</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI pmc_prfrdslvstat(unsigned short FlibHndl, ODBSLVST *odb) ; </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                Reads the state of slave function.
+            </p>
+            <p>
+                This function is available at the version 01-07 and 09 or later of the PROFIBUS-DP control software(6557 Series).  
+                In the control software in the version 08, the return value becomes EW_VERSION.<br/>
+                This function is also available at the 6558 Series.
+            </p>
+            <p>
+                * Please refer to "PROFIBUS-DP function manual" for details of the PROFIBUS-DP function.
+            </p>
+        </cmn>
+    </doc>  
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>odb</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the ODBSLVST structure including the state of slave function.
+                            The ODBSLVST structure is as follows.
+<pre>
+typedef struct {
+    unsigned char  cnfg_stat ;
+    unsigned char  prm_stat ;
+    char           wdg_stat ;
+    unsigned char  live_stat ;
+    short          ident_no ;
+} ODBSLVST ;
+</pre>
+                            <dl>
+                                <dt>cnfg_stat</dt>
+                                    <dd>Whether "CONFIG DATA" of the slave parameter of the DP-Master 
+                                        and Configration Data which the DP-Slave are recognizing is equal is stored.
+                                    </dd>
+                                    <dd><table border="0" class="dd">
+                                        <tr> <td>FF</td><td>:</td><td>Initialized condition</td> </tr>
+                                        <tr> <td>00</td><td>:</td><td>DP-Master is communicating with DP-Slave normally.</td> </tr>
+                                        <tr> <td>01</td><td>:</td><td>Unusual status</td> </tr>
+                                    </table></dd>
+                                <dt>prm_stat</dt>
+                                    <dd>Whether "USER PRM DATA" of the slave parameter of the DP-Master 
+                                        and Parameter Data which the DP-Slave are recognizing is equal is stored.
+                                    </dd>
+                                    <dd><table border="0" class="dd">
+                                        <tr> <td>FF</td><td>:</td><td>Initialized condition</td> </tr>
+                                        <tr> <td>00</td><td>:</td><td>DP-Master is communicating with DP-Slave normally.</td> </tr>
+                                        <tr> <td>01</td><td>:</td><td>Unusual status</td> </tr>
+                                    </table></dd>
+                                <dt>wdg_stat</dt>
+                                    <dd>The status of communication between a DP-Master and a DP-Slave is stored.</dd>
+                                    <dd><table border="0" class="dd">
+                                        <tr> <td>00</td><td>:</td><td>Connecting</td> </tr>
+                                        <tr> <td>01</td><td>:</td><td>Disconnecting</td> </tr>
+                                    </table></dd>
+                                <dt>live_stat</dt>
+                                    <dd>
+                                        Whether the software of the slave function works normally is stored.
+                                        The count up is repeated from 00 to the FF while normally operating.
+                                    </dd>
+                                <dt>ident_no</dt>
+                                    <dd>
+                                        The identification number of DP-Slave is stored.
+                                    </dd>
+                            </dl>
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>
+                    <li>The PROFIBUS-DP board(hardware) is necessary.</li>
+                    <li>The PROFIBUS-DP control software is necessary.</li>
+                    <li>The PROFIBUS-DP slave function is necessary.</li>
+                    <li>The extended driver/library function is necessary.</li>
+            </content>
+        </item>
+        <item>
+            <name>EW_VERSION</name>
+            <content>Version of PROFIBUS-DP control software is wrong.<br/>
+                    This function was called by version 08 of the control software.  
+                    Exchange the control software besides the version 08.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>
+            The PROFIBUS-DP slave function is necessary.
+        </need>
+    </option>
+
+
+
+    <parameter>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

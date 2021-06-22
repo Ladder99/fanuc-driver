@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_wrpscdproc</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_wrpscdproc(unsigned short FlibHndl,short s_no, short *number, IODBPSCD *pscd); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p> Writes the cutting data of the cutting condition file.
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the start cutting data group number.
+                        </p>
+                        <p>
+                            ・Series 16i/18i-L
+                            <table border="0" class="dd">
+                                <tr> <td>1 to 10</td><td>:</td><td>  cutting data group number</td>   </tr>
+                            </table>
+                        </p>
+                        <p>
+                            ・Series 30i/31i-LB
+                        </p>
+                        <p>
+                            When addition of the cutting condition data option is not provided.
+                            <table border="0" class="dd">
+                                <tr> <td>1 to 10</td><td>  cutting data group number</td>   </tr>
+                            </table>
+                        </p>
+                        <p>
+                            When addition of the cutting condition data option is provided.
+                            <table border="0" class="dd">
+                                <tr> <td>1 to 30</td><td>  cutting data group number</td>   </tr>
+                            </table>
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>number</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                             Pointer to the number of cutting data.
+                            Specify the number of cutting data to be written before function call, 
+                            and the number of cutting data being written actually is stored after the function call.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>pscd</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Pointer to the IODBPSCD structure including the cutting data of the cutting condition file.
+                            The IODBPSCD structure is as follows.
+                        </p>
+<pre>
+・Series 16i/18i-L
+typedef struct iodbpscd {
+    short   slct;       /* Flag of data selection */
+    long    feed;       /* Feedrate */
+    short   power;      /* Cutting peak power */
+    short   freq;       /* Cutting frequency */
+    short   duty;       /* Cutting duty */
+    short   g_press;    /* Assist gas pressure */
+    short   g_kind;     /* Assist gas select */
+    short   g_ready_t;  /* Assist gas setting time */
+    short   displace;   /* Reference displace */
+    long    supple;     /* Beam radius offset */
+    short   edge_slt;   /* Edge cutting select */
+    short   appr_slt;   /* Start-up select */
+    short   pwr_ctrl;   /* Power control */
+    short   reserve[4]; /* (reserve) */
+} IODBPSCD ;
+・Series 30i/31i-LB
+typedef struct iodbpscd {
+    short   slct;       /* Flag of data selection   */
+    long    feed;       /* Feedrate                 */
+    short   power;      /* Cutting peak power       */
+    short   freq;       /* Cutting frequency        */
+    short   duty;       /* Cutting duty             */
+    short   g_press;    /* Assist gas pressure      */
+    short   g_kind;     /* Assist gas select        */
+    short   g_ready_t;  /* Gas setting time         */
+    short   displace;   /* Reference displace       */
+    long    supple;     /* Beam radius offset       */
+    short   edge_slt;   /* Edge cutting select      */
+    short   appr_slt;   /* Start-up select          */
+    short   pwr_ctrl;   /* Power control            */
+    long    displace2;  /* Reference displace       */
+    char    gap_axis;   /* Gap control axis         */
+    char    feed_dec;   /* Decimals places          */
+    char    supple_dec; /* Decimals places          */
+    char    dsp2_dec;   /* Decimals places          */
+} IODBPSCD ;
+</pre>
+                        <dl>
+                            <dt>slct</dt>
+                                <dd>Flag of data selection must be set.</dd>
+                                <dd>・Series 16i/18i-L</dd>
+                            <dd><table border ="0" class="dd">
+                                <tr> <td>bit 0</td><td>:</td><td>Feedrate</td> </tr>
+                                <tr> <td>bit 1</td><td>:</td><td>Cutting peak power</td> </tr>
+                                <tr> <td>bit 2</td><td>:</td><td>Cutting frequency</td> </tr>
+                                <tr> <td>bit 3</td><td>:</td><td>Cutting duty</td> </tr>
+                                <tr> <td>bit 4</td><td>:</td><td>Assist gas pressure</td> </tr>
+                                <tr> <td>bit 5</td><td>:</td><td>Assist gas select</td> </tr>
+                                <tr> <td>bit 6</td><td>:</td><td>Assist gas setting time</td> </tr>
+                                <tr> <td>bit 7</td><td>:</td><td>Reference displace</td> </tr>
+                                <tr> <td>bit 8</td><td>:</td><td>Beam radius offset</td> </tr>
+                                <tr> <td>bit 9</td><td>:</td><td>Edge cutting select</td> </tr>
+                                <tr> <td>bit10</td><td>:</td><td>Start-up select</td> </tr>
+                                <tr> <td>bit11</td><td>:</td><td>Power control</td> </tr>
+                                <tr> <td>bit12,..,15</td><td>:</td><td>(reserve)</td> </tr>
+                            </table></dd>
+                                <dd>・Series 30i/31i-LB</dd>
+                            <dd><table border ="0" class="dd">
+                                <tr> <td>bit 0</td><td>：</td><td>Feedrate</td> </tr>
+                                <tr> <td>bit 1</td><td>：</td><td>Cutting peak power</td> </tr>
+                                <tr> <td>bit 2</td><td>：</td><td>Cutting frequency</td> </tr>
+                                <tr> <td>bit 3</td><td>：</td><td>Cutting duty</td> </tr>
+                                <tr> <td>bit 4</td><td>：</td><td>Assist gas pressure</td> </tr>
+                                <tr> <td>bit 5</td><td>：</td><td>Assist gas select</td> </tr>
+                                <tr> <td>bit 6</td><td>：</td><td>Gas setting time</td> </tr>
+                                <tr> <td>bit 7</td><td>：</td><td>Reference displace</td> </tr>
+                                <tr> <td>bit 8</td><td>：</td><td>Beam radius offset</td> </tr>
+                                <tr> <td>bit 9</td><td>：</td><td>Edge cutting select</td> </tr>
+                                <tr> <td>bit10</td><td>：</td><td>Start-up select</td> </tr>
+                                <tr> <td>bit11</td><td>：</td><td>Power control</td> </tr>
+                                <tr> <td>bit12</td><td>：</td><td>Reference displace2</td> </tr>
+                                <tr> <td>bit13</td><td>：</td><td>Gap control axis</td> </tr>
+                                <tr> <td>bit14,..,15</td><td>：</td><td>(reserve)</td> </tr>
+                            </table></dd>
+                            <dd>* In order to write the data to CNC, turn on the corresponding bit on this data.</dd>
+                            <dt>feed</dt>
+                                <dd>Specify feedrate.</dd>
+                                <dd>・Series 16i/18i-L</dd>
+                                <dd>(Setting range: 0 to 240000, Unit: mm/min)</dd>
+                                <dd>・Series 30i/31i-LB</dd>
+                                <dd>(Setting range: 0 to 999999999, Unit:mm/min, inch/min((input unit)))</dd>
+                            <dt>power</dt>
+                                <dd>Specify cutting peak power for contouring.</dd>
+                                <dd>(Setting range: 0 to 9999, Unit: W)</dd>
+                            <dt>freq</dt>
+                                <dd>Specify cutting frequency for contouring.</dd>
+                                <dd>・Series 16i/18i-L</dd>
+                                <dd>(Setting range: 5 to 2000, Unit: Hz)</dd>
+                                <dd>・Series 30i/31i-LB</dd>
+                                <dd>(Setting range: 1 to 32767, Unit:Hz)</dd>
+                            <dt>duty</dt>
+                                <dd>Specify cutting duty for contouring.</dd>
+                                <dd>(Setting range: 0 to 100, Unit: %)</dd>
+                            <dt>g_press</dt>
+                                <dd>Specify assist gas pressure.</dd>
+                                <dd>・Series 16i/18i-L</dd>
+                                <dd>(Setting range: 0 to 255, Unit: 0.1Kg/cm2)</dd>
+                                <dd>・Series 30i/31i-LB</dd>
+                                <dd>(Setting range: 0 to 9999, Unit: 0.01MPa, 0.1Kg/cm2)</dd>
+                            <dt>g_kind</dt>
+                                <dd>Specify assist gas select.</dd>
+                                <dd>・Series 16i/18i-L</dd>
+                                <dd>(Setting range: 1 to 7, Unit: kind)</dd>
+                                <dd>・Series 30i/31i-LB</dd>
+                                <dd>(Setting range: 1 to 15, Unit: kind)</dd>
+                            <dt>g_ready_t</dt>
+                                <dd>Specify assist gas setting time.</dd>
+                                <dd>(Setting range: 0 to 99, Unit: 0.1second)</dd>
+                            <dt>displace</dt>
+                                <dd>Specify reference displace.</dd>
+                                <dd>(Setting range: -32767 to 32767, Unit: 0.001mm)</dd>
+                            <dt>supple</dt>
+                                <dd>Specify beam radius offset.</dd>
+                                <dd>・Series 16i/18i-L</dd>
+                                <dd>(Setting range: -9999 to 9999, Unit: 0.001mm)</dd>
+                                <dd>・Series 30i/31i-LB</dd>
+                                <dd>(Setting range: -999999999 to 999999999, Unit: mm, inch(input unit))</dd>
+                            <dt>edge_slt</dt>
+                                <dd>Specify edge cutting select.</dd>
+                                <dd>・Series 16i/18i-L</dd>
+                                <dd>(Setting range: 0, 201 to 205)</dd>
+                                <dd>・Series 30i/31i-LB</dd>
+                                <dd>When addition of the cutting condition data option is not provided.</dd>
+                                <dd>(Setting range: 0, 201 to 205)</dd>
+                                <dd>When addition of the cutting condition data option is provided.</dd>
+                                <dd>(Setting range: 0, 201 to 210)</dd>
+                            <dt>appr_slt</dt>
+                                <dd>Specify start-up select.</dd>
+                                <dd>・Series 16i/18i-L</dd>
+                                <dd>(Setting range: 0, 201 to 205)</dd>
+                                <dd>・Series 30i/31i-LB</dd>
+                                <dd>When addition of the cutting condition data option is not provided.</dd>
+                                <dd>(Setting range: 0, 201 to 205)</dd>
+                                <dd>When addition of the cutting condition data option is provided.</dd>
+                                <dd>(Setting range: 0, 201 to 210)</dd>
+                            <dt>pwr_ctrl</dt>
+                                <dd>Specify power control.</dd>
+                                <dd>(Setting range: 0, 901 to 910)</dd>
+                            <dt>displace2</dt>
+                                <dd>・Series 30i/31i-LB only </dd>
+                                <dd>Specify Reference displace 2 .</dd>
+                                <dd>(Setting range: -999999999 to 999999999,  Unit: mm, inch(input unit))</dd>
+                            <dt>gap_axis</dt>
+                                <dd>・Series 30i/31i-LB only </dd>
+                                <dd>You cannot set the gap control axis even if you specified it.</dd>
+                            <dt>feed_dec</dt>
+                                <dd>・Series 30i/31i-LB only </dd>
+                                <dd>Specify decimals places in command value of feed rate.</dd>
+                                <dd>(Setting range: 0 to 9)</dd>
+                            <dt>supple_dec</dt>
+                                <dd>・Series 30i/31i-LB only </dd>
+                                <dd>Specify decimals places of beam diameter correction amount.</dd>
+                                <dd>(Setting range: 0 to 9)</dd>
+                            <dt>dsp2_dec</dt>
+                                <dd>・Series 30i/31i-LB only </dd>
+                                <dd>Specify decimals places in standard displacement.</dd>
+                                <dd>(Setting range: 0 to 9)</dd>
+                                <dd>The corresponding data is as follows. </dd>
+                                <ul>
+                                <table border="1">
+                                    <colgroup>
+                                    <colgroup width="100">
+                                    <tr>
+                                        <th>decimals places</th> <th>corresponding data</th>
+                                    </tr>
+                                    <tr> <td >feed_dec</td><td>feed</td>  </tr>
+                                    <tr> <td >supple_dec</td><td>supple</td> </tr>
+                                    <tr> <td >dsp2_dec</td><td>displace2</td> </tr>
+                                </colgroup>
+                                </colgroup>
+                                </table>
+                                </ul>
+                            <dt>reserve</dt>
+                                <dd>・Series 16i/18i-L only </dd>
+                                <dd>(reserve)</dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                Unavailable<br/>
+                This function cannot be used except 16i/18i-L , 30i/31i-LB.
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                Data block length error<br/>
+                Number of data(number) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                Data number error<br/>
+                Start number(s_no) is wrong.
+            </content>
+        </item>
+        <item>
+           <name>EW_DATA</name>
+            <content>
+                Data error<br/>
+                The cutting data of the cutting condition file is wrong.
+                In order to get more information for this err_no return value, execute 
+                <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.
+                The cutting data group number which an error occurred will be set onto the member
+                of err_no of ODBERR structure and the following detailed status will be set onto the member of
+                err_dtno of ODBERR structure.
+                <table border="0">
+                    <tr><td>1</td><td>:</td><td>Error of feedrate</td></tr>
+                    <tr><td>2</td><td>:</td><td>Error of cutting peak power</td></tr>
+                    <tr><td>3</td><td>:</td><td>Error of cutting frequency</td></tr>
+                    <tr><td>4</td><td>:</td><td>Error of cutting duty</td></tr>
+                    <tr><td>5</td><td>:</td><td>Error of assist gas pressure</td></tr>
+                    <tr><td>6</td><td>:</td><td>Error of assist gas select</td></tr>
+                    <tr><td>7</td><td>:</td><td>Error of assist gas setting time</td></tr>
+                    <tr><td>8</td><td>:</td><td>Error of reference displace</td></tr>
+                    <tr><td>9</td><td>:</td><td>Error of beam radius offset</td></tr>
+                    <tr><td>10</td><td>:</td><td>Error of edge cutting select</td></tr>
+                    <tr><td>11</td><td>:</td><td>Error of start-up select</td></tr>
+                    <tr><td>12</td><td>:</td><td>Error of power control</td></tr>
+                    <tr><td>13</td><td>：</td><td>Error of reference displace 2(Series 30i/31i-LB only)</td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The cutting condition setting function and the extended driver/library function are necessary.
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                CNC parameter error(Series 30i/31i-LB only)<br/>
+                Mistake of laser oscillator (parameter No.15030)
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>The cutting condition setting function is necessary.</need>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <li>Series 30i/31i-LB</li>
+            <span class="dd">No.15030</span>
+        </type>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </m>
+        <t>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </lc>
+        <p>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>-</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </w>
+        <pw>
+            <d>-</d>
+            <h>-</h>
+            <a>-</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdpscdproc</name>
+            <file>Laser/cnc_rdpscdproc.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

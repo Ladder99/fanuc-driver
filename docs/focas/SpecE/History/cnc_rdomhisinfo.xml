@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdomhisinfo</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdomhisinfo(unsigned short FlibHndl, ODBOMIF *hisif); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                Reads the maximum number, current number and maximum string length of
+                external operator's message history data.
+            </p>
+            <p>
+                It is necessary to stop logging the external operator's message history
+                data by using <a href="History/cnc_stopomhis.htm" target="_parent">cnc_stopomhis</a> function before this function is used.
+            </p>
+        </cmn>
+   </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>hisif</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the ODBOMIF structure for the maximum number, 
+                            current number and maximum string length of external operator's
+                            message history data.
+                            The ODBOMIF structure is as follows.
+<pre>
+typedef struct odbomif {
+    unsigned short  om_max ;    /* maximum number         */
+    unsigned short  om_sum ;    /* current number         */
+    unsigned short  om_char ;   /* maximum string length  */
+                                /* of external operator's */
+                                /* message history data   */
+} ODBOMIF ;
+</pre>
+                            <table border="1">
+                            <tr>
+                            <th>3113#7</th><th>3113#6</th><th>max.number</th><th>max.length(including 'NULL')</th>
+                            </tr>
+                                <tr><td>0</td><td>0</td><td>8</td><td>256</td></tr>
+                            <tr><td>0</td><td>1</td><td>10</td><td>201</td></tr>
+                            <tr><td>1</td><td>0</td><td>18</td><td>101</td></tr>
+                                <tr><td>1</td><td>1</td><td>32</td><td>51</td></tr>
+                            </table>
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                <a href="History/cnc_stopophis.htm" target="_parent">cnc_stopomhis</a> function has not been executed.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The external message option or the external
+                data input option, and the extended driver/
+                library function are necessary.
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                CNC parameter error<br/>
+                CNC parameter '3112#2' must be 1.<br/>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            The extended driver/library function is necessary.
+        </hssb>
+        <ethr>
+            <p>The Ethernet function and the extended driver/library function are necessary.</p>
+            <p>However, in case of Series 16i/18i/21i-B, 0i-B/C, the required CNC option is as follows.</p>
+            <p>When Embedded Ethernet is used,</p>
+            <p><ul>above two optional functions are not required.</ul></p>
+            <p>When Ethernet board is used,</p>
+            <p><ul>only Ethernet function is required.</ul></p>
+            <p>The external message or the external data input function is necessary.</p>
+        </ethr>
+        <need>
+            The external message option or the external data input option.
+        </need>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 16/18/21, 16i/18i/21i, 0i</li>
+                    3112#2=1 (must be set)
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>        
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_stopomhis</name>
+            <file>History/cnc_stopomhis.htm</file>
+        </item>
+        <item>
+            <name>cnc_startomhis</name>
+            <file>History/cnc_startomhis.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdomhistry</name>
+            <file>History/cnc_rdomhistry.htm</file>
+        </item>
+        <item>
+            <name>cnc_clearomhis</name>
+            <file>History/cnc_clearomhis.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

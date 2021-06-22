@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rddischrgalm</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rddischrgalm(unsigned short FlibHndl, long s_no, long *number, ODBDISCHRGALM *data); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p> Reads alarm history data related to electrical discharge.</p>
+            <p> When you acquire data before and after updating the history data, there might not be continuousness in the acquired data. So, usually acquire all data from the top.</p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>  
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+
+                <item>
+                    <name>s_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the reading start number of alarm history data related to electrical discharge. (0,1,2,...)
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>number</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                            Specify the pointer to the variable where the number of alarm history data related to electrical discharge which wants to be acquired was setted.<br/>
+                            This function returns the number of data which was read actually.<br/>
+                            The maximum number of history data is 5.<br/>
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>data</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Specify the pointer to the array of ODBDISCHRGALM structure to store the alarm history data related to electrical discharge. The number of array must be equal to "number".<br/>
+                            The ODBDISCHRGALM structure is as follows.
+                        </p>
+<pre>
+typedef struct odbdischrgalm {
+    unsigned short   year;       /* Year at alarm occurring */
+    unsigned short   month;      /* Month at alarm occurring */
+    unsigned short   day;        /* Day at alarm occurring */
+    unsigned short   hour;       /* Hour at alarm occurring */
+    unsigned short   minute;     /* Minute at alarm occurring */
+    unsigned short   second;     /* Second at alarm occurring */
+    long             almnum;     /* Alarm number */
+    unsigned long    psec;       /* Progress time(second) */
+    short            hpc;        /* Peak power */
+    short            hfq;        /* Pulse frequency */
+    short            hdt;        /* Pulse duty */
+    short            hpa;        /* Actual power */
+    long             hce;        /* Power compensation coefficient */
+    unsigned short   asq;        /* Sequence number at alarm occurring */
+    unsigned short   psu;        /* Power supply flag at alarm occurring */
+    unsigned short   aps;        /* Power supply select flag */
+    short            dummy;      /*  uunused */
+    long             rfi[8];     /* RF current(RFI) */
+    long             rfv[8];     /* RF voltage(RFV) */
+    long             dci[8];     /* DC current(DCI) */
+    long             dcv[8];     /* DC voltage(DCV) */
+    long             dcw[8];     /* DC power(DCW) */
+    short            almcd[8];   /* Power supply alarm code */
+} ODBDISCHRGALM;
+</pre>
+                        <dl>
+                            <dt>year    </dt> <dd>Year at alarm occurring (4 digits at Christian era)</dd>
+                            <dt>month   </dt> <dd>Month at alarm occurring (1-12)</dd>
+                            <dt>day     </dt> <dd>Day at alarm occurring (1-31)</dd>
+                            <dt>hour    </dt> <dd>Hour at alarm occurring (0-23)</dd>
+                            <dt>minute  </dt> <dd>Minute at alarm occurring (0-59)</dd>
+                            <dt>second  </dt> <dd>Second at alarm occurring (0-59)</dd>
+                            <dt>almnum  </dt> <dd>Alarm number (0-65535)</dd>
+                            <dt>psec    </dt> <dd>Progress time(second) (0-0xFFFFFFFF)</dd>
+                            <dt>hpc     </dt> <dd>Peak power (0-7000)</dd>
+                            <dt>hfq     </dt> <dd>Pulse frequency (0-2000)</dd>
+                            <dt>hdt     </dt> <dd>Pulse duty (0-100)</dd>
+                            <dt>hpa     </dt> <dd>Actual power (0-7000)</dd>
+                            <dt>hce     </dt> <dd>Power compensation coefficient (0-65535)</dd>
+                            <dt>asq     </dt> <dd>Sequence number at alarm occurring  (0-255)</dd>
+                            <dt>psu     </dt> <dd>Power supply flag at alarm occurring</dd>
+                                <dd><table border="0" class="dd">
+                                    <tr> <td>#0</td><td>:</td><td>PSU1  (Power supply 1)</td> </tr>
+                                    <tr> <td>#1</td><td>:</td><td>PSU2  (Power supply 2)</td> </tr>
+                                    <tr> <td>: </td><td> </td><td> :           </td> </tr>
+                                    <tr> <td>#7</td><td>:</td><td>PSU8  (Power supply 8)</td> </tr>
+                                </table></dd>
+                               <dd>（In case of alarm is 0）</dd>
+                            <dt>aps     </dt> <dd>Power supply select flag</dd>
+                                <dd><table border="0" class="dd">
+                                    <tr> <td>#0</td><td>:</td><td>PSU1  (Power supply 1)</td> </tr>
+                                    <tr> <td>#1</td><td>:</td><td>PSU2  (Power supply 2)</td> </tr>
+                                    <tr> <td>: </td><td> </td><td> :           </td> </tr>
+                                    <tr> <td>#7</td><td>:</td><td>PSU8  (Power supply 8)</td> </tr>
+                                </table></dd>
+                            <dt>dummy   </dt> <dd>uunused</dd>
+                            <dt>rfi[8]  </dt> <dd>RF current(RFI) (0-65535) 8 data at each power supply.</dd>
+                            <dt>rfv[8]  </dt> <dd>RF voltage(RFV) (0-65535) 8 data at each power supply.</dd>
+                            <dt>dci[8]  </dt> <dd>DC current(DCI) (0-65535) 8 data at each power supply.</dd>
+                            <dt>dcv[8]  </dt> <dd>DC voltage(DCV) (0-65535) 8 data at each power supply.</dd>
+                            <dt>dcw[8]  </dt> <dd>DC power(DCW) (0-65535) 8 data at each power supply.</dd>
+                            <dt>almcd[8]</dt> <dd>Power supply alarm code(0-255) 8 data at each power supply.</dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                Unavailable<br/>
+                This function cannot be used except 16i/18i-L, 30i/31i-LB.
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                Data number error<br/>
+                Start number(s_no) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                Data block length error<br/>
+                Number of data(number) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The extended driver/library function are necessary.
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                CNC parameter error(Series 30i/31i-LB only)<br/>
+                Mistake of laser oscillator (parameter No.15030)
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <li>Series 30i/31i-LB</li>
+            <span class="dd">No.15030</span>
+        </type>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </m>
+        <t>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </lc>
+        <p>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>-</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </w>
+        <pw>
+            <d>-</d>
+            <h>-</h>
+            <a>-</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

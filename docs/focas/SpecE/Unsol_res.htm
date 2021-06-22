@@ -1,0 +1,122 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=x-sjis">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>When you use the PMC address for the control parameter(Response Notice method)</title>
+<link rel="stylesheet" type="text/css" href="fwlib32.css">
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<p><a href="fwlib32.htm">Top Page</a></p>
+
+<hr>
+
+<h2>When you use the PMC address for the control parameter(Response Notice method)</h2>
+
+<ul>
+
+<blockquote>
+
+   <p>In the Response Notice method, the method to use the PMC address as the control data is explained.</p>
+   <p>The "R" or "E" address data of PMC is used to transmit the message from CNC. If you use the unsolicited messaging function, the ladder program by which the signal is controlled as follows is necessary.
+            <table  border="2" bordercolorlight="Black" bordercolordark="Black">
+                <tr><td>Note) In case of 30i/31i/32i, the macro variable can be also used for the transmission data.  In the following explanations, the PMC address is used as the transmission data.</td></tr>
+            </table>
+<br/>
+<li>Explanation of PMC address signal for control</li>
+
+    <p>Details of the PMC address signal for the control used for the unsolicited messaging function are shown.  The consecutive PMC address in two bytes is necessary to control.</p>
+    <p>The example which uses "Rxxxx" as PMC address for the control is shown.</p>
+
+
+<p><img src="unsol_resbit.gif"></p>
+<ul>
+	<dl compact>
+        <dt>REQ (Rxxxx#7)</dt>
+        <table>
+            <tr><td>[Name]     </td> <td>Transmission request signal of message</td></tr>
+            <tr><td>[Division] </td> <td>Input signal </td></tr>
+            <tr><td>[Function] </td> <td>The transmission of the unsolicited messaging is requested.</td></tr>
+            <tr><td>[Operation]</td> <td>After preparing the transmission message to the PMC address for the transmission, the ladder program changes this signal to "1". <br/> Then, the message is transmitted to the PC.</td></tr>
+        </table>
+
+        <dt>RES (Rxxxx+1#7)</dt>
+        <table>
+            <tr><td>[Name]            </td> <td>Response reception signal of message</td></tr>
+            <tr><td>[Division]        </td> <td>Output signal</td></tr>
+            <tr><td>[Function]        </td> <td>The reception of the response of the unsolicited message is notified.</td></tr>
+            <tr><td>[Output condition]</td> <td>After the message is received by the PC, the response of the message is transmitted to CNC(communication board). After the response is received, CNC(communication board) changes this signal to "1". <br/>The ladder program reads RES_CODE after this signal becomes Åg1", and changes REQ to Åg0".<br/>Then, CNC(communication board) changes RES_CODE to 0, and changes this signal to Åg0".</td></tr>
+        </table>
+
+
+        <dt>COM (Rxxxx+1#6)</dt>
+        <table>
+            <tr><td>[Name]            </td> <td>Transmission starting signal of message</td></tr>
+            <tr><td>[Division]        </td> <td>Output signal</td></tr>
+            <tr><td>[Function]        </td> <td>Starting of the transmission of the unsolicited message is notified.</td></tr>
+            <tr><td>[Output condition]</td> <td>When the transmission of the message to the personal computer is started, this signal becomes to "1" and when the transmission is completed, this signal becomes to "0".</td></tr>
+        </table>
+
+        <dt>RES_CODE (Rxxxx+1#0 - Rxxxx+1#5)
+        <table>
+            <tr><td>[Name]            </td> <td>Response reception result signal of message</td></tr>
+            <tr><td>[Division]        </td> <td>Output signal</td></tr>
+            <tr><td>[Function]        </td> <td>The reception result of the response of the unsolicited message is notified.</td></tr>
+            <tr><td>[Output condition]</td> <td>The reception result of the response of the message is set.<br/>After reading this signal, the ladder program changes REQ to Åg0".<br/>Then, CNC(communication board) changes this signal to "0".</td></tr>
+        </table>
+</ul>
+<br/>
+
+<li>Timing chart of signal of PMC address for control</li>
+<p><img src="unsol_reschat.gif"></p>
+
+<ul>
+        <table class="dt">
+            <tr><td>1</td> <td>:</td> <td>The ladder program prepares the transmission message after confirming REQ is "0", and REQ is changed to "1". </td></tr>
+            <tr><td>2</td> <td>:</td> <td>The communication board transmits the message after changing COM to "1".</td></tr>
+            <tr><td>3</td> <td>:</td> <td>After transmitting the message, the communication board changes COM to "0". </td></tr>
+            <tr><td>4</td> <td>:</td> <td>The communication board sets RES_CODE after the response of the message is received and changes RES to "1".</td></tr>
+            <tr><td>5</td> <td>:</td> <td>After reading RES_CODE, the ladder program changes REQ to "0".</td></tr>
+            <tr><td>6</td> <td>:</td> <td>The communication board changes RES_CODE to "0".</td></tr>
+            <tr><td>7</td> <td>:</td> <td>The communication board changes RES to "0".</td></tr>
+        </table>
+
+</ul>
+<br/>
+        <p>0x00..0x3F are available for RES_CODE.  0x01..0x0F and 0x21..0x2F are fixed for system and the meaning is as follows.
+        <ul>
+	<dl compact>
+                <dt>= 0x00 <dd>Success. 
+                <dt>= 0x01 <dd>CNC has no parameter or CNC doesn't accept the start of the unsolicited messaging service.
+                <dt>= 0x02 <dd>here isn't "Unsolicited messaging server" or the sever doesn't run.
+                <dt>= 0x03 <dd>CNC fails to transmit.
+                <dt>= 0x04 <dd>CNC fails to receive.
+                <dt>= 0x05 <dd>Transmission retry on CNC side exceeds the maximum count of retry.
+                <dt>= 0x06 <dd>CNC fails to make the Message data.
+                <dt>= 0x07 <dd>CNC receives the invalid packet.
+                <dt>= 0x08 <dd>CNC accepts the termination of the unsolicited messaging session.
+                <dt>= 0x09..0x0F <dd>Reserved.
+
+                <dt>= 0x21 <dd>The PC application to receive the Message does not exist though the message has been received by the PC.
+                               (The PC application might be terminated abnormally.)
+                <dt>= 0x22 <dd>The PC application to receive the Message is not recognized to "Unsolicited messaging server" though the
+                               Message has been received by the PC. (only Unsolicited messaging server might be restarted.)
+                <dt>= 0x23 <dd>Failed in writing the received message to the PC side.
+                <dt>= 0x24 <dd>The timeout period (timeout * retry count) is expired.
+                <dt>= 0x25 <dd>Illegal data was included in the received message.
+                <dt>= 0x26..0x2F <dd>Reserved.
+        </dl>
+        </ul>
+        <p>0x00, 0x10..0x1F, 0x30..0x3F are available for the PC application.
+</blockquote>
+
+</ul>
+
+<hr>
+
+<p><a href="fwlib32.htm">Top Page</a></p>
+</body>
+</html>

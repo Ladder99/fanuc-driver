@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdhissgnl3</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdhissgnl3(unsigned short FlibHndl, IODBSIG3 *sig); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                Reads the target signal for the operation history.<br/>
+                Please use this function instead of <a href="History/cnc_rdhissgnl.htm" target="_parent">cnc_rdhissgnl</a> for Series 30i, 0i-D/F and PMi-A.
+            </p>
+        </cmn>
+        <is>
+            <cmn>
+                <p>
+                    Reads the target signal for the operation history.<br/>
+                </p>
+            </cmn>
+        </is>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>sig </name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the IODBSIG3 structure in which the operation history signal is stored.
+                            The IODBSIG3 structure is as follows.
+                        </p>
+<pre>
+typedef struct iodbsig3 {
+    short      datano;   /* Not used */
+    short      type;     /* Not used */
+    struct {
+        short   ent_no;   /* Registration sequence number */
+        short   pmc_no;   /* PMC number                   */
+        short   sig_no;   /* Registered signal number     */
+        char    sig_name; /* Registered signal name       */
+        char    mask_pat; /* Signal mask pattern          */
+    } data[60];
+} IODBSIG3 ;
+</pre>
+                    <dl>
+                        <dt>ent_no</dt>
+                            <dd>Registration sequence number (1-60)</dd>
+                        <dt>pmc_no</dt>
+                            <dd>PMC number (1,2,3)</dd>
+                        <dt>sig_no</dt>
+                            <dd>Number of a registered signal<br/>
+                                <table class="dd">
+                                    <tr><td>X</td><td>:</td><td>0~127</td></tr>
+                                    <tr><td>G</td><td>:</td><td>0~767</td></tr>
+                                    <tr><td>Y</td><td>:</td><td>0~127</td></tr>
+                                    <tr><td>F</td><td>:</td><td>0~767</td></tr>
+                                </table>
+                            </dd>
+                        <dt>sig_name</dt>
+                            <dd>Name of a registered signal<br/>
+                                <table class="dd">
+                                    <tr><td>0</td><td>:</td><td>Not registered</td></tr>
+                                    <tr><td>1</td><td>:</td><td>X</td></tr>
+                                    <tr><td>2</td><td>:</td><td>G</td></tr>
+                                    <tr><td>3</td><td>:</td><td>Y</td></tr>
+                                    <tr><td>4</td><td>:</td><td>F</td></tr>
+                                </table>
+                            </dd>
+                        <dt>mask_pat</dt>
+                            <dd>Signal mask pattern</dd>
+                    </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The extended driver/library function is necessary.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            This function needs the extended driver/library function.
+        </hssb>
+        <ethr>
+            <p>The Ethernet function and the extended driver/library function are necessary.</p>
+            <p>However, in case of Series 0i-D/F, 30i and PMi-A, the required CNC option is as follows.</p>
+            <p>When Embedded Ethernet is used,</p>
+            <p><ul>above two optional functions are not required.</ul></p>
+            <p>When Ethernet board is used,</p>
+            <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul type="disc">
+                    3106#4=1,3195#6=0 (influenced by setting)
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item class="xis">
+            <name>cnc_rdhissgnl</name>
+            <file>History/cnc_rdhissgnl.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrhissgnl3</name>
+            <file>History/cnc_wrhissgnl3.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

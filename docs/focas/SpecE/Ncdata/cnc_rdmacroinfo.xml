@@ -1,0 +1,488 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdmacroinfo</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdmacroinfo(unsigned short FlibHndl, ODBMVINF *mvinf);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Reads the available number of the local macro variable and the common macro variable. Those are stored in "use_no1", "use_no2" of "ODBMVINF" with signed binary format.</p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>mvinf</name>
+                    <type>out</type>
+                    <content>
+                        <p>Pointer to the ODBMVINF structure including the custom macro variable information. The ODBMVINF structure is as follows.</p>
+
+<pre>
+typedef struct  odbmvinf {
+        short   use_no1 ;       /* number of local variable */
+        short   use_no2 ;       /* indicator of common variable */
+} ODBMVINF ;
+</pre>
+                        <dl>
+                            <dt>use_no1</dt>
+                            <dd>use_no1 Available number of local macro variable (33 sets)</dd>
+                            <br/>
+                            <dt>use_no2</dt>
+                            <dd>Indicator of available common variable <br/>
+                                <ul>
+                                    <br/>
+                                    <li>Series 15</li>
+                                    <table class="dd">
+                                        <colgroup width="50">
+                                        <colgroup>
+                                        <colgroup>
+                                        <colgroup>
+                                        <tr>
+                                            <td>M/T</td>
+                                            <td>0</td>
+                                            <td>:</td>
+                                            <td>100,..,149, 500,..,549</td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>1</td>
+                                            <td>:</td>
+                                            <td>100,..,199, 500,..,599</td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>2</td>
+                                            <td>:</td>
+                                            <td>100,..,199, 500,..,699</td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>3</td>
+                                            <td>:</td>
+                                            <td>100,..,199, 500,..,999</td>
+                                        </tr>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                    </table>
+                                    <br/>
+                                    <table class="dd">
+                                        <colgroup width="50">
+                                        <colgroup>
+                                        <colgroup>
+                                        <colgroup>
+                                        <tr>
+                                            <td>TT</td>
+                                            <td>0</td>
+                                            <td>:</td>
+                                            <td>100,..,149, 500,..,524</td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>1</td>
+                                            <td>:</td>
+                                            <td>100,..,149, 500,..,549</td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>2</td>
+                                            <td>:</td>
+                                            <td>100,..,149, 500,..,599</td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>3</td>
+                                            <td>:</td>
+                                            <td>100,..,149, 500,..,749</td>
+                                        </tr>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                    </table>
+                                    <br/>
+                                    <li>Series 15i</li>
+                                    <table class="dd">
+                                        <tr>
+                                            <td>3</td>
+                                            <td>:</td>
+                                            <td>100,..,199, 500,..,999</td>
+                                        </tr>
+                                        <tr>
+                                            <td>4</td>
+                                            <td>:</td>
+                                            <td>100,..,199, 200,..,999</td>
+                                        </tr>
+                                    </table>
+                                    <br/>
+                                    <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C</li>
+                                    <table class="dd">
+                                        <tr>
+                                            <td>0</td>
+                                            <td>:</td>
+                                            <td>100,..,149, 500,..,531</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>:</td>
+                                            <td>100,..,199, 500,..,999</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>:</td>
+                                            <td>100,..,199, 500,..,599</td>
+                                        </tr>
+                                    </table>
+                                    <br/>
+                                    <li>Series 16i/18i-W</li>
+                                    <table class="dd">
+                                        <tr><td>0</td><td>:</td><td>100,..,149, 500,..,531</td></tr>
+                                        <tr><td>1</td><td>:</td><td>100,..,314, 500,..,699</td></tr>
+                                        <tr><td>2</td><td>:</td><td>100,..,149, 500,..,699</td></tr>
+                                        <tr><td>3</td><td>:</td><td>100,..,314, 500,..,531</td></tr>
+                                        <tr><td>4</td><td>:</td><td>100,..,149, 500,..,999</td></tr>
+                                        <tr><td>5</td><td>:</td><td>100,..,314, 500,..,999</td></tr>
+                                    </table>
+                                    <br/>
+                                    <li>Power Mate i</li>
+                                    <table class="dd">
+                                        <tr>
+                                            <td>0</td>
+                                            <td>:</td>
+                                            <td>100,..,149, 500,..,531</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>:</td>
+                                            <td>100,..,199, 500,..,999</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>:</td>
+                                            <td>100,..,199, 500,..,699</td>
+                                        </tr>
+                                    </table>
+                                    <br/>
+                                    <li>Series 30i/31i/32i, 0i-D/F, PMi-A</li>
+                                    <table class="dd">
+                                        <tr> <td>0</td><td>:</td><td>100,..,149, 500,..,549</td> </tr>
+                                        <tr> <td>1</td><td>:</td><td>100,..,199, 500,..,999</td> </tr>
+                                        <tr> <td>2</td><td>:</td><td>100,..,149, 200,..,499, 500,..,549</td> </tr>
+                                        <tr> <td>3</td><td>:</td><td>100,..,499, 500,..,999</td> </tr>
+                                        <tr> <td>4</td><td>:</td><td>100,..,199, 500,..,999, 98000,..,98499</td> </tr>
+                                        <tr> <td>5</td><td>:</td><td>100,..,499, 500,..,999, 98000,..,98499</td> </tr>
+                                    </table>
+                                </ul>
+                            </dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+
+        <is>
+            <hssb>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>mvinf</name>
+                        <type>out</type>
+                        <content>
+                            <p>Pointer to the ODBMVINF structure including the custom macro variable information. The ODBMVINF structure is as follows.</p>
+
+<pre>
+typedef struct  odbmvinf {
+        short   use_no1 ;       /* number of local variable */
+        short   use_no2 ;       /* indicator of common variable */
+} ODBMVINF ;
+</pre>
+                            <dl>
+                                <dt>use_no1</dt>
+                                <dd>use_no1 Available number of local macro variable (33 sets)</dd>
+                                <br/>
+                                <dt>use_no2</dt>
+                                <dd>Indicator of available common variable <br/>
+                                    <table class="dd">
+                                        <tr> <td>0</td><td>:</td><td>100,..,149, 500,..,549</td> </tr>
+                                        <tr> <td>1</td><td>:</td><td>100,..,199, 500,..,999</td> </tr>
+                                        <tr> <td>2</td><td>:</td><td>100,..,149, 200,..,499, 500,..,549</td> </tr>
+                                        <tr> <td>3</td><td>:</td><td>100,..,199, 200,..,499, 500,..,999</td> </tr>
+                                        <tr> <td>4</td><td>:</td><td>100,..,199, 500,..,999, 98000,..,98499</td> </tr>
+                                        <tr> <td>5</td><td>:</td><td>100,..,499, 500,..,999, 98000,..,98499</td> </tr>
+                                    </table>
+                                </dd>
+                            </dl>
+                        </content>
+                    </item>
+                </vc>
+            </hssb>
+        </is>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>This function needs the custom macro option.</content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>
+            <li>Series 15/15i, 30i/31i/32i, 0i-D, PMi-A</li>
+            Custom macro<br/>
+            <br/>
+            <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i</li>
+            Custom macro B<br/>
+            <br/>
+        </need>
+        <type>
+            <li>Series 15</li>
+            Custom macro common variable 200 sets<br/>
+            Custom macro common variable 300 sets<br/>
+            Custom macro common variable 600 sets<br/>
+            <br/>
+            <li>Series 15i</li>
+            Custom macro common variable 900 sets<br/>
+            <br/>
+            <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i, PMi-A</li>
+            Custom macro common variable extension<br/>
+            <br/>
+            <li>Series 0i-F</li>
+            Embedded macro<br/>
+            Add. common macro value(1000 sets)<br/>
+            <br/>
+            <li>Series 30i/31i/32i, 0i-D</li>
+            Add. common macro value<br/>
+            Embedded macro<br/>
+            Add. common macro value(1000 sets)<br/>
+            <br/>
+        </type>
+
+        <is>
+            <hssb>The extended driver/library function is necessary.</hssb>
+            <need>
+                Custom macro
+            </need>
+            <type>
+                Custom macro common variable extension<br/>
+                Embedded macro
+            </type>
+        </is>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+            <li>Series 16i/18i-W</li>
+            6005#4,#5,#7 (influenced by setting)
+            </ul>
+        </type>
+    </parameter>
+
+    <is_parameter>
+    </is_parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+        <add><b></b></add>
+
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdmacro</name>
+            <file>ncdata/cnc_rdmacro.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrmacro</name>
+            <file>ncdata/cnc_wrmacro.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdmacror</name>
+            <file>ncdata/cnc_rdmacror.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrmacror</name>
+            <file>ncdata/cnc_wrmacror.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdmacror2</name>
+            <file>ncdata/cnc_rdmacror2.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrmacror2</name>
+            <file>ncdata/cnc_wrmacror2.htm</file>
+        </item>
+        <item>
+            <name>cnc_getmactype</name>
+            <file>ncdata/cnc_getmactype.htm</file>
+        </item>
+        <item>
+            <name>cnc_setmactype</name>
+            <file>ncdata/cnc_setmactype.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

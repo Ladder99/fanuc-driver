@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_rdpdf_subdir</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdpdf_subdir(unsigned short FlibHndl, short *num_dir, IDBPDFSDIR *pdf_sdir_in, ODBPDFSDIR *pdf_sdir_out);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                Reads the information of subfolder under the specified folder.<br/>
+                Execution of this function is kept waiting when CNC is in editing(including the background edit state).
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle.
+                            See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>num_dir</name>
+                    <type>in/out</type>
+                    <content>
+                        <table>
+                            <tr><td>in</td><td>:</td><td>Specify the maximum number of folders to be read.</td></tr>
+                            <tr><td>out</td><td>:</td><td>This function returns the number of folders that were actually read.</td></tr>
+                        </table>
+                    </content>
+                </item>
+                <item>
+                    <name>pdf_sdir_in</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the pointer of the IDBPDFSDIR structure that stores the folder setting value.<br/>
+                            The IDBPDFSDIR structure is as follows.
+                        </p>
+<pre>
+typedef struct idbpdfsdir {
+    /* input */
+    char        path[212];      /* Path name string */
+    short       req_num;        /* Request entry number */
+    short       dummy;
+} IDBPDFSDIR ;
+</pre>
+                        <dl>
+                            <dt>path</dt>
+                                <dd>Specify the string having "Drive name + folder name".<br/>
+                                    The string must be NULL terminated.<br/>
+                                    Please refer to <a href="general.htm#DriveName" target="_parent">&quot;General Description (Specifying the folder and file name for FS30i, 0i-D/F and PMi-A.)&quot;</a> for details of the folder name.</dd>
+
+                            <dt>req_num</dt>
+                                <dd>Specify the index of subfolder information.<br/>
+                                    The first subfolder index is 0, this data should be incremented 1 by 1.</dd>
+                        </dl>
+                    </content>
+                </item>
+                <item>
+                    <name>pdf_sdir_out</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Specify the pointer of the ODBPDFSDIR structure.<br/>
+                            The ODBPDFSDIR structure is as follows.
+                        </p>
+<pre>
+typedef struct odbpdfsdir {
+    /* output */
+    short       sub_exist;      /* existence of subfolder */
+    short       dummy;
+    char        d_f[36];        /* folder name */
+} ODBPDFSDIR ;
+</pre>
+                        <dl>
+                            <dt>sub_exist</dt>
+                                <dd>Indicates if file or subfolder exists under the subfolder which was acquired.</dd>
+                                <dd><table class="dd">
+                                <tr><td>bit 0</td><td>:</td><td>subfolders exists</td></tr>
+                                <tr><td>bit 1</td><td>:</td><td>file exists</td></tr>
+                                <tr><td>bit 2-15</td><td>:</td><td>not used</td></tr>
+                                </table></dd>
+                            <dt>d_f</dt>
+                                <dd>Subfolder name string, NULL terminated.</dd>
+                        </dl>
+                        <table>
+                            <colgroup valign="top">
+                            <colgroup valign="top">
+                            <tr><td>This function returns the current subfolder state when called.<br/>
+                                    At the application, modification to the subfolder(path of IDBPDFSDIR),
+                                    like creating more subfolder/deleting subfolder, should be avoided.</td></tr>
+                            </colgroup>
+                            </colgroup>
+                        </table>
+
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_BUSY</name>
+            <content>
+                Busy<br/>
+                NC uses the current resource.
+            </content>
+        </item>
+<!--
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                Data number error<br/>
+                Subfolder specified by (req_num) does not exist.
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                Data error<br/>
+                The format of folder name is invalid.
+            </content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>
+                Protected<br/>
+                The specified folder is prohibited from showing.
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                CNC execution rejected
+            </content>
+        </item>
+-->
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 0i-D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter></parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+        
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdpdf_alldir</name>
+            <file>Program/cnc_rdpdf_alldir.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdpdf_subdirn</name>
+            <file>Program/cnc_rdpdf_subdirn.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

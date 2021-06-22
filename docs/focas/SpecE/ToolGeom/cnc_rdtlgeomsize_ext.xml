@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdtlgeomsize_ext</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdtlgeomsize_ext( unsigned short FlibHndl, short coord, short s_number, short *data_num, IODBTLGSEXT *tlgsext ); </prottype>
+      </vc>
+    </declare>
+
+
+    <doc>
+        <cmn><p>This function reads the tool geometry size data within the range specified by "s_number" and "data_num".<br/>
+                The tool geometry size data is sequentially read one by one.<br/>
+                If the error occurs, the reading process thereafter is discontinued.
+             </p>
+        </cmn>
+    </doc>
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>coord</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the program coordinate system.<br/>
+                           When the tool offset switching function is invalid, this value is ignored.
+                        </p>
+                        <dt><table border="0" class="dd">
+                            <tr> <td>0</td><td>：</td><td>Coordinate-1</td></tr>
+                            <tr> <td>1</td><td>：</td><td>Coordinate-2</td></tr>
+                        </table></dt>
+                    </content>
+                </item>
+                <item>
+                    <name>s_number</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                           Specify the data number in which reading is started.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>data_num</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                           The pointer to the number of reading data.<br/>
+                           The tool geometry size data that belongs to one data number is counted by the set with one reading number.<br/>
+                           Set the number of reading data to the data specified with the pointer beforehand.<br/>
+                           The tool geometry size data of the number of "*data_num" are read from the data number which is specified by "s_number".<br/>
+                           The number of data actually read is returned to "*data_num" when the execution of this function ends.<br/>
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>tlgsext</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            The pointer to the structure that storage the tool geometry size data.<br/>
+                            The IODBTLGSEXT structure is as follows. 
+                        </p>
+<pre>
+typedef struct iodbtlgsext{
+    long    data1;          /* Data1         */
+    long    data2;          /* Data2         */
+    long    data3;          /* Data3         */
+    long    data4;          /* Data4         */
+    char    tooltype;       /* Tool type     */
+    char    install;        /* Attachment    */
+    char    holder;         /* Holder number */
+    char    toolname[9];    /* Tool name     */
+} IODBTLGSEXT;
+</pre>
+                          <dl>
+                              <dt>data1</dt>
+                                <dd>The value of tool data 1 is returned.</dd>
+                                <dd>In the case of "vacant", "0x7FFFFFFF" returns.</dd>
+                              <dt>data2</dt>
+                                <dd>The value of tool data 2 is returned.</dd>
+                                <dd>In the case of "vacant", "0x7FFFFFFF" returns.</dd>
+                              <dt>data3</dt>
+                                <dd>The value of tool data 3 is returned.</dd>
+                                <dd>In the case of "vacant", "0x7FFFFFFF" returns.</dd>
+                              <dt>data4</dt>
+                                <dd>The value of tool data 4 is returned.</dd>
+                                <dd>In the case of "vacant", "0x7FFFFFFF" returns.</dd>
+                              <dt>tooltype</dt>
+                                <dd>Kind of tool is returned.</dd>
+                                <dd>Tool type is as follows.</dd>
+                                <dd><table border="0" class="dd">
+                                  <tr> <td> 0</td><td>：</td><td>Tool is not defined.    </td></tr>
+                                  <tr> <td>10</td><td>：</td><td>General-purpose tool    </td></tr>
+                                  <tr> <td>11</td><td>：</td><td>Threading tool          </td></tr>
+                                  <tr> <td>12</td><td>：</td><td>Grooving tool           </td></tr>
+                                  <tr> <td>13</td><td>：</td><td>Round-nose tool         </td></tr>
+                                  <tr> <td>14</td><td>：</td><td>Point nose straight tool</td></tr>
+                                  <tr> <td>15</td><td>：</td><td>Versatile tool          </td></tr>
+                                  <tr> <td>20</td><td>：</td><td>Drill                   </td></tr>
+                                  <tr> <td>21</td><td>：</td><td>Counter sink tool       </td></tr>
+                                  <tr> <td>22</td><td>：</td><td>Flat end mill           </td></tr>
+                                  <tr> <td>23</td><td>：</td><td>Ball end mill           </td></tr>
+                                  <tr> <td>24</td><td>：</td><td>Tap                     </td></tr>
+                                  <tr> <td>25</td><td>：</td><td>Reamer                  </td></tr>
+                                  <tr> <td>26</td><td>：</td><td>Boring tool             </td></tr>
+                                  <tr> <td>27</td><td>：</td><td>Face mill               </td></tr>
+                              </table></dd>
+                          </dl>
+                          <dl>
+                              <dt>install</dt>
+                                <dd>Attachment value is returned.</dd>
+                                <dd>The setting range is different depending on the kind of the tool.</dd>
+                                <dd>In case of "0", the value of the attachment is not set.</dd>
+                                <dd><table border="0" class="dd">
+                                  <tr> <td>General-purpose tool    </td><td>0-16</td></tr>
+                                  <tr> <td>Threading tool          </td><td>0-16</td></tr>
+                                  <tr> <td>Grooving tool           </td><td>0-16</td></tr>
+                                  <tr> <td>Round-nose tool         </td><td>0-16</td></tr>
+                                  <tr> <td>Point nose straight tool</td><td>0-12</td></tr>
+                                  <tr> <td>Versatile tool          </td><td>0-16</td></tr>
+                                  <tr> <td>Drill                   </td><td>0-4</td></tr>
+                                  <tr> <td>Counter sink tool       </td><td>0-4</td></tr>
+                                  <tr> <td>Flat end mill           </td><td>0-4</td></tr>
+                                  <tr> <td>Ball end mill           </td><td>0-4</td></tr>
+                                  <tr> <td>Tap                     </td><td>0-4</td></tr>
+                                  <tr> <td>Reamer                  </td><td>0-4</td></tr>
+                                  <tr> <td>Boring tool             </td><td>0-4</td></tr>
+                                  <tr> <td>Face mill               </td><td>0-4</td></tr>
+                              </table></dd>
+                              <dt>holder</dt>
+                                <dd>Holder number is returned.</dd>
+                                <dd>The setting range is as follows.</dd>
+                                <dd><table border="0" class="dd">
+                                  <tr> <td>1 path system </td><td>0-120</td></tr>
+                                  <tr> <td>2 path systems</td><td>0-60</td></tr>
+                                  <tr> <td>3 path sysyems</td><td>0-40</td></tr>
+                                  <tr> <td>4 path systems</td><td>0-30</td></tr>
+                              </table></dd>
+                          </dl>
+                    </content>
+                </item>
+                <item>
+                    <name>toolname</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                           Tool name is returned.  NULL is set to the end of the character string.
+                        </p>
+                    </content>
+                </item>
+           </vc>
+        </common>
+    </argument>
+
+
+    <errcode>
+        <item>
+           <name>EW_LENGTH</name>
+            <content>
+                Reading number(data_num) is wrong.
+            </content>
+        </item>
+        <item>
+           <name>EW_NUMBER</name>
+            <content>
+                Reading start number(s_number) is wrong.
+            </content>
+        </item>
+        <item>
+           <name>EW_ATTRIB</name>
+            <content>
+                Program coordinate system value(coord) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option.<br/>
+                Tool geometry size data 100-pairs or 300-pairs is necessary.
+            </content>
+        </item>
+    </errcode>
+
+
+    <option>
+        <hssb>
+            <p>The extended driver/library function are necessary.</p>
+        </hssb>
+
+        <ethr>
+            <p>The Ethernet function and the extended driver/library function are necessary.</p>
+            <p>However, in case of Series 16i/18i/21i-B, 0i-F and 30i, the required CNC option is as follows.</p>
+            <p>When Embedded Ethernet is used,</p>
+            <p><ul>above two optional functions are not required.</ul></p>
+            <p>When Ethernet board is used,</p>
+            <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>
+            <p>
+            Tool geometry size data 100-pairs or 300-pairs is necessary.
+            </p>
+        </need>
+    </option>
+
+
+    <parameter>
+    </parameter>
+
+
+    <mode>
+    </mode>
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+    <reference>
+        <item>
+            <name>cnc_wrtlgeomsize_ext</name>
+            <file>ToolGeom/cnc_wrtlgeomsize_ext.htm</file>
+        </item>
+    </reference>
+
+
+    <example>
+    </example>
+
+
+  </func>
+</root>

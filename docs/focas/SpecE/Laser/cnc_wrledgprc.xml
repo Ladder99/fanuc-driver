@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_wrledgprc</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_wrledgprc(unsigned short FlibHndl, IODBLEGPR *edgepr); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p> Writes the laser power for contouring.
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>  
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>edgepr</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Pointer to the IODBLEGPR structure including the laser power for contouring.  
+                            The IODBLEGPR structure is as follows.
+<pre>
+typedef struct iodblegpr {
+    short   slct;       /* Flag of data selection */
+    short   power;      /* Peak power */
+    short   freq;       /* Pulse frequency */
+    short   duty;       /* Pulse duty */
+    short   reserve[5]; /* (reserve) */
+} IODBLEGPR ;
+</pre>
+                            <dl>
+                                <dt>slct</dt>
+                                    <dd>Specify flag of data selection.</dd>
+                                    <dd><table border="0" class="dd">
+                                        <tr> <td>bit 0</td><td>:</td><td>Peak power</td> </tr>
+                                        <tr> <td>bit 1</td><td>:</td><td>Pulse frequency</td> </tr>
+                                        <tr> <td>bit 2</td><td>:</td><td>Pulse duty</td> </tr>
+                                        <tr> <td>bit 3,..,7</td><td>:</td><td>(reserve)</td> </tr>
+                                        <tr> <td>bit 8,..,15</td><td>:</td><td>(not used)</td> </tr>                                   
+                                    </table></dd>
+                                    <dd>* In order to write the data to CNC, turn on the corresponding bit on this data.</dd>
+                                <dt>power</dt>
+                                    <dd>Specify peak power.</dd>
+                                <dt>freq</dt>
+                                    <dd>Specify pulse frequency.</dd>
+                                <dt>duty</dt>
+                                    <dd>Specify pulse duty.</dd>
+                                <dt>reserve</dt>
+                                    <dd>(reserve)</dd>
+                            </dl>
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                Unavailable<br/>
+                This function cannot be used except 16i/18i-L, 30i/31i-LB.
+            </content>
+        </item>
+        <item>
+           <name>EW_DATA</name>
+            <content>
+                Data error<br/>
+                The laser power for contouring is wrong.
+                In order to get more information for this err_no return value, 
+                execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a>function.
+                The following details status will be set onto the member, err_no of ODBERR structure.
+                <table border="0">
+                    <tr><td>1</td><td>:</td><td>Error of peak power</td></tr>
+                    <tr><td>2</td><td>:</td><td>Error of pulse frequency</td></tr>
+                    <tr><td>3</td><td>:</td><td>Error of pulse duty</td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The extended driver/library function is necessary.
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                CNC parameter error(Series 30i/31i-LB only)<br/>
+                Mistake of laser oscillator (parameter No.15030)
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <li>Series 30i/31i-LB</li>
+            <span class="dd">No.15030</span>
+        </type>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </m>
+        <t>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </lc>
+        <p>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>-</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </w>
+        <pw>
+            <d>-</d>
+            <h>-</h>
+            <a>-</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdledgprc</name>
+            <file>Laser/cnc_rdledgprc.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

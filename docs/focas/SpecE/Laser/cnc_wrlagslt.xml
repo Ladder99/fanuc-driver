@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_wrlagslt</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_wrlagslt(unsigned short FlibHndl, IODBLAGSL *agslt); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p> Writes the assist gas selection of laser setting data.
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>  
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>agslt</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Pointer to the IODBLAGSL structure including the assist gas selection of laser setting data.
+                            The IODBLAGSL structure is as follows.
+                        </p>
+<pre>
+・Series 16i/18i-L
+typedef struct iodblagsl {
+    short   slct;       /* Flag of data selection */
+    short   ag_slt;     /* Assist gas selection */
+    short   agflow_slt; /* Assist gas flow selection */
+    short   reserve[6]; /* (reserve) */
+} IODBLAGSL ;
+・Series 30i/31i-LB
+typedef struct iodblagsl {
+    short   slct;       /* FFlag of data selection           */
+    short   ag_slt;     /* Assist gas selection              */
+    short   agflow_slt; /* Series 30i/31i-LB cannot be used. */
+    short   ag_press;   /* Assist gas pressure               */
+    short   ag_ready_t; /* Gas setting time                  */
+    short   reserve[4]; /* (reserve)                         */
+} IODBLAGSL ;
+</pre>
+                        <dl>
+                            <dt>slct</dt>
+                                <dd>Specify flag of data selection.</dd>
+                                <dd>・Series 16i/18i-L</dd>
+                                <dd><table border="0" class="dd">
+                                    <tr> <td>bit 0</td><td>:</td><td>Assist gas selection</td> </tr>
+                                    <tr> <td>bit 1</td><td>:</td><td>Assist gas flow selection</td> </tr>
+                                    <tr> <td>bit 2,..,7</td><td>:</td><td>(reserve)</td> </tr>
+                                    <tr> <td>bit 8,..,15</td><td>:</td><td>(not used)</td> </tr>
+                                </table></dd>
+                                <dd>・Series 30i/31i-LB</dd>
+                                <dd><table border="0" class="dd">
+                                    <tr> <td>bit0</td><td>:</td><td>Assist gas selection</td> </tr>
+                                    <tr> <td>bit1</td><td>:</td><td>Series 30i/31i-LB cannot be used.</td> </tr>
+                                    <tr> <td>bit2</td><td>:</td><td>Assist gas pressure</td> </tr>
+                                    <tr> <td>bit3</td><td>:</td><td>Gas setting time</td> </tr>
+                                    <tr> <td>bit 4,..,15</td><td>:</td><td>(not used)</td> </tr>
+                                </table></dd>
+                                <dd>* In order to write the data to CNC, turn on the corresponding bit on this data.</dd>
+                            <dt>ag_slt</dt>
+                                <dd>Specify assist gas selection.</dd>
+                            <dt>agflow_slt</dt>
+                                <dd>Series 16i/18i-L</dd>
+                                <dd>Specify assist gas flow selection.</dd>
+                                <dd>Series 30i/31i-LB</dd>
+                                <dd>Series 30i/31i-LB cannot be used.</dd>
+                            <dt>ag_press</dt>
+                                <dd>・Series 30i/31i-LB only</dd>
+                                <dd>Specify Assist gas pressure.</dd>
+                                <dd>It corresponds to parameter No.15136.</dd>
+                            <dt>ag_ready_t</dt>
+                                <dd>・Series 30i/31i-LB only</dd>
+                                <dd>Specify Gas setting time.</dd>
+                                <dd>It corresponds to parameter No.15135.</dd>
+                            <dt>reserve</dt>    
+                                <dd>(reserve)</dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                Unavailable<br/>
+                This function cannot be used except 16i/18i-L, 30i/31i-LB.
+            </content>
+        </item>
+        <item>
+           <name>EW_DATA</name>
+            <content>
+                Data error<br/>
+                The assist gas selection of laser setting data is wrong.
+                In order to get more information for this err_no return value,
+                execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.
+                The following details status will be set onto the member, err_no of ODBERR structure.
+                <p>・Series 16i/18i-L</p>
+                <table border="0">
+                    <tr><td>1</td><td>:</td><td>Error of assist gas selection</td></tr>
+                    <tr><td>2</td><td>:</td><td>Error of assist gas flow selection</td></tr>
+                </table>
+                <p>・Series 30i/31i-LB</p>
+                <table border="0">
+                    <tr><td>1</td><td>：</td><td>Error of assist gas selection</td></tr>
+                    <tr><td>2</td><td>：</td><td>Error of select(Selecting items that cannot be used)</td></tr>
+                    <tr><td>3</td><td>：</td><td>Error of Assist gas pressure</td></tr>
+                    <tr><td>4</td><td>：</td><td>Error of Gas setting time</td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The extended driver/library function is necessary.
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                CNC parameter error(Series 30i/31i-LB only)<br/>
+                Mistake of laser oscillator (parameter No.15030)
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <li>Series 30i/31i-LB</li>
+            <span class="dd">No.15030</span>
+        </type>
+    </parameter>
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </m>
+        <t>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </lc>
+        <p>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>-</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </w>
+        <pw>
+            <d>-</d>
+            <h>-</h>
+            <a>-</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdlagslt</name>
+            <file>Laser/cnc_rdlagslt.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

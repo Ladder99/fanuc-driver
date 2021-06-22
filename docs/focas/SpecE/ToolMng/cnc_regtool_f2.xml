@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_regtool_f2</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_regtool_f2(unsigned short FlibHndl,
+                             short s_number, short *data_num, IODBTLMNG_F2 *tool); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                Registers the Tool management data which is specified by the start data number 
+                and the number of the data to the Tool management data table. 
+            </p>
+            <p>
+                Registration by this function is done sequentially one by one. 
+                Once the error occurs, succeeding registration is aborted. 
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_number</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the start data number for the registration to the Tool management data table. 
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>data_num</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                            Specify the pointer to the number of the registration data for the registration to the Tool management data table. 
+                            Set the number of the registration data(1...) to the pointed data before calling this function. 
+                        </p>
+                        <p>
+                            This function registers the number of Tool management data specified by "*data_num", 
+                            from the index specified by "s_number". 
+                            After the execution of this function, *data_num holds the real registered number of data. 
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>tool</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the pointer to IODBTLMNG_F2 structure including the Tool management data to be registered. 
+                            The IODBTLMNG_F2 structure is as follows. 
+<pre>
+typedef struct  iodbtlmng_f2 {
+    long T_code;                /* tool number(T) */
+    long life_count;            /* tool life counter */
+    long max_life;              /* maximum of tool life */
+    long rest_life;             /* rest of tool life */
+    unsigned char  life_stat;   /* state of tool life */
+    unsigned char  cust_bits;   /* customizing bit */
+    unsigned short tool_info;   /* tool info. */
+    short H_code;               /* tool length compensation number (H) */
+    short D_code;               /* cutter compensation number (D) */
+    long spindle_speed;         /* spindle speed(S) */
+    long feedrate;              /* feed rate(F) */
+    short magazine;             /* magazine number(read only) */
+    short pot;                  /* pot number(read only) */
+    short G_code;               /* tool geometric compensation number(G) */
+    short W_code;               /* tool wear compensation number(W) */
+    short gno;                  /* tool geometric number */
+    short grp;                  /* edge group number(only 0i-F, 30i/31i/32i) */
+    short edge;                 /* edge number(only 0i-F, 30i/31i/32i) */
+    short org_magazine;         /* origin magazine number(only 0i-F, 30i/31i/32i) */
+    short org_pot;              /* origin pot number(only 0i-F, 30i/31i/32i) */
+    short reserve_s;            /* reserved */
+    long reserved[2];           /* reserved */
+    long custom1;               /* customizing data 1  */
+    long custom2;               /* customizing data 2  */
+    long custom3;               /* customizing data 3  */
+    long custom4;               /* customizing data 4  */
+    long custom5;               /* customizing data 5  */
+    long custom6;               /* customizing data 6  */
+    long custom7;               /* customizing data 7  */
+    long custom8;               /* customizing data 8  */
+    long custom9;               /* customizing data 9  */
+    long custom10;              /* customizing data 10 */
+    long custom11;              /* customizing data 11 */
+    long custom12;              /* customizing data 12 */
+    long custom13;              /* customizing data 13 */
+    long custom14;              /* customizing data 14 */
+    long custom15;              /* customizing data 15 */
+    long custom16;              /* customizing data 16 */
+    long custom17;              /* customizing data 17 */
+    long custom18;              /* customizing data 18 */
+    long custom19;              /* customizing data 19 */
+    long custom20;              /* customizing data 20 */
+    long custom21;              /* customizing data 21 */
+    long custom22;              /* customizing data 22 */
+    long custom23;              /* customizing data 23 */
+    long custom24;              /* customizing data 24 */
+    long custom25;              /* customizing data 25 */
+    long custom26;              /* customizing data 26 */
+    long custom27;              /* customizing data 27 */
+    long custom28;              /* customizing data 28 */
+    long custom29;              /* customizing data 29 */
+    long custom30;              /* customizing data 30 */
+    long custom31;              /* customizing data 31 */
+    long custom32;              /* customizing data 32 */
+    long custom33;              /* customizing data 33 */
+    long custom34;              /* customizing data 34 */
+    long custom35;              /* customizing data 35 */
+    long custom36;              /* customizing data 36 */
+    long custom37;              /* customizing data 37 */
+    long custom38;              /* customizing data 38 */
+    long custom39;              /* customizing data 39 */
+    long custom40;              /* customizing data 40 */
+} IODBTLMNG_F2;
+</pre>
+                            <table border="0">
+                                <tr><td valign="top">(Note)</td>
+                                    <td>
+                                        Magazine number and pot number are read only data, so it is impossible to write data in these. 
+                                    </td>
+                                </tr>
+                                <tr><td valign="top">(Note)</td>
+                                    <td>
+                                        Above customizing data(5-20) are available at only "the additional customized data on tool management function option(5-20)".
+                                    </td>
+                                </tr>
+                                <tr><td valign="top">(Note)</td>
+                                    <td>
+                                        Above customizing data(5-40) are available at only "the additional customized data on tool management function option(5-40)".
+                                    </td>
+                                </tr>
+                            </table>
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_BUSY</name>
+            <content>
+                Other users(such as PMC) have accessed the same data window.
+                Try this function again.
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                The start data number for the Tool management data table(s_number) is invalid.
+                Or, valid number of the data on the Tool management data table exceeds.
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                The member in the IODBTLMNG_F2 structure is invalid.<br/>
+                In order to get more information for this err_no return value, execute 
+                <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.
+                The following detail status will be set onto the member, err_no of OBDERR structure.
+                <table border="0">
+                    <tr><td>0</td><td>:</td><td>error except EW_DATA</td></tr>
+                    <tr><td>1</td><td>:</td><td>error of tool number</td></tr>
+                    <tr><td>2</td><td>:</td><td>error of tool life counter</td></tr>
+                    <tr><td>3</td><td>:</td><td>error of maximum of tool life</td></tr>
+                    <tr><td>4</td><td>:</td><td>error of rest of tool life</td></tr>
+                    <tr><td>5</td><td>:</td><td>error of state of tool life</td></tr>
+                    <tr><td>7</td><td>:</td><td>error of tool information</td></tr>
+                    <tr><td>8</td><td>:</td><td>error of tool length compensation number</td></tr>
+                    <tr><td>9</td><td>:</td><td>error of cutter compensation number</td></tr>
+                    <tr><td>10</td><td>:</td><td>error of spindle speed</td></tr>
+                    <tr><td>11</td><td>:</td><td>error of feed rate</td></tr>
+                    <tr><td>12</td><td>:</td><td>error of tool geometric compensation number</td></tr>
+                    <tr><td>13</td><td>:</td><td>error of tool wear compensation number</td></tr>
+                    <tr><td>14</td><td>:</td><td>error of tool geometric number</td></tr>
+                    <tr><td>15</td><td>:</td><td>error of edge group number(only 0i-F, 30i/31i/32i)</td></tr>
+                    <tr><td>16</td><td>:</td><td>error of edge number(only 0i-F, 30i/31i/32i)</td></tr>
+                    <tr><td>17</td><td>:</td><td>error of origin magazine number(only 0i-F, 30i/31i/32i)</td></tr>
+                    <tr><td>18</td><td>:</td><td>error of origin pot number(only 0i-F, 30i/31i/32i)</td></tr>
+                    <tr><td>27</td><td>:</td><td>Registered magazine and pot number were specified.(only 0i-F, 30i/31i/32i)</td></tr>
+                    <tr><td>29</td><td>:</td><td>Multi edge data is illegal.(Data of multi edge tool has a part of inconsistency on tool management funcion.)(only 0i-F, 30i/31i/32i)</td></tr>
+                    <tr><td>31,..,70</td><td>:</td><td>error of customizing data</td></tr>
+                 </table>
+                </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The Tool management function 64 pairs, or the Tool management function 240 pairs, or the Tool management function 1000 pairs.
+            </content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>
+                Write protection<br/>
+                The Tool management data table is write protected.
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                CNC execution rejected<br/>
+                This function tries to register the data against the Tool management data table entry
+                which has already existed or interfere with other tool.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            <p>The extended driver/library function are necessary.</p>
+        </hssb>
+
+        <ethr>
+            <p>The Ethernet function and the extended driver/library function are necessary.</p>
+            <p>However, in case of Series 16i/18i/21i-B, 0i-F and 30i, the required CNC option is as follows.</p>
+            <p>When Embedded Ethernet is used,</p>
+            <p><ul>above two optional functions are not required.</ul></p>
+            <p>When Ethernet board is used,</p>
+            <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>
+            The Tool management function 64 pairs, or the Tool management function 240 pairs, or the Tool management function 1000 pairs.
+        </need>
+        <type>
+            <p>
+            This function is influenced by the additional customized data on tool management function option(5-20),(5-40).<br/>
+            </p>
+        </type>
+
+        <is>
+            <hssb>
+                <p>The extended driver/library function are necessary.</p>
+            </hssb>
+            <need>
+                The Tool management function 64 pairs, or the Tool management function 240 pairs, or the Tool management function 1000 pairs.
+            </need>
+            <type>
+                This function is influenced by the additional customized data on tool management function option(5-20),(5-40).<br/>
+            </type>
+        </is>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul type="disc">
+                <li>Series 16i/18i/21i</li>
+                    13220 (valid number of Tool management data)<br/>
+                <li>Series 0i-F, 30i/31i/32i</li>
+                    13220 (valid number of Tool management data)<br/>
+                    13201#3 (It is necessary to use multi edge tool on tool management function.)
+            </ul>
+        </type>
+    </parameter>
+
+    <is_parameter>
+        <type>
+            <ul>
+                13220 (valid number of Tool management data)<br/>
+                13201#3 (It is necessary to use multi edge tool on tool management function.)
+            </ul>
+        </type>
+    </is_parameter>
+
+
+    <mode>
+    </mode> 
+
+
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_regtool</name>
+            <file>ToolMng/cnc_regtool.htm</file>
+        </item>
+<!--
+        <item>
+            <name>cnc_regtool_f2</name>
+            <file>ToolMng/cnc_regtool_f2.htm</file>
+        </item>
+-->
+        <item>
+            <name>cnc_deltool</name>
+            <file>ToolMng/cnc_deltool.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdtool</name>
+            <file>ToolMng/cnc_rdtool.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdtool_f2</name>
+            <file>ToolMng/cnc_rdtool_f2.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrtool</name>
+            <file>ToolMng/cnc_wrtool.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrtool_f2</name>
+            <file>ToolMng/cnc_wrtool_f2.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrtool2</name>
+            <file>ToolMng/cnc_wrtool2.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

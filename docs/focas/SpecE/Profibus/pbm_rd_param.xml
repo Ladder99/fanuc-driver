@@ -1,0 +1,807 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <title>pbm_rd_param</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI pbm_rd_param( unsigned short FlibHndl, short type, T_SLVSLT_IND *slvslt_ind, OUT_PBMPRM *param ); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Reads the parameters of the PROFIBUS master function.</p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specifies the kind of PROFIBUS master parameter.<br/>
+                           The structure slvslt_ind is used according to the kind of the parameter.
+                        <table border="0">
+                            <tr><td>0</td><td>:</td><td>Bus parameter  </td></tr>
+                            <tr><td>1</td><td>:</td><td>allocated PMC address of mode</td></tr>
+                        </table>
+                        <p>/* parameter for each slave station */</p>
+                        <table border="0">
+                            <tr><td>20</td><td>:</td><td>Slave sub parameter</td></tr>
+                            <tr><td>21</td><td>:</td><td>Slave parameter  </td></tr>
+                            <tr><td>22</td><td>:</td><td>allocate of diagnosis data   </td></tr>
+                        </table>
+                        <p>/* parameter for each slot module */</p>
+                        <table border="0">
+                            <tr><td>40</td><td>:</td><td>Module data  </td></tr>
+                            <tr><td>41</td><td>:</td><td>allocated PMC address of DI/DO data</td></tr>
+                        </table>
+
+                        <p>(note) about using slvslt_ind</p>
+                        <table border="0">
+                            <tr><td> 0 to  1</td><td>:</td><td>slvslt_ind is not used. </td></tr>
+                            <tr><td>20 to 22</td><td>:</td><td>slvslt_ind.slv_no is used.</td></tr>
+                            <tr><td>40 to 41</td><td>:</td><td>slvslt_ind.slv_no and slvslt_ind.slt_no are used.</td></tr>
+                        </table>
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>slvslt_ind</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specifies the pointer to the T_SLVSLT_IND structure.<br/>
+                            The T_SLVSLT_IND structure is as follows.  When the slave station or slot module is set to type, this structure is used.
+<pre>
+typedef struct _T_SLVSLT_IND{
+    unsigned char   slv_no;
+    unsigned char   slt_no;
+} T_SLVSLT_IND;
+</pre>
+                            <dl>
+                            <dt>slv_no</dt>
+                                <dd>Station number of slave. range: from 0 to 125</dd>
+                                <dd>range: from 0 to 125</dd>
+
+                            <dt>slt_no</dt>
+                                <dd>Slot number.</dd>
+                                <dd>range: from 0 to 127</dd>
+                            </dl>
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>param</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Specifies the pointer to the OUT_PBMPRM structure to store the acquired parameter. The OUT_PBMPRM structure is as follows.
+<pre>
+/*- parameter of master function -----------------------------------*/
+typedef struct _OUT_PBMPRM{
+    union {
+        T_BUS_PARA          bus_para;
+        T_MODE_ADDR_ALLOC   mode_addr_alloc;
+        T_SLAVE_SUB_PARA    slv_sub_para;
+        T_SLAVE_PARA        slv_para;
+        T_DGN_ADDR_ALLOC    dgn_addr_alloc;
+        T_MODULE_DATA       module_data;
+        T_DIDO_ADDR_ALLOC   dido_addr_alloc;
+    } prm;
+} OUT_PBMPRM;
+
+/*- BUS PARAMETER -----------------------------------------*/
+typedef struct _T_BUS_PARA
+{
+    unsigned char   fdl_add;                 /* station no. */
+    unsigned char   baud_rate;
+    unsigned short  tsl;
+    unsigned short  min_tsdr;
+    unsigned short  max_tsdr;
+    unsigned char   tqui;
+    unsigned char   tset;
+    unsigned long   ttr;
+    unsigned char   g;
+    unsigned char   hsa;
+    unsigned char   max_retry_limit;
+    unsigned char   bp_flag;
+    unsigned short  min_slave_interval;
+    unsigned short  poll_timeout;
+    unsigned short  data_control_time;
+    unsigned char   reserved[6];
+    char            master_class2_name[32];
+    T_MAS_USR       mas_usr;
+} T_BUS_PARA;
+
+/* MASTER USER DATA */
+typedef struct _T_MAS_USR
+{
+    unsigned short  master_user_data_len;
+    unsigned char   master_user_data[62];
+} T_MAS_USR;
+
+/*- ADDRESS ALLOCATION FOR MODE -----------------------------------*/
+typedef struct _T_MODE_ADDR_ALLOC
+{
+    unsigned char       md_path;
+    unsigned char       md_kind;
+    unsigned short      md_top_address;
+    unsigned char       md_size;
+    unsigned char       pad;
+} T_MODE_ADDR_ALLOC;
+
+/*- SLAVE SUB-PARAMETER -----------------------------------*/
+typedef struct _T_SLAVE_SUB_PARA
+{
+    T_SLAVE_IND_PARA    slv_ind_para;
+    unsigned char       slv_enable;
+    unsigned char       slt_num;
+} T_SLAVE_SUB_PARA;
+
+/*- SLAVE PARAMETER -------------------------------------*/
+typedef struct _T_SLAVE_PARA
+{
+    T_SLAVE_IND_PARA    slv_ind_para;
+    unsigned char       sl_flag;
+    unsigned char       slave_type;
+    unsigned char       reserved[12];
+    T_PRM_DATA          prm_data;
+    T_CFG_DATA          cfg_data;
+    T_SLV_USR_DATA      slv_usr;
+} T_SLAVE_PARA;
+
+/* PARAMETER DATA */
+typedef struct _T_PRM_DATA
+{
+    unsigned char   station_status;
+    unsigned char   wd_fact_1;
+    unsigned char   wd_fact_2;
+    unsigned char   min_tsdr;
+    unsigned short  ident_number;
+    unsigned char   group_ident;
+    unsigned char   pad;
+    T_USR_PRM_DATA  usr_prm;
+} T_PRM_DATA;
+
+/* USER PARAMETER DATA */
+typedef struct _T_USR_PRM_DATA
+{
+    unsigned short  user_prm_data_len;
+    unsigned char   user_prm_data[201];
+    unsigned char   pad;
+} T_USR_PRM_DATA;
+
+/* CONFIGURATION DATA */
+typedef struct _T_CFG_DATA
+{
+    unsigned short  cfg_data_len;
+    unsigned char   cfg_data[128];
+} T_CFG_DATA;
+
+/* SLAVE USER DATA */
+typedef struct _T_SLV_USR_DATA
+{
+    unsigned short  slave_user_data_len;
+    unsigned char   slave_user_data[30];
+} T_SLV_USR_DATA;
+
+/*- ALLOCATION OF DIAGNOSIS DATA ---------------------------------------*/
+typedef struct _T_DGN_ADDR_ALLOC
+{
+    T_SLAVE_IND_PARA    slv_ind_para;
+    unsigned char       dgn_path;
+    unsigned char       dgn_kind;
+    unsigned short      dgn_top_address;
+    unsigned char       dgn_size;
+    unsigned char       pad;
+} T_DGN_ADDR_ALLOC;
+
+/*- MODULE DATA ---------------------------------------*/
+typedef struct _T_MODULE_DATA
+{
+    T_SLOT_IND_PARA     slt_ind_para;
+    unsigned short      module_len;
+    unsigned char       module_data[128];
+} T_MODULE_DATA;
+
+/*- ALLOCATION OF DI/DO DATA --------------------------------------*/
+typedef struct _T_DIDO_ADDR_ALLOC
+{
+    T_SLOT_IND_PARA     slt_ind_para;
+    unsigned char       di_path;
+    unsigned char       do_path;
+    unsigned char       di_kind;
+    unsigned char       do_kind;
+    unsigned short      di_top_address;
+    unsigned short      do_top_address;
+    unsigned char       di_size;
+    unsigned char       do_size;
+    unsigned char       module_type;
+    unsigned char       pad;
+} T_DIDO_ADDR_ALLOC;
+
+/* SLAVE INDICATION PARAMETER */
+typedef struct _T_SLAVE_IND_PARA
+{
+    unsigned char   slv_idx;
+    unsigned char   slv_no;
+} T_SLAVE_IND_PARA;
+
+/* SLOT INDICATION PARAMETER */
+typedef struct _T_SLOT_IND_PARA
+{
+    unsigned char   slv_no;
+    unsigned char   slt_no;
+} T_SLOT_IND_PARA;
+</pre>
+
+                        <dl>
+                        <p>/*- BUS PARAMETER -----------------------------------------*/</p>
+                            <dt>prm.bus_para.fdl_add</dt>
+                                <dd>"FDL_Add" of PROFIBUS standards Station number of master(self-node)</dd>
+                                <dd>range: from 0 to 125</dd>
+
+                            <dt>prm.bus_para.baud_rate</dt>
+                                <dd>"Baud_rate" of PROFIBUS standards</dd>
+                                <dd><table border="0">
+                                    <tr><td>0</td><td>:</td><td>  9.6  Kbps</td></tr>
+                                    <tr><td>1</td><td>:</td><td> 19.2  Kbps</td></tr>
+                                    <tr><td>2</td><td>:</td><td> 93.75 Kbps</td></tr>
+                                    <tr><td>3</td><td>:</td><td>187.5  Kbps</td></tr>
+                                    <tr><td>4</td><td>:</td><td>500.0  Kbps</td></tr>
+                                    <tr><td>6</td><td>:</td><td>  1.5  Mbps</td></tr>
+                                    <tr><td>7</td><td>:</td><td>  3.0  Mbps</td></tr>
+                                    <tr><td>8</td><td>:</td><td>  6.0  Mbps</td></tr>
+                                    <tr><td>9</td><td>:</td><td> 12.0  Mbps</td></tr>
+                                </table></dd>
+
+                            <dt>prm.bus_para.tsl</dt>
+                                <dd>"T SL" of PROFIBUS standards</dd>
+                                <dd>range: from 1 to 65535</dd>
+                                <dd>unit:  bit time</dd>
+
+                            <dt>prm.bus_para.min_tsdr</dt>
+                                <dd>"min T SDR" of PROFIBUS standards</dd>
+                                <dd>range: from 1 to 65535</dd>
+                                <dd>unit:  bit time</dd>
+
+                            <dt>prm.bus_para.max_tsdr</dt>
+                                <dd>"max T SDR" of PROFIBUS standards</dd>
+                                <dd>range: from 1 to 65535</dd>
+                                <dd>unit:  bit time</dd>
+
+                            <dt>prm.bus_para.tqui</dt>
+                                <dd>"T QUI" of PROFIBUS standards</dd>
+                                <dd>range: from 0 to 255</dd>
+                                <dd>unit:  bit time</dd>
+
+                            <dt>prm.bus_para.tset</dt>
+                                <dd>"T SET" of PROFIBUS standards</dd>
+                                <dd>range: from 1 to 255</dd>
+                                <dd>unit:  bit time</dd>
+
+                            <dt>prm.bus_para.ttr</dt>
+                                <dd>"T TR" of PROFIBUS standards</dd>
+                                <dd>range: from 1 to 16777215</dd>
+                                <dd>unit:  bit time</dd>
+
+                            <dt>prm.bus_para.g</dt>
+                                <dd>"G" of PROFIBUS standards</dd>
+                                <dd>range: from 1 to 100</dd>
+
+                            <dt>prm.bus_para.hsa</dt>
+                                <dd>"HSA" of PROFIBUS standards</dd>
+                                <dd>range: from 2 to 126</dd>
+
+                            <dt>prm.bus_para.max_retry_limit</dt>
+                                <dd>"max_retry_limit" of PROFIBUS standards</dd>
+                                <dd>ange: from 1 to 8</dd>
+
+                            <dt>prm.bus_para.bp_flag</dt>
+                                <dd>"Bp_Flag" of PROFIBUS standards</dd>
+                                <dd><table border="0">
+                                    <tr><td>bit7  </td><td>:</td><td>Error_Action_Flag</td></tr>
+                                    <tr><td>bit6-0</td><td>:</td><td>reserved</td></tr>
+                                </table></dd>
+
+                            <dt>prm.bus_para.min_slave_interval</dt>
+                                <dd>"Min_Slave_Interval" of PROFIBUS standards</dd>
+                                <dd>range: from 1 to 65535</dd>
+                                <dd>unit:  100 micro seconds</dd>
+
+                            <dt>prm.bus_para.poll_timeout</dt>
+                                <dd>"Poll_Timeout" of PROFIBUS standards</dd>
+                                <dd>range: from 1 to 65535</dd>
+                                <dd>unit:  1 milli-second</dd>
+
+                            <dt>prm.bus_para.data_control_time</dt>
+                                <dd>"Data_Control_Time" of PROFIBUS standards</dd>
+                                <dd>range: from 1 to 65535</dd>
+                                <dd>unit:  10 milli-seconds</dd>
+
+                            <dt>prm.bus_para.reserved[n]（n : 0 to 6)</dt>
+                                <dd>reserved</dd>
+
+                            <dt>prm.bus_para.master_class2_name[n]（n : 0 to 31)</dt>
+                                <dd>"Master_Class2_Name" of PROFIBUS standards</dd>
+                                <dd>ASCII string up to 32 bytes</dd>
+
+                        <p>/* MASTER USER DATA */</p>
+                            <dt>prm.bus_para.mas_usr.master_user_data_len</dt>
+                                 <dd>the value decreasing -2 from "Master_User_Data_Len" of PROFIBUS standards</dd>
+                                 <dd>range: from 0 to 62</dd>
+                                 <dd>unit:  byte</dd>
+
+                            <dt>prm.bus_para.mas_usr.master_user_data[n]（n : 0 to 61)</dt>
+                                 <dd>"Master_User_Data" of PROFIBUS standards</dd>
+
+                        <br/>
+                        <p>/*- ADDRESS ALLOCATION FOR MODE -----------------------------------*/</p>
+                            <dt>prm.mode_addr_alloc.md_path</dt>
+                                 <dd>PMC path number</dd>
+                                 <dd>range: from 1 to 3</dd>
+
+                            <dt>prm.mode_addr_alloc.md_kind</dt>
+                                 <dd>PMC address</dd>
+                                 <dd>range: R or E</dd>
+
+                            <dt>prm.mode_addr_alloc.md_top_address</dt>
+                                 <dd>top number of PMC address</dd>
+                                 <dd>range: depend on the PMC address</dd>
+
+                            <dt>prm.mode_addr_alloc.md_size</dt>
+                                 <dd>unused</dd>
+
+                            <dt>prm.mode_addr_alloc.pad</dt>
+                                 <dd>unused</dd>
+
+                        <br/>
+                        <p>/*- SLAVE SUB-PARAMETER -----------------------------------*/</p>
+                            <dt>prm.slv_sub_para.slv_ind_para.slv_idx</dt>
+                                <dd>number of slave index</dd>
+                                <dd>range: from 0 to 47</dd>
+
+                            <dt>prm.slv_sub_para.slv_ind_para.slv_no</dt>
+                                <dd>number of slave station</dd>
+                                <dd>range: from 0 to 125</dd>
+
+                            <dt>prm.slv_sub_para.slv_enable</dt>
+                                <dd>show whether the communication with the slave is valid or invalid</dd>
+                                <dd><table border="0">
+                                    <tr><td>0x00</td><td>:</td><td>invalid</td></tr>
+                                    <tr><td>0xff</td><td>:</td><td>valid</td></tr>
+                                </table></dd>
+
+                            <dt>prm.slv_sub_para.slt_num</dt>
+                                 <dd>number of slot for I/O module</dd>
+                                 <dd>range: from 1 to 128</dd>
+
+                        <br/>
+                        <p>/*- SLAVE PARAMETER -------------------------------------*/</p>
+                            <dt>prm.slv_para.slv_ind_para.slv_idx</dt>
+                                 <dd>number of slave index</dd>
+                                 <dd>range: from 0 to 47</dd>
+
+                            <dt>prm.slv_para.slv_ind_para.slv_no</dt>
+                                 <dd>number of slave station</dd>
+                                 <dd>range: from 0 to 125</dd>
+
+                            <dt>prm.slv_para.sl_flag</dt>
+                                 <dd>"Sl_Flag" of PROFIBUS standards</dd>
+                                <dd><table border="0">
+                                    <tr><td>bit7  </td><td>:</td><td>Active  </td></tr>
+                                    <tr><td>bit6  </td><td>:</td><td>New_Prm </td></tr>
+                                    <tr><td>bit5-0</td><td>:</td><td>reserved</td></tr>
+                                </table></dd>
+
+                            <dt>prm.slv_para.slave_type</dt>
+                                 <dd>"Slave_Type" of PROFIBUS standards</dd>
+                                 <dd>range: from 0 to 255</dd>
+
+                            <dt>prm.slv_para.reserved[n]（n : 0 to 11)</dt>
+                                 <dd>reserved</dd>
+
+                        <p>/* PARAMETER DATA */</p>
+                            <dt>prm.slv_para.prm_data.station_status</dt>
+                                 <dd>"Station_status" of PROFIBUS standards</dd>
+                                <dd><table border="0">
+                                    <tr><td>bit7  </td><td>:</td><td>Lock_Req  </td></tr>
+                                    <tr><td>bit6  </td><td>:</td><td>Unlock_Req</td></tr>
+                                    <tr><td>bit5  </td><td>:</td><td>Sync_Req  </td></tr>
+                                    <tr><td>bit4  </td><td>:</td><td>Freeze_Req</td></tr>
+                                    <tr><td>bit3  </td><td>:</td><td>WD_On     </td></tr>
+                                    <tr><td>bit2-0</td><td>:</td><td>reserved  </td></tr>
+                                </table></dd>
+
+                            <dt>prm.slv_para.prm_data.wd_fact_1</dt>
+                                <dd>"WD_Fact_1" of PROFIBUS standards</dd>
+                                <dd>range: from 1 to 255</dd>
+                                <dd>unit:  milli-second</dd>
+
+                            <dt>prm.slv_para.prm_data.wd_fact_2</dt>
+                                <dd>"WD_Fact_2" of PROFIBUS standards</dd>
+                                <dd>range: from 1 to 255</dd>
+                                <dd>unit:  milli-second</dd>
+
+                            <dt>prm.slv_para.prm_data.min_tsdr</dt>
+                                <dd>"min T SDR" of PROFIBUS standards</dd>
+                                <dd>range: from 0 to 255</dd>
+                                <dd>unit:  bit time</dd>
+
+                            <dt>prm.slv_para.prm_data.ident_number</dt>
+                                <dd>"Ident_Number" of PROFIBUS standards</dd>
+
+                            <dt>prm.slv_para.prm_data.group_ident</dt>
+                                <dd>"Group_Ident" of PROFIBUS standards</dd>
+                                <dd><table border="0">
+                                    <tr><td>bit7</td><td>:</td><td>Group8</td></tr>
+                                    <tr><td>bit6</td><td>:</td><td>Group7</td></tr>
+                                    <tr><td>bit5</td><td>:</td><td>Group6</td></tr>
+                                    <tr><td>bit4</td><td>:</td><td>Group5</td></tr>
+                                    <tr><td>bit3</td><td>:</td><td>Group4</td></tr>
+                                    <tr><td>bit2</td><td>:</td><td>Group3</td></tr>
+                                    <tr><td>bit1</td><td>:</td><td>Group2</td></tr>
+                                    <tr><td>bit0</td><td>:</td><td>Group1</td></tr>
+                                </table></dd>
+
+                            <dt>prm.slv_para.prm_data.pad</dt>
+                                <dd>unused</dd>
+
+                        <p>/* USER PARAMETER DATA */</p>
+                            <dt>prm.slv_para.prm_data.usr_prm.user_prm_data_len</dt>
+                                <dd>length of "User_Prm_Data" of PROFIBUS standards</dd>
+                                <dd>range: from 0 to 201</dd>
+                                <dd>unit:  byte</dd>
+
+                            <dt>prm.slv_para.prm_data.usr_prm.user_prm_data[n]（n : 0 to 200)</dt>
+                                <dd>"User_Prm_Data" of PROFIBUS standards</dd>
+
+                            <dt>prm.slv_para.prm_data.usr_prm.pad</dt>
+                                <dd>unused</dd>
+
+                        <p>/* CONFIGURATION DATA */</p>
+                            <dt>prm.slv_para.cfg_data.cfg_data_len</dt>
+                                <dd>the value decreasing -2 from "Cfg_Data_Len" of PROFIBUS standards</dd>
+                                <dd>range: from 0 to 128</dd>
+                                <dd>unit:  byte</dd>
+
+                            <dt>prm.slv_para.cfg_data.cfg_data[n]（n : 0 to 127)</dt>
+                                 <dd>"Cfg_Data" of PROFIBUS standards</dd>
+
+                        <p>/* SLAVE USER DATA */</p>
+                            <dt>prm.slv_para.slv_usr.slave_user_data_len</dt>
+                                <dd>the value decreasing -2 from"Slave_User_Data_Len" of PROFIBUS standards</dd>
+                                <dd>range: from 0 to 30</dd>
+                                <dd>unit:  byte</dd>
+
+                            <dt>prm.slv_para.slv_usr.slave_user_data[n]（n : 0 to 29)</dt>
+                                <dd>"Slave_User_Data" of PROFIBUS standards</dd>
+
+                        <br/>
+                        <p>/*- ALLOCATION OF DIAGNOSIS DATA ---------------------------------------*/</p>
+                            <dt>prm.dgn_addr_alloc.slv_ind_para.slv_idx</dt>
+                                <dd>number of slave index</dd>
+                                <dd>range: from 0 to 47</dd>
+
+                            <dt>prm.dgn_addr_alloc.slv_ind_para.slv_no</dt>
+                                <dd>number of slave station</dd>
+                                <dd>range: from 0 to 125</dd>
+
+                            <dt>prm.dgn_addr_alloc.dgn_path</dt>
+                                <dd>PMC path number</dd>
+                                <dd>range: from 1 to 3</dd>
+
+                            <dt>prm.dgn_addr_alloc.dgn_kind</dt>
+                                <dd>PMC address</dd>
+                                <dd>range: R or E</dd>
+
+                            <dt>prm.dgn_addr_alloc.dgn_top_address</dt>
+                                <dd>top number of PMC address</dd>
+                                <dd>range: depend on the PMC address</dd>
+
+                            <dt>prm.dgn_addr_alloc.dgn_size</dt>
+                                <dd>the size of diagnosis data</dd>
+                                <dd>range: from 0 to 244</dd>
+                                <dd>unit:  byte</dd>
+
+                            <dt>prm.dgn_addr_alloc.pad</dt>
+                                <dd>unused</dd>
+
+                        <br/>
+                        <p>/*- MODULE DATA ---------------------------------------*/</p>
+                            <dt>prm.module_data.slt_ind_para.slv_no</dt>
+                                <dd>number of slave station</dd>
+                                <dd>range: from 0 to 125</dd>
+
+                            <dt>prm.module_data.slt_ind_para.slt_no</dt>
+                                <dd>module number of slot</dd>
+                                <dd>range: from 0 to 127</dd>
+
+                            <dt>prm.module_data.module_len</dt>
+                                <dd>the length of "module" of PROFIBUS standards</dd>
+                                <dd>range: from 0 to 128</dd>
+                                <dd>unit:  byte</dd>
+
+                            <dt>prm.module_data.module_data[n]（n : 0 to 127)</dt>
+                                <dd>"module" of PROFIBUS standards</dd>
+
+                        <br/>
+                        <p>/*- ALLOCATION OF DI/DO DATA --------------------------------------*/</p>
+                            <dt>prm.dido_addr_alloc.slt_ind_para.slv_no</dt>
+                                <dd>number of slave station</dd>
+                                <dd>range: from 0 to 125</dd>
+
+                            <dt>prm.dido_addr_alloc.slt_ind_para.slt_no</dt>
+                                <dd>module number of slot</dd>
+                                <dd>range: from 0 to 127</dd>
+
+                            <dt>prm.dido_addr_alloc.di_path</dt>
+                                <dd>PMC path number of DI data</dd>
+                                <dd>range: from 1 to 3</dd>
+
+                            <dt>prm.dido_addr_alloc.do_path</dt>
+                                <dd>PMC path number of DO data</dd>
+                                <dd>range: from 1 to 3</dd>
+
+                            <dt>prm.dido_addr_alloc.di_kind</dt>
+                                <dd>PMC address of DI data</dd>
+                                <dd>range: R or E</dd>
+
+                            <dt>prm.dido_addr_alloc.do_kind</dt>
+                                <dd>PMC address of DO data</dd>
+                                <dd>range: R or E</dd>
+
+                            <dt>prm.dido_addr_alloc.di_top_address</dt>
+                                <dd>top number of PMC address of DI data</dd>
+                                <dd>range: depend on the PMC address</dd>
+
+                            <dt>prm.dido_addr_alloc.do_top_address</dt>
+                                <dd>top number of PMC address of DO data</dd>
+                                <dd>range: depend on the PMC address</dd>
+
+                            <dt>prm.dido_addr_alloc.di_size</dt>
+                                <dd>the size of DI data</dd>
+                                <dd>range: from 0 to 244</dd>
+                                <dd>unit:  byte</dd>
+
+                            <dt>prm.dido_addr_alloc.do_size</dt>
+                                <dd>the size of DO data</dd>
+                                <dd>range: from 0 to 244</dd>
+                                <dd>unit:  byte</dd>
+
+                            <dt>prm.dido_addr_alloc.module_type</dt>
+                                <dd>type of module</dd>
+                                <dd><table border="0">
+                                    <tr><td>1  </td><td>:</td><td>INPUT only</td></tr>
+                                    <tr><td>2  </td><td>:</td><td>OUTPUT only</td></tr>
+                                    <tr><td>3  </td><td>:</td><td>INPUT and OUTPUT</td></tr>
+                                    <tr><td>4  </td><td>:</td><td>no INPUT and no OUTPUT</td></tr>
+                                    <tr><td>200</td><td>:</td><td>out of size for INPUT/OUTPUT</td></tr>
+                                    <tr><td>201</td><td>:</td><td>violation of PROFIBUS standards</td></tr>
+                                    <tr><td>255</td><td>:</td><td>unsetting</td></tr>
+                                </table></dd>
+
+                            <dt>prm.dido_addr_alloc.pad</dt>
+                                <dd>unused</dd>
+                        </dl>
+                        </p>
+                    </content>
+                </item>
+
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_DATA</name>
+            <content>data error<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                err_no of ODBERR structure.
+                <table border="0">
+                    <tr><td>2</td><td>:</td><td>out of range</td></tr>
+                    <tr><td>5</td><td>:</td><td>data refused</td></tr>
+                </table>
+                err_dtno of ODBERR structure.
+                <table border="0">
+                    <tr><td>1</td><td>:</td><td>station number of slave is invalid</td></tr>
+                    <tr><td>2</td><td>:</td><td>slot number is invalid            </td></tr>
+                    <tr><td>3</td><td>:</td><td>a kind of parameter is invalid     </td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                err_no of ODBERR structure.
+                <table border="0">
+                    <tr><td>40</td><td>:</td><td>There is no PROFIBUS master board.           </td></tr>
+                    <tr><td>41</td><td>:</td><td>There is no PROFIBUS master function.        </td></tr>
+                    <tr><td>42</td><td>:</td><td>There is no SRAM of PROFIBUS master function.</td></tr>
+                </table>
+                err_dtno of ODBERR structure.
+                <table border="0">
+                    <tr><td>なし</td><td></td><td></td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>CNC execution rejection<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                err_no of ODBERR structure.
+                <table border="0">
+                    <tr><td>10</td><td>:</td><td>fail to read the parameter from SRAM</td></tr>
+                </table>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <need>The PROFIBUS-DP master function is necessary.</need>
+    </option>
+
+
+
+    <parameter>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>pbm_wr_param</name>
+            <file>Profibus/pbm_wr_param.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

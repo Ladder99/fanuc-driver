@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+    <title>cnc_rdnodeinfo</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdnodeinfo( long node_no, ODBNODE *info );</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn><p>Reads the specified node information of the HSSB.</p></cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>node_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the node number. (0,..,&#60;maximum node number&#62;)<br/>
+                            Maximum node number is 'the number of node - 1'.<br/>
+                            (The number of node is got by using <a href="Handle/cnc_rdnodenum.htm" target="_parent">cnc_rdnodenum</a> function.)
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>info</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the ODBNODE structure including the node information.<br/>
+                            <br/>
+                            The ODBNODE structure is as follows.<br/>
+                        </p>
+
+<pre>
+typedef struct odbnode {
+    long  node_no;      /* Node number */
+    long  io_base;      /* Base address of I/O port */
+    long  status;       /* Status of device installation */
+    long  cnc_type;     /* Type of CNC */
+    char  node_name[20];/* Node name */
+} ODBNODE;</pre>
+                        <ul>
+                            <dl>
+                                <dt>node_no</dt>
+                                    <dd>Specified node number is set.</dd>
+                                <dt>io_base</dt>
+                                    <dd>Base address of I/O port of specified node is set.</dd>
+                                <dt>status</dt>
+                                    <dd>Status of device installation of specified node is set.</dd>
+                                    <dd><span class="dd">0 : Not installed</span></dd>
+                                    <dd><span class="dd">1 : Installed</span></dd>
+                                <dt>cnc_type</dt>
+                                    <dd>Type of CNC is set.</dd>
+                                    <dd><span class="dd">1 : Series 16/18/21, 16i/18i/21i</span></dd>
+                                    <dd><span class="dd">2 : Series 15</span></dd>
+                                    <dd><span class="dd">3 : Power Mate</span></dd>
+                                    <dd><span class="dd">4 : Power Mate i</span></dd>
+                                    <dd><span class="dd">5 : Series 16i/18i-W</span></dd>
+                                    <dd><span class="dd">6 : Series 15i</span></dd>
+                                    <dd><span class="dd">7 : Series 0i-A</span></dd>
+                                    <dd><span class="dd">8 : Series 0i-B</span></dd>
+                                    <dd><span class="dd">9 : Series 30i/31i/32i, Series 0i-D/F, PMi-A</span></dd>
+                                <dt>node_name[20]</dt>
+                                    <dd>Node name is set.</dd>
+                                    <dd>Node name is up to 20 characters including 'NULL'.</dd>
+                            </dl>
+                        </ul>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_MMCSYS</name>
+            <content>
+                Access failure to the device driver<br/>
+                The device driver for HSSB multi-connection is not installed.
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                Node number(node_no) is wrong.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <cmn>The extended driver/library function is necessary.</cmn>
+    </option>
+
+
+
+    <parameter></parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs15>H</fs15>
+            <fs15i>H</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </w>
+        <pw>
+            <d>H</d>
+            <h>H</h>
+            <a>H</a>
+        </pw>
+    </support>
+
+
+
+  </func>
+</root>

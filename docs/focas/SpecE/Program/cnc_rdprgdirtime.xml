@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_rdprgdirtime</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdprgdirtime(unsigned short FlibHndl, long *top_prog, short *num_prog, PRGDIRTM *buf);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                Reads specified number of "Program Number","Comment" and "Processing time" data of the registered
+                programs in the CNC, starting from the program with the specified Program number.
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle.<br/>
+                            See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>top_prog</name>
+                    <type>in / out</type>
+                    <content>
+                        <p>
+                            Pointer to the starting program number.<br/>
+                            The program number of the first program actually read is stored after this function call.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>num_prog</name>
+                    <type>in / out</type>
+                    <content>
+                        <p>
+                            Pointer to the number of programs to be read.<br/>
+                            Actual number of programs being read is stored after this function call.<br/>
+                            When no programs are registered or no programs match the specified condition, 0" is returned.<br/>
+                            Valid number range is from 1 to 963.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>buf</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the PRGDIRTM structure where program directory data are returned.<br/>
+                            The PRGDIRTM structure is as follows.
+                        </p>
+<pre>
+typedef struct prgdirtm {
+        long    prg_no;
+        char    comment[51];
+        char    cuttime[13];
+} PRGDIRTM;
+</pre>
+                        <dl>
+                            <dt>prg_no</dt>
+                                <dd>Program number</dd>
+                                <dd>Program number is returned.</dd>
+                            <dt>comment</dt>
+                                <dd>Comment</dd>
+                                <dd>The "Comment" stored next to the "Program number" in the CNC is returned.<br/>
+                                    The maximum length of the comment stored is 48 characters (50 characters includ-
+                                    ing leading "(" and trailing ")").<br/>
+                                    When the "Comment" is longer than 48 characters, the part after the 48th character
+                                    is ignored. When no "Comment" is registered only parentheses ("()") are returned.<br/>
+                                    The "Comment" character string is terminated with NULL character.
+                                </dd>
+                            <dt>cuttime</dt>
+                                <dd>Processing time</dd>
+                                <dd>The "Processing time" measured by the "Processing time stamp function" is returned.<br/>
+                                    The maximum length of the "Processing time" data is 10 characters ( 12 characters
+                                    including leading and trailing parentheses ).<br/>
+                                    The character string is terminated with NULL character.</dd>
+                                <blockquote>
+                                    Format : (hhhHmmMssS)+NULL (3 digits+H, 2 digits+M, 2 digits+S)
+                                </blockquote>
+                                <dd>In the following cases, only parentheses ("()+NULL") are returned.</dd>
+                                <dd>
+                                    <ol>
+                                        <li>When no "Processing time" data exists.</li>
+                                        <li>When "Comment" of the program is longer than 48 characters.</li>
+                                        <li>When the format of the "Processing time" data is changed on the CNC side to the
+                                            format other than "hhhHmmMssS".</li>
+                                    </ol>
+                                </dd>
+                                <dd>When there are more than two "Processing time" data,
+                                    the first "Processing time" data is returned.</dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                Data block length error<br/>
+                The number of readout(num_prog) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                Data number error<br/>
+                The start number of program(top_prog) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The machining time stamp option and the extended driver/library function are necessary.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B and 0i-F, 30i, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        
+        <need>This function needs the machining time stamp function.</need>
+        
+    </option>
+
+
+
+    <parameter></parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>H</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdproctime</name>
+            <file>Program/cnc_rdproctime.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdalmhistry</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdalmhistry(unsigned short FlibHndl, unsigned short s_no, unsigned short e_no, unsigned short length, ODBAHIS *his);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                Reads the alarm history data.
+                The unit of one alarm history data is called a record.
+            </p>
+            <p>
+                The operation history data and the alarm history data are automatically
+                recorded on the CNC.  When these data are accessed, it is necessary to
+                temporarily stop sampling on the CNC.
+                Therefore, it is necessary to execute "Stop logging operation history
+                data"(<a href="History/cnc_stopophis.htm" target="_parent">cnc_stopophis</a>) before this function is used.
+            </p>
+            <p>
+                And it is necessary to execute "Restart logging operation history data"
+                (<a href="History/cnc_startophis.htm" target="_parent">cnc_startophis</a>) after reading to make the sampling stop time of the
+                history data as short as possible.
+            </p>
+            <p></p>
+            <p>
+                The start/end record number means the relative number uesd at reading
+                the alarm history data.  These record numbers are valid only at the
+                period from the execution of "Stop logging operation history data"
+                until the execution of "Restart logging operation history data".
+            </p >
+            <p></p>
+            <p>
+                This function cannot be used for Series 15i,
+                so use <a href="History/cnc_rdalmhistry2.htm" target="_parent">cnc_rdalmhistry2</a> function instead of cnc_rdalmhistry function. 
+            </p>
+            <p>The alarm history data is acquired in old order.</p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the start record number.(more than 1)
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>e_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the end record number.(more than 1)
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the data block length(size of ODBAHIS structure).
+                        </p>
+                        <img src="History/almhis_vc.gif"></img><br/>
+                    </content>
+                </item>
+                <item>
+                    <name>his</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the ODBAHIS structure in which the alarm history data is stored.
+                            The ODBAHIS structure is as follows.
+                        </p>
+<pre>
+typedef struct odbahis {
+    unsigned short s_no;       /* Start record number      */
+    short          type;       /* Not used                 */
+    unsigned short e_no;       /* Most recently entered    */
+                               /* record number            */
+    struct {
+        short      dummy;       /* Not used            */
+        short      alm_grp;     /* Alarm type          */
+        short      alm_no;      /* Alarm number        */
+        char       axis_no;     /* Axis number         */
+        char       year;        /* Year                */
+        char       month;       /* Month               */
+        char       day;         /* Day                 */
+        char       hour;        /* Hour                */
+        char       minute;      /* Minute              */
+        char       second;      /* Second              */
+        char       dummy2;      /* Not used            */
+        short      len_msg;     /* Length of alarm     */
+                                /* message             */
+        char       alm_msg[32]; /* Alarm message       */
+    } alm_his[N];   /* N : Number of record */
+} ODBAHIS ;
+</pre>
+                        <dl>
+                            <dt>alm_grp</dt>
+                    <dd>Alarm type (only Series 15)</dd>
+                <ul type="disc">
+                <table class="dd">
+                                <tr>
+                        <td>bit 0</td>
+                        <td>:</td>
+                                    <td>Background P/S</td>
+                                    <td>(BG)</td>
+                                </tr>
+                <tr>
+                        <td>bit 1</td>
+                        <td>:</td>
+                                    <td>Foreground P/S</td>
+                                    <td>(PS)</td>
+                                </tr>
+                <tr>
+                        <td>bit 2</td>
+                        <td>:</td>
+                                    <td>Over heat alarm</td>
+                                    <td>(OH)</td>
+                                </tr>
+                <tr>
+                        <td>bit 3</td>
+                        <td>:</td>
+                                    <td>Sub-CPU error</td>
+                                    <td>(SB)</td>
+                                </tr>
+                <tr>
+                        <td>bit 4</td>
+                        <td>:</td>
+                                    <td>Synchronized error</td>
+                                    <td>(SN)</td>
+                                </tr>
+                <tr>
+                        <td>bit 5</td>
+                        <td>:</td>
+                                    <td>Parameter switch on</td>
+                                    <td>(SW)</td>
+                                </tr>
+                <tr>
+                        <td>bit 6</td>
+                        <td>:</td>
+                                    <td>Over travel, external data</td>
+                                    <td>(OT)</td>
+                                </tr>
+                <tr>
+                        <td>bit 7</td>
+                        <td>:</td>
+                                    <td>PMC error</td>
+                                    <td>(PC)</td>
+                                </tr>
+                <tr>
+                        <td>bit 8</td>
+                        <td>:</td>
+                                    <td>External alarm message</td>
+                                    <td>(EX)</td>
+                                </tr>
+                <tr>
+                        <td>bit 9</td>
+                        <td>:</td>
+                                    <td>(Not used)</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 10</td>
+                        <td>:</td>
+                                    <td>Serious P/S</td>
+                                    <td>(SR)</td>
+                                </tr>
+                <tr>
+                        <td>bit 11</td>
+                        <td>:</td>
+                                    <td>(Not used)</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 12</td>
+                        <td>:</td>
+                                    <td>Servo alarm</td>
+                                    <td>(SV)</td>
+                                </tr>
+                <tr>
+                        <td>bit 13</td>
+                        <td>:</td>
+                                    <td>I/O error</td>
+                                    <td>(IO)</td>
+                                </tr>
+                <tr>
+                        <td>bit 14</td>
+                        <td>:</td>
+                                    <td>Power off parameter set</td>
+                                    <td>(PW)</td>
+                                </tr>
+                <tr>
+                        <td>bit 15</td>
+                        <td>:</td>
+                                    <td>(Not used)</td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                            </ul>
+                        <dt>alm_no</dt>
+                    <dd>Alarm number<br/>
+                                Macro alarm : bit15=1(only Series 15)<br/>
+                            </dd>
+                    <dt>axis_no</dt>
+                        <dd>Axis number(from 1 to maximum controlled axis)<br/>
+                            It is unused for an unrelated alarm to the axis. 
+                        </dd>
+                    <dt>year</dt>
+                        <dd>Year   (0,..,99)<br/></dd>
+                    <dt>month</dt>
+                        <dd>Month  (1,..,12)<br/></dd>
+                    <dt>day</dt>
+                        <dd>Day    (1,..,31)<br/></dd>
+                    <dt>hour</dt>
+                        <dd>Hour   (0,..,23)<br/></dd>
+                    <dt>minute</dt>
+                        <dd>Minute (0,..,59)<br/></dd>
+                    <dt>second</dt>
+                        <dd>Second (0,..,59)<br/></dd>
+                    <dt>len_msg</dt>
+                        <dd>Length of alarm message (0,..,32)<br/></dd>
+                    <dt>alm_msg</dt>
+                        <dd>Alarm message<br/></dd>
+                    </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                <a href="History/cnc_stopophis.htm" target="_parent">cnc_stopophis</a> function has not been executed.
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                Data block length error<br/>
+                Size of ODBAHIS structure(length) is wrong.<br/>
+                (e_no-s_no+1) * sizeof(data[0]) + 6 &gt; length
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                Data number error<br/>
+                The specification of the record number (s_no, e_no) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The extended driver/library function is necessary.
+            </content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            This function needs the extended driver/library function.
+        </hssb>
+
+        <ethr>
+            <p>The Ethernet function and the extended driver/library function are necessary.</p>
+            <p>However, in case of Series 16i/18i/21i-B, 0i-B/C, the required CNC option is as follows.</p>
+            <p>When Embedded Ethernet is used,</p>
+            <p><ul>above two optional functions are not required.</ul></p>
+            <p>When Ethernet board is used,</p>
+            <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_stopophis</name>
+            <file>History/cnc_stopophis.htm</file>
+        </item>
+        <item>
+            <name>cnc_startophis</name>
+            <file>History/cnc_startophis.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdalmhisno</name>
+            <file>History/cnc_rdalmhisno.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdalmhistry2</name>
+            <file>History/cnc_rdalmhistry2.htm</file>
+        </item>
+        <item>
+            <name>cnc_clearophis</name>
+            <file>History/cnc_clearophis.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

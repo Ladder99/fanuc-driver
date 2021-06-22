@@ -1,0 +1,580 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdwavedata</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>
+            FWLIBAPI short WINAPI cnc_rdwavedata(unsigned short FlibHndl, short channel, short axis, long rd_pntr, long *number, ODBWVDT *wvdt); 
+        </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Reads waveform diagnosis data.</p>
+            <p>
+                In case of using this function, the waveform diagnosis screen of CNC must not be used.<br/>
+                If used, the behavior of this function is not guaranteed.
+            </p>
+                In case that the waveform diagnosis parameter is changed, the correct data cannot be read
+                if <a href="Wave/cnc_wavestart.htm" target="_parent">cnc_wavestart</a> function is not executed.
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle.<br/>
+                            See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>channel</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                           Specify the channel number to be read.
+                        </p>
+                        <table class="dd">
+                            <tr>
+                                <td>Series 15</td>
+                                <td>:</td>
+                                <td>0,..,3, 6,..,11</td>
+                            </tr>
+                            <tr>
+                                <td>Series 15i</td>
+                                <td>:</td>
+                                <td>0,..,3, 8,..,11</td>
+                            </tr>
+                            <tr>
+                                <td>Series 16/18, 16i/18i/21i, 0i</td>
+                                <td>:</td>
+                                <td>0,..,7</td>
+                            </tr>
+                            <tr>
+                                <td>Series 16i/18i-W</td>
+                                <td>:</td>
+                                <td>6, 7</td>
+                            </tr>
+                        </table>
+                    </content>
+                </item>
+                <item>
+                    <name>axis</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify axis number of data to be read.(1 to number of controlled axis)<br/>
+                            This is invalid except channel number 0 to 5.<br/>
+                            In case of Series 16/18, 16i/18i/21i, 0i, and Series 15/15i, 16i/18i-W,
+                            this is not used.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>rd_pntr</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the start pointer to read.</p>
+                        <blockquote>
+                        example)<br/>
+                        In case of the top, '0' should be specified.<br/>
+                        In case of the 10th from the top, '9' should be specified.
+                        </blockquote>
+                    </content>
+                </item>
+                <item>
+                    <name>number</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                            Specify the address of the variable which shows the number of data
+                            of the waveform diagnosis data.<br/>
+                            Set the read number of data to this variable(*number).<br/>
+                            After executing this function, the number of data which has been read actually is set.
+                        </p>
+                        <p>
+                            The maximum data number which can be sampled is shown in the
+                            following table according to the condition and the CNC MODEL.
+                        </p>
+
+                    <table class="dd" border="1">
+                        <thead>
+                        <tr>
+                            <th>MODEL</th>
+                            <th colspan="2">Series 16/18, 16i/18i/21i, 0i</th>
+                            <th colspan="2">Series 15</th>
+                            <th>Series 15i</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>condition</td>
+                            <td>0/1/2</td>
+                            <td>100/101/102</td>
+                            <td>0/1/2</td>
+                            <td>100/101/102</td>
+                        </tr>
+                        <tr>
+                            <td>maximum number(n)</td>
+                            <td>4096</td>
+                            <td>8192</td>
+                            <td>prm.15#6=<br/>0:1000<br/>1:5000</td>
+                            <td>2000</td>
+                            <td>5001</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    </content>
+                </item>
+                <item>
+                    <name>wvdt</name>
+                    <type>out</type>
+                    <content>
+                    <div class="dd">
+                        <p>
+                            Pointer to the ODBWVDT structure including the waveform diagnosis data.<br/>
+                            The ODBWVDT structure is as follows.
+                        </p>
+<pre>
+typedef struct odbwvdt {
+    short   channel ;   /* channel number */
+    short   kind ;      /* kind of waveform data */
+    union {
+        short   axis ;  /* axis number of waveform data */
+        struct {        /* machine signal */
+            char    adr ; /* kind of PMC address */
+            char    bit ; /* bit number */
+            short   no ;  /* PMC address number */
+        } io ;
+    } u ;
+    char    year ;              /* year (0&#60;-&#62;99) */
+    char    month ;             /* month (1&#60;-&#62;12) */
+    char    day ;               /* day (1&#60;-&#62;31) */
+    char    hour ;              /* hour (0&#60;-&#62;23) */
+    char    minute ;            /* minute (0&#60;-&#62;59) */
+    char    second ;            /* second (0&#60;-&#62;59) */
+    short   t_cycle ;           /* sampling cycle (msec) */
+    short   data[8192] ;        /* waveform diagnosis data */
+} ODBWVDT ;
+</pre>
+
+<dl>
+    <dt>channel</dt>
+    <dd>channel number</dd>
+    <dd>The channel number which has been read actually is set.</dd>
+    <br/>
+
+    <dt>kind</dt>
+    <dd>kind of waveform data</dd>
+    <dd>
+        Refer to the kind of waveform data in <a href="Wave/cnc_rdwaveprm.htm" target="_parent">cnc_rdwaveprm</a> function.
+    <ul>
+        <li>In case that "kind" is except 13(machine signal)</li>
+            <dl>
+                <dt>axis</dt>
+                <dd>axis number of waveform data( Series 15/15i )
+                    <table border="1">
+                        <tr><th>axis number of waveform data</th><th></th></tr>
+                        <tr><td>0,..,7    </td><td>1 to number of controlled axis : axis number</td></tr>
+                        <tr><td>9       </td><td>1 to number of path : path number</td></tr>
+                        <tr><td>10,..,11  </td><td>1 to number of spindle : spindle number</td></tr>
+                    </table>
+                </dd>
+                <dd>axis number of waveform data( Series 16/18, 16i/18i/21i, 0i )
+                    <table border="1">
+                        <tr><th>channel number</th><th>kind of waveform data</th><th/></tr>
+                        <tr><td>0,..,5</td><td/><td>1,..,number of controlled axis : axis number</td></tr>
+                        <tr><td>6, 7</td><td>0,..,3, 5,..,7</td><td>1,..number of controlled axis : axis number</td></tr>
+                        <tr><td>6, 7</td><td>10, 11</td><td>1,..number of spindle : spindle number</td></tr>
+                    </table>
+                </dd>
+            </dl>
+            <br/>
+        <li>In case that "kind" is 13(machine signal)</li>
+            <dl>
+                <dt>adr</dt>
+                <dd>kind of PMC address of machine signal</dd>
+                <dd>The kind of the PMC address which is traced is stored with ASCII code.</dd>
+                <dd>kind of PMC address to be set : G, F, Y, X</dd>
+                
+                <dt>bit</dt>
+                <dd>bit number of machine signal</dd>
+                <dd>The bit number of PMC address which is traced is stored.</dd>
+                <dd>range of bit number which is stored : 0,..,7</dd>
+                
+                <dt>no</dt>
+                <dd>number of PMC address of machine signal</dd>
+                <dd>The PMC address number which is traced is stored.</dd>
+                <dd>
+                    The range of stored number is shown in <a href="Pmc/pmc_rdpmcrng.htm" target="_parent">pmc_rdpmcrng</a>
+                </dd>
+            </dl>
+    </ul>
+    </dd>
+    <br/>
+
+    <dt>year, month, day, hour, minute, second</dt>
+    <dd>If condition is 0,..,20, these are the date when sampling is started.</dd>
+    <dd>If condition is 100,..,120, these are the date when sampling is stopped.
+        <table class="dd">
+            <tr><td>year    </td><td>Year (0,..,99)  </td></tr>
+            <tr><td>month   </td><td>Month (1,..,12) </td></tr>
+            <tr><td>day     </td><td>Day (1,..,31)   </td></tr>
+            <tr><td>hour    </td><td>Hour (0,..,23)  </td></tr>
+            <tr><td>minute  </td><td>Minute (0,..,59)</td></tr>
+            <tr><td>second  </td><td>Second (0,..,59)</td></tr>
+        </table>
+    </dd>
+    <br/>
+
+    <dt>t_cycle</dt>
+    <dd>sampling cycle (msec)
+    <table class="dd" border="1">
+        <thead>
+        <tr>
+            <th>MODE</th>
+            <th colspan="2">Series 16/18, 16i/18i/21i, 0i</th>
+            <th colspan="2">Series 15</th>
+            <th colspan="2">Series 15i</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>condition</td>
+            <td>0/1/2</td>
+            <td>100/101/102</td>
+            <td>0/1/2</td>
+            <td>100/101/102</td>
+            <td>kind is except 13</td>
+            <td>kind is 13</td>
+        </tr>
+        <tr>
+            <td>cycle</td>
+            <td>2</td>
+            <td>8</td>
+            <td>2/4/8/16</td>
+            <td>8</td>
+            <td>2/4/8/16</td>
+            <td>8/16</td>
+        </tr>
+        </tbody>
+    </table>
+    </dd>
+    <br/>
+
+    <dt>data</dt>
+    <dd>waveform diagnosis data</dd>
+    <dd>The data which is specified by "kind" is stored.(In case of kind=13, this is 0/1. Othewise, this is binary data)</dd>
+    <dd>
+        Concerning the unit, etc., refer to the kind of the waveform data
+        in <a href="Wave/cnc_rdwaveprm.htm" target="_parent">cnc_rdwaveprm</a> function.
+    </dd>
+</dl>
+</div>
+
+<p class="label">Summary of the reading data
+<ul>
+    <li>In case that "kind" is except 13(machine signal)</li>
+        <table border="1" frame="hsides" rules="groups">
+            <thead>
+            <tr><th>structure membar</th><th>size</th><th>kind</th><th>effecitve range(binary)</th></tr>
+            </thead>
+            <tbody>
+            <tr><td>channel </td><td>2  </td><td>channel number</td><td>0,..,        </td></tr>
+            <tr><td>kind    </td><td>2  </td><td>kind of waveform data</td><td>0,..,12  </td></tr>
+            <tr><td>axis    </td><td>2  </td><td>axis number of waveform data</td><td>1,..,number of controlled axis</td></tr>
+            <tr><td>(dummy) </td><td>2  </td><td>                   </td><td>       </td></tr>
+            <tr><td>year    </td><td>1  </td><td>year                 </td><td>0,..,99  </td></tr>
+            <tr><td>month   </td><td>1  </td><td>manth                 </td><td>1,..,12  </td></tr>
+            <tr><td>day     </td><td>1  </td><td>day                 </td><td>1,..,31  </td></tr>
+            <tr><td>hour    </td><td>1  </td><td>hour                 </td><td>0,..,23  </td></tr>
+            <tr><td>minute  </td><td>1  </td><td>minute                 </td><td>0,..,59  </td></tr>
+            <tr><td>second  </td><td>1  </td><td>second                </td><td>0,..,59  </td></tr>
+            <tr><td>t_cycle </td><td>2  </td><td>sampling cycle   </td><td>2/4/8/16(ms)</td></tr>
+            <tr><td>data[0] </td><td>2  </td><td>waveform diagnosis data     </td><td>       </td></tr>
+            <tr><td>data[1] </td><td>2  </td><td>waveform diagnosis data     </td><td>       </td></tr>
+            <tr><td>&#160;&#160;:</td><td>&#160;&#160;:</td><td>&#160;&#160;:</td><td>  </td></tr>
+            <tr><td>data[n-1]</td><td>2 </td><td>waveform diagnosis data     </td><td>       </td></tr>
+            </tbody>
+        </table>
+    <li>In case that "kind" is 13(machine signal)</li>
+        <table border="1" frame="hsides" rules="groups">
+            <thead>
+            <tr><th>structure member</th><th>size</th><th>kind</th><th>effecitve range(binary)</th></tr>
+            </thead>
+            <tbody>
+            <tr><td>channel </td><td>2  </td><td>channel number    </td><td>6,..,        </td></tr>
+            <tr><td>kind    </td><td>2  </td><td>kind of waveform data   </td><td>13     </td></tr>
+            <tr><td>adr     </td><td>1  </td><td>kind of PMC address of machine signal</td><td>ASCII code(G,F,Y,X)   </td></tr>
+            <tr><td>bit     </td><td>1  </td><td>bit number of machine signal</td><td>0,..,7  </td></tr>
+            <tr><td>no      </td><td>2  </td><td>PMC address number</td><td>0,.., </td></tr>
+            <tr><td>year    </td><td>1  </td><td>year                 </td><td>0,..,99  </td></tr>
+            <tr><td>month   </td><td>1  </td><td>manth                 </td><td>1,..,12  </td></tr>
+            <tr><td>day     </td><td>1  </td><td>day                 </td><td>1,..,31  </td></tr>
+            <tr><td>hour    </td><td>1  </td><td>hour                 </td><td>0,..,23  </td></tr>
+            <tr><td>minute  </td><td>1  </td><td>minute                </td><td>0,..,59  </td></tr>
+            <tr><td>second  </td><td>1  </td><td>second                </td><td>0,..,59  </td></tr>
+            <tr><td>t_cycle </td><td>2  </td><td>sampling cycle   </td><td>2/4/8/16(ms)</td></tr>
+            <tr><td>data[0] </td><td>2  </td><td>waveform diagnosis data</td><td>0 or 1</td></tr>
+            <tr><td>data[1] </td><td>2  </td><td>waveform diagnosis data</td><td>0 or 1</td></tr>
+            <tr><td>&#160;&#160;:</td><td>&#160;&#160;:</td><td>&#160;&#160;:</td><td>&#160;&#160;:</td></tr>
+            <tr><td>data[n-1]</td><td>2 </td><td>waveform diagnosis data</td><td>0 or 1</td></tr>
+            </tbody>
+        </table>
+</ul>
+</p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                function is not executed<br/>
+                <a href="Wave/cnc_wavestop.htm" target="_parent">cnc_wavestop</a> function has not been executed.
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                data block length error<br/>
+                The number of data(*number) is less than 1.
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                data number error<br/>
+                Channel number(channel) is out of range.
+            </content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>
+                data attribute error<br/>
+                Axis number(axis) is out of range.
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                data error<br/>
+                Start pointer to read(rd_pntr) is out of range.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                no option<br/>
+                The extended driver/library function is necessary.
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                CNC parameter error( Series 16/18, 16i/18i/21i, 0i )<br/>
+                3112#0=0 when CNC is turned on.<br/>
+                set 3112#0=1 and reboot.
+            </content>
+        </item>
+        <item>
+            <name>EW_BUFFER</name>
+            <content>
+                buffer empty<br/>
+                There is no specified waveform diagnosis data.<br/>
+                (The case that the condition of a waveform diagnosis does not correspond to the specified
+                channel number is included.)
+            </content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 16/18, 16i/18i/21i, 0i</li>
+                    3112#0=1 (must be set)
+            </ul>
+        </type>
+        <add></add>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdwaveprm</name>
+            <file>Wave/cnc_rdwaveprm.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdwaveprm2</name>
+            <file>Wave/cnc_rdwaveprm2.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrwaveprm</name>
+            <file>Wave/cnc_wrwaveprm.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrwaveprm2</name>
+            <file>Wave/cnc_wrwaveprm2.htm</file>
+        </item>
+        <item>
+            <name>cnc_wavestart</name>
+            <file>Wave/cnc_wavestart.htm</file>
+        </item>
+        <item>
+            <name>cnc_wavestop</name>
+            <file>Wave/cnc_wavestop.htm</file>
+        </item>
+        <item>
+            <name>cnc_wavestat</name>
+            <file>Wave/cnc_wavestat.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

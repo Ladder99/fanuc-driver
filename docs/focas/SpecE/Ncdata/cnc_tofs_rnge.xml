@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+    <title>cnc_tofs_rnge</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_tofs_rnge(unsigned short FlibHndl,short number, short type,ODBDATRNG *tofsr);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Reads the effective setting range of tool offset value specified by
+        "number", "type".<br/>
+            The effective setting range is stored in "data_min", "data_max" of
+        ODBDATRNG with signed binary format.</p>
+
+            <p>The unit of offset value is as follows.</p>
+
+            <ul>
+                <li class="xis">Series 30i</li>
+                <table border="1">
+                    <tr>
+                        <th>5042#3<br/>(OFE)</th>
+                        <th>5042#2<br/>(OFD)</th>
+                        <th>5042#1<br/>(OFC)</th>
+                        <th>5042#0<br/>(OFA)</th>
+                        <th>Linear axis<br/>mm input<br/>[mm]</th>
+                        <th>Linear axis<br/>inch input<br/>[inch]</th>
+                    </tr>
+                    <tr>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>1</td>
+                        <td>0.01</td>
+                        <td>0.001</td>
+                    </tr>
+                    <tr>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0.001</td>
+                        <td>0.0001</td>
+                    </tr>
+                    <tr>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>1</td>
+                        <td>0</td>
+                        <td>0.0001</td>
+                        <td>0.00001</td>
+                    </tr>
+                    <tr>
+                        <td>0</td>
+                        <td>1</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0.00001</td>
+                        <td>0.000001</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0.000001</td>
+                        <td>0.0000001</td>
+                    </tr>
+                </table>
+                <br/>
+            </ul>
+
+            <span class="xis">
+            <ul>
+                <li>Series 0i-D/F</li>
+                <table border="1">
+                    <tr>
+                        <th>5042#1<br/>(OFC)</th>
+                        <th>5042#0<br/>(OFA)</th>
+                        <th>Linear axis<br/>mm input<br/>[mm]</th>
+                        <th>Linear axis<br/>inch input<br/>[inch]</th>
+                    </tr>
+                    <tr>
+                        <td>0</td>
+                        <td>1</td>
+                        <td>0.01</td>
+                        <td>0.001</td>
+                    </tr>
+                    <tr>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0.001</td>
+                        <td>0.0001</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>0</td>
+                        <td>0.0001</td>
+                        <td>0.00001</td>
+                    </tr>
+                </table>
+                <br/>
+            </ul>
+            </span>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>number</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the tool offset number.<br/>
+                           The available number of tool offset can be got by <a href="ncdata/cnc_rdtofsinfo.htm" target="_parent">cnc_rdtofsinfo</a> function.</p>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the tool offset type.(see the following table)</p>
+                        <ul>
+                            <li>Machining Center Series (M series)</li>
+                            <table border="1">
+                                <tr>
+                                    <td/>
+                                    <td>Cutter radius</td>
+                                    <td>Tool length</td>
+                                    <td>Imaginary tool nose</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Wear</td>
+                                    <td>0</td>
+                                    <td>2</td>
+                                    <td>6</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Geometry</td>
+                                    <td>1</td>
+                                    <td>3</td>
+                                    <td>7</td>
+                                </tr>
+                            </table>
+                            Specify "cutter radius" in case of no distinction of cutter
+                   radius/tool length, and "wear" in case of no distinction of
+                   wear/geometry.<br/>
+                            <br/>
+                            <li>Lathe Series (T series)</li>
+                            <table border="1">
+                                <tr>
+                                    <td/>
+                                    <td>X axis</td>
+                                    <td>Z axis</td>
+                                    <td>Nose R</td>
+                                    <td>Imaginary tool nose</td>
+                                    <td>Y axis</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Wear</td>
+                                    <td>0</td>
+                                    <td>2</td>
+                                    <td>4</td>
+                                    <td>6</td>
+                                    <td>8</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Geometry</td>
+                                    <td>1</td>
+                                    <td>3</td>
+                                    <td>5</td>
+                                    <td>7</td>
+                                    <td>9</td>
+                                </tr>
+                            </table>
+                            Specify "wear" in case of no distinction of wear/geometry.<br/>
+                            <br/>
+                            <li>Lathe Series/2nd geometry compensation</li>
+                            <table border="1">
+                                <tr>
+                                    <td/>
+                                    <td>X axis</td>
+                                    <td>Z axis</td>
+                                    <td>Y axis</td>
+                                </tr>
+                                <tr>
+                                    <td>Wear</td>
+                                    <td>100</td>
+                                    <td>101</td>
+                                    <td>102</td>
+                                </tr>
+                            </table>
+                        </ul>
+                    </content>
+                </item>
+                <item>
+                    <name>tofsr</name>
+                    <type>out</type>
+                    <content>
+                        <p>Specify the pointer of the ODBDATRNG structure that stores the
+                upper and lower limit of tool offset value.
+                The ODBDATRNG structure is as follows.</p>
+<pre>
+typedef struct odbdatrng {
+    long    data_min ;   /* lower limit */
+    long    data_max ;   /* upper limit */
+    long    status;      /* status of setting value */
+} ODBDATRNG ;
+</pre>
+                        <dl>
+                            <dt>data_min</dt>
+                            <dd>lower limit of effective setting range</dd>
+                            <br/>
+                            <dt>data_max</dt>
+                            <dd>upper limit of effective setting range</dd>
+                            <br/>
+                            <dt>status</dt>
+                            <dd>status of setting value<br/>
+                                <table class="dd">
+                                    <tr>
+                                        <td>0</td>
+                                        <td>:</td>
+                                        <td>in-range of effective setting range</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>:</td>
+                                        <td>out-range of effective setting range</td>
+                                    </tr>
+                                </table>
+                            </dd>
+                            <br/>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>Data number error<br/>Offset number(number) is wrong.</content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>Data attribute error<br/>Offset type(type) is wrong.</content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>Effective setting range cannot be acquired<br/>
+                     In order to get more information for this return value, execute 
+                     <a href="misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr
+                     </a> function.  The following detail status will be set onto the
+                     member, err_no of ODBERR structure.
+                    <br/>
+                    <table class="dd">
+                        <tr>
+                            <td>0</td>
+                            <td>:</td>
+                            <td>error other than EW_DATA</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>:</td>
+                            <td>setting of input data range check is void</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>:</td>
+                            <td>setting of input data range check is wrong
+                                    (upper or lower limit is invalid)</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>:</td>
+                            <td>setting of input data range check is wrong
+                                    (offset number overlaps with others)</td>
+                        </tr>
+                     </table>
+            </content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 0i-D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <type>
+                <li class="xis">Series 30i</li>
+                <table>
+                    <colgroup valign="top" width="30"/>
+                    <colgroup valign="top" width="230"/>
+                    <colgroup valign="top"/>
+                    <tr>
+                        <td>M</td>
+                        <td>Tool offset extension</td>
+                        <td>(32)/64/99/200/400/499/999/2000 sets</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Tool offset memory</td>
+                        <td>(A)/B/C</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Tool radius/Cutter radius compensation</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>The complex machining tool offset</td>
+                        <td></td>
+                    </tr>
+
+                    <tr>
+                        <td>T</td>
+                        <td>Tool offset extension</td>
+                        <td>(32)/64/99/200/400/499/999/2000 sets</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Geometry/wear offset</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Tool radius/Cutter radius compensation</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Y axis offset</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>2nd geometry tool offset</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>4th/5th Axis Offset Function</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>The changing active offset</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>The complex machining tool offset</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <br/>
+
+                <span class="xis">
+                <li>Series 0i-D/F</li>
+                <table>
+                    <colgroup valign="top" width="30"/>
+                    <colgroup valign="top" width="230"/>
+                    <colgroup valign="top"/>
+                    <tr>
+                        <td>M</td>
+                        <td>Tool offset extension</td>
+                        <td>32/(400) sets</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Tool offset memory</td>
+                        <td>A/(C)</td>
+                    </tr>
+                    <tr>
+                        <td>T</td>
+                        <td>Tool offset extension</td>
+                        <td>32/(99) sets</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Geometry/wear offset</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Cutter radius compensation</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Y axis offset</td>
+                        <td></td>
+                    </tr>
+                </table>
+                </span>
+                <p>* () : Basic</p>
+            <br/>
+        </type>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <li>Series 30i</li>
+            <div class="dd">5042#3,#2,#1,#0<br/>
+                            5009#5(only M series)<br/>
+                            5024</div><br/>
+            <li>Series 0i-D</li>
+            <div class="dd">5042#1,#0<br/>
+                            5009#5(only M series)<br/>
+                            5024</div><br/>
+            <li>Series 0i-F</li>
+            <div class="dd">5042#1,#0<br/>
+                            5009#5(only M series)<br/>
+                            5024<br/>
+                            8132#1=1 (must be set)</div><br/>
+        </type>
+        <add></add>
+    </parameter>
+    <is_parameter>
+        <type>
+            <div class="dd">5042#3,#2,#1,#0<br/>
+                            5009#5(only M series)<br/>
+                            5024</div><br/>
+        </type>
+        <add></add>
+    </is_parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

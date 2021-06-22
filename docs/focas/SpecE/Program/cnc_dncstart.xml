@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_dncstart</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_dncstart(unsigned short FlibHndl);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>It is possible to get CNC to run an NC program (NC command data),<br/>
+               which is made by the application program, directly (DNC operation).<br/>
+               The application program requests CNC to start DNC operation by this function.
+            </p>
+            <p>In case of Series 15, the parameter No.20 must be set to '15'.<br/>
+               Even if this setting is not done, this function does not return error.<br/>
+               In case of Series 16/18/21, 16i/18i/21i, 0i, Power Mate i, "DMMC" signal(DI) &#60;G042#7&#62;must be on.<br/>
+               Even if this setting is not done, this function does not return error.
+            </p>
+            <p>Start the data transferring by using the <a href="Program/cnc_dnc.htm" target="_parent">cnc_dnc</a> function or the <a href="Program/cnc_cdnc.htm" target="_parent">cnc_cdnc</a> function after executing this function and checking that the "STL" signal(DO) is on.
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle.<br/>
+                            See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_BUSY</name>
+            <content>
+                Busy<br/>
+                <li>cnc_dncstart function has been executed.</li>
+                    Terminate DNC operation by using <a href="Program/cnc_dncend.htm" target="_parent">cnc_dncend</a> function.<br/>
+                <br/>
+                <li>alarm in CNC side(Series 16/18/21, 16i/18i/21i, 0i, Power Mate i)</li>
+                    Reset the alarm on CNC.
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                CNC parameter error<br/>
+                The following CNC parameter must be set.<br/>
+                Series 16/18, 16i/18i/21i, 0i<br/>
+                <span class="dd">8706#1 = 0</span>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+            <li>Series 15</li>
+                    0020 = 15 (must be set)<br/>
+                    0000#0 (influenced by setting)<br/>
+            <br/>
+            <li>Series 16/18/21, 16i/18i/21i, 0i</li>
+                    0000#0 (influenced by setting)<br/>
+                    8706#0 (influenced by setting) (This parameter is effective only in path 1. Set 0 except the 1st path.)<br/>
+                    8706#1 = 0 (must be set)<br/>
+            <br/>
+            <li>Power Matre i</li>
+                    0000#0 (influenced by setting)
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <mode>
+        <cmn>
+            <ul>
+            <li>Series 15</li>
+                    It is necessary to be set in TAPE mode.<br/>
+            <br/>
+            <li>Series 16/18/21, 16i/18i/21i, 0i, Power Mate i</li>
+                    It is necessary to be set in MEM mode, and "DMMC" signal(DI), G042#7=1.
+            </ul>
+        </cmn>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>H</d>
+            <h>H</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_dnc</name>
+            <file>Program/cnc_dnc.htm</file>
+        </item>
+        <item>
+            <name>cnc_cdnc</name>
+            <file>Program/cnc_cdnc.htm</file>
+        </item>
+        <item>
+            <name>cnc_dncend</name>
+            <file>Program/cnc_dncend.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

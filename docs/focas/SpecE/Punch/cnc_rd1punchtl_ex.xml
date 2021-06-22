@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rd1punchtl_ex</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>
+            FWLIBAPI short WINAPI cnc_rd1punchtl_ex(unsigned short FlibHndl, IODBPUNCH1_EX *buf);
+        </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>Various tool registration data (tool number, tool punch frequency, and tool shape, etc.) corresponding to the specified tool registration number is read.</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>buf</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                           Pointer for returning various tool registration data (tool number, tool punch frequency, and tool shape, etc.) to a iodbpunch1_ex structure.
+                        </p>
+<pre>
+typedef struct iodbpunch1_ex {
+    unsigned short  number ;            /* Data number(N)      */
+    unsigned short  attr ;              /* Data attribute(M)   */
+    union {
+        unsigned short  u2data ;        /* Unsigned 2 bite     */
+        short           s2data ;        /* Signed 2 bite       */
+        unsigned long   u4data ;        /* Unsigned 4 bite     */
+        long            s4data ;        /* Signed 4 bite       */
+        unsigned long   u8data[2] ;     /* Unsigned 8 bite     */
+    } u ;
+    short           decimal ;           /* Decimal places      */
+    short           reserve ;           /* Reserve             */
+} IODBPUNCH1_EX ;
+</pre>
+                        <dl>
+                            <dt>number</dt>
+                                <dd>
+                                    Specify Tool registration number .
+                                </dd>
+                            <dt>attr</dt>
+                                <dd>
+                                    Specify kind of Read data.
+                                </dd>
+                            <dt>buf.u</dt>
+                                <dd>
+                                    The Read data is stored by each data form.
+                                </dd>
+                                <dd>
+                                    The kind of the data number that can be specified, the data attribute , and the read data is shown in the following tables.
+                                </dd>
+                                <dd>(a) Without the tool data setting function</dd>
+                                <ul>
+                                <table border="1">
+                                    <colgroup>
+                                    <colgroup width="100">
+                                    <tr>
+                                        <th>Kind of read data</th> <th>number</th>
+                                        <th>attr</th> <th>Member at storage destination</th><th>Range of value</th>
+                                    </tr>
+                                    <tr> <td >Number of use tools</td>                       <td>0</td>  <td>0</td>  <td>u2data</td>           <td>0～136</td>                                        </tr>
+                                    <tr> <td >Number of turret calculations</td>             <td>0</td>  <td>1</td>  <td>u2data</td>           <td>0～136</td>                                        </tr>
+                                    <tr> <td >Starting point tool number</td>                <td>0</td>  <td>2</td>  <td>u2data</td>           <td>0～9999</td>                                       </tr>
+                                    <tr> <td >Amount of turret axis movement</td>            <td>0</td>  <td>3</td>  <td>u4data , decimal</td> <td>Refer to standard parameter setting table (B)</td> </tr>
+                                    <tr> <td >Total punch frequency</td>                     <td>0</td>  <td>4</td>  <td>u8data</td>           <td>0～999999999999999999</td>                         </tr>
+                                    <tr> <td >Tool number</td>                               <td>Nr</td> <td>0</td>  <td>u2data</td>           <td>0～9999</td>                                       </tr>
+                                    <tr> <td >Punch number</td>                              <td>Nr</td> <td>1</td>  <td>u4data</td>           <td>0～65535</td>                                      </tr>
+                                    <tr> <td >Amount of X axis tool position correction</td> <td>Nr</td> <td>2</td>  <td>s4data , decimal</td> <td>Refer to standard parameter setting table (A)</td> </tr>
+                                    <tr> <td >Amount of Y axis tool position correction</td> <td>Nr</td> <td>3</td>  <td>s4data , decimal</td> <td>Refer to standard parameter setting table (A)</td> </tr>
+                                    <tr> <td >Turret calculation position</td>               <td>Nr</td> <td>4</td>  <td>u4data , decimal</td> <td>Refer to standard parameter setting table (B)</td> </tr>
+                                    <tr> <td >Tool number for tool change</td>               <td>Nr</td> <td>5</td>  <td>u2data</td>           <td>0～9999</td>                                       </tr>
+                                    <tr> <td >Tool life</td>                                 <td>Nr</td> <td>6</td>  <td>u4data</td>           <td>0～65535</td>                                      </tr>
+                                    <tr> <td >Tool shape for graphic drawing(C)</td>         <td>Nr</td> <td>7</td>  <td>u2data</td>           <td>0～99</td>                                         </tr>
+                                    <tr> <td >Size of tool for graphic drawing(I)</td>       <td>Nr</td> <td>8</td>  <td>u4data , decimal</td> <td>Refer to standard parameter setting table (B)</td> </tr>
+                                    <tr> <td >Size of tool for graphic drawing(J)</td>       <td>Nr</td> <td>9</td>  <td>u4data , decimal</td> <td>Refer to standard parameter setting table (B)</td> </tr>
+                                    <tr> <td >Angle of tool for graphic drawing(K)</td>      <td>Nr</td> <td>10</td> <td>u4data , decimal</td> <td>IS-Bの場合、0.0～359.999</td>                      </tr>
+                                </colgroup>
+                                </colgroup>
+                                </table>
+                                </ul>
+                            <br/>
+                                <dd>Nr: Tool registration number ( =1～136 )</dd>
+
+                                <dd>※For multi tool control</dd>
+                                <ul>
+                                <table border="1">
+                                    <colgroup>
+                                    <colgroup width="100">
+                                    <tr>
+                                        <th>Kind of read data</th> <th>number</th>
+                                        <th>attr</th> <th>Member at storage destination</th><th>Range of value</th>
+                                    </tr>
+                                    <tr> <td >Small tool number</td>                         <td>Nm</td> <td>0</td>  <td>u2data</td>           <td>0～9999</td>                                       </tr>
+                                    <tr> <td >Small tool calculation angle</td>              <td>Nm</td> <td>1</td>  <td>s4data , decimal</td> <td>0.0-359.999 in case of IS-B</td>                   </tr>
+                                    <tr> <td >Amount of Y axis tool position correction</td> <td>Nm</td> <td>2</td>  <td>s4data , decimal</td> <td>Refer to standard parameter setting table (A)</td> </tr>
+                                    <tr> <td >Tool shape for graphic drawing(C)</td>         <td>Nm</td> <td>3</td>  <td>u2data</td>           <td>0～99</td>                                         </tr>
+                                    <tr> <td >Size of tool for graphic drawing(I)</td>       <td>Nm</td> <td>4</td>  <td>u4data , decimal</td> <td>Refer to standard parameter setting table (B)</td> </tr>
+                                    <tr> <td >Size of tool for graphic drawing(J)</td>       <td>Nm</td> <td>5</td>  <td>u4data , decimal</td> <td>Refer to standard parameter setting table (B)</td> </tr>
+                                    <tr> <td >Angle of tool for graphic drawing(K)</td>      <td>Nm</td> <td>6</td>  <td>u4data , decimal</td> <td>0.0～359.999 in case of IS-B</td>                  </tr>
+                                </colgroup>
+                                </colgroup>
+                                </table>
+                                </ul>
+                            <br/>
+                                <dd>Nm: Multitool tool registration number + 200( =201～264 )</dd>
+
+
+
+
+
+                                <dd>(b) With the tool data setting function</dd>
+                                <ul>
+                                <table border="1">
+                                    <colgroup>
+                                    <colgroup width="100">
+                                    <tr>
+                                        <th>Kind of read data</th> <th>number</th>
+                                        <th>attr</th> <th>Member at storage destination</th><th>Range of value</th>
+                                    </tr>
+                                    <tr> <td >Number of use tools</td>                       <td>0</td>  <td>0</td>  <td>u2data</td>           <td>0～9999</td>                                       </tr>
+                                    <tr> <td >Number of turret calculations</td>             <td>0</td>  <td>1</td>  <td>u2data</td>           <td>0～9999</td>                                       </tr>
+                                    <tr> <td >Starting point tool number</td>                <td>0</td>  <td>2</td>  <td>u2data/u4data</td>    <td>0～99999999</td>                                   </tr>
+                                    <tr> <td >Amount of turret axis movement</td>            <td>0</td>  <td>3</td>  <td>u4data , decimal</td> <td>Refer to standard parameter setting table (B)</td> </tr>
+                                    <tr> <td >Total punch frequency</td>                     <td>0</td>  <td>4</td>  <td>u8data</td>           <td>0～999999999999999999</td>                         </tr>
+                                    <tr> <td >Tool number</td>                               <td>Nr</td> <td>0</td>  <td>u2data/u4data</td>    <td>0～99999999</td>                                   </tr>
+                                    <tr> <td >Punch number</td>                              <td>Nr</td> <td>1</td>  <td>u2data/u4data</td>    <td>0～999999999</td>                                  </tr>
+                                    <tr> <td >Amount of X axis tool position correction</td> <td>Nr</td> <td>2</td>  <td>s4data , decimal</td> <td>Refer to standard parameter setting table (A)</td> </tr>
+                                    <tr> <td >Amount of Y axis tool position correction</td> <td>Nr</td> <td>3</td>  <td>s4data , decimal</td> <td>Refer to standard parameter setting table (A)</td> </tr>
+                                    <tr> <td >Turret calculation position</td>               <td>Nr</td> <td>4</td>  <td>u4data , decimal</td> <td>Refer to standard parameter setting table (B)</td> </tr>
+                                    <tr> <td >Tool number for tool change</td>               <td>Nr</td> <td>5</td>  <td>u2data/u4data</td>    <td>0～99999999</td>                                   </tr>
+                                    <tr> <td >Tool life</td>                                 <td>Nr</td> <td>6</td>  <td>u2data/u4data</td>    <td>0～999999999</td>                                  </tr>
+                                    <tr> <td >Tool shape for graphic drawing(C)</td>         <td>Nr</td> <td>7</td>  <td>u2data</td>           <td>0～99</td>                                         </tr>
+                                    <tr> <td >Size of tool for graphic drawing(I)</td>       <td>Nr</td> <td>8</td>  <td>u4data , decimal</td> <td>Refer to standard parameter setting table (B)</td> </tr>
+                                    <tr> <td >Size of tool for graphic drawing(J)</td>       <td>Nr</td> <td>9</td>  <td>u4data , decimal</td> <td>Refer to standard parameter setting table (B)</td> </tr>
+                                    <tr> <td >Angle of tool for graphic drawing(K)</td>      <td>Nr</td> <td>10</td> <td>u4data , decimal</td> <td>0.0～359.999 in case of IS-B</td>                  </tr>
+                                    <tr> <td >Small tool calculation angle</td>              <td>Nr</td> <td>11</td> <td>s4data , decimal</td> <td>0.0～359.999 in case of IS-B</td>                  </tr>
+                                    <tr> <td >Radius of multi tool</td>                      <td>Nr</td> <td>12</td> <td>u4data , decimal</td> <td>Refer to standard parameter setting table (B)</td> </tr>
+                                </colgroup>
+                                </colgroup>
+                                </table>
+                                </ul>
+                            <br/>
+                                <dd>Nr: Tool registration number ( =1～Tool registration number )</dd>
+
+                                <dd>※For multi tool control</dd>
+                                <ul>
+                                <table border="1">
+                                    <colgroup>
+                                    <colgroup width="100">
+                                    <tr>
+                                        <th>Kind of read data</th> <th>number</th>
+                                        <th>attr</th> <th>Member at storage destination</th><th>Range of value</th>
+                                    </tr>
+                                    <tr> <td >Small tool number</td>                         <td>Nm</td> <td>0</td>  <td>u2data</td>           <td>0～9999</td>                                       </tr>
+                                    <tr> <td >Small tool calculation angle</td>              <td>Nm</td> <td>1</td>  <td>s4data , decimal</td> <td>0.0～359.999 in case of IS-B</td>                  </tr>
+                                    <tr> <td >Amount of Y axis tool position correction</td> <td>Nm</td> <td>2</td>  <td>s4data , decimal</td> <td>Refer to standard parameter setting table (A)</td> </tr>
+                                    <tr> <td >Tool shape for graphic drawing(C)</td>         <td>Nm</td> <td>3</td>  <td>u2data</td>           <td>0～99</td>                                         </tr>
+                                    <tr> <td >Size of tool for graphic drawing(I)</td>       <td>Nm</td> <td>4</td>  <td>u4data , decimal</td> <td>Refer to standard parameter setting table (B)</td> </tr>
+                                    <tr> <td >Size of tool for graphic drawing(J)</td>       <td>Nm</td> <td>5</td>  <td>u4data , decimal</td> <td>Refer to standard parameter setting table (B)</td> </tr>
+                                    <tr> <td >Angle of tool for graphic drawing(K)</td>      <td>Nm</td> <td>6</td>  <td>u4data , decimal</td> <td>0.0～359.999 in case of IS-B</td>                  </tr>
+                                    <tr> <td >Radius of multi tool</td>                      <td>Nm</td> <td>7</td>  <td>u4data , decimal</td> <td>Refer to standard parameter setting table (B)</td> </tr>
+                                    <tr> <td >Amount of X axis tool position correction</td> <td>Nm</td> <td>8</td>  <td>s4data , decimal</td> <td>Refer to standard parameter setting table (A)</td> </tr>
+                                </colgroup>
+                                </colgroup>
+                                </table>
+                                </ul>
+                            <br/>
+                                <dd>Nm: Tool registration number of the multi tool + 5000( =5001 to 5000＋Items on the tool registration)</dd>
+                                <dd>
+                                    When the Graphic function is invalid, the following items cannot be write regardless of the tool data setting function or the multi tool control function.
+                                </dd>
+                                <dd>・Tool shape of graphic drawing(C)</dd>
+                                <dd>・Tool size of graphic drawing(I)</dd>
+                                <dd>・Tool size of graphic drawing(J)</dd>
+                                <dd>・Tool size of graphic drawing(K)</dd>
+                        </dl>
+
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                Unavailable<br/>
+                This function cannot be used except 0i-PD/PF, 30i/31i-LB, 30i/31i-PB.
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>Data number error<br/>Start number(number) is wrong. </content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>data attribute error<br/>data attribute(attr) is wrong.<br/></content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The extended driver/library function is necessary.<br/>
+                It is necessary to set Punch press function option and Parameter ALA(No.16242#0).(30i/31i-LB only)
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <type>
+                <li>Multiple tool function</li>
+                <li>Tool data setting function</li>
+                <li>Graphic function</li>
+        </type>
+    </option>
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <li>Series 0i-PD/PF, 30i/31i-LB, 30i/31i-PB</li>
+            <div class="dd">16280#0,#1,#2,#3,#4,#5,#6,#7</div>
+            <div class="dd">16281#4</div>
+            <div class="dd">16282#1,#2,#3,#5,#6</div>
+            <div class="dd">16284, 16285, 16286</div>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>-</d>
+            <h>-</h>
+            <a>-</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_rd2punchtl_ex</name>
+            <file>Punch/cnc_rd2punchtl_ex.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdexchgtgrp</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdexchgtgrp(unsigned short FlibHndl,short *num_grp, ODBEXGP *exgrp); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>
+                The group number where the tool exchange signal has been generated is acquired in ascending order.
+            </p>
+            <p>
+                When the function for optional group number of tool life management B option is used, the optional group number set in each group is also acquired.
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>num_grp</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                            Specify the pointer to the variable where the number which wants to be acquired is stored.
+                            When the value of 0 or less was specified, EW_LENGTH error occurs.
+                            This function returns the number of data which was acquired actually.  
+                            When there is not any exchange necessary tool group, 0 is set.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>exgrp</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Specify the pointer to the ODBEXGP structure which stores the tool group number for which the acquired exchange is necessary.
+                            When the array of the number specified by num_grp is not prepared, the operation of this function is not guaranteed.
+                            The ODBEXGP structure is as follows.
+<pre>
+typedef struct odbexgp {
+    long    grp_no;     // Tool group number
+    long    opt_grpno;  // Optional group number
+} ODBEXGP;
+</pre>
+                        <dl>
+                            <dt>grp_no</dt>
+                            <dd>Tool group number</dd>
+                            <ul>
+                                The tool group number from which the tool exchange signal is derived is set.
+                            </ul>
+                            <dt>opt_grpno</dt>
+                            <dd>Optional group number</dd>
+                            <ul>
+                                The optional group number set in the tool group where the tool exchange signal has been generated is set.
+                                When the optional group number setting function is not used and the optional group number is not set, 0 is set.
+                            </ul>
+                        </dl>
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+        <is>
+        <hssb><p>The tool life management function and the extended driver/library function are necessary.</p>
+              <p>This function is influenced by additional pairs number of the tool life management.</p>
+              <table>
+                  <tr> <td>the tool life management                           </td><td>:</td>
+                       <td>256 pairs of the tool life management on whole system, both of M and T Series</td></tr>
+                  <tr> <td>additional pairs number of the tool life management</td><td>:</td>
+                       <td>1024 pairs of the tool life management on whole system, both of M and T Series</td></tr>
+              </table>
+        </hssb>
+        </is>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+           <name>EW_FUNC</name>
+            <content>
+                Unavailable<br/>
+                This function is not supported by CNC.
+            </content>
+        </item>
+        <item>
+           <name>EW_LENGTH</name>
+            <content>
+                Data length error<br/>
+                The value of 0 or less was specified for acquisition number(*num_grp).
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The tool life management function and the extended driver/library function are necessary.<br/>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            <p>The extended driver/library function are necessary.</p>
+        </hssb>
+
+        <ethr>
+            <p>The Ethernet function and the extended driver/library function are necessary.</p>
+            <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F and 30i the required CNC option is as follows.</p>
+            <p>When Embedded Ethernet is used,</p>
+            <p><ul>above two optional functions are not required.</ul></p>
+            <p>When Ethernet board is used,</p>
+            <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+
+        <need>
+            The tool life management function or the tool life management B function.
+        </need>
+        <type>
+            <li>Series 16i/18i/21i<br/>
+                <p>This function is influenced by 512(M Series)/128(T Series) pairs of the tool life management.</p>
+            </li>
+            <li>Series 0i-F, 30i<br/>
+                <p>This function is influenced by additional pairs number of the tool life management.</p>
+                <table>
+                    <tr> <td>the tool life management</td>        <td>:</td><td>256 pairs of the tool life management on whole system, both of M and T Series</td></tr>
+                    <tr> <td>additional pairs number of the tool life management</td><td>:</td><td>1024 pairs of the tool life management on whole system, both of M and T Series</td></tr>
+                </table>
+            </li>
+          </type>
+
+        <is>
+        <hssb>
+              <p>The tool life management function and the extended driver/library function are necessary.</p>
+              <p>And this function is influenced by additional pairs number of the tool life management.</p>
+              <table>
+                  <tr> <td>the tool life management</td><td>:</td>
+                       <td>256 pairs of the tool life management on whole system, both of M and T Series</td></tr>
+                  <tr> <td>additional pairs number of the tool life management</td><td>:</td>
+                       <td>1024 pairs of the tool life management on whole system, both of M and T Series</td></tr>
+              </table>
+           </hssb>
+           </is>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul type="disc">
+                <li>Series 16i/18i/21i</li>
+                    6800#0,#1<br/>
+                    6802#5 (Optional group number)<br/>
+                <li>Series 30i</li>
+                    6800#0,#1<br/>
+                    6802#5 (Optional group number)<br/>
+                    6805#4 (Tool life management B)<br/>
+                    6813<br/>
+                <li>Series 0i-D</li>
+                    6800#0,#1<br/>
+                    6813<br/>
+                    8132#0=1 (must be set)
+                <li>Series 0i-F</li>
+                    6800#0,#1<br/>
+                    6802#5 (Optional group number)<br/>
+                    6805#4 (Tool life management B)<br/>
+                    6813<br/>
+                    8132#0=1 (must be set)
+            </ul>
+        </type>
+    </parameter>
+    <is_parameter>
+        <type>
+            <table>
+                <tr><td> </td><td>6800#0,#1</td><td> </td><td>(influenced by setting)</td></tr>
+                <tr><td> </td><td>6805#4</td><td> </td><td>(Tool life management B)</td></tr>
+                <tr><td> </td><td>6802#5</td><td> </td><td>(Optional group number)</td></tr>
+            </table>
+        </type>
+    </is_parameter>
+
+
+
+    <mode></mode>
+    <!-- 30i(WinCE) -->
+    <is_mode></is_mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_alarm</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_alarm(unsigned short FlibHndl, ODBALM *alarm);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            Reads the alarm status of CNC. Various information is stored in "data" of ODBALM.<p/>
+            This function is used for watching CNC's alarm status, displaying the maintenance information or guidance of how to reset the alarm, etc.<p/>
+            When CNC falls into the system alarm, it is completely impossible to communicate data, and the alarm status cannot be acquired.<p/>
+            Please use the <a href="misc/cnc_alarm2.htm" target="_parent">cnc_alarm2</a> function for Series 15i, 30i, 0i-D/F and PMi-A, because this function cannot read all alarm status of Series 15i, 30i, 0i-D/F and PMi-A.
+        </cmn>
+
+    <is>
+        <cmn>
+            Reads the alarm status of CNC. Various information is stored in "data" of ODBALM.<p/>
+            This function is used for watching CNC's alarm status, displaying the maintenance information or guidance of how to reset the alarm, etc.<p/>
+            When CNC falls into the system alarm, it is completely impossible to communicate data, and the alarm status cannot be acquired.<p/>
+            Please use the <a href="misc/cnc_alarm2.htm" target="_parent">cnc_alarm2</a> function, because this function cannot read all alarm status.
+        </cmn>
+    </is>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>alarm</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the ODBALM structure including the alarm status information.
+                        </p>
+The ODBALM structure is as follows.
+<pre>
+typedef struct odbalm {
+     short  dummy[2] ;          /* Not used. */
+     short  data ;              /* Alarm status */
+} ODBALM ;
+</pre>
+                    <dt>dummy</dt>
+                        <dd>Not used.</dd>
+                    <dt>data</dt>
+                        <dd>Alarm status</dd>
+                        <dd>The meaning of each bit is as follows. <br/>
+                            <ul>
+                                <li>Series 15/15i</li>
+                                    <table class="dd">
+                                            <tr><td>#00</td> <td>:</td> <td>Background P/S</td>                   <td>(BG)</td> </tr>
+                                            <tr><td>#01</td> <td>:</td> <td>Foreground P/S</td>                   <td>(PS)</td> </tr>
+                                            <tr><td>#02</td> <td>:</td> <td>Overheat alarm(only Series 15)</td>  <td>(OH)</td> </tr>
+                                            <tr><td>#03</td> <td>:</td> <td>Sub-CPU error(only Series 15)</td>   <td>(SB)</td> </tr>
+                                            <tr><td>#04</td> <td>:</td> <td>Syncronized error</td>                <td>(SN)</td> </tr>
+                                            <tr><td>#05</td> <td>:</td> <td>Parameter switch on         </td>     <td>(SW)</td> </tr>
+                                            <tr><td>#06</td> <td>:</td> <td>Overtravel,External data</td>         <td>(OT)</td> </tr>
+                                            <tr><td>#07</td> <td>:</td> <td>PMC error</td>                        <td>(PC)</td> </tr>
+                                            <tr><td>#08</td> <td>:</td> <td>External alarm message  (1)</td>      <td>(EX)</td> </tr>
+                                            <tr><td>#09</td> <td>:</td> <td>(Not used)</td>                       <td></td>     </tr>
+                                            <tr><td>#10</td> <td>:</td> <td>Serious P/S</td>                      <td>(SR)</td> </tr>
+                                            <tr><td>#11</td> <td>:</td> <td>(Not used)</td>                       <td></td>     </tr>
+                                            <tr><td>#12</td> <td>:</td> <td>Servo alarm </td>                     <td>(SV)</td> </tr>
+                                            <tr><td>#13</td> <td>:</td> <td>I/O error </td>                       <td>(IO)</td> </tr>
+                                            <tr><td>#14</td> <td>:</td> <td>Power off parameter set</td>          <td>(PW)</td> </tr>
+                                            <tr><td>#15</td> <td>:</td> <td>System alarm(only Series 15i)</td>   <td>(SY)</td>     </tr>
+                                    </table>
+                                <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i</li>
+                                    <table class="dd">
+                                            <tr><td>#00</td> <td>:</td> <td>P/S100</td>                                  </tr>
+                                            <tr><td>#01</td> <td>:</td> <td>P/S000</td>                                  </tr>
+                                            <tr><td>#02</td> <td>:</td> <td>P/S101</td>                                  </tr>
+                                            <tr><td>#03</td> <td>:</td> <td>P/S alarm except above</td>                  </tr>
+                                            <tr><td>#04</td> <td>:</td> <td>Overtravel alarm</td>                        </tr>
+                                            <tr><td>#05</td> <td>:</td> <td>Overheat alarm</td>                          </tr>
+                                            <tr><td>#06</td> <td>:</td> <td>Servo alarm </td>                            </tr>
+                                            <tr><td>#07</td> <td>:</td> <td>System alarm</td>                            </tr>
+                                            <tr><td>#08</td> <td>:</td> <td>APC alarm</td>                               </tr>
+                                            <tr><td>#09</td> <td>:</td> <td>Spindle alarm</td>                           </tr>
+                                            <tr><td>#10</td> <td>:</td> <td>P/S alarm(No.5000,..), Punchpress alarm</td> </tr>
+                                            <tr><td>#11</td> <td>:</td> <td>Laser alarm</td>                             </tr>
+                                            <tr><td>#12</td> <td>:</td> <td>(Not used)</td>                              </tr>
+                                            <tr><td>#13</td> <td>:</td> <td>Rigid tap alarm</td>                         </tr>
+                                            <tr><td>#14</td> <td>:</td> <td>(Not used)</td>                              </tr>
+                                            <tr><td>#15</td> <td>:</td> <td>External alarm message</td>                  </tr>
+                                    </table>
+                                <li>Series 16i/18i-W </li>
+                                    <table class="dd">
+                                            <tr><td>#00</td> <td>:</td> <td>P/S alarm</td>              </tr>
+                                            <tr><td>#01</td> <td>:</td> <td>Overtravel alarm</td>       </tr>
+                                            <tr><td>#02</td> <td>:</td> <td>Servo alarm </td>           </tr>
+                                            <tr><td>#03</td> <td>:</td> <td>(Not used)</td>             </tr>
+                                            <tr><td>#04</td> <td>:</td> <td>Overtravel alarm</td>       </tr>
+                                            <tr><td>#05</td> <td>:</td> <td>Stroke limit - 1</td>       </tr>
+                                            <tr><td>#06</td> <td>:</td> <td>Stroke limit - 2</td>       </tr>
+                                            <tr><td>#07</td> <td>:</td> <td>Edit alarm</td>             </tr>
+                                            <tr><td>#08</td> <td>:</td> <td>APC alarm</td>              </tr>
+                                            <tr><td>#09</td> <td>:</td> <td>(Not used)</td>             </tr>
+                                            <tr><td>#10</td> <td>:</td> <td>P/S 5000 ... alarm</td>     </tr>
+                                            <tr><td>#11</td> <td>:</td> <td>(Not used)</td>             </tr>
+                                            <tr><td>#12</td> <td>:</td> <td>(Not used)</td>             </tr>
+                                            <tr><td>#13</td> <td>:</td> <td>(Not used)</td>             </tr>
+                                            <tr><td>#14</td> <td>:</td> <td>External alarm message</td> </tr>
+                                            <tr><td>#15</td> <td>:</td> <td>Reverse control alarm</td>  </tr>
+                                    </table>
+                                <li>Series 30i, 0i-D/F, PMi-A</li>
+                                    <table class="dd">
+                                            <tr><td>#00</td> <td>:</td> <td>Parameter switch on</td>          <td>(SW)</td> </tr>
+                                            <tr><td>#01</td> <td>:</td> <td>Power off parameter set</td>      <td>(PW)</td> </tr>
+                                            <tr><td>#02</td> <td>:</td> <td>I/O error</td>                    <td>(IO)</td> </tr>
+                                            <tr><td>#03</td> <td>:</td> <td>Foreground P/S</td>               <td>(PS)</td> </tr>
+                                            <tr><td>#04</td> <td>:</td> <td>Overtravel,External data</td>     <td>(OT)</td> </tr>
+                                            <tr><td>#05</td> <td>:</td> <td>Overheat alarm</td>               <td>(OH)</td> </tr>
+                                            <tr><td>#06</td> <td>:</td> <td>Servo alarm </td>                 <td>(SV)</td> </tr>
+                                            <tr><td>#07</td> <td>:</td> <td>Data I/O error</td>               <td>(SR)</td> </tr>
+                                            <tr><td>#08</td> <td>:</td> <td>Macro alarm</td>                  <td>(MC)</td> </tr>
+                                            <tr><td>#09</td> <td>:</td> <td>Spindle alarm</td>                <td>(SP)</td> </tr>
+                                            <tr><td>#10</td> <td>:</td> <td>Other alarm(DS)</td>              <td>(DS)</td> </tr>
+                                            <tr><td>#11</td> <td>:</td> <td>Alarm concerning Malfunction prevent functions</td> <td>(IE)</td> </tr>
+                                            <tr><td>#12</td> <td>:</td> <td>Background P/S</td>               <td>(BG)</td> </tr>
+                                            <tr><td>#13</td> <td>:</td> <td>Syncronized error</td>            <td>(SN)</td> </tr>
+                                            <tr><td>#14</td> <td>:</td> <td>(reserved)</td>                   <td>    </td> </tr>
+                                            <tr><td>#15</td> <td>:</td> <td>External alarm message</td>       <td>(EX)</td> </tr>
+                                    </table>
+                            </ul>
+                        </dd>
+                    </content>
+                </item>
+            </vc>
+        </common>
+
+        <!-- is Argument Start -->
+        <is>
+            <hssb>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                            </p>
+                        </content>
+                    </item>
+
+                    <item>
+                        <name>alarm</name>
+                        <type>out</type>
+                        <content>
+                            <p>
+                                Pointer to the ODBALM structure including the alarm status information.
+                            </p>
+    The ODBALM structure is as follows.
+    <pre>
+    typedef struct odbalm {
+         short  dummy[2] ;          /* Not used. */
+         short  data ;              /* Alarm status */
+    } ODBALM ;
+    </pre>
+                        <dt>dummy</dt>
+                            <dd>Not used.</dd>
+                        <dt>data</dt>
+                            <dd>Alarm status</dd>
+                            <dd>The meaning of each bit is as follows. <br/><br/>
+                            <table class="dd">
+                                <tr><td>#00</td> <td>:</td> <td>Parameter switch on</td>        <td>(SW)</td> </tr>
+                                <tr><td>#01</td> <td>:</td> <td>Power off parameter set</td>    <td>(PW)</td> </tr>
+                                <tr><td>#02</td> <td>:</td> <td>I/O error</td>                  <td>(IO)</td> </tr>
+                                <tr><td>#03</td> <td>:</td> <td>Foreground P/S</td>             <td>(PS)</td> </tr>
+                                <tr><td>#04</td> <td>:</td> <td>Overtravel,External data</td>   <td>(OT)</td> </tr>
+                                <tr><td>#05</td> <td>:</td> <td>Overheat alarm</td>             <td>(OH)</td> </tr>
+                                <tr><td>#06</td> <td>:</td> <td>Servo alarm </td>               <td>(SV)</td> </tr>
+                                <tr><td>#07</td> <td>:</td> <td>Data I/O error</td>             <td>(SR)</td> </tr>
+                                <tr><td>#08</td> <td>:</td> <td>Macro alarm</td>                <td>(MC)</td> </tr>
+                                <tr><td>#09</td> <td>:</td> <td>Spindle alarm</td>              <td>(SP)</td> </tr>
+                                <tr><td>#10</td> <td>:</td> <td>Other alarm(DS)</td>            <td>(DS)</td> </tr>
+                                <tr><td>#11</td> <td>:</td> <td>Alarm concerning Malfunction prevent functions</td> <td>(IE)</td> </tr>
+                                <tr><td>#12</td> <td>:</td> <td>Background P/S</td>             <td>(BG)</td> </tr>
+                                <tr><td>#13</td> <td>:</td> <td>Syncronized error</td>          <td>(SN)</td> </tr>
+                                <tr><td>#14</td> <td>:</td> <td>(reserved)</td>                 <td>    </td> </tr>
+                                <tr><td>#15</td> <td>:</td> <td>External alarm message</td>     <td>(EX)</td> </tr>
+                            </table>
+                            </dd>
+                        </content>
+                    </item>
+
+                </vc>
+            </hssb>
+        </is>
+        <!-- is Argument End -->
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_PARAM<br/>(Only Series 15)</name>
+            <content>CNC parameter error<p/>
+
+                     <li>Series 15</li>
+                     <dd>The CNC parameter 7613#0 has been 0 since CNC was turned on.</dd>
+                     <dd>Set 7613#0=1.</dd>
+                     <dd>Note) 7613#0 has modified 0 from 1, no error occurs, but the data is invalid.</dd>
+          </content>
+        </item>
+        <is>
+        </is>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 15</li>
+                    7613#0=1 (must be set)
+            </ul>
+        </type>
+    </parameter>
+    <is_parameter>
+    </is_parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+        <is>
+            <!-- M -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_alarm2</name>
+            <file>misc/cnc_alarm2.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdalminfo</name>
+            <file>misc/cnc_rdalminfo.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdalmmsg</name>
+            <file>misc/cnc_rdalmmsg.htm</file>
+        </item>
+        
+        <is>
+            <item>
+                <name>cnc_alarm2</name>
+                <file>misc/cnc_alarm2.htm</file>
+            </item>
+            <item>
+                <name>cnc_rdalminfo</name>
+                <file>misc/cnc_rdalminfo.htm</file>
+            </item>
+            <!-- is Nothing 
+            <item>
+                <name>cnc_rdalmmsg</name>
+                <file>misc/cnc_rdalmmsg.htm</file>
+            </item>
+            -->
+        </is>
+    </reference>
+
+
+
+    <example>
+        <vc><![CDATA[
+The following program displays the kinds of the current alarms .
+(For Series 16/18/21, 16i/18i/21i, 0i, Power Mate i)
+
+#include "fwlib32.h"
+
+void example( void )
+{
+        char *almmsg[] = {
+                "P/S 100 ALARM","P/S 000 ALARM",
+                "P/S 101 ALARM","P/S ALARM (1-255)",
+                "OT ALARM",     "OH ALARM",
+                "SERVO ALARM",  "SYSTEM ALARM",
+                "APC ALARM",    "SPINDLE ALARM",
+                "P/S ALARM (5000-)"
+        } ;
+        ODBALM buf ;
+        unsigned short idx ;
+        cnc_alarm( h, &buf ) ;
+        if ( buf.data == 0 )
+                printf( "NO ALARM\n" ) ;
+        else
+                for ( idx = 0 ; idx < 11 ; idx++ ) {
+                        if ( buf.data & 0x0001 )
+                                printf( "%s\n", almmsg[idx] ) ;
+                        buf.data >>= 1 ;
+                }
+}]]></vc>
+<vcs><![CDATA[
+The following program displays the kinds of the current alarms .
+(For Series 16/18/21, 16i/18i/21i, 0i, Power Mate i)
+
+class example
+{
+    public void sample()
+    {
+            string[] almmsg = {
+                    "P/S 100 ALARM","P/S 000 ALARM",
+                    "P/S 101 ALARM","P/S ALARM (1-255)",
+                    "OT ALARM",     "OH ALARM",
+                    "SERVO ALARM",  "SYSTEM ALARM",
+                    "APC ALARM",    "SPINDLE ALARM",
+                    "P/S ALARM (5000-)"
+            };
+            Focas1.ODBALM buf = new Focas1.ODBALM();
+            ushort idx;
+            Focas1.cnc_alarm(h, buf);
+            if (buf.data == 0)
+            {
+                    Console.WriteLine("NO ALARM");
+            }
+            else
+            {
+                    for (idx = 0; idx < 11; idx++)
+                    {
+                            if ((buf.data & 0x0001) > 0)
+                            {
+                                    Console.WriteLine("{0}", almmsg[idx]);
+                            }
+                            buf.data >>= 1;
+                    }
+            }
+    }
+}]]></vcs>
+    <is></is>
+    </example>
+
+
+
+  </func>
+</root>

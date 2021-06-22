@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+    <func>
+
+
+        <title>cnc_rdservoid2</title>
+
+
+
+        <declare>
+            <vc>
+                <include>#include "fwlib32.h"</include>
+                <prottype>FWLIBAPI short WINAPI cnc_rdservoid2(unsigned short FlibHndl, short axis, short type, ODBCSVID2 *servoid); </prottype>
+            </vc>
+        </declare>
+
+
+
+        <doc>
+            <cmn>
+                <p>Read specified servo id information from adaptation device.</p>
+                <p>Each information is stored in member of the ODBCSVID2 structure. </p>
+            </cmn>
+        </doc>
+
+
+
+        <argument>
+            <common>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Specify the library handle.See "<a href="handle.htm" target="_parent">Library handle</a>" for details. 
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>axis</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Specify the controlled axis number of reading servo ID information.
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>type</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Specify the type of reading data for servo ID information.
+                                The type which can be specified is as follows. 
+                            </p>
+                            <table border="0" class="dd">
+                                <tr><td>0</td><td>：</td><td>Servo motor specification</td></tr>
+                                <tr><td>1</td><td>：</td><td>Servo motor serial number</td></tr>
+                                <tr><td>2</td><td>：</td><td>Pulse coder specification</td></tr>
+                                <tr><td>3</td><td>：</td><td>Pulse coder serial number</td></tr>
+                                <tr><td>4</td><td>：</td><td>SV specification</td></tr>
+                                <tr><td>5</td><td>：</td><td>SV serial number</td></tr>
+                                <tr><td>6</td><td>：</td><td>PS specification</td></tr>
+                                <tr><td>7</td><td>：</td><td>PS serial number</td></tr>
+                                <tr><td>8</td><td>：</td><td>SV software series edition</td></tr>
+                                <tr><td>9</td><td>：</td><td>PS software series edition</td></tr>
+                                <tr><td>10</td><td>：</td><td>Separator 1 specification</td></tr>
+                                <tr><td>11</td><td>：</td><td>Separator 1 serial number</td></tr>
+                                <tr><td>12</td><td>：</td><td>Separator 2 specification</td></tr>
+                                <tr><td>13</td><td>：</td><td>Separator 2 serial number</td></tr>
+                                <tr><td>-1</td><td>：</td><td>All of the above-mentioned data kind</td></tr>
+                            </table>
+                        </content>
+                    </item>
+                    <item>
+                        <name>servoid</name>
+                        <type>out</type>
+                        <content>
+                            <p>
+                                Specify the pointer to a variable of ODBCSVID2 structure for setting servo ID information.
+                                The details of members of ODBCSVID2 structure are as follows. 
+                                "NULL ('\0')" is added to the end of character strings.
+
+                            </p>
+<pre>
+typedef struct {
+    char   mt_spc[20] ;        /* Servo motor specification */
+    char   mt_srn[10] ;        /* Servo motor serial number */
+    char   plc_spc[22] ;       /* Pulse coder specification */
+    char   plc_srn[9] ;        /* Pulse coder serial number */
+    char   svm_spc[22] ;       /* SV specification */
+    char   svm_srn[12] ;       /* SV serial number */
+    char   psm_spc[22] ;       /* PS specification */
+    char   psm_srn[12] ;       /* PS serial number */
+    char   svs_see[9] ;        /* SV software series edition */
+    char   pss_see[9] ;        /* PS software series edition */
+    char   pm1_spc[22] ;       /* Separator 1 specification */
+    char   pm1_srn[9] ;        /* Separator 1 serial number */
+    char   pm2_spc[22] ;       /* Separator 2 specification */
+    char   pm2_srn[9] ;        /* Separator 2 serial number */
+} ODBCSVID2 ;
+</pre>
+                        </content>
+                    </item>
+                </vc>
+            </common>
+        </argument>
+
+
+        <errcode>
+        </errcode>
+
+
+
+        <option>
+            <hssb>
+                The extended driver/library function is necessary. 
+            </hssb>
+            <ethr>
+                <p>The Ethernet function and the extended driver/library function are necessary.</p>
+                <p>However, in case of 0i-D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+                <p>When Embedded Ethernet is used,</p>
+                    <p class="dd">above two optional functions are not required.</p>
+                <p>When Ethernet board is used,</p>
+                    <p class="dd">only Ethernet function is required.</p>
+            </ethr>
+
+            <!-- 30i(WinCE) -->
+            <is>
+                <hssb>
+                    The following functions are necessary for this function.
+                    <ul type="disc">
+                        <li>The extended driver/library function.</li>
+                    </ul>
+                </hssb>
+            </is>
+        </option>
+
+
+
+        <parameter>
+        </parameter>
+
+        <is_parameter>
+        </is_parameter>
+
+
+
+        <mode></mode>
+        <is_mode></is_mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>X</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>X</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    </func>
+</root>

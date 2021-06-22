@@ -1,0 +1,710 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_diagnosr</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_diagnosr(unsigned short FlibHndl, short *s_number, short axis, short *e_number, short *length, void *diag);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+Reads the diagnosis data specified by "s_number","e_number","axis"(only for the diagnosis data with axis).  The data format depends on each diagnosis data.
+The format of Byte/Word/2-Word diagnosis data is generally signed binary.<p/>
+
+Reads the diagnosis data for all axes specified range by specifying 'ALL_AXES' in 'axis'.<p/>
+
+The attribute of CNC diagnosis data depends on the type and axis, and it is different for each diagnosis data.  It is as follows, and can be got by <a href="misc/cnc_rddiaginfo.htm" target="_parent">cnc_rddiaginfo</a> function.
+                <table class="dd" border="1">
+                    <colgroup width="190" valign="top">
+                    <colgroup valign="top">
+                    <colgroup valign="top">
+                    <tr>
+                        <th valign="middle">Diagnosis data type</th>
+                        <th valign="middle">Meaning</th>
+                        <th valign="middle">Byte size</th>
+                    </tr>
+                    <tr>
+                        <td>Bit diagnosis data</td>
+                        <td>Every bits have each definition.</td>
+                        <td align="center">1</td>
+                    </tr>
+                    <tr>
+                        <td>Bit diagnosis data with axis</td>
+                        <td>Every bits have each definition. (each axis)</td>
+                        <td align="center">1</td>
+                    </tr>
+                    <tr>
+                        <td>Byte diagnosis data</td>
+                        <td>1-byte data is stored. </td>
+                        <td align="center">1</td>
+                    </tr>
+                    <tr>
+                        <td>Byte diagnosis data with axis</td>
+                        <td>1-byte data is stored. (each axis)</td>
+                        <td align="center">1</td>
+                    </tr>
+                    <tr>
+                        <td>Word diagnosis data</td>
+                        <td>2-byte data is stored. </td>
+                        <td align="center">2</td>
+                    </tr>
+                    <tr>
+                        <td>Word diagnosis data with axis</td>
+                        <td>2-byte data is stored. (each axis)</td>
+                        <td align="center">2</td>
+                    </tr>
+                    <tr>
+                        <td>2-Word diagnosis data</td>
+                        <td>4-byte data is stored. </td>
+                        <td align="center">4</td>
+                    </tr>
+                    <tr>
+                        <td>2-Word diagnosis data with axis </td>
+                        <td>4-byte data is stored. (each axis)</td>
+                        <td align="center">4</td>
+                    </tr>
+                    <tr>
+                        <td>Real diagnosis<span class="xis"><br/>(Series 15i, 30i, 0i-D/F, PMi-A)</span></td>
+                        <td>4-byte data which indicates value of variable and 4-byte data which indicates number of places of decimals are stored.</td>
+                        <td align="center">8</td>
+                    </tr>
+                    <tr>
+                        <td>Real diagnosis with axis<span class="xis"><br/>(Series 15i, 30i, 0i-D/F, PMi-A)</span></td>
+                        <td>4-byte data which indicates value of variable and 4-byte data which indicates number of places of decimals are stored. (each axis)</td>
+                        <td align="center">8</td>
+                    </tr>
+                    </colgroup>
+                    </colgroup>
+                    </colgroup>
+                </table>
+                            <p>
+                It is impossible to read any bit diagnosis data bit by bit. 8 bits (i.e. 1 byte) which belong to the same diagnosis data number are read at the same time.
+            </p>
+            <p>
+                See the "MAINTENANCE MANUAL" of CNC for details of each diagnosis data.
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_number</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                            Specify the start diagnosis data number. The first diagnosis data number which was read actually is returned.
+                        </p>
+                        <p>
+                            See the "MAINTENANCE MANUAL" of CNC about available diagnosis data number. It can be got by <a href="misc/cnc_rddiagnum.htm" target="_parent">cnc_rddiagnum</a> function and <a href="misc/cnc_rddiaginfo.htm" target="_parent">cnc_rddiaginfo</a> function.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>e_number</name>
+                    <type>in/out</type>
+                    <content>
+Specify the end diagnosis data number. The last diagnosis data number which was read actually is returned.<p/>
+
+The new diagnosis data may be added according to updating CNC software, addition of the new function, etc. If the new diagnosis data is added within reading range, the error(Return:EW_LENGTH) may be returned or the application program may not work correctly. In order to avoid these problems, specify the continuous numbers of existing diagnoses as the reading range. 
+                    </content>
+                </item>
+                <item>
+                    <name>axis</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the axis number.
+                        </p>
+                        <table class="dd">
+                            <tr>
+                                <td>0</td>
+                                <td>:</td>
+                                <td>assigns no axis</td>
+                            </tr>
+                            <tr>
+                                <td>1,..,m</td>
+                                <td>:</td>
+                                <td>assigns 1 axis (m=maximum controlled axes)</td>
+                            </tr>
+                            <tr>
+                                <td>ALL_AXES</td>
+                                <td>:</td>
+                                <td>assigns all axes (ALL_AXES=-1)</td>
+                            </tr>
+                        </table>
+                        <p>
+                            None axis type diagnosis data can be read even if any value is specified in "axis". In case that an axis type diagnosis data exists in the specified range, the error(Retuen:EW_ATTRIB) is returned by specifying "axis=0".
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+Specify the data block length which is enough to store the specified diagnosis data.<p/>
+The structure per 1 diagnosis data is as follows, and each diagnosis data is lined up in order of number.<p/>
+<blockquote>
+    [= Sum of (4+(byte size of each diagnosis data) * (number of axis))] 
+</blockquote>
+Because the size of data which was read actually is returned, it is possible to specify the length more than the actual size.<p/>
+In case that the size of diagnosis data is 2 byte, the ODBDGN structure is as follows. In case that the size of diagnosis data is 1 or 2 byte and the length per 1 diagnosis data is not a multiple of 4, 'dummy' is necessary at the end of structure. In case that its size is 4 or 8 byte, the size of data part per 1 diagnosis data or 1 axis is 4 or 8 byte, and so 'dummy' is not necessary. <p/>
+
+                        <b>ODBDGN</b><br/>
+                        <table>
+                            <colgroup align="left" valign="top">
+                            <colgroup align="left" valign="top">
+                            <colgroup align="left" valign="top">
+                            <tr>
+                                <th>no axis/1 axis</th>
+                                <th>all axes</th>
+                            </tr>
+                            <tr>
+                                <td valign="top"><img src="misc/nprm.gif"></img></td>
+                                <td valign="top"><img src="misc/nprma.gif"></img></td>
+                            </tr>
+                            </colgroup>
+                            </colgroup>
+                            </colgroup>
+                        </table>
+                          n : Maximum controlled axes 
+                    </content>
+                </item>
+                <item>
+                    <name>diag</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the area to store the diagnoses. Each diagnosis data can be referred by using the ODBDGN structure.
+                        </p>
+<pre>
+<li>Series 15, 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i</li><![CDATA[
+typedef struct  odbdgn {
+   short datano;              /* diagnosis data number */
+   short type;                /* upper byte:type */
+                              /* lower byte:axis */
+   union {
+      char  cdata;            /* bit/byte diagnosis data */
+      short idata;            /* word diagnosis data */
+      long  ldata;            /* 2-word diagnosis data */
+      char  cdatas[MAX_AXIS]; /* bit/byte diagnosis data with axis*/
+      short idatas[MAX_AXIS]; /* word diagnosis data with axis */
+      long  ldatas[MAX_AXIS]; /* 2-word diagnosis data with axis */
+   } u ;
+} ODBDGN ;                /* MAX_AXIS : max. controlled axes */
+]]></pre><pre>
+<li>Series 15i, 30i, 0i-D/F, PMi-A</li><![CDATA[
+typedef struct realdgn {     /* real diagnosis data */
+   long   dgn_val;           /* value of variable */
+   long   dec_val;           /* number of places of decimals */
+} REALDGN ;
+
+typedef struct odbdgn {
+   short  datano;               /* diagnosis data number */
+   short  type;                 /* upper byte:type */
+                                /* lower byte:axis */
+   union {
+      char    cdata;           /* bit/byte diagnosis data */
+      short   idata;           /* word diagnosis data */
+      long    ldata;           /* 2-word diagnosis data */
+      REALDGN rdata;           /* real diagnosis data */
+      char    cdatas[MAX_AXIS];/*bit/byte diagnosis data with axis*/
+      short   idatas[MAX_AXIS];/* word diagnosis data with axis */
+      long    ldatas[MAX_AXIS];/* 2-word diagnosis data with axis */
+      REALDGN rdatas[MAX_AXIS];/* real diagnosis data with axis */
+   } u ;
+} ODBDGN ;                /* MAX_AXIS : max. controlled axes */
+]]></pre>
+<dl>
+
+                        <dt>datano</dt>
+                            <dd>diagnosis data number which was read is stored.</dd>
+                        <dt>type</dt>
+                            <dd>Attribute of diagnosis data which was read is stored.</dd>
+                            <dd>Upper byte : type</dd>
+                            <dd>
+                                <table class="dd">
+                                    <tr>
+                                        <td>0</td>
+                                        <td>:</td>
+                                        <td>byte type</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>:</td>
+                                        <td>word type</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>:</td>
+                                        <td>2-word type</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>:</td>
+                                        <td>bit type(8 bit)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>:</td>
+                                        <td>bit type(1 bit : except Series 15/15i)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td>:</td>
+                                        <td>real type(Series 15i, 30i, 0i-D/F, PMi-A)</td>
+                                    </tr>
+                                </table>
+                            </dd>
+                            <dd>Lower byte : axis</dd>
+                            <dd>
+                                <table class="dd">
+                                    <tr>
+                                        <td>0</td>
+                                        <td>:</td>
+                                        <td>no axis</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1,..,m</td>
+                                        <td>:</td>
+                                        <td>1 axis(m=max. controlled axes)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ALL_AXES</td>
+                                        <td>:</td>
+                                        <td>all axes(ALL_AXES=-1)</td>
+                                    </tr>
+                                </table>
+                            </dd>
+                        <dt>rdata, rdatas (Series 15i, 30i, 0i-D/F, PMi-A)</dt>
+                            <dd>Real diagnosis data is stored.</dd>
+                            <dd>The value of variable is stored in dgn_val, and the number of places of decimals is stored in dec_val.</dd>
+                            <p/>
+                            <dd>
+                                <div class="dd">
+                                    <p>Real diagnosis data = dgn_val * 10 ** (-dec_val)</p>
+                                    <p>(Example) When the value of real diagnosis data is 12.345, dgn_val and dec_val are read as follows.</p>
+                                    <p class="dd">dgn_val = 12345<br/>dec_val = 3</p>
+                                </div>
+                            </dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+
+        <!-- is Argument Start -->
+        <is>
+            <hssb>
+                <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_number</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                            Specify the start diagnosis data number. The first diagnosis data number which was read actually is returned.
+                        </p>
+                        <p>
+                            See the "MAINTENANCE MANUAL" of CNC about available diagnosis data number. It can be got by <a href="misc/cnc_rddiagnum.htm" target="_parent">cnc_rddiagnum</a> function and <a href="misc/cnc_rddiaginfo.htm" target="_parent">cnc_rddiaginfo</a> function.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>e_number</name>
+                    <type>in/out</type>
+                    <content>
+Specify the end diagnosis data number. The last diagnosis data number which was read actually is returned.<p/>
+
+The new diagnosis data may be added according to updating CNC software, addition of the new function, etc. If the new diagnosis data is added within reading range, the error(Return:EW_LENGTH) may be returned or the application program may not work correctly. In order to avoid these problems, specify the continuous numbers of existing diagnoses as the reading range. 
+                    </content>
+                </item>
+                <item>
+                    <name>axis</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the axis number.
+                        </p>
+                        <table class="dd">
+                            <tr>
+                                <td>0</td>
+                                <td>:</td>
+                                <td>assigns no axis</td>
+                            </tr>
+                            <tr>
+                                <td>1,..,m</td>
+                                <td>:</td>
+                                <td>assigns 1 axis (m=maximum controlled axes)</td>
+                            </tr>
+                            <tr>
+                                <td>ALL_AXES</td>
+                                <td>:</td>
+                                <td>assigns all axes (ALL_AXES=-1)</td>
+                            </tr>
+                        </table>
+                        <p>
+                            None axis type diagnosis data can be read even if any value is specified in "axis". In case that an axis type diagnosis data exists in the specified range, the error(Retuen:EW_ATTRIB) is returned by specifying "axis=0".
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+Specify the data block length which is enough to store the specified diagnosis data.<p/>
+The structure per 1 diagnosis data is as follows, and each diagnosis data is lined up in order of number.<p/>
+<blockquote>
+    [= Sum of (4+(byte size of each diagnosis data) * (number of axis))] 
+</blockquote>
+Because the size of data which was read actually is returned, it is possible to specify the length more than the actual size.<p/>
+In case that the size of diagnosis data is 2 byte, the ODBDGN structure is as follows. In case that the size of diagnosis data is 1 or 2 byte and the length per 1 diagnosis data is not a multiple of 4, 'dummy' is necessary at the end of structure. In case that its size is 4 or 8 byte, the size of data part per 1 diagnosis data or 1 axis is 4 or 8 byte, and so 'dummy' is not necessary. <p/>
+
+                        <b>ODBDGN</b><br/>
+                        <table>
+                            <colgroup align="left" valign="top"/>
+                            <colgroup align="left" valign="top"/>
+                            <tr>
+                                <th>no axis/1 axis</th>
+                                <th>all axes</th>
+                            </tr>
+                            <tr>
+                                <td><img src="misc/nprm.gif"></img></td>
+                                <td><img src="misc/nprma.gif"></img></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>n : Maximum controlled axes</td>
+                            </tr>
+                        </table>
+                    </content>
+                </item>
+                <item>
+                    <name>diag</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the area to store the diagnoses. Each diagnosis data can be referred by using the ODBDGN structure.
+                        </p>
+<pre>
+<![CDATA[
+typedef struct realdgn {       /* real diagnosis data */
+   long   dgn_val;             /* value of variable */
+   long   dec_val;             /* number of places of decimals */
+} REALDGN ;
+
+typedef struct odbdgn {
+   short  datano;              /* diagnosis data number */
+   short  type;                /* upper byte:type */
+                               /* lower byte:axis */
+   union {
+      char    cdata;           /* bit/byte diagnosis data */
+      short   idata;           /* word diagnosis data */
+      long    ldata;           /* 2-word diagnosis data */
+      REALDGN rdata;           /* real diagnosis data */
+      char    cdatas[MAX_AXIS];/* bit/byte diagnosis data with axis */
+      short   idatas[MAX_AXIS];/* word diagnosis data with axis */
+      long    ldatas[MAX_AXIS];/* 2-word diagnosis data with axis */
+      REALDGN rdatas[MAX_AXIS];/* real diagnosis data with axis */
+   } u ;
+} ODBDGN ;                /* MAX_AXIS : max. controlled axes */
+]]></pre>
+<dl>
+
+                        <dt>datano</dt>
+                            <dd>diagnosis data number which was read is stored.</dd>
+                        <dt>type</dt>
+                            <dd>Attribute of diagnosis data which was read is stored.</dd>
+                            <dd>Upper byte : type</dd>
+                            <dd>
+                                <table class="dd">
+                                    <tr>
+                                        <td>0</td>
+                                        <td>:</td>
+                                        <td>byte type</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>:</td>
+                                        <td>word type</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>:</td>
+                                        <td>2-word type</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>:</td>
+                                        <td>bit type(8 bit)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>:</td>
+                                        <td>bit type(1 bit)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td>:</td>
+                                        <td>real type</td>
+                                    </tr>
+                                </table>
+                            </dd>
+                            <dd>Lower byte : axis</dd>
+                            <dd>
+                                <table class="dd">
+                                    <tr>
+                                        <td>0</td>
+                                        <td>:</td>
+                                        <td>no axis</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1,..,m</td>
+                                        <td>:</td>
+                                        <td>1 axis(m=max. controlled axes)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ALL_AXES</td>
+                                        <td>:</td>
+                                        <td>all axes(ALL_AXES=-1)</td>
+                                    </tr>
+                                </table>
+                            </dd>
+                        <dt>rdata, rdatas</dt>
+                            <dd>Real diagnosis data is stored.</dd>
+                            <dd>The value of variable is stored in dgn_val, and the number of places of decimals is stored in dec_val.</dd>
+                            <p/>
+                            <dd>
+                                <div class="dd">
+                                    <p>Real diagnosis data = dgn_val * 10 ** (-dec_val)</p>
+                                    <p>(Example) When the value of real diagnosis data is 12.345, dgn_val and dec_val are read as follows.</p>
+                                    <p class="dd">dgn_val = 12345<br/>dec_val = 3</p>
+                                </div>
+                            </dd>
+                        </dl>
+                    </content>
+                </item>
+
+                </vc>
+            </hssb>
+        </is>
+        <!-- is Argument End -->
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                Data block length error<br/>
+                Size of area to store diagnosis data (length) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                Data number error<br/>
+                diagnosis data number (s_number, e_number) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>
+                Data attribute error<br/>
+                Axis number (axis) is wrong.
+            </content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter></parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+        <add><b></b></add>
+        <is>
+            <!-- M -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_diagnoss</name>
+            <file>misc/cnc_diagnoss.htm</file>
+        </item>
+        <item>
+            <name>cnc_rddiag_ext</name>
+            <file>misc/cnc_rddiag_ext.htm</file>
+        </item>
+        <item>
+            <name>cnc_rddiaginfo</name>
+            <file>misc/cnc_rddiaginfo.htm</file>
+        </item>
+        <item>
+            <name>cnc_rddiagnum</name>
+            <file>misc/cnc_rddiagnum.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

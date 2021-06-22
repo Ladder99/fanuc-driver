@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_rdspdlspeed</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdspdlspeed(unsigned short FlibHndl, short spdl_no, short gear_no, long *spdl_speed);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>This function does the calculation for serial spindle by which the gear
+            ratio was considered against the rotation speed of spindle motor.
+            And the approximate values of spindle speed(rpm) for numbers of spindle
+            which was  specified by specified spindle or parameter are returned.<br/>
+            But, only the first spindle becomes effective when there is no option
+            of the multi spindle.  In this function, the spindle speed is 
+            calculated by the following calculation expression.</p>
+
+            <table class="dd">
+                <colgroup align="center"/>
+                <colgroup align="center"/>
+                <colgroup align="center"/>
+                <colgroup align="center"/>
+                <colgroup align="center"/>
+                <colgroup align="center"/>
+                <tr>
+                    <td>Spindle speed</td>
+                    <td>=</td>
+                    <td></td>
+                    <td>
+                        Real speed(rpm)<br/>
+                        <hr/>
+                        Maximum speed(rpm)
+                    </td>
+                    <td></td>
+                    <td>*</td>
+                    <td>Maximum speed to gear(rpm)</td>
+                </tr>
+            </table>
+
+            <p>* The error might be included because of the approximate value calculation.</p>
+            <p>To calculate the spindle speed correctly by the above calculation
+            expression, it is necessary to set a correct value in the maximum
+            speed(rpm) of spindle motor and the maximum speed(rpm) to the gear as
+            follows. And the gear number under use must be notified to DI signal
+            correctly. </p>
+
+            <ul>
+                <p>
+                    <li>When there is no option of the multi spindle</li><p/>
+                    <ul>Maximum speed(rpm) of spindle motor
+                        <table border="1">
+                            <tr>
+                                <td>No spindle switching function, main spindle with spindle switching function</td>
+                                <td>Parameter No.4020(S1)</td>
+                            </tr>
+                            <tr>
+                                <td>Sub spindle with spindle switching function</td>
+                                <td>Parameter No.4196(S1)</td>
+                            </tr>
+                        </table>
+                    </ul>
+                </p>
+                <p>
+                    <ul>The using gear number
+                        <table border="1">
+                            <tr>
+                                <td>In case of gear selection mode M type of M system<br/>(The spindle is being controlled with CNC.)</td>
+                                <td>Distinguishes by DO signal F034#2,#1 and #0 which CNC outputs.</td>
+                            </tr>
+                            <tr>
+                                <td>In case of gear selection mode M type of M system<br/>(The spindle is being controlled with PMC.)</td>
+                                <td>Specify by the argument(gear_no) of this function.</td>
+                            </tr>
+                            <tr>
+                                <td>In case of gear selection mode T type of M system and T system<br/></td>
+                                <td>The gear number is notified by DI signal G028#2 and #1.<br/></td>
+                            </tr>
+                        </table>
+                    </ul>
+                </p>
+                <p>
+                    <ul>The maximum speed(rpm) to gear
+                        <table border="1">
+                            <tr>
+                                <td rowspan="3">In case of gear selection mode M type of M system<br/>(The spindle is being controlled with CNC.)</td>
+                                <td>F034#0=1</td>
+                                <td>Parameter No.3741</td>
+                            </tr>
+                            <tr>
+                                <td>F034#1=1</td>
+                                <td>Parameter No.3742</td>
+                            </tr>
+                            <tr>
+                                <td>F034#2=1</td>
+                                <td>Parameter No.3743</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="3">In case of gear selection mode M type of M system<br/>(The spindle is being controlled with PMC.)</td>
+                                <td>gera_no=1</td>
+                                <td>Parameter No.3741</td>
+                            </tr>
+                            <tr>
+                                <td>gera_no=2</td>
+                                <td>Parameter No.3742</td>
+                            </tr>
+                            <tr>
+                                <td>gera_no=3</td>
+                                <td>Parameter No.3743</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="4">In case of gear selection mode T type of M system and T system</td>
+                                <td>G028#2=0, G028#1=0</td>
+                                <td>Parameter No.3741</td>
+                            </tr>
+                            <tr>
+                                <td>G028#2=0, G028#1=1</td>
+                                <td>Parameter No.3742</td>
+                            </tr>
+                            <tr>
+                                <td>G028#2=1, G028#1=0</td>
+                                <td>Parameter No.3743</td>
+                            </tr>
+                            <tr>
+                                <td>G028#2=1, G028#1=1</td>
+                                <td>Parameter No.3744</td>
+                            </tr>
+                        </table>
+                        <p>* The gear selection mode of M system is shown as follows.
+                            <table border="1">
+                                <tr>
+                                    <td>M type</td>
+                                    <td>without constant surface speed control option<br/>and<br/>Parameter No.3706#4=0</td>
+                                </tr>
+                                <tr>
+                                    <td>T type</td>
+                                    <td>with constant surface speed control option<br/>or<br/>Parameter No.3706#4=1</td>
+                                </tr>
+                            </table>
+                        </p>
+                    </ul>
+                </p>
+            </ul>
+
+            <br/>
+            <ul>
+                <p>
+                    <li>When there is an option of the multi spindle</li><p/>
+                    <ul>Maximum speed(rpm) of spindle motor
+                        <table border="1">
+                            <tr>
+                                <td rowspan="4">No spindle switching function, main spindle with spindle switching function</td>
+                                <td>1st spindle</td>
+                                <td>Parameter No.4020(S1)</td>
+                            </tr>
+                            <tr>
+                                <td>2nd spindle</td>
+                                <td>Parameter No.4020(S2)</td>
+                            </tr>
+                            <tr>
+                                <td>3rd spindle</td>
+                                <td>Parameter No.4020(S3)</td>
+                            </tr>
+                            <tr>
+                                <td>4tf spindle</td>
+                                <td>Parameter No.4020(S4)</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="4">Sub spindle with spindle switching function</td>
+                                <td>1st spindle</td>
+                                <td>Parameter No.4196(S1)</td>
+                            </tr>
+                            <tr>
+                                <td>2nd spindle</td>
+                                <td>Parameter No.4196(S2)</td>
+                            </tr>
+                            <tr>
+                                <td>3rd spindle</td>
+                                <td>Parameter No.4196(S3)</td>
+                            </tr>
+                            <tr>
+                                <td>4th spindle</td>
+                                <td>Parameter No.4196(S4)</td>
+                            </tr>
+                        </table>
+                    </ul>
+                </p>
+                <p>
+                    <ul>The using gear number
+                        <table border="1">
+                            <tr>
+                                <td>1st spindle</td>
+                                <td>The gear number is notified by DI signal G028#2 and #1.</td>
+                            </tr>
+                            <tr>
+                                <td>2nd spindle</td>
+                                <td>The gear number is notified by DI signal G029#0.</td>
+                            </tr>
+                            <tr>
+                                <td>3rd spindle</td>
+                                <td>The gear number is notified by DI signal G029#2.</td>
+                            </tr>
+                            <tr>
+                                <td>4th spindle</td>
+                                <td>The gear number is notified by DI signal G031#4.</td>
+                            </tr>
+                        </table>
+                    </ul>
+                </p>
+                <p>
+                    <ul>The maximum speed(rpm) to gear
+                        <table border="1">
+                            <tr>
+                                <td rowspan="4">1st spindle</td>
+                                <td>G028#2=0,G028#1=0</td>
+                                <td>Parameter No.3741</td>
+                            </tr>
+                            <tr>
+                                <td>G028#2=0,G028#1=1</td>
+                                <td>Parameter No.3742</td>
+                            </tr>
+                            <tr>
+                                <td>G028#2=1,G028#1=0</td>
+                                <td>Parameter No.3743</td>
+                            </tr>
+                            <tr>
+                                <td>G028#2=1,G028#1=1</td>
+                                <td>Parameter No.3744</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2">2nd spindle</td>
+                                <td>G029#0=0</td>
+                                <td>Parameter No.3811</td>
+                            </tr>
+                            <tr>
+                                <td>G029#0=1</td>
+                                <td>Parameter No.3812</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2">3rd spindle</td>
+                                <td>G029#2=0</td>
+                                <td>Parameter No.3831</td>
+                            </tr>
+                            <tr>
+                                <td>G029#2=1</td>
+                                <td>Parameter No.3832</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2">4th spindle</td>
+                                <td>G031#4=0</td>
+                                <td>Parameter No.3851</td>
+                            </tr>
+                            <tr>
+                                <td>G031#4=1</td>
+                                <td>Parameter No.3852</td>
+                            </tr>
+                        </table>
+                    </ul>
+                </p>
+            </ul>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>spdl_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                           Specify the spindle number which wants to be acquired.<br/>
+                           Specify -1 or spindle number(1-4).<br/>
+                           When -1 is specified, the spindle speed(rpm) from 1st spindle
+                    to the spindle setted by the parameter is acquired.<br/>
+                           If the spindle number not set by the parameter is specified,
+                    the return value becomes an error(EW_NUMBER).
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>gear_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the gear number used by PMC spindle output control.<br/>
+                            Specify the value of 1-3.  If you specifies excepting 1-3, the return value becomes an error(EW_ATTRIB). <br/>
+                            Moreover, only when all of undermentioned condition 1)-3) are
+                    satisfied, this argument is used as a gear number.
+                        </p>
+                        <ul>
+                            1) No multi spindle option with M system<br/>
+                            2) Select the gear selection mode M type<br/>
+                              (Without constant surface speed control option, 
+                          Parameter No.3706#4=0)<br/>
+                            3) Signal G033#7 is 1.  (The spindle is being controlled with PMC.)<br/>
+                        </ul>
+                    </content>
+                </item>
+                <item>
+                    <name>spdl_speed</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to variable to store the spindle speed(rpm).<br/>
+                            When you specify -1 for spindle number(spdl_no), prepare the
+                    array for amounts of the spindle setted by the parameter, and
+                    specify the top pointer.
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                The spindle number(spdl_no) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>
+                The gear number(gear_no) is wrong.
+            </content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <li>Series 16/18/21, 16i/18i/21i</li>
+            <ul>
+                3701#5, #4 (influenced by setting)<br/>
+                3704#1  (influenced by setting)<br/>
+                3706#4  (influenced by setting)<br/>
+                4020  (influenced by setting)<br/>
+                4196  (influenced by setting)<br/>
+                3741  (influenced by setting)<br/>
+                3742  (influenced by setting)<br/>
+                3743  (influenced by setting)<br/>
+                3744  (influenced by setting)<br/>
+                3811  (influenced by setting)<br/>
+                3812  (influenced by setting)<br/>
+                3831  (influenced by setting)<br/>
+                3832  (influenced by setting)<br/>
+                3851  (influenced by setting)<br/>
+                3852  (influenced by setting)
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+        </p>
+        <l>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+        </l>
+        <w>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+        </pw>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference>
+    </reference>
+
+
+
+  </func>
+</root>

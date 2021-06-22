@@ -1,0 +1,272 @@
+<html>
+<head>
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<link rel="stylesheet" type="text/css" href="fwlib32.css">
+<title>top</title>
+<script language="JavaScript">
+    var endPrefix = "@";                       // 接頭語の終了識別子(上書き禁止)
+    var endResult = "?";                       // 結果の終了識別子(上書き禁止)
+    var typeCookie = "#FANUC_Ver2.0#"; // クッキー情報の終了識別子(上書き禁止)
+    var typeDivid = "=";                        // 分離識別子(上書き禁止) 
+    var typeOK = "O";
+    var typeNG = "X";
+
+    var elemNum = 4;
+    var cookieArray;                              // クッキー値
+
+    // 初期処理
+    function initRun(){
+        
+        // クッキーのデフォルトをチェック状態にする
+        cookieArray = new Array(elemNum);
+        for(var i=0; i < elemNum ; i++){
+            cookieArray[i] = typeOK;
+        }
+        
+        // クッキーの内容を取得する
+        var strCookieInfo = document.cookie;
+        
+        // クッキー情報がある場合
+        if(strCookieInfo != null)
+        {
+            var sIndex = 0;                // 開始オフセットの位置
+            var eIndex = 0;                // 終了オフセットの位置
+        
+            sIndex = strCookieInfo.indexOf(typeCookie);
+
+            // クッキー情報が有効の場合
+            if(sIndex != -1) {
+                eIndex = strCookieInfo.indexOf(typeCookie , sIndex+typeCookie.length);
+
+                // 取得文字列
+                var strResult = strCookieInfo.substring(sIndex+typeCookie.length , eIndex);
+                sIndex = strResult.indexOf(typeDivid,0);
+                sIndex ++;
+                var state=false;
+                var strTemp="";
+                for(var i=0 ; i<elemNum ; i++) {
+                    eIndex = strResult.indexOf( endResult ,  sIndex);
+                    strTemp = strResult.substring(sIndex , eIndex);
+                    sIndex = eIndex + 1;
+                    j = strTemp.indexOf("true" ,  0);
+                    if(j != -1)    // trueがある場合
+                    {
+                        state = typeOK;
+                    }
+                    else    // falseがある場合
+                    {
+                        state= typeNG;
+                    }
+                    cookieArray[i] = state;
+                }
+            }
+        }
+    }
+
+    function loadHtml()
+    {
+        // VCの初期チェックボックス設定
+        if(cookieArray[2] == typeOK)
+        {
+            document.TopMenu.elements[0].checked = true;
+        }
+        else
+        {
+            document.TopMenu.elements[0].checked = false;
+        }
+
+        // VBの初期チェックボックス設定
+        if(cookieArray[3] == typeOK)
+        {
+            document.TopMenu.elements[1].checked = true;
+        }
+        else
+        {
+            document.TopMenu.elements[1].checked = false;
+        }
+        var result = parent.getVBCheck();
+        if(!result)    // VB未対応の場合
+        {
+            setVBCheckBox();
+        }
+    }
+
+    // チェックボックスのチェック
+    function boxCheck(order){
+        var vcVal = document.TopMenu.VC.checked;
+        var vbVal = document.TopMenu.VB.checked;
+        var vbDis = document.TopMenu.VB.disabled;
+        if(!vcVal && !vbVal)
+        {
+            if(vbDis)
+            {
+                alert("Cannot change the box !!");
+            }
+            else
+            {
+                alert("Please choose VC or VB option at least !!");
+            }
+            document.TopMenu.elements[order].checked = true;
+        }
+
+        if( document.TopMenu.VC.checked )
+        {
+          cookieArray[2] = typeOK;
+        }
+        else
+        {
+          cookieArray[2] = typeNG;
+        }
+
+        if( document.TopMenu.VB.checked )
+        {
+          cookieArray[3] = typeOK;
+        }
+        else
+        {
+          cookieArray[3] = typeNG;
+        }
+
+        var lang = getLangType();
+        parent.frmmain.remoteFunc(lang);
+    }
+
+    // コンボボックスが選択された項目にジャンプ
+    function topixJump(){
+        var index = document.TopMenu.TopixJump.selectedIndex;
+        var val = document.TopMenu.TopixJump.options[index].value;
+        parent.frmmain.location.hash=val;
+    }
+
+    // 接続タイプを書き出す関数
+    function writeConnType(){
+        // 接続方法が「HSSB」の場合
+        if(cookieArray[0] == typeOK)
+        {
+            document.write("<b>");
+            document.write("HSSB".fontcolor("Navy"));
+            document.write("</b>");
+        }
+        else
+        {
+            document.write("HSSB".fontcolor("SlateGray"));
+        }
+
+        document.write("  |  ".fontcolor("SlateGray"));
+
+        // 接続方法が「Ethernet」の場合
+        if(cookieArray[1] == typeOK)
+        {
+            document.write("<b>");
+            document.write("Ethernet".fontcolor("Navy"));
+            document.write("</b>");
+        }
+        else
+        {
+            document.write("Ethernet".fontcolor("SlateGray"));
+        }
+    }
+
+    // 接続形態を返す(外部向け)
+    // 戻り値：HSSBのみ(1) Ethernetのみ(2) HSSB・Ethernet(3)
+    function getConnectType(){
+        var val = 0;
+        
+        if( cookieArray == null )
+        {
+          initRun();
+        }
+
+        // HSSBが選択されている場合
+        if(cookieArray[0] == typeOK)
+            val++;
+        // VBが選択されている場合
+        if(cookieArray[1] == typeOK)
+            val+=2;
+        return val;
+    }
+    
+    // 言語種別を返す(外部向け)
+    // 戻り値：VCのみ(1) VBのみ(2) VC・VB(3)
+    function getLangType(){
+        var val = 0;
+        
+        if( cookieArray == null )
+        {
+          initRun();
+        }
+
+        // VCが選択されている場合
+        if(cookieArray[2] == typeOK)
+            val++;
+        // VBが選択されている場合
+        if(cookieArray[3] == typeOK)
+            val+=2;
+        return val;
+    }
+
+    // VBのチェックボックスをfalseにし、選択不可能状態にする
+    function setVBCheckBox(){
+        document.TopMenu.elements[0].checked = true;    // VCにチェックを入れる
+        document.TopMenu.elements[1].checked = false;   // VBのチェックを外す
+        document.TopMenu.elements[1].disabled = true;     // VBをディスエイブルにする
+    }
+
+    // トップページへのリンク
+    function topPageJump(){
+        var linkURL = "FWLIB32.HTM";    // トップページへリンク
+        parent.jumpPage(linkURL);
+    }
+
+    // 関数一覧へのリンク
+    function functionListJump(){
+       // var id = parent.getLinkId();
+       // var linkURL = "./flist_com.htm#" + id;
+        var linkURL = "./flist_com.htm";
+        parent.jumpPage(linkURL);
+    }
+
+   function dataWindow(){
+       var linkURL = "errcode.htm";
+       parent.jumpPage(linkURL);
+   }
+   
+</script>
+</head>
+<!--
+<body bgcolor="lavender" onLoad='loadHtml()' >
+-->
+<body bgcolor="lavender">
+<form name="TopMenu">
+    <table border=0 >
+        <td width="500" align="left">| <a href = "javascript:topPageJump()"><font color="Blue">Top Page</font></a>| 
+                                                <a href = "javascript:functionListJump()"><font color="Blue">Function List</font></a>|
+                                                <a href = "javascript:dataWindow()"><font color="Blue">Return Status of Data Window Functions</font></a>|</td>
+<!--    <td width="100" align="right"><input type='checkbox' name='VC' value='VC_VAL' onClick="boxCheck(0)">VC</td> -->
+<!--    <td width="100" align="left"><input type='checkbox' name='VB' value='VB_VAL' onClick="boxCheck(1)">VB</td>  -->
+        <td width="100" align="center">
+            <select name="TopixJump" onChange="topixJump()">
+                <option value="Function Name">Function Name</option>
+                <option value="Declaration">Declaration</option>
+                <option value="Description">Description</option>
+                <option value="Arguments">Arguments</option>
+                <option value="Return">Return</option>
+                <option value="CNC option">CNC option</option>
+                <option value="CNC parameter">CNC parameter</option>
+                <option value="CNC mode">CNC mode</option>
+                <option value="Available CNC">Available CNC</option>
+                <option value="Reference">See Also</option>
+                <option value="Example">Example</option>
+            </select>
+        </td>
+        <script language="JavaScript">
+            // 初期処理
+            initRun();
+            document.write("<td width='200' align='right'>");
+            writeConnType();
+            document.write("</td>");
+        </script>
+    </table>
+</form>
+</body>
+</html>

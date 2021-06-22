@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_mergeprog</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_mergeprog(unsigned short FlibHndl, short type, long src_prog, unsigned long line_no, long dst_prog);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>This function inserts another program(dst_prog) in specified program(src_prog).</p>
+            <p>The insertion position can select a specified line or the last line. This function cannot be used to MDI program.</p><br/>
+
+            <p>
+                The program which becomes the CNC mode and an object which can be specified for the insertion destination is as follows.<br/>
+                <table border="1" class="dd">
+                    <tr><td>                    </td><td>EDIT mode </td><td>MDI mode  </td><td>Other mode</td></tr>
+                    <tr><td>MDI program         </td><td>&#215;(*1)</td><td>&#215;(*1)</td><td>&#215;(*1)</td></tr>
+                    <tr><td>Selected program    </td><td>    O     </td><td>&#215;(*2)</td><td>&#215;(*2)</td></tr>
+                    <tr><td>Not selected program</td><td>    O     </td><td>    O     </td><td>    O     </td></tr>
+                </table>
+                <span class="dd">O : Available  /  &#215; : Not available</span><br/>
+                <span class="dd">(*1) The return code is EW_DATA(Detail status is 1).</span><br/>
+                <span class="dd">(*2) The return code is EW_MODE.</span>
+            </p>
+
+            <p>
+                The program which becomes the CNC mode and an object which can be specified for the insertion source is as follows.<br/>
+                <table border="1" class="dd">
+                    <tr><td>                    </td><td>EDIT mode </td><td>MDI mode  </td><td>Other mode</td></tr>
+                    <tr><td>MDI program         </td><td>&#215;(*1)</td><td>&#215;(*1)</td><td>&#215;(*1)</td></tr>
+                    <tr><td>Selected program    </td><td>    O     </td><td>    O     </td><td>    O     </td></tr>
+                    <tr><td>Not selected program</td><td>    O     </td><td>    O     </td><td>    O     </td></tr>
+                </table>
+                <span class="dd">O : Available  /  &#215; : Not available</span><br/>
+                <span class="dd">(*1) The return code is EW_DATA(Detail status is 3).</span><br/>
+            </p>
+            <br/>
+            <p>The program from the next data of program number to the previous data of EOR is inserted.</p>
+            <p>The program is inserted from the top of specified line.  When the last line is specified, the program is inserted just before EOR.</p>
+
+            <img src="Program/mergeEx.gif"></img><br/>
+
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the library handle.
+                           See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the insert position of program.</p>
+                        <table border="0" class="dd">
+                          <tr> <td></td><td>0</td><td>：</td><td>Specified line.</td> </tr>
+                          <tr> <td></td><td>1</td><td>：</td><td>Last line.     </td> </tr>
+                        </table>
+                    </content>
+                </item>
+                <item>
+                    <name>src_prog</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the program number of insertion destination.</p>
+                    </content>
+                </item>
+                <item>
+                    <name>line_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the line number by which the program is inserted. (1-)<br/>
+                            This argument is effective at type=0.<br/>
+                            When the line number which does not exist or "0" is specified, the return code is EW_DATA(detail status 2).<br/>
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>dst_prog</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the program number of insertion source.</p>
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_BUSY</name>
+            <content>
+                Busy<br/>
+                - Background edit processing in CNC side<br/>
+                - MDI mode on CNC side
+            </content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>
+                data attribute error<br/>
+                Insert position(type) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                data error<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                The following detail status will be set onto the member, err_no of ODBERR structure.<br/>
+                <table>
+                    <tr><td>0</td><td>:</td><td>Error except EW_DATA</td></tr>
+                    <tr><td>1</td><td>:</td><td>The program number of insertion destination(dst_prog) is wrong.</td></tr>
+                    <tr><td>2</td><td>:</td><td>The Line number(lone_no) is wrong. (does not exist line number or "0")</td></tr>
+                    <tr><td>3</td><td>:</td><td>The program number of insertion source(src_prog) is wrong.</td></tr>
+                    <tr><td>4</td><td>:</td><td>The same program number is specified.</td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The extended driver/library function is necessary.
+            </content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>
+                Write protection on CNC side<br/>
+                CNC parameter is a state of write-protection (O8000-/O9000- protection, encoding).
+            </content>
+        </item>
+        <item>
+            <name>EW_OVERFLOW</name>
+            <content>
+                Memory overflow<br/>
+                It is lack of free area in CNC memory. Make enough free area in CNC memory. 
+            </content>
+        </item>
+        <item>
+            <name>EW_MODE</name>
+            <content>
+                CNC mode error
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                CNC execution rejection<br/>
+                - Program of the insertion destination is running.<br/>
+                - Some alarm in CNC.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            <p>The extended driver/library function are necessary.</p>
+        </hssb>
+    </option>
+
+
+
+    <parameter></parameter>
+
+
+
+    <mode>
+        <cmn>
+            See the above description.
+        </cmn>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        
+    </support>
+
+
+
+    <reference>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

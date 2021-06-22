@@ -39,7 +39,7 @@ namespace l99.driver.fanuc.collectors
                         _machine.SliceVeneer(path_slices.ToArray());
 
                         _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.SysInfo), "sys_info");
-                        _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.StatInfo), "stat_info");
+                        _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.StatInfoText), "stat_info");
                         _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.RdAxisname), "axis_name");
                         _machine.ApplyVeneerAcrossSlices(typeof(fanuc.veneers.RdSpindlename), "spindle_name");
                         

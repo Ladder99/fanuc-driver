@@ -1,0 +1,487 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rdalmhistry5</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdalmhistry5(unsigned short FlibHndl,
+                                unsigned short s_no,unsigned short e_no,unsigned short length,ODBAHIS5 *his); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+           <p>
+                Reads the alarm history data.
+            </p>
+            <p>
+                Please use this function instead of <a href="History/cnc_rdalmhistry.htm" target="_parent">cnc_rdalmhistry</a> for Series 30i, 0i-D/F and PMi-A.
+            </p>
+            <p>The unit of one alarm history data is called a record.</p>
+            <p>
+                The operation history data and the alarm history data are automatically
+                recorded on the CNC.  When these data are accessed, it is necessary to
+                temporarily stop sampling on the CNC.
+                Therefore, it is necessary to execute "Stop logging operation history
+                data"(<a href="History/cnc_stopophis.htm" target="_parent">cnc_stopophis</a>) 
+                before this function is used.
+            </p>
+            <p>
+                And it is necessary to execute "Restart logging operation history data"
+                (<a href="History/cnc_startophis.htm" target="_parent">cnc_startophis</a>) 
+                after reading to make the sampling stop time of the
+                history data as short as possible.
+            </p>
+            <p>
+                The start/end record number means the relative number uesd at reading
+                the alarm history data.  These record numbers are valid only at the
+                period from the execution of "Stop logging operation history data"
+                until the execution of "Restart logging operation history data".
+            </p>
+            <p>In case of 0i-D, the alarm history data in the path specified by the cnc_setpath is acquired.</p>
+            <p>The alarm history data is acquired in old order.</p>
+        </cmn>
+        <is>
+            <cmn>
+               <p>
+                    Reads the alarm history data.
+                </p>
+                <p>The unit of one alarm history data is called a record.</p>
+                <p>
+                    The operation history data and the alarm history data are automatically
+                    recorded on the CNC.  When these data are accessed, it is necessary to
+                    temporarily stop sampling on the CNC.
+                    Therefore, it is necessary to execute "Stop logging operation history
+                    data"(<a href="History/cnc_stopophis.htm" target="_parent">cnc_stopophis</a>) 
+                    before this function is used.
+                </p>
+                <p>
+                    And it is necessary to execute "Restart logging operation history data"
+                    (<a href="History/cnc_startophis.htm" target="_parent">cnc_startophis</a>) 
+                    after reading to make the sampling stop time of the
+                    history data as short as possible.
+                </p>
+                <p>
+                    The start/end record number means the relative number uesd at reading
+                    the alarm history data.  These record numbers are valid only at the
+                    period from the execution of "Stop logging operation history data"
+                    until the execution of "Restart logging operation history data".
+                </p>
+                <p>The alarm history data is acquired in old order.</p>
+            </cmn>
+        </is>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the start record number. (specify 1 or more.)
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>e_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the end record number. (specify 1 or more.)
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the data block length. (size of ODBAHIS5 structure)
+                        </p>
+                        <img src="History/ODBAHIS5.gif"></img><br/>
+                    </content>
+                </item>
+                <item>
+                    <name>his</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the ODBAHIS5 structure in which the alarm history data is stored.
+                            The ODBAHIS5 structure is as follows.
+                        </p>
+<pre>
+typedef struct odbahis5 {
+    unsigned short  s_no;       /* Start record number     */
+    unsigned short  e_no;       /* Most recently entered   */
+    struct {
+        short   alm_grp;        /* Alarm type              */
+        short   alm_no;         /* Alarm number            */
+        short   axis_no;        /* Axis number or Spindle number */
+        short   year;           /* Year                    */
+        short   month;          /* Month                   */
+        short   day;            /* Day                     */
+        short   hour;           /* Hour                    */
+        short   minute;         /* Minute                  */
+        short   second;         /* Second                  */
+        short   len_msg;        /* Length of alarm message */
+        short   pth_no;         /* path number             */
+        short   dammy;
+        short   dsp_flg;        /* Flag for displaying */
+        short   axis_num;       /* Total axis number */
+        char    alm_msg[64];    /* Alarm message           */
+        long    g_modal[10];    /* Modal data of G code */
+        char    g_dp[10];       /* #7=1 There is a command in the present block. */
+                                /* #6～#0 place of decimal point */
+        long    a_modal[10];    /* Modal data of B,D,E,F,H,M,N,O,S,T code */
+        char    a_dp[10];       /* #7=1 There is a command in the present block. */
+                                /* #6～#0 place of decimal point */
+        long    abs_pos[32];    /* Absolute position in alarm occuring */
+        char    abs_dp[32];     /* Place of decimal point for absolute position in alarm occuring */
+        long    mcn_pos[32];    /* Machine position in alarm occuring */
+        char    mcn_dp[32];     /* Place of decimal point for machine position in alarm occuring */
+    } alm_his[N];               /* N : number of alarm history data to be read  */
+} ODBAHIS5 ;
+</pre>
+                        <dl>
+                            <dt>alm_grp</dt>
+                            <dd>Alarm type</dd>
+                            <dd>
+                                <table border="0" class="dd">
+                                    <tr><td>0 </td> <td>:</td> <td>Parameter switch on</td>        <td>(SW)</td> </tr>
+                                    <tr><td>1 </td> <td>:</td> <td>Power off parameter set</td>    <td>(PW)</td> </tr>
+                                    <tr><td>2 </td> <td>:</td> <td>I/O error</td>                  <td>(IO)</td> </tr>
+                                    <tr><td>3 </td> <td>:</td> <td>Foreground P/S</td>             <td>(PS)</td> </tr>
+                                    <tr><td>4 </td> <td>:</td> <td>Overtravel,External data</td>   <td>(OT)</td> </tr>
+                                    <tr><td>5 </td> <td>:</td> <td>Overheat alarm</td>             <td>(OH)</td> </tr>
+                                    <tr><td>6 </td> <td>:</td> <td>Servo alarm</td>                <td>(SV)</td> </tr>
+                                    <tr><td>7 </td> <td>:</td> <td>Data I/O error</td>             <td>(SR)</td> </tr>
+                                    <tr><td>8 </td> <td>:</td> <td>Macro alarm</td>                <td>(MC)</td> </tr>
+                                    <tr><td>9 </td> <td>:</td> <td>Spindle alarm</td>              <td>(SP)</td> </tr>
+                                    <tr><td>10</td> <td>:</td> <td>Other alarm(DS)</td>            <td>(DS)</td> </tr>
+                                    <tr><td>11</td> <td>:</td> <td>Alarm concerning Malfunction prevent functions</td> <td>(IE)</td> </tr>
+                                    <tr><td>12</td> <td>:</td> <td>Background P/S</td>             <td>(BG)</td> </tr>
+                                    <tr><td>13</td> <td>:</td> <td>Syncronized error</td>          <td>(SN)</td> </tr>
+                                    <tr><td>14</td> <td>:</td> <td>(reserved)</td>                 <td></td>     </tr>
+                                    <tr><td>15</td> <td>:</td> <td>External alarm message</td>     <td>(EX)</td> </tr>
+                                    <tr><td>19</td> <td>:</td> <td>PMC error</td>                  <td>(PC)</td> </tr>
+                                </table>
+                                <table class="dd">
+                                    <tr><td>20 to 31</td> <td>:</td> <td>(Not used)</td> </tr>
+                                </table>
+                            </dd>
+                            <dt>alm_no</dt>
+                            <dd>Alarm number</dd>
+                            <dt>axis_no</dt>
+                            <dd>
+                                The relative axis number(1,..,max controlled axes) in the path or the relative spindle number(1,..,max spindle number) in the path is set in this variable.<br/>
+                                When the flexible path axis assignment function is valid, the absolute axis number + 1000(1001,..,max controlled axis number + 1000) or the relative spindle number(1,..,max spindle number) in the path is set in this variable.<br/>
+                                (Absolute axis number or absolute spindle number <b>0</b> is stored for an unrelated alarm to the axis and the spindle.)<br/>
+                            </dd>
+                            <dt>year</dt>
+                            <dd>Year   (1995,..,2094)</dd>
+                            <dt>month</dt>
+                            <dd>Month  (1,..,12)</dd>
+                            <dt>day</dt>
+                            <dd>Day   (1,..,31)</dd>
+                            <dt>hour</dt>   
+                            <dd>Hour   (0,..,23)</dd>
+                            <dt>minute</dt> 
+                            <dd>Minute (0,..,59)</dd>
+
+                            <dt>second</dt> 
+                            <dd>Second (0,..,59)</dd>
+
+                            <dt>len_msg</dt>
+                            <dd>Length of alarm message (0,..,64)</dd>
+
+                            <dt>pth_no</dt>
+                            <dd>path number(1,..,10)</dd>
+
+                            <dt>dsp_flg</dt>
+                            <dd>Flag for message displaying</dd>
+                                <table class="dd">
+                                    <tr><td>In case of the Macro alarm(alm_grp=8), the state of 6008#1 can be acquired.</td></tr>
+                                    <tr><td>In case of the External alarm message(alm_grp=15), the state of 6301#0 can be acquired.</td></tr>
+                                    <tr><td>In case of the External operator's message, the state of 6301#1 can be acquired.</td></tr>
+                                    <tr><td>（* The status of a point at alarm occurring can get.</td></tr>
+                                </table>
+                            <dt>axis_num</dt>
+                            <dd>Total axis number(0,..,32)(0:axis_num is invalid.)</dd>
+
+                            <dt>alm_msg</dt>
+                                <dd>Alarm message<br/></dd>
+
+                            <dt>g_modal</dt>
+                            <dd>Modal G code of specified G code group at alarm occurring (nonexistence -1)</dd>
+                            <dd>Modal G code group number is specified by the parameter from No.12990 to No.12999.<br/></dd>
+<!--
+                            <dd>
+                                <table>
+                                    <tr><td>&#160;&#160;&#160;&#160;</td><td>g_modal[0]</td><td>,g_dp[0]=No.12990</td></tr>
+                                    <tr><td>&#160;&#160;&#160;&#160;</td><td>&#160;&#160;&#160;&#160;:</td><td>&#160;&#160;&#160;&#160;:</td></tr>
+                                    <tr><td>&#160;&#160;&#160;&#160;</td><td>g_modal[9]</td><td>,g_dp[9]=No.12999</td></tr>
+                                </table>
+                            </dd>
+-->
+                            <dt>g_dp</dt>
+                            <dd>
+                                #7=1 There is a command in the present block.(nonexistence -1)<br/>
+                                #6～#0 place of decimal point
+                            </dd>
+                            <dt></dt>
+                            <dd>
+                                <img src="History/decimal.gif"></img><br/>
+                                #7=0 There is not a command in the present block. <br/>
+                                &#160;&#160;&#160;&#160;=1 There is a command in the present block.
+                            </dd>
+                            <dt></dt>
+                            <dt>a_modal</dt>
+                            <dd>
+                                Modal data of 2nd auxiliary function(prm3460),D,E,F,H,M,N,O,S,T code in alarm occuring(nonexistence -1)
+                            </dd>
+                            <dd>
+                                <table>
+                                    <tr><td>&#160;&#160;&#160;&#160;</td><td>a_modal[0]</td><td>,a_dp[0]=2nd auxiliary function code</td><td>,a_modal[1]</td><td>,a_dp[1]=D code</td></tr>
+                                    <tr><td>&#160;&#160;&#160;&#160;</td><td>a_modal[2]</td><td>,a_dp[2]=E code</td><td>,a_modal[3]</td><td>,a_dp[3]=F code</td></tr>
+                                    <tr><td>&#160;&#160;&#160;&#160;</td><td>a_modal[4]</td><td>,a_dp[2]=H code</td><td>,a_modal[5]</td><td>,a_dp[3]=M code</td></tr>
+                                    <tr><td>&#160;&#160;&#160;&#160;</td><td>a_modal[6]</td><td>,a_dp[2]=N code</td><td>,a_modal[7]</td><td>,a_dp[3]=O code</td></tr>
+                                    <tr><td>&#160;&#160;&#160;&#160;</td><td>a_modal[8]</td><td>,a_dp[2]=S code</td><td>,a_modal[9]</td><td>,a_dp[3]=T code</td></tr>
+                                </table>
+                            </dd>
+                            <dd>
+                                &#160;&#160;&#160;&#160;*In case of 'O' code, specify 5 charactors of head.<br/>
+                                <img src="History/example.gif"></img>
+                            </dd>
+                            <dt>a_dp</dt>
+                            <dd>
+                                #7=1 There is a command in the present block.(nonexistence -1)<br/>
+                                #6～#0 place of decimal point
+                            </dd>
+                            <dt></dt>
+                            <dt></dt>
+                            <dt></dt>
+                            <dd>
+                                <img src="History/decimal.gif"></img><br/>
+                                #7=0 There is not a command in the present block.<br/>
+                                &#160;&#160;&#160;&#160;=1 There is a command in the present block.
+                            </dd>
+                            <dt>abs_pos</dt>
+                            <dd>
+                                Absolute position in alarm occuring
+                            </dd>
+                            <dt>abs_dp</dt>
+                            <dd>
+                                Absolute position place of decimal point in alarm occuring
+                            </dd>
+                            <dt>mcn_pos</dt>
+                            <dd>
+                                Machine position in alarm occuring
+                            </dd>
+                            <dt>mcn_dp</dt>
+                            <dd>
+                                Machine position place of decimal point in alarm occuring<br/>
+                            </dd>
+                            *More than axis number is unused.
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                <a href="History/cnc_stopophis.htm" target="_parent">cnc_stopophis</a> function has not been executed.
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                    Data block length error<br/>
+                    Size of ODBAHIS4 structure(length) is wrong.<br/>
+                    (e_no-s_no+1) * sizeof(data[0]) + 4 > length    
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                Data number error<br/>
+                The specification of the record number (s_no, e_no) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                The extended driver/library function is necessary.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>This function needs the extended driver/library function. </hssb>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+                3112#3,3196#7,12990～12999,3460,6008#1,6301#0,11354#2 (influenced by setting)
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

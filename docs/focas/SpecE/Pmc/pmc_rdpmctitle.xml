@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>pmc_rdpmctitle</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI pmc_rdpmctitle(unsigned short FlibHndl, ODBPMCTITLE *title);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            Reads the PMC title data from PMC.<br/>
+            When this function is executed while editing the title data with PMC,
+            the return value becomes EW_REJECT, so please retry.<br/>
+            <span class="xis">This function is effective in PMC-SB7, 30i, 0i-D/F and PMi-A.</span>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle.<br/>
+                            See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>title</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Pointer to the array of ODBPMCTITLE structure where returned data are stored.<br/>
+                            The ODBPMCTITLE structure is as follows.
+                        </p>
+<pre>
+typedef struct  odbpmctitle {
+    char    mtb[48];       /* MACHINE TOOL BUILDER NAME */
+    char    machine[48];   /* MACHINE TOOL NAME */
+    char    type[48];      /* NC &#38; PMC TYPE NAME */
+    char    prgno[8];      /* PMC PROGRAM NO. */
+    char    prgvers[4];    /* EDITION NO. */
+    char    prgdraw[48];   /* ROGRAM DRAWING NO. */
+    char    date[32];      /* DATE OF PROGRAMIN */
+    char    design[48];    /* PROGRAM DESIGNED BY */
+    char    written[48];   /* ROM WRITTEN BY */
+    char    remarks[48];   /* REMARKS */
+} ODBPMCTITLE ;
+</pre>
+                        <dl>
+                            <dt>mtb</dt>
+                                <dd>MACHINE TOOL BUILDER NAME</dd>
+                            <dt>machine</dt>
+                                <dd>MACHINE TOOL NAME</dd>
+                            <dt>type</dt>
+                                <dd>NC &#38; PMC TYPE NAME</dd>
+                            <dt>prgno</dt>
+                                <dd>PMC PROGRAM NO.</dd>
+                            <dt>prgvers</dt>
+                                <dd>EDITION NO.</dd>
+                            <dt>prgdraw</dt>
+                                <dd>PROGRAM DRAWING NO.</dd>
+                            <dt>date</dt>
+                                <dd>DATE OF PROGRAMING</dd>
+                            <dt>design</dt>
+                                <dd>PROGRAM DESIGNED BY</dd>
+                            <dt>written</dt>
+                                <dd>ROM WRITTEN BY</dd>
+                            <dt>remarks</dt>
+                                <dd>REMARKS</dd>
+
+                            <dt>The each character string is terminated by 'NULL'.</dt>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NOPMC</name>
+            <content>
+                There is no PMC.
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                Ladder program is broken.
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                Title data is editing by PMC.<br/>
+                Please retry.
+            </content>
+        </item>
+        <item>
+            <name>EW_VERSION</name>
+            <content>
+                Version mismatch between PMC and library Replace the library or PMC control software.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <parameter></parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+    </reference>
+
+
+
+  </func>
+</root>

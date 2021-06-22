@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_download4</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_download4(unsigned short FlibHndl, long *length, char *data);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Output NC data to be registered (downloading).</p>
+            <p>
+                This function outputs the characters of NC program as long as it is specified by '*length'.<br/>
+                However, if there is no room to store the specified number of character, this function stores
+                the characters as many as possible to fill the buffer and then sets '*length' with the 
+                real number of characters which are stored in the buffer.
+            </p>
+            <p>
+                (In case of Ethernet connection, the size of 1460 bytes(maximun value) can be transmitted at a time. So, specify the size in 1024-1400 bytes for a value of *length. If the buffer size is a little size, transmission efficiency become to worsen, and  the communication error might occur.)
+            </p>
+            <p>
+                In case that this function cannot output at least one character, it returns EW_BUFFER,
+                so again call this function with the same arguments.
+            </p>
+            <p>
+                Because importance is attached to the speed of data transfer to the CNC, in general,
+                return of errors(EW_DATA, EW_OVRFLOW, etc.) may be delayed. Namely, an error status 
+                may refrect the result caused by the previously executed cnc_download4 callings.<br/>
+                And the error status for some cnc_download4
+                callings just before the finish of downloading is returned by
+                <a href="Program/cnc_dwnend4.htm" target="_parent">cnc_dwnend4</a> function.
+            </p>
+
+            <br/>
+            <b>NC data format</b>
+            <p>NC data to be registered to CNC is a string composed of ASCII characters as the following format.</p>
+
+<p class="dd">
+                LF Block1 LF Block2 LF ... LF %<br/>
+                where LF = 0x0A ('\n')
+</p>
+            <p>
+                'LF' must be placed at the top of the whole program, and '%' at the end.<br/>
+                Data before the first 'LF'are ignored.
+            </p>
+            <p>
+                In case of NC program, address 'O' and program number must be placed in the program to be registered.<br/>
+                For example, to register a program such as
+            </p>
+<pre>
+O1234 ;
+G1 F0.3 W10. ;
+M30 ;
+%
+</pre>
+            <p>send a following string using cnc_download4 function.</p>
+<pre>
+"\nO1234\nG1F0.3W10.\nM30\n%"
+</pre>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle.
+                            See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                            Specify the ponter of the variable to the character length of NC data.<br/>
+                            When this function returns, the actual number of characters that are output
+                            to CNC will be set.
+                        </p>
+                        <p>This function returns EW_LENGTH if '*length' has the value of zero or negative.</p>
+                    </content>
+                </item>
+                <item>
+                    <name>data </name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the ponter of the variable to NC data.</p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_RESET</name>
+            <content>
+                Reset or stop request<br/>
+                CNC required to stop downloading.<br/>
+                Call the <a href="Program/cnc_dwnend4.htm" target="_parent">cnc_dwnend4</a> function.<br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                <a href="Program/cnc_dwnstart4.htm" target="_parent">cnc_dwnstart4</a> function has not been executed.
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                The size of character string is zero or negative.
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                Data error<br/>
+                In order to get more information for this err_no return value, execute
+                <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                The following detail status will be set onto the member, err_no of ODBERR structure.
+                <table>
+                    <colgroup align="center" valign="top">
+                    <colgroup align="center" valign="top">
+                    <colgroup valign="top">
+                    <tr>
+                        <td>1</td><td>:</td><td>A character which is unavailable for NC program is detected.</td>
+                    </tr>
+                    <tr>
+                        <td>2</td><td>:</td><td>When TV check is effective, a block which includes odd number of characters
+                         (including 'LF' at the end of the block) is detected.</td>
+                    </tr>
+                    <tr>
+                        <td>3</td><td>:</td><td>The registered program count is full.</td>
+                    </tr>
+                    <tr>
+                        <td>4</td><td>:</td><td>The same program number has already been registered.</td>
+                    </tr>
+                    <tr>
+                        <td>5</td><td>:</td><td>The same program number is selected on CNC.</td>
+                    </tr>
+                    </colgroup>
+                    </colgroup>
+                    </colgroup>
+                </table>
+                See <a href="#disc">Description</a> about the timing of error.
+            </content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>
+                Write protected on CNC side<br/>
+                Tape memory is write-protected by the CNC parameter setting(O8000-/O9000- protection, encoding).<br/>
+                See <a href="#disc">Description</a> about the timing of error.
+            </content>
+        </item>
+        <item>
+            <name>EW_OVRFLOW</name>
+            <content>
+                Memory overflow<br/>
+                CNC tape memory shorts for the registration.<br/>
+                Make enough free area in CNC memory.<br/>
+                See <a href="#disc">Description</a> about the timing of error.
+            </content>
+        </item>
+        <item>
+            <name>EW_BUFFER</name>
+            <content>
+                Buffer full<br/>
+                Retry because the buffer is full.<br/>
+                See <a href="#disc">Description</a> about the timing of error.
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                CNC execution denied<br/>
+                Downloading is disable in the current CNC status.<br/>
+                (Machining, resetting, mode changing)<br/>
+                See <a href="#disc">Description</a> about the timing of error.
+            </content>
+        </item>
+        <item>
+            <name>EW_ALARM</name>
+            <content>
+                Alarm state<br/>
+                Alarm has occurred while downloading.<br/>
+                See <a href="#disc">Description</a> about the timing of error.
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <type>
+            Pitch error compensation<br/>
+            Custom macro<br/>
+            Work zero offset
+        </type>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            0000#0<br/>
+            3201#2,#5,#6<br/>
+            3202#0,#4<br/>
+            3204#3,#4<br/>
+            3210,3211
+            8900#0
+        </type>
+    </parameter>
+    <is_parameter>
+        <type>
+            0000#0<br/>
+            3201#2,#5,#6<br/>
+            3202#0,#4<br/>
+            3204#3,#4<br/>
+            3210,3211
+            8900#0
+        </type>
+    </is_parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+        <is>
+            <!-- M -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_dwnstart4</name>
+            <file>Program/cnc_dwnstart4.htm</file>
+        </item>
+        <item>
+            <name>cnc_dwnend4</name>
+            <file>Program/cnc_dwnend4.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+<vc><![CDATA[
+The following program registers the following NC program to CNC.
+
+        <PROG123> ;
+        M3 S1200 ;
+        G0 Z0 ;
+        G0 X0 Y0 ;
+        G1 F500 X120. Y-30. ;
+        M30 ;
+
+#include "fwlib32.h"
+
+short example( void )
+{
+        char* prg =
+                "\n"
+                "<PROG123>\n"
+                "M3 S1200\n"
+                "G0 Z0\n"
+                "G0 X0 Y0\n"
+                "G1 F500 X120. Y-30.\n"
+                "M30\n"
+                "%";
+
+        long len, n;
+        short ret;
+
+        ret = cnc_dwnstart4( h, 0, "//CNC_MEM/USER/PATH1" ) ;
+        if ( ret ) return ( ret ) ;
+
+        len = strlen( prg ) ;
+        while ( len > 0 ) {
+                n = len ;
+                ret = cnc_download4( h, &n, prg ) ;
+                if ( ret == EW_BUFFER ) {
+                        continue ;
+                }
+                if ( ret == EW_OK ) {
+                        prg += n ;
+                        len -= n ;
+                }
+                if ( ret != EW_OK ) {
+                        break ;
+                }
+        }
+        ret = cnc_dwnend4( h ) ;
+        return ( ret ) ;
+}
+]]></vc>
+<vcs><![CDATA[
+The following program registers the following NC program to CNC.
+
+        <PROG123> ;
+        M3 S1200 ;
+        G0 Z0 ;
+        G0 X0 Y0 ;
+        G1 F500 X120. Y-30. ;
+        M30 ;
+
+class example
+{
+    public short sample()
+    {
+            string strPrg =
+                    "\n"                    +
+                    "<PROG123>\n"           +
+                    "M3 S1200\n"            +
+                    "G0 Z0\n"               +
+                    "G0 X0 Y0\n"            +
+                    "G1 F500 X120. Y-30.\n" +
+                    "M30\n"                 +
+                    "%";
+
+            int len, n;
+            short ret;
+
+            ret = Focas1.cnc_dwnstart4(h, 0, "//CNC_MEM/USER/PATH1");
+            if (ret != Focas1.EW_OK) return (ret);
+
+            int startPos = 0;
+            len = strPrg.Length;
+            while (len > 0)
+            {
+                    char[] prg = new char[1280];
+                    strPrg.CopyTo(startPos, prg, 0, len);
+
+                    n = len;
+                    ret = Focas1.cnc_download4(h, ref n, prg);
+                    if (ret == (short)Focas1.focas_ret.EW_BUFFER)
+                    {
+                            continue;
+                    }
+                    if (ret == Focas1.EW_OK)
+                    {
+                            startPos += n;
+                            len -= n;
+                    }
+                    if (ret != Focas1.EW_OK)
+                    {
+                            break;
+                    }
+            }
+            ret = Focas1.cnc_dwnend4(h);
+            return (ret);
+    }
+}]]></vcs>
+    </example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_wrintchk</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_wrintchk(unsigned short FlibHndl, short length, IODBINT *intchk);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            Writes the coordinate value of interference check area specified by
+            "datano_s","datano_e","type".<br/>
+            The coordinate value must be stored in "data" array of "IODBINT" with
+            signed binary format.<br/>
+            All value can be written at a time by specifying ALL_AXES for "type".
+
+            <p>The unit of coordinate value is the same as "Read work zero offset
+            value( <a href="ncdata/cnc_rdzofs.htm" target="_parent">cnc_rdzofs</a> )".  See the description of <a href="ncdata/cnc_rdzofs.htm" target="_parent">cnc_rdzofs</a> function.</p>
+
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the data block length (size of IODBINT structure).</p>
+
+                        <p class="dd">(8+4*(number of coordinate)*(number of data))</p>
+
+                        <p><b>T series</b></p>
+                        <p><b>IODBINT</b>
+                            <table>
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                <tr>
+                                    <th>1 coordinate</th>
+                                    <th>all coordinate</th>
+                                </tr>
+                                <tr>
+                                    <td valign="top"><img src="ncdata/inft.gif"/></td>
+                                    <td valign="top"><img src="ncdata/ninft.gif"/></td>
+                                </tr>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+                            <div class="dd">K : Number of data to be written </div>
+                        </p>
+
+                        <p><b>M series</b></p>
+                        <p><b>IODBINT</b>
+                            <table>
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                <tr>
+                                    <th>1 coordinate</th>
+                                    <th>all coordinate</th>
+                                </tr>
+                                <tr>
+                                    <td valign="top"><img src="ncdata/infm.gif"/></td>
+                                    <td valign="top"><img src="ncdata/ninfm.gif"/></td>
+                                </tr>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>intchk</name>
+                    <type>in</type>
+                    <content>
+                        <p>Pointer to the IODBINT structure for the coordinate value of interference check data.  The IODBINT structure is as follows.</p>
+
+<pre>
+typedef struct  iodbint {
+        short   datano_s;       /* start data number */
+        short   type;           /* coordinate type   */
+        short   datano_e;       /* end data number   */
+        long    data[8*K];      /* coordinate value  */
+} IODBINT ;     /* K : number of data to be written  */
+</pre>
+                        <dl>
+                            <dt>datano_s</dt>
+                            <dd>Specify the start interference check data number.<br/>
+                                The available number of interference check data can be
+                            got by <a href="ncdata/cnc_rdintinfo.htm" target="_parent">cnc_rdintinfo</a> function.</dd>
+                            <br/>
+                            <dt>datano_e</dt>
+                            <dd>Specify the end interference check data number.</dd>
+                            <br/>
+                            <dt>type</dt>
+                            <dd>Specify the type of coordinate.<br/>
+                                <br/>
+                                <table class="dd">
+                                    <colgroup align="left" valign="top">
+                                    <colgroup align="left" valign="top">
+                                    <tr>
+                                        <td>ALL_AXES</td>
+                                        <td>:</td>
+                                        <td>assigns all coordinates(ALL_AXES=-1)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1,..,m</td>
+                                        <td>:</td>
+                                        <td>assigns 1 coordinate(TT:m=7, MM:m=5)</td>
+                                    </tr>
+                                    </colgroup>
+                                    </colgroup>
+                                </table>
+                                <p>In case of 1 coordinate, 'type' is as follows.</p>
+                                <table class="dd" border="1">
+                                    <tr>
+                                        <th rowspan="9">T series</th>
+                                        <th>type</th>
+                                        <th>coordinate </th>
+                                    </tr>
+                                    <tr>
+                                        <td>0</td>
+                                        <td>X (area 1)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>Z (area 1)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>I (area 1)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>K (area 1)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>X (area 2)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td>Z (area 2)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>6</td>
+                                        <td>I (area 2)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>7</td>
+                                        <td>K (area 2)</td>
+                                    </tr>
+                                </table>
+
+                                <table class="dd" border="1">
+                                    <tr>
+                                        <th rowspan="7">M series</th>
+                                        <th>type</th>
+                                        <th>coordinate</th>
+                                    </tr>
+                                    <tr>
+                                        <td>0</td>
+                                        <td>X</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>Y</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>Z</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>I</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>J</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td>K</td>
+                                    </tr>
+                                </table>
+                            </dd>
+                            <br/>
+                            <dt>data</dt>
+                            <dd>Specify the coordinate value of interference check data.<br/>
+                                Refer to description of length, type for the storing sequence of data.</dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>Unavailable<br/>This function cannot be used without 2 path control function.</content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                Data block length error<br/>
+                Size of IODBINT structure(length) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>Data number error<br/>
+                Type of coordinate(type) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>Data attribute error<br/>
+                Type of coordinate(type) is wrong.
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                Data error<br/>
+                    Coordinate value of interference check area (data) is out of range.<br/>
+                    In order to get more information for this err_no return value, execute
+                    <a href="misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr
+                    </a> function.  Data number will be set onto the member of err_no of 
+                    ODBERR structure and type of coordinate will be set onto the member of
+                    err_dtno of ODBERR structure.
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>The tool post interference check option (T series) or the multi-path interference check option (M series), and the extended driver/library function are necessary.</content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i-B, 0i-F and 30i, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>
+            <p>This function also needs the tool post interference check option (T series) or the multi-path interference check option (M series). </p>
+        </need>
+        <type>
+            <span class="xis">
+            <li>Series 15</li>
+            T series Tool offset extension (16)/32/80 sets(each path)<br/>
+            <br/>
+            </span>
+            <li class="xis">Series 16/18, 16i/18i, 0i-F, 30i</li>
+            T series Tool offset extension (16)/32/64 sets(each path)<br/>
+            <br/>
+             * () : Basic
+        </type>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 15</li>
+                7605#0,#1,#2,#3,#4,#7<br/>
+                7682,7683<br/>
+                1004#0,#1,#5, 1009#1<br/>
+                <br/>
+                <li>Series 16/18, 16i/18i, 0i-F, 30i</li>
+                8140#0,#1,#2,#3,#4,#5<br/>
+                8151,8152<br/>
+                8141,..,8149<br/>
+                0000#2, 1004#1<br/>
+                <br/>
+            </ul>
+        </type>
+    </parameter>
+    <is_parameter>
+        <type>
+            <ul>
+                8140#0,#1,#2,#3,#4,#5<br/>
+                8151,8152<br/>
+                8141,..,8149<br/>
+                0000#2, 1004#1<br/>
+            </ul>
+        </type>
+    </is_parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+        <add><b></b></add>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdintchk</name>
+            <file>ncdata/cnc_rdintchk.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdintinfo</name>
+            <file>ncdata/cnc_rdintinfo.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

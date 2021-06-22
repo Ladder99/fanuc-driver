@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_rddsfile</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rddsfile(unsigned short FlibHndl, char *dev_name, IN_DSFILE *ds_file_in, OUT_DSINFO *ds_info_out, OUT_DSFILE *ds_file_out); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <ul class="dd">
+                <li>DATA SERVER</li>
+            The list of the files in the current folder of DATA SERVER function (a sub folder is included) is taken out.<br/><br/>
+                <li>DATA SERVER Host</li>
+            The list of the files in the current folder of the present connection host of DATA SERVER function (a sub folder is included) is taken out.<br/><br/>
+                <li>Embedded Ethernet</li>
+            The list of the files in the current folder of the connection host of an embedded Ethernet function (a sub folder is included) is taken out.<br/>
+            </ul>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details. </p>
+                    </content>
+                </item>
+                <item>
+                    <name>dev_name</name>
+                    <type>in</type>
+                    <content>
+                        The pointer of the variable area where the device name to specify is stored is specified.<br/>
+                        Specify the device name is as follows:<br/>
+                        <dl><dd><table border="0">
+                        <tr> <td>DATA SERVER      </td><td>:</td><td>"DATA_SV"   </td> </tr>
+                        <tr> <td>DATA SERVER Host </td><td>:</td><td>"DTSVR_HOST"</td> </tr>
+                        <tr> <td>Embedded Ethernet</td><td>:</td><td>"EMB_ETHER" </td> </tr>
+                        </table></dd></dl>
+                    </content>
+                </item>
+                <item>
+                    <name>ds_file_in</name>
+                    <type>in</type>
+                    <content>
+                        The pointer to IN_DSFILE structure which passes the setting value of file information taken out of a connection host.<br/>
+                        IN_DSFILE structure is as follows:<br/>
+<pre>
+typedef struct in_dsfile {
+    char    path[256];  /* Standard File Name   */
+    long    fnum;       /* Standard File Number */
+    long    offset;     /* Offset               */
+    short   req_num;    /* Request File Number  */
+    short   size_type;  /* Size Type            */
+    short   detail;     /* File Detail          */
+    short   dummy;
+} IN_DSFILE;
+</pre>
+                <ul class="dd">
+                    <li>DATA SERVER</li>
+                    <dl>
+                    <dt>path</dt>
+                        <dd>The file name in the ATA card of DATA SERVER used as a standard is set up.</dd>
+                        <dd>In the ASCII character string ,a ternimus serves as NULL</dd>
+                        <dd>It sets up NULL, in setting up fnum.</dd>
+                    <dt>fnum</dt>
+                        <dd>The file consective numbers in the ATA card of DATA SERVER used as a standard are set up.</dd>
+                        <dd>It sets up 0, in setting up path.</dd>
+                    <dt>offset</dt>
+                        <dd>The difference of the file used as the standard specfied by the head file, path, and fnum of file information which are actury taken out is set up.</dd>
+                    <dt>req_num</dt>
+                        <dd>The numder of files of file information to takeout is set up.</dd>
+                    <dd>req_num can set up to a maximum of 32.</dd>
+                    <dt>size_type</dt>
+                        <dd>The data unit of the size of the file information to takeout is set up.</dd>
+<!--                    <dd>When the ATA card of DATA SERVER is file management format conventionally, even if it specifies 0, it is treated similarly to 1.</dd> -->
+                            <dd><table border="0" class="dd">
+                            <tr> <td>0</td><td>:</td><td>Page</td> </tr>
+                            <tr> <td>1</td><td>:</td><td>Byte</td> </tr>
+                            <tr> <td>2</td><td>:</td><td>KByte (1KByte = 1024Byte)</td> </tr>
+                            <tr> <td>3</td><td>:</td><td>MByte (1MByte = 1024KByte)</td> </tr>
+                            </table></dd>
+                    <dt>detail</dt>
+                        <dd>It set up whether comment information is read together for the file information to take out.</dd>
+                            <dd><table border="0" class="dd">
+                            <tr><td>0</td><td>:</td><td>Comment information is not read.</td></tr>
+                            <tr><td>1</td><td>:</td><td>Comment information is read.</td></tr>
+                            </table></dd>
+                    </dl><br/>
+
+                    <li>DATA SERVER Host,Embedded Ethernet</li>
+                    <dl>
+                    <dt>offset</dt>
+                        <dd>The offset value from a head file of the file information to take out is set up.</dd>
+                    <dt>req_num</dt>
+                        <dd>The numder of files of file information to takeout is set up.</dd>
+                        <dd>req_num can set up to a maximum of 32.</dd>
+                    <dt>detail</dt>
+                        <dd>Read only the file name or read inclusive the file information is set up for the file information to take out.<br/>
+                        <table border="0" class="dd">
+                        <tr><td>0</td><td>:</td><td>Read only the file name.</td></tr>
+                        <tr><td>1</td><td>:</td><td>Read inclusive the file information.</td></tr>
+                        </table></dd>
+                    </dl>
+                    </ul>
+                    </content>
+                </item>
+                <item>
+                    <name>ds_info_out</name>
+                    <type>out</type>
+                    <content>
+                        It is a pointer to OUT_DSINFO structure which stores the information on the whole ATA card.<br/>
+                        It is a pointer to OUT_DSINFO structure which stores a connection host's file information.<br/>
+                        OUT_DSINFO structure is as follows:<br/>
+<pre>
+typedef struct out_dsinfo {
+    short           type;       /* Type           */
+    short           dummy;
+    long            fnum;       /* Serial Number  */
+    long            total;      /* Total File Number   */
+    unsigned long   remain_h;   /* Remains Capacity(Upper) */
+    unsigned long   remain_l;   /* Remains Capacity(Lower) */
+    char            dir[256];   /* Current Folder */
+} OUT_DSINFO
+</pre>
+                <ul class="dd">
+                    <li>DATA SERVER</li>
+                    <dl>
+                    <dt>type</dt>
+                        <dd>The file management format of the ATA card of DATA SERVER is returned.</dd>
+                        <dd><table class="dd">
+                            <tr><td>0</td><td>:</td><td>CNC file management format</td></tr>
+<!--                        <tr><td>1</td><td>:</td><td>Conventional file management format</td></tr> -->
+                        </table></dd>
+                    <dt>fnum</dt>
+                        <dd>The serial numbers from the head file of the file stored in the ds_file_out are returned.</dd>
+                        <dd>In the case of a head file, 1 is returned.</dd>
+                    <dt>total</dt>
+                        <dd>The total of folders and files registred into the present current folder are returned.</dd>
+                    <dt>remain_h</dt>
+                    <dt>remain_l</dt>
+                        <dd>The remaining capacity of the ATA card of DATA SERVER is returned per byte.</dd>
+                        <dd>In the vase of 4Gbyte or less, remain_h is set to 0.</dd>
+                    <dt>dir</dt>
+                        <dd>The present folder in the ATA card of DATA SERVER is returned with a full path.</dd>
+                        <dd>In the ASCII character string ,a ternimus serves as NULL</dd>
+                    </dl><br/>
+
+                    <li>DATA SERVER Host,Embedded Ethernet</li>
+                    <dl>
+                    <dt>fnum</dt>
+                        <dd>The serial numbers from the head file of the file stored in the ds_file_out are returned.</dd>
+                        <dd>In the case of a head file, 1 is returned.</dd>
+                    <dt>total</dt>
+                        <dd>The total of folders and files registered into a connection host's current folder are returned.</dd>
+                    </dl>
+                </ul>
+                </content>
+                </item>
+                <item>
+                    <name>ds_file_out</name>
+                    <type>out</type>
+                    <content>
+                        The pointer to OUT_DSFILE structure which stores the taken-out file information.<br/>
+                        The area which can store the data for the number specified by the variable req_num of Argument ds_file_in is needed.<br/>
+                        OUT_DSFILE structure is as follows:<br/>
+<pre>
+typedef struct out_dsfile {
+    short           year;       /* Last Edit Time */
+    short           mon;        /* Last Edit Time */
+    short           day;        /* Last Edit Time */
+    short           hour;       /* Last Edit Time */
+    short           min;        /* Last Edit Time */
+    short           sec;        /* Last Edit Time */
+    long            size;       /* Size           */
+    unsigned long   attr;       /* Attribute      */
+    char            file[36];   /* File Name      */
+    char            info[128];  /* Information    */
+} OUT_DSFILE
+</pre>
+                    <ul class="dd">
+                    <li>DATA SERVER Host,Embedded Ethernet</li>
+                    <dl>
+                    <dt>year</dt>
+                        <dd>Last Edit Year</dd>
+                        <dd>In the case of the folder, it is invalid.</dd>
+                    <dt>mon</dt>
+                        <dd>Last Edit Month</dd>
+                        <dd>In the case of the folder, it is invalid.</dd>
+                    <dt>day</dt>
+                        <dd>Last Edit Day</dd>
+                        <dd>In the case of the folder, it is invalid.</dd>
+                    <dt>hour</dt>
+                        <dd>Last Edit Hour</dd>
+                        <dd>In the case of the folder, it is invalid.</dd>
+                    <dt>min</dt>
+                        <dd>Last Edit Minutes</dd>
+                        <dd>In the case of the folder, it is invalid.</dd>
+                    <dt>sec</dt>
+                        <dd>Last Edit Seconds</dd>
+                        <dd>In the case of the folder, it is invalid.</dd>
+                    <dt>size</dt>
+                        <dd>Not uned.</dd>
+                        <dd>File Size</dd>
+                        <dd>Only in the case of a file it is effective.</dd>
+                        <dd>The value of the data unit specified by size_type returns.</dd>
+                    <dt>attr</dt>
+                        <dd>The attribute which shows a File or Folder.</dd>
+                        <table class="dd">
+                        <tr> <td>The 31th bit</td><td>:</td><td>Always "1"</td> </tr>
+                        <tr> <td>The 30th bit</td><td>:</td><td>File or folder</td>      <td>0:folder</td>  <td>,1:File</td> </tr>
+                        <tr> <td>The 3rd  bit</td><td>:</td><td>Binary </td>             <td>0:Textry </td> <td>,1:Binary </td> </tr>
+                        <tr> <td>The 0th  bit</td><td>:</td><td>Prohibition of edit </td><td>0:Possible</td><td>,1:Prohibition</td> </tr>
+                        </table>
+                        <dd>Bits other than the above-mentioned are irregular.</dd>
+                    <dt>file</dt>
+                        <dd>File/Folder Name.</dd>
+                        <dd>Maximum of 33 characters of ASCII character string including NULL, a terminus serves as NULL.</dd>
+                    <dt>info</dt>
+                        <dd>The contents of the comment sentence immediately after a program number are stored.</dd>
+                        <dd>Maximum of 78 characters of ASCII character string, a terminus serves as NULL.</dd>
+                        <dd>When a comment sentence does not exist, the craracter string for 78 characters is returned from the head of the main part of data.</dd>
+                        <dd>detail is 1 and, only in the case of a file, it is effective.</dd>
+                        <dd>However, this information does not return about the file which has been selected as the main program.</dd>
+                    </dl><br/>
+
+                    <li>DATA SERVER Host,Embedded Ethernet</li>
+                    <dl>
+                    <dt>file</dt>
+                        <dd>The file name for operation is returned.</dd>
+                        <dd>Maximum of 33 characters of ASCII character string including NULL, and place the NULL at the end.</dd>
+                        <dd>It becomes effective only when 1 is specified to be detail variable of argument ds_file_in.</dd>
+                    <dt>info</dt>
+                        <dd>The file name for a display or the string of file information is returned.</dd>
+                        <dd>Maximum of 128 characters of ASCII character string including NULL, and place the NULL at the end.</dd>
+                        <dd>When 0 is specified to be a detail variable of argument ds_file_in,only the file name returns.</dd>
+                        <dd>When 1 is specified to be a detail variable of argument ds_file_in,the file information returns.</dd>
+                    </dl></ul>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a> function.<br/>
+                The following details status will be set onto the member, err_no of ODBERR structure.<br/>
+                <table class="dd">
+                    <tr> <td>22</td><td>:</td><td>The option board is nothing</td> </tr>
+                    <tr> <td>24</td><td>:</td><td>The DATA SERVER function is nothing. </td> </tr>
+                    <tr> <td>26</td><td>:</td><td>The ATA Card is nothing. </td> </tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_BUSY</name>
+            <content>Busy<br/>
+                DATA SERVER or embedded Ethernet is processing. <br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>Data block length error<br/>
+                     The Specification of req_num is wrong.<br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>Data number error<br/>
+                     The Specification of size_type, detail is wrong.<br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_DTSRVR</name>
+            <content>DATA SERVER error<br/>
+                     In order to get more information for this err_no return value,In order to get more information for this err_no return value,<a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a> function.<br/>
+                     The following details status will be set onto the member, err_no of ODBERR structure.<br/>
+                     <li>DATA SERVER</li>
+                     <table class="dd">
+                         <tr> <td>464</td><td>:</td><td>The ATA card is not formated.</td> </tr>
+                     </table>
+                     <li>DATA SERVER Host,Embedded Ethernet</li>
+                     <table class="dd">
+                         <tr> <td>468</td><td>:</td><td>Connection host is not found.</td> </tr>
+                         <tr> <td>501</td><td>:</td><td>Acquision of file information went wrong from the host computer.</td> </tr>
+                         <tr> <td>507</td><td>:</td><td>Change of a directory went wrong.</td> </tr>
+                         <tr> <td>508</td><td>:</td><td>Login to a connection host went wrong.</td> </tr>
+                         <tr> <td>509</td><td>:</td><td>Connection with a connection host went wrong.</td> </tr>
+                         <tr> <td>511</td><td>:</td><td>An error is in a connection host's parameter.</td> </tr>
+                     </table>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            <p> 
+                The DATA SERVER function and the extended driver/library function are necessary.
+            </p>
+        </hssb>
+    </option>
+
+
+
+    <parameter></parameter>
+    <!-- 30i(WinCE) -->
+    <is_parameter></is_parameter>
+
+
+
+    <mode></mode>
+    <!-- 30i(WinCE) -->
+    <is_mode></is_mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rddsdir</name>
+            <file>Data/cnc_rddsdir.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

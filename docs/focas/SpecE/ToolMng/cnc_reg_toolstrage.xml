@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_reg_toolstrage</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_regmagazine( unsigned short FlibHndl, unsigned char mode, IODBTLMAG *mag );</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+
+            <p>Storage position of magazine number and pot number is registered or released to tool management data.</p><br/>
+
+            <p>By specifying the storage position of magazine/pot for the tool, tool can be return the original position after moving to spindle position or stand by position.</p><br/>
+
+            <p>Magazine/pot which is specified as storage position cannot attach other tool.</p>
+            <p>Specify the registration with attaching the tool to storage position.</p>
+            <p>Specify the release with attaching the tool to storage position.</p><br/>
+
+            <p>It is possible to register storage position for all tools in a magazine.</p>
+            <p>It is possible to register storage position for all tools in all magazines.</p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>mode</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the Registration or Release of Tool storage position of specified magazine/pot.
+                        </p>
+                        <table class="dd">
+                            <tr><td>0</td><td>:</td><td>Registration</td></tr>
+                            <tr><td>1</td><td>:</td><td>Release</td></tr>
+                        </table>
+                    </content>
+                </item>
+                <item>
+                    <name>mag</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the pointer to IODBTLMAG structure including the Tool management data number to be registered/released.
+                            The IODBTLMAG structure is as follows.
+<pre>
+typedef struct  iodbtlmag {
+    short magazine;     /* magazine number */
+    short pot;          /* pot number */
+    short tool_index;   /* tool management data number */
+} IODBTLMAG;
+</pre>
+                        <dl>
+                            <dt>magazine</dt>
+                            <dd>specifies magazine number.</dd>
+                            <dd>(Setting range : 1,..,4, 11,..,14, 21,..,24)</dd>
+                            <dt>pot</dt>
+                            <dd>specifies pot number.</dd>
+                            <dd>(Setting range: According to CNC option and CNC parameter)</dd>
+                            <dt>tool_index</dt>
+                            <dd>specifies tool management data number</dd>
+
+                            <dt>magazine</dt>
+                            <dd>specifies magazine number.</dd>
+                            <dd>When all magazine and pot to which tool is attached is specified, set '-1' to magazine number.</dd>
+                            <dd>When all magazine or all pots in magazine is specified, the following items are ignored.</dd>
+                            <dd>- Magazine/pot to which tool is not attached.</dd>
+                            <dd>- Specify of arguments and tool management number.</dd>
+                            <dt>pot</dt>
+                            <dd> Specify pot number</dd>
+                            <dd> When all pot in a magazine is specified, set '-1' to pot number. </dd>
+                            <dt>tool_index</dt>
+                            <dd>Specify the tool management number of Tool storage position for specified magazine/pot.</dd>
+                            <dd>When Tool storage position is released, this argument need not be specified.</dd>
+                        </dl>
+                        </p>
+                    </content>
+                </item>
+           </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                The member in the IODBTLMAG structure is invalid.<br/>
+                In order to get more information for this err_no return value,
+                execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a > function.
+                The following detail status will be set onto the member, err_no of OBDERR structure.
+                <table border="0">
+                    <tr><td>0</td><td>:</td><td>error except EW_DATA</td></tr>
+                    <tr><td>17</td><td>:</td><td>error of magazine number</td></tr>
+                    <tr><td>18</td><td>:</td><td>error of pot number</td></tr>
+                    <tr><td>27</td><td>:</td><td>Registration is commanded to the magazine/pot which is already registered as Tool storage position for other tool.</td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                No option<br/>
+                Tool pair for tool management function: 64 pairs, 240pair or 1000pair and tool management expansion B is necessary.
+            </content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>
+                Write protection<br/>
+                Tool management data table is write protected.
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                CNC execution rejected<br/>
+                The storage position of magazine and pot cannot be registered. There is no tool in specified pot.
+            </content>
+        </item>
+        <item>
+            <name>EW_OVRFLOW</name>
+            <content>
+                Data of multi edge tool has a part of inconsistency on tool management funcion. (only 0i-F,30i/31i/32i)
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>
+            <p>The extended driver/library function are necessary.</p>
+        </hssb>
+
+        <ethr>
+            <p>The Ethernet function and the extended driver/library function are necessary.</p>
+            <p>However, in case of Series 16i/18i/21i-B, 0i-F and 30i, the required CNC option is as follows.</p>
+            <p>When Embedded Ethernet is used,</p>
+            <p><ul>above two optional functions are not required.</ul></p>
+            <p>When Ethernet board is used,</p>
+            <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>
+            Tool pair for tool management function: 64 pairs, 240pair or 1000pair and tool management expansion B is necessary.
+        </need>
+
+        <is>
+            <hssb>
+                <p>The extended driver/library function are necessary.</p>
+            </hssb>
+            <need>
+                Tool pair for tool management function: 64 pairs, 240pair or 1000pair and tool management expansion B is necessary.
+            </need>
+        </is>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            Refer to parameter manual of CNC for details.
+                When tool management function magazine property/pot property is used, It is necessary to set '1' to parameter No.13210#1.<br/>
+        </type>
+    </parameter>
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>H</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>H</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+    </reference>
+
+
+
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

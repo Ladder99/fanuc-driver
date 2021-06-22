@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+    <func>
+
+
+        <title>cnc_rdparainfo3</title>
+
+
+        <declare>
+            <vc>
+                <include>#include "fwlib32.h"</include>
+                <prottype>
+                    FWLIBAPI short WINAPI cnc_rdparainfo3( unsigned short FlibHndl, short s_number, short* read_no, short* prev_no, short* next_no, ODBPARAIF2 info[] );
+                </prottype>
+            </vc>
+        </declare>
+
+
+        <doc>
+            <cmn>
+                <p>Reads the CNC parameter information specified by "s_number" and "*read_no". </p>
+                <p>The CNC parameter is basically non-continuous, and the attribute like the type and the size, etc. is different in each number. </p>
+                <p>Use this function for such as displaying the parameter.</p><br/>
+                <p>This function can read the information of path type and machine group type of the parameter.</p>
+            </cmn>
+        </doc>
+
+
+        <argument>
+            <common>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>s_number</name>
+                        <type>in</type>
+                        <content>
+                            <p>Specify the start parameter number.</p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>read_no</name>
+                        <type>in/out</type>
+                        <content>
+                            <p>Specify the number of parameter information to be read.</p>
+                            <p>The number which was read actually is returned.</p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>prev_no</name>
+                        <type>out</type>
+                        <content>
+                            <p>Pointer to valiable of the previous parameter number to read.</p>
+                            <p>After the function returns, parameter number which exists before the number indicated as s_number is set.</p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>next_no</name>
+                        <type>out</type>
+                        <content>
+                            <p>Pointer to valiable of the next parameter number to read.</p>
+                            <p>After the function returns, parameter number which exists after the number to read is set.</p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>info</name>
+                        <type>out</type>
+                        <content>
+                            <p>Pointer to the ODBPARAIF2 structure including the parameter information. The ODBPARAIF2 structure is as follows.</p>
+<pre>
+typedef struct odbparaif2 {
+    short   prm_no;         /* number of parameter */
+    short   size;           /* parameter size */
+    short   array;          /* arrange type */
+    short   unit;           /* unit */
+    short   dim;            /* dimension */
+    short   input;          /* inout type */
+    short   display;        /* display information */
+    short   others;         /* other information */
+} ODBPARAIF2 ;
+</pre>
+                            <dl>
+                                <dt>info[N].prm_no</dt>
+                                <dd>number of parameter</dd>
+                                <dt>info[N].size</dt>
+                                <dd>parameter size</dd>
+                                <table>
+                                    <colgroup valign="top">
+                                    <colgroup valign="top">
+                                    <colgroup valign="top">
+                                        <table class="dd">
+                                            <tr><td>0</td><td>:</td><td>bit type        </td></tr>
+                                            <tr><td>1</td><td>:</td><td>byte type       </td></tr>
+                                            <tr><td>2</td><td>:</td><td>word type       </td></tr>
+                                            <tr><td>3</td><td>:</td><td>2 word type     </td></tr>
+                                            <tr><td>4</td><td>:</td><td>real number type</td></tr>
+                                        </table>
+                                    </colgroup>
+                                    </colgroup>
+                                    </colgroup>
+                                </table>
+                                <dt>info[N].array</dt>
+                                <dd>arrange type</dd>
+                                <table>
+                                    <colgroup valign="top">
+                                    <colgroup valign="top">
+                                    <colgroup valign="top">
+                                        <table class="dd">
+                                            <tr><td>0</td><td>:</td><td>independent type  </td></tr>
+                                            <tr><td>1</td><td>:</td><td>axes type         </td></tr>
+                                            <tr><td>2</td><td>:</td><td>spindle type      </td></tr>
+                                            <tr><td>3</td><td>:</td><td>paths type        </td></tr>
+                                            <tr><td>4</td><td>:</td><td>machine gorup type</td></tr>
+                                        </table>
+                                    </colgroup>
+                                    </colgroup>
+                                    </colgroup>
+                                </table>
+                                <dt>info[N].unit</dt>
+                                <dd>unit</dd>
+                                <table>
+                                    <colgroup valign="top">
+                                    <colgroup valign="top">
+                                    <colgroup valign="top">
+                                        <table class="dd">
+                                            <tr><td>0</td><td>:</td><td>except real number</td></tr>
+                                            <tr><td>1</td><td>:</td><td>input unit        </td></tr>
+                                            <tr><td>2</td><td>:</td><td>output unit       </td></tr>
+                                            <tr><td>3</td><td>:</td><td>offset unit       </td></tr>
+                                        </table>
+                                    </colgroup>
+                                    </colgroup>
+                                    </colgroup>
+                                </table>
+                                <dt>info[N].dim</dt>
+                                <dd>dimension</dd>
+                                <table>
+                                    <colgroup valign="top">
+                                    <colgroup valign="top">
+                                    <colgroup valign="top">
+                                        <table class="dd">
+                                            <tr><td>0</td><td>:</td><td>except real number </td></tr>
+                                            <tr><td>1</td><td>:</td><td>length unit        </td></tr>
+                                            <tr><td>2</td><td>:</td><td>angle unit         </td></tr>
+                                            <tr><td>3</td><td>:</td><td>length + angle unit</td></tr>
+                                            <tr><td>4</td><td>:</td><td>velocity unit      </td></tr>
+                                        </table>
+                                    </colgroup>
+                                    </colgroup>
+                                    </colgroup>
+                                </table>
+                                <dt>info[N].input</dt>
+                                <dd>input type</dd>
+                                <table>
+                                    <colgroup valign="top">
+                                    <colgroup valign="top">
+                                    <colgroup valign="top">
+                                        <table class="dd">
+                                            <tr><td>0</td><td>:</td><td>normal           </td></tr>
+                                            <tr><td>1</td><td>:</td><td>setting parameter</td></tr>
+                                            <tr><td>2</td><td>:</td><td>input prohibit   </td></tr>
+                                        </table>
+                                    </colgroup>
+                                    </colgroup>
+                                    </colgroup>
+                                </table>
+                                <dt>info[N].display</dt>
+                                <dd>display information</dd>
+                                <table>
+                                    <colgroup valign="top">
+                                    <colgroup valign="top">
+                                    <colgroup valign="top">
+                                        <table class="dd">
+                                            <tr><td>bit 0</td><td>:</td><td>symbol exist   </td></tr>
+                                            <tr><td>bit 1</td><td>:</td><td>top of group   </td></tr>
+                                            <tr><td>bit 2</td><td>:</td><td>bottom of group</td></tr>
+                                            <tr><td>bit 3</td><td>:</td><td>gap required   </td></tr>
+                                        </table>
+                                    </colgroup>
+                                    </colgroup>
+                                    </colgroup>
+                                </table>
+                                <dt>info[N].others</dt>
+                                <dd>other information</dd>
+                                <table>
+                                    <colgroup valign="top">
+                                    <colgroup valign="top">
+                                    <colgroup valign="top">
+                                        <table class="dd">
+                                            <tr><td>bit 0</td><td>:</td><td>unsigned          </td></tr>
+                                            <tr><td>bit 1</td><td>:</td><td>power off required</td></tr>
+                                            <tr><td>bit 2</td><td>:</td><td>not output        </td></tr>
+                                            <tr><td>bit 3</td><td>:</td><td>not compared      </td></tr>
+                                            <tr><td>bit 4</td><td>:</td><td>loader attribute  </td></tr>
+                                        </table>
+                                    </colgroup>
+                                    </colgroup>
+                                    </colgroup>
+                                </table>
+                            </dl>
+                        </content>
+                    </item>
+                </vc>
+            </common>
+        </argument>
+
+
+        <errcode>
+            <item>
+                <name>EW_NUMBER</name>
+                <content>
+                    Data number error<br/>Start parameter number (s_number) is wrong.
+                </content>
+            </item>
+        </errcode>
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 0i-F, 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+    </option>
+
+
+        <parameter></parameter>
+
+
+        <mode></mode>
+
+
+        <support>
+            <m>
+                <fs0ia>X</fs0ia>
+                <fs0ib>X</fs0ib>
+                <fs0id>X</fs0id>
+                <fs0if>O</fs0if>
+                <fs15>X</fs15>
+                <fs15i>X</fs15i>
+                <fs16>X</fs16>
+                <fs18>X</fs18>
+                <fs21>X</fs21>
+                <fs16ia>X</fs16ia>
+                <fs18ia>X</fs18ia>
+                <fs21ia>X</fs21ia>
+                <fs16ib>X</fs16ib>
+                <fs18ib>X</fs18ib>
+                <fs21ib>X</fs21ib>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </m>
+            <t>
+                <fs0ia>X</fs0ia>
+                <fs0ib>X</fs0ib>
+                <fs0id>X</fs0id>
+                <fs0if>O</fs0if>
+                <fs15>X</fs15>
+                <fs15i>X</fs15i>
+                <fs16>X</fs16>
+                <fs18>X</fs18>
+                <fs21>X</fs21>
+                <fs16ia>X</fs16ia>
+                <fs18ia>X</fs18ia>
+                <fs21ia>X</fs21ia>
+                <fs16ib>X</fs16ib>
+                <fs18ib>X</fs18ib>
+                <fs21ib>X</fs21ib>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </t>
+            <lc>
+                <fs0ia>X</fs0ia>
+                <fs0ib>X</fs0ib>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs15>X</fs15>
+                <fs15i>X</fs15i>
+                <fs16>X</fs16>
+                <fs18>X</fs18>
+                <fs21>X</fs21>
+                <fs16ia>X</fs16ia>
+                <fs18ia>X</fs18ia>
+                <fs21ia>X</fs21ia>
+                <fs16ib>X</fs16ib>
+                <fs18ib>X</fs18ib>
+                <fs21ib>X</fs21ib>
+                <fs30ia>X</fs30ia>
+                <fs30ib>X</fs30ib>
+            </lc>
+            <p>
+                <fs0id>X</fs0id>
+                <fs0if>O</fs0if>
+                <fs16i>X</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>O</fs30ib>
+            </p>
+            <l>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>X</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>O</fs30ib>
+            </l>
+            <w>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>X</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </w>
+            <pw>
+                <d>X</d>
+                <h>X</h>
+                <a>O</a>
+            </pw>
+            <is>
+                <m>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </m>
+                <t>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </t>
+                <w>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </w>
+            </is>
+        </support>
+
+
+        <reference>
+            <item>
+                <name>cnc_rdparam</name>
+                <file>ncdata/cnc_rdparam.htm</file>
+            </item>
+            <item>
+                <name>cnc_wrparam</name>
+                <file>ncdata/cnc_wrparam.htm</file>
+            </item>
+            <item>
+                <name>cnc_rdparar</name>
+                <file>ncdata/cnc_rdparar.htm</file>
+            </item>
+            <item>
+                <name>cnc_wrparas</name>
+                <file>ncdata/cnc_wrparas.htm</file>
+            </item>
+            <item>
+                <name>cnc_rdparam_ext</name>
+                <file>ncdata/cnc_rdparam_ext.htm</file>
+            </item>
+            <item>
+                <name>cnc_rdparanum</name>
+                <file>ncdata/cnc_rdparanum.htm</file>
+            </item>
+        </reference>
+
+
+    </func>
+</root>

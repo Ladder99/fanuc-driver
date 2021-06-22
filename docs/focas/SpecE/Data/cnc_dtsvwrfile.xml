@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <title>cnc_dtsvwrfile</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_dtsvwrfile(unsigned short FlibHndl,char *pc_file,char *dtsv_file,short chnl);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+Transfers file from hard disk on personal computer to DATA SERVER.<br/>
+This function is effective for the DATA SERVER board(10BASE-T), and 16i/18i/21i, 0i.
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>pc_file</name>
+                    <type>in</type>
+                    <content>
+Specify the pointer to the file name in the hard disk on personal computer.
+<p/>
+The specification of the file name of the hard disk on personal computer is as follows:
+<table class="dd" >
+<tr> <td valign="top">-</td> <td valign="top">Use ASCII code.</td> </tr>
+<tr> <td valign="top">-</td> <td valign="top">The last character of the file name must be 'NULL'.</td> </tr>
+<tr> <td valign="top">-</td> <td valign="top">Specify with the pathname.</td> </tr>
+<tr> <td valign="top">-</td> <td valign="top">The wild-card('*','?') cannot be used.</td> </tr>
+</table>
+                    </content>
+                </item>
+
+                <item>
+                    <name>dtsv_file</name>
+                    <type>in</type>
+                    <content>
+Specify the pointer to the file name in the DATA SERVER.
+<p/>
+The specification of the file name of the DATA SERVER is as follows:
+
+<table class="dd" >
+<tr> <td valign="top">- </td> <td valign="top">Use ASCII code.</td> </tr>
+<tr> <td valign="top">- </td> <td valign="top">The last character of the file name must be 'NULL'.</td> </tr>
+<tr> <td valign="top">- </td> <td valign="top">It is impossible to specify the path.<br/>(The file is made in the directory "\NCDATA" of the DATA SERVER)</td> </tr>
+<tr> <td valign="top">- </td> <td valign="top">The wild-card('*','?') cannot be used.<br/>Specify the MS-DOS form.</td> </tr>
+</table>
+
+<table class="dd" >
+<tr> <td valign="top"><![CDATA[<ex.>]]>      "XXXXXXXX.XXX" + "NULL"</td> </tr>
+</table>
+<p/>
+However, the "O" number is managed as a file name now.
+<table class="dd" >
+<tr> <td valign="top"><![CDATA[<ex.>]]>      "O0001" + "NULL"</td> </tr>
+</table>
+
+                    </content>
+                </item>
+                <item>
+                    <name>chnl</name>
+                    <type>in</type>
+                    <content>
+Specify Task channel of the DATA SERVER.
+<p/>
+DATA SERVER has 8 Task channels. The channel that a parsonal computer uses for transferring a file is specified by this "chnl". Available number is from 11 to 17.
+<p/>
+DATA SERVER can give 8 services for each user(NC, Personal computer, PMC, C-EXE). In order to decide which channel each user uses, it is necessary that NC parameters(No.941-948) are set with user's number as follows.
+<p/>
+                        <li>User's number</li>
+<table class="dd">
+    <tr><td>0</td><td>:</td><td width="120">Invalid</td>  <td>11</td><td>:</td><td width="220">Personal computer function No.1</td> <td>21</td><td>:</td><td>PMC</td>  </tr>
+    <tr><td>1</td><td>:</td>            <td>CNC No.1</td> <td>12</td><td>:</td>            <td>Personal computer function No.2</td> <td>31</td><td>:</td><td>C-EXE</td></tr>
+    <tr><td>2</td><td>:</td>            <td>CNC No.2</td> <td>13</td><td>:</td>            <td>Personal computer function No.3</td> </tr>
+    <tr><td>3</td><td>:</td>            <td>CNC No.3</td> <td>14</td><td>:</td>            <td>Personal computer function No.4</td> </tr>
+    <tr><td>4</td><td>:</td>            <td>CNC No.4</td> <td>15</td><td>:</td>            <td>Personal computer function No.5</td> </tr>
+    <tr><td>5</td><td>:</td>            <td>CNC No.5</td> <td>16</td><td>:</td>            <td>Personal computer function No.6</td> </tr>
+    <tr><td>6</td><td>:</td>            <td>CNC No.6</td> <td>17</td><td>:</td>            <td>Personal computer function No.7</td> </tr>
+    <tr><td>7</td><td>:</td>            <td>CNC No.7</td> </tr>
+    <tr><td>8</td><td>:</td>            <td>CNC No.8</td> </tr>
+</table>
+
+<p/>
+<li>CNC parameters</li>
+<table class="dd">
+    <tr><td>No.941</td><td>:</td><td>For channel No.1</td></tr>
+    <tr><td>No.942</td><td>:</td><td>For channel No.2</td></tr>
+    <tr><td>No.943</td><td>:</td><td>For channel No.3</td></tr>
+    <tr><td>No.944</td><td>:</td><td>For channel No.4</td></tr>
+    <tr><td>No.945</td><td>:</td><td>For channel No.5</td></tr>
+    <tr><td>No.946</td><td>:</td><td>For Channel No.6</td></tr>
+    <tr><td>No.947</td><td>:</td><td>For Channel No.7</td></tr>
+    <tr><td>No.948</td><td>:</td><td>For Channel No.8</td></tr>
+</table>
+<br/>
+NC patameters(No.941-948) must be set before using this function(If these parameters are all invalid, CNC No.1 uses channel No.1).<br/>
+After using this function, the mode of the channel used by this function is changed to storage mode.
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_BUSY</name>
+            <content>
+Busy<br/>
+<table>
+<tr> <td valign="top">-</td> <td>Try again because DATA SERVER is processing.</td> </tr>
+</table>
+
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                File name(pc_file[]) is wrong, File open error, File read error<br/>
+                In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                The following details status will be set onto the member, err_no of ODBERR structure.
+                <table class="dd">
+                    <tr><td>1</td><td>:</td><td>File(pc_file[]) open error</td></tr>
+                    <tr><td>2</td><td>:</td><td>File(pc_file[]) read error</td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+Task channel setting error in NC parameter
+<table>
+<tr> <td valign="top">-</td> <td>Setting user's number 11-17 for personal computer function to NC parameters(No.941-948) is necessary.</td> </tr>
+</table>
+            </content>
+        </item>
+
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+Task channel setting error in this function
+<table>
+<tr> <td valign="top">-</td> <td>Setting user's number 11-17 for personal computer function to argument"chnl" is necessary.</td> </tr>
+</table>
+            </content>
+        </item>
+
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+No option
+<table>
+<tr> <td valign="top">-</td> <td>The extended driver/library function is necessary.</td> </tr>
+<tr> <td valign="top">-</td> <td>The DATA SERVER board(10BASE-T) is necessary.</td> </tr>
+<tr> <td valign="top">-</td> <td>Hard disk is necessary on the DATA SERVER board.</td> </tr>
+</table>
+            </content>
+        </item>
+
+        <item>
+            <name>EW_DTSRVR</name>
+            <content>
+                DATA SERVER error<br/>
+                In order to get more information for this err_no return value, execute <a href="misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                The following details status will be set onto the member, err_no of ODBERR structure.As for the details, see "Ethernet Board/DATA SERVER Board OPERATOR'S MANUAL".
+                <table class="dd">
+                    <tr><td>0xf000, 0xfe00-</td><td>:</td><td>Error code from DATA SERVER</td></tr>
+                    <tr><td>1</td>              <td>:</td><td>Time out in DATA SERVER's operation</td></tr>
+                </table>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>This function needs the extended driver/library function and DATA SERVER function.</hssb>
+    </option>
+
+
+
+    <parameter>
+        <dtsv>
+            941-948 (Set user's number)
+        </dtsv>
+    </parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_dtsvrdfile</name>
+            <file>Data/cnc_dtsvrdfile.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

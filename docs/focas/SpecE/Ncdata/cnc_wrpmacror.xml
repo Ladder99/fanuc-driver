@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_wrpmacror</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_wrpmacror(unsigned short FlibHndl, unsigned short length, IODBPR *pmacror);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>Writes the P code macro variable (variable for the macro-executor) specified by "datano_s", "datano_e". The data must be stored in "IODBPR" with signed binary format.</p>
+
+            <p>It is possible to exchange the type of P code macro variable by <a href="ncdata/cnc_setpmactype.htm" target="_parent">cnc_setpmactype</a> function. In case of the integer type variable, this indication is invalid and always regarded as the decimal form floating-point type.</p>
+
+            <ul>
+                <li>decimal form floating-point type (data format=M*10**(-E))</li>
+                <table>
+                    <colgroup valign="top">
+                    <colgroup valign="top">
+                    <colgroup valign="top">
+                    <tr>
+                        <td>mcr_val</td>
+                        <td>:</td>
+                        <td>value of variable (=M)<br/>
+                        4-byte binary data with sign<br/>
+                        (available range: 999999999,..,-999999999, integer type:-32768,..,32767) </td>
+                    </tr>
+                    <tr>
+                        <td>dec_val</td>
+                        <td>:</td>
+                        <td>number of places of decimals (=E)<br/>
+                        2-byte binary data with sign<br/>
+                        (available range:-128,..,127, integer type : 0)</td>
+                    </tr>
+                    </colgroup>
+                    </colgroup>
+                    </colgroup>
+                </table>
+                <br/>
+                <li>binary form floating-point type (data format=M*2**(-E))</li>
+                <table>
+                    <colgroup valign="top">
+                    <colgroup valign="top">
+                    <colgroup valign="top">
+                    <tr>
+                        <td>mcr_val</td>
+                        <td>:</td>
+                        <td>numerical part of variable (=M)<br/>
+                        4-byte binary data with sign<br/>
+                        (available range:No limitation)</td>
+                    </tr>
+                    <tr>
+                        <td>dec_val</td>
+                        <td>:</td>
+                        <td>exponent part of variable (=E))<br/>
+                        2-byte binary data with sign<br/>
+                        (available range:-128,..,127)</td>
+                    </tr>
+                    </colgroup>
+                    </colgroup>
+                    </colgroup>
+                </table>
+
+            </ul>
+
+            <p>The value of an undefined variable is called "vacant", and it is expressed as follows both at decimal form floating-point type and at binary form floating-point type.</p>
+
+            <blockquote>
+                <p>mcr_val = 0<br/>
+                dec_val = -1</p>
+            </blockquote>
+
+            <p>See the "PROGRAMING MANUAL" of the macro-executor for details of the P code macro variable.</p>
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+                        <p>Specify the data block length (size of IODBPR structure). </p>
+
+                        <p class="dd">12+8*(Number of P code macro variable)</p>
+
+                        <p><b>IODBPR</b></p>
+
+                        <p><img src="ncdata/pmacro.gif"/></p>
+
+                        <p>N : Number of P code macro variable </p>
+                    </content>
+                </item>
+                <item>
+                    <name>pmacror</name>
+                    <type>in</type>
+                    <content>
+                        <p>Pointer to the IODBPR structure including the P code macro variable. The IODBPR structure is as follows.</p>
+
+<pre>
+typedef struct iodbpr {
+    long  datano_s; /* start P code macro variable number*/
+    short dummy;    /* (not used) */
+    long  datano_e; /* end P code macro variable number */
+    struct {
+          long  mcr_val; /* value of P code macro */
+          short dec_val; /* number of places of decimals */
+    } data[N];           /* N:Number of P code macro variable */
+} IODBPR;
+</pre>
+                        <dl>
+                            <dt>datano_s</dt>
+                            <dd>Specify the start P code macro variable number.</dd>
+                            <br/>
+                            <dt>datano_e</dt>
+                            <dd>Specify the end P code macro variable number.</dd>
+                            <br/>
+                            <dt>mcr_val</dt>
+                            <dd>Specify the value of variable/numerical part of variable.</dd>
+                            <br/>
+                            <dt>dec_val</dt>
+                            <dd>Specify the number of places of decimals/exponent part of variable.</dd>
+                            <br/>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>Data block length error<br/>Size of IODBPR structure(length) is wrong.</content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>Data number error<br/>P code macro variable number(datano_s, datano_e) is wrong.</content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>Data error<br/>Value of P code macro variable(mcr_val, dec_val) is out of available range.</content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>No option<br/>This function needs the macro-executor option.</content>
+        </item>
+        <item class="xis">
+            <name>EW_PASSWD</name>
+            <content>The P code macro variable of specified range cannot be written because the data is protected.<br/>( Series 16i/18i/21i, 0i-A/B/C )</content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <option>
+        <hssb>The extended driver/library function is necessary.</hssb>
+        <ethr><p>The Ethernet function and the extended driver/library function are necessary.</p>
+              <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+              <p>When Embedded Ethernet is used,</p>
+              <p><ul>above two optional functions are not required.</ul></p>
+              <p>When Ethernet board is used,</p>
+              <p><ul>only Ethernet function is required.</ul></p>
+        </ethr>
+        <need>The macro-executor function.</need>
+        <type class="xis">
+            <li>Series 16/18, 16i/18i</li>
+            This function is related to the high-speed cycle cutting option.
+        </type>
+    </option>
+
+
+
+    <parameter>
+        <add>
+            <p>But, this function is related to the compile parameter of the macro-executor. See the "PROGRAMING MANUAL" of the macro-executor for details of the compile parameter.</p>
+        </add>
+    </parameter>
+
+
+
+    <mode>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+        <add><b></b></add>
+
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdpmacro</name>
+            <file>ncdata/cnc_rdpmacro.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrpmacro</name>
+            <file>ncdata/cnc_wrpmacro.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdpmacror</name>
+            <file>ncdata/cnc_rdpmacror.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdpmacror2</name>
+            <file>ncdata/cnc_rdpmacror2.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrpmacror2</name>
+            <file>ncdata/cnc_wrpmacror2.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdpmacroinfo</name>
+            <file>ncdata/cnc_rdpmacroinfo.htm</file>
+        </item>
+        <item>
+            <name>cnc_getpmactype</name>
+            <file>ncdata/cnc_getpmactype.htm</file>
+        </item>
+        <item>
+            <name>cnc_setpmactype</name>
+            <file>ncdata/cnc_setpmactype.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+<vc>
+The following program writes the specified values into the P code macro
+variables within the specified range.
+
+#include "fwlib32.h"
+
+/* start is start variable number to be written. */
+/* value is array of value to be written. */
+/* number is number of variable. */
+short example( long start, long *value, short number )
+{
+        IODBPR *pmacror ;
+        short ret ;
+        long idx ;
+        pmacror = (IODBPR *)malloc( 12+8*number ) ;
+        pmacror-&#62;datano_s = start ;
+        pmacror-&#62;datano_e = start + number - 1 ;
+        for ( idx = 0 ; idx &#60; number ; idx++ ) {
+                pmacror-&#62;data[idx].mcr_val = value[idx] ;
+                pmacror-&#62;data[idx].dec_val = 0 ;
+        }
+        ret = cnc_wrpmacror( h, 12+8*number, pmacror ) ;
+        free( pmacror ) ;
+        return ( ret ) ;
+}
+</vc>
+<vcs><![CDATA[
+The following program writes the specified values into the P code macro
+variables within the specified range.
+
+class example
+{
+    /* start is start variable number to be written. */
+    /* value is array of value to be written. */
+    /* number is number of variable. */
+    public short sample(int start, int[] value, short number)
+    {
+            Focas1.IODBPR      pmcrHead = new Focas1.IODBPR();
+            Focas1.IODBPR_data pmcrData = new Focas1.IODBPR_data();
+            short ret;
+            int idx;
+
+            byte[] bytes = new byte[12 + 8 * number];
+            IntPtr ptrHead = Marshal.AllocCoTaskMem(Marshal.SizeOf(pmcrHead));
+            IntPtr ptrData = Marshal.AllocCoTaskMem(Marshal.SizeOf(pmcrData));
+
+            pmcrHead.datano_s = start;
+            pmcrHead.datano_e = start + number - 1;
+            Marshal.StructureToPtr(pmcrHead, ptrHead, false);
+            Marshal.Copy(ptrHead, bytes, 0, 12);
+            for (idx = 0; idx < number; idx++)
+            {
+                    pmcrData.mcr_val = value[idx];
+                    pmcrData.dec_val = 0;
+
+                    int pos = 12 + idx * Marshal.SizeOf(pmcrData);
+                    Marshal.StructureToPtr(pmcrData, ptrData, false);
+                    Marshal.Copy(ptrData, bytes, pos, Marshal.SizeOf(pmcrData));
+            }
+            ret = Focas1.cnc_wrpmacror(h, (ushort)(12 + 8 * number), bytes);
+            Marshal.FreeCoTaskMem(ptrHead);
+            Marshal.FreeCoTaskMem(ptrData);
+            return (ret);
+    }
+}]]></vcs>
+    </example>
+
+
+
+  </func>
+</root>

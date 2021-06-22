@@ -1,0 +1,233 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>Communication Log Function</title>
+<link rel="stylesheet" type="text/css" href="fwlib32.css">
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<p><a href="fwlib32.htm">Top Page</a></p>
+
+<hr>
+
+<h2>Communication Log Function</h2>
+
+<hr>
+
+<h3><a name="About Error Log"></a>1. Communication Log Function</h3>
+
+<p>The purpose of the communication log function is to record the cause of the error into the file and to investigate the problem rapidly when an error occurs in the Data window library.</p>
+
+<p>The contents of record are saved to the &quot;Fwlib&quot; folder in window directory by the following names. (In Windows Vista, the log files are saved to &quot;\FANUC\Fwlib&quot; of the application folder for all users(Ex.:C:\Programdata).)</p>
+
+<table class="dd">
+	<tr> <td>Ethetnet version(Fwlibe1.dll)               </td><td>:</td><td>Fwlibeth.log</td> </tr>
+	<tr> <td>FS15i(HSSB version)(Fwlib15i.dll)           </td><td>:</td><td>FS150i.log  </td> </tr>
+	<tr> <td>FS16/18/21(HSSB version)(Fwlib160.dll)      </td><td>:</td><td>Fwlib160.log</td> </tr>
+	<tr> <td>FS0i-A(HSSB version)(Fwlib0i.dll)           </td><td>:</td><td>Fwlib0i.log </td> </tr>
+	<tr> <td>FS0i-B(HSSB version)(Fwlib0iB.dll)          </td><td>:</td><td>Fwlib0iB.log</td> </tr>
+	<tr> <td>Power Mate i-H/D(HSSB version)(FwlibPMi.dll)</td><td>:</td><td>FwlibPMi.log</td> </tr>
+</table>
+
+<p>* The HSSB version except the above-mentioned does not output the log.</p>
+
+<hr>
+
+<h3><a name="Error Log Viewer"></a>2. Display contents of record</h3>
+
+<p>The current contents of record can be seen by &quot;FWLOG.EXE&quot; utility.</p>
+
+<p>You can start it by the following procedure.</p>
+<div class=dd>
+	1) Run &quot;FWLOG.EXE&quot; from this CD-ROM.<br>
+	&nbsp;or<br>
+	2) Copy &quot;FWLOG.EXE&quot; from this CD-ROM to a proper folder of a hard disk and then run it.
+</div>
+<p>&quot;Open&quot; dialog box appears after startup. Select &quot;FWLIBETH.LOG&quot; by cursor key and click [OK] button, and the log display screen will be shown.</p>
+
+<p>The operation of log display screen is explained as follows.</p>
+
+<dl>
+    <dt><strong>Move cursor</strong> </dt>
+    <dd>Press cursor key.</dd>
+    <dd>Do one of the following procedure to turn over the page.
+        <ul>
+            <li>Point [View]-[Previous Page] or [Next Page] in the menu.
+            <li>Press [Page Up] key or [Page Down] key of the keyboard.
+        </ul>
+    </dd>
+</dl>
+
+<dl>
+    <dt><strong>Copy to clipboard</strong> </dt>
+    <dd>You can copy the strings in the display area to the clipboard by the following way.
+        <ol>
+            <li>Select the log record lines which you want to copy by pressing [Shift]+[cursor] key.
+            <li>Point [Edit]-[Copy] in the menu or press [Ctrl]+[C] of the keyboard.
+        </ol>
+    </dd>
+</dl>
+
+<dl>
+    <dt><strong>Display specified line</strong> </dt>
+    <dd>Do one of the following procedure to display &quot;Jump&quot; dialog box.
+        <ul>
+            <li>Point [Edit]-[Jump...] in the menu.
+            <li>Press [Ctrl]+[J] of the keyboard.
+        </ul>
+    </dd>
+    <dd>Then specify the record number which you want to display and click [OK] button.
+    </dd>
+</dl>
+
+<dl>
+    <dt><strong>Find</strong> </dt>
+    <dd>Do one of the following procedure to display &quot;Find&quot; dialog box.
+        <ul>
+            <li>Point [Edit]-[Find...] in the menu.
+            <li>Press [Ctrl]+[F] of the keyboard.
+        </ul>
+    </dd>
+    <dd>Then input the keyword which you want to find and click [OK] button.
+    </dd>
+</dl>
+
+<dl>
+    <dt><strong>Print</strong> </dt>
+    <dd>Do one of the following procedure to display &quot;Print&quot; dialog box.
+        <ul>
+            <li>Point [Edit]-[Print...] in the menu.
+            <li>Press [Ctrl]+[P] of the keyboard.
+        </ul>
+    </dd>
+    <dd>Select the range of print and click [OK] button.
+        <blockquote>
+            <table border="1">
+                <tr>
+                    <th>Range</th>
+                    <th>Meaning</th>
+                </tr>
+                <tr>
+                    <td width="20%">All</td>
+                    <td>Print all.</td>
+                </tr>
+                <tr>
+                    <td>This Page</td>
+                    <td>Print the current displayed page only.</td>
+                </tr>
+            </table>
+        </blockquote>
+    </dd>
+</dl>
+
+<dl>
+    <dt><strong>Clear</strong> </dt>
+    <dd>Point [View]-[Clear] in the menu and dispaly &quot;Clear&quot; dialog box.</dd>
+    <dd>Click [OK] button.</dd>
+</dl>
+
+<dl>
+    <dt><strong>Monitor mode</strong> </dt>
+    <dd>In the monitor mode, &quot;FWLOG.EXE&quot; utility reads the log file periodically (default period is 2 seconds) and refreshes own screen. The monitor mode is OFF as default.<br>
+        When the monitor mode is ON, the following functions are disabled.
+        <ul>
+            <li>Print</li>
+            <li>Copy</li>
+            <li>Find</li>
+            <li>Jump</li>
+            <li>Previous Page / Next Page</li>
+            <li>Clear</li>
+        </ul>
+    </dd>
+    <dd>Monitor mode ON/OFF is switched by selecting [View]-[Monitor] in the meue.
+    </dd>
+</dl>
+
+<dl>
+    <dt><strong>Page setting</strong> </dt>
+    <dd>You can change the log records per page and the update period of the monitor mode by the following way.
+        <ol>
+            <li>Point [View]-[Page Setting...] in the menu and dispaly &quot;Page&quot; dialog box.
+            <li>Change the log records and the update period.
+            <li>Click [OK] button.
+        </ol>
+    </dd>
+</dl>
+
+<hr>
+
+<h3><a name="Control Error Log"></a>3. Control contents of record</h3>
+
+<p>In case of the Ethernet version, you can select the grade of log from 4 level.</p>
+
+<blockquote>
+<dl>
+    <dt><em>Level 0</em>
+    <dd>Not recorded.
+    <dt><em>Level 1</em> (default)
+    <dd>TCP/IP initialization/termination events and all errors are recorded.
+    <dt><em>Level 2</em>
+    <dd>All TCP/IP events are recorded with level 1.
+    <dt><em>Level 3</em>
+    <dd>All communication data are recorded with level 2.
+</dl>
+</blockquote>
+
+<p>In case of the HSSB version(except FWlib15i.dll), you can select the grade of log from 4 level.</p>
+
+<blockquote>
+<dl>
+    <dt><em>Level 0</em>
+    <dd>Not recorded.
+    <dt><em>Level 1</em> (default)
+    <dd>When the return value of the function is not normal, the log is output.
+    <dt><em>Level 2</em>
+    <dd>Same as level 1.
+    <dt><em>Level 3</em>
+    <dd>The contents of the level 1 and the input information of the function is output.
+</dl>
+</blockquote>
+
+<p>In case of the HSSB version for the FS15i, when the return value of the function is not normal, the log is output. The contents of the log cannot be controlled.</p>
+
+<p>You can see the current log level by using &quot;LOGLEVEL.EXE&quot; utility.
+You can start it by the following procedure.</p>
+<div class=dd>
+	1) Run &quot;LOGLEVEL.EXE&quot; from this CD-ROM.<br>
+	&nbsp;or<br>
+	2) Copy &quot;LOGLEVEL.EXE&quot; from this CD-ROM to a proper folder of a hard disk and then run it.
+</div>
+
+<dl>
+    <dt>(Usage)</dt>
+    <dd><pre>C:\&gt;LOGLEVEL
+Current log level = 1 (Standard)
+
+C:\&gt;
+</pre>
+    </dd>
+</dl>
+
+<p>And you can change the new level by passing it to &quot;LOGLEVEL.EXE&quot; utility. To enable the changed log level, it is necessary to restart applications that use the Data window library.</p>
+
+<dl>
+    <dt>(Usage)</dt>
+    <dd><pre>C:\&gt;LOGLEVEL 3
+New log level = 3 (Full)
+
+C:\&gt;</pre>
+    </dd>
+</dl>
+
+<p>* Please note that the changed level is reflected in all log files when you change the log level.</p>
+
+<hr>
+
+<p><a href="fwlib32.htm">Top Page</a></p>
+
+</body>
+</html>
