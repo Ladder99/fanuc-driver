@@ -4223,7 +4223,7 @@ namespace l99.driver.fanuc
             public short next_no;
             public ODBPARAIF1 info = new ODBPARAIF1();
         }
-
+        
         /* cnc_rdsetinfo:read informations of CNC setting data */
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class ODBSETIF_info
