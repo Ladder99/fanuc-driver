@@ -8,7 +8,7 @@ namespace l99.driver.fanuc.handlers
 {
     public class SparkplugB: Handler
     {
-        protected ILogger _logger;
+        protected ILogger logger;
         
         private bool SPB_STRICT = true;
         //private string SPB_BROKER_IP = "10.20.30.102";
@@ -19,7 +19,7 @@ namespace l99.driver.fanuc.handlers
         
         public SparkplugB(Machine machine) : base(machine)
         {
-            _logger = LogManager.GetLogger(this.GetType().FullName);
+            logger = LogManager.GetLogger(this.GetType().FullName);
         }
         
         public override async Task InitializeAsync()
@@ -32,7 +32,7 @@ namespace l99.driver.fanuc.handlers
             _protocol.add_node_metric("Properties/OS", "windows");
             _protocol.add_node_metric("Properties/Version", 3.1, MetricTypeEnum.DOUBLE);
             
-            await _protocol.give_node_birth();
+            await _protocol.GiveNodeBirth();
         }
         
         public override async Task<dynamic?> OnDataArrivalAsync(Veneers veneers, Veneer veneer, dynamic? beforeArrival)
@@ -82,19 +82,19 @@ namespace l99.driver.fanuc.handlers
                 add_metric(veneer, veneer.LastArrivedValue.maxpath_no);
                 break; 
             case "sys_info":
-                add_metric(veneer, _protocol.object_to_dataset(veneer.LastArrivedValue), MetricTypeEnum.DATASET);
+                add_metric(veneer, _protocol.ObjectToDataset(veneer.LastArrivedValue), MetricTypeEnum.DATASET);
                 break;
             case "stat_info":
-                add_metric(veneer, _protocol.object_to_dataset(veneer.LastArrivedValue), MetricTypeEnum.DATASET);
+                add_metric(veneer, _protocol.ObjectToDataset(veneer.LastArrivedValue), MetricTypeEnum.DATASET);
                 break;
             case "axis_name":
-                add_metric(veneer, _protocol.array_to_dataset(veneer.LastArrivedValue.axes), MetricTypeEnum.DATASET);
+                add_metric(veneer, _protocol.ArrayToDataset(veneer.LastArrivedValue.axes), MetricTypeEnum.DATASET);
                 break;
             case "spindle_name":
-                add_metric(veneer, _protocol.array_to_dataset(veneer.LastArrivedValue.spindles), MetricTypeEnum.DATASET);
+                add_metric(veneer, _protocol.ArrayToDataset(veneer.LastArrivedValue.spindles), MetricTypeEnum.DATASET);
                 break;
             case "axis_data":
-                add_metric(veneer, _protocol.object_to_dataset(new
+                add_metric(veneer, _protocol.ObjectToDataset(new
                 {
                     veneer.LastArrivedValue.pos.absolute,
                     veneer.LastArrivedValue.pos.machine,
@@ -108,8 +108,8 @@ namespace l99.driver.fanuc.handlers
                 add_metric(veneer, veneer.LastArrivedValue.data);
                 break;
             case "gcode_blocks":
-                //_logger.Trace(JObject.FromObject(veneer.LastArrivedValue.blocks).ToString());
-                add_metric(veneer, _protocol.array_to_dataset(veneer.LastArrivedValue.blocks), MetricTypeEnum.DATASET);
+                //logger.Trace(JObject.FromObject(veneer.LastArrivedValue.blocks).ToString());
+                add_metric(veneer, _protocol.ArrayToDataset(veneer.LastArrivedValue.blocks), MetricTypeEnum.DATASET);
                 break;
            }
         }
@@ -122,25 +122,25 @@ namespace l99.driver.fanuc.handlers
         
         public override async Task<dynamic?> OnCollectorSweepCompleteAsync(Machine machine, dynamic? beforeSweepComplete)
         {
-            await _protocol.dequeue_node_metrics();
+            await _protocol.DequeueNodeMetrics();
             
             switch (_protocol.DeviceState)
             {
                 case Protocol.DeviceStateEnum.NONE:
                     if(_last_connection_success == true)
-                        await _protocol.give_device_birth();
+                        await _protocol.GiveDeviceBirth();
                     break;
                 
                 case Protocol.DeviceStateEnum.ALIVE:
                     if(_last_connection_success == false)
-                        await _protocol.give_device_death();
+                        await _protocol.GiveDeviceDeath();
                     else
-                        await _protocol.dequeue_device_metrics();
+                        await _protocol.DequeueDeviceMetrics();
                     break;
                 
                 case Protocol.DeviceStateEnum.DEAD:
                     if(_last_connection_success == true)
-                        await _protocol.give_device_birth();
+                        await _protocol.GiveDeviceBirth();
                     break;
             }
             

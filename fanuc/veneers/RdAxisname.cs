@@ -9,13 +9,13 @@ namespace l99.driver.fanuc.veneers
     {
         public RdAxisname(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
-            _lastChangedValue = new
+            lastChangedValue = new
             {
                 axes = new List<dynamic>()
             };
         }
         
-        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additional_inputs)
+        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
         {
             if (input.success)
             {
@@ -39,12 +39,12 @@ namespace l99.driver.fanuc.veneers
                 
                 await onDataArrivedAsync(input, current_value);
                 
-                if(current_value.axes.IsDifferentHash((List<dynamic>)_lastChangedValue.axes))
+                if(current_value.axes.IsDifferentHash((List<dynamic>)lastChangedValue.axes))
                     await onDataChangedAsync(input, current_value);
                 
                 /*
                 var current_hc = current_value.axes.Select(x => x.GetHashCode());
-                var last_hc = ((List<dynamic>)_lastChangedValue.axes).Select(x => x.GetHashCode());
+                var last_hc = ((List<dynamic>)lastChangedValue.axes).Select(x => x.GetHashCode());
                 
                 await onDataArrivedAsync(input, current_value);
                 

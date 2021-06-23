@@ -8,13 +8,13 @@ namespace l99.driver.fanuc.veneers
     {
         public Alarms(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
-            _lastChangedValue = new 
+            lastChangedValue = new 
             {
                 alarms = new List<dynamic>() { -1 }
             };
         }
         
-        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additional_inputs)
+        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
         {
             var success = true;
             var temp_value = new List<dynamic>() ;
@@ -54,7 +54,7 @@ namespace l99.driver.fanuc.veneers
                 
                 await onDataArrivedAsync(input, current_value);
 
-                if (current_value.alarms.IsDifferentHash((List<dynamic>) _lastChangedValue.alarms))
+                if (current_value.alarms.IsDifferentHash((List<dynamic>) lastChangedValue.alarms))
                 {
                     await onDataChangedAsync(input, current_value);
                 }

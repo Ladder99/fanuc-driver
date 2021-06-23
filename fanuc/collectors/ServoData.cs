@@ -7,7 +7,7 @@ namespace l99.driver.fanuc.collectors
 {
     public class ServoData : FanucCollector
     {
-        public ServoData(Machine machine, int sweepMs = 1000, params dynamic[] additional_params) : base(machine, sweepMs, additional_params)
+        public ServoData(Machine machine, int sweepMs = 1000, params dynamic[] additionalParams) : base(machine, sweepMs, additionalParams)
         {
             
         }
@@ -16,28 +16,28 @@ namespace l99.driver.fanuc.collectors
         {
             try
             {
-                while (!_machine.VeneersApplied)
+                while (!machine.VeneersApplied)
                 {
-                    dynamic connect = await _machine["platform"].ConnectAsync();
+                    dynamic connect = await machine["platform"].ConnectAsync();
                     
                     if (connect.success)
                     {
-                        dynamic path = await _machine["platform"].SetPathAsync(1);
-                        dynamic x = await _machine["platform"].SvdtStartRdAsync(1);
+                        dynamic path = await machine["platform"].SetPathAsync(1);
+                        dynamic x = await machine["platform"].SvdtStartRdAsync(1);
                         
-                        dynamic disconnect = await _machine["platform"].DisconnectAsync();
+                        dynamic disconnect = await machine["platform"].DisconnectAsync();
                         
-                        _machine.VeneersApplied = true;
+                        machine.VeneersApplied = true;
                     }
                     else
                     {
-                        await Task.Delay(_sweepMs);
+                        await Task.Delay(sweepMs);
                     }
                 }
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, $"[{_machine.Id}] Collector initialization failed.");
+                logger.Error(ex, $"[{machine.Id}] Collector initialization failed.");
             }
 
             return null;
@@ -47,13 +47,13 @@ namespace l99.driver.fanuc.collectors
         {
             try
             {
-                dynamic connect = await _machine["platform"].ConnectAsync();
+                dynamic connect = await machine["platform"].ConnectAsync();
                 
                 if (connect.success)
                 {
-                    dynamic x = await _machine["platform"].SvdtRdDataAsync(1024);
+                    dynamic x = await machine["platform"].SvdtRdDataAsync(1024);
                     
-                    dynamic disconnect = await _machine["platform"].DisconnectAsync();
+                    dynamic disconnect = await machine["platform"].DisconnectAsync();
                 }
                 
                 LastSuccess = connect.success;
@@ -64,7 +64,7 @@ namespace l99.driver.fanuc.collectors
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, $"[{_machine.Id}] Collector sweep failed.");
+                logger.Error(ex, $"[{machine.Id}] Collector sweep failed.");
             }
 
             return null;

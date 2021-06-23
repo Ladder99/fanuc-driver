@@ -2,25 +2,16 @@ namespace l99.driver.fanuc
 {
     public class FocasEndpoint
     {
-        public string IPAddress
-        {
-            get { return _focasIpAddress; }
-        }
-        
+        public string IPAddress => _focasIpAddress;
+
         private string _focasIpAddress = "127.0.0.1";
         
-        public ushort Port
-        {
-            get { return _focasPort; }
-        }
-        
+        public ushort Port => _focasPort;
+
         private ushort _focasPort = 8193;
         
-        public short ConnectionTimeout
-        {
-            get { return _connectionTimeout; }
-        }
-        
+        public short ConnectionTimeout => _connectionTimeout;
+
         private short _connectionTimeout = 3;
 
         public FocasEndpoint(string focasIpAddress, ushort focasPort, short connectionTimeout)

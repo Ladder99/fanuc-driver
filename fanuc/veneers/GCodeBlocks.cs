@@ -14,19 +14,19 @@ namespace l99.driver.fanuc.veneers
         {
             _blocks = new Blocks();
             
-            _lastChangedValue = new
+            lastChangedValue = new
             {
                 blocks = new List<gcode.Block>()
             };
         }
         
-        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additional_inputs)
+        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
         {
-            if (input.success && additional_inputs[0].success && additional_inputs[1].success)
+            if (input.success && additionalInputs[0].success && additionalInputs[1].success)
             {
                 _blocks.Add(input.response.cnc_rdblkcount.prog_bc, 
-                    additional_inputs[0].response.cnc_rdactpt.blk_no, 
-                    additional_inputs[1].response.cnc_rdexecprog.data);
+                    additionalInputs[0].response.cnc_rdactpt.blk_no, 
+                    additionalInputs[1].response.cnc_rdexecprog.data);
                 
                 var current_value = new
                 {
@@ -35,7 +35,7 @@ namespace l99.driver.fanuc.veneers
                 
                 await onDataArrivedAsync(input, current_value);
                 
-                var last_keys = ((List<gcode.Block>)_lastChangedValue.blocks).Select(x => x.BlockNumber);
+                var last_keys = ((List<gcode.Block>)lastChangedValue.blocks).Select(x => x.BlockNumber);
                 var current_keys = ((List<gcode.Block>)current_value.blocks).Select(x => x.BlockNumber);
 
                 if (last_keys.Except(current_keys).Count() + current_keys.Except(last_keys).Count() > 0)

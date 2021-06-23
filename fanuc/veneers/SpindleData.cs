@@ -9,7 +9,7 @@ namespace l99.driver.fanuc.veneers
     {
         public SpindleData(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
-            _lastChangedValue = new
+            lastChangedValue = new
             {
                 name = string.Empty,
                 
@@ -48,28 +48,28 @@ namespace l99.driver.fanuc.veneers
             return string.Empty;
         }
         
-        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additional_inputs)
+        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
         {
             
             var current_spindle = input;
-            var spindle_names = additional_inputs[0];
-            var sp_speed = additional_inputs[1];
-            var sp_meter = additional_inputs[2];
-            var sp_maxrpm = additional_inputs[3]; 
-            var sp_gear = additional_inputs[4];
-            var diag_lnk = additional_inputs[5];
-            var diag_temp = additional_inputs[6];
-            var diag_comms = additional_inputs[7];
-            var diag_load_perc = additional_inputs[8];
-            var diag_load_min = additional_inputs[9];
-            var diag_coder = additional_inputs[10];
-            var diag_loop_dev = additional_inputs[11];
-            var diag_sync_error = additional_inputs[12];
-            var diag_pos_data = additional_inputs[13];
-            var diag_error = additional_inputs[14];
-            var diag_warn = additional_inputs[15];
-            var diag_rev_1 = additional_inputs[16];
-            var diag_rev_2 = additional_inputs[17];
+            var spindle_names = additionalInputs[0];
+            var sp_speed = additionalInputs[1];
+            var sp_meter = additionalInputs[2];
+            var sp_maxrpm = additionalInputs[3]; 
+            var sp_gear = additionalInputs[4];
+            var diag_lnk = additionalInputs[5];
+            var diag_temp = additionalInputs[6];
+            var diag_comms = additionalInputs[7];
+            var diag_load_perc = additionalInputs[8];
+            var diag_load_min = additionalInputs[9];
+            var diag_coder = additionalInputs[10];
+            var diag_loop_dev = additionalInputs[11];
+            var diag_sync_error = additionalInputs[12];
+            var diag_pos_data = additionalInputs[13];
+            var diag_error = additionalInputs[14];
+            var diag_warn = additionalInputs[15];
+            var diag_rev_1 = additionalInputs[16];
+            var diag_rev_2 = additionalInputs[17];
             
             var spindle_fields = spindle_names.response.cnc_rdspdlname.spdlname.GetType().GetFields();
             var spindle_value = spindle_fields[current_spindle - 1].GetValue(spindle_names.response.cnc_rdspdlname.spdlname);
@@ -114,7 +114,7 @@ namespace l99.driver.fanuc.veneers
             
             await onDataArrivedAsync(input, current_value);
             
-            if(current_value.IsDifferentString((object)_lastChangedValue))
+            if(current_value.IsDifferentString((object)lastChangedValue))
                 await onDataChangedAsync(input, current_value);
             /*
             else

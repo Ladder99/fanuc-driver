@@ -29,7 +29,7 @@ namespace l99.driver.fanuc
                 response = new { cnc_startupprocess = new { } }
             };
             
-            _logger.Trace($"[{_machine.Id}] Platform invocation result:\n{JObject.FromObject(nr).ToString()}");
+            logger.Trace($"[{machine.Id}] Platform invocation result:\n{JObject.FromObject(nr).ToString()}");
 
             return nr;
 #else

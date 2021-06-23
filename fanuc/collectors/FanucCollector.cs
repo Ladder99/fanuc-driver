@@ -6,18 +6,18 @@ namespace l99.driver.fanuc.collectors
 {
     public class FanucCollector : Collector
     {
-        protected dynamic _platform;
+        protected dynamic platform;
         
-        public FanucCollector(Machine machine, int sweepMs = 1000, params dynamic[] additional_params) : base(machine, sweepMs, additional_params)
+        public FanucCollector(Machine machine, int sweepMs = 1000, params dynamic[] additionalParams) : base(machine, sweepMs, additionalParams)
         {
-            _platform = _machine["platform"];
-            _platform.StartupProcess(3, "focas2.log");
+            platform = base.machine["platform"];
+            platform.StartupProcess(3, "focas2.log");
         }
         
         ~FanucCollector()
         {
             // TODO: verify invocation
-            _platform.ExitProcess();
+            platform.ExitProcess();
         }
         
         protected dynamic PathMarker(dynamic path)
@@ -25,12 +25,12 @@ namespace l99.driver.fanuc.collectors
             return new {path.request.cnc_setpath.path_no};
         }
 
-        protected dynamic AxisName(dynamic axis)
+        protected dynamic axisName(dynamic axis)
         {
             return ((char) axis.name).AsAscii() + ((char) axis.suff).AsAscii();
         }
 
-        protected dynamic SpindleName(dynamic spindle)
+        protected dynamic spindleName(dynamic spindle)
         {
             return ((char) spindle.name).AsAscii() +
                    ((char) spindle.suff1).AsAscii() +
@@ -38,7 +38,7 @@ namespace l99.driver.fanuc.collectors
                    // ((char) spindle.suff3).AsAscii(); reserved
         }
 
-        protected dynamic SpindleMarker(dynamic spindle)
+        protected dynamic spindleMarker(dynamic spindle)
         {
             return new
             {
@@ -49,7 +49,7 @@ namespace l99.driver.fanuc.collectors
             };
         }
 
-        protected dynamic AxisMarker(dynamic axis)
+        protected dynamic axisMarker(dynamic axis)
         {
             return new
             {

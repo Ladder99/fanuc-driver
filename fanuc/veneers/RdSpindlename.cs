@@ -9,13 +9,13 @@ namespace l99.driver.fanuc.veneers
     {
         public RdSpindlename(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
-            _lastChangedValue = new
+            lastChangedValue = new
             {
                 spindles = new List<dynamic>()
             };
         }
         
-        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additional_inputs)
+        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
         {
             if (input.success)
             {
@@ -40,12 +40,12 @@ namespace l99.driver.fanuc.veneers
                 
                 await onDataArrivedAsync(input, current_value);
                 
-                if(current_value.spindles.IsDifferentHash((List<dynamic>)_lastChangedValue.spindles))
+                if(current_value.spindles.IsDifferentHash((List<dynamic>)lastChangedValue.spindles))
                     await onDataChangedAsync(input, current_value);
                 
                 /*
                 var current_hc = current_value.spindles.Select(x => x.GetHashCode());
-                var last_hc = ((List<dynamic>)_lastChangedValue.spindles).Select(x => x.GetHashCode());
+                var last_hc = ((List<dynamic>)lastChangedValue.spindles).Select(x => x.GetHashCode());
                 
                 await onDataArrivedAsync(input, current_value);
                 

@@ -10,9 +10,9 @@ namespace l99.driver.fanuc.gcode
     private Blocks _blocks = new Blocks();
     private short _readAheadBytes = 128;
     
-    dynamic blkcount = await _machine["platform"].RdBlkCountAsync();
-    dynamic actpt = await _machine["platform"].RdActPtAsync();
-    dynamic execprog = await _machine["platform"].RdExecProgAsync(_readAheadBytes);
+    dynamic blkcount = await machine["platform"].RdBlkCountAsync();
+    dynamic actpt = await machine["platform"].RdActPtAsync();
+    dynamic execprog = await machine["platform"].RdExecProgAsync(_readAheadBytes);
     _blocks.Add(blkcount.response.cnc_rdblkcount.prog_bc, actpt.response.cnc_rdactpt.blk_no, execprog.response.cnc_rdexecprog.data);
     Console.WriteLine(_blocks.ToString(showMissedBlocks: true));
     

@@ -5,7 +5,7 @@ namespace l99.driver.fanuc.veneers
 {
     public class StatInfoText : Veneer
     {
-        readonly string[] _aut_text = new string[] 
+        readonly string[] _autText = new string[] 
         { 
             "****(No selection)", 
             "MDI", 
@@ -15,7 +15,7 @@ namespace l99.driver.fanuc.veneers
             "TeacH IN"
         };
         
-        readonly string[] _run_text = new string[]
+        readonly string[] _runText = new string[]
         {
             "STOP",
             "HOLD",
@@ -33,7 +33,7 @@ namespace l99.driver.fanuc.veneers
             "HPCC(during RISC operation)"
         };
         
-        readonly string[] _edit_text = new string[]
+        readonly string[] _editText = new string[]
         {
             "****(Not editing)",
             "EDIT",
@@ -44,7 +44,7 @@ namespace l99.driver.fanuc.veneers
             "PuNCH"
         };
         
-        readonly string[] _motion_text = new string[]
+        readonly string[] _motionText = new string[]
         {
             "***",
             "MoTioN",
@@ -52,19 +52,19 @@ namespace l99.driver.fanuc.veneers
             "Wait (waiting:only TT)"
         };
         
-        readonly string[] _mstb_text = new string[]
+        readonly string[] _mstbText = new string[]
         {
             "***",
             "FIN"
         };
         
-        readonly string[] _emergency_text = new string[]
+        readonly string[] _emergencyText = new string[]
         {
             "(Not emergency)",
             "EMerGency"
         };
         
-        readonly string[] _alarm_text = new string[]
+        readonly string[] _alarmText = new string[]
         {
             "(No alarm)",
             "ALarM"
@@ -72,7 +72,7 @@ namespace l99.driver.fanuc.veneers
         
         public StatInfoText(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
-            _lastChangedValue = new
+            lastChangedValue = new
             {
                 mode = new
                 {
@@ -95,7 +95,7 @@ namespace l99.driver.fanuc.veneers
             };
         }
         
-        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additional_inputs)
+        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
         {
             if (input.success)
             {
@@ -103,22 +103,22 @@ namespace l99.driver.fanuc.veneers
                 {
                     mode = new
                     {
-                        automatic = _aut_text[input.response.cnc_statinfo.statinfo.aut]
+                        automatic = _autText[input.response.cnc_statinfo.statinfo.aut]
                     },
                     status = new
                     {
-                        run = _run_text[input.response.cnc_statinfo.statinfo.run],
-                        edit = _edit_text[input.response.cnc_statinfo.statinfo.edit],
-                        motion = _motion_text[input.response.cnc_statinfo.statinfo.motion],
-                        mstb = _mstb_text[input.response.cnc_statinfo.statinfo.mstb],
-                        emergency = _emergency_text[input.response.cnc_statinfo.statinfo.emergency],
-                        alarm = _alarm_text[input.response.cnc_statinfo.statinfo.alarm]
+                        run = _runText[input.response.cnc_statinfo.statinfo.run],
+                        edit = _editText[input.response.cnc_statinfo.statinfo.edit],
+                        motion = _motionText[input.response.cnc_statinfo.statinfo.motion],
+                        mstb = _mstbText[input.response.cnc_statinfo.statinfo.mstb],
+                        emergency = _emergencyText[input.response.cnc_statinfo.statinfo.emergency],
+                        alarm = _alarmText[input.response.cnc_statinfo.statinfo.alarm]
                     }
                 };
                 
                 await onDataArrivedAsync(input, current_value);
                 
-                if (current_value.IsDifferentString((object)_lastChangedValue))
+                if (current_value.IsDifferentString((object)lastChangedValue))
                 {
                     await onDataChangedAsync(input, current_value);
                 }

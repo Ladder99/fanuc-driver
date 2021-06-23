@@ -7,89 +7,15 @@ using NLua.Exceptions;
 
 namespace l99.driver.fanuc.collectors
 {
-    public class NLuaRunner : FanucCollector2
+    public sealed class NLuaRunnerProxy
     {
-        
-        public bool IsValid
-        {
-            get => _lua_script_available && _lua_string_valid;
-        }
+        private NLuaRunner _runner;
 
-        private bool _lua_string_valid = false;
-        private bool _lua_script_available = false;
-        private string _lua_script_path = string.Empty;
-        private Lua _lua_state;
-        private LuaTable _lua_table_collector;
-        private LuaFunction _lua_fnc_init_root;
-        private LuaFunction _lua_fnc_init_path;
-        private LuaFunction _lua_fnc_init_axis_and_spindle;
-        private LuaFunction _lua_fnc_collect_root;
-        private LuaFunction _lua_fnc_collect_path;
-        private LuaFunction _lua_fnc_collect_axis;
-        private LuaFunction _lua_fnc_collect_spindle;
-        
-        public Platform Platform
+        public NLuaRunnerProxy(NLuaRunner runner)
         {
-            get => this._platform;
+            _runner = runner;
         }
         
-        public NLuaRunner(Machine machine, int sweepMs = 1000, params dynamic[] additional_params) : base(machine, sweepMs, additional_params)
-        {
-            _lua_script_path = additional_params[0];
-            Console.WriteLine(_lua_script_path);
-            var ok = _create_lua_state_from_file(_lua_script_path);
-        }
-
-        private bool _create_lua_state_from_file(string file_path)
-        {
-            if (!System.IO.File.Exists(file_path))
-            {
-                _lua_script_available = false;
-                return _lua_script_available;
-            }
-            else
-            {
-                _lua_script_available = true;
-                _lua_state = new Lua();
-                _lua_state.LoadCLRPackage();
-                return _lua_script_available && _load_lua_state(System.IO.File.ReadAllText(file_path));
-            }
-        }
-        
-        private bool _create_lua_state_from_string(string script_string)
-        {
-            _lua_script_available = true;
-            _lua_state = new Lua();
-            _lua_state.LoadCLRPackage();
-            return _lua_script_available && _load_lua_state(script_string);
-        }
-        
-        private bool _load_lua_state(string script_text)
-        {
-            try
-            {
-                _lua_state.DoString(script_text);
-                _lua_string_valid = true;
-                
-                _lua_table_collector = _lua_state["script"] as LuaTable;
-                _lua_fnc_init_root = _lua_table_collector?["init_root"] as LuaFunction;
-                _lua_fnc_init_path = _lua_table_collector?["init_paths"] as LuaFunction;
-                _lua_fnc_init_axis_and_spindle = _lua_table_collector?["init_axis_and_spindle"] as LuaFunction;
-                _lua_fnc_collect_root = _lua_table_collector?["collect_root"] as LuaFunction;
-                _lua_fnc_collect_path = _lua_table_collector?["collect_path"] as LuaFunction;
-                _lua_fnc_collect_axis = _lua_table_collector?["collect_axis"] as LuaFunction;
-                _lua_fnc_collect_spindle = _lua_table_collector?["collect_spindle"] as LuaFunction;
-                
-                //TODO: warn about script syntax
-            }
-            catch (LuaScriptException lse)
-            {
-                _lua_string_valid = false;
-            }
-
-            return _lua_string_valid;
-        }
-
         public bool publish(string topic, dynamic payload, bool retained = false)
         {
             try
@@ -97,7 +23,7 @@ namespace l99.driver.fanuc.collectors
                 var payload_string = payload.GetType().Namespace == null
                     ? JObject.FromObject(payload).ToString()
                     : payload.ToString();
-                _machine.Broker.PublishAsync(topic, payload_string, retained);
+                _runner.Machine.Broker.PublishAsync(topic, payload_string, retained);
                 return true;
             }
             catch (Exception e)
@@ -120,11 +46,126 @@ namespace l99.driver.fanuc.collectors
                 return JObject.FromObject(o).ToString();
         }
 
+        public async Task apply(string veneerType, string veneerName, bool isCompound = false, bool isInternal = false)
+        {
+            await _runner.Apply(veneerType, veneerName, isCompound, isInternal);
+        }
+
+        public dynamic? get(string propertyBagKey)
+        {
+            return _runner.Get(propertyBagKey);
+        }
+        
+        public async Task<dynamic?> set(string propertyBagKey, dynamic? value)
+        {
+            return await _runner.Set(propertyBagKey, value);
+        }
+        
+        public async Task<dynamic?> set_native(string propertyBagKey, dynamic? value)
+        {
+            return await _runner.SetNative(propertyBagKey, value);
+        }
+        
+        public async Task<dynamic?> set_native_and_peel(string propertyBagKey, dynamic? value)
+        {
+            return await _runner.SetNativeAndPeel(propertyBagKey, value);
+        }
+        
+        public async Task<dynamic?> peel(string veneerKey, params dynamic[] inputs)
+        {
+            return await _runner.Peel(veneerKey, inputs);
+        }
+    }
+
+    public class NLuaRunner : FanucCollector2
+    {
+        private NLuaRunnerProxy _luaCollectorProxy;
+        private bool _luaStringValid = false;
+        private bool _luaScriptAvailable = false;
+        private string _luaScriptPath = string.Empty;
+        private Lua _luaState;
+        private LuaTable _luaTableCollector;
+        private LuaFunction _luaFncInitRoot;
+        private LuaFunction _luaFncInitPath;
+        private LuaFunction _luaFncInitAxisAndSpindle;
+        private LuaFunction _luaFncCollectRoot;
+        private LuaFunction _luaFncCollectPath;
+        private LuaFunction _luaFncCollectAxis;
+        private LuaFunction _luaFncCollectSpindle;
+        
+        public bool IsValid
+        {
+            get => _luaScriptAvailable && _luaStringValid;
+        }
+        
+        public Platform Platform
+        {
+            get => this.platform;
+        }
+        
+        public NLuaRunner(Machine machine, int sweepMs = 1000, params dynamic[] additionalParams) : base(machine, sweepMs, additionalParams)
+        {
+            _luaCollectorProxy = new NLuaRunnerProxy(this);
+            _luaScriptPath = additionalParams[0];
+            Console.WriteLine(_luaScriptPath);
+            var ok = createLuaStateFromFile(_luaScriptPath);
+        }
+
+        private bool createLuaStateFromFile(string filePath)
+        {
+            if (!System.IO.File.Exists(filePath))
+            {
+                _luaScriptAvailable = false;
+                return _luaScriptAvailable;
+            }
+            else
+            {
+                _luaScriptAvailable = true;
+                _luaState = new Lua();
+                _luaState.LoadCLRPackage();
+                return _luaScriptAvailable && loadLuaState(System.IO.File.ReadAllText(filePath));
+            }
+        }
+        
+        private bool createLuaStateFromString(string scriptString)
+        {
+            _luaScriptAvailable = true;
+            _luaState = new Lua();
+            _luaState.LoadCLRPackage();
+            return _luaScriptAvailable && loadLuaState(scriptString);
+        }
+        
+        private bool loadLuaState(string scriptText)
+        {
+            try
+            {
+                _luaState.DoString(scriptText);
+                _luaStringValid = true;
+                
+                _luaTableCollector = _luaState["script"] as LuaTable;
+                _luaFncInitRoot = _luaTableCollector?["init_root"] as LuaFunction;
+                _luaFncInitPath = _luaTableCollector?["init_paths"] as LuaFunction;
+                _luaFncInitAxisAndSpindle = _luaTableCollector?["init_axis_and_spindle"] as LuaFunction;
+                _luaFncCollectRoot = _luaTableCollector?["collect_root"] as LuaFunction;
+                _luaFncCollectPath = _luaTableCollector?["collect_path"] as LuaFunction;
+                _luaFncCollectAxis = _luaTableCollector?["collect_axis"] as LuaFunction;
+                _luaFncCollectSpindle = _luaTableCollector?["collect_spindle"] as LuaFunction;
+                
+                //TODO: warn about script syntax
+            }
+            catch (LuaScriptException lse)
+            {
+                _luaStringValid = false;
+            }
+
+            return _luaStringValid;
+        }
+
         public override async Task InitRootAsync()
         {
             try
             {
-                var r = _lua_fnc_init_root?.Call(null, _lua_table_collector, this);
+                var r = _luaFncInitRoot?.Call(null, _luaTableCollector, _luaCollectorProxy);
             }
             catch (Exception e)
             {
@@ -136,7 +177,7 @@ namespace l99.driver.fanuc.collectors
         {
             try
             {
-                var r = _lua_fnc_init_path?.Call(null, _lua_table_collector, this);
+                var r = _luaFncInitPath?.Call(null, _luaTableCollector, _luaCollectorProxy);
             }
             catch (Exception e)
             {
@@ -148,7 +189,7 @@ namespace l99.driver.fanuc.collectors
         {
             try
             {
-                var r = _lua_fnc_init_axis_and_spindle?.Call(null, _lua_table_collector, this);
+                var r = _luaFncInitAxisAndSpindle?.Call(null, _luaTableCollector, _luaCollectorProxy);
             }
             catch (Exception e)
             {
@@ -165,7 +206,7 @@ namespace l99.driver.fanuc.collectors
         {
             try
             {
-                var r = _lua_fnc_collect_root?.Call(null, _lua_table_collector, this);
+                var r = _luaFncCollectRoot?.Call(null, _luaTableCollector, _luaCollectorProxy);
             }
             catch (Exception e)
             {
@@ -177,7 +218,7 @@ namespace l99.driver.fanuc.collectors
         {
             try
             {
-                var r = _lua_fnc_collect_path?.Call(null, _lua_table_collector, this, current_path);
+                var r = _luaFncCollectPath?.Call(null, _luaTableCollector, _luaCollectorProxy, current_path);
             }
             catch (Exception e)
             {
@@ -189,7 +230,7 @@ namespace l99.driver.fanuc.collectors
         {
             try
             {
-                var r = _lua_fnc_collect_axis?.Call(null, _lua_table_collector, this, get("current_path"), current_axis, axis_name);
+                var r = _luaFncCollectAxis?.Call(null, _luaTableCollector, _luaCollectorProxy, Get("current_path"), current_axis, axis_name);
             }
             catch (Exception e)
             {
@@ -201,7 +242,7 @@ namespace l99.driver.fanuc.collectors
         {
             try
             {
-                var r = _lua_fnc_collect_spindle?.Call(null, _lua_table_collector, this, get("current_path"), current_spindle, spindle_name);
+                var r = _luaFncCollectSpindle?.Call(null, _luaTableCollector, _luaCollectorProxy, Get("current_path"), current_spindle, spindle_name);
             }
             catch (Exception e)
             {

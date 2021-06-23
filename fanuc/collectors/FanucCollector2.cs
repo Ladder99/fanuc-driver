@@ -21,28 +21,28 @@ namespace l99.driver.fanuc.collectors
         }
         
         protected Dictionary<string, dynamic> propertyBag;
-        protected List<dynamic> focas_invocations = new List<dynamic>();
+        protected List<dynamic> focasInvocations = new List<dynamic>();
         protected Stopwatch sweepWatch = new Stopwatch();
         protected int sweepRemaining = 1000;
         private SegmentEnum _currentSegment = SegmentEnum.NONE;
         
-        public FanucCollector2(Machine machine, int sweepMs = 1000, params dynamic[] additional_params) : base(machine, sweepMs, additional_params)
+        public FanucCollector2(Machine machine, int sweepMs = 1000, params dynamic[] additionalParams) : base(machine, sweepMs, additionalParams)
         {
             sweepRemaining = sweepMs;
             propertyBag = new Dictionary<string, dynamic>();
         }
         
-        protected void catch_focas_performance(dynamic focas_native_return_object)
+        protected void catchFocasPerformance(dynamic focasNativeReturnObject)
         {
-            focas_invocations.Add(new
+            focasInvocations.Add(new
             {
-                focas_native_return_object.method,
-                focas_native_return_object.invocationMs,
-                focas_native_return_object.rc
+                focasNativeReturnObject.method,
+                focasNativeReturnObject.invocationMs,
+                focasNativeReturnObject.rc
             });
         }
 
-        public dynamic? get(string propertyBagKey)
+        public dynamic? Get(string propertyBagKey)
         {
             if (propertyBag.ContainsKey(propertyBagKey))
             {
@@ -54,33 +54,33 @@ namespace l99.driver.fanuc.collectors
             }
         }
 
-        public async Task<dynamic?> set(string propertyBagKey, dynamic? value)
+        public async Task<dynamic?> Set(string propertyBagKey, dynamic? value)
         {
-            return await _set(propertyBagKey, value, false, false);
+            return await set(propertyBagKey, value, false, false);
         }
         
-        public async Task<dynamic?> set_native(string propertyBagKey, dynamic? value)
+        public async Task<dynamic?> SetNative(string propertyBagKey, dynamic? value)
         {
-            return await _set(propertyBagKey, value, true, false);
+            return await set(propertyBagKey, value, true, false);
         }
         
-        public async Task<dynamic?> set_native_and_peel(string propertyBagKey, dynamic? value)
+        public async Task<dynamic?> SetNativeAndPeel(string propertyBagKey, dynamic? value)
         {
-            return await _set(propertyBagKey, value, true, true);
+            return await set(propertyBagKey, value, true, true);
         }
 
-        private async Task<dynamic?> _set(string propertyBagKey, dynamic? value, bool native_response = true, bool peel = true)
+        private async Task<dynamic?> set(string propertyBagKey, dynamic? value, bool nativeResponse = true, bool peel = true)
         {
             if (propertyBag.ContainsKey(propertyBagKey))
             {
                 propertyBag[propertyBagKey] = value;
-                if (native_response == true)
+                if (nativeResponse == true)
                     return await handleNativeResponsePropertyBagAssignment(propertyBagKey, value, peel);
             }
             else
             {
                 propertyBag.Add(propertyBagKey, value);
-                if (native_response == true)
+                if (nativeResponse == true)
                     return await handleNativeResponsePropertyBagAssignment(propertyBagKey, value, peel);
             }
 
@@ -89,15 +89,15 @@ namespace l99.driver.fanuc.collectors
         
         private async Task<dynamic?> handleNativeResponsePropertyBagAssignment(string key, dynamic value, bool peel)
         {
-            catch_focas_performance(value);
+            catchFocasPerformance(value);
 
             if (!peel)
                 return value;
 
-            return await _peel(key, value);
+            return await this.peel(key, value);
         }
 
-        private async Task<dynamic?> _peel(string veneer_key, dynamic input, params dynamic?[] additional_inputs)
+        private async Task<dynamic?> peel(string veneerKey, dynamic input, params dynamic?[] additionalInputs)
         {
             switch (_currentSegment)
             {
@@ -105,28 +105,28 @@ namespace l99.driver.fanuc.collectors
                     break;
                 
                 case SegmentEnum.BEGIN:
-                    return await _machine.PeelVeneerAsync(veneer_key, input, additional_inputs);
+                    return await machine.PeelVeneerAsync(veneerKey, input, additionalInputs);
                 
                 case SegmentEnum.ROOT:
-                    return await _machine.PeelVeneerAsync(veneer_key, input, additional_inputs);
+                    return await machine.PeelVeneerAsync(veneerKey, input, additionalInputs);
                 
                 case SegmentEnum.PATH:
-                    return await _machine.PeelAcrossVeneerAsync(get("current_path"),veneer_key, input, additional_inputs);
+                    return await machine.PeelAcrossVeneerAsync(Get("current_path"),veneerKey, input, additionalInputs);
                     
                 case SegmentEnum.AXIS:
-                    return await _machine.PeelAcrossVeneerAsync(get("axis_split"), veneer_key, input, additional_inputs);
+                    return await machine.PeelAcrossVeneerAsync(Get("axis_split"), veneerKey, input, additionalInputs);
                 
                 case SegmentEnum.SPINDLE:
-                    return await _machine.PeelAcrossVeneerAsync(get("spindle_split"), veneer_key, input, additional_inputs);
+                    return await machine.PeelAcrossVeneerAsync(Get("spindle_split"), veneerKey, input, additionalInputs);
                 
                 case SegmentEnum.END:
-                    return await _machine.PeelVeneerAsync(veneer_key, input, additional_inputs);
+                    return await machine.PeelVeneerAsync(veneerKey, input, additionalInputs);
             }
 
             return null;
         }
 
-        public async Task<dynamic?> peel(string veneer_key, params dynamic[] inputs)
+        public async Task<dynamic?> Peel(string veneerKey, params dynamic[] inputs)
         {
             if (inputs.Length == 0)
             {
@@ -134,21 +134,21 @@ namespace l99.driver.fanuc.collectors
             }
             else if (inputs.Length == 1)
             {
-                return await _peel(veneer_key, inputs[0]);
+                return await peel(veneerKey, inputs[0]);
             }
             else
             {
-                return await _peel(veneer_key, inputs[0], inputs.Skip(1).Take(inputs.Length - 1).ToArray());
+                return await peel(veneerKey, inputs[0], inputs.Skip(1).Take(inputs.Length - 1).ToArray());
             }
         }
 
-        public async Task apply(string veneer_type, string veneer_name, bool is_compound = false, bool is_internal = false)
+        public async Task Apply(string veneerType, string veneerName, bool isCompound = false, bool isInternal = false)
         {
-            Type t = Type.GetType($"l99.driver.fanuc.veneers.{veneer_type}");
-            await apply(t, veneer_name, is_compound, is_internal);
+            Type t = Type.GetType($"l99.driver.fanuc.veneers.{veneerType}");
+            await Apply(t, veneerName, isCompound, isInternal);
         }
 
-        public async Task apply(Type veneer_type, string veneer_name, bool is_compound = false, bool is_internal = false)
+        public async Task Apply(Type veneerType, string veneerName, bool isCompound = false, bool isInternal = false)
         {
             switch (_currentSegment)
             {
@@ -159,15 +159,15 @@ namespace l99.driver.fanuc.collectors
                     break;
                 
                 case SegmentEnum.ROOT:
-                    _machine.ApplyVeneer(veneer_type, veneer_name, is_compound, is_internal);
+                    machine.ApplyVeneer(veneerType, veneerName, isCompound, isInternal);
                     break;
                 
                 case SegmentEnum.PATH:
-                    _machine.ApplyVeneerAcrossSlices(veneer_type, veneer_name, is_compound, is_internal);
+                    machine.ApplyVeneerAcrossSlices(veneerType, veneerName, isCompound, isInternal);
                     break;
                     
                 case SegmentEnum.AXIS:
-                    _machine.ApplyVeneerAcrossSlices(get("current_path"), veneer_type, veneer_name, is_compound, is_internal);
+                    machine.ApplyVeneerAcrossSlices(Get("current_path"), veneerType, veneerName, isCompound, isInternal);
                     break;
                 
                 case SegmentEnum.SPINDLE:
@@ -180,12 +180,12 @@ namespace l99.driver.fanuc.collectors
         
         public override async Task SweepAsync(int delayMs = -1)
         {
-            sweepRemaining = _sweepMs - (int)sweepWatch.ElapsedMilliseconds;
+            sweepRemaining = sweepMs - (int)sweepWatch.ElapsedMilliseconds;
             if (sweepRemaining < 0)
             {
-                sweepRemaining = _sweepMs;
+                sweepRemaining = sweepMs;
             }
-            _logger.Trace($"[{_machine.Id}] Sweep delay: {sweepRemaining}ms");
+            logger.Trace($"[{machine.Id}] Sweep delay: {sweepRemaining}ms");
 
             await base.SweepAsync(sweepRemaining);
         }
@@ -196,34 +196,34 @@ namespace l99.driver.fanuc.collectors
             {
                 _currentSegment = SegmentEnum.NONE;
                 
-                while (!_machine.VeneersApplied)
+                while (!machine.VeneersApplied)
                 {
-                    dynamic connect = await _platform.ConnectAsync();
+                    dynamic connect = await platform.ConnectAsync();
                     
                     if (connect.success)
                     {
                         _currentSegment = SegmentEnum.ROOT;
                         
-                        await apply(typeof(fanuc.veneers.FocasPerf), "focas_perf", true);
-                        await apply(typeof(fanuc.veneers.Connect), "connect");
-                        await apply(typeof(fanuc.veneers.GetPath), "paths");
+                        await Apply(typeof(fanuc.veneers.FocasPerf), "focas_perf", true);
+                        await Apply(typeof(fanuc.veneers.Connect), "connect");
+                        await Apply(typeof(fanuc.veneers.GetPath), "paths");
                         
                         await InitRootAsync();
                         
                         _currentSegment = SegmentEnum.PATH;
                         
-                        var paths = await _platform.GetPathAsync();
+                        var paths = await platform.GetPathAsync();
 
                         IEnumerable<int> path_slices = Enumerable
                             .Range(paths.response.cnc_getpath.path_no, 
                                 paths.response.cnc_getpath.maxpath_no);
 
-                        _machine.SliceVeneer(path_slices.ToArray());
+                        machine.SliceVeneer(path_slices.ToArray());
 
                         await InitPathsAsync();
                         
-                        await apply(typeof(fanuc.veneers.RdAxisname), "axis_names");
-                        await apply(typeof(fanuc.veneers.RdSpindlename), "spindle_names");
+                        await Apply(typeof(fanuc.veneers.RdAxisname), "axis_names");
+                        await Apply(typeof(fanuc.veneers.RdSpindlename), "spindle_names");
                         
                         for (short current_path = paths.response.cnc_getpath.path_no;
                             current_path <= paths.response.cnc_getpath.maxpath_no;
@@ -231,48 +231,48 @@ namespace l99.driver.fanuc.collectors
                         {
                             _currentSegment = SegmentEnum.AXIS;
                             
-                            dynamic path = await _platform.SetPathAsync(current_path);
+                            dynamic path = await platform.SetPathAsync(current_path);
                             
-                            dynamic axes = await _platform.RdAxisNameAsync();
-                            dynamic spindles = await _platform.RdSpdlNameAsync();
+                            dynamic axes = await platform.RdAxisNameAsync();
+                            dynamic spindles = await platform.RdSpdlNameAsync();
                             dynamic axis_spindle_slices = new List<dynamic> { };
 
                             var fields_axes = axes.response.cnc_rdaxisname.axisname.GetType().GetFields();
                             for (int x = 0; x <= axes.response.cnc_rdaxisname.data_num - 1; x++)
                             {
                                 var axis = fields_axes[x].GetValue(axes.response.cnc_rdaxisname.axisname);
-                                axis_spindle_slices.Add(AxisName(axis));
+                                axis_spindle_slices.Add(axisName(axis));
                             }
                             
                             var fields_spindles = spindles.response.cnc_rdspdlname.spdlname.GetType().GetFields();
                             for (int x = 0; x <= spindles.response.cnc_rdspdlname.data_num - 1; x++)
                             {
                                 var spindle = fields_spindles[x].GetValue(spindles.response.cnc_rdspdlname.spdlname);
-                                axis_spindle_slices.Add(SpindleName(spindle));
+                                axis_spindle_slices.Add(spindleName(spindle));
                             };
 
-                            _machine.SliceVeneer(current_path, axis_spindle_slices.ToArray());
+                            machine.SliceVeneer(current_path, axis_spindle_slices.ToArray());
 
-                            await set("current_path", current_path);
+                            await Set("current_path", current_path);
                             
                             await InitAxisAndSpindleAsync();
                         }
                         
-                        dynamic disconnect = await _platform.DisconnectAsync();
+                        dynamic disconnect = await platform.DisconnectAsync();
                         
-                        _machine.VeneersApplied = true;
+                        machine.VeneersApplied = true;
                         
                         _currentSegment = SegmentEnum.NONE;
                     }
                     else
                     {
-                        await Task.Delay(_sweepMs);
+                        await Task.Delay(sweepMs);
                     }
                 }
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, $"[{_machine.Id}] Collector initialization failed.");
+                logger.Error(ex, $"[{machine.Id}] Collector initialization failed.");
             }
 
             return null;
@@ -319,7 +319,7 @@ namespace l99.driver.fanuc.collectors
         {
             try
             {
-                focas_invocations.Clear();
+                focasInvocations.Clear();
                 
                 _currentSegment = SegmentEnum.BEGIN;
                 
@@ -327,62 +327,62 @@ namespace l99.driver.fanuc.collectors
                 {
                     _currentSegment = SegmentEnum.ROOT;
                     
-                    await set_native_and_peel("paths", await _platform.GetPathAsync());
+                    await SetNativeAndPeel("paths", await platform.GetPathAsync());
                     
                     await CollectRootAsync();
 
-                    for (short current_path = get("paths").response.cnc_getpath.path_no;
-                        current_path <= get("paths").response.cnc_getpath.maxpath_no;
+                    for (short current_path = Get("paths").response.cnc_getpath.path_no;
+                        current_path <= Get("paths").response.cnc_getpath.maxpath_no;
                         current_path++)
                     {
                         _currentSegment = SegmentEnum.PATH;
-                        await set("current_path", current_path);
+                        await Set("current_path", current_path);
                         
-                        await set("path", await _platform.SetPathAsync(current_path));
-                        dynamic path_marker = PathMarker(get("path"));
+                        await Set("path", await platform.SetPathAsync(current_path));
+                        dynamic path_marker = PathMarker(Get("path"));
                         
-                        _machine.MarkVeneer(current_path, path_marker);
+                        machine.MarkVeneer(current_path, path_marker);
                         
-                        await set_native_and_peel("axis_names", await _platform.RdAxisNameAsync());
+                        await SetNativeAndPeel("axis_names", await platform.RdAxisNameAsync());
                         
-                        await set_native_and_peel("spindle_names", await _platform.RdSpdlNameAsync());
+                        await SetNativeAndPeel("spindle_names", await platform.RdSpdlNameAsync());
                         
                         await CollectForEachPathAsync(current_path, path_marker);
                         
-                        var fields_axes = get("axis_names").response.cnc_rdaxisname.axisname.GetType().GetFields();
+                        var fields_axes = Get("axis_names").response.cnc_rdaxisname.axisname.GetType().GetFields();
 
                         for (short current_axis = 1;
-                            current_axis <= get("axis_names").response.cnc_rdaxisname.data_num;
+                            current_axis <= Get("axis_names").response.cnc_rdaxisname.data_num;
                             current_axis++)
                         {
                             _currentSegment = SegmentEnum.AXIS;
                             
-                            dynamic axis = fields_axes[current_axis-1].GetValue(get("axis_names").response.cnc_rdaxisname.axisname);
-                            dynamic axis_name = AxisName(axis);
-                            dynamic axis_marker = AxisMarker(axis);
-                            await set("axis_split", new[] {current_path, axis_name});
+                            dynamic axis = fields_axes[current_axis-1].GetValue(Get("axis_names").response.cnc_rdaxisname.axisname);
+                            dynamic axis_name = axisName(axis);
+                            dynamic axis_marker = axisMarker(axis);
+                            await Set("axis_split", new[] {current_path, axis_name});
                             
-                            _machine.MarkVeneer(get("axis_split"), new[] { path_marker, axis_marker });
+                            machine.MarkVeneer(Get("axis_split"), new[] { path_marker, axis_marker });
 
-                            await CollectForEachAxisAsync(current_axis, axis_name, get("axis_split"), axis_marker);
+                            await CollectForEachAxisAsync(current_axis, axis_name, Get("axis_split"), axis_marker);
                         }
 
-                        var fields_spindles = get("spindle_names").response.cnc_rdspdlname.spdlname.GetType().GetFields();
+                        var fields_spindles = Get("spindle_names").response.cnc_rdspdlname.spdlname.GetType().GetFields();
                         
                         for (short current_spindle = 1;
-                            current_spindle <= get("spindle_names").response.cnc_rdspdlname.data_num;
+                            current_spindle <= Get("spindle_names").response.cnc_rdspdlname.data_num;
                             current_spindle++)
                         {
                             _currentSegment = SegmentEnum.SPINDLE;
                             
-                            var spindle = fields_spindles[current_spindle - 1].GetValue(get("spindle_names").response.cnc_rdspdlname.spdlname);
-                            dynamic spindle_name = SpindleName(spindle);
-                            dynamic spindle_marker = SpindleMarker(spindle);
-                            await set("spindle_split", new[] {current_path, spindle_name});
+                            var spindle = fields_spindles[current_spindle - 1].GetValue(Get("spindle_names").response.cnc_rdspdlname.spdlname);
+                            dynamic spindle_name = spindleName(spindle);
+                            dynamic spindle_marker = spindleMarker(spindle);
+                            await Set("spindle_split", new[] {current_path, spindle_name});
                                 
-                            _machine.MarkVeneer(get("spindle_split"), new[] { path_marker, spindle_marker });
+                            machine.MarkVeneer(Get("spindle_split"), new[] { path_marker, spindle_marker });
 
-                            await CollectForEachSpindleAsync(current_spindle, spindle_name, get("spindle_split"), spindle_marker);
+                            await CollectForEachSpindleAsync(current_spindle, spindle_name, Get("spindle_split"), spindle_marker);
                         };
                     }
                 }
@@ -393,7 +393,7 @@ namespace l99.driver.fanuc.collectors
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, $"[{_machine.Id}] Collector sweep failed at segment {_currentSegment}.");
+                logger.Error(ex, $"[{machine.Id}] Collector sweep failed at segment {_currentSegment}.");
             }
 
             return null;
@@ -407,9 +407,9 @@ namespace l99.driver.fanuc.collectors
         {
             sweepWatch.Restart();
             
-            await set_native_and_peel("connect", await _platform.ConnectAsync());
+            await SetNativeAndPeel("connect", await platform.ConnectAsync());
 
-            return get("connect").success;
+            return Get("connect").success;
         }
         
         /// <summary>
@@ -468,15 +468,14 @@ namespace l99.driver.fanuc.collectors
         /// </summary>
         public virtual async Task CollectEndAsync()
         {
-            await set_native("disconnect", await _platform.DisconnectAsync());
+            await SetNative("disconnect", await platform.DisconnectAsync());
 
-            await _machine.PeelVeneerAsync("focas_perf", new
+            await machine.PeelVeneerAsync("focas_perf", new
             {
-                sweepMs = sweepWatch.ElapsedMilliseconds,
-                focas_invocations
+                sweepMs = sweepWatch.ElapsedMilliseconds, focas_invocations = focasInvocations
             });
                     
-            LastSuccess = get("connect").success;
+            LastSuccess = Get("connect").success;
         }
     }
 }

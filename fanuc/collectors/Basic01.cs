@@ -7,7 +7,7 @@ namespace l99.driver.fanuc.collectors
 {
     public class Basic01 : FanucCollector
     {
-        public Basic01(Machine machine, int sweepMs = 1000, params dynamic[] additional_params) : base(machine, sweepMs, additional_params)
+        public Basic01(Machine machine, int sweepMs = 1000, params dynamic[] additionalParams) : base(machine, sweepMs, additionalParams)
         {
             
         }
@@ -16,32 +16,32 @@ namespace l99.driver.fanuc.collectors
         {
             try
             {
-                while (!_machine.VeneersApplied)
+                while (!machine.VeneersApplied)
                 {
-                    dynamic connect = await _machine["platform"].ConnectAsync();
+                    dynamic connect = await machine["platform"].ConnectAsync();
                     
                     if (connect.success)
                     {
-                        _machine.ApplyVeneer(typeof(fanuc.veneers.Connect), "connect");
-                        _machine.ApplyVeneer(typeof(fanuc.veneers.CNCId), "cnc_id");
-                        _machine.ApplyVeneer(typeof(fanuc.veneers.RdTimer), "power_on_time");
-                        _machine.ApplyVeneer(typeof(fanuc.veneers.RdParamLData), "power_on_time_6750");
-                        _machine.ApplyVeneer(typeof(fanuc.veneers.SysInfo), "sys_info");
-                        _machine.ApplyVeneer(typeof(fanuc.veneers.GetPath), "get_path");
+                        machine.ApplyVeneer(typeof(fanuc.veneers.Connect), "connect");
+                        machine.ApplyVeneer(typeof(fanuc.veneers.CNCId), "cnc_id");
+                        machine.ApplyVeneer(typeof(fanuc.veneers.RdTimer), "power_on_time");
+                        machine.ApplyVeneer(typeof(fanuc.veneers.RdParamLData), "power_on_time_6750");
+                        machine.ApplyVeneer(typeof(fanuc.veneers.SysInfo), "sys_info");
+                        machine.ApplyVeneer(typeof(fanuc.veneers.GetPath), "get_path");
 
-                        dynamic disconnect = await _machine["platform"].DisconnectAsync();
+                        dynamic disconnect = await machine["platform"].DisconnectAsync();
 
-                        _machine.VeneersApplied = true;
+                        machine.VeneersApplied = true;
                     }
                     else
                     {
-                        await Task.Delay(_sweepMs);
+                        await Task.Delay(sweepMs);
                     }
                 }
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, $"[{_machine.Id}] Collector initialization failed.");
+                logger.Error(ex, $"[{machine.Id}] Collector initialization failed.");
             }
 
             return null;
@@ -51,34 +51,34 @@ namespace l99.driver.fanuc.collectors
         {
             try
             {
-                dynamic connect = await _machine["platform"].ConnectAsync();
-                await _machine.PeelVeneerAsync("connect", connect);
+                dynamic connect = await machine["platform"].ConnectAsync();
+                await machine.PeelVeneerAsync("connect", connect);
 
                 if (connect.success)
                 {
-                    dynamic cncid = await _machine["platform"].CNCIdAsync();
-                    await _machine.PeelVeneerAsync("cnc_id", cncid);
+                    dynamic cncid = await machine["platform"].CNCIdAsync();
+                    await machine.PeelVeneerAsync("cnc_id", cncid);
 
-                    dynamic poweron = await _machine["platform"].RdTimerAsync(0);
-                    await _machine.PeelVeneerAsync("power_on_time", poweron);
+                    dynamic poweron = await machine["platform"].RdTimerAsync(0);
+                    await machine.PeelVeneerAsync("power_on_time", poweron);
 
-                    dynamic poweron_6750 = await _machine["platform"].RdParamDoubleWordNoAxisAsync(6750);
-                    await _machine.PeelVeneerAsync("power_on_time_6750", poweron_6750);
+                    dynamic poweron_6750 = await machine["platform"].RdParamDoubleWordNoAxisAsync(6750);
+                    await machine.PeelVeneerAsync("power_on_time_6750", poweron_6750);
 
-                    dynamic info = await _machine["platform"].SysInfoAsync();
-                    await _machine.PeelVeneerAsync("sys_info", info);
+                    dynamic info = await machine["platform"].SysInfoAsync();
+                    await machine.PeelVeneerAsync("sys_info", info);
 
-                    dynamic paths = await _machine["platform"].GetPathAsync();
-                    await _machine.PeelVeneerAsync("get_path", paths);
+                    dynamic paths = await machine["platform"].GetPathAsync();
+                    await machine.PeelVeneerAsync("get_path", paths);
 
-                    dynamic disconnect = await _machine["platform"].DisconnectAsync();
+                    dynamic disconnect = await machine["platform"].DisconnectAsync();
                 }
 
                 LastSuccess = connect.success;
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, $"[{_machine.Id}] Collector sweep failed.");
+                logger.Error(ex, $"[{machine.Id}] Collector sweep failed.");
             }
 
             return null;

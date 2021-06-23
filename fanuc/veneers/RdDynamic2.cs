@@ -8,7 +8,7 @@ namespace l99.driver.fanuc.veneers
     {
         public RdDynamic2(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
-            _lastChangedValue = new
+            lastChangedValue = new
             {
                 actual_feedrate = -1,
                 actual_spindle_speed = -1,
@@ -26,7 +26,7 @@ namespace l99.driver.fanuc.veneers
             };
         }
         
-        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additional_inputs)
+        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
         {
             if (input.success)
             {
@@ -48,9 +48,9 @@ namespace l99.driver.fanuc.veneers
                 // TODO: equality or hash code do not match on this object (x86)
                 //if (!current_value.Equals(_lastValue))
                 // TODO: can't do this because pos does not expand
-                //if(!current_value.ToString().Equals(_lastChangedValue.ToString())) 
-                //if(!JObject.FromObject(current_value).ToString().Equals(JObject.FromObject(_lastChangedValue).ToString()))
-                if(current_value.IsDifferentString((object)_lastChangedValue))
+                //if(!current_value.ToString().Equals(lastChangedValue.ToString())) 
+                //if(!JObject.FromObject(current_value).ToString().Equals(JObject.FromObject(lastChangedValue).ToString()))
+                if(current_value.IsDifferentString((object)lastChangedValue))
                 {
                     await onDataChangedAsync(input, current_value);
                 }

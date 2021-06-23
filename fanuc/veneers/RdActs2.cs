@@ -9,13 +9,13 @@ namespace l99.driver.fanuc.veneers
     {
         public RdActs2(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
-            _lastChangedValue = new 
+            lastChangedValue = new 
             {
                 data = -1
             };
         }
         
-        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additional_inputs)
+        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
         {
             if (input.success)
             {
@@ -25,7 +25,7 @@ namespace l99.driver.fanuc.veneers
                 
                 await onDataArrivedAsync(input, current_value);
                 
-                if(!current_value.Equals(_lastChangedValue))
+                if(!current_value.Equals(lastChangedValue))
                 {
                     await onDataChangedAsync(input, current_value);
                 }

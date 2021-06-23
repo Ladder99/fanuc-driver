@@ -7,14 +7,14 @@ namespace l99.driver.fanuc.veneers
     {
         public GetPath(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
-            _lastChangedValue = new
+            lastChangedValue = new
             {
                 path_no = -1,
                 maxpath_no = -1
             };
         }
         
-        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additional_inputs)
+        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
         {
             if (input.success)
             {
@@ -26,7 +26,7 @@ namespace l99.driver.fanuc.veneers
                 
                 await onDataArrivedAsync(input, current_value);
                 
-                if (!current_value.Equals(this._lastChangedValue))
+                if (!current_value.Equals(this.lastChangedValue))
                 {
                     await onDataChangedAsync(input, current_value);
                 }

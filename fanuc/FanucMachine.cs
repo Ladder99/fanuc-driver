@@ -24,7 +24,7 @@ namespace l99.driver.fanuc
             {
                 return new
                 {
-                    _id,
+                    _id = id,
                     _focasEndpoint.IPAddress,
                     _focasEndpoint.Port,
                     _focasEndpoint.ConnectionTimeout

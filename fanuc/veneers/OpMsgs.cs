@@ -9,13 +9,13 @@ namespace l99.driver.fanuc.veneers
     {
         public OpMsgs(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
-            _lastChangedValue = new
+            lastChangedValue = new
             {
                 msgs = new List<dynamic>()
             };
         }
         
-        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additional_inputs)
+        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
         {
             if (input.success)
             {
@@ -42,7 +42,7 @@ namespace l99.driver.fanuc.veneers
                 };
                 
                 var current_hc = current_value.msgs.Select(x => x.GetHashCode());
-                var last_hc = ((List<dynamic>)_lastChangedValue.msgs).Select(x => x.GetHashCode());
+                var last_hc = ((List<dynamic>)lastChangedValue.msgs).Select(x => x.GetHashCode());
                 
                 await onDataArrivedAsync(input, current_value);
                 

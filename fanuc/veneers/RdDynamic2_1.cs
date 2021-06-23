@@ -9,7 +9,7 @@ namespace l99.driver.fanuc.veneers
     {
         public RdDynamic2_1(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
-            _lastChangedValue = new
+            lastChangedValue = new
             {
                 actual_feedrate = -1,
                 actual_spindle_speed = -1,
@@ -27,12 +27,12 @@ namespace l99.driver.fanuc.veneers
             };
         }
         
-        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additional_inputs)
+        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
         {
-            if (input.success && additional_inputs[0].success)
+            if (input.success && additionalInputs[0].success)
             {
                 dynamic ad = input.response.cnc_rddynamic2.rddynamic;
-                dynamic fig_in = additional_inputs[0].response.cnc_getfigure.dec_fig_in;
+                dynamic fig_in = additionalInputs[0].response.cnc_getfigure.dec_fig_in;
                 
                 var current_value = new
                 {
@@ -44,10 +44,10 @@ namespace l99.driver.fanuc.veneers
                     ad.seqnum,
                     pos = new
                     {
-                        absolute = ad.pos.absolute / Math.Pow(10.0, fig_in[additional_inputs[1]]),
-                        machine = ad.pos.machine / Math.Pow(10.0, fig_in[additional_inputs[1]]),
-                        relative = ad.pos.relative / Math.Pow(10.0, fig_in[additional_inputs[1]]),
-                        distance = ad.pos.distance / Math.Pow(10.0, fig_in[additional_inputs[1]])
+                        absolute = ad.pos.absolute / Math.Pow(10.0, fig_in[additionalInputs[1]]),
+                        machine = ad.pos.machine / Math.Pow(10.0, fig_in[additionalInputs[1]]),
+                        relative = ad.pos.relative / Math.Pow(10.0, fig_in[additionalInputs[1]]),
+                        distance = ad.pos.distance / Math.Pow(10.0, fig_in[additionalInputs[1]])
                     }
                 };
 
@@ -56,9 +56,9 @@ namespace l99.driver.fanuc.veneers
                 // TODO: equality or hash code do not match on this object (x86)
                 //if (!current_value.Equals(_lastValue))
                 // TODO: can't do this because pos does not expand
-                //if(!current_value.ToString().Equals(_lastChangedValue.ToString())) 
-                //if(!JObject.FromObject(current_value).ToString().Equals(JObject.FromObject(_lastChangedValue).ToString()))
-                if(current_value.IsDifferentString((object)_lastChangedValue))
+                //if(!current_value.ToString().Equals(lastChangedValue.ToString())) 
+                //if(!JObject.FromObject(current_value).ToString().Equals(JObject.FromObject(lastChangedValue).ToString()))
+                if(current_value.IsDifferentString((object)lastChangedValue))
                 {
                     await onDataChangedAsync(input, current_value);
                 }

@@ -11,7 +11,7 @@ namespace l99.driver.fanuc.veneers
     {
         public FocasPerf(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
-            _lastChangedValue = new
+            lastChangedValue = new
             {
                 invocation = new
                 {
@@ -25,7 +25,7 @@ namespace l99.driver.fanuc.veneers
             };
         }
         
-        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additional_inputs)
+        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
         {
             var max = ((List<dynamic>)input.focas_invocations).MaxBy(o => o.invocationMs).First();
             var min = ((List<dynamic>)input.focas_invocations).MinBy(o => o.invocationMs).First();
