@@ -11,6 +11,8 @@ namespace l99.driver.fanuc.collectors
     {
         private NLuaRunner _runner;
 
+        public Platform Platform => _runner.Platform;
+        
         public NLuaRunnerProxy(NLuaRunner runner)
         {
             _runner = runner;
