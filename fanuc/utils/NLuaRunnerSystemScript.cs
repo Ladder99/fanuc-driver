@@ -1,11 +1,14 @@
 using System;
 using NLua;
 using NLua.Exceptions;
+using NLog;
 
 namespace l99.driver.fanuc.collectors
 {
     public sealed class NLuaRunnerSystemScript
     {
+        private ILogger _logger;
+        
         private Lua _luaState;
         public LuaTable Table { get; private set; }
         public LuaFunction FncInitRoot { get; private set; }
@@ -28,9 +31,10 @@ namespace l99.driver.fanuc.collectors
 
         public NLuaRunnerSystemScript(Lua lua, string scriptPath)
         {
+            _logger = LogManager.GetCurrentClassLogger();
             _luaState = lua;
             ScriptPath = scriptPath;
-            Console.WriteLine(scriptPath);
+            _logger.Info($"System script path '{scriptPath}'");
             injectModule(getScript());
         }
         
@@ -52,7 +56,7 @@ namespace l99.driver.fanuc.collectors
         {
             try
             {
-                Console.WriteLine(scriptText);
+                _logger.Trace(scriptText);
                 _luaState.DoString(scriptText);
                 Table = _luaState["script"] as LuaTable;
                 FncInitRoot = Table?["init_root"] as LuaFunction;
@@ -67,6 +71,7 @@ namespace l99.driver.fanuc.collectors
             }
             catch (LuaScriptException lse)
             {
+                _logger.Warn(lse, "Injecting module failed.");
                 return _injectSuccess = false;
             }
 

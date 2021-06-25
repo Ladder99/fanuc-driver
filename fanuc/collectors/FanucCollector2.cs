@@ -24,7 +24,8 @@ namespace l99.driver.fanuc.collectors
         protected List<dynamic> focasInvocations = new List<dynamic>();
         protected Stopwatch sweepWatch = new Stopwatch();
         protected int sweepRemaining = 1000;
-        private SegmentEnum _currentSegment = SegmentEnum.NONE;
+        private SegmentEnum _currentInitSegment = SegmentEnum.NONE;
+        private SegmentEnum _currentCollectSegment = SegmentEnum.NONE;
         
         public FanucCollector2(Machine machine, int sweepMs = 1000, params dynamic[] additionalParams) : base(machine, sweepMs, additionalParams)
         {
@@ -99,7 +100,7 @@ namespace l99.driver.fanuc.collectors
 
         private async Task<dynamic?> peel(string veneerKey, dynamic input, params dynamic?[] additionalInputs)
         {
-            switch (_currentSegment)
+            switch (_currentCollectSegment)
             {
                 case SegmentEnum.NONE:
                     break;
@@ -150,7 +151,7 @@ namespace l99.driver.fanuc.collectors
 
         public async Task Apply(Type veneerType, string veneerName, bool isCompound = false, bool isInternal = false)
         {
-            switch (_currentSegment)
+            switch (_currentInitSegment)
             {
                 case SegmentEnum.NONE:
                     break;
@@ -194,7 +195,7 @@ namespace l99.driver.fanuc.collectors
         {
             try
             {
-                _currentSegment = SegmentEnum.NONE;
+                _currentInitSegment = SegmentEnum.NONE;
                 
                 while (!machine.VeneersApplied)
                 {
@@ -202,7 +203,7 @@ namespace l99.driver.fanuc.collectors
                     
                     if (connect.success)
                     {
-                        _currentSegment = SegmentEnum.ROOT;
+                        _currentInitSegment = SegmentEnum.ROOT;
                         
                         await Apply(typeof(fanuc.veneers.FocasPerf), "focas_perf", true);
                         await Apply(typeof(fanuc.veneers.Connect), "connect");
@@ -210,7 +211,7 @@ namespace l99.driver.fanuc.collectors
                         
                         await InitRootAsync();
                         
-                        _currentSegment = SegmentEnum.PATH;
+                        _currentInitSegment = SegmentEnum.PATH;
                         
                         var paths = await platform.GetPathAsync();
 
@@ -225,12 +226,12 @@ namespace l99.driver.fanuc.collectors
                         await Apply(typeof(fanuc.veneers.RdAxisname), "axis_names");
                         await Apply(typeof(fanuc.veneers.RdSpindlename), "spindle_names");
                         
+                        _currentInitSegment = SegmentEnum.AXIS;
+                        
                         for (short current_path = paths.response.cnc_getpath.path_no;
                             current_path <= paths.response.cnc_getpath.maxpath_no;
                             current_path++)
                         {
-                            _currentSegment = SegmentEnum.AXIS;
-                            
                             dynamic path = await platform.SetPathAsync(current_path);
                             
                             dynamic axes = await platform.RdAxisNameAsync();
@@ -262,7 +263,7 @@ namespace l99.driver.fanuc.collectors
                         
                         machine.VeneersApplied = true;
                         
-                        _currentSegment = SegmentEnum.NONE;
+                        _currentInitSegment = SegmentEnum.NONE;
                     }
                     else
                     {
@@ -288,6 +289,11 @@ namespace l99.driver.fanuc.collectors
         {
             
         }
+
+        public virtual async Task InitUserRootAsync()
+        {
+            
+        }
         
         /// <summary>
         /// Applied Veneers:
@@ -298,6 +304,11 @@ namespace l99.driver.fanuc.collectors
         ///     RdSpindlename as "spindle_names"
         /// </summary>
         public virtual async Task InitPathsAsync()
+        {
+            
+        }
+
+        public virtual async Task InitUserPathsAsync()
         {
             
         }
@@ -314,29 +325,45 @@ namespace l99.driver.fanuc.collectors
         {
             
         }
+
+        public virtual async Task InitUserAxisAndSpindleAsync(short current_path)
+        {
+            
+        }
         
         public override async Task<dynamic?> CollectAsync()
         {
             try
             {
+                _currentInitSegment = SegmentEnum.NONE;
+                
                 focasInvocations.Clear();
                 
-                _currentSegment = SegmentEnum.BEGIN;
+                _currentCollectSegment = SegmentEnum.BEGIN;
                 
                 if(await CollectBeginAsync())
                 {
-                    _currentSegment = SegmentEnum.ROOT;
+                    _currentInitSegment = SegmentEnum.ROOT;
+                    _currentCollectSegment = SegmentEnum.ROOT;
                     
                     await SetNativeAndPeel("paths", await platform.GetPathAsync());
-                    
+
+                    await InitUserRootAsync();
                     await CollectRootAsync();
 
+                    _currentInitSegment = SegmentEnum.PATH;
+                    await InitUserPathsAsync();
+                    _currentInitSegment = SegmentEnum.AXIS;
+                    
                     for (short current_path = Get("paths").response.cnc_getpath.path_no;
                         current_path <= Get("paths").response.cnc_getpath.maxpath_no;
                         current_path++)
                     {
-                        _currentSegment = SegmentEnum.PATH;
+                        _currentCollectSegment = SegmentEnum.PATH;
+                        
                         await Set("current_path", current_path);
+
+                        await InitUserAxisAndSpindleAsync(current_path);
                         
                         await Set("path", await platform.SetPathAsync(current_path));
                         dynamic path_marker = PathMarker(Get("path"));
@@ -355,7 +382,7 @@ namespace l99.driver.fanuc.collectors
                             current_axis <= Get("axis_names").response.cnc_rdaxisname.data_num;
                             current_axis++)
                         {
-                            _currentSegment = SegmentEnum.AXIS;
+                            _currentCollectSegment = SegmentEnum.AXIS;
                             
                             dynamic axis = fields_axes[current_axis-1].GetValue(Get("axis_names").response.cnc_rdaxisname.axisname);
                             dynamic axis_name = axisName(axis);
@@ -373,7 +400,7 @@ namespace l99.driver.fanuc.collectors
                             current_spindle <= Get("spindle_names").response.cnc_rdspdlname.data_num;
                             current_spindle++)
                         {
-                            _currentSegment = SegmentEnum.SPINDLE;
+                            _currentCollectSegment = SegmentEnum.SPINDLE;
                             
                             var spindle = fields_spindles[current_spindle - 1].GetValue(Get("spindle_names").response.cnc_rdspdlname.spdlname);
                             dynamic spindle_name = spindleName(spindle);
@@ -387,13 +414,14 @@ namespace l99.driver.fanuc.collectors
                     }
                 }
                 
-                _currentSegment = SegmentEnum.END;
+                _currentInitSegment = SegmentEnum.NONE;
+                _currentCollectSegment = SegmentEnum.END;
 
                 await CollectEndAsync();
             }
             catch (Exception ex)
             {
-                logger.Error(ex, $"[{machine.Id}] Collector sweep failed at segment {_currentSegment}.");
+                logger.Error(ex, $"[{machine.Id}] Collector sweep failed at segment {_currentCollectSegment}.");
             }
 
             return null;

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using l99.driver.@base;
+using MoreLinq;
 using NLua;
 
 namespace l99.driver.fanuc.collectors
@@ -36,17 +38,58 @@ namespace l99.driver.fanuc.collectors
             var result = base.InitializeAsync();
             if (machine.VeneersApplied)
             {
-                await this.machine.Broker.SubscribeAsync("fanuc/lua", onIncomingMessage);
+                logger.Debug("Creating MQTT subscriptions.");
+                await this.machine.Broker.SubscribeAsync($"fanuc/{machine.Id}/lua/#", onIncomingMessage);
             }
             return result;
         }
 
+        private string _queueFncUserApplyRoot = string.Empty;
+        private string _queueFncUserApplyPath = string.Empty;
+        private string _queueFncUserApplyAxisAndSpindle = string.Empty;
+        private string _queueFncUserCollectRoot = string.Empty;
+        private string _queueFncUserCollectPath = string.Empty;
+        private string _queueFncUserCollectAxis = string.Empty;
+        private string _queueFncUserCollectSpindle = string.Empty;
+        
         private async Task onIncomingMessage(string topic, string payload, ushort qos, bool retain)
         {
-            Console.WriteLine("------");
-            Console.WriteLine(topic);
-            Console.WriteLine(payload);
-            Console.WriteLine("------");
+            logger.Debug($"Received message on topic '{topic}'.");
+            logger.Debug(payload);
+
+            //TODO: blah
+            var topic_end = string.Join('/',Enumerable.ToArray(Enumerable.TakeLast(topic.Split('/'), 2))).ToLower();
+            
+            switch (topic.ToLower())
+            {
+                case "apply/root":
+                    _queueFncUserApplyRoot = payload;
+                    break;
+                
+                case "apply/path":
+                    _queueFncUserApplyPath = payload;
+                    break;
+                
+                case "apply/axis_spindle":
+                    _queueFncUserApplyAxisAndSpindle = payload;
+                    break;
+                
+                case "collect/root":
+                    _queueFncUserCollectRoot = payload;
+                    break;
+                
+                case "collect/path":
+                    _queueFncUserCollectPath = payload;
+                    break;
+                
+                case "collect/axis":
+                    _queueFncUserCollectAxis = payload;
+                    break;
+                
+                case "collect/spindle":
+                    _queueFncUserCollectSpindle = payload;
+                    break;
+            }
         }
         
         public override async Task InitRootAsync()
@@ -57,7 +100,7 @@ namespace l99.driver.fanuc.collectors
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                logger.Warn(e, "InitRootAsync Lua invocation failed.");
             }
         }
         
@@ -69,7 +112,7 @@ namespace l99.driver.fanuc.collectors
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                logger.Warn(e, "InitPathAsync Lua invocation failed.");
             }
         }
         
@@ -81,15 +124,55 @@ namespace l99.driver.fanuc.collectors
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                logger.Warn(e, "InitAxisAndSpindleAsync Lua invocation failed.");
             }
         }
 
         public override async Task<bool> CollectBeginAsync()
         {
-            return await base.CollectBeginAsync();
+            var ret = await base.CollectBeginAsync();
+
+            if(!string.IsNullOrEmpty(_queueFncUserApplyRoot))
+                _luaUserScript.ModifyInitRootFunction(_queueFncUserApplyRoot);
+            
+            if(!string.IsNullOrEmpty(_queueFncUserApplyPath))
+                _luaUserScript.ModifyInitPathFunction(_queueFncUserApplyPath);
+            
+            if(!string.IsNullOrEmpty(_queueFncUserApplyAxisAndSpindle))
+                _luaUserScript.ModifyInitAxisAndSpindleFunction(_queueFncUserApplyAxisAndSpindle);
+            
+            if(!string.IsNullOrEmpty(_queueFncUserCollectRoot))
+                _luaUserScript.ModifyCollectRootFunction(_queueFncUserCollectRoot);
+            
+            if(!string.IsNullOrEmpty(_queueFncUserCollectPath))
+                _luaUserScript.ModifyCollectPathFunction(_queueFncUserCollectPath);
+            
+            if(!string.IsNullOrEmpty(_queueFncUserCollectAxis))
+                _luaUserScript.ModifyCollectAxisFunction(_queueFncUserCollectAxis);
+            
+            if(!string.IsNullOrEmpty(_queueFncUserCollectSpindle))
+                _luaUserScript.ModifyCollectSpindleFunction(_queueFncUserCollectSpindle);
+            
+            return ret;
         }
 
+        public override async Task InitUserRootAsync()
+        {
+            if (!string.IsNullOrEmpty(_queueFncUserApplyRoot))
+            {
+                logger.Debug("Invoking InitUserRootAsync.");
+                
+                try
+                {
+                    var r = _luaUserScript.FncInitRoot?.Call(null, _luaUserScript.Table, _luaCollectorProxy);
+                }
+                catch (Exception e)
+                {
+                    logger.Warn(e, "InitUserRootAsync USER Lua invocation failed.");
+                }
+            }
+        }
+        
         public override async Task CollectRootAsync()
         {
             try
@@ -98,7 +181,7 @@ namespace l99.driver.fanuc.collectors
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                logger.Warn(e, "CollectRootAsync SYSTEM Lua invocation failed.");
             }
             
             try
@@ -107,10 +190,27 @@ namespace l99.driver.fanuc.collectors
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                logger.Warn(e, "CollectRootAsync USER Lua invocation failed.");
             }
         }
 
+        public override async Task InitUserPathsAsync()
+        {
+            if (!string.IsNullOrEmpty(_queueFncUserApplyPath))
+            {
+                logger.Debug("Invoking InitUserPathsAsync.");
+                
+                try
+                {
+                    var r = _luaUserScript.FncInitPath?.Call(null, _luaUserScript.Table, _luaCollectorProxy);
+                }
+                catch (Exception e)
+                {
+                    logger.Warn(e, "InitUserPathsAsync USER Lua invocation failed.");
+                }
+            }
+        }
+        
         public override async Task CollectForEachPathAsync(short current_path, dynamic path_marker)
         {
             try
@@ -119,7 +219,7 @@ namespace l99.driver.fanuc.collectors
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                logger.Warn(e, "CollectForEachPathAsync SYSTEM Lua invocation failed.");
             }
             
             try
@@ -128,7 +228,24 @@ namespace l99.driver.fanuc.collectors
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                logger.Warn(e, "CollectForEachPathAsync USER Lua invocation failed.");
+            }
+        }
+
+        public override async Task InitUserAxisAndSpindleAsync(short current_path)
+        {
+            if (!string.IsNullOrEmpty(_queueFncUserApplyAxisAndSpindle))
+            {
+                logger.Debug("Invoking InitUserAxisAndSpindleAsync.");
+                
+                try
+                {
+                    var r = _luaUserScript.FncInitAxisAndSpindle?.Call(null, _luaUserScript.Table, _luaCollectorProxy, current_path);
+                }
+                catch (Exception e)
+                {
+                    logger.Warn(e, "InitUserAxisAndSpindleAsync USER Lua invocation failed.");
+                }
             }
         }
 
@@ -140,7 +257,7 @@ namespace l99.driver.fanuc.collectors
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                logger.Warn(e, "CollectForEachAxisAsync SYSTEM Lua invocation failed.");
             }
             
             try
@@ -149,7 +266,7 @@ namespace l99.driver.fanuc.collectors
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                logger.Warn(e, "CollectForEachAxisAsync USER Lua invocation failed.");
             }
         }
 
@@ -161,7 +278,7 @@ namespace l99.driver.fanuc.collectors
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                logger.Warn(e, "CollectForEachSpindleAsync SYSTEM Lua invocation failed.");
             }
             
             try
@@ -170,12 +287,20 @@ namespace l99.driver.fanuc.collectors
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                logger.Warn(e, "CollectForEachSpindleAsync USER Lua invocation failed.");
             }
         }
 
         public override async Task CollectEndAsync()
         {
+            _queueFncUserApplyRoot = string.Empty;
+            _queueFncUserApplyPath = string.Empty;
+            _queueFncUserApplyAxisAndSpindle = string.Empty;
+            _queueFncUserCollectRoot = string.Empty;
+            _queueFncUserCollectPath = string.Empty;
+            _queueFncUserCollectAxis = string.Empty;
+            _queueFncUserCollectSpindle = string.Empty;
+            
             await base.CollectEndAsync();
         }
     }
