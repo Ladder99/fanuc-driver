@@ -1,5 +1,18 @@
 # fanuc-driver
 
+***
+## :fire: NEW COOL STUFF! :fire:
+
+### Configure data collection on the fly using MQTT and Lua! 
+
+1. ***Static Lua Scripts.*** You can now collect data with Lua scripts.  This means no more compiling C# code when you want to modify your data collection strategy.
+
+2. ***Live Lua Scripts.*** Modify the running data collection strategy by publishing a Lua payload over MQTT.  This means you can tinker live and find the parameters, diagnostics, and other data points that work best for you. 
+
+More docs to come, until then please review the Lua scripts. [ex1](lua/collector_example1.lua) [ex4](lua/collector_example4.lua)
+
+***
+
 [OS / Architecture / Machine Tool Matrix](LIBRARY.md)
 
 [API Description and Sample Responses](PLATFORM.md)

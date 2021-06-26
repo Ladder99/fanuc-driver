@@ -35,7 +35,7 @@ function script:collect_root(this, collector)
     print("collect root");
 
     collector:set_native_and_peel("cnc_id", collector.Platform:CNCId());
-    collector:set_native_and_peel("power_on_time", collector.Platform:RdParamDoubleWordNoAxisAsync(6750));
+    collector:set_native_and_peel("power_on_time", collector.Platform:RdParamDoubleWordNoAxisAsync(6750).Result);
 end
 
 
