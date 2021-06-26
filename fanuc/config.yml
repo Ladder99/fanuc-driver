@@ -12,7 +12,7 @@ machines:
       enabled: !!bool true
       net_ip: 10.20.30.102
       net_port: !!int 1883
-      auto_connect: !!bool false
+      auto_connect: !!bool true
       publish_status: !!bool true
       publish_arrivals: !!bool true
       publish_changes: !!bool true
@@ -23,7 +23,7 @@ machines:
     enabled: !!bool true
     type: l99.driver.fanuc.FanucMachine, fanuc
     strategy_type: l99.driver.fanuc.collectors.NLuaRunner, fanuc
-    strategy_lua: lua/collector_example3.lua
+    strategy_lua: lua/test1.lua
     handler_type: l99.driver.fanuc.handlers.Native, fanuc
     sweep_ms: !!int 1000
     net_ip: 10.20.30.101

@@ -62,7 +62,8 @@ namespace l99.driver.fanuc.collectors
         
         public async Task<dynamic?> SetNative(string propertyBagKey, dynamic? value)
         {
-            return await set(propertyBagKey, value, true, false);
+            var a =  await set(propertyBagKey, value, true, false);
+            return a;
         }
         
         public async Task<dynamic?> SetNativeAndPeel(string propertyBagKey, dynamic? value)

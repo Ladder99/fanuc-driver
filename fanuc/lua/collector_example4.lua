@@ -5,6 +5,14 @@ script =  {}
 --[[
 user script:
 
+***
+NOTICE: NLua async/await support
+
+        any calls to async version of collector.Platform:xxxAsync() methods require 
+        that the return value's Return property be used inside of Lua
+        
+        e.g. collector.Platform:xxxAsync().Result
+***
 
 * ROOT
 
@@ -40,12 +48,24 @@ collector:set_native_and_peel("sys_info", collector.Platform:SysInfo());
 
 1)
 
+publish to fanuc/{machine_id}/lua/apply/path
+
+collector:apply("Figures", "figures");
+
+2)
+
 publish to fanuc/{machine_id}/lua/apply/axis_spindle
 
 collector:apply("RdDynamic2_1", "axis_data");
 collector:apply("RdActs2", "spindle_data");
 
-2)
+3)
+
+publish to fanuc/{machine_id}/lua/collect/path
+
+collector:set_native_and_peel("figures", collector.Platform:GetFigure(0, 32));
+
+4)
 
 publish to fanuc/{machine_id}/lua/collect/axis
 
@@ -54,7 +74,7 @@ collector:peel("axis_data",
     collector:get("figures"), 
     current_axis - 1);
     
-3)
+5)
 
 publish to fanuc/{machine_id}/lua/collect/spindle
 

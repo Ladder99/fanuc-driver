@@ -39,7 +39,13 @@ namespace l99.driver.fanuc.collectors
             if (machine.VeneersApplied)
             {
                 logger.Debug("Creating MQTT subscriptions.");
-                await this.machine.Broker.SubscribeAsync($"fanuc/{machine.Id}/lua/#", onIncomingMessage);
+                await this.machine.Broker.SubscribeAsync($"fanuc/{machine.Id}/lua/apply/root", onIncomingMessage);
+                await this.machine.Broker.SubscribeAsync($"fanuc/{machine.Id}/lua/apply/path", onIncomingMessage);
+                await this.machine.Broker.SubscribeAsync($"fanuc/{machine.Id}/lua/apply/axis_spindle", onIncomingMessage);
+                await this.machine.Broker.SubscribeAsync($"fanuc/{machine.Id}/lua/collect/root", onIncomingMessage);
+                await this.machine.Broker.SubscribeAsync($"fanuc/{machine.Id}/lua/collect/path", onIncomingMessage);
+                await this.machine.Broker.SubscribeAsync($"fanuc/{machine.Id}/lua/collect/axis", onIncomingMessage);
+                await this.machine.Broker.SubscribeAsync($"fanuc/{machine.Id}/lua/collect/spindle", onIncomingMessage);
             }
             return result;
         }
@@ -60,7 +66,7 @@ namespace l99.driver.fanuc.collectors
             //TODO: blah
             var topic_end = string.Join('/',Enumerable.ToArray(Enumerable.TakeLast(topic.Split('/'), 2))).ToLower();
             
-            switch (topic.ToLower())
+            switch (topic_end.ToLower())
             {
                 case "apply/root":
                     _queueFncUserApplyRoot = payload;
@@ -101,6 +107,7 @@ namespace l99.driver.fanuc.collectors
             catch (Exception e)
             {
                 logger.Warn(e, "InitRootAsync Lua invocation failed.");
+                if(e.InnerException!=null) logger.Warn(e.InnerException);
             }
         }
         
@@ -113,6 +120,7 @@ namespace l99.driver.fanuc.collectors
             catch (Exception e)
             {
                 logger.Warn(e, "InitPathAsync Lua invocation failed.");
+                if(e.InnerException!=null) logger.Warn(e.InnerException);
             }
         }
         
@@ -125,6 +133,7 @@ namespace l99.driver.fanuc.collectors
             catch (Exception e)
             {
                 logger.Warn(e, "InitAxisAndSpindleAsync Lua invocation failed.");
+                if(e.InnerException!=null) logger.Warn(e.InnerException);
             }
         }
 
@@ -169,6 +178,7 @@ namespace l99.driver.fanuc.collectors
                 catch (Exception e)
                 {
                     logger.Warn(e, "InitUserRootAsync USER Lua invocation failed.");
+                    if(e.InnerException!=null) logger.Warn(e.InnerException);
                 }
             }
         }
@@ -182,6 +192,7 @@ namespace l99.driver.fanuc.collectors
             catch (Exception e)
             {
                 logger.Warn(e, "CollectRootAsync SYSTEM Lua invocation failed.");
+                if(e.InnerException!=null) logger.Warn(e.InnerException);
             }
             
             try
@@ -191,6 +202,7 @@ namespace l99.driver.fanuc.collectors
             catch (Exception e)
             {
                 logger.Warn(e, "CollectRootAsync USER Lua invocation failed.");
+                if(e.InnerException!=null) logger.Warn(e.InnerException);
             }
         }
 
@@ -207,6 +219,7 @@ namespace l99.driver.fanuc.collectors
                 catch (Exception e)
                 {
                     logger.Warn(e, "InitUserPathsAsync USER Lua invocation failed.");
+                    if(e.InnerException!=null) logger.Warn(e.InnerException);
                 }
             }
         }
@@ -220,6 +233,7 @@ namespace l99.driver.fanuc.collectors
             catch (Exception e)
             {
                 logger.Warn(e, "CollectForEachPathAsync SYSTEM Lua invocation failed.");
+                if(e.InnerException!=null) logger.Warn(e.InnerException);
             }
             
             try
@@ -229,6 +243,7 @@ namespace l99.driver.fanuc.collectors
             catch (Exception e)
             {
                 logger.Warn(e, "CollectForEachPathAsync USER Lua invocation failed.");
+                if(e.InnerException!=null) logger.Warn(e.InnerException);
             }
         }
 
@@ -245,6 +260,7 @@ namespace l99.driver.fanuc.collectors
                 catch (Exception e)
                 {
                     logger.Warn(e, "InitUserAxisAndSpindleAsync USER Lua invocation failed.");
+                    if(e.InnerException!=null) logger.Warn(e.InnerException);
                 }
             }
         }
@@ -258,6 +274,7 @@ namespace l99.driver.fanuc.collectors
             catch (Exception e)
             {
                 logger.Warn(e, "CollectForEachAxisAsync SYSTEM Lua invocation failed.");
+                if(e.InnerException!=null) logger.Warn(e.InnerException);
             }
             
             try
@@ -267,6 +284,7 @@ namespace l99.driver.fanuc.collectors
             catch (Exception e)
             {
                 logger.Warn(e, "CollectForEachAxisAsync USER Lua invocation failed.");
+                if(e.InnerException!=null) logger.Warn(e.InnerException);
             }
         }
 
@@ -279,6 +297,7 @@ namespace l99.driver.fanuc.collectors
             catch (Exception e)
             {
                 logger.Warn(e, "CollectForEachSpindleAsync SYSTEM Lua invocation failed.");
+                if(e.InnerException!=null) logger.Warn(e.InnerException);
             }
             
             try
@@ -288,6 +307,7 @@ namespace l99.driver.fanuc.collectors
             catch (Exception e)
             {
                 logger.Warn(e, "CollectForEachSpindleAsync USER Lua invocation failed.");
+                if(e.InnerException!=null) logger.Warn(e.InnerException);
             }
         }
 
