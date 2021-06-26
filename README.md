@@ -9,7 +9,7 @@
 
 2. ***Live Lua Scripts.*** Modify the running data collection strategy by publishing a Lua payload over MQTT.  This means you can tinker live and find the parameters, diagnostics, and other data points that work best for you. 
 
-More docs to come, until then please review the Lua scripts. [ex1](lua/collector_example1.lua) [ex4](lua/collector_example4.lua)
+More docs to come, until then please review the Lua scripts. [ex1](fanuc/lua/collector_example1.lua) [ex4](fanuc/lua/collector_example4.lua)
 
 ***
 
