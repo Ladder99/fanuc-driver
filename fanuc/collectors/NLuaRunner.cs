@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using l99.driver.@base;
-using MoreLinq;
+using Newtonsoft.Json.Linq;
 using NLua;
 
 namespace l99.driver.fanuc.collectors
@@ -14,6 +15,8 @@ namespace l99.driver.fanuc.collectors
         private NLuaRunnerUserScript _luaUserScript;
         
         private Lua _luaState;
+
+        private Dictionary<string, dynamic> _userScriptDef;
         
         public Platform Platform
         {
@@ -26,76 +29,156 @@ namespace l99.driver.fanuc.collectors
             _luaState.LoadCLRPackage();
             
             _luaCollectorProxy = new NLuaRunnerProxy(this);
+            
             _luaSystemScript = new NLuaRunnerSystemScript(_luaState, additionalParams[0]);
             logger.Info($"Lua SYSTEM script valid: {_luaSystemScript.IsValid}");
+            
             _luaUserScript = new NLuaRunnerUserScript(_luaState);
             logger.Info($"Lua USER script valid: {_luaUserScript.IsValid}");
             
+            _userScriptDef = new Dictionary<string, dynamic>()
+            {
+                { "apply/root", new
+                    {
+                        topic = $"fanuc/{machine.Id}/lua/apply/root",
+                        lua = new
+                        {
+                            call = new Func<LuaFunction>(() => { return _luaUserScript.FncInitRoot; }),
+                            modify = new Func<string, bool>((script) => { return _luaUserScript.ModifyInitRootFunction(script); }),
+                            queued = new Queue<string>(),
+                            dequeued = new Queue<string>(),
+                            history = new List<dynamic>()
+                        }
+                    } 
+                },
+                { "apply/path", new
+                    {
+                        topic = $"fanuc/{machine.Id}/lua/apply/path",
+                        lua = new
+                        {
+                            call = new Func<LuaFunction>(() => { return _luaUserScript.FncInitPath; }),
+                            modify = new Func<string, bool>((script) => { return _luaUserScript.ModifyInitPathFunction(script); }),
+                            queued = new Queue<string>(),
+                            dequeued = new Queue<string>(),
+                            history = new List<dynamic>()
+                        }
+                    } 
+                },
+                { "apply/axis_spindle", new
+                    {
+                        topic = $"fanuc/{machine.Id}/lua/apply/axis_spindle",
+                        lua = new
+                        {
+                            call = new Func<LuaFunction>(() => { return _luaUserScript.FncInitAxisAndSpindle; }),
+                            modify = new Func<string, bool>((script) => { return _luaUserScript.ModifyInitAxisAndSpindleFunction(script); }),
+                            queued = new Queue<string>(),
+                            dequeued = new Queue<string>(),
+                            history = new List<dynamic>()
+                        }
+                    } 
+                },
+                { "collect/root", new
+                    {
+                        topic = $"fanuc/{machine.Id}/lua/collect/root",
+                        lua = new
+                        {
+                            call = new Func<LuaFunction>(() => { return _luaUserScript.FncCollectRoot; }),
+                            modify = new Func<string, bool>((script) => { return _luaUserScript.ModifyCollectRootFunction(script); }),
+                            queued = new Queue<string>(),
+                            dequeued = new Queue<string>(),
+                            history = new List<dynamic>()
+                        }
+                    } 
+                },
+                { "collect/path", new
+                    {
+                        topic = $"fanuc/{machine.Id}/lua/collect/path",
+                        lua = new
+                        {
+                            call = new Func<LuaFunction>(() => { return _luaUserScript.FncCollectPath; }),
+                            modify = new Func<string, bool>((script) => { return _luaUserScript.ModifyCollectPathFunction(script); }),
+                            queued = new Queue<string>(),
+                            dequeued = new Queue<string>(),
+                            history = new List<dynamic>()
+                        }
+                    } 
+                },
+                { "collect/axis", new
+                    {
+                        topic = $"fanuc/{machine.Id}/lua/collect/axis",
+                        lua = new
+                        {
+                            call = new Func<LuaFunction>(() => { return _luaUserScript.FncCollectAxis; }),
+                            modify = new Func<string, bool>((script) => { return _luaUserScript.ModifyCollectAxisFunction(script); }),
+                            queued = new Queue<string>(),
+                            dequeued = new Queue<string>(),
+                            history = new List<dynamic>()
+                        }
+                    } 
+                },
+                { "collect/spindle", new
+                    {
+                        topic = $"fanuc/{machine.Id}/lua/collect/spindle",
+                        lua = new
+                        {
+                            call = new Func<LuaFunction>(() => { return _luaUserScript.FncCollectSpindle; }),
+                            modify = new Func<string, bool>((script) => { return _luaUserScript.ModifyCollectSpindleFunction(script); }),
+                            queued = new Queue<string>(),
+                            dequeued = new Queue<string>(),
+                            history = new List<dynamic>()
+                        }
+                    } 
+                }
+            };
         }
 
+        private string createError(long ts, Exception outer, Exception inner)
+        {
+            return JObject.FromObject(new
+            {
+                timestamp = ts,
+                error = new
+                {
+                    outer = new {outer?.Message, outer?.StackTrace},
+                    inner = new {inner?.Message, inner?.StackTrace}
+                }
+            }).ToString();
+        }
+        
         public override async Task<dynamic?> InitializeAsync()
         {
             var result = base.InitializeAsync();
             if (machine.VeneersApplied)
             {
                 logger.Debug("Creating MQTT subscriptions.");
-                await this.machine.Broker.SubscribeAsync($"fanuc/{machine.Id}/lua/apply/root", onIncomingMessage);
-                await this.machine.Broker.SubscribeAsync($"fanuc/{machine.Id}/lua/apply/path", onIncomingMessage);
-                await this.machine.Broker.SubscribeAsync($"fanuc/{machine.Id}/lua/apply/axis_spindle", onIncomingMessage);
-                await this.machine.Broker.SubscribeAsync($"fanuc/{machine.Id}/lua/collect/root", onIncomingMessage);
-                await this.machine.Broker.SubscribeAsync($"fanuc/{machine.Id}/lua/collect/path", onIncomingMessage);
-                await this.machine.Broker.SubscribeAsync($"fanuc/{machine.Id}/lua/collect/axis", onIncomingMessage);
-                await this.machine.Broker.SubscribeAsync($"fanuc/{machine.Id}/lua/collect/spindle", onIncomingMessage);
+                foreach (var kv in _userScriptDef)
+                {
+                    await this.machine.Broker.SubscribeAsync((string)kv.Value.topic, onIncomingMessage);
+                }
+                
             }
             return result;
         }
 
-        private string _queueFncUserApplyRoot = string.Empty;
-        private string _queueFncUserApplyPath = string.Empty;
-        private string _queueFncUserApplyAxisAndSpindle = string.Empty;
-        private string _queueFncUserCollectRoot = string.Empty;
-        private string _queueFncUserCollectPath = string.Empty;
-        private string _queueFncUserCollectAxis = string.Empty;
-        private string _queueFncUserCollectSpindle = string.Empty;
-        
         private async Task onIncomingMessage(string topic, string payload, ushort qos, bool retain)
         {
-            logger.Debug($"Received message on topic '{topic}'.");
+            logger.Debug($"'{topic}' - Received message.");
             logger.Debug(payload);
 
             //TODO: blah
             var topic_end = string.Join('/',Enumerable.ToArray(Enumerable.TakeLast(topic.Split('/'), 2))).ToLower();
-            
-            switch (topic_end.ToLower())
+
+            if (_userScriptDef[topic_end].lua.queued.Count == 0)
+                _userScriptDef[topic_end].lua.queued.Enqueue(payload);
+            else
             {
-                case "apply/root":
-                    _queueFncUserApplyRoot = payload;
-                    break;
-                
-                case "apply/path":
-                    _queueFncUserApplyPath = payload;
-                    break;
-                
-                case "apply/axis_spindle":
-                    _queueFncUserApplyAxisAndSpindle = payload;
-                    break;
-                
-                case "collect/root":
-                    _queueFncUserCollectRoot = payload;
-                    break;
-                
-                case "collect/path":
-                    _queueFncUserCollectPath = payload;
-                    break;
-                
-                case "collect/axis":
-                    _queueFncUserCollectAxis = payload;
-                    break;
-                
-                case "collect/spindle":
-                    _queueFncUserCollectSpindle = payload;
-                    break;
+                var ts = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
+                await machine.Broker.PublishAsync(
+                    $"{_userScriptDef[topic_end].topic}/{ts}",
+                    createError(ts, new Exception("Queue pending. Message was rejected."), null));
+                logger.Warn($"'{topic}' - Queue pending. Message was rejected.");
             }
+
         }
         
         public override async Task InitRootAsync()
@@ -141,44 +224,51 @@ namespace l99.driver.fanuc.collectors
         {
             var ret = await base.CollectBeginAsync();
 
-            if(!string.IsNullOrEmpty(_queueFncUserApplyRoot))
-                _luaUserScript.ModifyInitRootFunction(_queueFncUserApplyRoot);
-            
-            if(!string.IsNullOrEmpty(_queueFncUserApplyPath))
-                _luaUserScript.ModifyInitPathFunction(_queueFncUserApplyPath);
-            
-            if(!string.IsNullOrEmpty(_queueFncUserApplyAxisAndSpindle))
-                _luaUserScript.ModifyInitAxisAndSpindleFunction(_queueFncUserApplyAxisAndSpindle);
-            
-            if(!string.IsNullOrEmpty(_queueFncUserCollectRoot))
-                _luaUserScript.ModifyCollectRootFunction(_queueFncUserCollectRoot);
-            
-            if(!string.IsNullOrEmpty(_queueFncUserCollectPath))
-                _luaUserScript.ModifyCollectPathFunction(_queueFncUserCollectPath);
-            
-            if(!string.IsNullOrEmpty(_queueFncUserCollectAxis))
-                _luaUserScript.ModifyCollectAxisFunction(_queueFncUserCollectAxis);
-            
-            if(!string.IsNullOrEmpty(_queueFncUserCollectSpindle))
-                _luaUserScript.ModifyCollectSpindleFunction(_queueFncUserCollectSpindle);
+            foreach (var kv in _userScriptDef)
+            {
+                if (kv.Value.lua.queued.Count > 0)
+                {
+                    string payload = kv.Value.lua.queued.Dequeue();
+                    kv.Value.lua.dequeued.Enqueue(payload);
+                    var accepted = kv.Value.lua.modify(payload);
+                    var history = new
+                    {
+                        timestamp = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds(),
+                        status = new 
+                        {
+                            chunk = payload,
+                            accepted 
+                        }
+                    };
+                    kv.Value.lua.history.Add(history);
+                    await machine.Broker.PublishAsync($"{kv.Value.topic}/{history.timestamp}", JObject.FromObject(history).ToString(), true );
+                }
+            }
             
             return ret;
         }
 
         public override async Task InitUserRootAsync()
         {
-            if (!string.IsNullOrEmpty(_queueFncUserApplyRoot))
+            var v = _userScriptDef["apply/root"];
+            
+            if (v.lua.dequeued.Count > 0)
             {
                 logger.Debug("Invoking InitUserRootAsync.");
                 
                 try
                 {
-                    var r = _luaUserScript.FncInitRoot?.Call(null, _luaUserScript.Table, _luaCollectorProxy);
+                    var r = v.lua.call()?.Call(null, _luaUserScript.Table, _luaCollectorProxy);
                 }
                 catch (Exception e)
                 {
                     logger.Warn(e, "InitUserRootAsync USER Lua invocation failed.");
-                    if(e.InnerException!=null) logger.Warn(e.InnerException);
+                    var ts = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
+                    await machine.Broker.PublishAsync(
+                        $"{_userScriptDef["apply/root"].topic}/{ts}", 
+                        createError(ts, e, e.InnerException), true );
+                    if (e.InnerException != null)
+                        logger.Warn(e.InnerException);
                 }
             }
         }
@@ -197,29 +287,44 @@ namespace l99.driver.fanuc.collectors
             
             try
             {
-                var r = _luaUserScript.FncCollectRoot?.Call(null, _luaUserScript.Table, _luaCollectorProxy);
+                var r = _userScriptDef["collect/root"].lua.call()?.Call(null, _luaUserScript.Table, _luaCollectorProxy);
             }
             catch (Exception e)
             {
                 logger.Warn(e, "CollectRootAsync USER Lua invocation failed.");
-                if(e.InnerException!=null) logger.Warn(e.InnerException);
+                if (_userScriptDef["collect/root"].lua.dequeued.Count > 0)
+                {
+                    var ts = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
+                    await machine.Broker.PublishAsync(
+                        $"{_userScriptDef["collect/root"].topic}/{ts}",
+                        createError(ts, e, e.InnerException), true);
+                }
+                if (e.InnerException != null)
+                    logger.Warn(e.InnerException);
             }
         }
 
         public override async Task InitUserPathsAsync()
         {
-            if (!string.IsNullOrEmpty(_queueFncUserApplyPath))
+            var v = _userScriptDef["apply/path"];
+            
+            if (v.lua.dequeued.Count > 0)
             {
                 logger.Debug("Invoking InitUserPathsAsync.");
                 
                 try
                 {
-                    var r = _luaUserScript.FncInitPath?.Call(null, _luaUserScript.Table, _luaCollectorProxy);
+                    var r = v.lua.call()?.Call(null, _luaUserScript.Table, _luaCollectorProxy);
                 }
                 catch (Exception e)
                 {
                     logger.Warn(e, "InitUserPathsAsync USER Lua invocation failed.");
-                    if(e.InnerException!=null) logger.Warn(e.InnerException);
+                    var ts = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
+                    await machine.Broker.PublishAsync(
+                        $"{_userScriptDef["apply/path"].topic}/{ts}", 
+                        createError(ts, e, e.InnerException), true );
+                    if (e.InnerException != null)
+                        logger.Warn(e.InnerException);
                 }
             }
         }
@@ -238,29 +343,44 @@ namespace l99.driver.fanuc.collectors
             
             try
             {
-                var r = _luaUserScript.FncCollectPath?.Call(null, _luaUserScript.Table, _luaCollectorProxy, current_path);
+                var r = _userScriptDef["collect/path"].lua.call()?.Call(null, _luaUserScript.Table, _luaCollectorProxy, current_path);
             }
             catch (Exception e)
             {
                 logger.Warn(e, "CollectForEachPathAsync USER Lua invocation failed.");
-                if(e.InnerException!=null) logger.Warn(e.InnerException);
+                if (_userScriptDef["collect/path"].lua.dequeued.Count > 0)
+                {
+                    var ts = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
+                    await machine.Broker.PublishAsync(
+                        $"{_userScriptDef["collect/path"].topic}/{ts}",
+                        createError(ts, e, e.InnerException), true);
+                }
+                if (e.InnerException != null)
+                    logger.Warn(e.InnerException);
             }
         }
 
         public override async Task InitUserAxisAndSpindleAsync(short current_path)
         {
-            if (!string.IsNullOrEmpty(_queueFncUserApplyAxisAndSpindle))
+            var v = _userScriptDef["apply/axis_spindle"];
+            
+            if (v.lua.dequeued.Count > 0)
             {
                 logger.Debug("Invoking InitUserAxisAndSpindleAsync.");
                 
                 try
                 {
-                    var r = _luaUserScript.FncInitAxisAndSpindle?.Call(null, _luaUserScript.Table, _luaCollectorProxy, current_path);
+                    var r = v.lua.call()?.Call(null, _luaUserScript.Table, _luaCollectorProxy, current_path);
                 }
                 catch (Exception e)
                 {
                     logger.Warn(e, "InitUserAxisAndSpindleAsync USER Lua invocation failed.");
-                    if(e.InnerException!=null) logger.Warn(e.InnerException);
+                    var ts = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
+                    await machine.Broker.PublishAsync(
+                        $"{_userScriptDef["apply/axis_spindle"].topic}/{ts}", 
+                        createError(ts, e, e.InnerException), true );
+                    if (e.InnerException != null)
+                        logger.Warn(e.InnerException);
                 }
             }
         }
@@ -279,12 +399,20 @@ namespace l99.driver.fanuc.collectors
             
             try
             {
-                var r = _luaUserScript.FncCollectAxis?.Call(null, _luaUserScript.Table, _luaCollectorProxy, Get("current_path"), current_axis, axis_name);
+                var r = _userScriptDef["collect/axis"].lua.call()?.Call(null, _luaUserScript.Table, _luaCollectorProxy, Get("current_path"), current_axis, axis_name);
             }
             catch (Exception e)
             {
                 logger.Warn(e, "CollectForEachAxisAsync USER Lua invocation failed.");
-                if(e.InnerException!=null) logger.Warn(e.InnerException);
+                if (_userScriptDef["collect/axis"].lua.dequeued.Count > 0)
+                {
+                    var ts = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
+                    await machine.Broker.PublishAsync(
+                        $"{_userScriptDef["collect/axis"].topic}/{ts}",
+                        createError(ts, e, e.InnerException), true);
+                }
+                if (e.InnerException != null)
+                    logger.Warn(e.InnerException);
             }
         }
 
@@ -302,24 +430,32 @@ namespace l99.driver.fanuc.collectors
             
             try
             {
-                var r = _luaUserScript.FncCollectSpindle?.Call(null, _luaUserScript.Table, _luaCollectorProxy, Get("current_path"), current_spindle, spindle_name);
+                var r = _userScriptDef["collect/spindle"].lua.call()?.Call(null, _luaUserScript.Table, _luaCollectorProxy, Get("current_path"), current_spindle, spindle_name);
             }
             catch (Exception e)
             {
                 logger.Warn(e, "CollectForEachSpindleAsync USER Lua invocation failed.");
-                if(e.InnerException!=null) logger.Warn(e.InnerException);
+                if (_userScriptDef["collect/spindle"].lua.dequeued.Count > 0)
+                {
+                    var ts = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
+                    await machine.Broker.PublishAsync(
+                        $"{_userScriptDef["collect/spindle"].topic}/{ts}",
+                        createError(ts, e, e.InnerException), true);
+                }
+                if (e.InnerException != null)
+                    logger.Warn(e.InnerException);
             }
         }
 
         public override async Task CollectEndAsync()
         {
-            _queueFncUserApplyRoot = string.Empty;
-            _queueFncUserApplyPath = string.Empty;
-            _queueFncUserApplyAxisAndSpindle = string.Empty;
-            _queueFncUserCollectRoot = string.Empty;
-            _queueFncUserCollectPath = string.Empty;
-            _queueFncUserCollectAxis = string.Empty;
-            _queueFncUserCollectSpindle = string.Empty;
+            foreach (var kv in _userScriptDef)
+            {
+                if (kv.Value.lua.dequeued.Count > 0)
+                {
+                    kv.Value.lua.dequeued.Dequeue();
+                }
+            }
             
             await base.CollectEndAsync();
         }
