@@ -7,21 +7,27 @@
 
 1. ***Static Lua Scripts.*** You can now collect data with Lua scripts.  This means no more compiling C# code when you want to modify your data collection strategy.
 
-2. ***Live Lua Scripts.*** Modify the running data collection strategy by publishing a Lua payload over MQTT.  This means you can tinker live and find the parameters, diagnostics, and other data points that work best for you. 
-
-More docs to come, until then please review the Lua scripts. [ex1](fanuc/lua/collector_example1.lua) [ex4](fanuc/lua/collector_example4.lua)
-
+2. ***Live Lua Scripts.*** Modify the running data collection strategy by publishing a Lua payload over MQTT.  This means you can tinker live and find the parameters, diagnostics, and other data points that work best for you.
 ***
 
-[OS / Architecture / Machine Tool Matrix](LIBRARY.md)
+## Contents
 
-[API Description and Sample Responses](PLATFORM.md)
+1. [Overview](#overview)
+2. [Suggested MQTT Topic Structure](#suggested-mqtt-topic-structure)
+3. [Suggested MQTT Payload Structure](#suggested-mqtt-payload-structure)
+4. [Concepts and Examples](#concepts)
+5. [Building and Running](#building-and-running)
+6. [Docker Deployment](#docker)
+7. [OS / Architecture / Machine Tool Matrix](LIBRARY.md)
+8. [API Description and Sample Responses](PLATFORM.md)
+
+## Overview
 
 This solution is built on top of Fanuc Focas libraries for interfacing with Fanuc controllers and publishing data to a MQTT broker or another target.
 
-The primary goal of this solution is to maintain the machine data in its native source format with slight transformations to make it more human readable at the target.  The intention behind this approach is to allow the developer to reference original [Focas API documentation](docs/FOCAS2_Linux.pdf) further downstream to aid in their transformation and translation efforts.  Concepts in the `base-driver` repository can be reused to create structured drivers for other protocols.  
+The primary goal of this solution is to maintain the machine data in its native source format with slight transformations to make it more human readable at the target.  The intention behind this approach is to allow the developer to reference original [Focas API documentation](docs/FOCAS2_Linux.pdf) further downstream to aid in their transformation and translation efforts.  Concepts in the [`base-driver`](https://github.com/Ladder99/base-driver) repository can be reused to create structured drivers for other protocols.  
 
-Below illustrates [Fanuc NC Guide](https://www.fanucamerica.com/products/cnc/software/cnc-guide-simulation-software) output visualized through [MQTT Explorer](http://mqtt-explorer.com/).
+Below illustrates [Fanuc NC Guide](https://www.fanucamerica.com/products/cnc/software/cnc-guide-simulation-software) output visualized with [MQTT Explorer](http://mqtt-explorer.com/).
 
 ![recording1](docs/recording1.gif)
 
@@ -29,7 +35,7 @@ Below illustrates [Fanuc 0i-TF](https://www.fanucamerica.com/products/cnc/cnc-sy
 
 ![recording2](docs/recording2.gif)
 
-## MQTT Topic Structure - Suggested
+## Suggested MQTT Topic Structure
 
 Observations can be single data points, such as axis absolute position or motor temperature.  Observations can also be more compound such as the health of a spindle which would package multiple relevant data points into a single observation payload.  Results of calls into the Focas library highly depend on the context they are invoked in.  For example, retrieving the position of an axis on the second execution path of the controller, requires that the second path is made active and the appropriate axis is called out when making the call.  This hierarchy is captured in the suggested topic structure below.
 
@@ -68,7 +74,7 @@ fanuc/{machine-id}-all/PING
 fanuc/DISCO
 ```
 
-## MQTT Payload Structure - Suggested
+## Suggested MQTT Payload Structure
 
 Data deltas are published to MQTT broker as retained messages.  This means that any newly connected client will only receive the latest data for each observation.
 
@@ -76,7 +82,7 @@ Below is an example of native [`cnc_sysinfo`](https://www.inventcom.net/fanuc-fo
 
 Native data from controller:
 
-```
+```json
 {
   "addinfo": 1090,
   "max_axis": 32,
@@ -109,7 +115,7 @@ Native data from controller:
 
 Data after transformation:
 
-```
+```json
 {
   "addinfo": 1090,
   "max_axis": 32,
@@ -128,7 +134,7 @@ fanuc/sim/sys_info
 fanuc/sim-all/sys_info
 ```
 
-```
+```json
 {
   "observation": {
     "time": 1620485344410,
@@ -210,8 +216,8 @@ The act of peeling veneers in order to execute transformations and reveal observ
 
 During collector initialization, each call to `ApplyVeneer` binds a transformation class to an observation name.
 
-```
-public override void Initialize()
+```c#
+public override async Task<dynamic?> InitializeAsync()
 {
     _machine.ApplyVeneer(typeof(fanuc.veneers.Connect), "connect");
     _machine.ApplyVeneer(typeof(fanuc.veneers.SysInfo), "sys_info");
@@ -220,24 +226,23 @@ public override void Initialize()
 
 The collector is processed at set intervals.
 
-```
-public override void Collect()
+```c#
+public override async Task<dynamic?> CollectAsync()
 {
-    dynamic connect = _machine.Platform.Connect();
-    _machine.PeelVeneer("connect", connect);
+    dynamic connect = await machine["platform"].ConnectAsync();
+    await machine.PeelVeneerAsync("connect", connect);
 ```
 
-A connection is established to the Fanuc controller and the call to `PeelVeneer` reveals the *connect* observation.  The `Connect` `Veneer` instance is responsible for transforming the native Focas response where appropriate, comparing it to the last value seen, and invoking the `dataArrived` and `dataChanged` actions.  Every arrived data is available via the `Machine.Veneers.OnDataArrival<Veneers, Veneer>` delegate. Changed data is available via the `Machine.Veneers.OnDataChange<Veneers, Veneer>` delegate.  Similarly, errors bubble up to `Machine.Veneers.OnError<Veneers, Veneer>`.
+A connection is established to the Fanuc controller and the call to `PeelVeneer` reveals the *connect* observation.  The [`Connect`](fanuc/veneers/Connect.cs) `Veneer` instance is responsible for transforming the native Focas response where appropriate, comparing it to the last value seen, and invoking the `onDataArrived` and `onDataChanged` actions.  Every arrived data is available via the `Machine.Veneers.OnDataArrival<Veneers, Veneer>` delegate. Changed data is available via the `Machine.Veneers.OnDataChange<Veneers, Veneer>` delegate.  Similarly, errors bubble up to `Machine.Veneers.OnError<Veneers, Veneer>`.
 
-
-```
+```c#
     if (connect.success)
     {
-        dynamic info = _machine.Platform.SysInfo();
-        _machine.PeelVeneer("sys_info", info);
+        dynamic info = _machine.Platform.SysInfoAsync();
+        await _machine.PeelVeneerAsync("sys_info", info);
 ```        
 
-Next, the *sys_info* observation is revealed.  A call to Focas `cnc_sysinfo` is made via the `Machine.Platform.SysInfo` wrapper method.  The `SysInfo` `Veneer` instance then transforms native character arrays to strings, for easier readability.
+Next, the *sys_info* observation is revealed.  A call to Focas `cnc_sysinfo` is made via the `Machine.Platform.SysInfo` wrapper method.  The [`SysInfo`](fanuc/veneers/SysInfo.cs) `Veneer` instance then transforms native character arrays to strings, for easier readability.
 
 ```
         dynamic disconnect = _machine.Platform.Disconnect();
@@ -250,43 +255,40 @@ Next, the *sys_info* observation is revealed.  A call to Focas `cnc_sysinfo` is 
 
 Finally, the connection to the Fanuc controller is broken and the success of the `Collect` iteration captured.
 
-#### Example: Basic01
+#### Example: [Basic01](fanuc/collectors/Basic01.cs)
 
 Initialization of the `Basic01` `Collector` strategy binds several `Veneer` types to named observations.
 
-```
-_machine.ApplyVeneer(typeof(fanuc.veneers.Connect), "connect");
-_machine.ApplyVeneer(typeof(fanuc.veneers.CNCId), "cnc_id");
-_machine.ApplyVeneer(typeof(fanuc.veneers.RdTimer), "power_on_time");
-_machine.ApplyVeneer(typeof(fanuc.veneers.RdParamLData), "power_on_time_6750");
-_machine.ApplyVeneer(typeof(fanuc.veneers.SysInfo), "sys_info");
-_machine.ApplyVeneer(typeof(fanuc.veneers.GetPath), "get_path");
+```c#
+machine.ApplyVeneer(typeof(fanuc.veneers.Connect), "connect");
+machine.ApplyVeneer(typeof(fanuc.veneers.CNCId), "cnc_id");
+machine.ApplyVeneer(typeof(fanuc.veneers.RdTimer), "power_on_time");
+machine.ApplyVeneer(typeof(fanuc.veneers.RdParamLData), "power_on_time_6750");
+machine.ApplyVeneer(typeof(fanuc.veneers.SysInfo), "sys_info");
+machine.ApplyVeneer(typeof(fanuc.veneers.GetPath), "get_path");
 ```
 
 Each data collection iteration retrieves data from the Fanuc controller and reveals individual observations.
 
-```
-dynamic connect = _machine.Platform.Connect();
-_machine.PeelVeneer("connect", connect);
-
+```c#
 if (connect.success)
 {
-    dynamic cncid = _machine.Platform.CNCId();
-    _machine.PeelVeneer("cnc_id", cncid);
-    
-    dynamic poweron = _machine.Platform.RdTimer(0);
-    _machine.PeelVeneer("power_on_time", poweron);
-    
-    dynamic poweron_6750 = _machine.Platform.RdParam(6750, 0, 8, 1);
-    _machine.PeelVeneer("power_on_time_6750", poweron_6750);
-    
-    dynamic info = _machine.Platform.SysInfo();
-    _machine.PeelVeneer("sys_info", info);
-    
-    dynamic paths = _machine.Platform.GetPath();
-    _machine.PeelVeneer("get_path", paths);
+    dynamic cncid = await machine["platform"].CNCIdAsync();
+    await machine.PeelVeneerAsync("cnc_id", cncid);
 
-    dynamic disconnect = _machine.Platform.Disconnect();
+    dynamic poweron = await machine["platform"].RdTimerAsync(0);
+    await machine.PeelVeneerAsync("power_on_time", poweron);
+
+    dynamic poweron_6750 = await machine["platform"].RdParamDoubleWordNoAxisAsync(6750);
+    await machine.PeelVeneerAsync("power_on_time_6750", poweron_6750);
+
+    dynamic info = await machine["platform"].SysInfoAsync();
+    await machine.PeelVeneerAsync("sys_info", info);
+
+    dynamic paths = await machine["platform"].GetPathAsync();
+    await machine.PeelVeneerAsync("get_path", paths);
+
+    dynamic disconnect = await machine["platform"].DisconnectAsync();
 }
 
 LastSuccess = connect.success;
@@ -306,7 +308,7 @@ LastSuccess = connect.success;
 
 #### Example: [Basic08](fanuc/collectors/Basic08.cs)
 
-This example departs from previous ones based on the emerged pattern of data collection at different levels in the Fanuc component hierarchy as it relates to the Focas windowing function calls.  Data collection is broken down by path, axis, and spindle with the boiler plate implemented in `FanucCollector2` base class.
+This example departs from previous ones based on the emerged pattern of data collection at different levels in the Fanuc component hierarchy as it relates to the Focas windowing function calls.  Data collection is broken down by path, axis, and spindle with the boiler plate implemented in [`FanucCollector2`](fanuc/collectors/FanucCollector2.cs) base class.
 
 ```c#
 using System.Threading.Tasks;
@@ -432,6 +434,10 @@ namespace l99.driver.fanuc.collectors
 }
 ```
 
+#### Example: [NLuaRunner](fanuc/collectors/NLuaRunner.cs)
+
+More docs to come, until then please review the Lua scripts. [ex1](fanuc/lua/collector_example1.lua) [ex4](fanuc/lua/collector_example4.lua)
+
 ### Post-Processing Examples
 
 #### Splunk Metric
@@ -456,7 +462,7 @@ namespace l99.driver.fanuc.collectors
 
 The `config.yml` file contains runtime information about each Focas endpoint and it target MQTT broker.
 
-```
+```yaml
 machines:
   - id: sim
     enabled: !!bool true
@@ -509,7 +515,7 @@ Follow .NET Core SDK installation instructions here: https://sukesh.me/2020/07/0
   
 Clone the repository, build the project, and run it.  
   
-```  
+```
 export DOTNET_ROOT=$HOME/dotnet
 export PATH=$PATH:$HOME/dotnet
 
