@@ -438,6 +438,8 @@ namespace l99.driver.fanuc.collectors
 
 More docs to come, until then please review the Lua scripts. [ex1](fanuc/lua/collector_example1.lua) [ex4](fanuc/lua/collector_example4.lua)
 
+![collector_sequence_lua](docs/fanuc-driver_collector_sequence_lua.png)
+
 ### Post-Processing Examples
 
 #### Splunk Metric

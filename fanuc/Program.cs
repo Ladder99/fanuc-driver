@@ -115,7 +115,7 @@ namespace l99.driver.fanuc
             {
                 _logger.Trace($"Creating machine from config:\n{JObject.FromObject(cfg).ToString()}");
                 
-                Broker broker = await brokers.AddAsync(cfg.broker);
+                Broker broker = await brokers.AddAsync(cfg.machine, cfg.broker);
                 Machine machine = machines.Add(cfg.machine, broker);
                 machine.AddCollector(Type.GetType(cfg.machine.collector), cfg.machine.collector_sweep_ms, cfg.machine.collector_lua);
                 await machine.AddHandlerAsync(Type.GetType(cfg.machine.handler));
