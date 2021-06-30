@@ -92,6 +92,7 @@
                         <tr> <td>85   </td><td>:</td><td>Remote machine diagnose log</td> </tr>
                         <tr> <td>86   </td><td>:</td><td>FACTOLINK log</td> </tr>
                         </table></dd>
+                        </dl>
                     </content>
                 </item>
                 <item>
@@ -117,7 +118,7 @@
                     <type>out</type>
                     <content>
                         <p>Specify the pointer to the OUT_ETHLOG structure that stores getting log.</p>
-                        <p>The OUT_ETHLOG structure is as follows:<br/>
+                        <p>The OUT_ETHLOG structure is as follows:<br/></p>
 <pre>
 typedef struct _out_ethlog {
     short               Count;
@@ -149,7 +150,7 @@ typedef struct _out_ethlog1shot {
                             <dt>log.logData[n].MsgId</dt>
                             <dd>Fixation log message ID</dd>
                             <dd>Range 0,..,65535</dd>
-                            <dd>In the case of 0(zero), Fixation log message does not exist.
+                            <dd>In the case of 0(zero), Fixation log message does not exist.</dd>
 
                             <dt>log.logData[n].Year</dt>
                             <dd>The 3 figures under A.D. when the log occurred.</dd>

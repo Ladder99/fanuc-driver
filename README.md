@@ -17,8 +17,9 @@
 3. [Suggested MQTT Payload Structure](#suggested-mqtt-payload-structure)
 4. [Concepts and Examples](#concepts)
 5. [Building and Running](#building-and-running)
-6. [Docker Deployment](#docker)
-7. [OS / Architecture / Machine Tool Matrix](LIBRARY.md)
+6. [Docker Deployment](#docker) 
+7. [Focas Function List](FOCAS_FUNCTION_LIST.md)
+8. [OS / Architecture / Machine Tool Matrix](LIBRARY.md)
 8. [API Description and Sample Responses](PLATFORM.md)
 
 ## Overview
