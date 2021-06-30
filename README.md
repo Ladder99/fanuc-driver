@@ -18,9 +18,9 @@
 4. [Concepts and Examples](#concepts)
 5. [Building and Running](#building-and-running)
 6. [Docker Deployment](#docker) 
-7. [Focas Function List](FOCAS_FUNCTION_LIST.md)
-8. [OS / Architecture / Machine Tool Matrix](LIBRARY.md)
-8. [API Description and Sample Responses](PLATFORM.md)
+7. [Focas Library Matrix](FOCAS_LIBRARY_MATRIX.md)
+8. [Focas Function Matrix](FOCAS_FUNCTION_MATRIX.md)
+9. [API Description and Sample Responses](PLATFORM.md)
 
 ## Overview
 
