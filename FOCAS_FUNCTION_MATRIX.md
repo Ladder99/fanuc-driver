@@ -1,10 +1,16 @@
 # Focas Function Matrix
 
-## Support Legend  
+## Controller Model Legend
+
+| (M) | (T) | (LC) | (P) | (L) | (W) |
+|---|---|---|---|---|---|
+| Machining | Turning | Loader | Punch Press | Laser | Wire |  
+
+## Function Support Legend
 
 | O | E | H | X | - |
 |---|---|---|---|---|
-| Ethernet+HSSB | Ethernet | HSSB | Cannot be used | None |  
+| Ethernet+HSSB | Ethernet | HSSB | Cannot be used | None | 
 
 ## Functions [CSV](docs/focas_function_matrix.csv)
 
