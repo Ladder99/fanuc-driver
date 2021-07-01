@@ -33,12 +33,13 @@ element table {
     },
     for $doc in collection('../SpecE/?select=*.xml;recurse=yes')
     let $section := lower-case(tokenize(document-uri($doc), "[/]")[last()-1])
-    let $name := concat("[", $doc/root/func/title/text(), "](#", $doc/root/func/title/text(), ")")
+    let $name := $doc/root/func/title/text() (:concat("[", $doc/root/func/title/text(), "](#", $doc/root/func/title/text(), ")"):)
     let $prototype := functx:trim(normalize-space(string-join($doc/root/func/declare/vc/prottype/string(), "")))
     let $references := string-join
         (
             for $reference in $doc/root/func/reference/item/name/text()
-            return concat("[", normalize-space($reference), "](#", normalize-space($reference), ")"), ", "
+            return normalize-space($reference), ", "
+            (:return concat("[", normalize-space($reference), "](#", normalize-space($reference), ")"), ", ":)
         )
     let $comment := 
         if (string-length(functx:trim($doc/root/func/doc/cmn[1]/text()[1])) > 0) then
