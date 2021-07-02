@@ -9612,21 +9612,74 @@ namespace l99.driver.fanuc
             short a, short b, ref short c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBCMD d);
 
         /* read diagnosis data */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_diagnoss")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_diagnoss")]
+#elif LINUX32_100
+        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_diagnoss")]
+#elif LINUX32_105
+        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_diagnoss")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_diagnoss")]
+#endif
         public static extern short cnc_diagnoss(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBDGN_1 d);
+        
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_diagnoss")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_diagnoss")]
+#elif LINUX32_100
+        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_diagnoss")]
+#elif LINUX32_105
+        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_diagnoss")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_diagnoss")]
+#endif
         public static extern short cnc_diagnoss(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBDGN_2 d);
+        
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_diagnoss")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_diagnoss")]
+#elif LINUX32_100
+        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_diagnoss")]
+#elif LINUX32_105
+        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_diagnoss")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_diagnoss")]
+#endif
         public static extern short cnc_diagnoss(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBDGN_3 d);
+        
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_diagnoss")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_diagnoss")]
+#elif LINUX32_100
+        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_diagnoss")]
+#elif LINUX32_105
+        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_diagnoss")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_diagnoss")]
+#endif
         public static extern short cnc_diagnoss(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBDGN_4 d);
 
         /* read diagnosis data(area specified) */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_diagnosr")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_diagnosr")]
+#elif LINUX32_100
+        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_diagnosr")]
+#elif LINUX32_105
+        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_diagnosr")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_diagnosr")]
+#endif
         public static extern short cnc_diagnosr(ushort FlibHndl,
             ref short a, short b, ref short c, ref short d, [Out, MarshalAs(UnmanagedType.AsAny)] Object e);
         //  [DllImport("FWLIB32.dll", EntryPoint="cnc_diagnosr")]
