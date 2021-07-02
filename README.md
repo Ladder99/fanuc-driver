@@ -21,7 +21,8 @@
 7. [Docker Deployment](#docker) 
 8. [Focas Library Matrix](FOCAS_LIBRARY_MATRIX.md)
 9. [Focas Function Matrix](FOCAS_FUNCTION_MATRIX.md)
-10. [API Description and Sample Responses](PLATFORM.md)
+10. [Focas Function Platform Matrix](FOCAS_FUNCTION_PLATFORM_MATRIX.md)
+11. [API Description and Sample Responses](PLATFORM.md)
 
 ## Cybersecurity
 
