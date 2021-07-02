@@ -7,7 +7,7 @@ machines:
     sweep_ms: !!int 1000
     net_ip: 10.20.30.101
     net_port: !!int 8193
-    net_timeout_s: !!int 2
+    net_timeout_s: !!int 3
     broker:
       enabled: !!bool true
       net_ip: 10.20.30.102

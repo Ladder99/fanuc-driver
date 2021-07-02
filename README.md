@@ -12,15 +12,20 @@
 
 ## Contents
 
-1. [Overview](#overview)
-2. [Suggested MQTT Topic Structure](#suggested-mqtt-topic-structure)
-3. [Suggested MQTT Payload Structure](#suggested-mqtt-payload-structure)
-4. [Concepts and Examples](#concepts)
-5. [Building and Running](#building-and-running)
-6. [Docker Deployment](#docker) 
-7. [Focas Library Matrix](FOCAS_LIBRARY_MATRIX.md)
-8. [Focas Function Matrix](FOCAS_FUNCTION_MATRIX.md)
-9. [API Description and Sample Responses](PLATFORM.md)
+1. [Cybersecurity](#cybersecurity)
+2. [Overview](#overview)
+3. [Suggested MQTT Topic Structure](#suggested-mqtt-topic-structure)
+4. [Suggested MQTT Payload Structure](#suggested-mqtt-payload-structure)
+5. [Concepts and Examples](#concepts)
+6. [Building and Running](#building-and-running)
+7. [Docker Deployment](#docker) 
+8. [Focas Library Matrix](FOCAS_LIBRARY_MATRIX.md)
+9. [Focas Function Matrix](FOCAS_FUNCTION_MATRIX.md)
+10. [API Description and Sample Responses](PLATFORM.md)
+
+## Cybersecurity
+
+Review [Fanuc Vulnerability Information](https://www.fanuc.co.jp/en/product/vulnerability/index.html) before proceeding.
 
 ## Overview
 
