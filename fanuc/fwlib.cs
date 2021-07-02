@@ -8065,15 +8065,45 @@ namespace l99.driver.fanuc
         public static extern short cnc_canmovrlap(ushort FlibHndl, short a);
 
         /* read load information of serial spindle */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdspload")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdspload")]
+#elif LINUX32_100
+        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdspload")]
+#elif LINUX32_105
+        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdspload")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdspload")]
+#endif
         public static extern short cnc_rdspload(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSPN b);
 
         /* read maximum r.p.m. ratio of serial spindle */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdspmaxrpm")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdspmaxrpm")]
+#elif LINUX32_100
+        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdspmaxrpm")]
+#elif LINUX32_105
+        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdspmaxrpm")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdspmaxrpm")]
+#endif
         public static extern short cnc_rdspmaxrpm(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSPN b);
 
         /* read gear ratio of serial spindle */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdspgear")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdspgear")]
+#elif LINUX32_100
+        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdspgear")]
+#elif LINUX32_105
+        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdspgear")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdspgear")]
+#endif
         public static extern short cnc_rdspgear(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSPN b);
 
         /* read absolute axis position 2 */
@@ -8100,7 +8130,17 @@ namespace l99.driver.fanuc
             short a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBPOS c);
 
         /* read current speed */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdspeed")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdspeed")]
+#elif LINUX32_100
+        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdspeed")]
+#elif LINUX32_105
+        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdspeed")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdspeed")]
+#endif
         public static extern short cnc_rdspeed(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSPEED b);
 
         /* read servo load meter */
@@ -8155,7 +8195,17 @@ namespace l99.driver.fanuc
         public static extern short cnc_rdspcss(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBCSS a);
 
         /* read execution program pointer */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdexecpt")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdexecpt")]
+#elif LINUX32_100
+        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdexecpt")]
+#elif LINUX32_105
+        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdexecpt")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdexecpt")]
+#endif
         public static extern short cnc_rdexecpt(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] PRGPNT a, [Out, MarshalAs(UnmanagedType.LPStruct)] PRGPNT b);
 
         /* read various axis data */

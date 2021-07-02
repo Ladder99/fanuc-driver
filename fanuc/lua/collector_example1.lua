@@ -30,6 +30,11 @@ function script:init_axis_and_spindle(this, collector)
     collector:apply("RdActs2", "spindle_data");
 end
 
+function script:init_post(this, collector)
+    print("initialize post");
+    
+end
+
 
 function script:collect_root(this, collector)
     print("collect root");

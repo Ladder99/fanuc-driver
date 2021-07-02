@@ -14,6 +14,7 @@ namespace l99.driver.fanuc.collectors
         public LuaFunction FncInitRoot { get; private set; }
         public LuaFunction FncInitPath { get; private set; }
         public LuaFunction FncInitAxisAndSpindle { get; private set; }
+        public LuaFunction FncPostInit { get; private set; }
         public LuaFunction FncCollectRoot { get; private set; }
         public LuaFunction FncCollectPath { get; private set; }
         public LuaFunction FncCollectAxis { get; private set; }
@@ -62,6 +63,7 @@ namespace l99.driver.fanuc.collectors
                 FncInitRoot = Table?["init_root"] as LuaFunction;
                 FncInitPath = Table?["init_paths"] as LuaFunction;
                 FncInitAxisAndSpindle = Table?["init_axis_and_spindle"] as LuaFunction;
+                FncPostInit = Table?["init_post"] as LuaFunction;
                 FncCollectRoot = Table?["collect_root"] as LuaFunction;
                 FncCollectPath = Table?["collect_path"] as LuaFunction;
                 FncCollectAxis = Table?["collect_axis"] as LuaFunction;

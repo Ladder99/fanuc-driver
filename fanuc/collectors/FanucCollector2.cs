@@ -260,6 +260,8 @@ namespace l99.driver.fanuc.collectors
                             await InitAxisAndSpindleAsync();
                         }
                         
+                        await PostInitAsync();
+                        
                         dynamic disconnect = await platform.DisconnectAsync();
                         
                         machine.VeneersApplied = true;
@@ -280,6 +282,11 @@ namespace l99.driver.fanuc.collectors
             return null;
         }
 
+        public virtual async Task PostInitAsync()
+        {
+            
+        }
+        
         /// <summary>
         /// Applied Veneers:
         ///     FocasPerf as "focas_perf",

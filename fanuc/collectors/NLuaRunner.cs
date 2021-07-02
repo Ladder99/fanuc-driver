@@ -220,6 +220,19 @@ namespace l99.driver.fanuc.collectors
             }
         }
 
+        public override async Task PostInitAsync()
+        {
+            try
+            {
+                var r = _luaSystemScript.FncPostInit?.Call(null, _luaSystemScript.Table, _luaCollectorProxy);
+            }
+            catch (Exception e)
+            {
+                logger.Warn(e, "PostInitAsync SYSTEM Lua invocation failed.");
+                if(e.InnerException!=null) logger.Warn(e.InnerException);
+            }
+        }
+        
         public override async Task<bool> CollectBeginAsync()
         {
             var ret = await base.CollectBeginAsync();
