@@ -26,11 +26,14 @@ namespace l99.driver.fanuc.collectors
         protected int sweepRemaining = 1000;
         private SegmentEnum _currentInitSegment = SegmentEnum.NONE;
         private SegmentEnum _currentCollectSegment = SegmentEnum.NONE;
+
+        private IntermediateModelGenerator _intermediateModel;
         
         public FanucCollector2(Machine machine, int sweepMs = 1000, params dynamic[] additionalParams) : base(machine, sweepMs, additionalParams)
         {
             sweepRemaining = sweepMs;
             propertyBag = new Dictionary<string, dynamic>();
+            _intermediateModel = new IntermediateModelGenerator();
         }
         
         protected void catchFocasPerformance(dynamic focasNativeReturnObject)
@@ -110,15 +113,27 @@ namespace l99.driver.fanuc.collectors
                     return await machine.PeelVeneerAsync(veneerKey, input, additionalInputs);
                 
                 case SegmentEnum.ROOT:
+                    if(!_intermediateModel.IsGenerated)
+                        _intermediateModel.AddRootItem(veneerKey);
+                        
                     return await machine.PeelVeneerAsync(veneerKey, input, additionalInputs);
                 
                 case SegmentEnum.PATH:
+                    if(!_intermediateModel.IsGenerated)
+                        _intermediateModel.AddPathItem(veneerKey);
+                    
                     return await machine.PeelAcrossVeneerAsync(Get("current_path"),veneerKey, input, additionalInputs);
                     
                 case SegmentEnum.AXIS:
+                    if(!_intermediateModel.IsGenerated)
+                        _intermediateModel.AddAxisItem(veneerKey);
+                    
                     return await machine.PeelAcrossVeneerAsync(Get("axis_split"), veneerKey, input, additionalInputs);
                 
                 case SegmentEnum.SPINDLE:
+                    if(!_intermediateModel.IsGenerated)
+                        _intermediateModel.AddSpindleItem(veneerKey);
+                    
                     return await machine.PeelAcrossVeneerAsync(Get("spindle_split"), veneerKey, input, additionalInputs);
                 
                 case SegmentEnum.END:
@@ -205,7 +220,7 @@ namespace l99.driver.fanuc.collectors
                     if (connect.success)
                     {
                         _currentInitSegment = SegmentEnum.ROOT;
-                        
+
                         await Apply(typeof(fanuc.veneers.FocasPerf), "focas_perf", true);
                         await Apply(typeof(fanuc.veneers.Connect), "connect");
                         await Apply(typeof(fanuc.veneers.GetPath), "paths");
@@ -354,6 +369,9 @@ namespace l99.driver.fanuc.collectors
                     _currentInitSegment = SegmentEnum.ROOT;
                     _currentCollectSegment = SegmentEnum.ROOT;
                     
+                    if(!_intermediateModel.IsGenerated)
+                        _intermediateModel.Start();
+                    
                     await SetNativeAndPeel("paths", await platform.GetPathAsync());
 
                     await InitUserRootAsync();
@@ -368,6 +386,9 @@ namespace l99.driver.fanuc.collectors
                         current_path++)
                     {
                         _currentCollectSegment = SegmentEnum.PATH;
+                        
+                        if(!_intermediateModel.IsGenerated)
+                            _intermediateModel.AddPath(current_path);
                         
                         await Set("current_path", current_path);
 
@@ -397,6 +418,9 @@ namespace l99.driver.fanuc.collectors
                             dynamic axis_marker = axisMarker(axis);
                             await Set("axis_split", new[] {current_path, axis_name});
                             
+                            if(!_intermediateModel.IsGenerated)
+                                _intermediateModel.AddAxis(current_path, axis_name);
+                            
                             machine.MarkVeneer(Get("axis_split"), new[] { path_marker, axis_marker });
 
                             await CollectForEachAxisAsync(current_axis, axis_name, Get("axis_split"), axis_marker);
@@ -415,11 +439,21 @@ namespace l99.driver.fanuc.collectors
                             dynamic spindle_marker = spindleMarker(spindle);
                             await Set("spindle_split", new[] {current_path, spindle_name});
                                 
+                            if(!_intermediateModel.IsGenerated)
+                                _intermediateModel.AddAxis(current_path, spindle_name);
+                            
                             machine.MarkVeneer(Get("spindle_split"), new[] { path_marker, spindle_marker });
 
                             await CollectForEachSpindleAsync(current_spindle, spindle_name, Get("spindle_split"), spindle_marker);
                         };
                     }
+
+                    if (!_intermediateModel.IsGenerated)
+                    {
+                        _intermediateModel.Finish();
+                        Console.WriteLine(_intermediateModel.Model);
+                    }
+                        
                 }
                 
                 _currentInitSegment = SegmentEnum.NONE;

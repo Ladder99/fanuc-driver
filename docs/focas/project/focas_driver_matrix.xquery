@@ -10,13 +10,13 @@ element table {
         element td { "name" },
         element td { "comment" },
         element td { "prototype" },
-        element td { "collector" },
+        element td { "platform" },
         element td { "veneer" }
     },
     for $doc in collection('../SpecE/?select=*.xml;recurse=yes')
     let $section := lower-case(tokenize(document-uri($doc), "[/]")[last()-1])
     let $name := $doc/root/func/title/text()
-    let $prototype := functx:trim(normalize-space(string-join($doc/root/func/declare/vc/prottype/string(), "")))
+    let $prototype := concat("`", functx:trim(normalize-space(string-join($doc/root/func/declare/vc/prottype/string(), ""))), "`")
     let $comment := 
         if (string-length(functx:trim($doc/root/func/doc/cmn[1]/text()[1])) > 0) then
             normalize-space($doc/root/func/doc/cmn[1]/text()[1])
