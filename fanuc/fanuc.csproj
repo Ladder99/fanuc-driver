@@ -24,6 +24,7 @@
       <PackageReference Include="morelinq" Version="3.3.2" />
       <PackageReference Include="MQTTnet" Version="3.0.15" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+      <PackageReference Include="NJsonSchema" Version="10.4.4" />
       <PackageReference Include="NLog.Extensions.Logging" Version="1.7.2" />
       <PackageReference Include="NLua" Version="1.5.9" />
       <PackageReference Include="YamlDotNet" Version="11.1.3-nullable-enums-0003" />

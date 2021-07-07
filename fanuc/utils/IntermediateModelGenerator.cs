@@ -1,14 +1,18 @@
 using System.Collections.Generic;
 using System.Text;
+using l99.driver.@base;
+using NJsonSchema;
 
 namespace l99.driver.fanuc
 {
     public class IntermediateModelGenerator
     {
-        private List<string> _rootItems = new List<string>();
-        private List<string> _pathItems = new List<string>();
-        private List<string> _axisItems = new List<string>();
-        private List<string> _spindleItems = new List<string>();
+        private Machine _machine;
+
+        private Dictionary<string, (dynamic, string)> _rootItems = new Dictionary<string, (dynamic, string)>();
+        private Dictionary<string, (dynamic, string)> _pathItems = new Dictionary<string, (dynamic, string)>();
+        private Dictionary<string, (dynamic, string)> _axisItems = new Dictionary<string, (dynamic, string)>();
+        private Dictionary<string, (dynamic, string)> _spindleItems = new Dictionary<string, (dynamic, string)>();
         
         private List<short> _paths = new List<short>();
         private Dictionary<short, List<string>> _axes = new Dictionary<short, List<string>>();
@@ -23,17 +27,17 @@ namespace l99.driver.fanuc
             {
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine("model:");
-                foreach(string item in _rootItems)
-                    sb.AppendLine($"  - {item}");
+                foreach(var item in _rootItems)
+                    sb.AppendLine($"\t{item.Key}");
 
                 sb.AppendLine($"\tpaths:");
                 foreach (short path in _paths)
                 {
                     sb.AppendLine($"\t\t{path}:");
 
-                    foreach (string path_item in _pathItems)
+                    foreach (var path_item in _pathItems)
                     {
-                        sb.AppendLine($"\t\t\t{path_item}");
+                        sb.AppendLine($"\t\t\t{path_item.Key}");
                     }
 
                     sb.AppendLine($"\t\t\taxes:");
@@ -41,9 +45,9 @@ namespace l99.driver.fanuc
                     {
                         sb.AppendLine($"\t\t\t\t{axis}:");
 
-                        foreach (string axis_item in _axisItems)
+                        foreach (var axis_item in _axisItems)
                         {
-                            sb.AppendLine($"\t\t\t\t\t{axis_item}");
+                            sb.AppendLine($"\t\t\t\t\t{axis_item.Key}");
                         }
                     }
                     
@@ -52,9 +56,9 @@ namespace l99.driver.fanuc
                     {
                         sb.AppendLine($"\t\t\t\t{spindle}:");
 
-                        foreach (string spindle_item in _spindleItems)
+                        foreach (var spindle_item in _spindleItems)
                         {
-                            sb.AppendLine($"\t\t\t\t\t{spindle_item}");
+                            sb.AppendLine($"\t\t\t\t\t{spindle_item.Key}");
                         }
                     }
                 }
@@ -63,14 +67,15 @@ namespace l99.driver.fanuc
             }
         }
         
-        public void Start()
+        public void Start(Machine machine)
         {
-            
+            _machine = machine;
         }
         
-        public void AddRootItem(string name)
+        public void AddRootItem(string name, dynamic payload)
         {
-            _rootItems.Add(name);
+            if(!_rootItems.ContainsKey(name))
+                _rootItems.Add(name, (payload, JsonSchema.FromSampleJson(payload).ToString()));
         }
 
         public void AddPath(short path)
@@ -80,9 +85,10 @@ namespace l99.driver.fanuc
             _spindles.Add(path, new List<string>());
         }
         
-        public void AddPathItem(string name)
+        public void AddPathItem(string name, dynamic payload)
         {
-            _pathItems.Add(name);
+            if(!_pathItems.ContainsKey(name))
+                _pathItems.Add(name, (payload, JsonSchema.FromSampleJson(payload).ToString()));
         }
 
         public void AddAxis(short path, string name)
@@ -90,9 +96,10 @@ namespace l99.driver.fanuc
             _axes[path].Add(name);
         }
         
-        public void AddAxisItem(string name)
+        public void AddAxisItem(string name, dynamic payload)
         {
-            _axisItems.Add(name);
+            if(!_axisItems.ContainsKey(name))
+                _axisItems.Add(name, (payload, JsonSchema.FromSampleJson(payload).ToString()));
         }
 
         public void AddSpindle(short path, string name)
@@ -100,9 +107,10 @@ namespace l99.driver.fanuc
             _spindles[path].Add(name);
         }
         
-        public void AddSpindleItem(string name)
+        public void AddSpindleItem(string name, dynamic payload)
         {
-            _spindleItems.Add(name);
+            if(!_spindleItems.ContainsKey(name))
+                _spindleItems.Add(name, (payload, JsonSchema.FromSampleJson(payload).ToString()));
         }
 
         public void Finish()

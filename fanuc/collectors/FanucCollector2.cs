@@ -113,28 +113,36 @@ namespace l99.driver.fanuc.collectors
                     return await machine.PeelVeneerAsync(veneerKey, input, additionalInputs);
                 
                 case SegmentEnum.ROOT:
+                    var rootObj = await machine.PeelVeneerAsync(veneerKey, input, additionalInputs);
+                    
                     if(!_intermediateModel.IsGenerated)
-                        _intermediateModel.AddRootItem(veneerKey);
-                        
-                    return await machine.PeelVeneerAsync(veneerKey, input, additionalInputs);
+                        _intermediateModel.AddRootItem(veneerKey, rootObj);
+
+                    return rootObj;
                 
                 case SegmentEnum.PATH:
-                    if(!_intermediateModel.IsGenerated)
-                        _intermediateModel.AddPathItem(veneerKey);
+                    var pathObj = await machine.PeelAcrossVeneerAsync(Get("current_path"),veneerKey, input, additionalInputs);
                     
-                    return await machine.PeelAcrossVeneerAsync(Get("current_path"),veneerKey, input, additionalInputs);
+                    if(!_intermediateModel.IsGenerated)
+                        _intermediateModel.AddPathItem(veneerKey, pathObj);
+
+                    return pathObj;
                     
                 case SegmentEnum.AXIS:
-                    if(!_intermediateModel.IsGenerated)
-                        _intermediateModel.AddAxisItem(veneerKey);
+                    var axisObj = await machine.PeelAcrossVeneerAsync(Get("axis_split"), veneerKey, input, additionalInputs);
                     
-                    return await machine.PeelAcrossVeneerAsync(Get("axis_split"), veneerKey, input, additionalInputs);
+                    if(!_intermediateModel.IsGenerated)
+                        _intermediateModel.AddAxisItem(veneerKey, axisObj);
+
+                    return axisObj;
                 
                 case SegmentEnum.SPINDLE:
-                    if(!_intermediateModel.IsGenerated)
-                        _intermediateModel.AddSpindleItem(veneerKey);
+                    var spindleObj = await machine.PeelAcrossVeneerAsync(Get("spindle_split"), veneerKey, input, additionalInputs);
                     
-                    return await machine.PeelAcrossVeneerAsync(Get("spindle_split"), veneerKey, input, additionalInputs);
+                    if(!_intermediateModel.IsGenerated)
+                        _intermediateModel.AddSpindleItem(veneerKey, spindleObj);
+
+                    return spindleObj;
                 
                 case SegmentEnum.END:
                     return await machine.PeelVeneerAsync(veneerKey, input, additionalInputs);
@@ -370,7 +378,7 @@ namespace l99.driver.fanuc.collectors
                     _currentCollectSegment = SegmentEnum.ROOT;
                     
                     if(!_intermediateModel.IsGenerated)
-                        _intermediateModel.Start();
+                        _intermediateModel.Start(machine);
                     
                     await SetNativeAndPeel("paths", await platform.GetPathAsync());
 
@@ -440,7 +448,7 @@ namespace l99.driver.fanuc.collectors
                             await Set("spindle_split", new[] {current_path, spindle_name});
                                 
                             if(!_intermediateModel.IsGenerated)
-                                _intermediateModel.AddAxis(current_path, spindle_name);
+                                _intermediateModel.AddSpindle(current_path, spindle_name);
                             
                             machine.MarkVeneer(Get("spindle_split"), new[] { path_marker, spindle_marker });
 
