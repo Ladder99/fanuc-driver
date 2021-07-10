@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Text;
 using l99.driver.@base;
 using Newtonsoft.Json.Linq;
 using NJsonSchema;
@@ -19,7 +18,6 @@ namespace l99.driver.fanuc
         private Dictionary<short, List<string>> _axes = new Dictionary<short, List<string>>();
         private Dictionary<short, List<string>> _spindles = new Dictionary<short, List<string>>();
         
-        
         public bool IsGenerated { get; private set; }
 
         public string Model
@@ -34,11 +32,6 @@ namespace l99.driver.fanuc
                         new JProperty("veneer", item.Value.Item1.veneer.GetType().FullName)
                         //new JProperty("schema", JObject.Parse(item.Value.Item2))
                     ));
-                    /*
-                    obs_root[item.Key] = new JObject();
-                    obs_root[item.Key]["veneer"] = item.Value.Item1.veneer.GetType().FullName;
-                    obs_root[item.Key]["schema"] = JObject.Parse(item.Value.Item2);
-                    */
                 }
                 
                 var obs_path = new JArray();
@@ -49,11 +42,6 @@ namespace l99.driver.fanuc
                         new JProperty("veneer", item.Value.Item1.veneer.GetType().FullName)
                         //new JProperty("schema", JObject.Parse(item.Value.Item2))
                     ));
-                    /*
-                    obs_path[item.Key] = new JObject();
-                    obs_path[item.Key]["veneer"] = item.Value.Item1.veneer.GetType().FullName;
-                    obs_path[item.Key]["schema"] = JObject.Parse(item.Value.Item2);
-                    */
                 }
                 
                 var obs_axis = new JArray();
@@ -64,11 +52,6 @@ namespace l99.driver.fanuc
                         new JProperty("veneer", item.Value.Item1.veneer.GetType().FullName)
                         //new JProperty("schema", JObject.Parse(item.Value.Item2))
                     ));
-                    /*
-                    obs_axis[item.Key] = new JObject();
-                    obs_axis[item.Key]["veneer"] = item.Value.Item1.veneer.GetType().FullName;
-                    obs_axis[item.Key]["schema"] = JObject.Parse(item.Value.Item2);
-                    */
                 }
                 
                 var obs_spindle = new JArray();
@@ -76,17 +59,20 @@ namespace l99.driver.fanuc
                 {
                     obs_spindle.Add(new JObject(
                         new JProperty("name", item.Key),
-                        new JProperty("veneer", item.Value.Item1.veneer.GetType().FullName)
+                        new JProperty("type", item.Value.Item1.veneer.GetType().FullName)
                         //new JProperty("schema", JObject.Parse(item.Value.Item2))
                     ));
-                    /*
-                    obs_spindle[item.Key] = new JObject();
-                    obs_spindle[item.Key]["veneer"] = item.Value.Item1.veneer.GetType().FullName;
-                    obs_spindle[item.Key]["schema"] = JObject.Parse(item.Value.Item2);
-                    */
                 }
                 
                 JObject model = new JObject();
+                model["handler"] = new JObject(
+                    new JProperty("name", _machine.Handler.GetType().Name),
+                    new JProperty("type", _machine.Handler.GetType().FullName)
+                );
+                model["collector"] = new JObject(
+                    new JProperty("name", _machine.Collector.GetType().Name),
+                    new JProperty("type", _machine.Collector.GetType().FullName)
+                );
                 model["observations"] = new JObject();
                 model["observations"]["root"] = obs_root;
                 model["observations"]["path"] = obs_path;
@@ -109,11 +95,6 @@ namespace l99.driver.fanuc
                             new JProperty("name", axis),
                             new JProperty("observations", new JObject(new JProperty("$ref", "#/observations/axis")))
                         ));
-                        /*
-                        axes[axis] = new JObject();
-                        axes[axis]["observations"] = new JObject(
-                            new JProperty("$ref", "#/observations/axis"));
-                        */
                     }
 
                     var spindle_array = new JArray();
@@ -124,11 +105,6 @@ namespace l99.driver.fanuc
                             new JProperty("name", spindle),
                             new JProperty("observations", new JObject(new JProperty("$ref", "#/observations/spindle")))
                         ));
-                        /*
-                        spindles[spindle] = new JObject();
-                        spindles[spindle]["observations"] = new JObject(
-                            new JProperty("$ref", "#/observations/spindle"));
-                        */
                     }
 
                     path_array.Add(new JObject(
@@ -136,57 +112,12 @@ namespace l99.driver.fanuc
                         new JProperty("observations", new JObject(new JProperty("$ref", "#/observations/path"))),
                         new JProperty("axis", axis_array),
                         new JProperty("spindle", spindle_array)));
-                    
-                   /* model["structure"]["path"][path.ToString()] = new JObject(
-                        new JProperty("observations", new JObject(new JProperty("$ref", "#/observations/path"))),
-                        new JProperty("axis", axes),
-                        new JProperty("spindle", spindles));*/
                 }
 
                 model["structure"]["path"] = path_array;
                 
                 var j = model.ToString();
                 return j;
-                /*
-                StringBuilder sb = new StringBuilder();
-                sb.AppendLine("model:");
-                foreach(var item in _rootItems)
-                    sb.AppendLine($"\t{item.Key}");
-
-                sb.AppendLine($"\tpaths:");
-                foreach (short path in _paths)
-                {
-                    sb.AppendLine($"\t\t{path}:");
-
-                    foreach (var path_item in _pathItems)
-                    {
-                        sb.AppendLine($"\t\t\t{path_item.Key}");
-                    }
-
-                    sb.AppendLine($"\t\t\taxes:");
-                    foreach (string axis in _axes[path])
-                    {
-                        sb.AppendLine($"\t\t\t\t{axis}:");
-
-                        foreach (var axis_item in _axisItems)
-                        {
-                            sb.AppendLine($"\t\t\t\t\t{axis_item.Key}");
-                        }
-                    }
-                    
-                    sb.AppendLine($"\t\t\tspindles:");
-                    foreach (string spindle in _spindles[path])
-                    {
-                        sb.AppendLine($"\t\t\t\t{spindle}:");
-
-                        foreach (var spindle_item in _spindleItems)
-                        {
-                            sb.AppendLine($"\t\t\t\t\t{spindle_item.Key}");
-                        }
-                    }
-                }
-
-                return sb.ToString();*/
             }
         }
         

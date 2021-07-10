@@ -1,12 +1,16 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using l99.driver.@base;
 using Newtonsoft.Json.Linq;
+using NJsonSchema;
 
 namespace l99.driver.fanuc.handlers
 {
     public class Native: Handler
     {
+        private Dictionary<string,string> _publishedSchemas = new Dictionary<string, string>();
+        
         public Native(Machine machine) : base(machine)
         {
             
@@ -78,12 +82,20 @@ namespace l99.driver.fanuc.handlers
 
             return payload;
         }
-        
+
         protected override async Task afterDataChangeAsync(Veneers veneers, Veneer veneer, dynamic? onChange)
         {
             var topic = $"fanuc/{veneers.Machine.Id}/{veneer.Name}{(veneer.SliceKey == null ? string.Empty : "/" + veneer.SliceKey.ToString())}";
             string payload = JObject.FromObject(onChange).ToString();
             await veneers.Machine.Broker.PublishChangeAsync(topic, payload);
+
+            if (!_publishedSchemas.ContainsKey(veneer.Name))
+            {
+                var topic_schema = $"fanuc/{veneers.Machine.Id}/{veneer.Name}/$schema";
+                string schema = JsonSchema.FromSampleJson(payload).ToJson();
+                await veneers.Machine.Broker.PublishAsync(topic_schema, schema, true);
+                _publishedSchemas.Add(veneer.Name, schema);
+            }
         }
         
         public override async Task<dynamic?> OnCollectorSweepCompleteAsync(Machine machine, dynamic? beforeSweepComplete)
@@ -94,7 +106,7 @@ namespace l99.driver.fanuc.handlers
                 {
                     time =  new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds(),
                     machine = machine.Id,
-                    name = "PING"
+                    name = "ping"
                 },
                 source = new
                 {
@@ -111,8 +123,8 @@ namespace l99.driver.fanuc.handlers
         
         protected override async Task afterSweepCompleteAsync(Machine machine, dynamic? onSweepComplete)
         {
-            string topic_all = $"fanuc/{machine.Id}-all/PING";
-            string topic = $"fanuc/{machine.Id}/PING";
+            string topic_all = $"fanuc/{machine.Id}-all/ping";
+            string topic = $"fanuc/{machine.Id}/ping";
             string payload = JObject.FromObject(onSweepComplete).ToString();
             
             await machine.Broker.PublishArrivalStatusAsync(topic_all, payload);
@@ -121,7 +133,11 @@ namespace l99.driver.fanuc.handlers
 
         public override async Task OnGenerateIntermediateModel(string json)
         {
+            string topic_all = $"fanuc/{machine.Id}-all/$model";
             var topic = $"fanuc/{machine.Id}/$model";
+            
+            // TODO: conditional -all
+            await machine.Broker.PublishAsync(topic_all, json, true);
             await machine.Broker.PublishAsync(topic, json, true);
         }
     }

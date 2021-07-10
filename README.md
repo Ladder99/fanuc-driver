@@ -46,6 +46,26 @@ Below illustrates [Fanuc 0i-TF](https://www.fanucamerica.com/products/cnc/cnc-sy
 
 Observations can be single data points, such as axis absolute position or motor temperature.  Observations can also be more compound such as the health of a spindle which would package multiple relevant data points into a single observation payload.  Results of calls into the Focas library highly depend on the context they are invoked in.  For example, retrieving the position of an axis on the second execution path of the controller, requires that the second path is made active and the appropriate axis is called out when making the call.  This hierarchy is captured in the suggested topic structure below.
 
+### Machine Model
+
+Machine model contains information about:
+
+* Path, axis, and spindle structure.
+* Observations attached to each structure leaf.
+* Handler and collector information responsible for generating the model.
+
+```
+fanuc/{machine-id}/$model
+```
+
+### Observation Schema
+
+JSON schema is published for every observation.
+
+```
+fanuc/{machine-id}/{observation-name}/$schema
+```
+
 ### Machine Level Observations
 
 ```
@@ -65,20 +85,19 @@ fanuc/{machine-id}-all/{observation-name}/{controller-execution-path-number}
 ```
 fanuc/{machine-id}/{observation-name}/{controller-execution-path-number}/{machine-axis-name / machine-spindle-name}
 fanuc/{machine-id}-all/{observation-name}/{controller-execution-path-number}/{machine-axis-name / machine-spindle-name}
-
 ```
 
 ### Driver Status
 
 ```
-fanuc/{machine-id}/PING
-fanuc/{machine-id}-all/PING
+fanuc/{machine-id}/ping
+fanuc/{machine-id}-all/ping
 ```
 
 ### Machine Discovery
 
 ```
-fanuc/DISCO
+fanuc/$disco
 ```
 
 ## Suggested MQTT Payload Structure
@@ -477,6 +496,27 @@ machines:
     enabled: !!bool true
     type: l99.driver.fanuc.FanucMachine, fanuc
     strategy_type: l99.driver.fanuc.collectors.Basic06, fanuc
+    handler_type: l99.driver.fanuc.handlers.Native, fanuc
+    sweep_ms: !!int 1000
+    net_ip: 10.20.30.101
+    net_port: !!int 8193
+    net_timeout_s: !!int 2
+    broker:
+      enabled: !!bool false
+      net_ip: 10.20.30.102
+      net_port: !!int 1883
+      auto_connect: !!bool true
+      publish_status: !!bool true
+      publish_arrivals: !!bool true
+      publish_changes: !!bool true
+      publish_disco: !!bool true
+      disco_base_topic: fanuc
+      
+  - id: sim_lua
+    enabled: !!bool false
+    type: l99.driver.fanuc.FanucMachine, fanuc
+    strategy_type: l99.driver.fanuc.collectors.NLuaRunner, fanuc
+    strategy_lua: lua/test1.lua
     handler_type: l99.driver.fanuc.handlers.Native, fanuc
     sweep_ms: !!int 1000
     net_ip: 10.20.30.101

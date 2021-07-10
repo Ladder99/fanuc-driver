@@ -110,7 +110,12 @@ namespace l99.driver.fanuc.collectors
                     break;
                 
                 case SegmentEnum.BEGIN:
-                    return await machine.PeelVeneerAsync(veneerKey, input, additionalInputs);
+                    var beginObj = await machine.PeelVeneerAsync(veneerKey, input, additionalInputs);
+                
+                    if(!_intermediateModel.IsGenerated)
+                        _intermediateModel.AddRootItem(veneerKey, beginObj);
+
+                    return beginObj;
                 
                 case SegmentEnum.ROOT:
                     var rootObj = await machine.PeelVeneerAsync(veneerKey, input, additionalInputs);
@@ -145,7 +150,12 @@ namespace l99.driver.fanuc.collectors
                     return spindleObj;
                 
                 case SegmentEnum.END:
-                    return await machine.PeelVeneerAsync(veneerKey, input, additionalInputs);
+                    var endObj = await machine.PeelVeneerAsync(veneerKey, input, additionalInputs);
+                
+                    if(!_intermediateModel.IsGenerated)
+                        _intermediateModel.AddRootItem(veneerKey, endObj);
+
+                    return endObj;
             }
 
             return null;
@@ -372,13 +382,13 @@ namespace l99.driver.fanuc.collectors
                 
                 _currentCollectSegment = SegmentEnum.BEGIN;
                 
+                if(!_intermediateModel.IsGenerated)
+                    _intermediateModel.Start(machine);
+                
                 if(await CollectBeginAsync())
                 {
                     _currentInitSegment = SegmentEnum.ROOT;
                     _currentCollectSegment = SegmentEnum.ROOT;
-                    
-                    if(!_intermediateModel.IsGenerated)
-                        _intermediateModel.Start(machine);
                     
                     await SetNativeAndPeel("paths", await platform.GetPathAsync());
 
@@ -455,19 +465,18 @@ namespace l99.driver.fanuc.collectors
                             await CollectForEachSpindleAsync(current_spindle, spindle_name, Get("spindle_split"), spindle_marker);
                         };
                     }
-
-                    if (!_intermediateModel.IsGenerated)
-                    {
-                        _intermediateModel.Finish();
-                        await machine.Handler.OnGenerateIntermediateModel(_intermediateModel.Model);
-                    }
-                        
                 }
                 
                 _currentInitSegment = SegmentEnum.NONE;
                 _currentCollectSegment = SegmentEnum.END;
 
                 await CollectEndAsync();
+                
+                if (!_intermediateModel.IsGenerated)
+                {
+                    _intermediateModel.Finish();
+                    await machine.Handler.OnGenerateIntermediateModel(_intermediateModel.Model);
+                }
             }
             catch (Exception ex)
             {
