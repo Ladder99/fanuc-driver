@@ -486,6 +486,10 @@ More docs to come, until then please review the Lua scripts. [ex1](fanuc/lua/col
 
 ![recording6](docs/recording6.gif)
 
+#### MTConnect
+
+See [Ladder99](https://github.com/Ladder99/ladder99) pipeline.
+
 ## Configuration
 
 The `config.yml` file contains runtime information about each Focas endpoint and it target MQTT broker.
