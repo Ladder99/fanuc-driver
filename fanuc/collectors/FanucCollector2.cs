@@ -459,7 +459,7 @@ namespace l99.driver.fanuc.collectors
                     if (!_intermediateModel.IsGenerated)
                     {
                         _intermediateModel.Finish();
-                        Console.WriteLine(_intermediateModel.Model);
+                        await machine.Handler.OnGenerateIntermediateModel(_intermediateModel.Model);
                     }
                         
                 }

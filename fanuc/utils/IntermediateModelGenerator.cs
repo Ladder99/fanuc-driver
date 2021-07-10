@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 using l99.driver.@base;
+using Newtonsoft.Json.Linq;
 using NJsonSchema;
 
 namespace l99.driver.fanuc
@@ -25,6 +26,128 @@ namespace l99.driver.fanuc
         {
             get
             {
+                var obs_root = new JArray();
+                foreach (var item in _rootItems)
+                {
+                    obs_root.Add(new JObject(
+                        new JProperty("name", item.Key),
+                        new JProperty("veneer", item.Value.Item1.veneer.GetType().FullName)
+                        //new JProperty("schema", JObject.Parse(item.Value.Item2))
+                    ));
+                    /*
+                    obs_root[item.Key] = new JObject();
+                    obs_root[item.Key]["veneer"] = item.Value.Item1.veneer.GetType().FullName;
+                    obs_root[item.Key]["schema"] = JObject.Parse(item.Value.Item2);
+                    */
+                }
+                
+                var obs_path = new JArray();
+                foreach (var item in _pathItems)
+                {
+                    obs_path.Add(new JObject(
+                        new JProperty("name", item.Key),
+                        new JProperty("veneer", item.Value.Item1.veneer.GetType().FullName)
+                        //new JProperty("schema", JObject.Parse(item.Value.Item2))
+                    ));
+                    /*
+                    obs_path[item.Key] = new JObject();
+                    obs_path[item.Key]["veneer"] = item.Value.Item1.veneer.GetType().FullName;
+                    obs_path[item.Key]["schema"] = JObject.Parse(item.Value.Item2);
+                    */
+                }
+                
+                var obs_axis = new JArray();
+                foreach (var item in _axisItems)
+                {
+                    obs_axis.Add(new JObject(
+                        new JProperty("name", item.Key),
+                        new JProperty("veneer", item.Value.Item1.veneer.GetType().FullName)
+                        //new JProperty("schema", JObject.Parse(item.Value.Item2))
+                    ));
+                    /*
+                    obs_axis[item.Key] = new JObject();
+                    obs_axis[item.Key]["veneer"] = item.Value.Item1.veneer.GetType().FullName;
+                    obs_axis[item.Key]["schema"] = JObject.Parse(item.Value.Item2);
+                    */
+                }
+                
+                var obs_spindle = new JArray();
+                foreach (var item in _spindleItems)
+                {
+                    obs_spindle.Add(new JObject(
+                        new JProperty("name", item.Key),
+                        new JProperty("veneer", item.Value.Item1.veneer.GetType().FullName)
+                        //new JProperty("schema", JObject.Parse(item.Value.Item2))
+                    ));
+                    /*
+                    obs_spindle[item.Key] = new JObject();
+                    obs_spindle[item.Key]["veneer"] = item.Value.Item1.veneer.GetType().FullName;
+                    obs_spindle[item.Key]["schema"] = JObject.Parse(item.Value.Item2);
+                    */
+                }
+                
+                JObject model = new JObject();
+                model["observations"] = new JObject();
+                model["observations"]["root"] = obs_root;
+                model["observations"]["path"] = obs_path;
+                model["observations"]["axis"] = obs_axis;
+                model["observations"]["spindle"] = obs_spindle;
+
+                model["structure"] = new JObject();
+                model["structure"]["observations"] = new JObject(
+                    new JProperty("$ref", "#/observations/root"));
+
+                var path_array = new JArray();
+                
+                foreach (short path in _paths)
+                {
+                    var axis_array = new JArray();
+                    //var axes = new JObject();
+                    foreach (string axis in _axes[path])
+                    {
+                        axis_array.Add(new JObject(
+                            new JProperty("name", axis),
+                            new JProperty("observations", new JObject(new JProperty("$ref", "#/observations/axis")))
+                        ));
+                        /*
+                        axes[axis] = new JObject();
+                        axes[axis]["observations"] = new JObject(
+                            new JProperty("$ref", "#/observations/axis"));
+                        */
+                    }
+
+                    var spindle_array = new JArray();
+                    //var spindles = new JObject();
+                    foreach (string spindle in _spindles[path])
+                    {
+                        spindle_array.Add(new JObject(
+                            new JProperty("name", spindle),
+                            new JProperty("observations", new JObject(new JProperty("$ref", "#/observations/spindle")))
+                        ));
+                        /*
+                        spindles[spindle] = new JObject();
+                        spindles[spindle]["observations"] = new JObject(
+                            new JProperty("$ref", "#/observations/spindle"));
+                        */
+                    }
+
+                    path_array.Add(new JObject(
+                        new JProperty("name", path),
+                        new JProperty("observations", new JObject(new JProperty("$ref", "#/observations/path"))),
+                        new JProperty("axis", axis_array),
+                        new JProperty("spindle", spindle_array)));
+                    
+                   /* model["structure"]["path"][path.ToString()] = new JObject(
+                        new JProperty("observations", new JObject(new JProperty("$ref", "#/observations/path"))),
+                        new JProperty("axis", axes),
+                        new JProperty("spindle", spindles));*/
+                }
+
+                model["structure"]["path"] = path_array;
+                
+                var j = model.ToString();
+                return j;
+                /*
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine("model:");
                 foreach(var item in _rootItems)
@@ -63,7 +186,7 @@ namespace l99.driver.fanuc
                     }
                 }
 
-                return sb.ToString();
+                return sb.ToString();*/
             }
         }
         
@@ -75,7 +198,11 @@ namespace l99.driver.fanuc
         public void AddRootItem(string name, dynamic payload)
         {
             if(!_rootItems.ContainsKey(name))
-                _rootItems.Add(name, (payload, JsonSchema.FromSampleJson(payload).ToString()));
+            {
+                var json_string = JObject.FromObject(payload.veneer.LastArrivedValue).ToString();
+                var json_schema = string.Empty;//JsonSchema.FromSampleJson(json_string).ToJson();
+                _rootItems.Add(name, (payload, json_schema));
+            }
         }
 
         public void AddPath(short path)
@@ -88,7 +215,11 @@ namespace l99.driver.fanuc
         public void AddPathItem(string name, dynamic payload)
         {
             if(!_pathItems.ContainsKey(name))
-                _pathItems.Add(name, (payload, JsonSchema.FromSampleJson(payload).ToString()));
+            {
+                var json_string = JObject.FromObject(payload.veneer.LastArrivedValue).ToString();
+                var json_schema = string.Empty;//JsonSchema.FromSampleJson(json_string).ToJson();
+                _pathItems.Add(name, (payload, json_schema));
+            }
         }
 
         public void AddAxis(short path, string name)
@@ -99,18 +230,26 @@ namespace l99.driver.fanuc
         public void AddAxisItem(string name, dynamic payload)
         {
             if(!_axisItems.ContainsKey(name))
-                _axisItems.Add(name, (payload, JsonSchema.FromSampleJson(payload).ToString()));
+            {
+                var json_string = JObject.FromObject(payload.veneer.LastArrivedValue).ToString();
+                var json_schema = string.Empty;//JsonSchema.FromSampleJson(json_string).ToJson();
+                _axisItems.Add(name, (payload, json_schema));
+            }
         }
 
         public void AddSpindle(short path, string name)
         {
             _spindles[path].Add(name);
         }
-        
+
         public void AddSpindleItem(string name, dynamic payload)
         {
-            if(!_spindleItems.ContainsKey(name))
-                _spindleItems.Add(name, (payload, JsonSchema.FromSampleJson(payload).ToString()));
+            if (!_spindleItems.ContainsKey(name))
+            {
+                var json_string = JObject.FromObject(payload.veneer.LastArrivedValue).ToString();
+                var json_schema = JsonSchema.FromSampleJson(json_string).ToJson();
+                _spindleItems.Add(name, (payload, json_schema));
+            }
         }
 
         public void Finish()

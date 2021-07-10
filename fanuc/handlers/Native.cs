@@ -118,5 +118,11 @@ namespace l99.driver.fanuc.handlers
             await machine.Broker.PublishArrivalStatusAsync(topic_all, payload);
             await machine.Broker.PublishChangeStatusAsync(topic, payload);
         }
+
+        public override async Task OnGenerateIntermediateModel(string json)
+        {
+            var topic = $"fanuc/{machine.Id}/$model";
+            await machine.Broker.PublishAsync(topic, json, true);
+        }
     }
 }
