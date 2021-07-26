@@ -40,7 +40,7 @@ namespace l99.driver.fanuc.veneers
                     for (int x = 0; x <= alarm_count - 1; x++)
                     {
                         var alm = fields[x].GetValue(response_data.almmsg);
-                        temp_value.Add(new { alm.alm_no, alm.type, alm.axis, alm_msg = alm.alm_msg.ToString() });
+                        temp_value.Add(new { alm.alm_no, alm.type, alm.axis, alm_msg = ((string)alm.alm_msg).AsAscii() });
                     }
                 }
             }
