@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using l99.driver.@base;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NJsonSchema;
 
@@ -9,6 +10,8 @@ namespace l99.driver.fanuc.handlers
 {
     public class Native: Handler
     {
+        private readonly Formatting jsonFormatting = Formatting.None;
+        
         private Dictionary<string,string> _publishedSchemas = new Dictionary<string, string>();
         
         public Native(Machine machine) : base(machine)
@@ -49,7 +52,7 @@ namespace l99.driver.fanuc.handlers
         protected override async Task afterDataArrivalAsync(Veneers veneers, Veneer veneer, dynamic? onArrival)
         {
             var topic = $"fanuc/{veneers.Machine.Id}-all/{veneer.Name}{(veneer.SliceKey == null ? string.Empty : "/" + veneer.SliceKey.ToString())}";
-            string payload = JObject.FromObject(onArrival).ToString();
+            string payload = JObject.FromObject(onArrival).ToString(jsonFormatting);
             await veneers.Machine.Broker.PublishArrivalAsync(topic, payload);
         }
         
@@ -86,7 +89,7 @@ namespace l99.driver.fanuc.handlers
         protected override async Task afterDataChangeAsync(Veneers veneers, Veneer veneer, dynamic? onChange)
         {
             var topic = $"fanuc/{veneers.Machine.Id}/{veneer.Name}{(veneer.SliceKey == null ? string.Empty : "/" + veneer.SliceKey.ToString())}";
-            string payload = JObject.FromObject(onChange).ToString();
+            string payload = JObject.FromObject(onChange).ToString(jsonFormatting);
             await veneers.Machine.Broker.PublishChangeAsync(topic, payload);
 
             if (!_publishedSchemas.ContainsKey(veneer.Name))
@@ -125,7 +128,7 @@ namespace l99.driver.fanuc.handlers
         {
             string topic_all = $"fanuc/{machine.Id}-all/ping";
             string topic = $"fanuc/{machine.Id}/ping";
-            string payload = JObject.FromObject(onSweepComplete).ToString();
+            string payload = JObject.FromObject(onSweepComplete).ToString(jsonFormatting);
             
             await machine.Broker.PublishArrivalStatusAsync(topic_all, payload);
             await machine.Broker.PublishChangeStatusAsync(topic, payload);
