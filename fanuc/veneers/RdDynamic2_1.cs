@@ -44,6 +44,7 @@ namespace l99.driver.fanuc.veneers
                     ad.seqnum,
                     pos = new
                     {
+                        // TODO: should index be current axis number?
                         absolute = ad.pos.absolute / Math.Pow(10.0, fig_in[additionalInputs[1]]),
                         machine = ad.pos.machine / Math.Pow(10.0, fig_in[additionalInputs[1]]),
                         relative = ad.pos.relative / Math.Pow(10.0, fig_in[additionalInputs[1]]),

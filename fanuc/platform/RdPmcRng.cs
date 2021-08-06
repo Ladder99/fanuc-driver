@@ -5,8 +5,12 @@ namespace l99.driver.fanuc
 {
     public partial class Platform
     {
-        public async Task<dynamic> RdPmcRngAsync(short adr_type, short data_type, ushort s_number, ushort e_number, ushort length,
-            int IODBPMC_type)
+        public async Task<dynamic> RdPmcRngYByteAsync(ushort number)
+        {
+            return await Task.FromResult(RdPmcRng(2, 0, number, number, 8+1, 0));
+        }
+        
+        public async Task<dynamic> RdPmcRngAsync(short adr_type, short data_type, ushort s_number, ushort e_number, ushort length, int IODBPMC_type)
         {
             return await Task.FromResult(RdPmcRng(adr_type, data_type, s_number, e_number, length, IODBPMC_type));
         }
@@ -31,8 +35,7 @@ namespace l99.driver.fanuc
 
             NativeDispatchReturn ndr = nativeDispatch(() =>
             {
-                return (Focas.focas_ret) Focas.pmc_rdpmcrng(_handle, adr_type, data_type, s_number, e_number,
-                    length, buf);
+                return (Focas.focas_ret) Focas.pmc_rdpmcrng(_handle, adr_type, data_type, s_number, e_number, length, buf);
             });
 
             var nr = new

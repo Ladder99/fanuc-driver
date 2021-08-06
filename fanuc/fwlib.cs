@@ -7074,8 +7074,7 @@ namespace l99.driver.fanuc
             public short datano_s;  /* start PMC address */
             [FieldOffset(6)]
             public short datano_e;  /* end PMC address */
-            [FieldOffset(8),
-           MarshalAs(UnmanagedType.ByValArray, SizeConst = 5)]
+            [FieldOffset(8), MarshalAs(UnmanagedType.ByValArray, SizeConst = 5)]
             public byte[] cdata;       /* PMC data */
         } /* In case that the number of data is 5 */
 
@@ -7090,8 +7089,7 @@ namespace l99.driver.fanuc
             public short datano_s;  /* start PMC address */
             [FieldOffset(6)]
             public short datano_e;  /* end PMC address */
-            [FieldOffset(8),
-           MarshalAs(UnmanagedType.ByValArray, SizeConst = 5)]
+            [FieldOffset(8), MarshalAs(UnmanagedType.ByValArray, SizeConst = 5)]
             public short[] idata;
         } /* In case that the number of data is 5 */
 
@@ -7106,8 +7104,7 @@ namespace l99.driver.fanuc
             public short datano_s;  /* start PMC address */
             [FieldOffset(6)]
             public short datano_e;  /* end PMC address */
-            [FieldOffset(8),
-           MarshalAs(UnmanagedType.ByValArray, SizeConst = 5)]
+            [FieldOffset(8), MarshalAs(UnmanagedType.ByValArray, SizeConst = 5)]
             public int[] ldata;
         } /* In case that the number of data is 5 */
 

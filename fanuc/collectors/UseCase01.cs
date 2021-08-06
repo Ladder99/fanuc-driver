@@ -4,9 +4,9 @@ using l99.driver.@base;
 namespace l99.driver.fanuc.collectors
 {
     /*
-        x cnc_sysinfo;
+        y cnc_sysinfo;
         - cnc_sysinfo_ex;
-        - cnc_sysconfig;
+        n cnc_sysconfig;    - HSSB only
 
         - cnc_rdsyssoft;
         - cnc_rdsyssoft2;
@@ -17,22 +17,22 @@ namespace l99.driver.fanuc.collectors
         - cnc_rdproginfo;
         - cnc_rdprgnum;
         - cnc_exeprgname;
-        x gcode
-            x cnc_rdseqnum;
-            x cnc_rdblkcount;
-            x cnc_rdexecprog;
+        y gcode
+            y cnc_rdseqnum;
+            y cnc_rdblkcount;
+            y cnc_rdexecprog;
         - cnc_rdrepeatval;
         - cnc_rdrepeatval_ext;
 
-        x cnc_rdparam (6711, 6712 and 6713);
+        y cnc_rdparam (6711, 6712 and 6713);
 
         - cnc_alarm;
         - cnc_alarm2;
         - cnc_rdalminfo;
-        x cnc_rdalmmsg;
-        x cnc_rdalmmsg2;
-        - cnc_getdtailerr;
-        x cnc_statinfo;
+        y cnc_rdalmmsg;
+        y cnc_rdalmmsg2;
+        n cnc_getdtailerr;  - this is unnecessary.  Return status of Focas functions is already trapped within original Focas response.
+        y cnc_statinfo;
         - cnc_statinfo2;
         - cnc_rdopnlsgnl (4, 5);
         - cnc_rdopnlsgn (3);
@@ -55,6 +55,10 @@ namespace l99.driver.fanuc.collectors
             await Apply(typeof(fanuc.veneers.OpMsgs), "message1");
             
             //await Apply(typeof(fanuc.veneers.OpMsgs), "message2");
+            
+            await Apply(typeof(fanuc.veneers.RdPmcRngByte), "y0003");
+            
+            await Apply(typeof(fanuc.veneers.RdPmcRngByte), "y0008");
         }
         
         public override async Task InitPathsAsync()
@@ -107,6 +111,9 @@ namespace l99.driver.fanuc.collectors
             //var k = await platform.RdOpMsgAll_16i_18iW_Async();
             //var l = await platform.RdOpMsg1_16_18_21_16i_18i_21i_0i_30i_PowerMatei_PMiA_Async();
 
+            await SetNativeAndPeel("y0003", await platform.RdPmcRngYByteAsync(3));
+            
+            await SetNativeAndPeel("y0008", await platform.RdPmcRngYByteAsync(8));
         }
 
         public override async Task CollectForEachPathAsync(short current_path, dynamic path_marker)

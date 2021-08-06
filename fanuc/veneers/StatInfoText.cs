@@ -97,6 +97,8 @@ namespace l99.driver.fanuc.veneers
         
         protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
         {
+            // TODO: evaluate text based on controller model
+            
             if (input.success)
             {
                 var current_value = new
@@ -104,6 +106,7 @@ namespace l99.driver.fanuc.veneers
                     mode = new
                     {
                         automatic = _autText[input.response.cnc_statinfo.statinfo.aut]
+                        // manual ?
                     },
                     status = new
                     {

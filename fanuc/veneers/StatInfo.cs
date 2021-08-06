@@ -39,6 +39,7 @@ namespace l99.driver.fanuc.veneers
                     mode = new
                     {
                         automatic = input.response.cnc_statinfo.statinfo.aut
+                        // manual ?
                     },
                     status = new
                     {
