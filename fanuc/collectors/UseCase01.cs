@@ -55,6 +55,8 @@ namespace l99.driver.fanuc.collectors
             await Apply(typeof(fanuc.veneers.OpMsgs), "message1");
             
             //await Apply(typeof(fanuc.veneers.OpMsgs), "message2");
+
+            await Apply(typeof(fanuc.veneers.RdPmcTitle), "pmc_title");
             
             await Apply(typeof(fanuc.veneers.RdPmcRngByte), "y0003");
             
@@ -111,6 +113,8 @@ namespace l99.driver.fanuc.collectors
             //var k = await platform.RdOpMsgAll_16i_18iW_Async();
             //var l = await platform.RdOpMsg1_16_18_21_16i_18i_21i_0i_30i_PowerMatei_PMiA_Async();
 
+            await SetNativeAndPeel("pmc_title", await platform.RdPmcTitle());
+            
             await SetNativeAndPeel("y0003", await platform.RdPmcRngYByteAsync(3));
             
             await SetNativeAndPeel("y0008", await platform.RdPmcRngYByteAsync(8));
