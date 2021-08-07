@@ -1,9 +1,3132 @@
 <html xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:bop2="http://www.fanuc.co.jp/develop/mmc/bop2">
    <head>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-      <title></title>
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
       <link rel="stylesheet" type="text/css" href="../fwlib32.css">
    </head>
-   <body bgcolor="#FFFFFF"><FONT face="Verdana,Arial,Helvetica,sans-serif"><a name="Function Name"></a><div class="text"><a name="Declaration"></a><a name="Description"></a><a name="Arguments"></a><a name="Return"></a><a name="CNC option"></a><a name="CNC parameter"></a><a name="CNC mode"></a><a name="Available CNC"></a><a name="Reference"></a><a name="Example"></a></div></FONT><hr>
+   <body bgcolor="#FFFFFF">
+      <div class="text">
+         <h3 class="label"><a name="#All">CNC: Function Reference related to library handle, node</a></h3>
+         <table border="1" cellpadding="5" cols="2" frame="below" rules="rows">
+            <colgroup align="left" valign="top" width="30%"></colgroup>
+            <colgroup align="left" valign="top" width="70%"></colgroup>
+            <thead>
+               <tr>
+                  <th>Function Name</th>
+                  <th>Brief description</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Handle/cnc_rdnodenum.html">cnc_rdnodenum</a></td>
+                  <td>Read the number of node</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Handle/cnc_rdnodeinfo.html">cnc_rdnodeinfo</a></td>
+                  <td>Read the information of node</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Handle/cnc_setdefnode.html">cnc_setdefnode</a></td>
+                  <td>Set the default node number</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Handle/cnc_allclibhndl.html">cnc_allclibhndl</a></td>
+                  <td>Allocate library handle</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Handle/cnc_allclibhndl2.html">cnc_allclibhndl2</a></td>
+                  <td>Allocate the library handle(for multi-connection)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Handle/cnc_allclibhndl3.html">cnc_allclibhndl3</a></td>
+                  <td>Get the library handle(for Ethernet)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Handle/cnc_allclibhndls.html">cnc_allclibhndls</a></td>
+                  <td>Get the library handle(for Ethernet/Security support)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Handle/cnc_freelibhndl.html">cnc_freelibhndl</a></td>
+                  <td>Free library handle</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Handle/cnc_settimeout.html">cnc_settimeout</a></td>
+                  <td>Set timeout interval </td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Handle/cnc_getlibopt.html">cnc_getlibopt</a></td>
+                  <td>Get a library option</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Handle/cnc_setlibopt.html">cnc_setlibopt</a></td>
+                  <td>Set a library option</td>
+               </tr>
+            </tbody>
+         </table>
+         <h3 class="label"><a name="#All">CNC: Function related to controlled axis/spindle</a></h3>
+         <table border="1" cellpadding="5" cols="2" frame="below" rules="rows">
+            <colgroup align="left" valign="top" width="30%"></colgroup>
+            <colgroup align="left" valign="top" width="70%"></colgroup>
+            <thead>
+               <tr>
+                  <th>Function Name</th>
+                  <th>Brief description</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_actf.html">cnc_actf</a></td>
+                  <td>Read actual axis feedrate(F)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_absolute.html">cnc_absolute</a></td>
+                  <td>Read absolute axis position</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_absolute2.html">cnc_absolute2</a></td>
+                  <td>Read absolute axis position 2</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_machine.html">cnc_machine</a></td>
+                  <td>Read machine axis position</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_relative.html">cnc_relative</a></td>
+                  <td>Read relative axis position</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_relative2.html">cnc_relative2</a></td>
+                  <td>Read relative axis position 2</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_distance.html">cnc_distance</a></td>
+                  <td>Read distance to go</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_rdposition.html">cnc_rdposition</a></td>
+                  <td>Read position information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_rdaxisdata.html">cnc_rdaxisdata</a></td>
+                  <td>Read various data relating servo axis or spindle axis</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_skip.html">cnc_skip</a></td>
+                  <td>Read skip position</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_srvdelay.html">cnc_srvdelay</a></td>
+                  <td>Read servo delay value</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_accdecdly.html">cnc_accdecdly</a></td>
+                  <td>Read acceleration/deceleration delay value</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_rddynamic.html">cnc_rddynamic</a></td>
+                  <td>Read all dynamic data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_rddynamic2.html">cnc_rddynamic2</a></td>
+                  <td>Read all dynamic data (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_acts.html">cnc_acts</a></td>
+                  <td>Read actual spindle speed(S)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_acts2.html">cnc_acts2</a></td>
+                  <td>Read actual spindle speed(S) (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_rdspcss.html">cnc_rdspcss</a></td>
+                  <td>Read constant surface speed data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_rdspeed.html">cnc_rdspeed</a></td>
+                  <td>Read speed information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_wrrelpos.html">cnc_wrrelpos</a></td>
+                  <td>Set origin/preset relative axis position</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_prstwkcd.html">cnc_prstwkcd</a></td>
+                  <td>Preset work coordinate</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_rdmovrlap.html">cnc_rdmovrlap</a></td>
+                  <td>Read manual overlapped motion value</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_canmovrlap.html">cnc_canmovrlap</a></td>
+                  <td>Cancel manual overlapped motion value</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_rdhndintrpt.html">cnc_rdhndintrpt</a></td>
+                  <td>Read manual overlapped motion information </td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_rdspload.html">cnc_rdspload</a></td>
+                  <td>Read load information of serial spindle</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_rdspmaxrpm.html">cnc_rdspmaxrpm</a></td>
+                  <td>Read maximum r.p.m. ratio of serial spindle</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_rdspgear.html">cnc_rdspgear</a></td>
+                  <td>Read gear ratio of serial spindle</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_rdsvmeter.html">cnc_rdsvmeter</a></td>
+                  <td>Read servo load meter</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_rdspmeter.html">cnc_rdspmeter</a></td>
+                  <td>Read spindle load meter</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_rd3dtooltip.html">cnc_rd3dtooltip</a></td>
+                  <td>Read tool tip coordinates for 3-dimensional handle feed</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_rd3dpulse.html">cnc_rd3dpulse</a></td>
+                  <td>Read handle interrupt pulse amount for 3-dimensional handle feed</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_rd3dmovrlap.html">cnc_rd3dmovrlap</a></td>
+                  <td>Read handle interrupt move amount for 3-dimensional handle feed</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_rd3dofschg.html">cnc_rd3dofschg</a></td>
+                  <td>Read the modification of tool length compensation amount in tool axis dir. for 3-dimensional
+                     handle feed</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_clr3dplsmov.html">cnc_clr3dplsmov</a></td>
+                  <td>Clear handle interrupt pulse and move amount for 3-dimensional handle feed</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_rdaxisname.html">cnc_rdaxisname</a></td>
+                  <td>Read axis name</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_exaxisname.html">cnc_exaxisname</a></td>
+                  <td>Read the name of controlled axis and spindle name</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_exaxisname2.html">cnc_exaxisname2</a></td>
+                  <td>Read the name of controlled axis and spindle name(2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_rdspdlname.html">cnc_rdspdlname</a></td>
+                  <td>Read spindle name</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_rd5axmandt.html">cnc_rd5axmandt</a></td>
+                  <td>Read the data for the manual feed for 5-axis machining</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_rd5axovrlap.html">cnc_rd5axovrlap</a></td>
+                  <td>Read the machine axis movement for the manual feed for 5-axis machining</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Position/cnc_clr5axpls.html">cnc_clr5axpls</a></td>
+                  <td>Clear the pulse amount for manual feed for 5-axis machining</td>
+               </tr>
+            </tbody>
+         </table>
+         <h3 class="label"><a name="#All">CNC: Function related to CNC program</a></h3>
+         <table border="1" cellpadding="5" cols="2" frame="below" rules="rows">
+            <colgroup align="left" valign="top" width="30%"></colgroup>
+            <colgroup align="left" valign="top" width="70%"></colgroup>
+            <thead>
+               <tr>
+                  <th>Function Name</th>
+                  <th>Brief description</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_dwnstart.html">cnc_dwnstart</a></td>
+                  <td>Start downloading NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_download.html">cnc_download</a></td>
+                  <td>Download NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_cdownload.html">cnc_cdownload</a></td>
+                  <td>Download NC program(conditional)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_dwnend.html">cnc_dwnend</a></td>
+                  <td>End of downloading NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_dwnstart3.html">cnc_dwnstart3</a></td>
+                  <td>Start downloading NC program (3)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_download3.html">cnc_download3</a></td>
+                  <td>Download NC program (3)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_dwnend3.html">cnc_dwnend3</a></td>
+                  <td>End of downloading NC program (3)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_dwnstart4.html">cnc_dwnstart4</a></td>
+                  <td>Start downloading NC program (4)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_download4.html">cnc_download4</a></td>
+                  <td>Download NC program (4)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_dwnend4.html">cnc_dwnend4</a></td>
+                  <td>End of downloading NC program (4)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_vrfstart.html">cnc_vrfstart</a></td>
+                  <td>Start verification of NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_verify.html">cnc_verify</a></td>
+                  <td>Verify NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_cverify.html">cnc_cverify</a></td>
+                  <td>Verify NC program(conditional)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_vrfend.html">cnc_vrfend</a></td>
+                  <td>End of verification</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_vrfstart4.html">cnc_vrfstart4</a></td>
+                  <td>Start verification of NC program(4)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_verify4.html">cnc_verify4</a></td>
+                  <td>Verify NC program(4)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_vrfend4.html">cnc_vrfend4</a></td>
+                  <td>End of verification(4)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_buff.html">cnc_buff</a></td>
+                  <td>Read buffer status for downloading/verification NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_dncstart.html">cnc_dncstart</a></td>
+                  <td>Start downloading DNC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_dnc.html">cnc_dnc</a></td>
+                  <td>Download DNC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_cdnc.html">cnc_cdnc</a></td>
+                  <td>Download DNC program(conditional)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_dncend.html">cnc_dncend</a></td>
+                  <td>End of downloading DNC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_dncstart2.html">cnc_dncstart2</a></td>
+                  <td>Start downloading DNC program (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_dnc2.html">cnc_dnc2</a></td>
+                  <td>Download DNC program (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_dncend2.html">cnc_dncend2</a></td>
+                  <td>End of downloading DNC program (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_rddncdgndt.html">cnc_rddncdgndt</a></td>
+                  <td>Read the diagnosis data of downloading DNC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_upstart.html">cnc_upstart</a></td>
+                  <td>Start uploading NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_upload.html">cnc_upload</a></td>
+                  <td>Upload NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_cupload.html">cnc_cupload</a></td>
+                  <td>Upload NC program(conditional)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_upend.html">cnc_upend</a></td>
+                  <td>End of uploading NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_upstart3.html">cnc_upstart3</a></td>
+                  <td>Start uploading NC program (3)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_upload3.html">cnc_upload3</a></td>
+                  <td>Upload NC program (3)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_upend3.html">cnc_upend3</a></td>
+                  <td>End of uploading NC program (3)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_upstart4.html">cnc_upstart4</a></td>
+                  <td>Start uploading NC program (4)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_upload4.html">cnc_upload4</a></td>
+                  <td>Upload NC program (4)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_upend4.html">cnc_upend4</a></td>
+                  <td>End of uploading NC program (4)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_search.html">cnc_search</a></td>
+                  <td>Search specified program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_delall.html">cnc_delall</a></td>
+                  <td>Delete all programs</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_delete.html">cnc_delete</a></td>
+                  <td>Delete specified program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_delrange.html">cnc_delrange</a></td>
+                  <td>Delete specified program(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_rdprogdir.html">cnc_rdprogdir</a></td>
+                  <td>Read program directory</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_rdprogdir2.html">cnc_rdprogdir2</a></td>
+                  <td>Read program directory (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_rdprogdir3.html">cnc_rdprogdir3</a></td>
+                  <td>Read program directory (3)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_rdprogdir4.html">cnc_rdprogdir4</a></td>
+                  <td>Read program directory (4)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_rdproginfo.html">cnc_rdproginfo</a></td>
+                  <td>Read program information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_rdprgnum.html">cnc_rdprgnum</a></td>
+                  <td>Read program number under execution</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_exeprgname.html">cnc_exeprgname</a></td>
+                  <td>Read program name under execution</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_exeprgname2.html">cnc_exeprgname2</a></td>
+                  <td>Read program name under execution (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_rdseqnum.html">cnc_rdseqnum</a></td>
+                  <td>Read sequence number under execution</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_seqsrch.html">cnc_seqsrch</a></td>
+                  <td>Search specified sequence number</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_seqsrch2.html">cnc_seqsrch2</a></td>
+                  <td>Search specified sequence number(2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_rewind.html">cnc_rewind</a></td>
+                  <td>Rewind cursor of NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_rdblkcount.html">cnc_rdblkcount</a></td>
+                  <td>Read block counter</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_rdexecprog.html">cnc_rdexecprog</a></td>
+                  <td>Read program under execution</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_wrmdiprog.html">cnc_wrmdiprog</a></td>
+                  <td>Write program for MDI operation</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_rdmdipntr.html">cnc_rdmdipntr</a></td>
+                  <td>Read execution pointer for MDI operation</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_wrmdipntr.html">cnc_wrmdipntr</a></td>
+                  <td>Write execution pointer for MDI operation</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_rdmdiprgstat.html">cnc_rdmdiprgstat</a></td>
+                  <td>Get MDI program information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_rdproctime.html">cnc_rdproctime</a></td>
+                  <td>Read processing time stamp data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_rdprgdirtime.html">cnc_rdprgdirtime</a></td>
+                  <td>Read directory for processing time stamp data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_copyprog.html">cnc_copyprog</a></td>
+                  <td>Copy program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_mergeprog.html">cnc_mergeprog</a></td>
+                  <td>Merge program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_renameprog.html">cnc_renameprog</a></td>
+                  <td>Change program number</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_condense.html">cnc_condense</a></td>
+                  <td>Condense program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_rdprogline.html">cnc_rdprogline</a></td>
+                  <td>Read NC program by line basis</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_rdprogline2.html">cnc_rdprogline2</a></td>
+                  <td>Read NC program by line basis(2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_wrprogline.html">cnc_wrprogline</a></td>
+                  <td>Write NC program by line basis</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_delprogline.html">cnc_delprogline</a></td>
+                  <td>Delete NC program by line basis</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_searchword.html">cnc_searchword</a></td>
+                  <td>Search string in NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_searchresult.html">cnc_searchresult</a></td>
+                  <td>Get result of string search in NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_setpglock.html">cnc_setpglock</a></td>
+                  <td>Set the protection of running/editing of NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_resetpglock.html">cnc_resetpglock</a></td>
+                  <td>Reset the protection of running/editing of NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_rdpglockstat.html">cnc_rdpglockstat</a></td>
+                  <td>Get the status of running/editing of NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_rdactpt.html">cnc_rdactpt</a></td>
+                  <td>Get execution pointer</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_wractpt.html">cnc_wractpt</a></td>
+                  <td>Set execution pointer</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_rdexecpt.html">cnc_rdexecpt</a></td>
+                  <td>Read execution pointer</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_rdpdf_drive.html">cnc_rdpdf_drive</a></td>
+                  <td>Read information of Program memory drive</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_rdpdf_inf.html">cnc_rdpdf_inf</a></td>
+                  <td>Read information Program memory file</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_rdpdf_curdir.html">cnc_rdpdf_curdir</a></td>
+                  <td>Read information of current folder</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_wrpdf_curdir.html">cnc_wrpdf_curdir</a></td>
+                  <td>Set current folder</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_rdpdf_subdir.html">cnc_rdpdf_subdir</a></td>
+                  <td>Read information of subfolder </td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_rdpdf_alldir.html">cnc_rdpdf_alldir</a></td>
+                  <td>Read file information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_rdpdf_subdirn.html">cnc_rdpdf_subdirn</a></td>
+                  <td>Read number of subfolders or files</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_pdf_add.html">cnc_pdf_add</a></td>
+                  <td>Create folder or file</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_pdf_del.html">cnc_pdf_del</a></td>
+                  <td>Delete folder or file</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_pdf_delall.html">cnc_pdf_delall</a></td>
+                  <td>Delete all programs</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_pdf_rename.html">cnc_pdf_rename</a></td>
+                  <td>Rename folder or file</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_pdf_copy.html">cnc_pdf_copy</a></td>
+                  <td>Copy file</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_pdf_move.html">cnc_pdf_move</a></td>
+                  <td>Move file</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_pdf_cond.html">cnc_pdf_cond</a></td>
+                  <td>Rearrange the contents of the program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_wrpdf_attr.html">cnc_wrpdf_attr</a></td>
+                  <td>Change attribute of folder or file</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_pdf_rdmain.html">cnc_pdf_rdmain</a></td>
+                  <td>Read main program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_pdf_slctmain.html">cnc_pdf_slctmain</a></td>
+                  <td>Select main program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_rdpdf_line.html">cnc_rdpdf_line</a></td>
+                  <td>Read NC program by line basis(For arbitrary file name)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_wrpdf_line.html">cnc_wrpdf_line</a></td>
+                  <td>Write NC program by line basis(For arbitrary file name)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_pdf_delline.html">cnc_pdf_delline</a></td>
+                  <td>Delete NC program by line basis(For arbitrary file name)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_pdf_searchword.html">cnc_pdf_searchword</a></td>
+                  <td>Search string in NC program(For arbitrary file name)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_pdf_searchresult.html">cnc_pdf_searchresult</a></td>
+                  <td>Get result of string search in NC program(For arbitrary file name)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_setpdf_pglock.html">cnc_setpdf_pglock</a></td>
+                  <td>Set the protection of running/editing of NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_resetpdf_pglock.html">cnc_resetpdf_pglock</a></td>
+                  <td>Reset the protection of running/editing of NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_rdpdf_pglockstat.html">cnc_rdpdf_pglockstat</a></td>
+                  <td>Get the status of running/editing of NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_pdf_rdactpt.html">cnc_pdf_rdactpt</a></td>
+                  <td>Get execution pointer(For arbitrary file name)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_pdf_wractpt.html">cnc_pdf_wractpt</a></td>
+                  <td>Set execution pointer(For arbitrary file name)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_saveprog_start.html">cnc_saveprog_start</a></td>
+                  <td>Starts of the manual saving for the high speed program management</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Program/cnc_saveprog_end.html">cnc_saveprog_end</a></td>
+                  <td>Get execution result of the manual saving for the high speed program management</td>
+               </tr>
+            </tbody>
+         </table>
+         <h3 class="label"><a name="#All">CNC: Function related to CNC file data</a></h3>
+         <table border="1" cellpadding="5" cols="2" frame="below" rules="rows">
+            <colgroup align="left" valign="top" width="30%"></colgroup>
+            <colgroup align="left" valign="top" width="70%"></colgroup>
+            <thead>
+               <tr>
+                  <th>Function Name</th>
+                  <th>Brief description</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdtofs.html">cnc_rdtofs</a></td>
+                  <td>Read tool offset value</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_wrtofs.html">cnc_wrtofs</a></td>
+                  <td>Write tool offset value</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdtofsr.html">cnc_rdtofsr</a></td>
+                  <td>Read tool offset value(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_wrtofsr.html">cnc_wrtofsr</a></td>
+                  <td>Write tool offset value(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdtofsinfo.html">cnc_rdtofsinfo</a></td>
+                  <td>Read tool offset information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdtofsinfo2.html">cnc_rdtofsinfo2</a></td>
+                  <td>Read tool offset information (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_tofs_rnge.html">cnc_tofs_rnge</a></td>
+                  <td>Read the effective setting range of tool offset value</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdzofs.html">cnc_rdzofs</a></td>
+                  <td>Read work zero offset value</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_wrzofs.html">cnc_wrzofs</a></td>
+                  <td>Write work zero offset value</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdzofsr.html">cnc_rdzofsr</a></td>
+                  <td>Read work zero offset value(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_wrzofsr.html">cnc_wrzofsr</a></td>
+                  <td>Write work zero offset value(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdzofsinfo.html">cnc_rdzofsinfo</a></td>
+                  <td>Read work zero offset information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_zofs_rnge.html">cnc_zofs_rnge</a></td>
+                  <td>Read the effective setting range of work zero offset value </td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdparam.html">cnc_rdparam</a></td>
+                  <td>Read parameter</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_wrparam.html">cnc_wrparam</a></td>
+                  <td>Write parameter</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdparam3.html">cnc_rdparam3</a></td>
+                  <td>Read parameter(3)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdparar.html">cnc_rdparar</a></td>
+                  <td>Read parameter(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_wrparas.html">cnc_wrparas</a></td>
+                  <td>Write parameter(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdparam_ext.html">cnc_rdparam_ext</a></td>
+                  <td>Read random number parameters </td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdhsprminfo.html">cnc_rdhsprminfo</a></td>
+                  <td>Get information for high-speed read of parameter</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdhsparam.html">cnc_rdhsparam</a></td>
+                  <td>High-speed read of parameter</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdparainfo.html">cnc_rdparainfo</a></td>
+                  <td>Read parameter information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdparainfo3.html">cnc_rdparainfo3</a></td>
+                  <td>Read parameter information (3)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdparanum.html">cnc_rdparanum</a></td>
+                  <td>Read minimum, maximum, total number of parameter</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdset.html">cnc_rdset</a></td>
+                  <td>Read setting data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_wrset.html">cnc_wrset</a></td>
+                  <td>Write setting data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdsetr.html">cnc_rdsetr</a></td>
+                  <td>Read setting data(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_wrsets.html">cnc_wrsets</a></td>
+                  <td>Write setting data(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdsetinfo.html">cnc_rdsetinfo</a></td>
+                  <td>Read setting data information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdsetnum.html">cnc_rdsetnum</a></td>
+                  <td>Read minimum, maximum, total number of setting data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdpitchr.html">cnc_rdpitchr</a></td>
+                  <td>Read pitch error compensation data(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_wrpitchr.html">cnc_wrpitchr</a></td>
+                  <td>Write pitch error compensation data(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdpitchinfo.html">cnc_rdpitchinfo</a></td>
+                  <td>Read pitch error compensation data information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdvolc.html">cnc_rdvolc</a></td>
+                  <td>Read 3-dimensional error compensation data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_wrvolc.html">cnc_wrvolc</a></td>
+                  <td>Write 3-dimensional error compensation data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdvolccomp.html">cnc_rdvolccomp</a></td>
+                  <td>Read 3-dimensional error compensation value at current position</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdrotvolc.html">cnc_rdrotvolc</a></td>
+                  <td>Read the 3-dimensional rotary error compensation data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_wrrotvolc.html">cnc_wrrotvolc</a></td>
+                  <td>Write the 3-dimensional rotary error compensation data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdmacro.html">cnc_rdmacro</a></td>
+                  <td>Read custom macro variable</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_wrmacro.html">cnc_wrmacro</a></td>
+                  <td>Write custom macro variable</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdmacror.html">cnc_rdmacror</a></td>
+                  <td>Read custom macro variables(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_wrmacror.html">cnc_wrmacror</a></td>
+                  <td>Write custom macro variables(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdmacror2.html">cnc_rdmacror2</a></td>
+                  <td>Read custom macro variables(double precision)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdmacror3.html">cnc_rdmacror3</a></td>
+                  <td>Read custom macro variables and name(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_wrmacror2.html">cnc_wrmacror2</a></td>
+                  <td>Write custom macro variables(double precision)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdmacroinfo.html">cnc_rdmacroinfo</a></td>
+                  <td>Read custom macro variable information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_getmactype.html">cnc_getmactype</a></td>
+                  <td>Get type of custom macro variable</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_setmactype.html">cnc_setmactype</a></td>
+                  <td>Set type of custom macro variable</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdpmacro.html">cnc_rdpmacro</a></td>
+                  <td>Read P code macro variable</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_wrpmacro.html">cnc_wrpmacro</a></td>
+                  <td>Write P code macro variable</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdpmacror.html">cnc_rdpmacror</a></td>
+                  <td>Read P code macro variables(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdpmacror2.html">cnc_rdpmacror2</a></td>
+                  <td>Read P code macro variables(double precision)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_wrpmacror.html">cnc_wrpmacror</a></td>
+                  <td>Write P code macro variables(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_wrpmacror2.html">cnc_wrpmacror2</a></td>
+                  <td>Write P code macro variables(double precision)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdpmacroinfo.html">cnc_rdpmacroinfo</a></td>
+                  <td>Read P code macro variable information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdpmacroinfo2.html">cnc_rdpmacroinfo2</a></td>
+                  <td>Read P code macro variable information(2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_getpmactype.html">cnc_getpmactype</a></td>
+                  <td>Get type of P code macro variable</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_setpmactype.html">cnc_setpmactype</a></td>
+                  <td>Set type of P code macro variable</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdmgrpdata.html">cnc_rdmgrpdata</a></td>
+                  <td>Read M code group data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_wrmgrpdata.html">cnc_wrmgrpdata</a></td>
+                  <td>Write M code group data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdexecmcode.html">cnc_rdexecmcode</a></td>
+                  <td>Read M code group data(executing,executed M code)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdrstrmcode.html">cnc_rdrstrmcode</a></td>
+                  <td>Read M code group data(for program restart)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdhpccset.html">cnc_rdhpccset</a></td>
+                  <td>Read setting data for High-speed and high-precision machining</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_wrhpccset.html">cnc_wrhpccset</a></td>
+                  <td>Write setting data for HPCC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_hpccatset.html">cnc_hpccatset</a></td>
+                  <td>Set setting data for HPCC automatically</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdhpcctupr.html">cnc_rdhpcctupr</a></td>
+                  <td>Read tuning data(parameter input) for HPCC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_wrhpcctupr.html">cnc_wrhpcctupr</a></td>
+                  <td>Write tuning data(parameter input) for HPCC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdhpcctuac.html">cnc_rdhpcctuac</a></td>
+                  <td>Read tuning data(acc./dec. input) for HPCC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_wrhpcctuac.html">cnc_wrhpcctuac</a></td>
+                  <td>Write tuning data(acc./dec. input) for HPCC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_hpccattune.html">cnc_hpccattune</a></td>
+                  <td>Tune up tuning data for HPCC automatically</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_hpccactfine.html">cnc_hpccactfine</a></td>
+                  <td>Read fine level for HPCC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_hpccselfine.html">cnc_hpccselfine</a></td>
+                  <td>Select fine level for HPCC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdactfixofs.html">cnc_rdactfixofs</a></td>
+                  <td>Read active fixture offset</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdfixofs.html">cnc_rdfixofs</a></td>
+                  <td>Read fixture offset value(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_wrfixofs.html">cnc_wrfixofs</a></td>
+                  <td>Write fixture offset value(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdintchk.html">cnc_rdintchk</a></td>
+                  <td>Read interference check data(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_wrintchk.html">cnc_wrintchk</a></td>
+                  <td>Write interference check data(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdintinfo.html">cnc_rdintinfo</a></td>
+                  <td>Read interference check data information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdwkcdshft.html">cnc_rdwkcdshft</a></td>
+                  <td>Read work coordinate shift value</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_wrwkcdshft.html">cnc_wrwkcdshft</a></td>
+                  <td>Write work coordinate shift value</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdwkcdsfms.html">cnc_rdwkcdsfms</a></td>
+                  <td>Read work coordinate shift measured value</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_wrwkcdsfms.html">cnc_wrwkcdsfms</a></td>
+                  <td>Write work coordinate shift measured value</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_wksft_rnge.html">cnc_wksft_rnge</a></td>
+                  <td>Read the effective setting range of work coordinate shift value</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdbtofsr.html">cnc_rdbtofsr</a></td>
+                  <td>Read tool offset value for B axis(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_wrbtofsr.html">cnc_wrbtofsr</a></td>
+                  <td>Write tool offset value for B axis(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdbtofsinfo.html">cnc_rdbtofsinfo</a></td>
+                  <td>Read tool offset information for B axis</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Ncdata/cnc_rdbaxis.html">cnc_rdbaxis</a></td>
+                  <td>Read command data for B axis</td>
+               </tr>
+            </tbody>
+         </table>
+         <h3 class="label"><a name="#All">CNC: Function related to tool life management data</a></h3>
+         <table border="1" cellpadding="5" cols="2" frame="below" rules="rows">
+            <colgroup align="left" valign="top" width="30%"></colgroup>
+            <colgroup align="left" valign="top" width="70%"></colgroup>
+            <thead>
+               <tr>
+                  <th>Function Name</th>
+                  <th>Brief description</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_rdgrpid.html">cnc_rdgrpid</a></td>
+                  <td>Read tool life management data(tool group number)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_rdgrpid2.html">cnc_rdgrpid2</a></td>
+                  <td>Read tool life management data(tool group number) 2</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_rdngrp.html">cnc_rdngrp</a></td>
+                  <td>Read tool life management data(number of tool groups)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_rdntool.html">cnc_rdntool</a></td>
+                  <td>Read tool life management data(number of tools)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_rdlife.html">cnc_rdlife</a></td>
+                  <td>Read tool life management data(tool life)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_rdcount.html">cnc_rdcount</a></td>
+                  <td>Read tool life management data(tool life counter)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_rd1length.html">cnc_rd1length</a></td>
+                  <td>Read tool life management data(tool length number-1)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_rd2length.html">cnc_rd2length</a></td>
+                  <td>Read tool life management data(tool length number-2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_rd1radius.html">cnc_rd1radius</a></td>
+                  <td>Read tool life management data(cutter compensation num.-1)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_rd2radius.html">cnc_rd2radius</a></td>
+                  <td>Read tool life management data(cutter compensation num.-2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_t1info.html">cnc_t1info</a></td>
+                  <td>Read tool life management data(tool information-1)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_t2info.html">cnc_t2info</a></td>
+                  <td>Read tool life management data(tool information-2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_toolnum.html">cnc_toolnum</a></td>
+                  <td>Read tool life management data(tool number)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_rdtoolrng.html">cnc_rdtoolrng</a></td>
+                  <td>Read tool life management data(tool number, tool life, tool life counter)(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_rdtoolgrp.html">cnc_rdtoolgrp</a></td>
+                  <td>Read tool life management data(all data within group)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_wrcountr.html">cnc_wrcountr</a></td>
+                  <td>Write tool life management data(tool life counter)(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_rdusegrpid.html">cnc_rdusegrpid</a></td>
+                  <td>Read tool life management data(used tool group number)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_rdmaxgrp.html">cnc_rdmaxgrp</a></td>
+                  <td>Read tool life management data(max. number of tool groups)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_rdmaxtool.html">cnc_rdmaxtool</a></td>
+                  <td>Read tool life management data(max. number of tool within group)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_rdusetlno.html">cnc_rdusetlno</a></td>
+                  <td>Read tool life management data(used tool number within group)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_rd1tlifedata.html">cnc_rd1tlifedata</a></td>
+                  <td>Read tool life management data(tool data1)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_rd1tlifedat2.html">cnc_rd1tlifedat2</a></td>
+                  <td>Read tool life management data(tool data1) 2</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_rd2tlifedata.html">cnc_rd2tlifedata</a></td>
+                  <td>Read tool life management data(tool data2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_wr1tlifedata.html">cnc_wr1tlifedata</a></td>
+                  <td>Write tool life management data(tool data1)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_wr1tlifedat2.html">cnc_wr1tlifedat2</a></td>
+                  <td>Write tool life management data(tool data1) 2</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_wr2tlifedata.html">cnc_wr2tlifedata</a></td>
+                  <td>Write tool life management data(tool data2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_rdgrpinfo.html">cnc_rdgrpinfo</a></td>
+                  <td>Read tool life management data(tool group information)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_rdgrpinfo2.html">cnc_rdgrpinfo2</a></td>
+                  <td>Read tool life management data(tool group information 2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_rdgrpinfo3.html">cnc_rdgrpinfo3</a></td>
+                  <td>Read tool life management data(tool group information 3)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_rdgrpinfo4.html">cnc_rdgrpinfo4</a></td>
+                  <td>Read tool life management data(tool group information 4)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_wrgrpinfo.html">cnc_wrgrpinfo</a></td>
+                  <td>Write tool life management data(tool group information)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_wrgrpinfo2.html">cnc_wrgrpinfo2</a></td>
+                  <td>Write tool life management data(tool group information 2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_wrgrpinfo3.html">cnc_wrgrpinfo3</a></td>
+                  <td>Write tool life management data(tool group information 3)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_deltlifegrp.html">cnc_deltlifegrp</a></td>
+                  <td>Delete tool life management data(tool group)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_instlifedt.html">cnc_instlifedt</a></td>
+                  <td>Insert tool life management data(tool data)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_deltlifedt.html">cnc_deltlifedt</a></td>
+                  <td>Delete tool life management data(tool data)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_clrcntinfo.html">cnc_clrcntinfo</a></td>
+                  <td>Clear tool life management data(tool life counter, tool information)(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_rdtlinfo.html">cnc_rdtlinfo</a></td>
+                  <td>Read tool life management data(maximum number of tool groups, maximum number of tool
+                     within group, maximum number of life count) </td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_rdtlusegrp.html">cnc_rdtlusegrp</a></td>
+                  <td>Read tool life management data(next/current/last used tool group number) </td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_rdtlgrp.html">cnc_rdtlgrp</a></td>
+                  <td>Read tool life management data(tool group information) (area specified) </td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_rdtltool.html">cnc_rdtltool</a></td>
+                  <td>Read tool life management data(tool data) (area specified) </td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Toollife/cnc_rdexchgtgrp.html">cnc_rdexchgtgrp</a></td>
+                  <td>Read tool life management data(Exchange necessary tool group number)</td>
+               </tr>
+            </tbody>
+         </table>
+         <h3 class="label"><a name="#All">CNC: Function related to tool management data</a></h3>
+         <table border="1" cellpadding="5" cols="2" frame="below" rules="rows">
+            <colgroup align="left" valign="top" width="30%"></colgroup>
+            <colgroup align="left" valign="top" width="70%"></colgroup>
+            <thead>
+               <tr>
+                  <th>Function Name</th>
+                  <th>Brief description</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+                  <td class="func"><a target="_parent" href="../ToolMng/cnc_regtool.html">cnc_regtool</a></td>
+                  <td>New registration of Tool management data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../ToolMng/cnc_regtool_f2.html">cnc_regtool_f2</a></td>
+                  <td>New registration of Tool management data (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../ToolMng/cnc_deltool.html">cnc_deltool</a></td>
+                  <td>Delete Tool management data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../ToolMng/cnc_rdtool.html">cnc_rdtool</a></td>
+                  <td>Read Tool management data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../ToolMng/cnc_rdtool_f2.html">cnc_rdtool_f2</a></td>
+                  <td>Read Tool management data (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../ToolMng/cnc_wrtool.html">cnc_wrtool</a></td>
+                  <td>Write Tool management data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../ToolMng/cnc_wrtool_f2.html">cnc_wrtool_f2</a></td>
+                  <td>Write Tool management data (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../ToolMng/cnc_wrtool2.html">cnc_wrtool2</a></td>
+                  <td>Write individual data of Tool management data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../ToolMng/cnc_regmagazine.html">cnc_regmagazine</a></td>
+                  <td>New registration of Magazine management data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../ToolMng/cnc_delmagazine.html">cnc_delmagazine</a></td>
+                  <td>Delete Magazine management data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../ToolMng/cnc_rdmagazine.html">cnc_rdmagazine</a></td>
+                  <td>Read Magazine management data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../ToolMng/cnc_wrmagazine.html">cnc_wrmagazine</a></td>
+                  <td>Write individual data of Magazine management data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../ToolMng/cnc_wrtoolgeom_tlm.html">cnc_wrtoolgeom_tlm</a></td>
+                  <td>Write tool geometry data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../ToolMng/cnc_rdtoolgeom_tlm.html">cnc_rdtoolgeom_tlm</a></td>
+                  <td>Read tool geometry data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../ToolMng/cnc_btlfpotsrh.html">cnc_btlfpotsrh</a></td>
+                  <td>Search empty pot for oversize tool</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../ToolMng/cnc_rdmag_property.html">cnc_rdmag_property</a></td>
+                  <td>Read the magazine property data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../ToolMng/cnc_wrmag_property.html">cnc_wrmag_property</a></td>
+                  <td>Write the magazine property data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../ToolMng/cnc_delmag_property.html">cnc_delmag_property</a></td>
+                  <td>Delete the magazine property data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../ToolMng/cnc_rdpot_property.html">cnc_rdpot_property</a></td>
+                  <td>Read the pot property data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../ToolMng/cnc_wrpot_property.html">cnc_wrpot_property</a></td>
+                  <td>Write the pot property data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../ToolMng/cnc_delpot_property.html">cnc_delpot_property</a></td>
+                  <td>Delete the pot property data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../ToolMng/cnc_tool_move.html">cnc_tool_move</a></td>
+                  <td>Move of tool management data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../ToolMng/cnc_reg_toolstrage.html">cnc_reg_toolstrage</a></td>
+                  <td>Registration and release of Tool storage position</td>
+               </tr>
+            </tbody>
+         </table>
+         <h3 class="label"><a name="#All">CNC: Function related to tool geometry size data</a></h3>
+         <table border="1" cellpadding="5" cols="2" frame="below" rules="rows">
+            <colgroup align="left" valign="top" width="30%"></colgroup>
+            <colgroup align="left" valign="top" width="70%"></colgroup>
+            <thead>
+               <tr>
+                  <th>Function Name</th>
+                  <th>Brief description</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+                  <td class="func"><a target="_parent" href="../ToolGeom/cnc_rdtlgeomsize_ext.html">cnc_rdtlgeomsize_ext</a></td>
+                  <td>Read the tool geometry size data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../ToolGeom/cnc_wrtlgeomsize_ext.html">cnc_wrtlgeomsize_ext</a></td>
+                  <td>Write the tool geometry size data</td>
+               </tr>
+            </tbody>
+         </table>
+         <h3 class="label"><a name="#All">CNC: Function related to history data</a></h3>
+         <table border="1" cellpadding="5" cols="2" frame="below" rules="rows">
+            <colgroup align="left" valign="top" width="30%"></colgroup>
+            <colgroup align="left" valign="top" width="70%"></colgroup>
+            <thead>
+               <tr>
+                  <th>Function Name</th>
+                  <th>Brief description</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+                  <td class="func"><a target="_parent" href="../History/cnc_stopophis.html">cnc_stopophis</a></td>
+                  <td>Stop logging operation history data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../History/cnc_startophis.html">cnc_startophis</a></td>
+                  <td>Restart logging operation history data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../History/cnc_rdophisno.html">cnc_rdophisno</a></td>
+                  <td>Read number of operation history data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../History/cnc_rdophistry.html">cnc_rdophistry</a></td>
+                  <td>Read operation history data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../History/cnc_rdophistry2.html">cnc_rdophistry2</a></td>
+                  <td>Read operation history data (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../History/cnc_rdophistry4.html">cnc_rdophistry4</a></td>
+                  <td>Read operation history data (4)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../History/cnc_clearophis.html">cnc_clearophis</a></td>
+                  <td>Clear operation history data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../History/cnc_rdhissgnl.html">cnc_rdhissgnl</a></td>
+                  <td>Read signals related operation history</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../History/cnc_wrhissgnl.html">cnc_wrhissgnl</a></td>
+                  <td>Write signals related operation history</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../History/cnc_rdhissgnl2.html">cnc_rdhissgnl2</a></td>
+                  <td>Read signals related operation history(2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../History/cnc_wrhissgnl2.html">cnc_wrhissgnl2</a></td>
+                  <td>Write signals related operation history(2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../History/cnc_rdhissgnl3.html">cnc_rdhissgnl3</a></td>
+                  <td>Read signals related operation history(3)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../History/cnc_wrhissgnl3.html">cnc_wrhissgnl3</a></td>
+                  <td>Write signals related operation history(3)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../History/cnc_wrkeyhistry.html">cnc_wrkeyhistry</a></td>
+                  <td>Record of key stroke</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../History/cnc_rdalmhisno.html">cnc_rdalmhisno</a></td>
+                  <td>Read number of alarm history data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../History/cnc_rdalmhistry.html">cnc_rdalmhistry</a></td>
+                  <td>Read alarm history data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../History/cnc_rdalmhistry2.html">cnc_rdalmhistry2</a></td>
+                  <td>Read alarm history data (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../History/cnc_rdalmhistry5.html">cnc_rdalmhistry5</a></td>
+                  <td>Read alarm history data (5)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../History/cnc_stopomhis.html">cnc_stopomhis</a></td>
+                  <td>Stop logging external operator's message history data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../History/cnc_startomhis.html">cnc_startomhis</a></td>
+                  <td>Restart logging external operator's message history data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../History/cnc_rdomhisinfo.html">cnc_rdomhisinfo</a></td>
+                  <td>Read external operator's message history data information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../History/cnc_rdomhisno.html">cnc_rdomhisno</a></td>
+                  <td>Read number of external operator's message history data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../History/cnc_rdomhistry.html">cnc_rdomhistry</a></td>
+                  <td>Read external operator's message history data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../History/cnc_rdomhistry2.html">cnc_rdomhistry2</a></td>
+                  <td>Read external operator's message history data (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../History/cnc_clearomhis.html">cnc_clearomhis</a></td>
+                  <td>Clear external operator's message history data</td>
+               </tr>
+            </tbody>
+         </table>
+         <h3 class="label"><a name="#All">CNC: Function related to servo/spindle</a></h3>
+         <table border="1" cellpadding="5" cols="2" frame="below" rules="rows">
+            <colgroup align="left" valign="top" width="30%"></colgroup>
+            <colgroup align="left" valign="top" width="70%"></colgroup>
+            <thead>
+               <tr>
+                  <th>Function Name</th>
+                  <th>Brief description</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Motor/cnc_rdloopgain.html">cnc_rdloopgain</a></td>
+                  <td>Read loop gain for servo adjustment</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Motor/cnc_rdcurrent.html">cnc_rdcurrent</a></td>
+                  <td>Read real current for servo adjustment</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Motor/cnc_rdsrvspeed.html">cnc_rdsrvspeed</a></td>
+                  <td>Read real speed for servo adjustment</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Motor/cnc_rdnspdl.html">cnc_rdnspdl</a></td>
+                  <td>Read number of spindle</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Motor/cnc_rdopmode.html">cnc_rdopmode</a></td>
+                  <td>Read operation mode for spindle setting</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Motor/cnc_rdposerrs.html">cnc_rdposerrs</a></td>
+                  <td>Read position deflection S for spindle adjustment</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Motor/cnc_rdposerrs2.html">cnc_rdposerrs2</a></td>
+                  <td>Read position deflection S1,S2 for spindle adjustment(synchronous control mode)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Motor/cnc_rdposerrz.html">cnc_rdposerrz</a></td>
+                  <td>Read position deflection Z of tapping axis for spindle adjustment(rigid tapping mode)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Motor/cnc_rdsynerrsy.html">cnc_rdsynerrsy</a></td>
+                  <td>Read synchronous error for spindle adjustment(synchronous control mode)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Motor/cnc_rdsynerrrg.html">cnc_rdsynerrrg</a></td>
+                  <td>Read synchronous error for spindle adjustment(rigid tapping mode)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Motor/cnc_rdspdlalm.html">cnc_rdspdlalm</a></td>
+                  <td>Read spindle alarm for spindle monitor</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Motor/cnc_rdctrldi.html">cnc_rdctrldi</a></td>
+                  <td>Read control input signal for spindle monitor</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Motor/cnc_rdctrldo.html">cnc_rdctrldo</a></td>
+                  <td>Read control output signal for spindle monitor</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Motor/cnc_rdservoid2.html">cnc_rdservoid2</a></td>
+                  <td>Read servo id info(2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Motor/cnc_rdspindleid2.html">cnc_rdspindleid2</a></td>
+                  <td>Read spindle id info(2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Motor/cnc_rdfromservoid2.html">cnc_rdfromservoid2</a></td>
+                  <td>Read from servo id info(2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Motor/cnc_rdfromspindleid2.html">cnc_rdfromspindleid2</a></td>
+                  <td>Read from spindle id info(2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Motor/cnc_wrfromservoid2.html">cnc_wrfromservoid2</a></td>
+                  <td>Write from servo id info(2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Motor/cnc_wrfromspindleid2.html">cnc_wrfromspindleid2</a></td>
+                  <td>Write from spindle id info(2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Motor/cnc_loadtorq.html">cnc_loadtorq</a></td>
+                  <td>Read abnormal load torq data</td>
+               </tr>
+            </tbody>
+         </table>
+         <h3 class="label"><a name="#All">CNC: Function related to waveform diagnosis</a></h3>
+         <table border="1" cellpadding="5" cols="2" frame="below" rules="rows">
+            <colgroup align="left" valign="top" width="30%"></colgroup>
+            <colgroup align="left" valign="top" width="70%"></colgroup>
+            <thead>
+               <tr>
+                  <th>Function Name</th>
+                  <th>Brief description</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Wave/cnc_rdwaveprm.html">cnc_rdwaveprm</a></td>
+                  <td>Read waveform diagnosis parameter</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Wave/cnc_rdwaveprm2.html">cnc_rdwaveprm2</a></td>
+                  <td>Read waveform diagnosis parameter (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Wave/cnc_wrwaveprm.html">cnc_wrwaveprm</a></td>
+                  <td>Write waveform diagnosis parameter</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Wave/cnc_wrwaveprm2.html">cnc_wrwaveprm2</a></td>
+                  <td>Write waveform diagnosis parameter (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Wave/cnc_wavestart.html">cnc_wavestart</a></td>
+                  <td>Start sampling waveform diagnosis data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Wave/cnc_wavestop.html">cnc_wavestop</a></td>
+                  <td>Stop sampling waveform diagnosis data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Wave/cnc_wavestat.html">cnc_wavestat</a></td>
+                  <td>Read sampling status of waveform diagnosis data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Wave/cnc_rdwavedata.html">cnc_rdwavedata</a></td>
+                  <td>Read waveform diagnosis data</td>
+               </tr>
+            </tbody>
+         </table>
+         <h3 class="label"><a name="#All">CNC: Function related to PUNCH PRESS</a></h3>
+         <table border="1" cellpadding="5" cols="2" frame="below" rules="rows">
+            <colgroup align="left" valign="top" width="30%"></colgroup>
+            <colgroup align="left" valign="top" width="70%"></colgroup>
+            <thead>
+               <tr>
+                  <th>Function Name</th>
+                  <th>Brief description</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Punch/cnc_rdtlctldata.html">cnc_rdtlctldata</a></td>
+                  <td>Read tool control data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Punch/cnc_wrtlctldata.html">cnc_wrtlctldata</a></td>
+                  <td>Write tool control data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Punch/cnc_rdtoolinfo.html">cnc_rdtoolinfo</a></td>
+                  <td>Read tool information data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Punch/cnc_rdtooldata.html">cnc_rdtooldata</a></td>
+                  <td>Read tool data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Punch/cnc_wrtooldata.html">cnc_wrtooldata</a></td>
+                  <td>Write tool data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Punch/cnc_rdmultitldt.html">cnc_rdmultitldt</a></td>
+                  <td>Read multiple tool data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Punch/cnc_wrmultitldt.html">cnc_wrmultitldt</a></td>
+                  <td>Write multiple tool data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Punch/cnc_rdsafetyzone.html">cnc_rdsafetyzone</a></td>
+                  <td>Read safety zone data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Punch/cnc_wrsafetyzone.html">cnc_wrsafetyzone</a></td>
+                  <td>Write safety zone data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Punch/cnc_rdtoolzone.html">cnc_rdtoolzone</a></td>
+                  <td>Read tool zone data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Punch/cnc_wrtoolzone.html">cnc_wrtoolzone</a></td>
+                  <td>Write tool zone data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Punch/cnc_rdacttlzone.html">cnc_rdacttlzone</a></td>
+                  <td>Read actual tool zone data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Punch/cnc_rdsetzone.html">cnc_rdsetzone</a></td>
+                  <td>Read number of automatic setting zone</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Punch/cnc_wrsetzone.html">cnc_wrsetzone</a></td>
+                  <td>Write number of automatic setting zone</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Punch/cnc_rd1punchtl_ex.html">cnc_rd1punchtl_ex</a></td>
+                  <td>Get tool data(Registration number specification)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Punch/cnc_rd2punchtl_ex.html">cnc_rd2punchtl_ex</a></td>
+                  <td>Get tool data(Tool number specification)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Punch/cnc_wrpunchtl_ex.html">cnc_wrpunchtl_ex</a></td>
+                  <td>Get tool data(Registration number specification)</td>
+               </tr>
+            </tbody>
+         </table>
+         <h3 class="label"><a name="#All">CNC: Function related to LASER</a></h3>
+         <table border="1" cellpadding="5" cols="2" frame="below" rules="rows">
+            <colgroup align="left" valign="top" width="30%"></colgroup>
+            <colgroup align="left" valign="top" width="70%"></colgroup>
+            <thead>
+               <tr>
+                  <th>Function Name</th>
+                  <th>Brief description</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_rdpscdproc.html">cnc_rdpscdproc</a></td>
+                  <td>Read cutting condition file(cutting data)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_wrpscdproc.html">cnc_wrpscdproc</a></td>
+                  <td>Write cutting condition file(cutting data)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_rdpscdpirc.html">cnc_rdpscdpirc</a></td>
+                  <td>Read cutting condition file(piercing data)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_wrpscdpirc.html">cnc_wrpscdpirc</a></td>
+                  <td>Write cutting condition file(piercing data)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_rdpscdedge.html">cnc_rdpscdedge</a></td>
+                  <td>Read cutting condition file(edge cutting data)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_wrpscdedge.html">cnc_wrpscdedge</a></td>
+                  <td>Write cutting condition file(edge cutting data)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_rdpscdslop.html">cnc_rdpscdslop</a></td>
+                  <td>Read cutting condition file(slope control data)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_wrpscdslop.html">cnc_wrpscdslop</a></td>
+                  <td>Write cutting condition file(slope control data)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_rdlpwrdty.html">cnc_rdlpwrdty</a></td>
+                  <td>Read duty data for power control</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_wrlpwrdty.html">cnc_wrlpwrdty</a></td>
+                  <td>Write duty data for power control</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_rdlpwrdat.html">cnc_rdlpwrdat</a></td>
+                  <td>Read laser power data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_rdlpwrcpst.html">cnc_rdlpwrcpst</a></td>
+                  <td>Read power compensation coefficient</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_wrlpwrcpst.html">cnc_wrlpwrcpst</a></td>
+                  <td>Write power compensation coefficient</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_rdlagslt.html">cnc_rdlagslt</a></td>
+                  <td>Read assist gas selection</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_wrlagslt.html">cnc_wrlagslt</a></td>
+                  <td>Write assist gas selection</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_rdlagst.html">cnc_rdlagst</a></td>
+                  <td>Read assist gas flow</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_wrlagst.html">cnc_wrlagst</a></td>
+                  <td>Write assist gas flow</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_rdledgprc.html">cnc_rdledgprc</a></td>
+                  <td>Read laser power for contouring</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_wrledgprc.html">cnc_wrledgprc</a></td>
+                  <td>Write laser power for contouring</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_rdlprcprc.html">cnc_rdlprcprc</a></td>
+                  <td>Read laser power for piercing</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_wrlprcprc.html">cnc_wrlprcprc</a></td>
+                  <td>Write laser power for piercing</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_rdlcmddat.html">cnc_rdlcmddat</a></td>
+                  <td>Read command data of laser</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_rdldsplc.html">cnc_rdldsplc</a></td>
+                  <td>Read command data of reference displace</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_wrldsplc.html">cnc_wrldsplc</a></td>
+                  <td>Write command data of reference displace</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_rdlerrz.html">cnc_rdlerrz</a></td>
+                  <td>Read error of Z-axis tracing</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_rdlactnum.html">cnc_rdlactnum</a></td>
+                  <td>Read active cutting number/piercing number/slope number</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_rdlcmmt.html">cnc_rdlcmmt</a></td>
+                  <td>Read comment data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_rdlpwrslt.html">cnc_rdlpwrslt</a></td>
+                  <td>Read laser power selection</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_wrlpwrslt.html">cnc_wrlpwrslt</a></td>
+                  <td>Write laser power selection</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_rdlpwrctrl.html">cnc_rdlpwrctrl</a></td>
+                  <td>Read laser power control</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_wrlpwrctrl.html">cnc_wrlpwrctrl</a></td>
+                  <td>Write laser power control</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_rdpwofsthis.html">cnc_rdpwofsthis</a></td>
+                  <td>Read the history data of power compensation coefficient</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_rdmngtime.html">cnc_rdmngtime</a></td>
+                  <td>Read the management time</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_wrmngtime.html">cnc_wrmngtime</a></td>
+                  <td>Write the management time</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_rddischarge.html">cnc_rddischarge</a></td>
+                  <td>Read data related to electrical discharge at power compensation ends</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_rddischrgalm.html">cnc_rddischrgalm</a></td>
+                  <td>Read alarm history data related to electrical discharge</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_rdlppfbdt.html">cnc_rdlppfbdt</a></td>
+                  <td></td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_wrlppfbdt.html">cnc_wrlppfbdt</a></td>
+                  <td></td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_rdpscdedge2.html">cnc_rdpscdedge2</a></td>
+                  <td>Read cutting condition file(edge cutting data)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_wrpscdedge2.html">cnc_wrpscdedge2</a></td>
+                  <td>Write cutting condition file(edge cutting data)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_rdlpscdpwrctl.html">cnc_rdlpscdpwrctl</a></td>
+                  <td>Read cutting condition file(power control data)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_wrlpscdpwrctl.html">cnc_wrlpscdpwrctl</a></td>
+                  <td>Write cutting condition file(power control data)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_rdldsplc2.html">cnc_rdldsplc2</a></td>
+                  <td>Read command data of reference displace</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Laser/cnc_wrldsplc2.html">cnc_wrldsplc2</a></td>
+                  <td>Write command data of reference displace</td>
+               </tr>
+            </tbody>
+         </table>
+         <h3 class="label"><a name="#All">CNC: Function related to WIRE CUT</a></h3>
+         <table border="1" cellpadding="5" cols="2" frame="below" rules="rows">
+            <colgroup align="left" valign="top" width="30%"></colgroup>
+            <colgroup align="left" valign="top" width="70%"></colgroup>
+            <thead>
+               <tr>
+                  <th>Function Name</th>
+                  <th>Brief description</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Wire/cnc_setvrtclpos.html">cnc_setvrtclpos</a></td>
+                  <td>Set wire vertical position</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Wire/cnc_rdmsptype.html">cnc_rdmsptype</a></td>
+                  <td>Read the measured point type data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Wire/cnc_wrmsptype.html">cnc_wrmsptype</a></td>
+                  <td>Write the measured point type data</td>
+               </tr>
+            </tbody>
+         </table>
+         <h3 class="label"><a name="#All">CNC: Function Reference related to data server,DNC1,DNC2,OSI-Ethernet</a></h3>
+         <table border="1" cellpadding="5" cols="2" frame="below" rules="rows">
+            <colgroup align="left" valign="top" width="30%"></colgroup>
+            <colgroup align="left" valign="top" width="70%"></colgroup>
+            <thead>
+               <tr>
+                  <th>Function Name</th>
+                  <th>Brief description</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dtsvftpget.html">cnc_dtsvftpget</a></td>
+                  <td>Transfer file from host to DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dtsvftpput.html">cnc_dtsvftpput</a></td>
+                  <td>Transfer file from DATA SERVER to host</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dtsvftpstat.html">cnc_dtsvftpstat</a></td>
+                  <td>Read status of file transfer between host and DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dtsvrdpgdir.html">cnc_dtsvrdpgdir</a></td>
+                  <td>Read directory in DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dtsvdelete.html">cnc_dtsvdelete</a></td>
+                  <td>Delete file in DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dtsvdownload.html">cnc_dtsvdownload</a></td>
+                  <td>Download from DATA SERVER to CNC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dtsvupload.html">cnc_dtsvupload</a></td>
+                  <td>Upload from CNC to DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dtsvcnclupdn.html">cnc_dtsvcnclupdn</a></td>
+                  <td>Cancel upload/download between DATA SERVER and CNC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dtsvupdnstat.html">cnc_dtsvupdnstat</a></td>
+                  <td>Read upload/download status between DATA SERVER and CNC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dtsvgetdncpg.html">cnc_dtsvgetdncpg</a></td>
+                  <td>Get DNC operation file name in DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dtsvsetdncpg.html">cnc_dtsvsetdncpg</a></td>
+                  <td>Set DNC operation file name in DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dtsvrdset.html">cnc_dtsvrdset</a></td>
+                  <td>Read setting data for DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dtsvwrset.html">cnc_dtsvwrset</a></td>
+                  <td>Write setting data for DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dtsvchkdsk.html">cnc_dtsvchkdsk</a></td>
+                  <td>Check hard disk on DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dtsvhdformat.html">cnc_dtsvhdformat</a></td>
+                  <td>Format hard disk on DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dtsvsavecram.html">cnc_dtsvsavecram</a></td>
+                  <td>Save I/F buffer for DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dtsvrdcram.html">cnc_dtsvrdcram</a></td>
+                  <td>Read I/F buffer for DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dtsvmntinfo.html">cnc_dtsvmntinfo</a></td>
+                  <td>Read maintenance information for DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dtsvgetmode.html">cnc_dtsvgetmode</a></td>
+                  <td>Get mode of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dtsvsetmode.html">cnc_dtsvsetmode</a></td>
+                  <td>Set mode of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dtsvrderrmsg.html">cnc_dtsvrderrmsg</a></td>
+                  <td>Read error message for DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dtsvwrfile.html">cnc_dtsvwrfile</a></td>
+                  <td>Transfer file from personal computer to DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dtsvrdfile.html">cnc_dtsvrdfile</a></td>
+                  <td>Transfer file from DATA SERVER to personal computer</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_rddncfname.html">cnc_rddncfname</a></td>
+                  <td>Read DNC file name for DNC1, DNC2, OSI-Ethernet</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_wrdncfname.html">cnc_wrdncfname</a></td>
+                  <td>Write DNC file name for DNC1, DNC2 ,OSI-Ethernet</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_rdcomparam.html">cnc_rdcomparam</a></td>
+                  <td>Read communication parameter for DNC1, DNC2 , OSI-Ethernet</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_wrcomparam.html">cnc_wrcomparam</a></td>
+                  <td>Write communication parameter for DNC1, DNC2, OSI-Ethernet</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_rdcomlogmsg.html">cnc_rdcomlogmsg</a></td>
+                  <td>Read logging message for DNC2</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_rdcomopemsg.html">cnc_rdcomopemsg</a></td>
+                  <td>Read operator's message for DNC1,DNC2</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_rdrcvmsg.html">cnc_rdrcvmsg</a></td>
+                  <td>Read receipt message for OSI-Ethernet</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_rdsndmsg.html">cnc_rdsndmsg</a></td>
+                  <td>Read sending message for OSI-Ethernet</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_sendmessage.html">cnc_sendmessage</a></td>
+                  <td>Send message for OSI-Ethernet</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_clrmsgbuff.html">cnc_clrmsgbuff</a></td>
+                  <td>Clear message buffer for OSI-Ethernet</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_rdrcvstat.html">cnc_rdrcvstat</a></td>
+                  <td>Read receipt status of message for OSI-Ethernet</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/etb_rdparam.html">etb_rdparam</a></td>
+                  <td>Get Ethernet board parameter</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/etb_wrparam.html">etb_wrparam</a></td>
+                  <td>Set Ethernet board parameter</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/etb_rderrmsg.html">etb_rderrmsg</a></td>
+                  <td>Get error message of Ethernet board</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_rdmode.html">ds_rdmode</a></td>
+                  <td>Get DATA SERVER mode</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_wrmode.html">ds_wrmode</a></td>
+                  <td>Set DATA SERVER mode</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_rdhddinfo.html">ds_rdhddinfo</a></td>
+                  <td>Get hard disk information of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_rdhdddir.html">ds_rdhdddir</a></td>
+                  <td>Get hard disk file list of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_delhddfile.html">ds_delhddfile</a></td>
+                  <td>Delete hard disk file of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_copyhddfile.html">ds_copyhddfile</a></td>
+                  <td>Copy hard disk file of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_renhddfile.html">ds_renhddfile</a></td>
+                  <td>Change of hard disk file name of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_puthddfile.html">ds_puthddfile</a></td>
+                  <td>PUT of hard disk file of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_mputhddfile.html">ds_mputhddfile</a></td>
+                  <td>MPUT of hard disk file of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_rdhostinfo.html">ds_rdhostinfo</a></td>
+                  <td>Get host login directory information of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_rdhostdir.html">ds_rdhostdir</a></td>
+                  <td>Get host file list of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_rdhostdir2.html">ds_rdhostdir2</a></td>
+                  <td>Get host file list of DATA SERVER (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_delhostfile.html">ds_delhostfile</a></td>
+                  <td>Delete host file of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_gethostfile.html">ds_gethostfile</a></td>
+                  <td>GET of host file of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_mgethostfile.html">ds_mgethostfile</a></td>
+                  <td>MGET of host file of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_rdresult.html">ds_rdresult</a></td>
+                  <td>Get execution result of function of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_cancel.html">ds_cancel</a></td>
+                  <td>Stop function for DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_rdncfile.html">ds_rdncfile</a></td>
+                  <td>Input of NC file in DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_rdncfile2.html">ds_rdncfile2</a></td>
+                  <td>Input of NC file in DATA SERVER (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_wrncfile.html">ds_wrncfile</a></td>
+                  <td>Output of NC file in DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_rdfile.html">ds_rdfile</a></td>
+                  <td>Input of NC file in DATA SERVER (DATA SERVER -&gt; PC)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_wrfile.html">ds_wrfile</a></td>
+                  <td>Output of NC file in DATA SERVER (PC -&gt; DATA SERVER)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_rddnchddfile.html">ds_rddnchddfile</a></td>
+                  <td>Get hard disk file name of DATA SERVER for DNC operation</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_wrdnchddfile.html">ds_wrdnchddfile</a></td>
+                  <td>Set hard disk file name of DATA SERVER for DNC operation</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_rddnchostfile.html">ds_rddnchostfile</a></td>
+                  <td>Get host file name of DATA SERVER for DNC operation</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_wrdnchostfile.html">ds_wrdnchostfile</a></td>
+                  <td>Set host file name of DATA SERVER for DNC operation</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_rdhostno.html">ds_rdhostno</a></td>
+                  <td>Get connected host of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_wrhostno.html">ds_wrhostno</a></td>
+                  <td>Set connects host of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_rdmntinfo.html">ds_rdmntinfo</a></td>
+                  <td>Get maintenance information of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_checkhdd.html">ds_checkhdd</a></td>
+                  <td>Check of hard disk of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_formathdd.html">ds_formathdd</a></td>
+                  <td>Format of hard disk of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_makehdddir.html">ds_makehdddir</a></td>
+                  <td>Make hard disk directory of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_delhdddir.html">ds_delhdddir</a></td>
+                  <td>Delete hard disk directory of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_chghdddir.html">ds_chghdddir</a></td>
+                  <td>Change of current directory of hard disk of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_lputhddfile.html">ds_lputhddfile</a></td>
+                  <td>LIST-PUT of hard disk file of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_ldelhddfile.html">ds_ldelhddfile</a></td>
+                  <td>LIST-DELETE of hard disk file of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_lgethostfile.html">ds_lgethostfile</a></td>
+                  <td>LIST-GET of host file of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_rdm198hdddir.html">ds_rdm198hdddir</a></td>
+                  <td>Get directory of DATA SERVER for M198 operation</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_wrm198hdddir.html">ds_wrm198hdddir</a></td>
+                  <td>Set directory of DATA SERVER for M198 operation</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_rdm198host.html">ds_rdm198host</a></td>
+                  <td>Get connected host of DATA SERVER for M198 operation</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_wrm198host.html">ds_wrm198host</a></td>
+                  <td>Set connects host of DATA SERVER for M198 operation</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_searchword.html">ds_searchword</a></td>
+                  <td>Search string in NC program in DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_searchresult.html">ds_searchresult</a></td>
+                  <td>Get result of string search in NC program in DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_dwnstart.html">ds_dwnstart</a></td>
+                  <td>Start downloading to DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_download.html">ds_download</a></td>
+                  <td>Download to DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/ds_dwnend.html">ds_dwnend</a></td>
+                  <td>End of downloading to DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/eth_rdparam.html">eth_rdparam</a></td>
+                  <td>Get the parameter of Ethernet</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/eth_wrparam.html">eth_wrparam</a></td>
+                  <td>Set the parameter of Ethernet</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/eth_rddsmode.html">eth_rddsmode</a></td>
+                  <td>Get the mode of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/eth_wrdsmode.html">eth_wrdsmode</a></td>
+                  <td>Set the mode of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/eth_rddsstate.html">eth_rddsstate</a></td>
+                  <td>Get the maintenance information on DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/eth_rdhost.html">eth_rdhost</a></td>
+                  <td>Get the connection host number of Ethernet</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/eth_wrhost.html">eth_wrhost</a></td>
+                  <td>Set the connection host number of Ethernet</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/eth_rddsm198dir.html">eth_rddsm198dir</a></td>
+                  <td>Get the folder for M198 operation of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/eth_wrdsm198dir.html">eth_wrdsm198dir</a></td>
+                  <td>Set the folder for M198 operation of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/eth_rddsm198host.html">eth_rddsm198host</a></td>
+                  <td>Get the host for M198 operation of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/eth_wrdsm198host.html">eth_wrdsm198host</a></td>
+                  <td>Set the host for M198 operation of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/eth_rddsformat.html">eth_rddsformat</a></td>
+                  <td>Get the format form of the ATA card of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/eth_dsformat.html">eth_dsformat</a></td>
+                  <td>Format of the ATA card of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/eth_dschkdsk.html">eth_dschkdsk</a></td>
+                  <td>Check disk of the ATA card of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_rddsdncfile.html">cnc_rddsdncfile</a></td>
+                  <td>Get file for DNC operation</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_wrdsdncfile.html">cnc_wrdsdncfile</a></td>
+                  <td>Set file for DNC operation</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_rddsdevinfo.html">cnc_rddsdevinfo</a></td>
+                  <td>Get memory device information on DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_rddsdir.html">cnc_rddsdir</a></td>
+                  <td>Get current folder</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_rddsfile.html">cnc_rddsfile</a></td>
+                  <td>Get file list information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dsmkdir.html">cnc_dsmkdir</a></td>
+                  <td>Make folder</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dsrmdir.html">cnc_dsrmdir</a></td>
+                  <td>Delete folder</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dsremove.html">cnc_dsremove</a></td>
+                  <td>Delete file</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dschdir.html">cnc_dschdir</a></td>
+                  <td>Change current foledr</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dsrename.html">cnc_dsrename</a></td>
+                  <td>Change folder name or file name</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dscopyfile.html">cnc_dscopyfile</a></td>
+                  <td>Copy file of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dsget_req.html">cnc_dsget_req</a></td>
+                  <td>Start GET of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dsput_req.html">cnc_dsput_req</a></td>
+                  <td>Start PUT of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dsmget_req.html">cnc_dsmget_req</a></td>
+                  <td>Start MGET of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dsmput_req.html">cnc_dsmput_req</a></td>
+                  <td>Start MPUT of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dslistget_req.html">cnc_dslistget_req</a></td>
+                  <td>Start List-GET of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dslistput_req.html">cnc_dslistput_req</a></td>
+                  <td>Start List-PUT of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dslistdel_req.html">cnc_dslistdel_req</a></td>
+                  <td>Start List-DEL of DATA SERVER function</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dsftpstat.html">cnc_dsftpstat</a></td>
+                  <td>Read file transfer result of DATA SERVER</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Data/cnc_dsftpcancel.html">cnc_dsftpcancel</a></td>
+                  <td>Stop file transfer of DATA SERVER</td>
+               </tr>
+            </tbody>
+         </table>
+         <h3 class="label"><a name="#All">CNC: Function Reference related to servo learning data</a></h3>
+         <table border="1" cellpadding="5" cols="2" frame="below" rules="rows">
+            <colgroup align="left" valign="top" width="30%"></colgroup>
+            <colgroup align="left" valign="top" width="70%"></colgroup>
+            <thead>
+               <tr>
+                  <th>Function Name</th>
+                  <th>Brief description</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Servo/cnc_svdtstartrd.html">cnc_svdtstartrd</a></td>
+                  <td>Start of reading servo learning data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Servo/cnc_svdtrddata.html">cnc_svdtrddata</a></td>
+                  <td>Reading of the data from I/F buffer for the servo learning data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Servo/cnc_svdtendrd.html">cnc_svdtendrd</a></td>
+                  <td>End of reading servo learning data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Servo/cnc_svdtstartwr.html">cnc_svdtstartwr</a></td>
+                  <td>Start of writing servo learning data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Servo/cnc_svdtwrdata.html">cnc_svdtwrdata</a></td>
+                  <td>Writing of the data to I/F buffer for the servo learning data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Servo/cnc_svdtendwr.html">cnc_svdtendwr</a></td>
+                  <td>End of writing servo learning data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Servo/cnc_svdtstopexec.html">cnc_svdtstopexec</a></td>
+                  <td>Stop of reading/writing of the servo learning data</td>
+               </tr>
+            </tbody>
+         </table>
+         <h3 class="label"><a name="#All">CNC: Function related to Unsolicited messaging function</a></h3>
+         <table border="1" cellpadding="5" cols="2" frame="below" rules="rows">
+            <colgroup align="left" valign="top" width="30%"></colgroup>
+            <colgroup align="left" valign="top" width="70%"></colgroup>
+            <thead>
+               <tr>
+                  <th>Function Name</th>
+                  <th>Brief description</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+                  <td class="func"><a target="_parent" href="../UnSolic/cnc_wrunsolicprm.html">cnc_wrunsolicprm</a></td>
+                  <td>Set the unsolicited messaging parameters</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../UnSolic/cnc_wrunsolicprm2.html">cnc_wrunsolicprm2</a></td>
+                  <td>Set the unsolicited messaging parameters (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../UnSolic/cnc_rdunsolicprm.html">cnc_rdunsolicprm</a></td>
+                  <td>Get the unsolicited messaging parameters </td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../UnSolic/cnc_rdunsolicprm2.html">cnc_rdunsolicprm2</a></td>
+                  <td>Get the unsolicited messaging parameters (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../UnSolic/cnc_unsolicstart.html">cnc_unsolicstart</a></td>
+                  <td>Initiate the unsolicited messaging session</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../UnSolic/cnc_unsolicstop.html">cnc_unsolicstop</a></td>
+                  <td>Terminate the unsolicited messaging session </td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../UnSolic/cnc_rdunsolicmsg.html">cnc_rdunsolicmsg</a></td>
+                  <td>Read the unsolicited messaging data </td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../UnSolic/cnc_rdunsolicmsg2.html">cnc_rdunsolicmsg2</a></td>
+                  <td>Read the unsolicited messaging data (2)</td>
+               </tr>
+            </tbody>
+         </table>
+         <h3 class="label"><a name="#All">PMC: Function related to PMC</a></h3>
+         <table border="1" cellpadding="5" cols="2" frame="below" rules="rows">
+            <colgroup align="left" valign="top" width="30%"></colgroup>
+            <colgroup align="left" valign="top" width="70%"></colgroup>
+            <thead>
+               <tr>
+                  <th>Function Name</th>
+                  <th>Brief description</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Pmc/pmc_rdmsg.html">pmc_rdmsg</a></td>
+                  <td>Read message from PMC to MMC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Pmc/pmc_wrmsg.html">pmc_wrmsg</a></td>
+                  <td>Write message from MMC to PMC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Pmc/pmc_crdmsg.html">pmc_crdmsg</a></td>
+                  <td>Read message from PMC to MMC (conditional)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Pmc/pmc_cwrmsg.html">pmc_cwrmsg</a></td>
+                  <td>Write message from MMC to PMC (conditional)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Pmc/pmc_rdpmcrng.html">pmc_rdpmcrng</a></td>
+                  <td>Read PMC data(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Pmc/pmc_wrpmcrng.html">pmc_wrpmcrng</a></td>
+                  <td>Write PMC data(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Pmc/pmc_rdkpm.html">pmc_rdkpm</a></td>
+                  <td>Read data from extended backup memory</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Pmc/pmc_wrkpm.html">pmc_wrkpm</a></td>
+                  <td>Write data to extended backup memory</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Pmc/pmc_rdkpm2.html">pmc_rdkpm2</a></td>
+                  <td>Read data from extended backup memory(2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Pmc/pmc_wrkpm2.html">pmc_wrkpm2</a></td>
+                  <td>Write data to extended backup memory(2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Pmc/pmc_kpmsiz.html">pmc_kpmsiz</a></td>
+                  <td>Read maximum size of extended backup memory</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Pmc/pmc_rdpmcinfo.html">pmc_rdpmcinfo</a></td>
+                  <td>Read PMC data information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Pmc/pmc_rdcntldata.html">pmc_rdcntldata</a></td>
+                  <td>Read control data of PMC data table</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Pmc/pmc_wrcntldata.html">pmc_wrcntldata</a></td>
+                  <td>Write control data of PMC data table</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Pmc/pmc_rdcntlgrp.html">pmc_rdcntlgrp</a></td>
+                  <td>Read the sum total group of control data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Pmc/pmc_wrcntlgrp.html">pmc_wrcntlgrp</a></td>
+                  <td>Write the sum total group of control data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Pmc/pmc_set_timer_type.html">pmc_set_timer_type</a></td>
+                  <td>Set the PMC timer accuracy</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Pmc/pmc_get_timer_type.html">pmc_get_timer_type</a></td>
+                  <td>Get the PMC timer accuracy</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Pmc/pmc_getdtailerr.html">pmc_getdtailerr</a></td>
+                  <td>Get detail error for PMC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Pmc/pmc_rdalmmsg.html">pmc_rdalmmsg</a></td>
+                  <td>Read PMC alarm messages</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Pmc/pmc_rdpmctitle.html">pmc_rdpmctitle</a></td>
+                  <td>Read PMC title data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Pmc/pmc_rdprmstart.html">pmc_rdprmstart</a></td>
+                  <td>Start uploading PMC parameter</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Pmc/pmc_rdpmcparam.html">pmc_rdpmcparam</a></td>
+                  <td>Upload PMC parameter</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Pmc/pmc_rdprmend.html">pmc_rdprmend</a></td>
+                  <td>End of uploading PMC parameter</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Pmc/pmc_wrprmstart.html">pmc_wrprmstart</a></td>
+                  <td>Start downloading PMC parameter</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Pmc/pmc_wrpmcparam.html">pmc_wrpmcparam</a></td>
+                  <td>Download PMC parameter</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Pmc/pmc_wrprmend.html">pmc_wrprmend</a></td>
+                  <td>End of downloading PMC parameter</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Pmc/pmc_select_pmc_unit.html">pmc_select_pmc_unit</a></td>
+                  <td>Select the PMC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Pmc/pmc_get_current_pmc_unit.html">pmc_get_current_pmc_unit</a></td>
+                  <td>Get the current PMC unit type</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Pmc/pmc_get_number_of_pmc.html">pmc_get_number_of_pmc</a></td>
+                  <td>Read the number of existing PMC paths</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Pmc/pmc_get_pmc_unit_types.html">pmc_get_pmc_unit_types</a></td>
+                  <td>Read the PMC system information</td>
+               </tr>
+            </tbody>
+         </table>
+         <h3 class="label"><a name="#All">PMC: Function Reference related to PROFIBUS-DP</a></h3>
+         <table border="1" cellpadding="5" cols="2" frame="below" rules="rows">
+            <colgroup align="left" valign="top" width="30%"></colgroup>
+            <colgroup align="left" valign="top" width="70%"></colgroup>
+            <thead>
+               <tr>
+                  <th>Function Name</th>
+                  <th>Brief description</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pmc_prfrdconfig.html">pmc_prfrdconfig</a></td>
+                  <td>Read series/version of PROFIBUS software</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pmc_prfrdbusprm.html">pmc_prfrdbusprm</a></td>
+                  <td>Read bus parameter of master function</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pmc_prfwrbusprm.html">pmc_prfwrbusprm</a></td>
+                  <td>Write bus parameter of master function</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pmc_prfrdslvprm.html">pmc_prfrdslvprm</a></td>
+                  <td>Read slave parameter of master function</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pmc_prfwrslvprm.html">pmc_prfwrslvprm</a></td>
+                  <td>Write slave parameter of master function</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pmc_prfrdallcadr.html">pmc_prfrdallcadr</a></td>
+                  <td>Read address allocation of master function</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pmc_prfwrallcadr.html">pmc_prfwrallcadr</a></td>
+                  <td>Set address allocation of master function</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pmc_prfrdslvaddr.html">pmc_prfrdslvaddr</a></td>
+                  <td>Read address allocation of slave function</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pmc_prfwrslvaddr.html">pmc_prfwrslvaddr</a></td>
+                  <td>Set address allocation of slave function</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pmc_prfrdslvstat.html">pmc_prfrdslvstat</a></td>
+                  <td>Read state of slave function</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pmc_prfrdslvid.html">pmc_prfrdslvid</a></td>
+                  <td>Reads slave index data of master function</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pmc_prfwrslvid.html">pmc_prfwrslvid</a></td>
+                  <td>Writes slave index data of master function</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pmc_prfrdslvprm2.html">pmc_prfrdslvprm2</a></td>
+                  <td>Reads slave parameter of master function(2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pmc_prfwrslvprm2.html">pmc_prfwrslvprm2</a></td>
+                  <td>Writes slave parameter of master function(2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pmc_prfrddido.html">pmc_prfrddido</a></td>
+                  <td>Reads DI/DO address data of master function</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pmc_prfwrdido.html">pmc_prfwrdido</a></td>
+                  <td>Writes DI/DO address data of master function</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pmc_prfrdindiadr.html">pmc_prfrdindiadr</a></td>
+                  <td>Reads indication address for communication mode of master function</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pmc_prfwrindiadr.html">pmc_prfwrindiadr</a></td>
+                  <td>Writes indication address for communication mode of master function</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pmc_prfrdopmode.html">pmc_prfrdopmode</a></td>
+                  <td>Reads operation mode of master function</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pmc_prfwropmode.html">pmc_prfwropmode</a></td>
+                  <td>Writes operation mode of master function</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pbm_rd_param.html">pbm_rd_param</a></td>
+                  <td>Reading of the parameters of the PROFIBUS master function</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pbm_wr_param.html">pbm_wr_param</a></td>
+                  <td>Setting the parameters of the PROFIBUS master function</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pbm_ini_prm.html">pbm_ini_prm</a></td>
+                  <td>Initialization of the specified parameters of the PROFIBUS master function</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pbm_rd_allslvtbl.html">pbm_rd_allslvtbl</a></td>
+                  <td>Reading of all slave table</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pbm_exe_subfunc.html">pbm_exe_subfunc</a></td>
+                  <td>Execution of sub-function</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pbm_rd_subprm.html">pbm_rd_subprm</a></td>
+                  <td>Reading of the setting assistant parameters</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pbm_rd_errcode.html">pbm_rd_errcode</a></td>
+                  <td>Reading of an error code</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pbm_chg_mode.html">pbm_chg_mode</a></td>
+                  <td>Change of the operation mode</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pbm_rd_cominfo.html">pbm_rd_cominfo</a></td>
+                  <td>Reading of the communicating information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pbm_rd_nodetable.html">pbm_rd_nodetable</a></td>
+                  <td>Reading of status of connected slave</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pbm_rd_nodeinfo.html">pbm_rd_nodeinfo</a></td>
+                  <td>Reading of the information of slave station</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pbm_rd_slot.html">pbm_rd_slot</a></td>
+                  <td>Reading of the number of slot on master function</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pbm_rd_slotinfo.html">pbm_rd_slotinfo</a></td>
+                  <td>Reading of the slot information on master function</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pbs_rd_param.html">pbs_rd_param</a></td>
+                  <td>Reading of the parameters of the PROFIBUS slave function</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pbs_wr_param.html">pbs_wr_param</a></td>
+                  <td>Setting of the parameters of the PROFIBUS slave function</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pbs_ini_prm.html">pbs_ini_prm</a></td>
+                  <td>Initialization of the parameters of the PROFIBUS slave function</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pbs_rd_cominfo.html">pbs_rd_cominfo</a></td>
+                  <td>Reading of the communication state of the PROFIBUS slave function</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pbs_rd_param2.html">pbs_rd_param2</a></td>
+                  <td>Reading of the parameters of the PROFIBUS slave function(2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pbs_wr_param2.html">pbs_wr_param2</a></td>
+                  <td>Setting of the parameters of the PROFIBUS slave function(2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Profibus/pbs_rd_cominfo2.html">pbs_rd_cominfo2</a></td>
+                  <td>Reading of the communication state of the PROFIBUS slave function(2)</td>
+               </tr>
+            </tbody>
+         </table>
+         <h3 class="label"><a name="#All">CNC: Function related to others</a></h3>
+         <table border="1" cellpadding="5" cols="2" frame="below" rules="rows">
+            <colgroup align="left" valign="top" width="30%"></colgroup>
+            <colgroup align="left" valign="top" width="70%"></colgroup>
+            <thead>
+               <tr>
+                  <th>Function Name</th>
+                  <th>Brief description</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_sysinfo.html">cnc_sysinfo</a></td>
+                  <td>Read CNC system information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_sysinfo_ex.html">cnc_sysinfo_ex</a></td>
+                  <td>Read CNC system information(2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_statinfo.html">cnc_statinfo</a></td>
+                  <td>Read CNC status information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_statinfo2.html">cnc_statinfo2</a></td>
+                  <td>Read CNC status information(2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_alarm.html">cnc_alarm</a></td>
+                  <td>Read alarm status</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_alarm2.html">cnc_alarm2</a></td>
+                  <td>Read alarm status (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdalminfo.html">cnc_rdalminfo</a></td>
+                  <td>Read alarm information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdalmmsg.html">cnc_rdalmmsg</a></td>
+                  <td>Read alarm message </td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdalmmsg2.html">cnc_rdalmmsg2</a></td>
+                  <td>Read alarm message (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_modal.html">cnc_modal</a></td>
+                  <td>Read modal data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdgcode.html">cnc_rdgcode</a></td>
+                  <td>Read G modal code</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdcommand.html">cnc_rdcommand</a></td>
+                  <td>Read commanded data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_diagnoss.html">cnc_diagnoss</a></td>
+                  <td>Read diagnosis data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_diagnosr.html">cnc_diagnosr</a></td>
+                  <td>Read diagnosis data(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rddiag_ext.html">cnc_rddiag_ext</a></td>
+                  <td>Read random number diagnosis data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rddiaginfo.html">cnc_rddiaginfo</a></td>
+                  <td>Read diagnosis data information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rddiagnum.html">cnc_rddiagnum</a></td>
+                  <td>Read minimum, maximum, total number of diagnosis data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_adcnv.html">cnc_adcnv</a></td>
+                  <td>Read A/D conversion data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdopmsg.html">cnc_rdopmsg</a></td>
+                  <td>Read operator's message</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdopmsg2.html">cnc_rdopmsg2</a></td>
+                  <td>Read operator's message (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdopmsg3.html">cnc_rdopmsg3</a></td>
+                  <td>Read operator's message (3)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_setpath.html">cnc_setpath</a></td>
+                  <td>Set path number(for multi-path)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_getpath.html">cnc_getpath</a></td>
+                  <td>Get path number(for multi-path)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_sysconfig.html">cnc_sysconfig</a></td>
+                  <td>Read CNC configuration information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdprstrinfo.html">cnc_rdprstrinfo</a></td>
+                  <td>Read program restart information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rstrseqsrch.html">cnc_rstrseqsrch</a></td>
+                  <td>Search sequence number for program restart</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rstrseqsrch2.html">cnc_rstrseqsrch2</a></td>
+                  <td>Search sequence number for program restart (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdopnlsgnl.html">cnc_rdopnlsgnl</a></td>
+                  <td>Read output signal image of software operator's panel</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_wropnlsgnl.html">cnc_wropnlsgnl</a></td>
+                  <td>Write output signal of software operator's panel</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdopnlgnrl.html">cnc_rdopnlgnrl</a></td>
+                  <td>Read general signal image of software operator's panel</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_wropnlgnrl.html">cnc_wropnlgnrl</a></td>
+                  <td>Write general signal image of software operator's panel</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdopnlgsname.html">cnc_rdopnlgsname</a></td>
+                  <td>Read general signal name of software operator's panel</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_wropnlgsname.html">cnc_wropnlgsname</a></td>
+                  <td>Write general signal name of software operator's panel</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_getdtailerr.html">cnc_getdtailerr</a></td>
+                  <td>Get detail error for CNC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_getfigure.html">cnc_getfigure</a></td>
+                  <td>Read maximum valid figures, number of decimal places</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdbrstrinfo.html">cnc_rdbrstrinfo</a></td>
+                  <td>Read block restart information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdmenuswitch.html">cnc_rdmenuswitch</a></td>
+                  <td>Read menu switch signal</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_wrmenuswitch.html">cnc_wrmenuswitch</a></td>
+                  <td>Write menu switch signal</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdradofs.html">cnc_rdradofs</a></td>
+                  <td>Read internal position compensation data(cutter compensation/tool nose radius compensation)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdlenofs.html">cnc_rdlenofs</a></td>
+                  <td>Read internal position compensation data(tool length compensation)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdfixcycle.html">cnc_rdfixcycle</a></td>
+                  <td>Read internal position compensation data(canned cycle)(canned cycle)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdcdrotate.html">cnc_rdcdrotate</a></td>
+                  <td>Read internal position compensation data(coordinate rotation)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rd3dcdcnv.html">cnc_rd3dcdcnv</a></td>
+                  <td>Read internal position compensation data(3-D coordinate conversion)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdmirimage.html">cnc_rdmirimage</a></td>
+                  <td>Read internal position compensation data(programmable mirror image)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdscaling.html">cnc_rdscaling</a></td>
+                  <td>Read internal position compensation data(scaling)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rd3dtofs.html">cnc_rd3dtofs</a></td>
+                  <td>Read internal position compensation data(3-D tool compensation)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdposofs.html">cnc_rdposofs</a></td>
+                  <td>Read internal position compensation data(tool position compensation)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdsyssoft.html">cnc_rdsyssoft</a></td>
+                  <td>Read series/version of CNC system software</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdsyssoft2.html">cnc_rdsyssoft2</a></td>
+                  <td>Read series/version of CNC system software (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdsyssoft3.html">cnc_rdsyssoft3</a></td>
+                  <td>Read series/version of CNC system software (3)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdsyshard.html">cnc_rdsyshard</a></td>
+                  <td>Read of CNC hardware configuration</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdmdlconfig.html">cnc_rdmdlconfig</a></td>
+                  <td>Read module configuration of CNC system</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdmdlconfig2.html">cnc_rdmdlconfig2</a></td>
+                  <td>Read module configuration of CNC system (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_gettimer.html">cnc_gettimer</a></td>
+                  <td>Get calendar timer of CNC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_settimer.html">cnc_settimer</a></td>
+                  <td>Set calendar timer of CNC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdtimer.html">cnc_rdtimer</a></td>
+                  <td>Get timer data of CNC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_wrtimer.html">cnc_wrtimer</a></td>
+                  <td>Set timer data of CNC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_reset.html">cnc_reset</a></td>
+                  <td>CNC reset</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_reset2.html">cnc_reset2</a></td>
+                  <td>CNC reset (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_clralm.html">cnc_clralm</a></td>
+                  <td>Clear CNC alarm</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_getfrominfo.html">cnc_getfrominfo</a></td>
+                  <td>Read F-ROM information on CNC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_fromgetstart.html">cnc_fromgetstart</a></td>
+                  <td>Start of reading F-ROM data from CNC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_fromget.html">cnc_fromget</a></td>
+                  <td>Read F-ROM data from CNC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_fromgetend.html">cnc_fromgetend</a></td>
+                  <td>End of reading F-ROM data from CNC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_fromputstart.html">cnc_fromputstart</a></td>
+                  <td>Start of writing F-ROM data to CNC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_fromput.html">cnc_fromput</a></td>
+                  <td>Write F-ROM data to CNC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_fromputend.html">cnc_fromputend</a></td>
+                  <td>End of writing F-ROM data to CNC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_fromremove.html">cnc_fromremove</a></td>
+                  <td>Delete F-ROM data on CNC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_getsraminfo.html">cnc_getsraminfo</a></td>
+                  <td>Read S-RAM information on CNC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_sramgetstart.html">cnc_sramgetstart</a></td>
+                  <td>Start of reading S-RAM data from CNC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_sramget.html">cnc_sramget</a></td>
+                  <td>Read S-RAM data from CNC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_sramgetend.html">cnc_sramgetend</a></td>
+                  <td>End of reading S-RAM data from CNC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_getlockstat.html">cnc_getlockstat</a></td>
+                  <td>Get state of NC data protection</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_chgprotbit.html">cnc_chgprotbit</a></td>
+                  <td>Set state of NC data protection </td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdcexesram.html">cnc_rdcexesram</a></td>
+                  <td>Read SRAM variable area for C language executor</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_wrcexesram.html">cnc_wrcexesram</a></td>
+                  <td>Write SRAM variable area for C language executor</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_cexesramsize.html">cnc_cexesramsize</a></td>
+                  <td>Read maximum size of SRAM variable area for C language executor</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdetherinfo.html">cnc_rdetherinfo</a></td>
+                  <td>Read Ethernet board information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdcoordnum.html">cnc_rdcoordnum</a></td>
+                  <td>Read additional workpiece coordinate systems number</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdrepeatval.html">cnc_rdrepeatval</a></td>
+                  <td>Read the repeat counter</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdrepeatval_ext.html">cnc_rdrepeatval_ext</a></td>
+                  <td>Read the repeat counter(2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdpm_mcnitem.html">cnc_rdpm_mcnitem</a></td>
+                  <td>Read machine specific maintenance item for periodic maintenance</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_wrpm_mcnitem.html">cnc_wrpm_mcnitem</a></td>
+                  <td>Write machine specific maintenance item for periodic maintenance</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdpm_cncitem.html">cnc_rdpm_cncitem</a></td>
+                  <td>Read cnc maintenance item for periodic maintenance</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdpm_item.html">cnc_rdpm_item</a></td>
+                  <td>Read maintenance item status for periodic maintenance</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_wrpm_item.html">cnc_wrpm_item</a></td>
+                  <td>Write maintenance item status for periodic maintenance</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_getlanguage.html">cnc_getlanguage</a></td>
+                  <td>Get CNC display language</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="../Misc/cnc_rdcncid.html">cnc_rdcncid</a></td>
+                  <td>Read the CNC ID number</td>
+               </tr>
+            </tbody>
+         </table>
+      </div>
    </body>
 </html>

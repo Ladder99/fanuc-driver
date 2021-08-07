@@ -19,10 +19,11 @@
 5. [Concepts and Examples](#concepts)
 6. [Building and Running](#building-and-running)
 7. [Docker Deployment](#docker) 
-8. [Focas Library Matrix](FOCAS_LIBRARY_MATRIX.md)
-9. [Focas Function Matrix](FOCAS_FUNCTION_MATRIX.md)
-10. [Focas Function Platform Matrix](FOCAS_FUNCTION_PLATFORM_MATRIX.md)
-11. [API Description and Sample Responses](PLATFORM.md)
+8. [Focas Library Documentation](https://ladder99.github.io/fanuc-driver/focas/SpecE/All/flist_All.html) 
+9. [Focas Library Matrix](FOCAS_LIBRARY_MATRIX.md)
+10. [Focas Function Matrix](FOCAS_FUNCTION_MATRIX.md)
+11. [Focas Function Platform Matrix](FOCAS_FUNCTION_PLATFORM_MATRIX.md)
+12. [API Description and Sample Responses](PLATFORM.md)
 
 ## Cybersecurity
 

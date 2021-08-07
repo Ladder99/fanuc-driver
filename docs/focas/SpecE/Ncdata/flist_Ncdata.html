@@ -1,9 +1,372 @@
 <html xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:bop2="http://www.fanuc.co.jp/develop/mmc/bop2">
    <head>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-      <title></title>
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
       <link rel="stylesheet" type="text/css" href="../fwlib32.css">
    </head>
-   <body bgcolor="#FFFFFF"><FONT face="Verdana,Arial,Helvetica,sans-serif"><a name="Function Name"></a><div class="text"><a name="Declaration"></a><a name="Description"></a><a name="Arguments"></a><a name="Return"></a><a name="CNC option"></a><a name="CNC parameter"></a><a name="CNC mode"></a><a name="Available CNC"></a><a name="Reference"></a><a name="Example"></a></div></FONT><hr>
+   <body bgcolor="#FFFFFF">
+      <div class="text">
+         <h3 class="label"><a name="#Ncdata">CNC: Function related to CNC file data</a></h3>
+         <table border="1" cellpadding="5" cols="2" frame="below" rules="rows">
+            <colgroup align="left" valign="top" width="30%"></colgroup>
+            <colgroup align="left" valign="top" width="70%"></colgroup>
+            <thead>
+               <tr>
+                  <th>Function Name</th>
+                  <th>Brief description</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdtofs.html">cnc_rdtofs</a></td>
+                  <td>Read tool offset value</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrtofs.html">cnc_wrtofs</a></td>
+                  <td>Write tool offset value</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdtofsr.html">cnc_rdtofsr</a></td>
+                  <td>Read tool offset value(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrtofsr.html">cnc_wrtofsr</a></td>
+                  <td>Write tool offset value(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdtofsinfo.html">cnc_rdtofsinfo</a></td>
+                  <td>Read tool offset information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdtofsinfo2.html">cnc_rdtofsinfo2</a></td>
+                  <td>Read tool offset information (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_tofs_rnge.html">cnc_tofs_rnge</a></td>
+                  <td>Read the effective setting range of tool offset value</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdzofs.html">cnc_rdzofs</a></td>
+                  <td>Read work zero offset value</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrzofs.html">cnc_wrzofs</a></td>
+                  <td>Write work zero offset value</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdzofsr.html">cnc_rdzofsr</a></td>
+                  <td>Read work zero offset value(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrzofsr.html">cnc_wrzofsr</a></td>
+                  <td>Write work zero offset value(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdzofsinfo.html">cnc_rdzofsinfo</a></td>
+                  <td>Read work zero offset information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_zofs_rnge.html">cnc_zofs_rnge</a></td>
+                  <td>Read the effective setting range of work zero offset value </td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdparam.html">cnc_rdparam</a></td>
+                  <td>Read parameter</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrparam.html">cnc_wrparam</a></td>
+                  <td>Write parameter</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdparam3.html">cnc_rdparam3</a></td>
+                  <td>Read parameter(3)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdparar.html">cnc_rdparar</a></td>
+                  <td>Read parameter(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrparas.html">cnc_wrparas</a></td>
+                  <td>Write parameter(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdparam_ext.html">cnc_rdparam_ext</a></td>
+                  <td>Read random number parameters </td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdhsprminfo.html">cnc_rdhsprminfo</a></td>
+                  <td>Get information for high-speed read of parameter</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdhsparam.html">cnc_rdhsparam</a></td>
+                  <td>High-speed read of parameter</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdparainfo.html">cnc_rdparainfo</a></td>
+                  <td>Read parameter information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdparainfo3.html">cnc_rdparainfo3</a></td>
+                  <td>Read parameter information (3)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdparanum.html">cnc_rdparanum</a></td>
+                  <td>Read minimum, maximum, total number of parameter</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdset.html">cnc_rdset</a></td>
+                  <td>Read setting data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrset.html">cnc_wrset</a></td>
+                  <td>Write setting data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdsetr.html">cnc_rdsetr</a></td>
+                  <td>Read setting data(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrsets.html">cnc_wrsets</a></td>
+                  <td>Write setting data(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdsetinfo.html">cnc_rdsetinfo</a></td>
+                  <td>Read setting data information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdsetnum.html">cnc_rdsetnum</a></td>
+                  <td>Read minimum, maximum, total number of setting data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdpitchr.html">cnc_rdpitchr</a></td>
+                  <td>Read pitch error compensation data(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrpitchr.html">cnc_wrpitchr</a></td>
+                  <td>Write pitch error compensation data(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdpitchinfo.html">cnc_rdpitchinfo</a></td>
+                  <td>Read pitch error compensation data information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdvolc.html">cnc_rdvolc</a></td>
+                  <td>Read 3-dimensional error compensation data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrvolc.html">cnc_wrvolc</a></td>
+                  <td>Write 3-dimensional error compensation data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdvolccomp.html">cnc_rdvolccomp</a></td>
+                  <td>Read 3-dimensional error compensation value at current position</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdrotvolc.html">cnc_rdrotvolc</a></td>
+                  <td>Read the 3-dimensional rotary error compensation data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrrotvolc.html">cnc_wrrotvolc</a></td>
+                  <td>Write the 3-dimensional rotary error compensation data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdmacro.html">cnc_rdmacro</a></td>
+                  <td>Read custom macro variable</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrmacro.html">cnc_wrmacro</a></td>
+                  <td>Write custom macro variable</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdmacror.html">cnc_rdmacror</a></td>
+                  <td>Read custom macro variables(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrmacror.html">cnc_wrmacror</a></td>
+                  <td>Write custom macro variables(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdmacror2.html">cnc_rdmacror2</a></td>
+                  <td>Read custom macro variables(double precision)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdmacror3.html">cnc_rdmacror3</a></td>
+                  <td>Read custom macro variables and name(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrmacror2.html">cnc_wrmacror2</a></td>
+                  <td>Write custom macro variables(double precision)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdmacroinfo.html">cnc_rdmacroinfo</a></td>
+                  <td>Read custom macro variable information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_getmactype.html">cnc_getmactype</a></td>
+                  <td>Get type of custom macro variable</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_setmactype.html">cnc_setmactype</a></td>
+                  <td>Set type of custom macro variable</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdpmacro.html">cnc_rdpmacro</a></td>
+                  <td>Read P code macro variable</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrpmacro.html">cnc_wrpmacro</a></td>
+                  <td>Write P code macro variable</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdpmacror.html">cnc_rdpmacror</a></td>
+                  <td>Read P code macro variables(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdpmacror2.html">cnc_rdpmacror2</a></td>
+                  <td>Read P code macro variables(double precision)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrpmacror.html">cnc_wrpmacror</a></td>
+                  <td>Write P code macro variables(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrpmacror2.html">cnc_wrpmacror2</a></td>
+                  <td>Write P code macro variables(double precision)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdpmacroinfo.html">cnc_rdpmacroinfo</a></td>
+                  <td>Read P code macro variable information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdpmacroinfo2.html">cnc_rdpmacroinfo2</a></td>
+                  <td>Read P code macro variable information(2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_getpmactype.html">cnc_getpmactype</a></td>
+                  <td>Get type of P code macro variable</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_setpmactype.html">cnc_setpmactype</a></td>
+                  <td>Set type of P code macro variable</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdmgrpdata.html">cnc_rdmgrpdata</a></td>
+                  <td>Read M code group data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrmgrpdata.html">cnc_wrmgrpdata</a></td>
+                  <td>Write M code group data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdexecmcode.html">cnc_rdexecmcode</a></td>
+                  <td>Read M code group data(executing,executed M code)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdrstrmcode.html">cnc_rdrstrmcode</a></td>
+                  <td>Read M code group data(for program restart)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdhpccset.html">cnc_rdhpccset</a></td>
+                  <td>Read setting data for High-speed and high-precision machining</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrhpccset.html">cnc_wrhpccset</a></td>
+                  <td>Write setting data for HPCC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_hpccatset.html">cnc_hpccatset</a></td>
+                  <td>Set setting data for HPCC automatically</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdhpcctupr.html">cnc_rdhpcctupr</a></td>
+                  <td>Read tuning data(parameter input) for HPCC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrhpcctupr.html">cnc_wrhpcctupr</a></td>
+                  <td>Write tuning data(parameter input) for HPCC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdhpcctuac.html">cnc_rdhpcctuac</a></td>
+                  <td>Read tuning data(acc./dec. input) for HPCC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrhpcctuac.html">cnc_wrhpcctuac</a></td>
+                  <td>Write tuning data(acc./dec. input) for HPCC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_hpccattune.html">cnc_hpccattune</a></td>
+                  <td>Tune up tuning data for HPCC automatically</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_hpccactfine.html">cnc_hpccactfine</a></td>
+                  <td>Read fine level for HPCC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_hpccselfine.html">cnc_hpccselfine</a></td>
+                  <td>Select fine level for HPCC</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdactfixofs.html">cnc_rdactfixofs</a></td>
+                  <td>Read active fixture offset</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdfixofs.html">cnc_rdfixofs</a></td>
+                  <td>Read fixture offset value(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrfixofs.html">cnc_wrfixofs</a></td>
+                  <td>Write fixture offset value(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdintchk.html">cnc_rdintchk</a></td>
+                  <td>Read interference check data(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrintchk.html">cnc_wrintchk</a></td>
+                  <td>Write interference check data(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdintinfo.html">cnc_rdintinfo</a></td>
+                  <td>Read interference check data information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdwkcdshft.html">cnc_rdwkcdshft</a></td>
+                  <td>Read work coordinate shift value</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrwkcdshft.html">cnc_wrwkcdshft</a></td>
+                  <td>Write work coordinate shift value</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdwkcdsfms.html">cnc_rdwkcdsfms</a></td>
+                  <td>Read work coordinate shift measured value</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrwkcdsfms.html">cnc_wrwkcdsfms</a></td>
+                  <td>Write work coordinate shift measured value</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wksft_rnge.html">cnc_wksft_rnge</a></td>
+                  <td>Read the effective setting range of work coordinate shift value</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdbtofsr.html">cnc_rdbtofsr</a></td>
+                  <td>Read tool offset value for B axis(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrbtofsr.html">cnc_wrbtofsr</a></td>
+                  <td>Write tool offset value for B axis(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdbtofsinfo.html">cnc_rdbtofsinfo</a></td>
+                  <td>Read tool offset information for B axis</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdbaxis.html">cnc_rdbaxis</a></td>
+                  <td>Read command data for B axis</td>
+               </tr>
+            </tbody>
+         </table>
+      </div>
    </body>
 </html>

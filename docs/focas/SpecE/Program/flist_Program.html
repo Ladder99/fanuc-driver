@@ -1,9 +1,444 @@
 <html xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:bop2="http://www.fanuc.co.jp/develop/mmc/bop2">
    <head>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-      <title></title>
+      <meta http-equiv="Content-Script-Type" content="text/javascript">
       <link rel="stylesheet" type="text/css" href="../fwlib32.css">
    </head>
-   <body bgcolor="#FFFFFF"><FONT face="Verdana,Arial,Helvetica,sans-serif"><a name="Function Name"></a><div class="text"><a name="Declaration"></a><a name="Description"></a><a name="Arguments"></a><a name="Return"></a><a name="CNC option"></a><a name="CNC parameter"></a><a name="CNC mode"></a><a name="Available CNC"></a><a name="Reference"></a><a name="Example"></a></div></FONT><hr>
+   <body bgcolor="#FFFFFF">
+      <div class="text">
+         <h3 class="label"><a name="#Program">CNC: Function related to CNC program</a></h3>
+         <table border="1" cellpadding="5" cols="2" frame="below" rules="rows">
+            <colgroup align="left" valign="top" width="30%"></colgroup>
+            <colgroup align="left" valign="top" width="70%"></colgroup>
+            <thead>
+               <tr>
+                  <th>Function Name</th>
+                  <th>Brief description</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_dwnstart.html">cnc_dwnstart</a></td>
+                  <td>Start downloading NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_download.html">cnc_download</a></td>
+                  <td>Download NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_cdownload.html">cnc_cdownload</a></td>
+                  <td>Download NC program(conditional)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_dwnend.html">cnc_dwnend</a></td>
+                  <td>End of downloading NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_dwnstart3.html">cnc_dwnstart3</a></td>
+                  <td>Start downloading NC program (3)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_download3.html">cnc_download3</a></td>
+                  <td>Download NC program (3)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_dwnend3.html">cnc_dwnend3</a></td>
+                  <td>End of downloading NC program (3)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_dwnstart4.html">cnc_dwnstart4</a></td>
+                  <td>Start downloading NC program (4)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_download4.html">cnc_download4</a></td>
+                  <td>Download NC program (4)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_dwnend4.html">cnc_dwnend4</a></td>
+                  <td>End of downloading NC program (4)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_vrfstart.html">cnc_vrfstart</a></td>
+                  <td>Start verification of NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_verify.html">cnc_verify</a></td>
+                  <td>Verify NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_cverify.html">cnc_cverify</a></td>
+                  <td>Verify NC program(conditional)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_vrfend.html">cnc_vrfend</a></td>
+                  <td>End of verification</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_vrfstart4.html">cnc_vrfstart4</a></td>
+                  <td>Start verification of NC program(4)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_verify4.html">cnc_verify4</a></td>
+                  <td>Verify NC program(4)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_vrfend4.html">cnc_vrfend4</a></td>
+                  <td>End of verification(4)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_buff.html">cnc_buff</a></td>
+                  <td>Read buffer status for downloading/verification NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_dncstart.html">cnc_dncstart</a></td>
+                  <td>Start downloading DNC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_dnc.html">cnc_dnc</a></td>
+                  <td>Download DNC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_cdnc.html">cnc_cdnc</a></td>
+                  <td>Download DNC program(conditional)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_dncend.html">cnc_dncend</a></td>
+                  <td>End of downloading DNC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_dncstart2.html">cnc_dncstart2</a></td>
+                  <td>Start downloading DNC program (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_dnc2.html">cnc_dnc2</a></td>
+                  <td>Download DNC program (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_dncend2.html">cnc_dncend2</a></td>
+                  <td>End of downloading DNC program (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rddncdgndt.html">cnc_rddncdgndt</a></td>
+                  <td>Read the diagnosis data of downloading DNC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_upstart.html">cnc_upstart</a></td>
+                  <td>Start uploading NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_upload.html">cnc_upload</a></td>
+                  <td>Upload NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_cupload.html">cnc_cupload</a></td>
+                  <td>Upload NC program(conditional)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_upend.html">cnc_upend</a></td>
+                  <td>End of uploading NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_upstart3.html">cnc_upstart3</a></td>
+                  <td>Start uploading NC program (3)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_upload3.html">cnc_upload3</a></td>
+                  <td>Upload NC program (3)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_upend3.html">cnc_upend3</a></td>
+                  <td>End of uploading NC program (3)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_upstart4.html">cnc_upstart4</a></td>
+                  <td>Start uploading NC program (4)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_upload4.html">cnc_upload4</a></td>
+                  <td>Upload NC program (4)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_upend4.html">cnc_upend4</a></td>
+                  <td>End of uploading NC program (4)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_search.html">cnc_search</a></td>
+                  <td>Search specified program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_delall.html">cnc_delall</a></td>
+                  <td>Delete all programs</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_delete.html">cnc_delete</a></td>
+                  <td>Delete specified program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_delrange.html">cnc_delrange</a></td>
+                  <td>Delete specified program(area specified)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdprogdir.html">cnc_rdprogdir</a></td>
+                  <td>Read program directory</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdprogdir2.html">cnc_rdprogdir2</a></td>
+                  <td>Read program directory (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdprogdir3.html">cnc_rdprogdir3</a></td>
+                  <td>Read program directory (3)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdprogdir4.html">cnc_rdprogdir4</a></td>
+                  <td>Read program directory (4)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdproginfo.html">cnc_rdproginfo</a></td>
+                  <td>Read program information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdprgnum.html">cnc_rdprgnum</a></td>
+                  <td>Read program number under execution</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_exeprgname.html">cnc_exeprgname</a></td>
+                  <td>Read program name under execution</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_exeprgname2.html">cnc_exeprgname2</a></td>
+                  <td>Read program name under execution (2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdseqnum.html">cnc_rdseqnum</a></td>
+                  <td>Read sequence number under execution</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_seqsrch.html">cnc_seqsrch</a></td>
+                  <td>Search specified sequence number</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_seqsrch2.html">cnc_seqsrch2</a></td>
+                  <td>Search specified sequence number(2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rewind.html">cnc_rewind</a></td>
+                  <td>Rewind cursor of NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdblkcount.html">cnc_rdblkcount</a></td>
+                  <td>Read block counter</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdexecprog.html">cnc_rdexecprog</a></td>
+                  <td>Read program under execution</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrmdiprog.html">cnc_wrmdiprog</a></td>
+                  <td>Write program for MDI operation</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdmdipntr.html">cnc_rdmdipntr</a></td>
+                  <td>Read execution pointer for MDI operation</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrmdipntr.html">cnc_wrmdipntr</a></td>
+                  <td>Write execution pointer for MDI operation</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdmdiprgstat.html">cnc_rdmdiprgstat</a></td>
+                  <td>Get MDI program information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdproctime.html">cnc_rdproctime</a></td>
+                  <td>Read processing time stamp data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdprgdirtime.html">cnc_rdprgdirtime</a></td>
+                  <td>Read directory for processing time stamp data</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_copyprog.html">cnc_copyprog</a></td>
+                  <td>Copy program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_mergeprog.html">cnc_mergeprog</a></td>
+                  <td>Merge program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_renameprog.html">cnc_renameprog</a></td>
+                  <td>Change program number</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_condense.html">cnc_condense</a></td>
+                  <td>Condense program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdprogline.html">cnc_rdprogline</a></td>
+                  <td>Read NC program by line basis</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdprogline2.html">cnc_rdprogline2</a></td>
+                  <td>Read NC program by line basis(2)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrprogline.html">cnc_wrprogline</a></td>
+                  <td>Write NC program by line basis</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_delprogline.html">cnc_delprogline</a></td>
+                  <td>Delete NC program by line basis</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_searchword.html">cnc_searchword</a></td>
+                  <td>Search string in NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_searchresult.html">cnc_searchresult</a></td>
+                  <td>Get result of string search in NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_setpglock.html">cnc_setpglock</a></td>
+                  <td>Set the protection of running/editing of NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_resetpglock.html">cnc_resetpglock</a></td>
+                  <td>Reset the protection of running/editing of NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdpglockstat.html">cnc_rdpglockstat</a></td>
+                  <td>Get the status of running/editing of NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdactpt.html">cnc_rdactpt</a></td>
+                  <td>Get execution pointer</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wractpt.html">cnc_wractpt</a></td>
+                  <td>Set execution pointer</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdexecpt.html">cnc_rdexecpt</a></td>
+                  <td>Read execution pointer</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdpdf_drive.html">cnc_rdpdf_drive</a></td>
+                  <td>Read information of Program memory drive</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdpdf_inf.html">cnc_rdpdf_inf</a></td>
+                  <td>Read information Program memory file</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdpdf_curdir.html">cnc_rdpdf_curdir</a></td>
+                  <td>Read information of current folder</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrpdf_curdir.html">cnc_wrpdf_curdir</a></td>
+                  <td>Set current folder</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdpdf_subdir.html">cnc_rdpdf_subdir</a></td>
+                  <td>Read information of subfolder </td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdpdf_alldir.html">cnc_rdpdf_alldir</a></td>
+                  <td>Read file information</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdpdf_subdirn.html">cnc_rdpdf_subdirn</a></td>
+                  <td>Read number of subfolders or files</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_pdf_add.html">cnc_pdf_add</a></td>
+                  <td>Create folder or file</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_pdf_del.html">cnc_pdf_del</a></td>
+                  <td>Delete folder or file</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_pdf_delall.html">cnc_pdf_delall</a></td>
+                  <td>Delete all programs</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_pdf_rename.html">cnc_pdf_rename</a></td>
+                  <td>Rename folder or file</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_pdf_copy.html">cnc_pdf_copy</a></td>
+                  <td>Copy file</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_pdf_move.html">cnc_pdf_move</a></td>
+                  <td>Move file</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_pdf_cond.html">cnc_pdf_cond</a></td>
+                  <td>Rearrange the contents of the program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrpdf_attr.html">cnc_wrpdf_attr</a></td>
+                  <td>Change attribute of folder or file</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_pdf_rdmain.html">cnc_pdf_rdmain</a></td>
+                  <td>Read main program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_pdf_slctmain.html">cnc_pdf_slctmain</a></td>
+                  <td>Select main program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdpdf_line.html">cnc_rdpdf_line</a></td>
+                  <td>Read NC program by line basis(For arbitrary file name)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_wrpdf_line.html">cnc_wrpdf_line</a></td>
+                  <td>Write NC program by line basis(For arbitrary file name)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_pdf_delline.html">cnc_pdf_delline</a></td>
+                  <td>Delete NC program by line basis(For arbitrary file name)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_pdf_searchword.html">cnc_pdf_searchword</a></td>
+                  <td>Search string in NC program(For arbitrary file name)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_pdf_searchresult.html">cnc_pdf_searchresult</a></td>
+                  <td>Get result of string search in NC program(For arbitrary file name)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_setpdf_pglock.html">cnc_setpdf_pglock</a></td>
+                  <td>Set the protection of running/editing of NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_resetpdf_pglock.html">cnc_resetpdf_pglock</a></td>
+                  <td>Reset the protection of running/editing of NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_rdpdf_pglockstat.html">cnc_rdpdf_pglockstat</a></td>
+                  <td>Get the status of running/editing of NC program</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_pdf_rdactpt.html">cnc_pdf_rdactpt</a></td>
+                  <td>Get execution pointer(For arbitrary file name)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_pdf_wractpt.html">cnc_pdf_wractpt</a></td>
+                  <td>Set execution pointer(For arbitrary file name)</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_saveprog_start.html">cnc_saveprog_start</a></td>
+                  <td>Starts of the manual saving for the high speed program management</td>
+               </tr>
+               <tr>
+                  <td class="func"><a target="_parent" href="./cnc_saveprog_end.html">cnc_saveprog_end</a></td>
+                  <td>Get execution result of the manual saving for the high speed program management</td>
+               </tr>
+            </tbody>
+         </table>
+      </div>
    </body>
 </html>
