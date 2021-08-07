@@ -1,0 +1,886 @@
+<html xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:bop2="http://www.fanuc.co.jp/develop/mmc/bop2">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <title>cnc_download3</title>
+      <link rel="stylesheet" type="text/css" href="../fwlib32.css">
+   </head>
+   <body bgcolor="#FFFFFF"><FONT face="Verdana,Arial,Helvetica,sans-serif"><a name="Function Name"></a><p class="ftitle">cnc_download3</p>
+         <div class="text"><a name="Declaration"></a><p class="label">Declaration</p>
+            <div class="mth">#include "fwlib32.h" or "fwlib64.h"
+               <p></p>
+               <prottype>FWLIBAPI short WINAPI cnc_download3(unsigned short FlibHndl, long *length, char *data);
+                  </prottype>
+            </div><a name="Description"></a><p class="label">Description</p>
+            <cmn>
+               
+               <p>Output NC data to be registered (downloading).</p>
+               
+               <p>
+                  This function outputs the characters of NC program as long as it is specified by '*length'.<br>
+                  However, if there is no room to store the specified number of character, this function
+                  stores
+                  the characters as many as possible to fill the buffer and then sets '*length' with
+                  the 
+                  real number of characters which are stored in the buffer.
+                  </p>
+               
+               <p>
+                  Data is transferred using 256 bytes buffer.
+                  To improve translation speed, the value of the '*length' should be a multiple of 256.
+                  
+                  </p>
+               
+               <p>
+                  (In case of Ethernet connection, the size of 1460 bytes(maximun value) can be transmitted
+                  at a time. So, specify the size in 1024-1400 bytes for a value of *length. If the
+                  buffer size is a little size, transmission efficiency become to worsen, and  the communication
+                  error might occur.)
+                  </p>
+               
+               <p>
+                  In case that this function cannot output at least one character, it returns EW_BUFFER,
+                  so again call this function with the same arguments.
+                  </p>
+               
+               <p>
+                  Because importance is attached to the speed of data transfer to the CNC, in general,
+                  return of errors(EW_DATA, EW_OVRFLOW, etc.) may be delayed. Namely, an error status
+                  
+                  may refrect the result caused by the previously executed
+                  <a href="Program/cnc_download.htm" target="_parent">cnc_download</a> callings.<br>
+                  And the error status for some <a href="Program/cnc_download.htm" target="_parent">cnc_download</a>
+                  callings just before the finish of downloading is returned by
+                  <a href="Program/cnc_dwnend3.htm" target="_parent">cnc_dwnend3</a> function.
+                  </p>
+               <br>
+               <b>NC data format</b>
+               
+               <p>NC data to be registered to CNC is a string composed of ASCII characters as the following
+                  format.</p>
+               
+               <p class="dd">
+                  LF Block1 LF Block2 LF ... LF %<br>
+                  where LF = 0x0A ('\n')
+                  </p>
+               
+               <p>
+                  'LF' must be placed at the top of the whole program, and '%' at the end.<br>
+                  Data before the first 'LF'are ignored.
+                  </p>
+               
+               <p>
+                  In case of NC program, address 'O' and program number must be placed in the program
+                  to be registered.<br>
+                  For example, to register a program such as
+                  </p>
+               
+               <pre>
+        O1234 ;
+        G1 F0.3 W10. ;
+        M30 ;
+        %
+</pre>
+               
+               <p>send a following string using cnc_download3 function.</p>
+               
+               <pre>
+        "\nO1234\nG1F0.3W10.\nM30\n%"
+</pre>
+               
+               </cmn><a name="Arguments"></a><p class="label">Arguments</p>
+            <div class="dtarg">
+               <name>FlibHndl</name>
+               &nbsp;&nbsp;[&nbsp;
+               <type>in</type>&nbsp;]
+               </div>
+            <div class="ddarg">
+               <content>
+                  
+                  <p>
+                     Specify the library handle.
+                     See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                     </p>
+                  </content>
+            </div>
+            <div class="dtarg">
+               <name>length</name>
+               &nbsp;&nbsp;[&nbsp;
+               <type>in/out</type>&nbsp;]
+               </div>
+            <div class="ddarg">
+               <content>
+                  
+                  <p>
+                     Specify the ponter of the variable to the character length of NC data.<br>
+                     When this function returns, the actual number of characters that are output
+                     to CNC will be set.
+                     </p>
+                  
+                  <p>This function returns EW_LENGTH if '*length' has the value of zero or negative.</p>
+                  </content>
+            </div>
+            <div class="dtarg">
+               <name>data </name>
+               &nbsp;&nbsp;[&nbsp;
+               <type>in</type>&nbsp;]
+               </div>
+            <div class="ddarg">
+               <content>
+                  
+                  <p>Specify the ponter of the variable to NC data.</p>
+                  </content>
+            </div><a name="Return"></a><p class="label">Return</p>
+            <p>EW_OK is returned on successful completion, otherwise any value except EW_OK is returned.</p>
+            <p>The major error codes are as follows.</p>
+            <table border="1">
+               <colgroup align="center" valign="top"></colgroup>
+               <colgroup align="left" valign="top"></colgroup>
+               <colgroup align="left" valign="top"></colgroup>
+               <tr>
+                  <th>Return code</th>
+                  <th>Meaning/Error handling</th>
+               </tr>
+               <tr>
+                  <td>
+                     <name>EW_RESET</name><br>(-2)</td>
+                  <td>
+                     <content>
+                        Reset or stop request<br>
+                        CNC required to stop downloading.<br>
+                        Call the <a href="Program/cnc_dwnend3.htm" target="_parent">cnc_dwnend3</a> function.<br>
+                        </content>
+                  </td>
+               </tr>
+               <tr>
+                  <td>
+                     <name>EW_FUNC</name><br>(1)</td>
+                  <td>
+                     <content>
+                        <a href="Program/cnc_dwnstart3.htm" target="_parent">cnc_dwnstart3</a> function has not been executed.
+                        </content>
+                  </td>
+               </tr>
+               <tr>
+                  <td>
+                     <name>EW_LENGTH</name><br>(2)</td>
+                  <td>
+                     <content>
+                        The size of character string is negative.
+                        </content>
+                  </td>
+               </tr>
+               <tr>
+                  <td>
+                     <name>EW_DATA</name><br>(5)</td>
+                  <td>
+                     <content>
+                        Data error<br>
+                        In order to get more information for this err_no return value, execute
+                        <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br>
+                        The following detail status will be set onto the member, err_no of ODBERR structure.
+                        
+                        <table>
+                           
+                           <colgroup align="center" valign="top">
+                              
+                              <colgroup align="center" valign="top">
+                                 
+                                 <colgroup valign="top">
+                                    
+                                    <tr>
+                                       
+                                       <td>1</td>
+                                       <td>:</td>
+                                       <td>A character which is unavailable for NC program is detected.</td>
+                                       </tr>
+                                    
+                                    <tr>
+                                       
+                                       <td>2</td>
+                                       <td>:</td>
+                                       <td>When TV check is effective, a block which includes odd number of characters (including
+                                          'LF' at the end of the block) is detected.</td>
+                                       </tr>
+                                    
+                                    <tr>
+                                       
+                                       <td>3</td>
+                                       <td>:</td>
+                                       <td>The registered program count is full.</td>
+                                       </tr>
+                                    
+                                    <tr>
+                                       
+                                       <td>4</td>
+                                       <td>:</td>
+                                       <td>The same program number has already been registered.</td>
+                                       </tr>
+                                    
+                                    <tr>
+                                       
+                                       <td>5</td>
+                                       <td>:</td>
+                                       <td>The same program number is selected on CNC.</td>
+                                       </tr>
+                                    </colgroup>
+                                 </colgroup>
+                              </colgroup>
+                           </table>
+                        See <a href="#disc">Description</a> about the timing of error.
+                        </content>
+                  </td>
+               </tr>
+               <tr>
+                  <td>
+                     <name>EW_PROT</name><br>(7)</td>
+                  <td>
+                     <content>
+                        Write protected on CNC side<br>
+                        Tape memory is write-protected by the CNC parameter setting(O8000-/O9000- protection,
+                        encoding).<br>
+                        See <a href="#disc">Description</a> about the timing of error.
+                        </content>
+                  </td>
+               </tr>
+               <tr>
+                  <td>
+                     <name>EW_OVRFLOW</name><br>(8)</td>
+                  <td>
+                     <content>
+                        Memory overflow<br>
+                        CNC tape memory shorts for the registration.<br>
+                        Make enough free area in CNC memory.<br>
+                        See <a href="#disc">Description</a> about the timing of error.
+                        </content>
+                  </td>
+               </tr>
+               <tr>
+                  <td>
+                     <name>EW_BUFFER</name><br>(10)</td>
+                  <td>
+                     <content>
+                        Buffer full<br>
+                        Retry because the buffer is full.<br>
+                        See <a href="#disc">Description</a> about the timing of error.
+                        </content>
+                  </td>
+               </tr>
+               <tr>
+                  <td>
+                     <name>EW_REJECT</name><br>(13)</td>
+                  <td>
+                     <content>
+                        CNC execution denied (Series 15i)<br>
+                        Downloading is disable in the current CNC status.<br>
+                        (Machining, resetting, mode changing)<br>
+                        See <a href="#disc">Description</a> about the timing of error.
+                        </content>
+                  </td>
+               </tr>
+               <tr>
+                  <td>
+                     <name>EW_ALARM</name><br>(15)</td>
+                  <td>
+                     <content>
+                        Alarm state (Series 15i)<br>
+                        Alarm has occurred while downloading.<br>
+                        See <a href="#disc">Description</a> about the timing of error.
+                        </content>
+                  </td>
+               </tr>
+            </table>
+            <p></p>
+            <p>
+               As for the other return codes or the details, see 
+               
+               
+               "<a href="errcode.htm" target="_parent">Return status of Data window function</a>"
+               
+               </p><a name="CNC option"></a><p class="label">CNC option</p>
+            <p></p>
+            <p>And this function is related to the following CNC option.</p>
+            <ul>
+               <p>
+                  <type>
+                     
+                     <li>Series 15i</li>
+                     Pitch error compensation<br>
+                     Custom macro<br>
+                     <br>
+                     
+                     <li>Series 16i/18i/21i, 0i, 30i, PMi-A</li>
+                     Pitch error compensation<br>
+                     Custom macro<br>
+                     Work zero offset
+                     </type>
+               </p>
+            </ul>
+            <p>For HSSB connection,</p>
+            <ul>
+               <p>
+                  <hssb>The extended driver/library function is necessary.</hssb>
+               </p>
+            </ul>
+            <p>For Ethernet connection,</p>
+            <ul>
+               <p>
+                  <ethr>
+                     <p>The Ethernet function and the extended driver/library function are necessary.</p>
+                     
+                     <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required
+                        CNC option is as follows.</p>
+                     
+                     <p>When Embedded Ethernet is used,</p>
+                     
+                     <p>
+                        <ul>above two optional functions are not required.</ul>
+                     </p>
+                     
+                     <p>When Ethernet board is used,</p>
+                     
+                     <p>
+                        <ul>only Ethernet function is required.</ul>
+                     </p>
+                     </ethr>
+               </p>
+            </ul>
+            <p></p><a name="CNC parameter"></a><p class="label">CNC parameter</p>
+            <p>This function is related to the following CNC parameter.<br>
+               See the manual of CNC parameter for details.</p>
+            <p>
+               <type>
+                  
+                  <ul>
+                     
+                     <li>Series 15i</li>
+                     0020=16(HSSB), 7(Ethernet) (*) (must be set)<br>
+                     0022=16(HSSB), 7(Ethernet) (*) (must be set)<br>
+                     0000#0<br>
+                     2200#1,#3,#4<br>
+                     0011#0,2201#0<br>
+                     2210,2211,2212,2213<br>
+                     8000#0<br>
+                     <br>
+                     
+                     <li>Series 16i/18i/21i, 0i, 30i, PMi-A</li>
+                     0000#0<br>
+                     3201#2,#5,#6<br>
+                     3202#0,#4<br>
+                     3204#3,#4<br>
+                     3210,3211<br>
+                     8900#0<br>
+                     <br>
+                     
+                     <li>Power Mate i</li>
+                     0000#0<br>
+                     3201#2,#5,#6<br>
+                     3202#0,#4<br>
+                     3204#3,#4<br>
+                     8900#0<br>
+                     </ul>
+                  
+                  <blockquote>
+                     
+                     <table>
+                        
+                        <tr>
+                           <td rowspan="3" valign="top">*</td>
+                           <td colspan="3">In case of NC program</td>
+                        </tr>
+                        
+                        <tr>
+                           <td>EDIT mode              </td>
+                           <td>:</td>
+                           <td>0020 is used</td>
+                        </tr>
+                        
+                        <tr>
+                           <td>Not EDIT mode          </td>
+                           <td>:</td>
+                           <td>0022 is used</td>
+                        </tr>
+                        
+                        <tr>
+                           <td rowspan="3" valign="top">*</td>
+                           <td colspan="3">In case of except NC program</td>
+                        </tr>
+                        
+                        <tr>
+                           <td>Not background editing</td>
+                           <td>:</td>
+                           <td>0020 is used</td>
+                        </tr>
+                        
+                        <tr>
+                           <td>Background editing    </td>
+                           <td>:</td>
+                           <td>Cannot be used</td>
+                        </tr>
+                        </table>
+                     </blockquote>
+                  </type>
+            </p>
+            <p></p><a name="CNC mode"></a><p class="label">CNC mode</p>
+            <p>
+               <cmn>
+                  This function can be used in any CNC mode.<br>
+                  (It is necessary to set mode according to the target data.)
+                  </cmn>
+            </p>
+            <p></p><a name="Available CNC"></a><p class="label">Available CNC</p>
+            <table border="1">
+               <colgroup width="100em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <tr>
+                  <th></th>
+                  <th>0i-A</th>
+                  <th>0i-B/C(Note)</th>
+                  <th>0i-D</th>
+                  <th>0i-F</th>
+                  <th>15</th>
+                  <th>15i</th>
+                  <th>16</th>
+                  <th>18</th>
+                  <th>21</th>
+                  <th>16i-A</th>
+                  <th>18i-A</th>
+                  <th>21i-A</th>
+                  <th>16i-B</th>
+                  <th>18i-B</th>
+                  <th>21i-B</th>
+                  <th>30i-A</th>
+                  <th>30i-B</th>
+               </tr>
+               <tr>
+                  <td>M (Machining)</td>
+                  <td class="">
+                     <fs0ia>X</fs0ia>
+                  </td>
+                  <td class="support">
+                     <fs0ib>O</fs0ib>
+                  </td>
+                  <td class="support">
+                     <fs0id>O</fs0id>
+                  </td>
+                  <td class="support">
+                     <fs0if>O</fs0if>
+                  </td>
+                  <td class="">
+                     <fs15>X</fs15>
+                  </td>
+                  <td class="support">
+                     <fs15i>O</fs15i>
+                  </td>
+                  <td class="">
+                     <fs16>X</fs16>
+                  </td>
+                  <td class="">
+                     <fs18>X</fs18>
+                  </td>
+                  <td class="">
+                     <fs21>X</fs21>
+                  </td>
+                  <td class="support">
+                     <fs16ia>O</fs16ia>
+                  </td>
+                  <td class="support">
+                     <fs18ia>O</fs18ia>
+                  </td>
+                  <td class="support">
+                     <fs21ia>O</fs21ia>
+                  </td>
+                  <td class="support">
+                     <fs16ib>O</fs16ib>
+                  </td>
+                  <td class="support">
+                     <fs18ib>O</fs18ib>
+                  </td>
+                  <td class="support">
+                     <fs21ib>O</fs21ib>
+                  </td>
+                  <td class="support">
+                     <fs30ia>O</fs30ia>
+                  </td>
+                  <td class="support">
+                     <fs30ib>O</fs30ib>
+                  </td>
+               </tr>
+               <tr>
+                  <td>T (Turning)  </td>
+                  <td class="">
+                     <fs0ia>X</fs0ia>
+                  </td>
+                  <td class="support">
+                     <fs0ib>O</fs0ib>
+                  </td>
+                  <td class="support">
+                     <fs0id>O</fs0id>
+                  </td>
+                  <td class="support">
+                     <fs0if>O</fs0if>
+                  </td>
+                  <td class="">
+                     <fs15>X</fs15>
+                  </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="">
+                     <fs16>X</fs16>
+                  </td>
+                  <td class="">
+                     <fs18>X</fs18>
+                  </td>
+                  <td class="">
+                     <fs21>X</fs21>
+                  </td>
+                  <td class="support">
+                     <fs16ia>O</fs16ia>
+                  </td>
+                  <td class="support">
+                     <fs18ia>O</fs18ia>
+                  </td>
+                  <td class="support">
+                     <fs21ia>O</fs21ia>
+                  </td>
+                  <td class="support">
+                     <fs16ib>O</fs16ib>
+                  </td>
+                  <td class="support">
+                     <fs18ib>O</fs18ib>
+                  </td>
+                  <td class="support">
+                     <fs21ib>O</fs21ib>
+                  </td>
+                  <td class="support">
+                     <fs30ia>O</fs30ia>
+                  </td>
+                  <td class="support">
+                     <fs30ib>O</fs30ib>
+                  </td>
+               </tr>
+               <tr>
+                  <td>LC (Loader)  </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="">
+                     <fs16>X</fs16>
+                  </td>
+                  <td class="">
+                     <fs18>X</fs18>
+                  </td>
+                  <td class="">
+                     <fs21>X</fs21>
+                  </td>
+                  <td class="">
+                     <fs16ia>X</fs16ia>
+                  </td>
+                  <td class="">
+                     <fs18ia>X</fs18ia>
+                  </td>
+                  <td class="">
+                     <fs21ia>X</fs21ia>
+                  </td>
+                  <td class="">
+                     <fs16ib>X</fs16ib>
+                  </td>
+                  <td class="">
+                     <fs18ib>X</fs18ib>
+                  </td>
+                  <td class="">
+                     <fs21ib>X</fs21ib>
+                  </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+               </tr>
+            </table>
+            <p></p>
+            <table border="1">
+               <colgroup width="100em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <tr>
+                  <th></th>
+                  <th>0i-D</th>
+                  <th>0i-F</th>
+                  <th>16i</th>
+                  <th>18i</th>
+                  <th>30i-A</th>
+                  <th>30i-B</th>
+               </tr>
+               <tr>
+                  <td>P (Punch press)</td>
+                  <td class="support">
+                     <fs0id>O</fs0id>
+                  </td>
+                  <td class="support">
+                     <fs0if>O</fs0if>
+                  </td>
+                  <td class="support">
+                     <fs16i>O</fs16i>
+                  </td>
+                  <td class="support">
+                     <fs18i>O</fs18i>
+                  </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="support">
+                     <fs30ib>O</fs30ib>
+                  </td>
+               </tr>
+               <tr>
+                  <td>L (Laser)      </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="support">
+                     <fs16i>O</fs16i>
+                  </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="support">
+                     <fs30ib>O</fs30ib>
+                  </td>
+               </tr>
+               <tr>
+                  <td>W (Wire)       </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="support">
+                     <fs16i>E</fs16i>
+                  </td>
+                  <td class="support">
+                     <fs18i>E</fs18i>
+                  </td>
+                  <td class="support">
+                     <fs30ia>O</fs30ia>
+                  </td>
+                  <td class="support">
+                     <fs30ib>O</fs30ib>
+                  </td>
+               </tr>
+            </table>
+            <p></p><br><table border="1">
+               <colgroup width="100em"></colgroup>
+               <colgroup align="center" width="86em"></colgroup>
+               <colgroup align="center" width="86em"></colgroup>
+               <tr>
+                  <td>Power Mate i-D</td>
+                  <td class="support">
+                     <d>O</d>
+                  </td>
+               </tr>
+               <tr>
+                  <td>Power Mate i-H</td>
+                  <td class="support">
+                     <h>O</h>
+                  </td>
+               </tr>
+               <tr>
+                  <td>Power Motion i-A</td>
+                  <td class="support"><a>O</a></td>
+               </tr>
+            </table>
+            <p></p>
+            <table class="dd">
+               <tr>
+                  <td></td>
+                  <td>"O"</td>
+                  <td>:</td>
+                  <td>Both Ethernet and HSSB</td>
+               </tr>
+               <tr>
+                  <td></td>
+                  <td>"E"</td>
+                  <td>:</td>
+                  <td>Ethernet</td>
+               </tr>
+               <tr>
+                  <td></td>
+                  <td>"H"</td>
+                  <td>:</td>
+                  <td>HSSB</td>
+               </tr>
+               <tr>
+                  <td></td>
+                  <td>"X"</td>
+                  <td>:</td>
+                  <td>Cannot be used</td>
+               </tr>
+               <tr>
+                  <td></td>
+                  <td>"-"</td>
+                  <td>:</td>
+                  <td>None</td>
+               </tr>
+            </table>
+            <p style="background-color:mistyrose;">Note) 0i-C does not support the HSSB function.</p>
+            <p></p><a name="Reference"></a><p class="label">See Also</p>
+            <p><a class="func" target="_parent" href="Program/cnc_dwnstart3.htm">cnc_dwnstart3</a>&nbsp;&nbsp;
+               <a class="func" target="_parent" href="Program/cnc_dwnend3.htm">cnc_dwnend3</a>&nbsp;&nbsp;
+               </p><a name="Example"></a><p class="label">Example(C Language)</p>
+            <p></p>
+            <pre>
+The following program registers the following NC program to CNC.
+
+        O1234 ;
+        M3 S1200 ;
+        G0 Z0 ;
+        G0 X0 Y0 ;
+        G1 F500 X120. Y-30. ;
+        M30 ;
+
+#include "fwlib32.h"
+
+short example( void )
+{
+        char* prg =
+                "\n"
+                "O1234\n"
+                "M3 S1200\n"
+                "G0 Z0\n"
+                "G0 X0 Y0\n"
+                "G1 F500 X120. Y-30.\n"
+                "M30\n"
+                "%";
+
+        long len, n;
+        short ret;
+
+        ret = cnc_dwnstart3( h, 0 ) ;
+        if ( ret ) return ( ret ) ;
+
+        len = strlen( prg ) ;
+        while ( len &gt; 0 ) {
+                n = len ;
+                ret = cnc_download3( h, &amp;n, prg ) ;
+                if ( ret == EW_BUFFER ) {
+                        continue ;
+                }
+                if ( ret == EW_OK ) {
+                        prg += n ;
+                        len -= n ;
+                }
+                if ( ret != EW_OK ) {
+                        break ;
+                }
+        }
+        ret = cnc_dwnend3( h ) ;
+        return ( ret ) ;
+}
+</pre>
+            <p class="label">Example(C#)</p>
+            <pre>
+The following program registers the following NC program to CNC.
+
+        O1234 ;
+        M3 S1200 ;
+        G0 Z0 ;
+        G0 X0 Y0 ;
+        G1 F500 X120. Y-30. ;
+        M30 ;
+
+class example
+{
+    public short sample()
+    {
+            string strPrg =
+                    "\n"                    +
+                    "O1234\n"               +
+                    "M3 S1200\n"            +
+                    "G0 Z0\n"               +
+                    "G0 X0 Y0\n"            +
+                    "G1 F500 X120. Y-30.\n" +
+                    "M30\n"                 +
+                    "%";
+
+            int len, n;
+            short ret;
+
+            ret = Focas1.cnc_dwnstart3(h, 0);
+            if (ret != Focas1.EW_OK) return (ret);
+
+            int startPos = 0;
+            len = strPrg.Length;
+            while (len &gt; 0)
+            {
+                    char[] prg = new char[1280];
+                    strPrg.CopyTo(startPos, prg, 0, len);
+
+                    n = len;
+                    ret = Focas1.cnc_download3(h, ref n, prg);
+                    if (ret == (short)Focas1.focas_ret.EW_BUFFER)
+                    {
+                            continue;
+                    }
+                    if (ret == Focas1.EW_OK)
+                    {
+                            startPos += n;
+                            len -= n;
+                    }
+                    if (ret != Focas1.EW_OK)
+                    {
+                            break;
+                    }
+            }
+            ret = Focas1.cnc_dwnend3(h);
+            return (ret);
+    }
+}</pre>
+         </div></FONT><hr>
+   </body>
+</html>

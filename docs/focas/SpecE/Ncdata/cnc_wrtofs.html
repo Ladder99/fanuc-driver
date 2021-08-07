@@ -1,0 +1,2403 @@
+<html xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:bop2="http://www.fanuc.co.jp/develop/mmc/bop2">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <title>cnc_wrtofs</title>
+      <link rel="stylesheet" type="text/css" href="../fwlib32.css">
+   </head>
+   <body bgcolor="#FFFFFF"><FONT face="Verdana,Arial,Helvetica,sans-serif"><a name="Function Name"></a><p class="ftitle">cnc_wrtofs</p>
+         <div class="text"><a name="Declaration"></a><p class="label">Declaration</p>
+            <div class="mth">#include "fwlib32.h" or "fwlib64.h"
+               <p></p>
+               <prottype>FWLIBAPI short WINAPI cnc_wrtofs(unsigned short FlibHndl, short number, short type,
+                  short length, long data);</prottype>
+            </div><a name="Description"></a><p class="label">Description</p>
+            <cmn>
+               
+               <p>Writes the tool offset value specified by "number", "type". The offset value must
+                  be stored in "data" with signed binary format. </p>
+               
+               
+               <p>The unit of offset value is as follows.</p>
+               
+               
+               <ul>
+                  
+                  <li>Series 15</li>
+                  
+                  <table border="1">
+                     
+                     <tr>
+                        
+                        <th>6007#0<br>(ONM)</th>
+                        
+                        <th>6004#0<br>(OUF)</th>
+                        
+                        <th>6002#1<br>(OFN)</th>
+                        
+                        <th>6002#0<br>(ORG)</th>
+                        
+                        <th>Linear axis<br>mm input<br>[mm]</th>
+                        
+                        <th>Linear axis<br>inch input<br>[inch]</th>
+                        
+                        <th>Rotation axis<br> <br>[deg]</th>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>1</td>
+                        
+                        <td>0.01</td>
+                        
+                        <td>0.001</td>
+                        
+                        <td>0.01</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0.001</td>
+                        
+                        <td>0.0001</td>
+                        
+                        <td>0.001</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>1</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0.0001</td>
+                        
+                        <td>0.00001</td>
+                        
+                        <td>0.0001</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>0</td>
+                        
+                        <td>1</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0.00001</td>
+                        
+                        <td>0.000001</td>
+                        
+                        <td>0.00001</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>1</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0.000001</td>
+                        
+                        <td>0.0000001</td>
+                        
+                        <td>0.000001</td>
+                        </tr>
+                     </table>
+                  <br>
+                  
+                  <li>Series 15i</li>
+                  
+                  <table border="1">
+                     
+                     <tr>
+                        
+                        <th>6007#0<br>(OFE)</th>
+                        
+                        <th>6004#0<br>(OFD)</th>
+                        
+                        <th>6002#1<br>(OFC)</th>
+                        
+                        <th>6002#0<br>(OFA)</th>
+                        
+                        <th>Linear axis<br>mm input<br>[mm]</th>
+                        
+                        <th>Linear axis<br>inch input<br>[inch]</th>
+                        
+                        <th>Rotation axis<br> <br>[deg]</th>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>1</td>
+                        
+                        <td>0.01</td>
+                        
+                        <td>0.001</td>
+                        
+                        <td>0.01</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0.001</td>
+                        
+                        <td>0.0001</td>
+                        
+                        <td>0.001</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>1</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0.0001</td>
+                        
+                        <td>0.00001</td>
+                        
+                        <td>0.0001</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>0</td>
+                        
+                        <td>1</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0.00001</td>
+                        
+                        <td>0.000001</td>
+                        
+                        <td>0.00001</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>1</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0.000001</td>
+                        
+                        <td>0.0000001</td>
+                        
+                        <td>0.000001</td>
+                        </tr>
+                     </table>
+                  <br>
+                  
+                  <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i</li>
+                  
+                  <table border="1">
+                     
+                     <tr>
+                        
+                        <th></th>
+                        
+                        <th>1004#1<br>(ISC)</th>
+                        
+                        <th>1004#0<br>(ISA)</th>
+                        
+                        <th>Linear axis<br>mm input<br>[mm]</th>
+                        
+                        <th>Linear axis<br>inch input<br>[inch]</th>
+                        
+                        <th>Rotation axis<br> <br>[deg]</th>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>IS-A</td>
+                        
+                        <td>0</td>
+                        
+                        <td>1</td>
+                        
+                        <td>0.01</td>
+                        
+                        <td>0.001</td>
+                        
+                        <td>0.01</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>IS-B</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0.001</td>
+                        
+                        <td>0.0001</td>
+                        
+                        <td>0.001</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>IS-C</td>
+                        
+                        <td>1</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0.0001</td>
+                        
+                        <td>0.00001</td>
+                        
+                        <td>0.0001</td>
+                        </tr>
+                     </table>
+                  IS-A is effective for Power Mate i-H.<br>
+                  IS-C is effective for Power Mate i-D.<br>
+                  <br>
+                  
+                  
+                  <li>Series 0i-D/F, PMi-A</li>
+                  
+                  <table border="1">
+                     
+                     <tr>
+                        
+                        <th>5042#1<br>(OFC)</th>
+                        
+                        <th>5042#0<br>(OFA)</th>
+                        
+                        <th>Linear axis<br>mm input<br>[mm]</th>
+                        
+                        <th>Linear axis<br>inch input<br>[inch]</th>
+                        
+                        <th>Rotation axis<br> <br>[deg]</th>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>0</td>
+                        
+                        <td>1</td>
+                        
+                        <td>0.01</td>
+                        
+                        <td>0.001</td>
+                        
+                        <td>0.01</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0.001</td>
+                        
+                        <td>0.0001</td>
+                        
+                        <td>0.001</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>1</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0.0001</td>
+                        
+                        <td>0.00001</td>
+                        
+                        <td>0.0001</td>
+                        </tr>
+                     </table>
+                  <br>
+                  
+                  
+                  <li>Series 30i</li>
+                  
+                  <table border="1">
+                     
+                     <tr>
+                        
+                        <th>5042#3<br>(OFE)</th>
+                        
+                        <th>5042#2<br>(OFD)</th>
+                        
+                        <th>5042#1<br>(OFC)</th>
+                        
+                        <th>5042#0<br>(OFA)</th>
+                        
+                        <th>Linear axis<br>mm input<br>[mm]</th>
+                        
+                        <th>Linear axis<br>inch input<br>[inch]</th>
+                        
+                        <th>Rotation axis<br> <br>[deg]</th>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>1</td>
+                        
+                        <td>0.01</td>
+                        
+                        <td>0.001</td>
+                        
+                        <td>0.01</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0.001</td>
+                        
+                        <td>0.0001</td>
+                        
+                        <td>0.001</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>1</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0.0001</td>
+                        
+                        <td>0.00001</td>
+                        
+                        <td>0.0001</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>0</td>
+                        
+                        <td>1</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0.00001</td>
+                        
+                        <td>0.000001</td>
+                        
+                        <td>0.00001</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>1</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0.000001</td>
+                        
+                        <td>0.0000001</td>
+                        
+                        <td>0.000001</td>
+                        </tr>
+                     </table>
+                  </ul>
+               <br>
+               
+               <p>The available range of offset value is as follows.</p>
+               
+               
+               <ul>
+                  
+                  <li>Series 15</li>
+                  
+                  <table border="1">
+                     
+                     <tr>
+                        
+                        <th>6007#0<br>(ONM)</th>
+                        
+                        <th>6004#0<br>(OUF)</th>
+                        
+                        <th>6002#1<br>(OFN)</th>
+                        
+                        <th>6002#0<br>(ORG)</th>
+                        
+                        <th>Linear axis<br>mm input<br>[mm]</th>
+                        
+                        <th>Linear axis<br>inch input<br>[inch]</th>
+                        
+                        <th>Rotation axis<br> <br>[deg]</th>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>1</td>
+                        
+                        <td>± 999.99<br>(±9999.99)</td>
+                        
+                        <td>± 99.999<br>(±999.999)</td>
+                        
+                        <td>± 999.99<br>(±9999.99)</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>± 999.999<br>(±9999.999)</td>
+                        
+                        <td>± 99.9999<br>(±999.9999)</td>
+                        
+                        <td>± 999.999<br>(±9999.999)</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>1</td>
+                        
+                        <td>0</td>
+                        
+                        <td>± 999.9999<br>(±9999.9999)</td>
+                        
+                        <td>± 99.99999<br>(±999.99999)</td>
+                        
+                        <td>± 999.9999<br>(±9999.9999)</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>0</td>
+                        
+                        <td>1</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>± 99.99999<br>(±9999.99999)</td>
+                        
+                        <td>± 9.999999<br>(±999.999999)</td>
+                        
+                        <td>± 99.99999<br>(±9999.99999)</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>1</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>± 9.999999<br>(±999.999999)</td>
+                        
+                        <td>± 0.9999999<br>(±99.9999999)</td>
+                        
+                        <td>± 9.999999<br>(±999.999999)</td>
+                        </tr>
+                     </table>
+                  * () : Extended tool offset value option<br>
+                  <br>
+                  
+                  <li>Series 15i</li>
+                  
+                  <table border="1">
+                     
+                     <tr>
+                        
+                        <th>6007#0<br>(OFE)</th>
+                        
+                        <th>6004#0<br>(OFD)</th>
+                        
+                        <th>6002#1<br>(OFC)</th>
+                        
+                        <th>6002#0<br>(OFA)</th>
+                        
+                        <th>Linear axis<br>mm input<br>[mm]</th>
+                        
+                        <th>Linear axis<br>inch input<br>[inch]</th>
+                        
+                        <th>Rotation axis<br> <br>[deg]</th>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>1</td>
+                        
+                        <td>±9999.99</td>
+                        
+                        <td>±999.999</td>
+                        
+                        <td>±9999.99</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>±9999.999</td>
+                        
+                        <td>±999.9999</td>
+                        
+                        <td>±9999.999</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>1</td>
+                        
+                        <td>0</td>
+                        
+                        <td>±9999.9999</td>
+                        
+                        <td>±999.99999</td>
+                        
+                        <td>±9999.9999</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>0</td>
+                        
+                        <td>1</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>±9999.99999</td>
+                        
+                        <td>±999.999999</td>
+                        
+                        <td>±9999.99999</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>1</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>± 999.999999</td>
+                        
+                        <td>± 99.9999999</td>
+                        
+                        <td>± 999.999999</td>
+                        </tr>
+                     </table>
+                  <br>
+                  
+                  <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i</li>
+                  
+                  <table border="1">
+                     
+                     <tr>
+                        
+                        <th></th>
+                        
+                        <th>1004#1<br>(ISC)</th>
+                        
+                        <th>1004#0<br>(ISA)</th>
+                        
+                        <th>Linear axis<br>mm input<br>[mm]</th>
+                        
+                        <th>Linear axis<br>inch input<br>[inch]</th>
+                        
+                        <th>Rotation axis<br> <br>[deg]</th>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>IS-A</td>
+                        
+                        <td>0</td>
+                        
+                        <td>1</td>
+                        
+                        <td>± 999.99<br>(±  99.99)</td>
+                        
+                        <td>± 99.999<br>(±  9.999)</td>
+                        
+                        <td>± 999.99<br>(±  99.99)</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>IS-B</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>± 999.999<br>(±  99.999)</td>
+                        
+                        <td>± 99.9999<br>(±  9.9999)</td>
+                        
+                        <td>± 999.999<br>(±  99.999)</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>IS-C</td>
+                        
+                        <td>1</td>
+                        
+                        <td>0</td>
+                        
+                        <td>± 999.9999<br>(±  99.9999)</td>
+                        
+                        <td>± 99.99999<br>(±  9.99999)</td>
+                        
+                        <td>± 999.9999<br>(±  99.9999)</td>
+                        </tr>
+                     </table>
+                  * () : Wear offset<br>
+                  IS-A is effective for Power Mate i-H.<br>
+                  IS-C is effective for Power Mate i-D.<br>
+                  <br>
+                  
+                  <li>Series 0i-D/F, PMi-A</li>
+                  
+                  <table border="1">
+                     
+                     <tr>
+                        
+                        <th>5042#1<br>(OFC)</th>
+                        
+                        <th>5042#0<br>(OFA)</th>
+                        
+                        <th>Linear axis<br>mm input<br>[mm]</th>
+                        
+                        <th>Linear axis<br>inch input<br>[inch]</th>
+                        
+                        <th>Rotation axis<br> <br>[deg]</th>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>0</td>
+                        
+                        <td>1</td>
+                        
+                        <td>±9999.99</td>
+                        
+                        <td>±999.999</td>
+                        
+                        <td>±9999.99</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>±9999.999</td>
+                        
+                        <td>±999.9999</td>
+                        
+                        <td>±9999.999</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>1</td>
+                        
+                        <td>0</td>
+                        
+                        <td>±9999.9999</td>
+                        
+                        <td>±999.99999</td>
+                        
+                        <td>±9999.9999</td>
+                        </tr>
+                     </table>
+                  <br>
+                  
+                  <li>Series 30i</li>
+                  
+                  <table border="1">
+                     
+                     <tr>
+                        
+                        <th>5042#3<br>(OFE)</th>
+                        
+                        <th>5042#2<br>(OFD)</th>
+                        
+                        <th>5042#1<br>(OFC)</th>
+                        
+                        <th>5042#0<br>(OFA)</th>
+                        
+                        <th>Linear axis<br>mm input<br>[mm]</th>
+                        
+                        <th>Linear axis<br>inch input<br>[inch]</th>
+                        
+                        <th>Rotation axis<br> <br>[deg]</th>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>1</td>
+                        
+                        <td>±9999.99</td>
+                        
+                        <td>±999.999</td>
+                        
+                        <td>±9999.99</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>±9999.999</td>
+                        
+                        <td>±999.9999</td>
+                        
+                        <td>±9999.999</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>1</td>
+                        
+                        <td>0</td>
+                        
+                        <td>±9999.9999</td>
+                        
+                        <td>±999.99999</td>
+                        
+                        <td>±9999.9999</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>0</td>
+                        
+                        <td>1</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>±9999.99999</td>
+                        
+                        <td>±999.999999</td>
+                        
+                        <td>±9999.99999</td>
+                        </tr>
+                     
+                     
+                     <tr>
+                        
+                        <td>1</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>0</td>
+                        
+                        <td>±999.999999</td>
+                        
+                        <td>±99.9999999</td>
+                        
+                        <td>±999.999999</td>
+                        </tr>
+                     </table>
+                  </ul>
+               </cmn><a name="Arguments"></a><p class="label">Arguments</p>
+            <div class="dtarg">
+               <name>FlibHndl</name>
+               &nbsp;&nbsp;[&nbsp;
+               <type>in</type>&nbsp;]
+               </div>
+            <div class="ddarg">
+               <content>
+                  
+                  <p>
+                     Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                     </p>
+                  </content>
+            </div>
+            <div class="dtarg">
+               <name>number</name>
+               &nbsp;&nbsp;[&nbsp;
+               <type>in</type>&nbsp;]
+               </div>
+            <div class="ddarg">
+               <content>
+                  
+                  <p>Specify the tool offset number.<br>
+                     The available number of tool offset can be got by <a href="ncdata/cnc_rdtofsinfo.htm" target="_parent">cnc_rdtofsinfo</a> function. </p>
+                  </content>
+            </div>
+            <div class="dtarg">
+               <name>type</name>
+               &nbsp;&nbsp;[&nbsp;
+               <type>in</type>&nbsp;]
+               </div>
+            <div class="ddarg">
+               <content>
+                  
+                  <p>Specify the tool offset type. (see the following table)</p>
+                  
+                  <ul>
+                     
+                     <div class="xis"> <!-- attention -->
+                        
+                        <li>Machining Center Series (M series, including Power Mate i, PMi-A)</li>
+                        
+                        <table border="1">
+                           
+                           <tr>
+                              
+                              <td></td>
+                              
+                              <td>Cutter radius</td>
+                              
+                              <td>Tool length</td>
+                              </tr>
+                           
+                           
+                           <tr>
+                              
+                              <td>Wear</td>
+                              
+                              <td>0</td>
+                              
+                              <td>2</td>
+                              </tr>
+                           
+                           
+                           <tr>
+                              
+                              <td>Geometry</td>
+                              
+                              <td>1</td>
+                              
+                              <td>3</td>
+                              </tr>
+                           </table>
+                        Specify "cutter radius" in case of no distinction of cutter radius/tool length, and
+                        "wear" in case of no distinction of wear/geometry.<br>
+                        <br>
+                        </div> <!-- class="xis" -->
+                     
+                     
+                     <li>Machining Center Series (M series<span class="xis">, Series 30i</span>)</li>
+                     
+                     <table border="1">
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>Cutter radius</td>
+                           
+                           <td>Tool length</td>
+                           
+                           <td>Imaginary tool nose</td>
+                           
+                           <td>Corner R</td>
+                           </tr>
+                        
+                        
+                        <tr>
+                           
+                           <td>Wear</td>
+                           
+                           <td>0</td>
+                           
+                           <td>2</td>
+                           
+                           <td>6</td>
+                           
+                           <td>10</td>
+                           </tr>
+                        
+                        
+                        <tr>
+                           
+                           <td>Geometry</td>
+                           
+                           <td>1</td>
+                           
+                           <td>3</td>
+                           
+                           <td>7</td>
+                           
+                           <td>11</td>
+                           </tr>
+                        </table>
+                     Specify "cutter radius" in case of no distinction of cutter radius/tool length, and
+                     "wear" in case of no distinction of wear/geometry.<br>
+                     <br>
+                     
+                     <li>Lathe Series (T series)</li>
+                     
+                     <table border="1">
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>X axis</td>
+                           
+                           <td>Z axis</td>
+                           
+                           <td>Nose R</td>
+                           
+                           <td>Imaginary tool nose</td>
+                           
+                           <td>Y axis</td>
+                           
+                           <td>4th axis</td>
+                           
+                           <td>5th axis</td>
+                           </tr>
+                        
+                        
+                        <tr>
+                           
+                           <td>Wear</td>
+                           
+                           <td>0</td>
+                           
+                           <td>2</td>
+                           
+                           <td>4</td>
+                           
+                           <td>6</td>
+                           
+                           <td>8</td>
+                           
+                           <td>30</td>
+                           
+                           <td>32</td>
+                           </tr>
+                        
+                        
+                        <tr>
+                           
+                           <td>Geometry</td>
+                           
+                           <td>1</td>
+                           
+                           <td>3</td>
+                           
+                           <td>5</td>
+                           
+                           <td>7</td>
+                           
+                           <td>9</td>
+                           
+                           <td>31</td>
+                           
+                           <td>33</td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td>2nd coord Ware<span class="xis">(Series 30i)</span></td>
+                           
+                           <td>15</td>
+                           
+                           <td>17</td>
+                           
+                           <td>19</td>
+                           
+                           <td>21</td>
+                           
+                           <td>23</td>
+                           
+                           <td>--</td>
+                           
+                           <td>--</td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td>2nd coord Geometry<span class="xis">(Series 30i)</span></td>
+                           
+                           <td>16</td>
+                           
+                           <td>18</td>
+                           
+                           <td>20</td>
+                           
+                           <td>22</td>
+                           
+                           <td>24</td>
+                           
+                           <td>--</td>
+                           
+                           <td>--</td>
+                           </tr>
+                        </table>
+                     Specify "wear" in case of no distinction of wear/geometry.<br>
+                     <br>
+                     
+                     <li>Lathe Series (T series, second geometry offset<span class="xis">, Series 30i</span>)</li>
+                     
+                     <table border="1">
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>X axis</td>
+                           
+                           <td>Z axis</td>
+                           
+                           <td>Y axis</td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td>Geometry</td>
+                           
+                           <td>100</td>
+                           
+                           <td>101</td>
+                           
+                           <td>102</td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td>2nd coord Geometry</td>
+                           
+                           <td>110</td>
+                           
+                           <td>111</td>
+                           
+                           <td>112</td>
+                           </tr>
+                        </table>
+                     
+                     <br>
+                     When the tool offset for milling and turning function option is effective, specify
+                     the following type.<span class="xis">(Series 30i)</span><br>
+                     
+                     <li>Machining Center Series</li>
+                     
+                     <table border="1">
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>X axis</td>
+                           
+                           <td>Tool length</td>
+                           
+                           <td>Cutter radius</td>
+                           
+                           <td>Imaginary tool nose</td>
+                           
+                           <td>Y axis</td>
+                           
+                           <td>Corner R</td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td>Wear</td>
+                           
+                           <td>0</td>
+                           
+                           <td>2</td>
+                           
+                           <td>4</td>
+                           
+                           <td>6</td>
+                           
+                           <td>8</td>
+                           
+                           <td>10</td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td>Geometry</td>
+                           
+                           <td>1</td>
+                           
+                           <td>3</td>
+                           
+                           <td>5</td>
+                           
+                           <td>7</td>
+                           
+                           <td>9</td>
+                           
+                           <td>11</td>
+                           </tr>
+                        </table>
+                     <br>
+                     
+                     <li>Lathe Series (T series)</li>
+                     
+                     <table border="1">
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>X axis</td>
+                           
+                           <td>Z axis</td>
+                           
+                           <td>Nose R</td>
+                           
+                           <td>Imaginary tool nose</td>
+                           
+                           <td>Y axis</td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td>Wear</td>
+                           
+                           <td>0</td>
+                           
+                           <td>2</td>
+                           
+                           <td>4</td>
+                           
+                           <td>6</td>
+                           
+                           <td>8</td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td>Geometry</td>
+                           
+                           <td>1</td>
+                           
+                           <td>3</td>
+                           
+                           <td>5</td>
+                           
+                           <td>7</td>
+                           
+                           <td>9</td>
+                           </tr>
+                        </table>
+                     The tool offset for milling and turning function and the changing active offset value
+                     with manual move function can not specify at same time. So, the wear and geometry
+                     offset for 2nd coordinate are not exist.<br>
+                     <!--                        As for the second geometry offset for lathe system, the complex machining tool offset is similar to an invalid case.<br/> -->
+                     
+                     <br>
+                     
+                     <li>Lathe Series/second geometry offset</li>
+                     
+                     <table border="1">
+                        
+                        <tr>
+                           <td>        </td>
+                           <td>X axis</td>
+                           <td>Z axis</td>
+                           <td>Y axis</td>
+                        </tr>
+                        
+                        <tr>
+                           <td>Geometry</td>
+                           <td>  100 </td>
+                           <td>  101 </td>
+                           <td>  102 </td>
+                        </tr>
+                        </table>
+                     The tool offset for milling and turning function and the changing active offset value
+                     with manual move function can not specify at same time. So, the geometry offset for
+                     2nd coordinate are not exist.<br>
+                     
+                     </ul>
+                  <br>
+                  </content>
+            </div>
+            <div class="dtarg">
+               <name>length</name>
+               &nbsp;&nbsp;[&nbsp;
+               <type>in</type>&nbsp;]
+               </div>
+            <div class="ddarg">
+               <content>
+                  
+                  <p>Specify 8.</p>
+                  </content>
+            </div>
+            <div class="dtarg">
+               <name>data</name>
+               &nbsp;&nbsp;[&nbsp;
+               <type>in</type>&nbsp;]
+               </div>
+            <div class="ddarg">
+               <content>
+                  
+                  <p>Set the tool offset value.</p>
+                  </content>
+            </div><a name="Return"></a><p class="label">Return</p>
+            <p>EW_OK is returned on successful completion, otherwise any value except EW_OK is returned.</p>
+            <p>The major error codes are as follows.</p>
+            <table border="1">
+               <colgroup align="center" valign="top"></colgroup>
+               <colgroup align="left" valign="top"></colgroup>
+               <colgroup align="left" valign="top"></colgroup>
+               <tr>
+                  <th>Return code</th>
+                  <th>Meaning/Error handling</th>
+               </tr>
+               <tr>
+                  <td>
+                     <name>EW_LENGTH</name><br>(2)</td>
+                  <td>
+                     <content>Data block length error<br>Size (length) is not 8.</content>
+                  </td>
+               </tr>
+               <tr>
+                  <td>
+                     <name>EW_NUMBER</name><br>(3)</td>
+                  <td>
+                     <content>Data number error<br>Offset number (number) is wrong.</content>
+                  </td>
+               </tr>
+               <tr>
+                  <td>
+                     <name>EW_ATTRIB</name><br>(4)</td>
+                  <td>
+                     <content>Data Type error<br>Offset type (type) is wrong.</content>
+                  </td>
+               </tr>
+               <tr>
+                  <td>
+                     <name>EW_ALARM</name><br>(15)</td>
+                  <td>
+                     <content>Data error<br>Offset data is out of range of the wrong operation prevention functions.</content>
+                  </td>
+               </tr>
+               <tr>
+                  <td>
+                     <name>EW_DATA</name><br>(5)</td>
+                  <td>
+                     <content>Data error (Series 15)<br>Offset data (data) is out of range.</content>
+                  </td>
+               </tr>
+            </table>
+            <p></p>
+            <p>
+               As for the other return codes or the details, see 
+               
+               
+               "<a href="errcode.htm" target="_parent">Return status of Data window function</a>"
+               
+               </p><a name="CNC option"></a><p class="label">CNC option</p>
+            <p></p>
+            <p>And this function is related to the following CNC option.</p>
+            <ul>
+               <p>
+                  <type>
+                     
+                     <li>Series 15</li>
+                     
+                     <table>
+                        
+                        <colgroup valign="top" width="30"></colgroup>
+                        
+                        <colgroup valign="top" width="250"></colgroup>
+                        
+                        <colgroup valign="top"></colgroup>
+                        
+                        <tr>
+                           
+                           <td>M</td>
+                           
+                           <td>Tool offset extension</td>
+                           
+                           <td>(32)/99/200/499/999 sets</td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>Tool offset memory</td>
+                           
+                           <td>(A)/B/C</td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td colspan="2">Extended tool offset value(number of offset is half of the above sets.)</td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td>T</td>
+                           
+                           <td>Tool offset extension</td>
+                           
+                           <td>(32)/64/160 sets</td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>Tool offset memory</td>
+                           
+                           <td>(A)/B</td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>Cutter radius compensation</td>
+                           
+                           <td></td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td colspan="2">Extended tool offset value(number of offset is half of the above sets.)</td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td>TT</td>
+                           
+                           <td>Tool offset extension(each path)</td>
+                           
+                           <td>(16)/32/80 sets</td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>Tool offset memory</td>
+                           
+                           <td>(A)/B</td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>Cutter radius compensation</td>
+                           
+                           <td></td>
+                           </tr>
+                        </table>
+                     <br>
+                     
+                     <li>Series 15i</li>
+                     
+                     <table>
+                        
+                        <colgroup valign="top" width="30"></colgroup>
+                        
+                        <colgroup valign="top" width="250"></colgroup>
+                        
+                        <colgroup valign="top"></colgroup>
+                        
+                        <tr>
+                           
+                           <td>M</td>
+                           
+                           <td>Tool offset extension</td>
+                           
+                           <td>(32)/99/200/499/999 sets</td>
+                           </tr>
+                        
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>Tool offset memory</td>
+                           
+                           <td>(A)/B/C</td>
+                           </tr>
+                        </table>
+                     <br>
+                     
+                     <li>Series 16/18/21, 16i/18i/21i</li>
+                     
+                     <table>
+                        
+                        <colgroup valign="top" width="30"></colgroup>
+                        
+                        <colgroup valign="top" width="250"></colgroup>
+                        
+                        <colgroup valign="top"></colgroup>
+                        
+                        <tr>
+                           
+                           <td>M</td>
+                           
+                           <td>Tool offset extension</td>
+                           
+                           <td>(32)/64/99/200/400/499/999 sets</td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>Tool offset memory</td>
+                           
+                           <td>(A)/B/C</td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td>T</td>
+                           
+                           <td>Tool offset extension</td>
+                           
+                           <td>(16)/32/64/99 sets</td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>Geometry/wear offset</td>
+                           
+                           <td></td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>Cutter radius compensation</td>
+                           
+                           <td></td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>Y axis offset</td>
+                           
+                           <td></td>
+                           </tr>
+                        </table>
+                     <br>
+                     
+                     
+                     <li>Series 0i-A/B/C</li>
+                     
+                     <table>
+                        
+                        <colgroup valign="top" width="30"></colgroup>
+                        
+                        <colgroup valign="top" width="250"></colgroup>
+                        
+                        <colgroup valign="top"></colgroup>
+                        
+                        <tr>
+                           
+                           <td>M</td>
+                           
+                           <td>Tool offset extension</td>
+                           
+                           <td>32/(400) sets</td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>Tool offset memory</td>
+                           
+                           <td>A/(C)</td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td>T</td>
+                           
+                           <td>Tool offset extension</td>
+                           
+                           <td>32/(64) sets</td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>Geometry/wear offset</td>
+                           
+                           <td></td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>Cutter radius compensation</td>
+                           
+                           <td></td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>Y axis offset</td>
+                           
+                           <td></td>
+                           </tr>
+                        </table>
+                     <br>
+                     
+                     
+                     <li>Series 0i-D/F</li>
+                     
+                     <table>
+                        
+                        <colgroup valign="top" width="30"></colgroup>
+                        
+                        <colgroup valign="top" width="250"></colgroup>
+                        
+                        <colgroup valign="top"></colgroup>
+                        
+                        <tr>
+                           
+                           <td>M</td>
+                           
+                           <td>Tool offset extension</td>
+                           
+                           <td>32/(400) sets</td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>Tool offset memory</td>
+                           
+                           <td>A/(C)</td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td>T</td>
+                           
+                           <td>Tool offset extension</td>
+                           
+                           <td>32/(99) sets</td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>Geometry/wear offset</td>
+                           
+                           <td></td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>Cutter radius compensation</td>
+                           
+                           <td></td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>Y axis offset</td>
+                           
+                           <td></td>
+                           </tr>
+                        </table>
+                     <br>
+                     
+                     
+                     <li>Series 30i</li>
+                     
+                     <table>
+                        
+                        <colgroup valign="top" width="30"></colgroup>
+                        
+                        <colgroup valign="top" width="250"></colgroup>
+                        
+                        <colgroup valign="top"></colgroup>
+                        
+                        <tr>
+                           
+                           <td>M</td>
+                           
+                           <td>Tool offset extension</td>
+                           
+                           <td>(32)/64/99/200/400/499/999/2000 sets</td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>Tool offset memory</td>
+                           
+                           <td>(A)/B/C</td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>Tool radius/Cutter radius compensation</td>
+                           
+                           <td></td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>Tool offset for Milling and Turning function</td>
+                           
+                           <td></td>
+                           </tr>
+                        
+                        
+                        <tr>
+                           
+                           <td>T</td>
+                           
+                           <td>Tool offset extension</td>
+                           
+                           <td>(32)/64/99/200/400/499/999/2000 sets</td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>Geometry/wear offset</td>
+                           
+                           <td></td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>Tool radius/Cutter radius compensation</td>
+                           
+                           <td></td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>Y axis offset</td>
+                           
+                           <td></td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>Second figure tool offset</td>
+                           
+                           <td></td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>4th/5th Axis Offset Function</td>
+                           
+                           <td></td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>The changing active offset</td>
+                           
+                           <td></td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td></td>
+                           
+                           <td>Tool offset for Milling and Turning function</td>
+                           
+                           <td></td>
+                           </tr>
+                        </table>
+                     <br>
+                     
+                     <li>Power Motion i</li>
+                     
+                     <table>
+                        
+                        <colgroup valign="top" width="30"></colgroup>
+                        
+                        <colgroup valign="top" width="250"></colgroup>
+                        
+                        <colgroup valign="top"></colgroup>
+                        
+                        <tr>
+                           
+                           <td> </td>
+                           
+                           <td>Tool offset extension</td>
+                           
+                           <td>(32)/99/200 sets</td>
+                           </tr>
+                        </table>
+                     <br>
+                     
+                     <p>* ( ) : Basic</p>
+                     </type>
+               </p>
+            </ul>
+            <p>For HSSB connection,</p>
+            <ul>
+               <p>
+                  <hssb>The extended driver/library function is necessary.</hssb>
+               </p>
+            </ul>
+            <p>For Ethernet connection,</p>
+            <ul>
+               <p>
+                  <ethr>
+                     <p>The Ethernet function and the extended driver/library function are necessary.</p>
+                     
+                     <p>However, in case of FS16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required
+                        CNC option is as follows.</p>
+                     
+                     <p>When Embedded Ethernet is used,</p>
+                     
+                     <p class="dd">above two optional functions are not required.</p>
+                     
+                     <p>When Ethernet board is used,</p>
+                     
+                     <p class="dd">only Ethernet function is required.</p>
+                     </ethr>
+               </p>
+            </ul>
+            <p>
+               <add></add>
+            </p><a name="CNC parameter"></a><p class="label">CNC parameter</p>
+            <p>This function is related to the following CNC parameter.<br>
+               See the manual of CNC parameter for details.</p>
+            <p>
+               <type>
+                  
+                  <li>Series 15/15i</li>
+                  
+                  <div class="dd">6002#0,#1, 6004#0, 6007#0</div><br>
+                  
+                  <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C</li>
+                  
+                  <div class="dd">1004#0,#1</div><br>
+                  
+                  <li>Series 0i-D, PMi-A</li>
+                  
+                  <div class="dd">5042#1,#0<br>
+                     5009#5(Only M Series)<br>
+                     5024</div><br>
+                  
+                  <li>Series 0i-F</li>
+                  
+                  <div class="dd">5042#1,#0<br>
+                     5009#5(Only M Series)<br>
+                     5024<br>
+                     8132#1=1 (must be set)</div><br>
+                  
+                  <li>Series 30i</li>
+                  
+                  <div class="dd">5042#3,#2,#1,#0<br>
+                     5009#5(Only M Series)<br>
+                     5024</div><br>
+                  
+                  <li>Power Mate i</li>
+                  
+                  <div class="dd">1004#0(In case of Power Mate i-H)<br>
+                     1004#1(In case of Power Mate i-D)</div><br>
+                  </type>
+            </p>
+            <p>
+               <add></add>
+            </p><a name="CNC mode"></a><p class="label">CNC mode</p>
+            <p>This function can be used in any CNC mode.</p><a name="Available CNC"></a><p class="label">Available CNC</p>
+            <table border="1">
+               <colgroup width="100em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <tr>
+                  <th></th>
+                  <th>0i-A</th>
+                  <th>0i-B/C(Note)</th>
+                  <th>0i-D</th>
+                  <th>0i-F</th>
+                  <th>15</th>
+                  <th>15i</th>
+                  <th>16</th>
+                  <th>18</th>
+                  <th>21</th>
+                  <th>16i-A</th>
+                  <th>18i-A</th>
+                  <th>21i-A</th>
+                  <th>16i-B</th>
+                  <th>18i-B</th>
+                  <th>21i-B</th>
+                  <th>30i-A</th>
+                  <th>30i-B</th>
+               </tr>
+               <tr>
+                  <td>M (Machining)</td>
+                  <td class="support">
+                     <fs0ia>H</fs0ia>
+                  </td>
+                  <td class="support">
+                     <fs0ib>O</fs0ib>
+                  </td>
+                  <td class="support">
+                     <fs0id>O</fs0id>
+                  </td>
+                  <td class="support">
+                     <fs0if>O</fs0if>
+                  </td>
+                  <td class="support">
+                     <fs15>H</fs15>
+                  </td>
+                  <td class="support">
+                     <fs15i>O</fs15i>
+                  </td>
+                  <td class="support">
+                     <fs16>H</fs16>
+                  </td>
+                  <td class="support">
+                     <fs18>H</fs18>
+                  </td>
+                  <td class="support">
+                     <fs21>H</fs21>
+                  </td>
+                  <td class="support">
+                     <fs16ia>O</fs16ia>
+                  </td>
+                  <td class="support">
+                     <fs18ia>O</fs18ia>
+                  </td>
+                  <td class="support">
+                     <fs21ia>O</fs21ia>
+                  </td>
+                  <td class="support">
+                     <fs16ib>O</fs16ib>
+                  </td>
+                  <td class="support">
+                     <fs18ib>O</fs18ib>
+                  </td>
+                  <td class="support">
+                     <fs21ib>O</fs21ib>
+                  </td>
+                  <td class="support">
+                     <fs30ia>O</fs30ia>
+                  </td>
+                  <td class="support">
+                     <fs30ib>O</fs30ib>
+                  </td>
+               </tr>
+               <tr>
+                  <td>T (Turning)  </td>
+                  <td class="support">
+                     <fs0ia>H</fs0ia>
+                  </td>
+                  <td class="support">
+                     <fs0ib>O</fs0ib>
+                  </td>
+                  <td class="support">
+                     <fs0id>O</fs0id>
+                  </td>
+                  <td class="support">
+                     <fs0if>O</fs0if>
+                  </td>
+                  <td class="support">
+                     <fs15>H</fs15>
+                  </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="support">
+                     <fs16>H</fs16>
+                  </td>
+                  <td class="support">
+                     <fs18>H</fs18>
+                  </td>
+                  <td class="support">
+                     <fs21>H</fs21>
+                  </td>
+                  <td class="support">
+                     <fs16ia>O</fs16ia>
+                  </td>
+                  <td class="support">
+                     <fs18ia>O</fs18ia>
+                  </td>
+                  <td class="support">
+                     <fs21ia>O</fs21ia>
+                  </td>
+                  <td class="support">
+                     <fs16ib>O</fs16ib>
+                  </td>
+                  <td class="support">
+                     <fs18ib>O</fs18ib>
+                  </td>
+                  <td class="support">
+                     <fs21ib>O</fs21ib>
+                  </td>
+                  <td class="support">
+                     <fs30ia>O</fs30ia>
+                  </td>
+                  <td class="support">
+                     <fs30ib>O</fs30ib>
+                  </td>
+               </tr>
+               <tr>
+                  <td>LC (Loader)  </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="support">
+                     <fs16>H</fs16>
+                  </td>
+                  <td class="support">
+                     <fs18>H</fs18>
+                  </td>
+                  <td class="support">
+                     <fs21>H</fs21>
+                  </td>
+                  <td class="support">
+                     <fs16ia>H</fs16ia>
+                  </td>
+                  <td class="support">
+                     <fs18ia>H</fs18ia>
+                  </td>
+                  <td class="support">
+                     <fs21ia>H</fs21ia>
+                  </td>
+                  <td class="support">
+                     <fs16ib>H</fs16ib>
+                  </td>
+                  <td class="support">
+                     <fs18ib>H</fs18ib>
+                  </td>
+                  <td class="support">
+                     <fs21ib>H</fs21ib>
+                  </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+               </tr>
+            </table>
+            <p></p>
+            <table border="1">
+               <colgroup width="100em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <tr>
+                  <th></th>
+                  <th>0i-D</th>
+                  <th>0i-F</th>
+                  <th>16i</th>
+                  <th>18i</th>
+                  <th>30i-A</th>
+                  <th>30i-B</th>
+               </tr>
+               <tr>
+                  <td>P (Punch press)</td>
+                  <td class="support">
+                     <fs0id>O</fs0id>
+                  </td>
+                  <td class="support">
+                     <fs0if>O</fs0if>
+                  </td>
+                  <td class="support">
+                     <fs16i>O</fs16i>
+                  </td>
+                  <td class="support">
+                     <fs18i>O</fs18i>
+                  </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="support">
+                     <fs30ib>O</fs30ib>
+                  </td>
+               </tr>
+               <tr>
+                  <td>L (Laser)      </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="support">
+                     <fs16i>O</fs16i>
+                  </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="support">
+                     <fs30ib>O</fs30ib>
+                  </td>
+               </tr>
+               <tr>
+                  <td>W (Wire)       </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="support">
+                     <fs16i>E</fs16i>
+                  </td>
+                  <td class="support">
+                     <fs18i>E</fs18i>
+                  </td>
+                  <td class="support">
+                     <fs30ia>O</fs30ia>
+                  </td>
+                  <td class="support">
+                     <fs30ib>O</fs30ib>
+                  </td>
+               </tr>
+            </table>
+            <p></p><br><table border="1">
+               <colgroup width="100em"></colgroup>
+               <colgroup align="center" width="86em"></colgroup>
+               <colgroup align="center" width="86em"></colgroup>
+               <tr>
+                  <td>Power Mate i-D</td>
+                  <td class="support">
+                     <d>O</d>
+                  </td>
+               </tr>
+               <tr>
+                  <td>Power Mate i-H</td>
+                  <td class="support">
+                     <h>O</h>
+                  </td>
+               </tr>
+               <tr>
+                  <td>Power Motion i-A</td>
+                  <td class="support"><a>O</a></td>
+               </tr>
+            </table>
+            <p></p>
+            <table class="dd">
+               <tr>
+                  <td></td>
+                  <td>"O"</td>
+                  <td>:</td>
+                  <td>Both Ethernet and HSSB</td>
+               </tr>
+               <tr>
+                  <td></td>
+                  <td>"E"</td>
+                  <td>:</td>
+                  <td>Ethernet</td>
+               </tr>
+               <tr>
+                  <td></td>
+                  <td>"H"</td>
+                  <td>:</td>
+                  <td>HSSB</td>
+               </tr>
+               <tr>
+                  <td></td>
+                  <td>"X"</td>
+                  <td>:</td>
+                  <td>Cannot be used</td>
+               </tr>
+               <tr>
+                  <td></td>
+                  <td>"-"</td>
+                  <td>:</td>
+                  <td>None</td>
+               </tr>
+            </table>
+            <p style="background-color:mistyrose;">Note) 0i-C does not support the HSSB function.</p>
+            <p>
+               <add><b></b></add>
+            </p><a name="Reference"></a><p class="label">See Also</p>
+            <p><a class="func" target="_parent" href="ncdata/cnc_rdtofs.htm">cnc_rdtofs</a>&nbsp;&nbsp;
+               <a class="func" target="_parent" href="ncdata/cnc_rdtofsr.htm">cnc_rdtofsr</a>&nbsp;&nbsp;
+               <a class="func" target="_parent" href="ncdata/cnc_wrtofsr.htm">cnc_wrtofsr</a>&nbsp;&nbsp;
+               <a class="func" target="_parent" href="ncdata/cnc_rdtofsinfo.htm">cnc_rdtofsinfo</a>&nbsp;&nbsp;
+               </p><a name="Example"></a><p class="label">Example(C Language)</p>
+            <p></p>
+            <pre>
+
+The following program writes the offset value of specified offset number.
+(for M series)
+
+
+#include "fwlib32.h"
+
+/* tidx is tool index. */
+/* offset is new offset value. */
+short example( short tidx, long offset )
+{
+    short ret ;
+    ret = cnc_wrtofs( h, tidx, 0, 8, offset ) ;
+    return ( ret ) ;
+}
+
+        </pre>
+            <p class="label">Example(C#)</p>
+            <pre>
+The following program writes the offset value of specified offset number.
+(for M series)
+
+class example
+{
+    /* tidx is tool index. */
+    /* offset is new offset value. */
+    public short sample(short tidx, int offset)
+    {
+        short ret;
+        ret = Focas1.cnc_wrtofs(h, tidx, 0, 8, offset);
+        return (ret);
+    }
+}</pre>
+         </div></FONT><hr>
+   </body>
+</html>

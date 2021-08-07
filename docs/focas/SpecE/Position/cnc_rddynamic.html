@@ -1,0 +1,1263 @@
+<html xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:bop2="http://www.fanuc.co.jp/develop/mmc/bop2">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <title>cnc_rddynamic</title>
+      <link rel="stylesheet" type="text/css" href="../fwlib32.css">
+   </head>
+   <body bgcolor="#FFFFFF"><FONT face="Verdana,Arial,Helvetica,sans-serif"><a name="Function Name"></a><p class="ftitle">cnc_rddynamic</p>
+         <div class="text"><a name="Declaration"></a><p class="label">Declaration</p>
+            <div class="mth">#include "fwlib32.h" or "fwlib64.h"
+               <p></p>
+               <prottype>FWLIBAPI short WINAPI cnc_rddynamic( unsigned short FlibHndl, short axis, short length,
+                  ODBDY *rddynamic );</prottype>
+            </div><a name="Description"></a><p class="label">Description</p>
+            <cmn>
+               
+               <p>Read various data which changes at CNC operation at a time. The data which can be
+                  read is as follows.</p>
+               
+               
+               <table border="1">
+                  
+                  <tr>
+                     
+                     <th>Data</th>
+                     
+                     <th>Function used for reading individually</th>
+                     </tr>
+                  
+                  <tr>
+                     
+                     <td>Alarm status</td>
+                     
+                     <td><a href="misc/cnc_alarm.htm" target="_parent">cnc_alarm</a></td>
+                     </tr>
+                  
+                  <tr>
+                     
+                     <td>Program number in executing</td>
+                     
+                     <td><a href="program/cnc_rdprgnum.htm" target="_parent">cnc_rdprgnum</a></td>
+                     </tr>
+                  
+                  <tr>
+                     
+                     <td>Program number of the main program </td>
+                     
+                     <td><a href="program/cnc_rdprgnum.htm" target="_parent">cnc_rdprgnum</a></td>
+                     </tr>
+                  
+                  <tr>
+                     
+                     <td>Sequence number </td>
+                     
+                     <td><a href="program/cnc_rdseqnum.htm" target="_parent">cnc_rdseqnum</a></td>
+                     </tr>
+                  
+                  <tr>
+                     
+                     <td>Actual feed rate</td>
+                     
+                     <td><a href="position/cnc_actf.htm" target="_parent">cnc_actf</a></td>
+                     </tr>
+                  
+                  <tr>
+                     
+                     <td>Actual spindle speed </td>
+                     
+                     <td><a href="position/cnc_acts.htm" target="_parent">cnc_acts</a></td>
+                     </tr>
+                  
+                  <tr>
+                     
+                     <td>Absolute position data of controlled axis (2)</td>
+                     
+                     <td><a href="position/cnc_absolute2.htm" target="_parent">cnc_absolute2</a></td>
+                     </tr>
+                  
+                  <tr>
+                     
+                     <td>Machine position data of controlled axis </td>
+                     
+                     <td><a href="position/cnc_machine.htm" target="_parent">cnc_machine</a></td>
+                     </tr>
+                  
+                  <tr>
+                     
+                     <td>Relative position data of controlled axis (2)</td>
+                     
+                     <td><a href="position/cnc_relative2.htm" target="_parent">cnc_relative2</a></td>
+                     </tr>
+                  
+                  <tr>
+                     
+                     <td>Amount of distance to go of controlled axis </td>
+                     
+                     <td><a href="position/cnc_distance.htm" target="_parent">cnc_distance</a></td>
+                     </tr>
+                  </table>
+               
+               
+               <p>The formats of each data are same as "Function used for reading individually". Refer
+                  to each function for details.</p>
+               
+               The data concerning the axis is read by specified with axis.
+               Each data is stored in oaxis structure in ODBDY.<br><br>
+               
+               All axes can be read at a time by specifying ALL_AXES for "axis".
+               In that case, various data concerning the axis is stored in each array
+               of faxis inside of ODBDY.<br><br>
+               
+               The decimal point position of the various data concerning the axis
+               can be acquired in the <a href="misc/cnc_getfigure.htm" target="_parent">cnc_getfigure</a> function.
+               <br>
+               
+               <span class="xis">
+                  
+                  <p>
+                     
+                     <li>Series 15i</li>
+                     
+                     <ul>This function cannot read all alarm status.<br>Please use <a href="position/cnc_rddynamic2.htm" target="_parent">cnc_rddynamic2</a> function in order to read all alarm status.</ul>
+                     
+                     <ul>
+                        it is
+                        necessary to switch API to the one for the program number 8 digits.
+                        See "<a href="general.htm#O8">Program number 8 digits</a>" for details.</ul>
+                     </p>
+                  
+                  
+                  <p>
+                     
+                     <li>Series 16/18/16i/18i, Power Mate i</li>
+                     
+                     <ul>it is possible to use this function for
+                        the program number 8 digits, however it is necessary to switch API to
+                        the one for the program number 8 digits. See "<a href="general.htm#O8">Program number 8 digits</a>" for details.</ul>
+                     </p>
+                  
+                  
+                  <p>
+                     
+                     <li>Series 16i/18i-W</li>
+                     
+                     <ul>the data corresponding to "Actual spindle
+                        speed", "Amount of distance to go of controlled axis" cannot be got.</ul>
+                     </p>
+                  </span>
+               
+               </cmn><a name="Arguments"></a><p class="label">Arguments : HSSB</p>
+            <div class="dtarg">
+               <name>FlibHndl</name>
+               &nbsp;&nbsp;[&nbsp;
+               <type>in</type>&nbsp;]
+               </div>
+            <div class="ddarg">
+               <content>
+                  
+                  <p>
+                     Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                     </p>
+                  </content>
+            </div>
+            <div class="dtarg">
+               <name>axis</name>
+               &nbsp;&nbsp;[&nbsp;
+               <type>in</type>&nbsp;]
+               </div>
+            <div class="ddarg">
+               <content>
+                  
+                  <p>Specify axis number to read.
+                     
+                     <table class="dd">
+                        
+                        <tr>
+                           
+                           <td>ALL_AXES</td>
+                           
+                           <td>:</td>
+                           
+                           <td>for all axes(ALL_AXES : -1)</td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td>1,..,m</td>
+                           
+                           <td>:</td>
+                           
+                           <td>for each axis(m : number of controlled axis)</td>
+                           </tr>
+                        </table>
+                     </p>
+                  </content>
+            </div>
+            <div class="dtarg">
+               <name>length</name>
+               &nbsp;&nbsp;[&nbsp;
+               <type>in</type>&nbsp;]
+               </div>
+            <div class="ddarg">
+               <content>
+                  
+                  <p>Specify the length of the data block(size of ODBDY structure)</p>
+                  
+                  <p><b>ODBDY</b>
+                     
+                     <table>
+                        
+                        <colgroup align="left" valign="top"></colgroup>
+                        
+                        <colgroup align="left" valign="top"></colgroup>
+                        
+                        <tr>
+                           
+                           <th>for each axis</th>
+                           
+                           <th></th>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td><b>for program number 4 digits</b></td>
+                           
+                           <td><b>for program number 8 digits</b></td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td valign="top"><img src="position/dyn.gif"></td>
+                           
+                           <td valign="top"><img src="position/dyn8.gif"></td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <th>for all axes</th>
+                           
+                           <th></th>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td><b>for program number 4 digits</b></td>
+                           
+                           <td><b>for program number 8 digits</b></td>
+                           </tr>
+                        
+                        <tr>
+                           
+                           <td valign="top"><img src="position/dyna.gif"></td>
+                           
+                           <td valign="top"><img src="position/dyna8.gif"></td>
+                           </tr>
+                        </table>
+                     </p>
+                  
+                  <p>n = Maximum controlled axes (The data for current controlled axes are valid)</p>
+                  </content>
+            </div>
+            <div class="dtarg">
+               <name>rddynamic</name>
+               &nbsp;&nbsp;[&nbsp;
+               <type>out</type>&nbsp;]
+               </div>
+            <div class="ddarg">
+               <content>
+                  
+                  <p>Pointer to the ODBDY structure including various data. The ODBDY structure is as follows.</p>
+                  
+                  <pre>
+For program number 4 digits
+
+typedef struct odbdy {
+        short  dummy ;     /* not used                */
+        short  axis ;      /* axis number             */
+        short  alarm ;     /* alarm status            */
+        short  prgnum ;    /* current program number  */
+        short  prgmnum ;   /* main program number     */
+        long   seqnum ;    /* current sequence number */
+        long   actf ;      /* actual feedrate         */
+        long   acts ;      /* actual spindle speed    */
+        union {
+            struct {
+                long  absolute[MAX_AXIS] ; /* absolute */
+                long  machine[MAX_AXIS] ;  /* machine  */
+                long  relative[MAX_AXIS] ; /* relative */
+                long  distance[MAX_AXIS] ; /* distance to go */
+            } faxis ; /* In case of all axes */
+            struct {
+                long  absolute ; /* absolute */
+                long  machine ;  /* machine  */
+                long  relative ; /* relative */
+                long  distance ; /* distance to go */
+            } oaxis ; /* In case of 1 axis */
+        } pos ;
+} ODBDY ;              /* MAX_AXIS is the maximum controlled axes. */
+
+
+For program number 8 digits
+
+typedef struct odbdy {
+        short  dummy ;     /* not used                */
+        short  axis ;      /* axis number             */
+        short  alarm ;     /* alarm status            */
+        long   prgnum ;    /* current program number  */
+        long   prgmnum ;   /* main program number     */
+        long   seqnum ;    /* current sequence number */
+        long   actf ;      /* actual feedrate         */
+        long   acts ;      /* actual spindle speed    */
+        union {
+            struct {
+                long  absolute[MAX_AXIS] ; /* absolute */
+                long  machine[MAX_AXIS] ;  /* machine  */
+                long  relative[MAX_AXIS] ; /* relative */
+                long  distance[MAX_AXIS] ; /* distance to go */
+            } faxis ; /* In case of all axes */
+            struct {
+                long  absolute ; /* absolute */
+                long  machine ;  /* machine  */
+                long  relative ; /* relative */
+                long  distance ; /* distance to go */
+            } oaxis ; /* In case of 1 axis */
+        } pos ;
+} ODBDY ;                       /* MAX_AXIS is the maximum controlled axes. */
+</pre>
+                  
+                  <ul>
+                     
+                     <dl>
+                        
+                        <dt>dummy</dt>
+                        
+                        <dd>Not used</dd>
+                        
+                        <dt>axis</dt>
+                        
+                        <dd>Axis number<br>The read axis number is returned.</dd>
+                        
+                        <dt>alarm</dt>
+                        
+                        <dd>Alarm status<br>The meaning of each bit is as follows.
+                           <span class="xis">
+                              
+                              <ul><br><li>Series 15/15i</li>
+                                 
+                                 <table>
+                                    
+                                    <tr>
+                                       <td>#00</td>
+                                       <td>:</td>
+                                       <td>Background P/S</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#01</td>
+                                       <td>:</td>
+                                       <td>Foreground P/S</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#02</td>
+                                       <td>:</td>
+                                       <td>Overheat alarm (Only Series 15)</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#03</td>
+                                       <td>:</td>
+                                       <td>Sub-CPU error (Only Series 15)</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#04</td>
+                                       <td>:</td>
+                                       <td>Syncronized error</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#05</td>
+                                       <td>:</td>
+                                       <td>Parameter switch on</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#06</td>
+                                       <td>:</td>
+                                       <td>Overtravel,Ext. data</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#07</td>
+                                       <td>:</td>
+                                       <td>PMC error</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#08</td>
+                                       <td>:</td>
+                                       <td>External alarm message</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#09</td>
+                                       <td>:</td>
+                                       <td>(Not used)</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#10</td>
+                                       <td>:</td>
+                                       <td>Serious P/S</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#11</td>
+                                       <td>:</td>
+                                       <td>(Not used)</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#12</td>
+                                       <td>:</td>
+                                       <td>Servo alarm</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#13</td>
+                                       <td>:</td>
+                                       <td>I/O error</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#14</td>
+                                       <td>:</td>
+                                       <td>Power off parameter set</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#15</td>
+                                       <td>:</td>
+                                       <td>System error</td>
+                                    </tr>
+                                    </table>
+                                 </ul><br>
+                              
+                              <ul>
+                                 <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i</li>
+                                 
+                                 <table>
+                                    
+                                    <tr>
+                                       <td>#00</td>
+                                       <td>:</td>
+                                       <td>P/S alarm 100 </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#01</td>
+                                       <td>:</td>
+                                       <td>P/S alarm 000 </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#02</td>
+                                       <td>:</td>
+                                       <td>P/S alarm 101 </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#03</td>
+                                       <td>:</td>
+                                       <td>P/S alarm except above</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#04</td>
+                                       <td>:</td>
+                                       <td>Overtravel alarm</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#05</td>
+                                       <td>:</td>
+                                       <td>Overheat alarm</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#06</td>
+                                       <td>:</td>
+                                       <td>Servo alarm</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#07</td>
+                                       <td>:</td>
+                                       <td>System alarm</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#08</td>
+                                       <td>:</td>
+                                       <td>APC alarm</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#09</td>
+                                       <td>:</td>
+                                       <td>Spindle alarm</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#10</td>
+                                       <td>:</td>
+                                       <td>P/S alarm 5000, Punch press alarm</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#11</td>
+                                       <td>:</td>
+                                       <td>Laser alarm</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#12</td>
+                                       <td>:</td>
+                                       <td>(Not used)</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#13</td>
+                                       <td>:</td>
+                                       <td>(Not used)</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#14</td>
+                                       <td>:</td>
+                                       <td>(Not used)</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#15</td>
+                                       <td>:</td>
+                                       <td>External alarm message</td>
+                                    </tr>
+                                    </table>
+                                 </ul><br>
+                              
+                              <ul>
+                                 <li>Series 16i/18i-W</li>
+                                 
+                                 <table>
+                                    
+                                    <tr>
+                                       <td>#00</td>
+                                       <td>:</td>
+                                       <td>P/S alarm</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#01</td>
+                                       <td>:</td>
+                                       <td>Overtravel alarm</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#02</td>
+                                       <td>:</td>
+                                       <td>Servo alarm</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#03</td>
+                                       <td>:</td>
+                                       <td>(Not used)</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#04</td>
+                                       <td>:</td>
+                                       <td>Overheat alarm</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#05</td>
+                                       <td>:</td>
+                                       <td>Stroke limit - 1</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#06</td>
+                                       <td>:</td>
+                                       <td>Stroke limit - 2</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#07</td>
+                                       <td>:</td>
+                                       <td>Edit alarm</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#08</td>
+                                       <td>:</td>
+                                       <td>APC alarm</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#09</td>
+                                       <td>:</td>
+                                       <td>System alarm</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#10</td>
+                                       <td>:</td>
+                                       <td>P/S 5000 ... alarm</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#11</td>
+                                       <td>:</td>
+                                       <td>(Not used)</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#12</td>
+                                       <td>:</td>
+                                       <td>(Not used)</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#13</td>
+                                       <td>:</td>
+                                       <td>(Not used)</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#14</td>
+                                       <td>:</td>
+                                       <td>External alarm</td>
+                                    </tr>
+                                    
+                                    <tr>
+                                       <td>#15</td>
+                                       <td>:</td>
+                                       <td>Reverse control alarm</td>
+                                    </tr>
+                                    </table>
+                                 </ul><br>
+                              </span>
+                           
+                           <ul><span class="xis">
+                                 <li>Series 30i, 0i-D/F, PMi-A</li></span>
+                              
+                              <table>
+                                 
+                                 <tr>
+                                    <td>#00</td> 
+                                    <td>:</td> 
+                                    <td>Parameter switch on</td>          
+                                    <td>(SW)</td> </tr>
+                                 
+                                 <tr>
+                                    <td>#01</td> 
+                                    <td>:</td> 
+                                    <td>Power off parameter set</td>      
+                                    <td>(PW)</td> </tr>
+                                 
+                                 <tr>
+                                    <td>#02</td> 
+                                    <td>:</td> 
+                                    <td>I/O error</td>                    
+                                    <td>(IO)</td> </tr>
+                                 
+                                 <tr>
+                                    <td>#03</td> 
+                                    <td>:</td> 
+                                    <td>Foreground P/S</td>               
+                                    <td>(PS)</td> </tr>
+                                 
+                                 <tr>
+                                    <td>#04</td> 
+                                    <td>:</td> 
+                                    <td>Overtravel,External data</td>     
+                                    <td>(OT)</td> </tr>
+                                 
+                                 <tr>
+                                    <td>#05</td> 
+                                    <td>:</td> 
+                                    <td>Overheat alarm</td>               
+                                    <td>(OH)</td> </tr>
+                                 
+                                 <tr>
+                                    <td>#06</td> 
+                                    <td>:</td> 
+                                    <td>Servo alarm </td>                 
+                                    <td>(SV)</td> </tr>
+                                 
+                                 <tr>
+                                    <td>#07</td> 
+                                    <td>:</td> 
+                                    <td>Data I/O error</td>               
+                                    <td>(SR)</td> </tr>
+                                 
+                                 <tr>
+                                    <td>#08</td> 
+                                    <td>:</td> 
+                                    <td>Macro alarm</td>                  
+                                    <td>(MC)</td> </tr>
+                                 
+                                 <tr>
+                                    <td>#09</td> 
+                                    <td>:</td> 
+                                    <td>Spindle alarm</td>                
+                                    <td>(SP)</td> </tr>
+                                 
+                                 <tr>
+                                    <td>#10</td> 
+                                    <td>:</td> 
+                                    <td>Other alarm(DS)</td>              
+                                    <td>(DS)</td> </tr>
+                                 
+                                 <tr>
+                                    <td>#11</td> 
+                                    <td>:</td> 
+                                    <td>Alarm concerning Malfunction prevent functions</td> 
+                                    <td>(IE)</td> </tr>
+                                 
+                                 <tr>
+                                    <td>#12</td> 
+                                    <td>:</td> 
+                                    <td>Background P/S</td>               
+                                    <td>(BG)</td> </tr>
+                                 
+                                 <tr>
+                                    <td>#13</td> 
+                                    <td>:</td> 
+                                    <td>Syncronized error</td>            
+                                    <td>(SN)</td> </tr>
+                                 
+                                 <tr>
+                                    <td>#14</td> 
+                                    <td>:</td> 
+                                    <td>(reserved)</td>                   
+                                    <td>    </td> </tr>
+                                 
+                                 <tr>
+                                    <td>#15</td> 
+                                    <td>:</td> 
+                                    <td>External alarm message</td>       
+                                    <td>(EX)</td> </tr>
+                                 </table>
+                              </ul><br>
+                           </dd>
+                        
+                        <dt>prgnum</dt>
+                        
+                        <dd>Program number under execution<br>
+                           (It is the selected program number while
+                           automatic operation stopping)</dd>
+                        
+                        <dt>prgmnum</dt>
+                        
+                        <dd>Main program number <span class="xis">(It is invalid in Series 15)</span></dd>
+                        
+                        <dt>seqnum</dt>
+                        
+                        <dd>Current sequence number</dd>
+                        
+                        <dt>actf</dt>
+                        
+                        <dd>Actual feed rate of the controlled axes</dd>
+                        
+                        <dt>acts</dt>
+                        
+                        <dd>Actual spindle speed data<span class="xis">(It is invalid in Series 16i/18i-W, Power Mate i-H)</span></dd>
+                        
+                        <dt>absolute</dt>
+                        
+                        <dd>Absolute position of the controlled axes</dd>
+                        
+                        <dt>machine</dt>
+                        
+                        <dd>Machine position of the controlled axes</dd>
+                        
+                        <dt>relative</dt>
+                        
+                        <dd>Relative position of the controlled axes</dd>
+                        
+                        <dt>distance</dt>
+                        
+                        <dd>Amount of distance to go of the controlled axes <span class="xis">(It is invalid in Series 16i/18i-W)</span></dd>
+                        </dl>
+                     </ul>
+                  </content>
+            </div><a name="Return"></a><p class="label">Return</p>
+            <p>EW_OK is returned on successful completion, otherwise any value except EW_OK is returned.</p>
+            <p>The major error codes are as follows.</p>
+            <table border="1">
+               <colgroup align="center" valign="top"></colgroup>
+               <colgroup align="left" valign="top"></colgroup>
+               <colgroup align="left" valign="top"></colgroup>
+               <tr>
+                  <th>Return code</th>
+                  <th>Meaning/Error handling</th>
+               </tr>
+               <tr>
+                  <td>
+                     <name>EW_LENGTH</name><br>(2)</td>
+                  <td>
+                     <content>
+                        data block length error<br>
+                        Size of ODBDY structure(length) is illegal.
+                        </content>
+                  </td>
+               </tr>
+               <tr>
+                  <td>
+                     <name>EW_ATTRIB</name><br>(4)</td>
+                  <td>
+                     <content>
+                        data attribute error<br>The specification of axis number (axis) is improper.
+                        </content>
+                  </td>
+               </tr>
+            </table>
+            <p>
+               <add></add>
+            </p>
+            <p>
+               As for the other return codes or the details, see 
+               
+               
+               "<a href="errcode.htm" target="_parent">Return status of Data window function</a>"
+               
+               </p><a name="CNC option"></a><p class="label">CNC option</p>
+            <p></p>
+            <p>For HSSB connection,</p>
+            <ul>
+               <p>
+                  <hssb>The extended driver/library function is necessary.</hssb>
+               </p>
+            </ul>
+            <p></p><a name="CNC parameter"></a><p class="label">CNC parameter</p>
+            <p>This function is not related to CNC parameter.</p>
+            <p></p><a name="CNC mode"></a><p class="label">CNC mode</p>
+            <p>This function can be used in any CNC mode.</p><a name="Available CNC"></a><p class="label">Available CNC</p>
+            <table border="1">
+               <colgroup width="100em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <tr>
+                  <th></th>
+                  <th>0i-A</th>
+                  <th>0i-B/C(Note)</th>
+                  <th>0i-D</th>
+                  <th>0i-F</th>
+                  <th>15</th>
+                  <th>15i</th>
+                  <th>16</th>
+                  <th>18</th>
+                  <th>21</th>
+                  <th>16i-A</th>
+                  <th>18i-A</th>
+                  <th>21i-A</th>
+                  <th>16i-B</th>
+                  <th>18i-B</th>
+                  <th>21i-B</th>
+                  <th>30i-A</th>
+                  <th>30i-B</th>
+               </tr>
+               <tr>
+                  <td>M (Machining)</td>
+                  <td class="support">
+                     <fs0ia>H</fs0ia>
+                  </td>
+                  <td class="support">
+                     <fs0ib>O</fs0ib>
+                  </td>
+                  <td class="support">
+                     <fs0id>O</fs0id>
+                  </td>
+                  <td class="support">
+                     <fs0if>O</fs0if>
+                  </td>
+                  <td class="support">
+                     <fs15>H</fs15>
+                  </td>
+                  <td class="support">
+                     <fs15i>O</fs15i>
+                  </td>
+                  <td class="support">
+                     <fs16>H</fs16>
+                  </td>
+                  <td class="support">
+                     <fs18>H</fs18>
+                  </td>
+                  <td class="support">
+                     <fs21>H</fs21>
+                  </td>
+                  <td class="support">
+                     <fs16ia>O</fs16ia>
+                  </td>
+                  <td class="support">
+                     <fs18ia>O</fs18ia>
+                  </td>
+                  <td class="support">
+                     <fs21ia>O</fs21ia>
+                  </td>
+                  <td class="support">
+                     <fs16ib>O</fs16ib>
+                  </td>
+                  <td class="support">
+                     <fs18ib>O</fs18ib>
+                  </td>
+                  <td class="support">
+                     <fs21ib>O</fs21ib>
+                  </td>
+                  <td class="support">
+                     <fs30ia>O</fs30ia>
+                  </td>
+                  <td class="support">
+                     <fs30ib>O</fs30ib>
+                  </td>
+               </tr>
+               <tr>
+                  <td>T (Turning)  </td>
+                  <td class="support">
+                     <fs0ia>H</fs0ia>
+                  </td>
+                  <td class="support">
+                     <fs0ib>O</fs0ib>
+                  </td>
+                  <td class="support">
+                     <fs0id>O</fs0id>
+                  </td>
+                  <td class="support">
+                     <fs0if>O</fs0if>
+                  </td>
+                  <td class="support">
+                     <fs15>H</fs15>
+                  </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="support">
+                     <fs16>H</fs16>
+                  </td>
+                  <td class="support">
+                     <fs18>H</fs18>
+                  </td>
+                  <td class="support">
+                     <fs21>H</fs21>
+                  </td>
+                  <td class="support">
+                     <fs16ia>O</fs16ia>
+                  </td>
+                  <td class="support">
+                     <fs18ia>O</fs18ia>
+                  </td>
+                  <td class="support">
+                     <fs21ia>O</fs21ia>
+                  </td>
+                  <td class="support">
+                     <fs16ib>O</fs16ib>
+                  </td>
+                  <td class="support">
+                     <fs18ib>O</fs18ib>
+                  </td>
+                  <td class="support">
+                     <fs21ib>O</fs21ib>
+                  </td>
+                  <td class="support">
+                     <fs30ia>O</fs30ia>
+                  </td>
+                  <td class="support">
+                     <fs30ib>O</fs30ib>
+                  </td>
+               </tr>
+               <tr>
+                  <td>LC (Loader)  </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="support">
+                     <fs16>H</fs16>
+                  </td>
+                  <td class="support">
+                     <fs18>H</fs18>
+                  </td>
+                  <td class="support">
+                     <fs21>H</fs21>
+                  </td>
+                  <td class="support">
+                     <fs16ia>H</fs16ia>
+                  </td>
+                  <td class="support">
+                     <fs18ia>H</fs18ia>
+                  </td>
+                  <td class="support">
+                     <fs21ia>H</fs21ia>
+                  </td>
+                  <td class="support">
+                     <fs16ib>H</fs16ib>
+                  </td>
+                  <td class="support">
+                     <fs18ib>H</fs18ib>
+                  </td>
+                  <td class="support">
+                     <fs21ib>H</fs21ib>
+                  </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+               </tr>
+            </table>
+            <p></p>
+            <table border="1">
+               <colgroup width="100em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <tr>
+                  <th></th>
+                  <th>0i-D</th>
+                  <th>0i-F</th>
+                  <th>16i</th>
+                  <th>18i</th>
+                  <th>30i-A</th>
+                  <th>30i-B</th>
+               </tr>
+               <tr>
+                  <td>P (Punch press)</td>
+                  <td class="support">
+                     <fs0id>O</fs0id>
+                  </td>
+                  <td class="support">
+                     <fs0if>O</fs0if>
+                  </td>
+                  <td class="support">
+                     <fs16i>O</fs16i>
+                  </td>
+                  <td class="support">
+                     <fs18i>O</fs18i>
+                  </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="support">
+                     <fs30ib>O</fs30ib>
+                  </td>
+               </tr>
+               <tr>
+                  <td>L (Laser)      </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="support">
+                     <fs16i>O</fs16i>
+                  </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="support">
+                     <fs30ib>O</fs30ib>
+                  </td>
+               </tr>
+               <tr>
+                  <td>W (Wire)       </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="support">
+                     <fs16i>O</fs16i>
+                  </td>
+                  <td class="support">
+                     <fs18i>O</fs18i>
+                  </td>
+                  <td class="support">
+                     <fs30ia>O</fs30ia>
+                  </td>
+                  <td class="support">
+                     <fs30ib>O</fs30ib>
+                  </td>
+               </tr>
+            </table>
+            <p></p><br><table border="1">
+               <colgroup width="100em"></colgroup>
+               <colgroup align="center" width="86em"></colgroup>
+               <colgroup align="center" width="86em"></colgroup>
+               <tr>
+                  <td>Power Mate i-D</td>
+                  <td class="support">
+                     <d>O</d>
+                  </td>
+               </tr>
+               <tr>
+                  <td>Power Mate i-H</td>
+                  <td class="support">
+                     <h>O</h>
+                  </td>
+               </tr>
+               <tr>
+                  <td>Power Motion i-A</td>
+                  <td class="support"><a>O</a></td>
+               </tr>
+            </table>
+            <p></p>
+            <table class="dd">
+               <tr>
+                  <td></td>
+                  <td>"O"</td>
+                  <td>:</td>
+                  <td>Both Ethernet and HSSB</td>
+               </tr>
+               <tr>
+                  <td></td>
+                  <td>"E"</td>
+                  <td>:</td>
+                  <td>Ethernet</td>
+               </tr>
+               <tr>
+                  <td></td>
+                  <td>"H"</td>
+                  <td>:</td>
+                  <td>HSSB</td>
+               </tr>
+               <tr>
+                  <td></td>
+                  <td>"X"</td>
+                  <td>:</td>
+                  <td>Cannot be used</td>
+               </tr>
+               <tr>
+                  <td></td>
+                  <td>"-"</td>
+                  <td>:</td>
+                  <td>None</td>
+               </tr>
+            </table>
+            <p style="background-color:mistyrose;">Note) 0i-C does not support the HSSB function.</p>
+            <p>
+               <add><b></b></add>
+            </p><a name="Reference"></a><p class="label">See Also</p>
+            <p><a class="func" target="_parent" href="position/cnc_rddynamic2.htm">cnc_rddynamic2</a>&nbsp;&nbsp;
+               <a class="func" target="_parent" href="misc/cnc_alarm.htm">cnc_alarm</a>&nbsp;&nbsp;
+               <a class="func" target="_parent" href="program/cnc_rdprgnum.htm">cnc_rdprgnum</a>&nbsp;&nbsp;
+               <a class="func" target="_parent" href="program/cnc_rdseqnum.htm">cnc_rdseqnum</a>&nbsp;&nbsp;
+               <a class="func" target="_parent" href="position/cnc_actf.htm">cnc_actf</a>&nbsp;&nbsp;
+               <a class="func" target="_parent" href="position/cnc_acts.htm">cnc_acts</a>&nbsp;&nbsp;
+               <a class="func" target="_parent" href="position/cnc_absolute.htm">cnc_absolute</a>&nbsp;&nbsp;
+               <a class="func" target="_parent" href="position/cnc_machine.htm">cnc_machine</a>&nbsp;&nbsp;
+               <a class="func" target="_parent" href="position/cnc_relative.htm">cnc_relative</a>&nbsp;&nbsp;
+               <a class="func" target="_parent" href="position/cnc_distance.htm">cnc_distance</a>&nbsp;&nbsp;
+               </p><a name="Example"></a><p class="label">Example(C Language)</p>
+            <p></p>
+            <pre>
+The following program reads the dynamic data of all axes (number of axes =
+MAX_AXIS) and displays them on the screen.
+
+#include "fwlib32.h"
+
+void example( void )
+{
+    ODBDY buf ;
+    unsigned int idx ;
+    cnc_rddynamic( h, -1, sizeof(buf), &amp;buf ) ;
+    printf( "Current program = %d   Main program = %d\n",
+                    buf.prgnum, buf.prgmnum ) ;
+    printf( "Sequence number = %ld\n", buf.seqnum ) ;
+    printf( "actf = %ld   acts = %ld\n", buf.actf, buf.acts ) ;
+    printf( "Alarm status = %d\n", buf.alarm ) ;
+    printf( "AXIS Absolute  Relative  Machine   Distance\n" ) ;
+    printf( "----+---------+---------+---------+--------\n" ) ;
+    for ( idx = 0 ; idx &lt; MAX_AXIS ; idx++ )
+        printf( "  %u  %8ld  %8ld  %8ld  %8ld\n", idx,
+            buf.pos.faxis.absolute[idx],
+            buf.pos.faxis.relative[idx],
+            buf.pos.faxis.machine[idx],
+            buf.pos.faxis.distance[idx] ) ;
+}
+</pre>
+            <p class="label">Example(C#)</p>
+            <pre>
+The following program reads the dynamic data of all axes (number of axes =
+MAX_AXIS) and displays them on the screen.
+
+class example
+{
+    public void sample()
+    {
+        Focas1.ODBDY_1 buf = new Focas1.ODBDY_1();
+        uint idx;
+        Focas1.cnc_rddynamic(h, -1, (short)Marshal.SizeOf(buf), buf);
+        Console.WriteLine("Current program = {0}   Main program = {1}",
+                        buf.prgnum, buf.prgmnum);
+        Console.WriteLine("Sequence number = {0}", buf.seqnum);
+        Console.WriteLine("actf = {0}   acts = {1}", buf.actf, buf.acts);
+        Console.WriteLine("Alarm status = {0}", buf.alarm);
+        Console.WriteLine("AXIS Absolute  Relative  Machine   Distance");
+        Console.WriteLine("----+---------+---------+---------+--------");
+        for (idx = 0; idx &lt; Focas1.MAX_AXIS; idx++)
+        {
+            Console.WriteLine("  {0}  {1,8}  {2,8}  {3,8}  {4,8}", idx,
+                buf.pos.absolute[idx],
+                buf.pos.relative[idx],
+                buf.pos.machine[idx],
+                buf.pos.distance[idx]);
+        }
+    }
+}</pre>
+         </div></FONT><hr>
+   </body>
+</html>

@@ -1,0 +1,952 @@
+<html xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:bop2="http://www.fanuc.co.jp/develop/mmc/bop2">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <title>cnc_rdalmmsg</title>
+      <link rel="stylesheet" type="text/css" href="../fwlib32.css">
+   </head>
+   <body bgcolor="#FFFFFF"><FONT face="Verdana,Arial,Helvetica,sans-serif"><a name="Function Name"></a><p class="ftitle">cnc_rdalmmsg</p>
+         <div class="text"><a name="Declaration"></a><p class="label">Declaration</p>
+            <div class="mth">#include "fwlib32.h" or "fwlib64.h"
+               <p></p>
+               <prottype>FWLIBAPI short WINAPI cnc_rdalmmsg(unsigned short FlibHndl, short type, short *num,
+                  ODBALMMSG *almmsg);</prottype>
+            </div><a name="Description"></a><p class="label">Description</p>
+            <cmn>
+               Reads the currently arising CNC alarm messages. All alarm messages can be read at
+               once.
+               <p></p>
+               Differing from <a href="misc/cnc_rdalminfo.htm" target="_parent">cnc_rdalminfo</a> fucntion, the axis name is inserted in the axis-type alarm message.
+               <p></p>
+               The number of characters which can be acquired in this function is up to 32 characters.
+               So, Plese use <a href="misc/cnc_rdalmmsg2.htm" target="_parent">cnc_rdalmmsg2</a> fucntion for Series 30i/31i/32i, 0i-D/F and PMi-A.
+               <p></p>
+               </cmn><a name="Arguments"></a><p class="label">Arguments</p>
+            <div class="dtarg">
+               <name>FlibHndl</name>
+               &nbsp;&nbsp;[&nbsp;
+               <type>in</type>&nbsp;]
+               </div>
+            <div class="ddarg">
+               <content>
+                  
+                  <p>
+                     Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                     </p>
+                  </content>
+            </div>
+            <div class="dtarg">
+               <name>type</name>
+               &nbsp;&nbsp;[&nbsp;
+               <type>in</type>&nbsp;]
+               </div>
+            <div class="ddarg">
+               <content>
+                  Specify the type of alarm.
+                  
+                  <dd><br>
+                     
+                     <ul>
+                        
+                        <li>Series 15i (only Ethernet)</li>
+                        
+                        <table class="dd">
+                           
+                           <tr>
+                              <td>0</td>  
+                              <td>:</td> 
+                              <td>Background P/S</td>               
+                              <td>(BG)</td> </tr>
+                           
+                           <tr>
+                              <td>1</td>  
+                              <td>:</td> 
+                              <td>Foreground P/S</td>               
+                              <td>(PS)</td> </tr>
+                           
+                           <tr>
+                              <td>2</td>  
+                              <td>:</td> 
+                              <td>Overheat alarm</td>               
+                              <td>(OH)</td> </tr>
+                           
+                           <tr>
+                              <td>3</td>  
+                              <td>:</td> 
+                              <td>Sub-CPU error</td>                
+                              <td>(SB)</td> </tr>
+                           
+                           <tr>
+                              <td>4</td>  
+                              <td>:</td> 
+                              <td>Syncronized error</td>            
+                              <td>(SN)</td> </tr>
+                           
+                           <tr>
+                              <td>5</td>  
+                              <td>:</td> 
+                              <td>Parameter switch on</td>          
+                              <td>(SW)</td> </tr>
+                           
+                           <tr>
+                              <td>6</td>  
+                              <td>:</td> 
+                              <td>Overtravel,External data</td>     
+                              <td>(OT)</td> </tr>
+                           
+                           <tr>
+                              <td>7</td>  
+                              <td>:</td> 
+                              <td>PMC error</td>                    
+                              <td>(PC)</td> </tr>
+                           
+                           <tr>
+                              <td>8</td>  
+                              <td>:</td> 
+                              <td>External alarm message (1)</td>   
+                              <td>(EX)</td> </tr>
+                           
+                           <tr>
+                              <td>9</td>  
+                              <td>:</td> 
+                              <td>(Not used) </td>                  
+                              <td></td>     </tr>
+                           
+                           <tr>
+                              <td>10</td> 
+                              <td>:</td> 
+                              <td>Serious P/S</td>                  
+                              <td>(SR)</td> </tr>
+                           
+                           <tr>
+                              <td>11</td> 
+                              <td>:</td> 
+                              <td>(Not used)</td>                   
+                              <td></td>     </tr>
+                           
+                           <tr>
+                              <td>12</td> 
+                              <td>:</td> 
+                              <td>Servo alarm</td>                  
+                              <td>(SV)</td> </tr>
+                           
+                           <tr>
+                              <td>13</td> 
+                              <td>:</td> 
+                              <td>I/O error</td>                    
+                              <td>(IO)</td> </tr>
+                           
+                           <tr>
+                              <td>14</td> 
+                              <td>:</td> 
+                              <td>Power off parameter set</td>      
+                              <td>(PW)</td> </tr>
+                           
+                           <tr>
+                              <td>15</td> 
+                              <td>:</td> 
+                              <td>(Not used)</td>                   
+                              <td></td>     </tr>
+                           
+                           <tr>
+                              <td>16</td> 
+                              <td>:</td> 
+                              <td>External alarm message (2)</td>   
+                              <td>(EX)</td> </tr>
+                           
+                           <tr>
+                              <td>17</td> 
+                              <td>:</td> 
+                              <td>External alarm message (3)</td>   
+                              <td>(EX)</td> </tr>
+                           
+                           <tr>
+                              <td>18</td> 
+                              <td>:</td> 
+                              <td>External alarm message (4)</td>   
+                              <td>(EX)</td> </tr>
+                           
+                           <tr>
+                              <td>19</td> 
+                              <td>:</td> 
+                              <td>Macro alarm</td>                  
+                              <td>(MC)</td> </tr>
+                           
+                           <tr>
+                              <td>20</td> 
+                              <td>:</td> 
+                              <td>Spindle alarm</td>                
+                              <td>(SP)</td> </tr>
+                           
+                           <tr>
+                              <td>-1</td> 
+                              <td>:</td> 
+                              <td>all type</td>                     
+                              <td></td>     </tr>
+                           </table>
+                        
+                        <li>Series 16i/18i/21i, 0i-A/B/C, Power Mate i (only Ethernet)</li>
+                        
+                        <table class="dd">
+                           
+                           <tr>
+                              <td>0</td>  
+                              <td>:</td> 
+                              <td>P/S100</td>                                  </tr>
+                           
+                           <tr>
+                              <td>1</td>  
+                              <td>:</td> 
+                              <td>P/S000</td>                                  </tr>
+                           
+                           <tr>
+                              <td>2</td>  
+                              <td>:</td> 
+                              <td>P/S101</td>                                  </tr>
+                           
+                           <tr>
+                              <td>3</td>  
+                              <td>:</td> 
+                              <td>P/S alarm except above</td>                  </tr>
+                           
+                           <tr>
+                              <td>4</td>  
+                              <td>:</td> 
+                              <td>Overtravel alarm</td>                        </tr>
+                           
+                           <tr>
+                              <td>5</td>  
+                              <td>:</td> 
+                              <td>Overheat alarm</td>                          </tr>
+                           
+                           <tr>
+                              <td>6</td>  
+                              <td>:</td> 
+                              <td>Servo alarm</td>                             </tr>
+                           
+                           <tr>
+                              <td>7</td>  
+                              <td>:</td> 
+                              <td>(Not used) </td>                             </tr>
+                           
+                           <tr>
+                              <td>8</td>  
+                              <td>:</td> 
+                              <td>APC alarm</td>                               </tr>
+                           
+                           <tr>
+                              <td>9</td>  
+                              <td>:</td> 
+                              <td>Spindle alarm</td>                           </tr>
+                           
+                           <tr>
+                              <td>10</td> 
+                              <td>:</td> 
+                              <td>P/S alarm(No.5000,..), Punchpress alarm</td> </tr>
+                           
+                           <tr>
+                              <td>11</td> 
+                              <td>:</td> 
+                              <td>Laser alarm</td>                             </tr>
+                           
+                           <tr>
+                              <td>12</td> 
+                              <td>:</td> 
+                              <td>(Not used) </td>                             </tr>
+                           
+                           <tr>
+                              <td>13</td> 
+                              <td>:</td> 
+                              <td>Rigid tap alarm</td>                         </tr>
+                           
+                           <tr>
+                              <td>14</td> 
+                              <td>:</td> 
+                              <td>(Not used)</td>                              </tr>
+                           
+                           <tr>
+                              <td>15</td> 
+                              <td>:</td> 
+                              <td>External alarm message</td>                  </tr>
+                           
+                           <tr>
+                              <td>-1</td> 
+                              <td>:</td> 
+                              <td>all type</td>                                </tr>
+                           </table>
+                        
+                        <li>Series 30i, 0i-D/F, PMi-A</li>
+                        
+                        <table class="dd">
+                           
+                           <tr>
+                              <td>0</td>  
+                              <td>:</td> 
+                              <td>Parameter switch on</td>            
+                              <td>(SW)</td> </tr>
+                           
+                           <tr>
+                              <td>1</td>  
+                              <td>:</td> 
+                              <td>Power off parameter set</td>        
+                              <td>(PW)</td> </tr>
+                           
+                           <tr>
+                              <td>2</td>  
+                              <td>:</td> 
+                              <td>I/O error</td>                      
+                              <td>(IO)</td> </tr>
+                           
+                           <tr>
+                              <td>3</td>  
+                              <td>:</td> 
+                              <td>Foreground P/S</td>                 
+                              <td>(PS)</td> </tr>
+                           
+                           <tr>
+                              <td>4</td>  
+                              <td>:</td> 
+                              <td>Overtravel,External data</td>       
+                              <td>(OT)</td> </tr>
+                           
+                           <tr>
+                              <td>5</td>  
+                              <td>:</td> 
+                              <td>Overheat alarm</td>                 
+                              <td>(OH)</td> </tr>
+                           
+                           <tr>
+                              <td>6</td>  
+                              <td>:</td> 
+                              <td>Servo alarm</td>                    
+                              <td>(SV)</td> </tr>
+                           
+                           <tr>
+                              <td>7</td>  
+                              <td>:</td> 
+                              <td>Data I/O error</td>                 
+                              <td>(SR)</td> </tr>
+                           
+                           <tr>
+                              <td>8</td>  
+                              <td>:</td> 
+                              <td>Macro alarm</td>                    
+                              <td>(MC)</td> </tr>
+                           
+                           <tr>
+                              <td>9</td>  
+                              <td>:</td> 
+                              <td>Spindle alarm</td>                  
+                              <td>(SP)</td> </tr>
+                           
+                           <tr>
+                              <td>10</td> 
+                              <td>:</td> 
+                              <td>Other alarm(DS)</td> 
+                              <td>(DS)</td> </tr>
+                           
+                           <tr>
+                              <td>11</td> 
+                              <td>:</td> 
+                              <td>Alarm concerning Malfunction prevent functions</td> 
+                              <td>(IE)</td> </tr>
+                           
+                           <tr>
+                              <td>12</td> 
+                              <td>:</td> 
+                              <td>Background P/S</td>                 
+                              <td>(BG)</td> </tr>
+                           
+                           <tr>
+                              <td>13</td> 
+                              <td>:</td> 
+                              <td>Syncronized error</td>              
+                              <td>(SN)</td> </tr>
+                           
+                           <tr>
+                              <td>14</td> 
+                              <td>:</td> 
+                              <td>(reserved)</td>                     
+                              <td></td>     </tr>
+                           
+                           <tr>
+                              <td>15</td> 
+                              <td>:</td> 
+                              <td>External alarm message</td>         
+                              <td>(EX)</td> </tr>
+                           
+                           <tr>
+                              <td>16</td> 
+                              <td>:</td> 
+                              <td>(reserved)</td>                     
+                              <td></td>     </tr>
+                           
+                           <tr>
+                              <td>17</td> 
+                              <td>:</td> 
+                              <td>(reserved)</td>                     
+                              <td></td>     </tr>
+                           
+                           <tr>
+                              <td>18</td> 
+                              <td>:</td> 
+                              <td>(reserved)</td>                     
+                              <td></td>     </tr>
+                           
+                           <tr>
+                              <td>19</td> 
+                              <td>:</td> 
+                              <td>PMC error</td>                      
+                              <td>(PC)</td> </tr>
+                           
+                           <tr>
+                              <td>-1</td> 
+                              <td>:</td> 
+                              <td>all type</td>                       
+                              <td></td>     </tr>
+                           </table>
+                        </ul>
+                     </dd>
+                  </content>
+            </div>
+            <div class="dtarg">
+               <name>num</name>
+               &nbsp;&nbsp;[&nbsp;
+               <type>in/out</type>&nbsp;]
+               </div>
+            <div class="ddarg">
+               <content>
+                  Pointer to the number of alarm messages to be read. Specify the number of alarm messages
+                  to be read before function call and actual number of data being read is stored after
+                  the function call.
+                  </content>
+            </div>
+            <div class="dtarg">
+               <name>almmsg</name>
+               &nbsp;&nbsp;[&nbsp;
+               <type>out</type>&nbsp;]
+               </div>
+            <div class="ddarg">
+               <content>
+                  Specify the pointer to the array of ODBALMMSG structure to store the alarm messages.
+                  The number of array must be equal to "*num".
+                  <p></p>
+                  The ODBALMMSG structure is as follows.
+                  
+                  
+                  <pre>
+typedef struct odbalmmsg {
+        long alm_no ;           /* alarm number */
+        short type ;            /* alarm type */
+        short axis ;            /* axis number */
+        short dummy ;           /* reserved */
+        short msg_len ;         /* message length */
+        char alm_msg[32];       /* alarm message */
+} ODBALMMSG;
+</pre>
+                  
+                  
+                  <dt>alm_no</dt>
+                  
+                  <dd>Alarm number is stored.</dd>
+                  
+                  <dt>type</dt>
+                  
+                  <dd>Alarm type is stored. The value is same as one which is specified as the parameter
+                     <b>type</b>.</dd>
+                  
+                  <dt>axis</dt>
+                  
+                  <dd>Axis number is stored. (1 to maximum controlled axes number)</dd>
+                  
+                  <dd>As for the none axis-type alarm, it is 0. </dd>
+                  
+                  <dt>msg_len</dt>
+                  
+                  <dd>Message length(binary) is stored. (1 to 32)</dd>
+                  
+                  <dt>alm_msg</dt>
+                  
+                  <dd>Alarm message character string is stored.</dd>
+                  
+                  <dd>The message is acquired in the following character-codes.</dd>
+                  
+                  <ul>
+                     
+                     <table class="dd">
+                        
+                        <tr>
+                           <td>English            </td> 
+                           <td>:</td> 
+                           <td>ASCII         </td> </tr>
+                        
+                        <tr>
+                           <td>Japanese           </td> 
+                           <td>:</td> 
+                           <td>Shift-JIS     </td> </tr>
+                        
+                        <tr>
+                           <td>Simplified Chinese </td> 
+                           <td>:</td> 
+                           <td>Shift-JIS     </td> </tr>
+                        
+                        <tr>
+                           <td>Traditional Chinese</td> 
+                           <td>:</td> 
+                           <td>GB2312        </td> </tr>
+                        
+                        <tr>
+                           <td>Korean             </td> 
+                           <td>:</td> 
+                           <td>Code Page 949 </td> </tr>
+                        
+                        <tr>
+                           <td>Cyrillic           </td> 
+                           <td>:</td> 
+                           <td>Code Page 1251</td> </tr>
+                        
+                        <tr>
+                           <td>Turkish            </td> 
+                           <td>:</td> 
+                           <td>Code Page 1254</td> </tr>
+                        
+                        <tr>
+                           <td>Others European    </td> 
+                           <td>:</td> 
+                           <td>Western Europe</td> </tr>
+                        </table>
+                     </ul>
+                  
+                  <dd>Note1) In CNC except Series 30i, 0i-D/F and PMi-A, messages except English and Japanese
+                     cannot be correctly acquired.</dd>
+                  
+                  <dd>Note2) Korean cannot be correctly acquired with FOCAS2/Ethernet.(Except 30i-B, 0i-D/F
+                     and PMi-A)</dd>
+                  
+                  <dd>Note3) Refer to "APPENDIX I Central &amp; East European Character Code", "APPENDIX J West
+                     European Character Code List" of "C Language Executor PROGRAMMING MANUAL" for Western
+                     Europe code.</dd>
+                  </content>
+            </div><a name="Return"></a><p class="label">Return</p>
+            <p>EW_OK is returned on successful completion, otherwise any value except EW_OK is returned.</p>
+            <p>The major error codes are as follows.</p>
+            <table border="1">
+               <colgroup align="center" valign="top"></colgroup>
+               <colgroup align="left" valign="top"></colgroup>
+               <colgroup align="left" valign="top"></colgroup>
+               <tr>
+                  <th>Return code</th>
+                  <th>Meaning/Error handling</th>
+               </tr>
+               <tr>
+                  <td>
+                     <name>EW_LENGTH</name><br>(2)</td>
+                  <td>
+                     <content>
+                        Data block length error<br>
+                        The alarm message number (*num) is 0 or less.
+                        </content>
+                  </td>
+               </tr>
+               <tr>
+                  <td>
+                     <name>EW_ATTRIB</name><br>(4)</td>
+                  <td>
+                     <content>
+                        Data attribute error<br>
+                        The specification of alarm type (type) is wrong.
+                        </content>
+                  </td>
+               </tr>
+            </table>
+            <p>
+               <add></add>
+            </p>
+            <p>
+               As for the other return codes or the details, see 
+               
+               
+               "<a href="errcode.htm" target="_parent">Return status of Data window function</a>"
+               
+               </p><a name="CNC option"></a><p class="label">CNC option</p>
+            <p></p>
+            <p>For HSSB connection,</p>
+            <ul>
+               <p>
+                  <hssb>The extended driver/library function is necessary.</hssb>
+               </p>
+            </ul>
+            <p>For Ethernet connection,</p>
+            <ul>
+               <p>
+                  <ethr>
+                     <p>The Ethernet function and the extended driver/library function are necessary.</p>
+                     
+                     <p>However, in case of Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i and PMi-A, the required
+                        CNC option is as follows.</p>
+                     
+                     <p>When Embedded Ethernet is used,</p>
+                     
+                     <p>
+                        <ul>above two optional functions are not required.</ul>
+                     </p>
+                     
+                     <p>When Ethernet board is used,</p>
+                     
+                     <p>
+                        <ul>only Ethernet function is required.</ul>
+                     </p>
+                     </ethr>
+               </p>
+            </ul>
+            <p></p><a name="CNC parameter"></a><p class="label">CNC parameter</p>
+            <p>This function is not related to CNC parameter.</p><a name="CNC mode"></a><p class="label">CNC mode</p>
+            <p>This function can be used in any CNC mode.</p><a name="Available CNC"></a><p class="label">Available CNC</p>
+            <table border="1">
+               <colgroup width="100em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <tr>
+                  <th></th>
+                  <th>0i-A</th>
+                  <th>0i-B/C(Note)</th>
+                  <th>0i-D</th>
+                  <th>0i-F</th>
+                  <th>15</th>
+                  <th>15i</th>
+                  <th>16</th>
+                  <th>18</th>
+                  <th>21</th>
+                  <th>16i-A</th>
+                  <th>18i-A</th>
+                  <th>21i-A</th>
+                  <th>16i-B</th>
+                  <th>18i-B</th>
+                  <th>21i-B</th>
+                  <th>30i-A</th>
+                  <th>30i-B</th>
+               </tr>
+               <tr>
+                  <td>M (Machining)</td>
+                  <td class="">
+                     <fs0ia>X</fs0ia>
+                  </td>
+                  <td class="support">
+                     <fs0ib>E</fs0ib>
+                  </td>
+                  <td class="support">
+                     <fs0id>O</fs0id>
+                  </td>
+                  <td class="support">
+                     <fs0if>O</fs0if>
+                  </td>
+                  <td class="">
+                     <fs15>X</fs15>
+                  </td>
+                  <td class="support">
+                     <fs15i>E</fs15i>
+                  </td>
+                  <td class="">
+                     <fs16>X</fs16>
+                  </td>
+                  <td class="">
+                     <fs18>X</fs18>
+                  </td>
+                  <td class="">
+                     <fs21>X</fs21>
+                  </td>
+                  <td class="support">
+                     <fs16ia>E</fs16ia>
+                  </td>
+                  <td class="support">
+                     <fs18ia>E</fs18ia>
+                  </td>
+                  <td class="support">
+                     <fs21ia>E</fs21ia>
+                  </td>
+                  <td class="support">
+                     <fs16ib>E</fs16ib>
+                  </td>
+                  <td class="support">
+                     <fs18ib>E</fs18ib>
+                  </td>
+                  <td class="support">
+                     <fs21ib>E</fs21ib>
+                  </td>
+                  <td class="support">
+                     <fs30ia>O</fs30ia>
+                  </td>
+                  <td class="support">
+                     <fs30ib>O</fs30ib>
+                  </td>
+               </tr>
+               <tr>
+                  <td>T (Turning)  </td>
+                  <td class="">
+                     <fs0ia>X</fs0ia>
+                  </td>
+                  <td class="support">
+                     <fs0ib>E</fs0ib>
+                  </td>
+                  <td class="support">
+                     <fs0id>O</fs0id>
+                  </td>
+                  <td class="support">
+                     <fs0if>O</fs0if>
+                  </td>
+                  <td class="">
+                     <fs15>X</fs15>
+                  </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="">
+                     <fs16>X</fs16>
+                  </td>
+                  <td class="">
+                     <fs18>X</fs18>
+                  </td>
+                  <td class="">
+                     <fs21>X</fs21>
+                  </td>
+                  <td class="support">
+                     <fs16ia>E</fs16ia>
+                  </td>
+                  <td class="support">
+                     <fs18ia>E</fs18ia>
+                  </td>
+                  <td class="support">
+                     <fs21ia>E</fs21ia>
+                  </td>
+                  <td class="support">
+                     <fs16ib>E</fs16ib>
+                  </td>
+                  <td class="support">
+                     <fs18ib>E</fs18ib>
+                  </td>
+                  <td class="support">
+                     <fs21ib>E</fs21ib>
+                  </td>
+                  <td class="support">
+                     <fs30ia>O</fs30ia>
+                  </td>
+                  <td class="support">
+                     <fs30ib>O</fs30ib>
+                  </td>
+               </tr>
+               <tr>
+                  <td>LC (Loader)  </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="">
+                     <fs16>X</fs16>
+                  </td>
+                  <td class="">
+                     <fs18>X</fs18>
+                  </td>
+                  <td class="">
+                     <fs21>X</fs21>
+                  </td>
+                  <td class="">
+                     <fs16ia>X</fs16ia>
+                  </td>
+                  <td class="">
+                     <fs18ia>X</fs18ia>
+                  </td>
+                  <td class="">
+                     <fs21ia>X</fs21ia>
+                  </td>
+                  <td class="">
+                     <fs16ib>X</fs16ib>
+                  </td>
+                  <td class="">
+                     <fs18ib>X</fs18ib>
+                  </td>
+                  <td class="">
+                     <fs21ib>X</fs21ib>
+                  </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+               </tr>
+            </table>
+            <p></p>
+            <table border="1">
+               <colgroup width="100em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <tr>
+                  <th></th>
+                  <th>0i-D</th>
+                  <th>0i-F</th>
+                  <th>16i</th>
+                  <th>18i</th>
+                  <th>30i-A</th>
+                  <th>30i-B</th>
+               </tr>
+               <tr>
+                  <td>P (Punch press)</td>
+                  <td class="support">
+                     <fs0id>O</fs0id>
+                  </td>
+                  <td class="support">
+                     <fs0if>O</fs0if>
+                  </td>
+                  <td class="support">
+                     <fs16i>E</fs16i>
+                  </td>
+                  <td class="support">
+                     <fs18i>E</fs18i>
+                  </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="support">
+                     <fs30ib>O</fs30ib>
+                  </td>
+               </tr>
+               <tr>
+                  <td>L (Laser)      </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="support">
+                     <fs16i>E</fs16i>
+                  </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="support">
+                     <fs30ib>O</fs30ib>
+                  </td>
+               </tr>
+               <tr>
+                  <td>W (Wire)       </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="">
+                     <fs16i>X</fs16i>
+                  </td>
+                  <td class="">
+                     <fs18i>X</fs18i>
+                  </td>
+                  <td class="support">
+                     <fs30ia>O</fs30ia>
+                  </td>
+                  <td class="support">
+                     <fs30ib>O</fs30ib>
+                  </td>
+               </tr>
+            </table>
+            <p></p><br><table border="1">
+               <colgroup width="100em"></colgroup>
+               <colgroup align="center" width="86em"></colgroup>
+               <colgroup align="center" width="86em"></colgroup>
+               <tr>
+                  <td>Power Mate i-D</td>
+                  <td class="support">
+                     <d>E</d>
+                  </td>
+               </tr>
+               <tr>
+                  <td>Power Mate i-H</td>
+                  <td class="support">
+                     <h>E</h>
+                  </td>
+               </tr>
+               <tr>
+                  <td>Power Motion i-A</td>
+                  <td class="support"><a>O</a></td>
+               </tr>
+            </table>
+            <p></p>
+            <table class="dd">
+               <tr>
+                  <td></td>
+                  <td>"O"</td>
+                  <td>:</td>
+                  <td>Both Ethernet and HSSB</td>
+               </tr>
+               <tr>
+                  <td></td>
+                  <td>"E"</td>
+                  <td>:</td>
+                  <td>Ethernet</td>
+               </tr>
+               <tr>
+                  <td></td>
+                  <td>"H"</td>
+                  <td>:</td>
+                  <td>HSSB</td>
+               </tr>
+               <tr>
+                  <td></td>
+                  <td>"X"</td>
+                  <td>:</td>
+                  <td>Cannot be used</td>
+               </tr>
+               <tr>
+                  <td></td>
+                  <td>"-"</td>
+                  <td>:</td>
+                  <td>None</td>
+               </tr>
+            </table>
+            <p style="background-color:mistyrose;">Note) 0i-C does not support the HSSB function.</p>
+            <p></p><a name="Reference"></a><p class="label">See Also</p>
+            <p><a class="func" target="_parent" href="misc/cnc_alarm.htm">cnc_alarm</a>&nbsp;&nbsp;
+               <a class="func" target="_parent" href="misc/cnc_alarm2.htm">cnc_alarm2</a>&nbsp;&nbsp;
+               <a class="func" target="_parent" href="misc/cnc_rdalminfo.htm">cnc_rdalminfo</a>&nbsp;&nbsp;
+               <a class="func" target="_parent" href="misc/cnc_rdalmmsg2.htm">cnc_rdalmmsg2</a>&nbsp;&nbsp;
+               </p><a name="Example"></a></div></FONT><hr>
+   </body>
+</html>

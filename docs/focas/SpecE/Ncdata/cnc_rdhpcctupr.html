@@ -1,0 +1,758 @@
+<html xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:bop2="http://www.fanuc.co.jp/develop/mmc/bop2">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <title>cnc_rdhpcctupr</title>
+      <link rel="stylesheet" type="text/css" href="../fwlib32.css">
+   </head>
+   <body bgcolor="#FFFFFF"><FONT face="Verdana,Arial,Helvetica,sans-serif"><a name="Function Name"></a><p class="ftitle">cnc_rdhpcctupr</p>
+         <div class="text"><a name="Declaration"></a><p class="label">Declaration</p>
+            <div class="mth">#include "fwlib32.h"
+               <p></p>
+               <prottype>FWLIBAPI short WINAPI cnc_rdhpcctupr(unsigned short FlibHndl, IODBHPPR *hppr);</prottype>
+            </div><a name="Description"></a><p class="label">Description</p>
+            <cmn>
+               
+               <p>Reads tuning data(parameter input) for high-speed and high-precision machining.  The
+                  data is stored in each member of "IODBHPPR".</p>
+               
+               
+               <p>This function is not supported on Series 15i. The function which reads CNC parameter
+                  ( <a href="ncdata/cnc_rdparam.htm" target="_parent">cnc_rdparam</a> or <a href="ncdata/cnc_rdparar.htm" target="_parent">cnc_rdparar</a> ) can be substituted for this
+                  function.<br>Refer to CNC operator's manual and CNC parameter manual in order to
+                  know CNC parameters which correspond to the data which are read by this
+                  function.</p>
+               </cmn><a name="Arguments"></a><p class="label">Arguments : HSSB</p>
+            <div class="dtarg">
+               <name>FlibHndl</name>
+               &nbsp;&nbsp;[&nbsp;
+               <type>in</type>&nbsp;]
+               </div>
+            <div class="ddarg">
+               <content>
+                  
+                  <p>
+                     Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                     </p>
+                  </content>
+            </div>
+            <div class="dtarg">
+               <name>hppr</name>
+               &nbsp;&nbsp;[&nbsp;
+               <type>out</type>&nbsp;]
+               </div>
+            <div class="ddarg">
+               <content>
+                  
+                  <p>Pointer to the IODBHPPR structure for the tuning data(parameter input) for high-speed
+                     and high-precision machining. The IODBHPPR structure is as follows.</p>
+                  
+                  
+                  <pre>
+typedef struct iodbhppr {
+    struct {
+        short   slct;       /* flag of valid data */
+        short   diff;       /* flag of data status */
+        short   fine;       /* fine level */
+        short   acc_lv;     /* acceleration/deceleration level*/
+        long    max_f;      /* maximum feed */
+        short   bipl;       /* time constant for before IPL */
+        short   aipl;       /* time constant for after IPL */
+        long    corner;     /* difference of corner feed */
+        short   clamp;      /* clamp by acceleration */
+        long    radius;     /* radius of feed clamp by radius*/
+                            /*                      of circle*/
+        long    max_cf;     /* maximum feed of feed clamp by */
+                            /*               radius of circle*/
+        long    min_cf;     /* minimum feed of feed clamp by */
+                            /*               radius of circle*/
+        long    foward;     /* coefficient of feed forward */
+        long    reserve[5]; /* (not used) */
+    }tune[3]
+} IODBHPPR ;
+
+hppr.tune[0].slct,...,hppr.tune[0].reserve
+                                : tuning data for fine level
+hppr.tune[1].slct,...,hppr.tune[1].reserve
+                                : tuning data for medium level
+hppr.tune[2].slct,...,hppr.tune[2].reserve
+                                : tuning data for rough level
+</pre>
+                  
+                  <dl>
+                     
+                     <dt>slct</dt>
+                     
+                     <dd>Flag of valid data is set.<br>
+                        <br>
+                        
+                        <table class="dd">
+                           
+                           <tr>
+                              
+                              <td>bit 0</td>
+                              
+                              <td>:</td>
+                              
+                              <td>fine level</td>
+                              </tr>
+                           
+                           <tr>
+                              
+                              <td>bit 1</td>
+                              
+                              <td>:</td>
+                              
+                              <td>acceleration/deceleration level</td>
+                              </tr>
+                           
+                           <tr>
+                              
+                              <td>bit 2</td>
+                              
+                              <td>:</td>
+                              
+                              <td>maximum feed</td>
+                              </tr>
+                           
+                           <tr>
+                              
+                              <td>bit 3</td>
+                              
+                              <td>:</td>
+                              
+                              <td>time constant for before IPL</td>
+                              </tr>
+                           
+                           <tr>
+                              
+                              <td>bit 4</td>
+                              
+                              <td>:</td>
+                              
+                              <td>time constant for after IPL</td>
+                              </tr>
+                           
+                           <tr>
+                              
+                              <td>bit 5</td>
+                              
+                              <td>:</td>
+                              
+                              <td>difference of corner feed</td>
+                              </tr>
+                           
+                           <tr>
+                              
+                              <td>bit 6</td>
+                              
+                              <td>:</td>
+                              
+                              <td>clamp by acceleration</td>
+                              </tr>
+                           
+                           <tr>
+                              
+                              <td>bit 7</td>
+                              
+                              <td>:</td>
+                              
+                              <td>radius of feed clamp by radius of circle</td>
+                              </tr>
+                           
+                           <tr>
+                              
+                              <td>bit 8</td>
+                              
+                              <td>:</td>
+                              
+                              <td>maximum feed of feed clamp by radius of circle</td>
+                              </tr>
+                           
+                           <tr>
+                              
+                              <td>bit 9</td>
+                              
+                              <td>:</td>
+                              
+                              <td>minimum feed of feed clamp by radius of circle</td>
+                              </tr>
+                           
+                           <tr>
+                              
+                              <td>bit10</td>
+                              
+                              <td>:</td>
+                              
+                              <td>coefficient of feed forward</td>
+                              </tr>
+                           
+                           <tr>
+                              
+                              <td>bit11,..,15</td>
+                              
+                              <td>:</td>
+                              
+                              <td>(not used)</td>
+                              </tr>
+                           </table>
+                        <br>
+                        * When a bit is 0, it means the CNC does not have the
+                        related option, then the corresponding data has no
+                        meaning.
+                        </dd>
+                     <br>
+                     
+                     
+                     <dt>diff</dt>
+                     
+                     <dd>Each bit indicates whether the corresponding
+                        data is common for all axes, or not.<br>
+                        <br>
+                        
+                        <table class="dd">
+                           
+                           <tr>
+                              
+                              <td>bit 0,..,3</td>
+                              
+                              <td>:</td>
+                              
+                              <td>(not used)</td>
+                              </tr>
+                           
+                           <tr>
+                              
+                              <td>bit 4</td>
+                              
+                              <td>:</td>
+                              
+                              <td>time constant for after IPL</td>
+                              </tr>
+                           
+                           <tr>
+                              
+                              <td>bit 5</td>
+                              
+                              <td>:</td>
+                              
+                              <td>difference of corner feed</td>
+                              </tr>
+                           
+                           <tr>
+                              
+                              <td>bit 6</td>
+                              
+                              <td>:</td>
+                              
+                              <td>clamp by acceleration</td>
+                              </tr>
+                           
+                           <tr>
+                              
+                              <td>bit 7,..,9</td>
+                              
+                              <td>:</td>
+                              
+                              <td>(not used)</td>
+                              </tr>
+                           
+                           <tr>
+                              
+                              <td>bit10</td>
+                              
+                              <td>:</td>
+                              
+                              <td>coefficient of feed forward</td>
+                              </tr>
+                           
+                           <tr>
+                              
+                              <td>bit11,..,15</td>
+                              
+                              <td>:</td>
+                              
+                              <td>(not used)</td>
+                              </tr>
+                           </table>
+                        <br>
+                        * When the bit value is 0, it means the corresponding
+                        data is applied commonly to all axes.
+                        </dd>
+                     <br>
+                     
+                     
+                     <dt>fine</dt>
+                     
+                     <dd>Fine level is set.</dd>
+                     <br>
+                     
+                     
+                     <dt>acc_lv</dt>
+                     
+                     <dd>Acceleration/deceleration level is set.</dd>
+                     <br>
+                     
+                     
+                     <dt>max_f</dt>
+                     
+                     <dd>Maximum feed is set.</dd>
+                     <br>
+                     
+                     
+                     <dt>bipl</dt>
+                     
+                     <dd>Time constant for before IPL is set.</dd>
+                     <br>
+                     
+                     
+                     <dt>aipl</dt>
+                     
+                     <dd>Time constant for after IPL is set.</dd>
+                     <br>
+                     
+                     
+                     <dt>corner</dt>
+                     
+                     <dd>Difference of corner feed is set.</dd>
+                     <br>
+                     
+                     
+                     <dt>clamp</dt>
+                     
+                     <dd>Clamp by acceleration is set.</dd>
+                     <br>
+                     
+                     
+                     <dt>radius</dt>
+                     
+                     <dd>Radius of feed clamp by radius of circle is
+                        set.</dd>
+                     <br>
+                     
+                     
+                     <dt>max_cf</dt>
+                     
+                     <dd>Maximum feed of feed clamp by radius of circle
+                        is set.</dd>
+                     <br>
+                     
+                     
+                     <dt>min_cf</dt>
+                     
+                     <dd>Minimum feed of feed clamp by radius of circle
+                        is set.</dd>
+                     <br>
+                     
+                     
+                     <dt>foward</dt>
+                     
+                     <dd>Coefficient of feed forward is set.</dd>
+                     <br>
+                     
+                     
+                     <dt>reserve[5]</dt>
+                     
+                     <dd>(not used)</dd>
+                     <br>
+                     
+                     </dl>
+                  </content>
+            </div><a name="Return"></a><p class="label">Return</p>
+            <p>EW_OK is returned on successful completion, otherwise any value except EW_OK is returned.</p>
+            <p>The major error codes are as follows.</p>
+            <table border="1">
+               <colgroup align="center" valign="top"></colgroup>
+               <colgroup align="left" valign="top"></colgroup>
+               <colgroup align="left" valign="top"></colgroup>
+               <tr>
+                  <th>Return code</th>
+                  <th>Meaning/Error handling</th>
+               </tr>
+               <tr>
+                  <td>
+                     <name>EW_FUNC</name><br>(1)</td>
+                  <td>
+                     <content>Unavailable<br>This function cannot be used at T Series.</content>
+                  </td>
+               </tr>
+               <tr>
+                  <td>
+                     <name>EW_NOOPT</name><br>(6)</td>
+                  <td>
+                     <content>No option<br>The extended driver/library function is
+                        necessary.</content>
+                  </td>
+               </tr>
+            </table>
+            <p>
+               <add></add>
+            </p>
+            <p>
+               As for the other return codes or the details, see 
+               
+               
+               "<a href="errcode.htm" target="_parent">Return status of Data window function</a>"
+               
+               </p><a name="CNC option"></a><p class="label">CNC option</p>
+            <p></p>
+            <p>For HSSB connection,</p>
+            <ul>
+               <p>
+                  <hssb>The extended driver/library function is necessary.</hssb>
+               </p>
+            </ul>
+            <p></p><a name="CNC parameter"></a><p class="label">CNC parameter</p>
+            <p>This function is not related to CNC parameter.</p><a name="CNC mode"></a><p class="label">CNC mode</p>
+            <p>This function can be used in any CNC mode.</p><a name="Available CNC"></a><p class="label">Available CNC</p>
+            <table border="1">
+               <colgroup width="100em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <tr>
+                  <th></th>
+                  <th>0i-A</th>
+                  <th>0i-B/C(Note)</th>
+                  <th>0i-D</th>
+                  <th>0i-F</th>
+                  <th>15</th>
+                  <th>15i</th>
+                  <th>16</th>
+                  <th>18</th>
+                  <th>21</th>
+                  <th>16i-A</th>
+                  <th>18i-A</th>
+                  <th>21i-A</th>
+                  <th>16i-B</th>
+                  <th>18i-B</th>
+                  <th>21i-B</th>
+                  <th>30i-A</th>
+                  <th>30i-B</th>
+               </tr>
+               <tr>
+                  <td>M (Machining)</td>
+                  <td class="">
+                     <fs0ia>X</fs0ia>
+                  </td>
+                  <td class="">
+                     <fs0ib>X</fs0ib>
+                  </td>
+                  <td class="">
+                     <fs0id>X</fs0id>
+                  </td>
+                  <td class="">
+                     <fs0if>X</fs0if>
+                  </td>
+                  <td class="support">
+                     <fs15>H</fs15>
+                  </td>
+                  <td class="">
+                     <fs15i>X</fs15i>
+                  </td>
+                  <td class="">
+                     <fs16>X</fs16>
+                  </td>
+                  <td class="">
+                     <fs18>X</fs18>
+                  </td>
+                  <td class="">
+                     <fs21>X</fs21>
+                  </td>
+                  <td class="">
+                     <fs16ia>X</fs16ia>
+                  </td>
+                  <td class="">
+                     <fs18ia>X</fs18ia>
+                  </td>
+                  <td class="">
+                     <fs21ia>X</fs21ia>
+                  </td>
+                  <td class="">
+                     <fs16ib>X</fs16ib>
+                  </td>
+                  <td class="">
+                     <fs18ib>X</fs18ib>
+                  </td>
+                  <td class="">
+                     <fs21ib>X</fs21ib>
+                  </td>
+                  <td class="">
+                     <fs30ia>X</fs30ia>
+                  </td>
+                  <td class="">
+                     <fs30ib>X</fs30ib>
+                  </td>
+               </tr>
+               <tr>
+                  <td>T (Turning)  </td>
+                  <td class="">
+                     <fs0ia>X</fs0ia>
+                  </td>
+                  <td class="">
+                     <fs0ib>X</fs0ib>
+                  </td>
+                  <td class="">
+                     <fs0id>X</fs0id>
+                  </td>
+                  <td class="">
+                     <fs0if>X</fs0if>
+                  </td>
+                  <td class="">
+                     <fs15>X</fs15>
+                  </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="">
+                     <fs16>X</fs16>
+                  </td>
+                  <td class="">
+                     <fs18>X</fs18>
+                  </td>
+                  <td class="">
+                     <fs21>X</fs21>
+                  </td>
+                  <td class="">
+                     <fs16ia>X</fs16ia>
+                  </td>
+                  <td class="">
+                     <fs18ia>X</fs18ia>
+                  </td>
+                  <td class="">
+                     <fs21ia>X</fs21ia>
+                  </td>
+                  <td class="">
+                     <fs16ib>X</fs16ib>
+                  </td>
+                  <td class="">
+                     <fs18ib>X</fs18ib>
+                  </td>
+                  <td class="">
+                     <fs21ib>X</fs21ib>
+                  </td>
+                  <td class="">
+                     <fs30ia>X</fs30ia>
+                  </td>
+                  <td class="">
+                     <fs30ib>X</fs30ib>
+                  </td>
+               </tr>
+               <tr>
+                  <td>LC (Loader)  </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="">
+                     <fs16>X</fs16>
+                  </td>
+                  <td class="">
+                     <fs18>X</fs18>
+                  </td>
+                  <td class="">
+                     <fs21>X</fs21>
+                  </td>
+                  <td class="">
+                     <fs16ia>X</fs16ia>
+                  </td>
+                  <td class="">
+                     <fs18ia>X</fs18ia>
+                  </td>
+                  <td class="">
+                     <fs21ia>X</fs21ia>
+                  </td>
+                  <td class="">
+                     <fs16ib>X</fs16ib>
+                  </td>
+                  <td class="">
+                     <fs18ib>X</fs18ib>
+                  </td>
+                  <td class="">
+                     <fs21ib>X</fs21ib>
+                  </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+               </tr>
+            </table>
+            <p></p>
+            <table border="1">
+               <colgroup width="100em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <tr>
+                  <th></th>
+                  <th>0i-D</th>
+                  <th>0i-F</th>
+                  <th>16i</th>
+                  <th>18i</th>
+                  <th>30i-A</th>
+                  <th>30i-B</th>
+               </tr>
+               <tr>
+                  <td>P (Punch press)</td>
+                  <td class="">
+                     <fs0id>X</fs0id>
+                  </td>
+                  <td class="">
+                     <fs0if>X</fs0if>
+                  </td>
+                  <td class="">
+                     <fs16i>X</fs16i>
+                  </td>
+                  <td class="">
+                     <fs18i>X</fs18i>
+                  </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="">
+                     <fs30ib>X</fs30ib>
+                  </td>
+               </tr>
+               <tr>
+                  <td>L (Laser)      </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="">
+                     <fs16i>X</fs16i>
+                  </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="">
+                     <fs30ib>X</fs30ib>
+                  </td>
+               </tr>
+               <tr>
+                  <td>W (Wire)       </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="">
+                     <fs16i>X</fs16i>
+                  </td>
+                  <td class="">
+                     <fs18i>X</fs18i>
+                  </td>
+                  <td class="">
+                     <fs30ia>X</fs30ia>
+                  </td>
+                  <td class="">
+                     <fs30ib>X</fs30ib>
+                  </td>
+               </tr>
+            </table>
+            <p></p><br><table border="1">
+               <colgroup width="100em"></colgroup>
+               <colgroup align="center" width="86em"></colgroup>
+               <colgroup align="center" width="86em"></colgroup>
+               <tr>
+                  <td>Power Mate i-D</td>
+                  <td class="">
+                     <d>X</d>
+                  </td>
+               </tr>
+               <tr>
+                  <td>Power Mate i-H</td>
+                  <td class="">
+                     <h>X</h>
+                  </td>
+               </tr>
+               <tr>
+                  <td>Power Motion i-A</td>
+                  <td class=""><a>X</a></td>
+               </tr>
+            </table>
+            <p></p>
+            <table class="dd">
+               <tr>
+                  <td></td>
+                  <td>"O"</td>
+                  <td>:</td>
+                  <td>Both Ethernet and HSSB</td>
+               </tr>
+               <tr>
+                  <td></td>
+                  <td>"E"</td>
+                  <td>:</td>
+                  <td>Ethernet</td>
+               </tr>
+               <tr>
+                  <td></td>
+                  <td>"H"</td>
+                  <td>:</td>
+                  <td>HSSB</td>
+               </tr>
+               <tr>
+                  <td></td>
+                  <td>"X"</td>
+                  <td>:</td>
+                  <td>Cannot be used</td>
+               </tr>
+               <tr>
+                  <td></td>
+                  <td>"-"</td>
+                  <td>:</td>
+                  <td>None</td>
+               </tr>
+            </table>
+            <p style="background-color:mistyrose;">Note) 0i-C does not support the HSSB function.</p>
+            <p>
+               <add><b></b></add>
+            </p><a name="Reference"></a><p class="label">See Also</p>
+            <p><a class="func" target="_parent" href="ncdata/cnc_rdhpccset.htm">cnc_rdhpccset</a>&nbsp;&nbsp;
+               <a class="func" target="_parent" href="ncdata/cnc_wrhpccset.htm">cnc_wrhpccset</a>&nbsp;&nbsp;
+               <a class="func" target="_parent" href="ncdata/cnc_wrhpcctupr.htm">cnc_wrhpcctupr</a>&nbsp;&nbsp;
+               <a class="func" target="_parent" href="ncdata/cnc_rdhpcctuac.htm">cnc_rdhpcctuac</a>&nbsp;&nbsp;
+               <a class="func" target="_parent" href="ncdata/cnc_wrhpcctuac.htm">cnc_wrhpcctuac</a>&nbsp;&nbsp;
+               </p><a name="Example"></a></div></FONT><hr>
+   </body>
+</html>

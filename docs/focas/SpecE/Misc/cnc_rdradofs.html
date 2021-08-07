@@ -1,0 +1,575 @@
+<html xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:bop2="http://www.fanuc.co.jp/develop/mmc/bop2">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <title>cnc_rdradofs</title>
+      <link rel="stylesheet" type="text/css" href="../fwlib32.css">
+   </head>
+   <body bgcolor="#FFFFFF"><FONT face="Verdana,Arial,Helvetica,sans-serif"><a name="Function Name"></a><p class="ftitle">cnc_rdradofs</p>
+         <div class="text"><a name="Declaration"></a><p class="label">Declaration</p>
+            <div class="mth">#include "fwlib32.h"
+               <p></p>
+               <prottype>FWLIBAPI short WINAPI cnc_rdradofs(unsigned short FlibHndl, ODBROFS *radofs);</prottype>
+            </div><a name="Description"></a><p class="label">Description</p>
+            <cmn>
+               
+               <p>
+                  Reads the mode and vector of the cutter compensation(tool nose radius compensation).<br>
+                  These are stored in each member of ODBROFS structure.<br>
+                  The places of decimal points can be got by <a href="misc/cnc_getfigure.htm" target="_parent">cnc_getfigure</a> function.
+                  </p>
+               </cmn><a name="Arguments"></a><p class="label">Arguments</p>
+            <div class="dtarg">
+               <name>FlibHndl</name>
+               &nbsp;&nbsp;[&nbsp;
+               <type>in</type>&nbsp;]
+               </div>
+            <div class="ddarg">
+               <content>
+                  
+                  <p>
+                     Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                     </p>
+                  </content>
+            </div>
+            <div class="dtarg">
+               <name>radofs</name>
+               &nbsp;&nbsp;[&nbsp;
+               <type>out</type>&nbsp;]
+               </div>
+            <div class="ddarg">
+               <content>
+                  
+                  <p>
+                     Pointer to the ODBROFS structure for the data of the cutter compensation(tool nose
+                     radius compensation). The ODBROFS structure is as follows.
+                     </p>
+                  
+                  <pre>
+typedef struct odbrofs {
+    short   mode;         /* offset mode             */
+    short   pln_axes[2];  /* axis of plane selection */
+    long    ofsvct[2];    /* offset vector           */
+} ODBROFS ;
+</pre>
+                  
+                  <dl>
+                     
+                     <dt>mode</dt>
+                     
+                     <dd>Mode of the cutter compensation(tool nose radius compensation) is set.</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td>0</td> 
+                              <td>:</td> 
+                              <td>cancel mode</td> </tr>
+                           
+                           <tr> 
+                              <td>1</td> 
+                              <td>:</td> 
+                              <td>offset mode</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dd>* In case of '0', the data except 'mode' is invalid.</dd>
+                     
+                     <dt>pln_axes</dt>
+                     
+                     <dd>Axis number of plane selection is set.</dd>
+                     
+                     <dd>(0,..,MAX_AXIS-1) MAX_AXIS:max.controlled axes</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td>pln_axes[0]</td> 
+                              <td>:</td> 
+                              <td>1st axis number</td> </tr>
+                           
+                           <tr> 
+                              <td>pln_axes[1]</td> 
+                              <td>:</td> 
+                              <td>2nd axis number</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>ofsvct</dt>
+                     
+                     <dd>Vector of the cutter compensation(tool nose radius compensation) is set.</dd>
+                     </dl>
+                  
+                  <p></p>'ofsvct' according to the G code of plane selection is as follows.
+                  
+                  <table class="dd" border="1">
+                     
+                     <thead>
+                        
+                        <tr> 
+                           <th></th> 
+                           <th>ofsvct[0]</th> 
+                           <th>ofsvct[1]</th> </tr>
+                        </thead>
+                     
+                     <tbody>
+                        
+                        <tr> 
+                           <td>G17</td> 
+                           <td>X axis or parallel axis</td> 
+                           <td>Y axis or parallel axis</td> </tr>
+                        
+                        <tr> 
+                           <td>G18</td> 
+                           <td>Z axis or parallel axis</td> 
+                           <td>X axis or parallel axis</td> </tr>
+                        
+                        <tr> 
+                           <td>G19</td> 
+                           <td>Y axis or parallel axis</td> 
+                           <td>Z axis or parallel axis</td> </tr>
+                        </tbody>
+                     </table>
+                  </content>
+            </div><a name="Return"></a><p class="label">Return</p>
+            <p>EW_OK is returned on successful completion, otherwise any value except EW_OK is returned.</p>
+            <p>The major error codes are as follows.</p>
+            <table border="1">
+               <colgroup align="center" valign="top"></colgroup>
+               <colgroup align="left" valign="top"></colgroup>
+               <colgroup align="left" valign="top"></colgroup>
+               <tr>
+                  <th>Return code</th>
+                  <th>Meaning/Error handling</th>
+               </tr>
+               <tr>
+                  <td>
+                     <name>EW_NOOPT</name><br>(6)</td>
+                  <td>
+                     <content>No option<br>
+                        
+                        <table>
+                           
+                           <tr> 
+                              <td width="65" valign="top">Series 15</td>
+                              
+                              <td valign="top">:</td>
+                              
+                              <td>The cutter compensation(tool nose radius compensation) option and the extended driver/library
+                                 option are necessary.</td>
+                              </tr>
+                           
+                           <tr> 
+                              <td width="65" valign="top">Series 15i</td>
+                              
+                              <td valign="top">:</td>
+                              
+                              <td>This function needs the cutter compensation option and the extended driver/library
+                                 function.</td>
+                              </tr>
+                           </table>
+                        </content>
+                  </td>
+               </tr>
+            </table>
+            <p>
+               <add></add>
+            </p>
+            <p>
+               As for the other return codes or the details, see 
+               
+               
+               "<a href="errcode.htm" target="_parent">Return status of Data window function</a>"
+               
+               </p><a name="CNC option"></a><p class="label">CNC option</p>
+            <p></p>
+            <p>This function need the following CNC option.</p>
+            <ul>
+               <p>
+                  <need>
+                     
+                     <li>Series 15</li>
+                     This function needs the cutter compensation(tool nose radius compensation) option.
+                     
+                     <li>Series 15i</li>
+                     This function needs the cutter compensation option.
+                     </need>
+               </p>
+            </ul>
+            <p>For HSSB connection,</p>
+            <ul>
+               <p>
+                  <hssb>
+                     The extended driver/library function is necessary.
+                     </hssb>
+               </p>
+            </ul>
+            <p>For Ethernet connection,</p>
+            <ul>
+               <p>
+                  <ethr>
+                     <p>The Ethernet function and the extended driver/library function are necessary.</p>
+                  </ethr>
+               </p>
+            </ul>
+            <p>
+               <add></add>
+            </p><a name="CNC parameter"></a><p class="label">CNC parameter</p>
+            <p>This function is not related to CNC parameter.</p><a name="CNC mode"></a><p class="label">CNC mode</p>
+            <p>This function can be used in any CNC mode.</p><a name="Available CNC"></a><p class="label">Available CNC</p>
+            <table border="1">
+               <colgroup width="100em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <tr>
+                  <th></th>
+                  <th>0i-A</th>
+                  <th>0i-B/C(Note)</th>
+                  <th>0i-D</th>
+                  <th>0i-F</th>
+                  <th>15</th>
+                  <th>15i</th>
+                  <th>16</th>
+                  <th>18</th>
+                  <th>21</th>
+                  <th>16i-A</th>
+                  <th>18i-A</th>
+                  <th>21i-A</th>
+                  <th>16i-B</th>
+                  <th>18i-B</th>
+                  <th>21i-B</th>
+                  <th>30i-A</th>
+                  <th>30i-B</th>
+               </tr>
+               <tr>
+                  <td>M (Machining)</td>
+                  <td class="">
+                     <fs0ia>X</fs0ia>
+                  </td>
+                  <td class="">
+                     <fs0ib>X</fs0ib>
+                  </td>
+                  <td class="">
+                     <fs0id>X</fs0id>
+                  </td>
+                  <td class="">
+                     <fs0if>X</fs0if>
+                  </td>
+                  <td class="support">
+                     <fs15>H</fs15>
+                  </td>
+                  <td class="support">
+                     <fs15i>O</fs15i>
+                  </td>
+                  <td class="">
+                     <fs16>X</fs16>
+                  </td>
+                  <td class="">
+                     <fs18>X</fs18>
+                  </td>
+                  <td class="">
+                     <fs21>X</fs21>
+                  </td>
+                  <td class="">
+                     <fs16ia>X</fs16ia>
+                  </td>
+                  <td class="">
+                     <fs18ia>X</fs18ia>
+                  </td>
+                  <td class="">
+                     <fs21ia>X</fs21ia>
+                  </td>
+                  <td class="">
+                     <fs16ib>X</fs16ib>
+                  </td>
+                  <td class="">
+                     <fs18ib>X</fs18ib>
+                  </td>
+                  <td class="">
+                     <fs21ib>X</fs21ib>
+                  </td>
+                  <td class="">
+                     <fs30ia>X</fs30ia>
+                  </td>
+                  <td class="">
+                     <fs30ib>X</fs30ib>
+                  </td>
+               </tr>
+               <tr>
+                  <td>T (Turning)  </td>
+                  <td class="">
+                     <fs0ia>X</fs0ia>
+                  </td>
+                  <td class="">
+                     <fs0ib>X</fs0ib>
+                  </td>
+                  <td class="">
+                     <fs0id>X</fs0id>
+                  </td>
+                  <td class="">
+                     <fs0if>X</fs0if>
+                  </td>
+                  <td class="support">
+                     <fs15>H</fs15>
+                  </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="">
+                     <fs16>X</fs16>
+                  </td>
+                  <td class="">
+                     <fs18>X</fs18>
+                  </td>
+                  <td class="">
+                     <fs21>X</fs21>
+                  </td>
+                  <td class="">
+                     <fs16ia>X</fs16ia>
+                  </td>
+                  <td class="">
+                     <fs18ia>X</fs18ia>
+                  </td>
+                  <td class="">
+                     <fs21ia>X</fs21ia>
+                  </td>
+                  <td class="">
+                     <fs16ib>X</fs16ib>
+                  </td>
+                  <td class="">
+                     <fs18ib>X</fs18ib>
+                  </td>
+                  <td class="">
+                     <fs21ib>X</fs21ib>
+                  </td>
+                  <td class="">
+                     <fs30ia>X</fs30ia>
+                  </td>
+                  <td class="">
+                     <fs30ib>X</fs30ib>
+                  </td>
+               </tr>
+               <tr>
+                  <td>LC (Loader)  </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="">
+                     <fs16>X</fs16>
+                  </td>
+                  <td class="">
+                     <fs18>X</fs18>
+                  </td>
+                  <td class="">
+                     <fs21>X</fs21>
+                  </td>
+                  <td class="">
+                     <fs16ia>X</fs16ia>
+                  </td>
+                  <td class="">
+                     <fs18ia>X</fs18ia>
+                  </td>
+                  <td class="">
+                     <fs21ia>X</fs21ia>
+                  </td>
+                  <td class="">
+                     <fs16ib>X</fs16ib>
+                  </td>
+                  <td class="">
+                     <fs18ib>X</fs18ib>
+                  </td>
+                  <td class="">
+                     <fs21ib>X</fs21ib>
+                  </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+               </tr>
+            </table>
+            <p></p>
+            <table border="1">
+               <colgroup width="100em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <tr>
+                  <th></th>
+                  <th>0i-D</th>
+                  <th>0i-F</th>
+                  <th>16i</th>
+                  <th>18i</th>
+                  <th>30i-A</th>
+                  <th>30i-B</th>
+               </tr>
+               <tr>
+                  <td>P (Punch press)</td>
+                  <td class="">
+                     <fs0id>X</fs0id>
+                  </td>
+                  <td class="">
+                     <fs0if>X</fs0if>
+                  </td>
+                  <td class="">
+                     <fs16i>X</fs16i>
+                  </td>
+                  <td class="">
+                     <fs18i>X</fs18i>
+                  </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="">
+                     <fs30ib>X</fs30ib>
+                  </td>
+               </tr>
+               <tr>
+                  <td>L (Laser)      </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="">
+                     <fs16i>X</fs16i>
+                  </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="">
+                     <fs30ib>X</fs30ib>
+                  </td>
+               </tr>
+               <tr>
+                  <td>W (Wire)       </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="">
+                     <fs16i>X</fs16i>
+                  </td>
+                  <td class="">
+                     <fs18i>X</fs18i>
+                  </td>
+                  <td class="">
+                     <fs30ia>X</fs30ia>
+                  </td>
+                  <td class="">
+                     <fs30ib>X</fs30ib>
+                  </td>
+               </tr>
+            </table>
+            <p></p><br><table border="1">
+               <colgroup width="100em"></colgroup>
+               <colgroup align="center" width="86em"></colgroup>
+               <colgroup align="center" width="86em"></colgroup>
+               <tr>
+                  <td>Power Mate i-D</td>
+                  <td class="">
+                     <d>X</d>
+                  </td>
+               </tr>
+               <tr>
+                  <td>Power Mate i-H</td>
+                  <td class="">
+                     <h>X</h>
+                  </td>
+               </tr>
+               <tr>
+                  <td>Power Motion i-A</td>
+                  <td class=""><a>X</a></td>
+               </tr>
+            </table>
+            <p></p>
+            <table class="dd">
+               <tr>
+                  <td></td>
+                  <td>"O"</td>
+                  <td>:</td>
+                  <td>Both Ethernet and HSSB</td>
+               </tr>
+               <tr>
+                  <td></td>
+                  <td>"E"</td>
+                  <td>:</td>
+                  <td>Ethernet</td>
+               </tr>
+               <tr>
+                  <td></td>
+                  <td>"H"</td>
+                  <td>:</td>
+                  <td>HSSB</td>
+               </tr>
+               <tr>
+                  <td></td>
+                  <td>"X"</td>
+                  <td>:</td>
+                  <td>Cannot be used</td>
+               </tr>
+               <tr>
+                  <td></td>
+                  <td>"-"</td>
+                  <td>:</td>
+                  <td>None</td>
+               </tr>
+            </table>
+            <p style="background-color:mistyrose;">Note) 0i-C does not support the HSSB function.</p>
+            <p>
+               <add><b></b></add>
+            </p><a name="Reference"></a><p class="label">See Also</p>
+            <p><a class="func" target="_parent" href="misc/cnc_rdlenofs.htm">cnc_rdlenofs</a>&nbsp;&nbsp;
+               <a class="func" target="_parent" href="misc/cnc_rdfixcycle.htm">cnc_rdfixcycle</a>&nbsp;&nbsp;
+               <a class="func" target="_parent" href="misc/cnc_rdcdrotate.htm">cnc_rdcdrotate</a>&nbsp;&nbsp;
+               <a class="func" target="_parent" href="misc/cnc_rd3dcdcnv.htm">cnc_rd3dcdcnv</a>&nbsp;&nbsp;
+               <a class="func" target="_parent" href="misc/cnc_rdmirimage.htm">cnc_rdmirimage</a>&nbsp;&nbsp;
+               <a class="func" target="_parent" href="misc/cnc_rdscaling.htm">cnc_rdscaling</a>&nbsp;&nbsp;
+               <a class="func" target="_parent" href="misc/cnc_rd3dtofs.htm">cnc_rd3dtofs</a>&nbsp;&nbsp;
+               <a class="func" target="_parent" href="misc/cnc_rdposofs.htm">cnc_rdposofs</a>&nbsp;&nbsp;
+               </p><a name="Example"></a></div></FONT><hr>
+   </body>
+</html>

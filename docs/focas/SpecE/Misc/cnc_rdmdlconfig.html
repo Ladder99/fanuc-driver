@@ -1,0 +1,1858 @@
+<html xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:bop2="http://www.fanuc.co.jp/develop/mmc/bop2">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <title>cnc_rdmdlconfig</title>
+      <link rel="stylesheet" type="text/css" href="../fwlib32.css">
+   </head>
+   <body bgcolor="#FFFFFF"><FONT face="Verdana,Arial,Helvetica,sans-serif"><a name="Function Name"></a><p class="ftitle">cnc_rdmdlconfig</p>
+         <div class="text"><a name="Declaration"></a><p class="label">Declaration</p>
+            <div class="mth">#include "fwlib32.h"
+               <p></p>
+               <prottype>FWLIBAPI short WINAPI cnc_rdmdlconfig(unsigned short FlibHndl, ODBMDLC *mdlconfig);</prottype>
+            </div><a name="Description"></a><p class="label">Description</p>
+            <cmn>
+               Reads the module configuration of CNC system.
+               <p></p>
+               These information are stored in each member of ODBMDLC.
+               <p></p>
+               Reading the data which depends on the path needs exchanging the path.
+               <p></p>
+               This function is only available for Series 16/18 MODEL-C.
+               
+               </cmn><a name="Arguments"></a><p class="label">Arguments : HSSB</p>
+            <div class="dtarg">
+               <name>FlibHndl</name>
+               &nbsp;&nbsp;[&nbsp;
+               <type>in</type>&nbsp;]
+               </div>
+            <div class="ddarg">
+               <content>
+                  
+                  <p>
+                     Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+                     </p>
+                  </content>
+            </div>
+            <div class="dtarg">
+               <name>mdlconfig</name>
+               &nbsp;&nbsp;[&nbsp;
+               <type>out</type>&nbsp;]
+               </div>
+            <div class="ddarg">
+               <content>
+                  
+                  <p>
+                     Pointer to the ODBMDLC structure for the module configuration of CNC system.The ODBMDLC
+                     structure is as follows.
+                     </p>
+                  - The ODBMDLC structure for Series 16/18 is as follows.
+                  
+                  <pre>
+typedef struct odbmdlc {
+     short   from;          /* Capacity of FROM module                                  */
+     short   dram;          /* Capacity of DRAM module                                  */
+     short   sram;          /* Capacity of additional SRAM module                       */
+     short   pmc;           /* Type of PMC module                                       */
+     short   crtc;          /* Type of CRTC module                                      */
+     short   servo12;       /* Existence of servo module(axis1,2)                       */
+     short   servo34;       /* Existence of servo module(axis3,4)                       */
+     short   servo56;       /* Existence of servo module(axis5,6)                       */
+     short   servo78;       /* (reserve)                                                */
+     short   sic;           /* Existence of SIC                                         */
+     short   pos_lsi;       /* Existence of POSITION LSI                                */
+     short   hi_aio;        /* Existence of high-speed skip &amp; analog I/O                */
+     short   reserve1[12];  /* (reserve)                                                */
+
+     /* Above items depend on each path.              */
+     /* Following items are independent of each path. */
+
+     short   drmmrc;        /* Capacity of Extended DRAM for management software(PMC-SC) */
+     short   drmarc;        /* Capacity of DRAM for application(PMC-SC)                  */
+     short   pmcmrc;        /* Type of PMC module(PMC-SC)                                */
+     short   dmaarc;        /* Existence of additional board for DMA(PMC-SC)             */
+     short   iopt;          /* Number of DI/DO points(I/O card)                          */
+     short   hdiio;         /* Existence of LSI for high-speed skip(I/O card)            */
+     short   gm2gr1;        /* Existence of graphic engine 2                             */
+     short   crtgr2;        /* Type of CRTC module(OPT-1)                                */
+     short   gm1gr2;        /* Existence of graphic module1(OPT-1)                       */
+     short   gm2gr2;        /* Existence of graphic module2(OPT-1)                       */
+     short   cmmrb;         /* Existence of communication module(OPT-1)                  */
+     short   sv5axs;        /* Existence of servo module(axis5,6)(axis card)             */
+     short   sv7axs;        /* Existence of servo module(axis7,8)(axis card)             */
+     short   sicaxs;        /* Existence of SIC(axis card)                               */
+     short   posaxs;        /* Existence of POSITION LSI(axis card)                      */
+     short   hamaxs;        /* Existence of high-speed skip &amp; analog I/O(axis card)      */
+     short   romr64;        /* Capacity of system EPROM module(64bitRISC)                */
+     short   srmr64;        /* Capacity of SRAM module(64bitRISC)                        */
+     short   dr1r64;        /* Capacity of DRAM module1(64bitRISC)                       */
+     short   dr2r64;        /* Capacity of DRAM module2(64bitRISC)                       */
+     short   iopio2;        /* Number of DI/DO points(I/O card#2)                        */
+     short   hdiio2;        /* Existence of LSI for high-speed skip(I/O card#2)          */
+     short   cmmrb2;        /* Existence of communication module(OPT-1#2)                */
+     short   romfap;        /* Existence of system EPROM module(CAP2)                    */
+     short   srmfap;        /* Capacity of SRAM module(CAP2)                             */
+     short   drmfap;        /* Capacity of DRAM module(CAP2)                             */
+     short   drmare;        /* Capacity of DRAM for application(PMC-SE)                  */
+     short   pmcmre;        /* Type of PMC module(PMC-SE)                                */
+     short   dmaare;        /* Existence of additional board for DMA(PMC-SE)             */
+     short   frmbgg;        /* Capacity of FROM module(BG-GRPH)                          */
+     short   drmbgg;        /* Capacity of DRAM module(BG-GRPH)                          */
+     short   asrbgg;        /* Capacity of additional SRAM module(BG-GRPH)               */
+     short   edtpsc;        /* Version of module(PMC-SB5/SB6)                            */
+     short   slcpsc;        /* Existence of SLC(PMC-SB5/SB6)                             */
+     short   reserve2[34];  /* (reserve)                                                 */
+} ODBMDLC ;
+</pre>
+                  
+                  <dl>
+                     
+                     <dt>from</dt>
+                     
+                     <dd>Capacity of FROM module</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td>  
+                              <td align="right">10</td> 
+                              <td>:</td> 
+                              <td> 6 (MB)   </td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>(reserve) </td>             
+                              <td align="right">11</td> 
+                              <td>:</td> 
+                              <td> 8 (MB)   </td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 1</td> 
+                              <td>:</td> 
+                              <td> 2 (MB)   </td>             
+                              <td align="right">12</td> 
+                              <td>:</td> 
+                              <td>10 (MB)   </td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 2</td> 
+                              <td>:</td> 
+                              <td> 4 (MB)   </td>             
+                              <td align="right">13</td> 
+                              <td>:</td> 
+                              <td>12 (MB)   </td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 3</td> 
+                              <td>:</td> 
+                              <td> 6 (MB)   </td>             
+                              <td align="right">14</td> 
+                              <td>:</td> 
+                              <td>14 (MB)   </td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 4</td> 
+                              <td>:</td> 
+                              <td> 8 (MB)   </td>             
+                              <td align="right">15</td> 
+                              <td>:</td> 
+                              <td> 1 (MB)   </td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 5</td> 
+                              <td>:</td> 
+                              <td>10 (MB)   </td>             
+                              <td align="right">16</td> 
+                              <td>:</td> 
+                              <td> 1 (MB)   </td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 6</td> 
+                              <td>:</td> 
+                              <td>12 (MB)   </td>             
+                              <td align="right">17</td> 
+                              <td>:</td> 
+                              <td>(reserve)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 7</td> 
+                              <td>:</td> 
+                              <td> 4 (MB)   </td>             
+                              <td align="right">18</td> 
+                              <td>:</td> 
+                              <td> 4 (MB)   </td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 8</td> 
+                              <td>:</td> 
+                              <td> 3 (MB)   </td>             
+                              <td align="right">19</td> 
+                              <td>:</td> 
+                              <td> 8 (MB)   </td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 9</td> 
+                              <td>:</td> 
+                              <td> 2 (MB)   </td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>dram</dt>
+                     
+                     <dd>Capacity of DRAM module</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 4</td> 
+                              <td>:</td> 
+                              <td>16 (MB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td> 4 (MB)</td>               
+                              <td align="right"> 5</td> 
+                              <td>:</td> 
+                              <td> 8 (MB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 1</td> 
+                              <td>:</td> 
+                              <td> 2 (MB)</td>               
+                              <td align="right"> 6</td> 
+                              <td>:</td> 
+                              <td> 4 (MB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 2</td> 
+                              <td>:</td> 
+                              <td> 1 (MB)</td>               
+                              <td align="right"> 7</td> 
+                              <td>:</td> 
+                              <td>24 (MB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 3</td> 
+                              <td>:</td> 
+                              <td> 6 (MB)</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>sram</dt>
+                     
+                     <dd>Capacity of additional SRAM module</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 5</td> 
+                              <td>:</td> 
+                              <td>768 (KB)   </td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>  1 (MB) </td>             
+                              <td align="right"> 6</td> 
+                              <td>:</td> 
+                              <td>(reserve) </td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 1</td> 
+                              <td>:</td> 
+                              <td>512 (KB) </td>             
+                              <td align="right"> 7</td> 
+                              <td>:</td> 
+                              <td>2.25(MB)   </td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 2</td> 
+                              <td>:</td> 
+                              <td>  2 (MB) </td>             
+                              <td align="right"> 8</td> 
+                              <td>:</td> 
+                              <td>(reserve) </td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 3</td> 
+                              <td>:</td> 
+                              <td>(reserve)</td>             
+                              <td align="right"> 9</td> 
+                              <td>:</td> 
+                              <td>256 (KB)   </td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 4</td> 
+                              <td>:</td> 
+                              <td>(reserve) </td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>pmc</dt>
+                     
+                     <dd>Type of PMC module</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 2</td> 
+                              <td>:</td> 
+                              <td>PMP2+SLC</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>BOC2    </td>              
+                              <td align="right"> 3</td> 
+                              <td>:</td> 
+                              <td>BSI     </td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 1</td> 
+                              <td>:</td> 
+                              <td>BSI+SLC </td>              
+                              <td align="right"> 4</td> 
+                              <td>:</td> 
+                              <td>PMP2    </td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>crtc</dt>
+                     
+                     <dd>Type of CRTC module</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 3</td> 
+                              <td>:</td> 
+                              <td>HSSB-VGA </td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>14"CRT     </td>           
+                              <td align="right"> 4</td> 
+                              <td>:</td> 
+                              <td>(reserve)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 1</td> 
+                              <td>:</td> 
+                              <td>9"CRT      </td>           
+                              <td align="right"> 5</td> 
+                              <td>:</td> 
+                              <td>9"VGA    </td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 2</td> 
+                              <td>:</td> 
+                              <td>VGA        </td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>servo12</dt>
+                     
+                     <dd>Existence of servo module(axis1,2)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>Exists</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>servo34</dt>
+                     
+                     <dd>Existence of servo module(axis3,4)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>Exists</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>servo56</dt>
+                     
+                     <dd>Existence of servo module(axis5,6)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>Exists</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>sic</dt>
+                     
+                     <dd>Existence of SIC</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>Exists</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>pos_lsi</dt>
+                     
+                     <dd>Existence of POSITION LSI</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>Exists</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>hi_aio</dt>
+                     
+                     <dd>Existence of high-speed skip &amp; analog I/O</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 1</td> 
+                              <td>:</td> 
+                              <td>only high-speed skip</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>Both exist</td>            
+                              <td align="right"> 2</td> 
+                              <td>:</td> 
+                              <td>only analog I/O</td>      </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>drmmrc</dt>
+                     
+                     <dd>Capacity of additional DRAM for management software (PMC-SC)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>Exists</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>drmarc</dt>
+                     
+                     <dd>Capacity of DRAM for application (PMC-SC)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td>  
+                              <td align="right"> 2</td> 
+                              <td>:</td> 
+                              <td>512(KB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>2(MB)</td>                  
+                              <td align="right"> 3</td> 
+                              <td>:</td> 
+                              <td>  1(MB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 1</td> 
+                              <td>:</td> 
+                              <td>(reserve)</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>pmcmrc</dt>
+                     
+                     <dd>Type of PMC module(PMC-SC)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 2</td> 
+                              <td>:</td> 
+                              <td>PMP2+SLC</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>BOC2</td>                  
+                              <td align="right"> 3</td> 
+                              <td>:</td> 
+                              <td>BSI     </td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 1</td> 
+                              <td>:</td> 
+                              <td>BSI+SLC</td>               
+                              <td align="right"> 4</td> 
+                              <td>:</td> 
+                              <td>PMP2    </td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>dmaarc</dt>
+                     
+                     <dd>Existence of additional board for DMA (PMC-SC)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>Exists</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>iopt</dt>
+                     
+                     <dd>Number of DI/DO points (I/O card)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 2</td> 
+                              <td>:</td> 
+                              <td> 80/ 56</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>144/112</td>               
+                              <td align="right"> 3</td> 
+                              <td>:</td> 
+                              <td>104/ 72</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 1</td> 
+                              <td>:</td> 
+                              <td> 40/ 40</td>               
+                              <td align="right"> 4</td> 
+                              <td>:</td> 
+                              <td>156/120</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>hdiio</dt>
+                     
+                     <dd>Existence of LSI for high-speed skip (I/O card)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>Exists</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>gm2gr1</dt>
+                     
+                     <dd>Existence of graphic engine 2</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>Exists</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>crtgr2</dt>
+                     
+                     <dd>Type of CRTC module (OPT-1)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 3</td> 
+                              <td>:</td> 
+                              <td>(reserve)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>14" CRT </td>              
+                              <td align="right"> 4</td> 
+                              <td>:</td> 
+                              <td>14" CRT GRPH</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 1</td> 
+                              <td>:</td> 
+                              <td> 9" CRT </td>              
+                              <td align="right"> 5</td> 
+                              <td>:</td> 
+                              <td> 9" CRT GRPH</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 2</td> 
+                              <td>:</td> 
+                              <td>VGA MAIN</td>              
+                              <td align="right"> 6</td> 
+                              <td>:</td> 
+                              <td>VGA GRPH</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>gm1gr2</dt>
+                     
+                     <dd>Existence of graphic module 1 (OPT-1)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>Exists</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>gm2gr2</dt>
+                     
+                     <dd>Existence of graphic module 2 (OPT-1)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>Exists</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>cmmrb</dt>
+                     
+                     <dd>Existence of communication module (OPT-1)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>Exists</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>sv5axs</dt>
+                     
+                     <dd>Existence of servo module (axis5,6) (axis card)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>Exists</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>sv7axs</dt>
+                     
+                     <dd>Existence of servo module (axis7,8) (axis card)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>Exists</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>sicaxs</dt>
+                     
+                     <dd>Existence of SIC (axis card)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>Exists</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>posaxs</dt>
+                     
+                     <dd>Existence of POSITION LSI (axis card)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>Exists</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>hamaxs</dt>
+                     
+                     <dd>Existence of high-speed skip &amp; analog I/O (axis card)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 1</td> 
+                              <td>:</td> 
+                              <td>only high-speed skip</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>Both exist</td>            
+                              <td align="right"> 2</td> 
+                              <td>:</td> 
+                              <td>only analog I/O</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>romr64</dt>
+                     
+                     <dd>Capacity of system EPROM module (64bitRISC)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 3</td> 
+                              <td>:</td> 
+                              <td>512 (KB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td> 4 (MB)</td>               
+                              <td align="right"> 4</td> 
+                              <td>:</td> 
+                              <td>256 (KB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 1</td> 
+                              <td>:</td> 
+                              <td> 2 (MB)</td>               
+                              <td align="right"> 5</td> 
+                              <td>:</td> 
+                              <td>128 (KB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 2</td> 
+                              <td>:</td> 
+                              <td> 1 (MB)</td>               
+                              <td align="right"> 6</td> 
+                              <td>:</td> 
+                              <td>768 (KB)</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>srmr64</dt>
+                     
+                     <dd>Capacity of SRAM module (64bitRISC)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 3</td> 
+                              <td>:</td> 
+                              <td>512 (KB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>4 (MB)</td>                
+                              <td align="right"> 4</td> 
+                              <td>:</td> 
+                              <td>256 (KB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 1</td> 
+                              <td>:</td> 
+                              <td>2 (MB)</td>                
+                              <td align="right"> 5</td> 
+                              <td>:</td> 
+                              <td>128 (KB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 2</td> 
+                              <td>:</td> 
+                              <td>1 (MB)</td>                
+                              <td align="right"> 6</td> 
+                              <td>:</td> 
+                              <td>768 (KB)</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>dr1r64</dt>
+                     
+                     <dd>Capacity of DRAM module 1 (64bitRISC)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 2</td> 
+                              <td>:</td> 
+                              <td>  2 (MB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>(reserve)</td>             
+                              <td align="right"> 3</td> 
+                              <td>:</td> 
+                              <td>  4 (MB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 1</td> 
+                              <td>:</td> 
+                              <td>(reserve)</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>dr2r64</dt>
+                     
+                     <dd>Capacity of DRAM module 2 (64bitRISC)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 2</td> 
+                              <td>:</td> 
+                              <td>  2 (MB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>(reserve)</td>             
+                              <td align="right"> 3</td> 
+                              <td>:</td> 
+                              <td>  4 (MB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 1</td> 
+                              <td>:</td> 
+                              <td>(reserve)</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>iopio2</dt>
+                     
+                     <dd>Number of DI/DO points(I/O card#2)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 2</td> 
+                              <td>:</td> 
+                              <td> 80/ 56</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>144/112</td>               
+                              <td align="right"> 3</td> 
+                              <td>:</td> 
+                              <td>104/ 72</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 1</td> 
+                              <td>:</td> 
+                              <td> 40/ 40</td>               
+                              <td align="right"> 4</td> 
+                              <td>:</td> 
+                              <td>156/120</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>hdiio2</dt>
+                     
+                     <dd>Existence of LSI for high-speed skip (I/O card#2)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>Exists</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>cmmrb2</dt>
+                     
+                     <dd>Existence of communication module (OPT-1#2)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>Exists</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>romfap</dt>
+                     
+                     <dd>Existence of system EPROM module (CAP2)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 3</td> 
+                              <td>:</td> 
+                              <td>512 (KB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>(reserve)</td>             
+                              <td align="right"> 4</td> 
+                              <td>:</td> 
+                              <td>256 (KB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 1</td> 
+                              <td>:</td> 
+                              <td>(reserve)</td>             
+                              <td align="right"> 5</td> 
+                              <td>:</td> 
+                              <td>128 (KB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 2</td> 
+                              <td>:</td> 
+                              <td>1 (MB)</td>                
+                              <td align="right"> 6</td> 
+                              <td>:</td> 
+                              <td>768 (KB)</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>srmfap</dt>
+                     
+                     <dd>Capacity of SRAM module (CAP2)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 3</td> 
+                              <td>:</td> 
+                              <td>512 (KB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>(reserve)</td>             
+                              <td align="right"> 4</td> 
+                              <td>:</td> 
+                              <td>256 (KB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 1</td> 
+                              <td>:</td> 
+                              <td>(reserve)</td>             
+                              <td align="right"> 5</td> 
+                              <td>:</td> 
+                              <td>128 (KB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 2</td> 
+                              <td>:</td> 
+                              <td>1 (MB)   </td>             
+                              <td align="right"> 6</td> 
+                              <td>:</td> 
+                              <td>768 (KB)</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>drmfap</dt>
+                     
+                     <dd>Capacity of DRAM module (CAP2)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 3</td> 
+                              <td>:</td> 
+                              <td>512 (KB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>2  (MB)</td>               
+                              <td align="right"> 4</td> 
+                              <td>:</td> 
+                              <td>256 (KB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 1</td> 
+                              <td>:</td> 
+                              <td>1.5(MB)</td>               
+                              <td align="right"> 5</td> 
+                              <td>:</td> 
+                              <td>128 (KB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 2</td> 
+                              <td>:</td> 
+                              <td>1  (MB)</td>               
+                              <td align="right"> 6</td> 
+                              <td>:</td> 
+                              <td>(reserve)</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>drmare</dt>
+                     
+                     <dd>Capacity of DRAM for applications (PMC-SE)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 2</td> 
+                              <td>:</td> 
+                              <td>512(KB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>2(MB)</td>                 
+                              <td align="right"> 3</td> 
+                              <td>:</td> 
+                              <td>  1(MB)</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>pmcmre</dt>
+                     
+                     <dd>Type of PMC module (PMC-SE)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 2</td> 
+                              <td>:</td> 
+                              <td>PMP2+SLC</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>BOC2   </td>               
+                              <td align="right"> 3</td> 
+                              <td>:</td> 
+                              <td>BSI</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 1</td> 
+                              <td>:</td> 
+                              <td>BSI+SLC</td>               
+                              <td align="right"> 4</td> 
+                              <td>:</td> 
+                              <td>PMP2</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>dmaare</dt>
+                     
+                     <dd>Existence of additional board for DMA (PMC-SE)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>Exists</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>frmbgg</dt>
+                     
+                     <dd>Capacity of FROM module (BG-GRAPH)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right">10</td> 
+                              <td>:</td> 
+                              <td> 6 (MB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>(reserve)</td>             
+                              <td align="right">11</td> 
+                              <td>:</td> 
+                              <td> 8 (MB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 1</td> 
+                              <td>:</td> 
+                              <td> 2 (MB)   </td>            
+                              <td align="right">12</td> 
+                              <td>:</td> 
+                              <td>10 (MB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 2</td> 
+                              <td>:</td> 
+                              <td> 4 (MB)   </td>            
+                              <td align="right">13</td> 
+                              <td>:</td> 
+                              <td>12 (MB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 3</td> 
+                              <td>:</td> 
+                              <td> 6 (MB)   </td>            
+                              <td align="right">14</td> 
+                              <td>:</td> 
+                              <td>14 (MB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 4</td> 
+                              <td>:</td> 
+                              <td> 8 (MB)   </td>            
+                              <td align="right">15</td> 
+                              <td>:</td> 
+                              <td> 1 (MB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 5</td> 
+                              <td>:</td> 
+                              <td>10 (MB)   </td>            
+                              <td align="right">16</td> 
+                              <td>:</td> 
+                              <td> 1 (MB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 6</td> 
+                              <td>:</td> 
+                              <td>12 (MB)   </td>            
+                              <td align="right">17</td> 
+                              <td>:</td> 
+                              <td>(reserve)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 7</td> 
+                              <td>:</td> 
+                              <td> 4 (MB)   </td>            
+                              <td align="right">18</td> 
+                              <td>:</td> 
+                              <td> 4 (MB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 8</td> 
+                              <td>:</td> 
+                              <td> 3 (MB)   </td>            
+                              <td align="right">19</td> 
+                              <td>:</td> 
+                              <td> 8 (MB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 9</td> 
+                              <td>:</td> 
+                              <td>2 (MB)</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>drmbgg</dt>
+                     
+                     <dd>Capacity of DRAM module (BG-GRAPH)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 4</td> 
+                              <td>:</td> 
+                              <td>16 (MB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td> 4 (MB)    </td>           
+                              <td align="right"> 5</td> 
+                              <td>:</td> 
+                              <td> 8 (MB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 1</td> 
+                              <td>:</td> 
+                              <td> 2 (MB)    </td>           
+                              <td align="right"> 6</td> 
+                              <td>:</td> 
+                              <td> 4 (MB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 2</td> 
+                              <td>:</td> 
+                              <td> 1 (MB)    </td>           
+                              <td align="right"> 7</td> 
+                              <td>:</td> 
+                              <td>24 (MB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 3</td> 
+                              <td>:</td> 
+                              <td> 6 (MB)</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>asrbgg</dt>
+                     
+                     <dd>Capacity of additional SRAM module (BG-GRPH)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 5</td> 
+                              <td>:</td> 
+                              <td>768 (KB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>  1 (MB)   </td>           
+                              <td align="right"> 6</td> 
+                              <td>:</td> 
+                              <td>(reserve)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 1</td> 
+                              <td>:</td> 
+                              <td>512 (KB)   </td>           
+                              <td align="right"> 7</td> 
+                              <td>:</td> 
+                              <td>2.25(MB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 2</td> 
+                              <td>:</td> 
+                              <td>  2 (MB)   </td>           
+                              <td align="right"> 8</td> 
+                              <td>:</td> 
+                              <td>(reserve)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 3</td> 
+                              <td>:</td> 
+                              <td>(reserve) </td>            
+                              <td align="right"> 9</td> 
+                              <td>:</td> 
+                              <td>256 (KB)</td> </tr>
+                           
+                           <tr> 
+                              <td align="right"> 4</td> 
+                              <td>:</td> 
+                              <td>(reserve)</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>edtpsc</dt>
+                     
+                     <dd>Version of module (PMC-SB5/SB6)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist </td> 
+                              <td align="right"> 0,...,F</td> 
+                              <td>:</td> 
+                              <td>Version</td> </tr>
+                           </table>
+                     </dd>
+                     
+                     <dt>slcpsc</dt>
+                     
+                     <dd>Existence of SLC (PMC-SB5/SB6)</dd>
+                     
+                     <dd>
+                        <table class="dd">
+                           
+                           <tr> 
+                              <td align="right">-1</td> 
+                              <td>:</td> 
+                              <td width="100">Not exist</td> 
+                              <td align="right"> 0</td> 
+                              <td>:</td> 
+                              <td>Exists</td> </tr>
+                           </table>
+                     </dd>
+                     </dl>
+                  </content>
+            </div><a name="Return"></a><p class="label">Return</p>
+            <p>EW_OK is returned on successful completion, otherwise any value except EW_OK is returned.</p>
+            <p>The major error codes are as follows.</p>
+            <table border="1">
+               <colgroup align="center" valign="top"></colgroup>
+               <colgroup align="left" valign="top"></colgroup>
+               <colgroup align="left" valign="top"></colgroup>
+               <tr>
+                  <th>Return code</th>
+                  <th>Meaning/Error handling</th>
+               </tr>
+               <tr>
+                  <td>
+                     <name>EW_NOOPT</name><br>(6)</td>
+                  <td>
+                     <content>No option<br>The extended driver/library function is necessary.</content>
+                  </td>
+               </tr>
+            </table>
+            <p>
+               <add></add>
+            </p>
+            <p>
+               As for the other return codes or the details, see 
+               
+               
+               "<a href="errcode.htm" target="_parent">Return status of Data window function</a>"
+               
+               </p><a name="CNC option"></a><p class="label">CNC option</p>
+            <p></p>
+            <p>For HSSB connection,</p>
+            <ul>
+               <p>
+                  <hssb>The extended driver/library function is necessary.</hssb>
+               </p>
+            </ul>
+            <p>
+               <add></add>
+            </p><a name="CNC parameter"></a><p class="label">CNC parameter</p>
+            <p>This function is not related to CNC parameter.</p>
+            <p>
+               <add></add>
+            </p><a name="CNC mode"></a><p class="label">CNC mode</p>
+            <p>This function can be used in any CNC mode.</p><a name="Available CNC"></a><p class="label">Available CNC</p>
+            <table border="1">
+               <colgroup width="100em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <tr>
+                  <th></th>
+                  <th>0i-A</th>
+                  <th>0i-B/C(Note)</th>
+                  <th>0i-D</th>
+                  <th>0i-F</th>
+                  <th>15</th>
+                  <th>15i</th>
+                  <th>16</th>
+                  <th>18</th>
+                  <th>21</th>
+                  <th>16i-A</th>
+                  <th>18i-A</th>
+                  <th>21i-A</th>
+                  <th>16i-B</th>
+                  <th>18i-B</th>
+                  <th>21i-B</th>
+                  <th>30i-A</th>
+                  <th>30i-B</th>
+               </tr>
+               <tr>
+                  <td>M (Machining)</td>
+                  <td class="">
+                     <fs0ia>X</fs0ia>
+                  </td>
+                  <td class="">
+                     <fs0ib>X</fs0ib>
+                  </td>
+                  <td class="">
+                     <fs0id>X</fs0id>
+                  </td>
+                  <td class="">
+                     <fs0if>X</fs0if>
+                  </td>
+                  <td class="">
+                     <fs15>X</fs15>
+                  </td>
+                  <td class="">
+                     <fs15i>X</fs15i>
+                  </td>
+                  <td class="support">
+                     <fs16>H</fs16>
+                  </td>
+                  <td class="support">
+                     <fs18>H</fs18>
+                  </td>
+                  <td class="">
+                     <fs21>X</fs21>
+                  </td>
+                  <td class="">
+                     <fs16ia>X</fs16ia>
+                  </td>
+                  <td class="">
+                     <fs18ia>X</fs18ia>
+                  </td>
+                  <td class="">
+                     <fs21ia>X</fs21ia>
+                  </td>
+                  <td class="">
+                     <fs16ib>X</fs16ib>
+                  </td>
+                  <td class="">
+                     <fs18ib>X</fs18ib>
+                  </td>
+                  <td class="">
+                     <fs21ib>X</fs21ib>
+                  </td>
+                  <td class="">
+                     <fs30ia>X</fs30ia>
+                  </td>
+                  <td class="">
+                     <fs30ib>X</fs30ib>
+                  </td>
+               </tr>
+               <tr>
+                  <td>T (Turning)  </td>
+                  <td class="">
+                     <fs0ia>X</fs0ia>
+                  </td>
+                  <td class="">
+                     <fs0ib>X</fs0ib>
+                  </td>
+                  <td class="">
+                     <fs0id>X</fs0id>
+                  </td>
+                  <td class="">
+                     <fs0if>X</fs0if>
+                  </td>
+                  <td class="">
+                     <fs15>X</fs15>
+                  </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="support">
+                     <fs16>H</fs16>
+                  </td>
+                  <td class="support">
+                     <fs18>H</fs18>
+                  </td>
+                  <td class="">
+                     <fs21>X</fs21>
+                  </td>
+                  <td class="">
+                     <fs16ia>X</fs16ia>
+                  </td>
+                  <td class="">
+                     <fs18ia>X</fs18ia>
+                  </td>
+                  <td class="">
+                     <fs21ia>X</fs21ia>
+                  </td>
+                  <td class="">
+                     <fs16ib>X</fs16ib>
+                  </td>
+                  <td class="">
+                     <fs18ib>X</fs18ib>
+                  </td>
+                  <td class="">
+                     <fs21ib>X</fs21ib>
+                  </td>
+                  <td class="">
+                     <fs30ia>X</fs30ia>
+                  </td>
+                  <td class="">
+                     <fs30ib>X</fs30ib>
+                  </td>
+               </tr>
+               <tr>
+                  <td>LC (Loader)  </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="">
+                     <fs16>X</fs16>
+                  </td>
+                  <td class="">
+                     <fs18>X</fs18>
+                  </td>
+                  <td class="">
+                     <fs21>X</fs21>
+                  </td>
+                  <td class="">
+                     <fs16ia>X</fs16ia>
+                  </td>
+                  <td class="">
+                     <fs18ia>X</fs18ia>
+                  </td>
+                  <td class="">
+                     <fs21ia>X</fs21ia>
+                  </td>
+                  <td class="">
+                     <fs16ib>X</fs16ib>
+                  </td>
+                  <td class="">
+                     <fs18ib>X</fs18ib>
+                  </td>
+                  <td class="">
+                     <fs21ib>X</fs21ib>
+                  </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+               </tr>
+            </table>
+            <p></p>
+            <table border="1">
+               <colgroup width="100em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <colgroup align="center" width="40em"></colgroup>
+               <tr>
+                  <th></th>
+                  <th>0i-D</th>
+                  <th>0i-F</th>
+                  <th>16i</th>
+                  <th>18i</th>
+                  <th>30i-A</th>
+                  <th>30i-B</th>
+               </tr>
+               <tr>
+                  <td>P (Punch press)</td>
+                  <td class="">
+                     <fs0id>X</fs0id>
+                  </td>
+                  <td class="">
+                     <fs0if>X</fs0if>
+                  </td>
+                  <td class="">
+                     <fs16i>X</fs16i>
+                  </td>
+                  <td class="">
+                     <fs18i>X</fs18i>
+                  </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="">
+                     <fs30ib>X</fs30ib>
+                  </td>
+               </tr>
+               <tr>
+                  <td>L (Laser)      </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="">
+                     <fs16i>X</fs16i>
+                  </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="">
+                     <fs30ib>X</fs30ib>
+                  </td>
+               </tr>
+               <tr>
+                  <td>W (Wire)       </td>
+                  <td>
+                     -
+                     </td>
+                  <td>
+                     -
+                     </td>
+                  <td class="">
+                     <fs16i>X</fs16i>
+                  </td>
+                  <td class="">
+                     <fs18i>X</fs18i>
+                  </td>
+                  <td class="">
+                     <fs30ia>X</fs30ia>
+                  </td>
+                  <td class="">
+                     <fs30ib>X</fs30ib>
+                  </td>
+               </tr>
+            </table>
+            <p></p><br><table border="1">
+               <colgroup width="100em"></colgroup>
+               <colgroup align="center" width="86em"></colgroup>
+               <colgroup align="center" width="86em"></colgroup>
+               <tr>
+                  <td>Power Mate i-D</td>
+                  <td class="">
+                     <d>X</d>
+                  </td>
+               </tr>
+               <tr>
+                  <td>Power Mate i-H</td>
+                  <td class="">
+                     <h>X</h>
+                  </td>
+               </tr>
+               <tr>
+                  <td>Power Motion i-A</td>
+                  <td class=""><a>X</a></td>
+               </tr>
+            </table>
+            <p></p>
+            <table class="dd">
+               <tr>
+                  <td></td>
+                  <td>"O"</td>
+                  <td>:</td>
+                  <td>Both Ethernet and HSSB</td>
+               </tr>
+               <tr>
+                  <td></td>
+                  <td>"E"</td>
+                  <td>:</td>
+                  <td>Ethernet</td>
+               </tr>
+               <tr>
+                  <td></td>
+                  <td>"H"</td>
+                  <td>:</td>
+                  <td>HSSB</td>
+               </tr>
+               <tr>
+                  <td></td>
+                  <td>"X"</td>
+                  <td>:</td>
+                  <td>Cannot be used</td>
+               </tr>
+               <tr>
+                  <td></td>
+                  <td>"-"</td>
+                  <td>:</td>
+                  <td>None</td>
+               </tr>
+            </table>
+            <p style="background-color:mistyrose;">Note) 0i-C does not support the HSSB function.</p>
+            <p>
+               <add><b></b></add>
+            </p><a name="Reference"></a><a name="Example"></a></div></FONT><hr>
+   </body>
+</html>
