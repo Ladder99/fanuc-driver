@@ -23,7 +23,7 @@ namespace l99.driver.fanuc
             {
                 method = "cnc_rdtimer",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = "https://www.inventcom.net/fanuc-focas-library/misc/cnc_rdtimer",
+                doc = "https://ladder99.github.io/fanuc-driver/focas/SpecE/Misc/cnc_rdtimer",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdtimer = new {type}},

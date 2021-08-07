@@ -23,7 +23,7 @@ namespace l99.driver.fanuc
             {
                 method = "cnc_rdmacro",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = "https://www.inventcom.net/fanuc-focas-library/ncdata/cnc_rdmacro",
+                doc = "https://ladder99.github.io/fanuc-driver/focas/SpecE/Ncdata/cnc_rdmacro",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnd_rdmacro = new {number, length}},

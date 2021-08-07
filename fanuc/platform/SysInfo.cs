@@ -23,7 +23,7 @@ namespace l99.driver.fanuc
             {
                 method = "cnc_sysinfo",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = "https://www.inventcom.net/fanuc-focas-library/misc/cnc_sysinfo",
+                doc = "https://ladder99.github.io/fanuc-driver/focas/SpecE/Misc/cnc_sysinfo",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_sysinfo = new { }},

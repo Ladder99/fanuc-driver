@@ -26,7 +26,7 @@ namespace l99.driver.fanuc
             {
                 method = "cnc_rdalmmsg2",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = "https://www.inventcom.net/fanuc-focas-library/misc/cnc_rdalmmsg2",
+                doc = "https://ladder99.github.io/fanuc-driver/focas/SpecE/Misc/cnc_rdalmmsg2",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdalmmsg2 = new {type, num}},
@@ -52,7 +52,7 @@ namespace l99.driver.fanuc
             {
                 method = "cnc_rdalmmsg2_ALL",
                 invocationMs = (long) alms.Sum(x => (int)x.Value.invocationMs),
-                doc = "https://www.inventcom.net/fanuc-focas-library/misc/cnc_rdalmmsg2",
+                doc = "https://ladder99.github.io/fanuc-driver/focas/SpecE/misc/cnc_rdalmmsg2",
                 success = true, // TODO: aggregate
                 rc = Focas.EW_OK, // TODO: aggregate
                 request = new { cnc_rdalmmsg2_ALL = new { minType = 0, maxType, count } },
@@ -78,7 +78,7 @@ namespace l99.driver.fanuc
             {
                 method = "cnc_rdalmmsg2_ALL",
                 invocationMs = (long) alms.Sum(x => (int)x.Value.invocationMs),
-                doc = "https://www.inventcom.net/fanuc-focas-library/misc/cnc_rdalmmsg2",
+                doc = "https://ladder99.github.io/fanuc-driver/focas/SpecE/misc/cnc_rdalmmsg2",
                 success = true, // TODO: aggregate
                 rc = Focas.EW_OK, // TODO: aggregate
                 request = new { cnc_rdalmmsg2_ALL = new { minType = 0, maxType, count } },

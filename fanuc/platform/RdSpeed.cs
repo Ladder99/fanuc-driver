@@ -23,7 +23,7 @@ namespace l99.driver.fanuc
             {
                 method = "cnc_rdspeed",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = "https://www.inventcom.net/fanuc-focas-library/position/cnc_rdspeed",
+                doc = "https://ladder99.github.io/fanuc-driver/focas/SpecE/Position/cnc_rdspeed",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdspeed = new {type}},

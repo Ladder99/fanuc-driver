@@ -23,7 +23,7 @@ namespace l99.driver.fanuc
             {
                 method = "cnc_exeprgname",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = "https://www.inventcom.net/fanuc-focas-library/program/cnc_exeprgname",
+                doc = "https://ladder99.github.io/fanuc-driver/focas/SpecE/Program/cnc_exeprgname",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_exeprgname = new { }},

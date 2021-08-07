@@ -25,7 +25,7 @@ namespace l99.driver.fanuc
             {
                 method = "cnc_allclibhndl3",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = "https://www.inventcom.net/fanuc-focas-library/handle/cnc_allclibhndl3",
+                doc = "https://ladder99.github.io/fanuc-driver/focas/SpecE/Handle/cnc_allclibhndl3",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new

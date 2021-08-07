@@ -27,7 +27,7 @@ namespace l99.driver.fanuc
             {
                 method = "cnc_rdsvmeter",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = "https://www.inventcom.net/fanuc-focas-library/position/cnc_rdsvmeter",
+                doc = "https://ladder99.github.io/fanuc-driver/focas/SpecE/Position/cnc_rdsvmeter",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdsvmeter = new {data_num}},

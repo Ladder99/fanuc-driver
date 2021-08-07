@@ -23,7 +23,7 @@ namespace l99.driver.fanuc
             {
                 method = "cnc_rdopmode",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = "https://www.inventcom.net/fanuc-focas-library/motor/cnc_rdopmode",
+                doc = "https://ladder99.github.io/fanuc-driver/focas/SpecE/Motor/cnc_rdopmode",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdopmode = new { }},
