@@ -13,8 +13,11 @@ element div {
         return
             element li {
                 attribute class { "scroll-to-link active" },
-                attribute data-target { },
-                element a { $name }
+                attribute data-target { concat($section, "-", $name) },
+                element a { 
+                    (:attribute href { concat("#", $section, "-", $name) },:)
+                    concat($section, "\", $name) 
+                }
             }
     }
 }
