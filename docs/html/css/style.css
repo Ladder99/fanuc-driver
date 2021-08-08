@@ -162,7 +162,7 @@ pre{
     color: #777A7A;
     letter-spacing: 0.025em;
     line-height: 1.2;
-    text-transform: capitalize;
+    /*text-transform: capitalize;*/
 }
 
 /* CONTENT-PAGE
