@@ -9,6 +9,8 @@ element div {
     let $name := $doc/root/func/title/text()
     let $comment := $doc/root/func/doc/cmn
     let $prototype := $doc/root/func/declare/vc/prottype/text()
+    let $arguments := $doc/root/func/argument//item
+    let $errors := $doc/root/func/errcode/item
     where $doc/root/func
     order by $section, $name
     return
@@ -19,30 +21,39 @@ element div {
                 attribute id { concat($section, "-", $name) },
                 concat($section, "\", $name) 
             },
-            element p {
-                $comment
-            },
-            element br {
-            
-            },
-            element h4 { 
-                "prototype" 
-            },
+            element p { $comment },
+            element br { },
+            (::)
+            element h4 { "PROTOTYPE" },
             element p {
                 element code { $prototype }
             },
             element br {
             
             },
-            element h4 { 
-                "arguments" 
+            (::)
+            element h4 { "ARGUMENTS" },
+            element table {
+                element thead {
+                    element tr {
+                        element th { "Name" },
+                        element th { "Direction" },
+                        element th { "Description" }
+                    }
+                },
+                element tbody {
+                    for $argument in $arguments
+                    return
+                        element tr {
+                            element td { $argument/name/text() },
+                            element td { $argument/type/text() },
+                            element td { $argument/content }
+                        }
+                }
             },
-            element br {
-            
-            },
-            element h4 { 
-                "errors" 
-            },
+            element br { },
+            (::)
+            element h4 { "ERRORS" },
             element table {
                 element thead {
                     element tr {
@@ -51,11 +62,11 @@ element div {
                     }
                 },
                 element tbody {
-                    for $err in $doc/root/func/errcode/item
+                    for $error in $errors
                     return
                         element tr {
-                            element td { $err/name/text() },
-                            element td { $err/content }
+                            element td { $error/name/text() },
+                            element td { $error/content }
                         }
                 }
             }
