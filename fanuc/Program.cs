@@ -86,7 +86,7 @@ namespace l99.driver.fanuc
                         timeout = machine_conf.ContainsKey("net_timeout_s") ? machine_conf["net_timeout_s"] : 2,
                         collector = machine_conf.ContainsKey("strategy_type") ? machine_conf["strategy_type"] : "l99.driver.fanuc.collectors.Basic01, fanuc",
                         collector_lua = machine_conf.ContainsKey("strategy_lua") ? machine_conf["strategy_lua"] : string.Empty,
-                        collector_sweep_ms = machine_conf.ContainsKey("sweepMs") ? machine_conf["sweepMs"] : 2000,
+                        collector_sweep_ms = machine_conf.ContainsKey("sweep_ms") ? machine_conf["sweep_ms"] : 2000,
                         handler = machine_conf.ContainsKey("handler_type") ? machine_conf["handler_type"] : "l99.driver.fanuc.handlers.Native, fanuc",
                     },
                     broker = new
