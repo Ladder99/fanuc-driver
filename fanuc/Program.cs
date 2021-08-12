@@ -100,7 +100,8 @@ namespace l99.driver.fanuc
                         ip = (machine_conf.ContainsKey("broker") && machine_conf["broker"].ContainsKey("net_ip")) ? machine_conf["broker"]["net_ip"] : "127.0.0.1", 
                         port = (machine_conf.ContainsKey("broker") && machine_conf["broker"].ContainsKey("net_port")) ? machine_conf["broker"]["net_port"] : 1883,
                         auto_connect = (machine_conf.ContainsKey("broker") && machine_conf["broker"].ContainsKey("enabled")) ? machine_conf["broker"]["auto_connect"] : false
-                    }
+                    },
+                    handler = new object()
                 };
                 
                 _logger.Trace($"Machine configuration built:\n{JObject.FromObject(built_config).ToString()}");
@@ -118,7 +119,7 @@ namespace l99.driver.fanuc
                 Broker broker = await brokers.AddAsync(cfg.machine, cfg.broker);
                 Machine machine = machines.Add(cfg.machine, broker);
                 machine.AddCollector(Type.GetType(cfg.machine.collector), cfg.machine.collector_sweep_ms, cfg.machine.collector_lua);
-                await machine.AddHandlerAsync(Type.GetType(cfg.machine.handler));
+                await machine.AddHandlerAsync(Type.GetType(cfg.machine.handler), cfg.handler);
                 
                 /*
                 Machine machine = machines
