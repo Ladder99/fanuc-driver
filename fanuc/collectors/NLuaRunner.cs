@@ -23,14 +23,16 @@ namespace l99.driver.fanuc.collectors
             get => this.platform;
         }
         
-        public NLuaRunner(Machine machine, int sweepMs = 1000, params dynamic[] additionalParams) : base(machine, sweepMs, additionalParams)
+        public NLuaRunner(Machine machine, object cfg) : base(machine, cfg)
         {
+            dynamic config = (dynamic)cfg;
+            
             _luaState = new Lua();
             _luaState.LoadCLRPackage();
             
             _luaCollectorProxy = new NLuaRunnerProxy(this);
             
-            _luaSystemScript = new NLuaRunnerSystemScript(_luaState, additionalParams[0]);
+            _luaSystemScript = new NLuaRunnerSystemScript(_luaState, config.strategy["script"]);
             logger.Info($"Lua SYSTEM script valid: {_luaSystemScript.IsValid}");
             
             _luaUserScript = new NLuaRunnerUserScript(_luaState);

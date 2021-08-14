@@ -7,7 +7,7 @@ namespace l99.driver.fanuc.collectors
 {
     public class Basic01 : FanucCollector
     {
-        public Basic01(Machine machine, int sweepMs = 1000, params dynamic[] additionalParams) : base(machine, sweepMs, additionalParams)
+        public Basic01(Machine machine, object cfg) : base(machine, cfg)
         {
             
         }

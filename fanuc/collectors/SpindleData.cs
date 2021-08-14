@@ -10,7 +10,7 @@ namespace l99.driver.fanuc.collectors
 {
     public class SpindleData : FanucCollector2
     {
-        public SpindleData(Machine machine, int sweepMs = 1000, params dynamic[] additionalParams) : base(machine, sweepMs, additionalParams)
+        public SpindleData(Machine machine, object cfg) : base(machine, cfg)
         {
             
         }

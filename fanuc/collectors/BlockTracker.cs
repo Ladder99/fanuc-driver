@@ -10,7 +10,7 @@ namespace l99.driver.fanuc.collectors
         private Blocks _blocks = new Blocks();
         private short _readAheadBytes = 128;
 
-        public BlockTracker(Machine machine, int sweepMs = 1000, params dynamic[] additionalParams) : base(machine, sweepMs, additionalParams)
+        public BlockTracker(Machine machine, object cfg) : base(machine, cfg)
         {
 
         }

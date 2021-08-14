@@ -12,7 +12,7 @@ namespace l99.driver.fanuc.collectors
     {
         private Stopwatch _sweepWatch = new Stopwatch();
         
-        public Basic05(Machine machine, int sweepMs = 1000, params dynamic[] additionalParams) : base(machine, sweepMs, additionalParams)
+        public Basic05(Machine machine, object cfg) : base(machine, cfg)
         {
             
         }

@@ -1,6 +1,4 @@
-﻿using System;
-using l99.driver.@base;
-using Newtonsoft.Json.Linq;
+﻿using l99.driver.@base;
 
 namespace l99.driver.fanuc.collectors
 {
@@ -8,7 +6,7 @@ namespace l99.driver.fanuc.collectors
     {
         protected dynamic platform;
         
-        public FanucCollector(Machine machine, int sweepMs = 1000, params dynamic[] additionalParams) : base(machine, sweepMs, additionalParams)
+        public FanucCollector(Machine machine, object cfg) : base(machine, cfg)
         {
             platform = base.machine["platform"];
             platform.StartupProcess(3, "focas2.log");

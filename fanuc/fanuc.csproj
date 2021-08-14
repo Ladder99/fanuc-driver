@@ -115,6 +115,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Compile Include="..\base-driver\base\Bootstrap.cs">
+        <Link>base\Bootstrap.cs</Link>
+      </Compile>
       <Compile Include="..\base-driver\base\Collector.cs">
         <Link>base\Collector.cs</Link>
       </Compile>

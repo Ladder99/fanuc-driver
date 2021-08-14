@@ -29,7 +29,7 @@ namespace l99.driver.fanuc.collectors
 
         private IntermediateModelGenerator _intermediateModel;
         
-        public FanucCollector2(Machine machine, int sweepMs = 1000, params dynamic[] additionalParams) : base(machine, sweepMs, additionalParams)
+        public FanucCollector2(Machine machine, object cfg) : base(machine, cfg)
         {
             sweepRemaining = sweepMs;
             propertyBag = new Dictionary<string, dynamic>();
