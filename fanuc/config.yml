@@ -2,7 +2,7 @@ machines:
   - id: sim
     enabled: !!bool false
     type: l99.driver.fanuc.FanucMachine, fanuc
-    strategy: l99.driver.fanuc.collectors.Basic01, fanuc
+    strategy: l99.driver.fanuc.collectors.UseCase01, fanuc
     handler: l99.driver.fanuc.handlers.Native, fanuc
     
     broker:
@@ -15,7 +15,7 @@ machines:
       publish_changes: !!bool true
       publish_disco: !!bool true
       disco_base_topic: fanuc
-      anonymous: !!true
+      anonymous: !!bool true
       user: 
       password: 
 
@@ -32,18 +32,18 @@ machines:
     handler: l99.driver.fanuc.handlers.Native, fanuc
     
     broker:
-      enabled: !!bool false
+      enabled: !!bool true
       net_ip: 10.20.30.102
       net_port: !!int 1883
-      auto_connect: !!bool false
+      auto_connect: !!bool true
       publish_status: !!bool true
       publish_arrivals: !!bool true
       publish_changes: !!bool true
       publish_disco: !!bool true
       disco_base_topic: fanuc
-      anonymous: !!true
-      user:
-      password:
+      anonymous: !!bool true
+      user: 
+      password: 
 
     l99.driver.fanuc.FanucMachine, fanuc:
       sweep_ms: !!int 1000
@@ -70,9 +70,9 @@ machines:
       publish_changes: !!bool true
       publish_disco: !!bool true
       disco_base_topic: fanuc
-      anonymous: !!true
-      user:
-      password:
+      anonymous: !!bool true
+      user: 
+      password: 
         
     l99.driver.fanuc.FanucMachine, fanuc:
       sweep_ms: !!int 1000
