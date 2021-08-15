@@ -17,7 +17,7 @@ namespace l99.driver.fanuc.veneers
         protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
         {
             if (input.success)
-            {;
+            {
                 var current_value = new
                 {
                     cncid = string.Join("-", ((uint[])input.response.cnc_rdcncid.cncid).Select(x => x.ToString("X")).ToArray())
