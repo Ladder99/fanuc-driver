@@ -7,12 +7,26 @@ namespace l99.driver.fanuc.veneers
     {
         readonly string[] _autText = new string[] 
         { 
-            "****(No selection)", 
+            // 15/15i
+            /*"****(No selection)", 
             "MDI", 
             "TAPE(Series 15), DNC(Series 15i)",
             "MEMory",
             "EDIT",
-            "TeacH IN"
+            "TeacH IN"*/
+            
+            // all others
+            "MDI",
+            "MEMory",
+            "****",
+            "EDIT",
+            "HaNDle",
+            "JOG",
+            "Teach in JOG",
+            "Teach in HaNDle",
+            "INC·feed",
+            "REFerence",
+            "ReMoTe"
         };
         
         readonly string[] _runText = new string[]
@@ -61,13 +75,22 @@ namespace l99.driver.fanuc.veneers
         readonly string[] _emergencyText = new string[]
         {
             "(Not emergency)",
-            "EMerGency"
+            "EMerGency",
+            "ReSET",
+            "WAIT(FS35i only)"
         };
         
         readonly string[] _alarmText = new string[]
         {
             "(No alarm)",
-            "ALarM"
+            "ALarM",
+            "BATtery low",
+            "FAN(NC or Servo amplifier",
+            "PS Warning",
+            "FSsB warning",
+            "INSulate warning",
+            "ENCoder warning",
+            "PMC alarm"
         };
         
         public StatInfoText(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
