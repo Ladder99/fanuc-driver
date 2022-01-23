@@ -11,7 +11,8 @@ namespace l99.driver.fanuc.handlers
     public class Native: Handler
     {
         private readonly Formatting jsonFormatting = Formatting.None;
-        
+
+        private readonly bool _publishSchemas = false;
         private Dictionary<string,string> _publishedSchemas = new Dictionary<string, string>();
         
         public Native(Machine machine) : base(machine)
@@ -92,7 +93,7 @@ namespace l99.driver.fanuc.handlers
             string payload = JObject.FromObject(onChange).ToString(jsonFormatting);
             await veneers.Machine.Broker.PublishChangeAsync(topic, payload);
 
-            if (!_publishedSchemas.ContainsKey(veneer.Name))
+            if (_publishSchemas && !_publishedSchemas.ContainsKey(veneer.Name))
             {
                 var topic_schema = $"fanuc/{veneers.Machine.Id}/{veneer.Name}/$schema";
                 string schema = JsonSchema.FromSampleJson(payload).ToJson();

@@ -1,0 +1,26 @@
+machines:
+  - id: bunker-sim-1
+    enabled: !!bool true
+    type: l99.driver.fanuc.FanucMachine, fanuc
+    strategy: l99.driver.fanuc.collectors.ProgramAndPieceCount, fanuc
+    handler: l99.driver.fanuc.handlers.Native, fanuc
+    
+    broker:
+      enabled: !!bool true
+      net_ip: 10.1.10.210
+      net_port: !!int 1883
+      auto_connect: !!bool true
+      publish_status: !!bool true
+      publish_arrivals: !!bool true
+      publish_changes: !!bool true
+      publish_disco: !!bool true
+      disco_base_topic: fanuc
+      anonymous: !!bool true
+      user: 
+      password: 
+        
+    l99.driver.fanuc.FanucMachine, fanuc:
+      sweep_ms: !!int 1000
+      net_ip: 10.1.10.211
+      net_port: !!int 8193
+      net_timeout_s: !!int 3
