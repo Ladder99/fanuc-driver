@@ -5,6 +5,11 @@ namespace l99.driver.fanuc
 {
     public partial class Platform
     {
+        public async Task<dynamic> RdPmcRngGByteAsync(ushort number)
+        {
+            return await Task.FromResult(RdPmcRng(0, 0, number, number, 8+1, 0));
+        }
+        
         public async Task<dynamic> RdPmcRngYByteAsync(ushort number)
         {
             return await Task.FromResult(RdPmcRng(2, 0, number, number, 8+1, 0));
@@ -42,7 +47,7 @@ namespace l99.driver.fanuc
             {
                 method = "pmc_rdpmcrng",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = "https://ladder99.github.io/fanuc-driver/focas/SpecE/Pmc/pmc_rdpmcrng",
+                doc = $"{this._docBasePath}/pmc/pmc_rdpmcrng",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {pmc_rdpmcrng = new {adr_type, data_type, s_number, e_number, length, IODBPMC_type}},

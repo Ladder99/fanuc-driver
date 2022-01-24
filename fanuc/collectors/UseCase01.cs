@@ -58,9 +58,9 @@ namespace l99.driver.fanuc.collectors
 
             await Apply(typeof(fanuc.veneers.RdPmcTitle), "pmc_title");
             
-            await Apply(typeof(fanuc.veneers.RdPmcRngByte), "y0003");
+            await Apply(typeof(fanuc.veneers.RdPmcRngBits), "y0003");
             
-            await Apply(typeof(fanuc.veneers.RdPmcRngByte), "y0008");
+            await Apply(typeof(fanuc.veneers.RdPmcRngBits), "y0008");
         }
         
         public override async Task InitPathsAsync()

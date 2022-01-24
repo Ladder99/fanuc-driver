@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Dynamic;
 using NLog;
 
 namespace l99.driver.fanuc
@@ -9,6 +12,8 @@ namespace l99.driver.fanuc
         private ILogger _logger;
         
         private FanucMachine _machine;
+
+        private readonly string _docBasePath = "https://docs.ladder99.com/drivers/fanuc-driver/focas-api";
 
         public ushort Handle
         {

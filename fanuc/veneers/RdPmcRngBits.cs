@@ -5,13 +5,13 @@ using l99.driver.@base;
 
 namespace l99.driver.fanuc.veneers
 {
-    public class RdPmcRngByte : Veneer
+    public class RdPmcRngBits : Veneer
     {
-        public RdPmcRngByte(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
+        public RdPmcRngBits(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
             lastChangedValue = new
             {
-                cdata = -1
+                bits = new int[] { -1 }
             };
         }
         
@@ -19,14 +19,16 @@ namespace l99.driver.fanuc.veneers
         {
             if (input.success)
             {
+                BitArray b = new BitArray(new byte[] { input.response.pmc_rdpmcrng.buf.cdata[0] });
+                
                 var current_value = new
                 {
-                    cdata = input.response.pmc_rdpmcrng.buf.cdata[0]
+                    bits = b.Cast<bool>().Select(bit => bit ? 1 : 0).Reverse().ToArray()
                 };
                 
                 await onDataArrivedAsync(input, current_value);
                 
-                if (!current_value.Equals(lastChangedValue))
+                if (current_value.IsDifferentString((object)lastChangedValue))
                 {
                     await onDataChangedAsync(input, current_value);
                 }

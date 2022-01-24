@@ -12,11 +12,21 @@ namespace l99.driver.fanuc.collectors
         
         public override async Task InitRootAsync()
         {
+            await Apply(typeof(fanuc.veneers.Alarms), "alarms");
             
+            await Apply(typeof(fanuc.veneers.OpMsgs), "message");
         }
         
         public override async Task InitPathsAsync()
         {
+            await Apply(typeof(fanuc.veneers.StatInfo), "stat-info");
+            
+            await Apply(typeof(fanuc.veneers.RdPmcRngByte), "feedrate-override");
+            
+            await Apply(typeof(fanuc.veneers.RdPmcRngByte), "feedrate-rapid-override");
+            
+            await Apply(typeof(fanuc.veneers.RdPmcRngByte), "spindle-override");
+            
             await Apply(typeof(fanuc.veneers.PrgName), "program-name");
             
             await Apply(typeof(fanuc.veneers.RdParamLData), "pieces-produced");
@@ -42,11 +52,21 @@ namespace l99.driver.fanuc.collectors
         
         public override async Task CollectRootAsync()
         {
-            
+            await SetNativeAndPeel("alarms", await platform.RdAlmMsgAllAsync(10,20));
+                    
+            await SetNativeAndPeel("message", await platform.RdOpMsgAsync(0, 6+256));
         }
 
         public override async Task CollectForEachPathAsync(short current_path, dynamic path_marker)
         {
+            await SetNativeAndPeel("stat-info", await platform.StatInfoAsync());
+            
+            await SetNativeAndPeel("feedrate-override", await platform.RdPmcRngGByteAsync(12));
+            
+            await SetNativeAndPeel("feedrate-rapid-override", await platform.RdPmcRngGByteAsync(14));
+            
+            await SetNativeAndPeel("spindle-override", await platform.RdPmcRngGByteAsync(30));
+            
             await SetNativeAndPeel("program-name", await platform.ExePrgNameAsync());
             
             await SetNativeAndPeel("pieces-produced", await platform.RdParamDoubleWordNoAxisAsync(6711));

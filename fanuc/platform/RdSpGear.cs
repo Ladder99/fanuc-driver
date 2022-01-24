@@ -23,7 +23,7 @@ namespace l99.driver.fanuc
             {
                 method = "cnc_rdspgear",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = "https://ladder99.github.io/fanuc-driver/focas/SpecE/Position/cnc_rdspgear",
+                doc = $"{this._docBasePath}/position/cnc_rdspgear",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdspgear = new {sp_no}},

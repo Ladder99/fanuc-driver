@@ -23,7 +23,7 @@ namespace l99.driver.fanuc
             {
                 method = "pmc_rdpmctitle",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = "https://ladder99.github.io/fanuc-driver/focas/SpecE/Pmc/pmc_rdpmctitle",
+                doc = $"{this._docBasePath}/pmc/pmc_rdpmctitle",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {pmc_rdpmctitle = new {}},

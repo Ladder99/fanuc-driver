@@ -25,17 +25,17 @@ namespace l99.driver.fanuc
             {
                 method = "cnc_allclibhndl3",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = "https://ladder99.github.io/fanuc-driver/focas/SpecE/Handle/cnc_allclibhndl3",
+                doc = $"{this._docBasePath}/handle/cnc_allclibhndl3",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new
                 {
                     cnc_allclibhndl3 = new
-                        {
-                            ipaddr = _machine.FocasEndpoint.IPAddress, 
-                            port = _machine.FocasEndpoint.Port, 
-                            timeout = _machine.FocasEndpoint.ConnectionTimeout
-                        }
+                    {
+                        ipaddr = _machine.FocasEndpoint.IPAddress, 
+                        port = _machine.FocasEndpoint.Port, 
+                        timeout = _machine.FocasEndpoint.ConnectionTimeout
+                    }
                 },
                 response = new {cnc_allclibhndl3 = new {FlibHndl = _handle}}
             };

@@ -23,7 +23,7 @@ namespace l99.driver.fanuc
             {
                 method = "cnc_getpath",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = "https://ladder99.github.io/fanuc-driver/focas/SpecE/Misc/cnc_getpath",
+                doc = $"{this._docBasePath}/misc/cnc_getpath",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_getpath = new {path_no}},

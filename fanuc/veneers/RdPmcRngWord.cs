@@ -5,13 +5,13 @@ using l99.driver.@base;
 
 namespace l99.driver.fanuc.veneers
 {
-    public class RdPmcRngByte : Veneer
+    public class RdPmcRngWord : Veneer
     {
-        public RdPmcRngByte(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
+        public RdPmcRngWord(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
             lastChangedValue = new
             {
-                cdata = -1
+                idata = -1
             };
         }
         
@@ -21,7 +21,7 @@ namespace l99.driver.fanuc.veneers
             {
                 var current_value = new
                 {
-                    cdata = input.response.pmc_rdpmcrng.buf.cdata[0]
+                    idata = input.response.pmc_rdpmcrng.buf.idata[0]
                 };
                 
                 await onDataArrivedAsync(input, current_value);

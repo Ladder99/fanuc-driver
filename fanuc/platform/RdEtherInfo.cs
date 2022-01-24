@@ -23,7 +23,7 @@ namespace l99.driver.fanuc
             {
                 method = "cnc_rdetherinfo",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = "https://ladder99.github.io/fanuc-driver/focas/SpecE/Misc/cnc_rdetherinfo",
+                doc = $"{this._docBasePath}/misc/cnc_rdetherinfo",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdetherinfo = new {}},

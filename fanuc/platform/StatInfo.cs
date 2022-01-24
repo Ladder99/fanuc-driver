@@ -23,7 +23,7 @@ namespace l99.driver.fanuc
             {
                 method = "cnc_statinfo",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = "https://ladder99.github.io/fanuc-driver/focas/SpecE/Misc/cnc_statinfo",
+                doc = $"{this._docBasePath}/misc/cnc_statinfo",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_statinfo = new { }},

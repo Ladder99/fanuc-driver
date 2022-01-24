@@ -83,7 +83,7 @@ namespace l99.driver.fanuc
             {
                 method = "cnc_rdopmsg",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = "https://ladder99.github.io/fanuc-driver/focas/SpecE/Misc/cnc_rdopmsg",
+                doc = $"{this._docBasePath}/misc/cnc_rdopmsg",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdopmsg = new {type, length}},

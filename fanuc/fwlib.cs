@@ -1,7 +1,7 @@
 /*-------------------------------------------------------------------*/
 /* fwlib32.cs                                                        */
 /*                                                                   */
-/* CNC/PMC Data Window Library for FOCAS1/Ethernet                   */
+/* CNC/pmc Data Window Library for FOCAS1/Ethernet                   */
 /*                                                                   */
 /* Copyright (C) 2002-2011 by FANUC CORPORATION All rights reserved. */
 /*                                                                   */
@@ -40,7 +40,7 @@ namespace l99.driver.fanuc
         EW_SYSTEM2  =     (-10),           /* system error */
         EW_HSSB     =     (-9) ,           /* hssb communication error */
         EW_HANDLE   =     (-8) ,           /* Windows library handle error */
-        EW_VERSION  =     (-7) ,           /* CNC/PMC version missmatch */
+        EW_VERSION  =     (-7) ,           /* CNC/pmc version missmatch */
         EW_UNEXP    =     (-6) ,           /* abnormal error */
         EW_SYSTEM   =     (-5) ,           /* system error */
         EW_PARITY   =     (-4) ,           /* shared RAM parity error */

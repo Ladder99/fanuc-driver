@@ -1,3 +1,6 @@
+using System;
+using System.Reflection;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
@@ -23,7 +26,7 @@ namespace l99.driver.fanuc
             {
                 method = "cnc_acts",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = "https://ladder99.github.io/fanuc-driver/focas/SpecE/Position/cnc_acts",
+                doc = $"{this._docBasePath}/position/cnc_acts",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_acts = new { }},
