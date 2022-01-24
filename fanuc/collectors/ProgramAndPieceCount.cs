@@ -12,6 +12,8 @@ namespace l99.driver.fanuc.collectors
         
         public override async Task InitRootAsync()
         {
+            await Apply(typeof(fanuc.veneers.RdParamLData), "uptime");
+            
             await Apply(typeof(fanuc.veneers.Alarms), "alarms");
             
             await Apply(typeof(fanuc.veneers.OpMsgs), "message");
@@ -52,6 +54,8 @@ namespace l99.driver.fanuc.collectors
         
         public override async Task CollectRootAsync()
         {
+            await SetNativeAndPeel("uptime", await platform.RdParamDoubleWordNoAxisAsync(6750));
+            
             await SetNativeAndPeel("alarms", await platform.RdAlmMsgAllAsync(10,20));
                     
             await SetNativeAndPeel("message", await platform.RdOpMsgAsync(0, 6+256));
@@ -61,6 +65,7 @@ namespace l99.driver.fanuc.collectors
         {
             await SetNativeAndPeel("stat-info", await platform.StatInfoAsync());
             
+            //TODO 255-value = override
             await SetNativeAndPeel("feedrate-override", await platform.RdPmcRngGByteAsync(12));
             
             await SetNativeAndPeel("feedrate-rapid-override", await platform.RdPmcRngGByteAsync(14));
