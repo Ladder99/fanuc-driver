@@ -43,6 +43,10 @@ namespace l99.driver.fanuc.handlers
 
         public override async Task<dynamic?> OnDataChangeAsync(Veneers veneers, Veneer veneer, dynamic? beforeChange)
         {
+            // dump paths other than first
+            if (veneer.Marker != null && veneer.Marker.GetType().GetProperty("path_no") != null && veneer.Marker.path_no != 1)
+                return null;
+        
             dataUpdated = true;
             
             switch (veneer.Name)

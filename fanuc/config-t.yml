@@ -3,11 +3,11 @@ machines:
     enabled: !!bool true
     type: l99.driver.fanuc.FanucMachine, fanuc
     strategy: l99.driver.fanuc.collectors.ProgramAndPieceCount, fanuc
-    handler: l99.driver.fanuc.handlers.Native, fanuc
+    handler: l99.driver.fanuc.handlers.Simple01, fanuc
     
     broker:
       enabled: !!bool true
-      net_ip: 172.16.10.3
+      net_ip: 10.1.10.210
       net_port: !!int 1883
       auto_connect: !!bool true
       publish_status: !!bool true
