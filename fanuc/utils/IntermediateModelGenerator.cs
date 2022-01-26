@@ -1,12 +1,15 @@
+using System;
 using System.Collections.Generic;
 using l99.driver.@base;
 using Newtonsoft.Json.Linq;
 using NJsonSchema;
+using NLog;
 
 namespace l99.driver.fanuc
 {
     public class IntermediateModelGenerator
     {
+        protected ILogger logger;
         private Machine _machine;
 
         private Dictionary<string, (dynamic, string)> _rootItems = new Dictionary<string, (dynamic, string)>();
@@ -120,72 +123,135 @@ namespace l99.driver.fanuc
                 return j;
             }
         }
+
+        public IntermediateModelGenerator()
+        {
+            logger = LogManager.GetLogger(this.GetType().FullName);
+        }
         
         public void Start(Machine machine)
         {
+            logger.Trace($"[{machine.Id}] Starting build.");
             _machine = machine;
         }
         
         public void AddRootItem(string name, dynamic payload)
         {
-            if(!_rootItems.ContainsKey(name))
+            try
             {
-                var json_string = JObject.FromObject(payload.veneer.LastArrivedValue).ToString();
-                var json_schema = string.Empty;//JsonSchema.FromSampleJson(json_string).ToJson();
-                _rootItems.Add(name, (payload, json_schema));
+                if (!_rootItems.ContainsKey(name))
+                {
+                    var json_string = JObject.FromObject(payload.veneer.LastArrivedValue).ToString();
+                    var json_schema = string.Empty; //JsonSchema.FromSampleJson(json_string).ToJson();
+                    logger.Trace($"[{this._machine.Id}] AddRootItem {json_string}, {json_schema}");
+                    _rootItems.Add(name, (payload, json_schema));
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex,$"[{this._machine.Id}] AddRootItem.");
             }
         }
 
         public void AddPath(short path)
         {
-            _paths.Add(path);
-            _axes.Add(path, new List<string>());
-            _spindles.Add(path, new List<string>());
+            try
+            {
+                logger.Trace($"[{this._machine.Id}] AddPath {path}");
+                _paths.Add(path);
+                _axes.Add(path, new List<string>());
+                _spindles.Add(path, new List<string>());
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex,$"[{this._machine.Id}] AddPath.");
+            }
         }
         
         public void AddPathItem(string name, dynamic payload)
         {
-            if(!_pathItems.ContainsKey(name))
+            try
             {
-                var json_string = JObject.FromObject(payload.veneer.LastArrivedValue).ToString();
-                var json_schema = string.Empty;//JsonSchema.FromSampleJson(json_string).ToJson();
-                _pathItems.Add(name, (payload, json_schema));
+                if (!_pathItems.ContainsKey(name))
+                {
+                    var json_string = JObject.FromObject(payload.veneer.LastArrivedValue).ToString();
+                    var json_schema = string.Empty; //JsonSchema.FromSampleJson(json_string).ToJson();
+                    logger.Trace($"[{this._machine.Id}] AddPathItem {name}, {json_string}");
+                    _pathItems.Add(name, (payload, json_schema));
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex,$"[{this._machine.Id}] AddPathItem.");
             }
         }
 
         public void AddAxis(short path, string name)
         {
-            _axes[path].Add(name);
+            try
+            {
+                logger.Trace($"[{this._machine.Id}] AddAxis {path}, {name}");
+                _axes[path].Add(name);
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex,$"[{this._machine.Id}] AddAxis.");
+            }
         }
         
         public void AddAxisItem(string name, dynamic payload)
         {
-            if(!_axisItems.ContainsKey(name))
+            try
             {
-                var json_string = JObject.FromObject(payload.veneer.LastArrivedValue).ToString();
-                var json_schema = string.Empty;//JsonSchema.FromSampleJson(json_string).ToJson();
-                _axisItems.Add(name, (payload, json_schema));
+                if (!_axisItems.ContainsKey(name))
+                {
+                    var json_string = JObject.FromObject(payload.veneer.LastArrivedValue).ToString();
+                    var json_schema = string.Empty; //JsonSchema.FromSampleJson(json_string).ToJson();
+                    logger.Trace($"[{this._machine.Id}] AddAxisItem {name}, {json_string}");
+                    _axisItems.Add(name, (payload, json_schema));
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex,$"[{this._machine.Id}] AddAxisItem.");
             }
         }
 
         public void AddSpindle(short path, string name)
         {
-            _spindles[path].Add(name);
+            try
+            {
+                logger.Trace($"[{this._machine.Id}] AddSpindle {path}, {name}");
+                _spindles[path].Add(name);
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex,$"[{this._machine.Id}] AddSpindle.");
+            }
         }
 
         public void AddSpindleItem(string name, dynamic payload)
         {
-            if (!_spindleItems.ContainsKey(name))
+            try
             {
-                var json_string = JObject.FromObject(payload.veneer.LastArrivedValue).ToString();
-                var json_schema = JsonSchema.FromSampleJson(json_string).ToJson();
-                _spindleItems.Add(name, (payload, json_schema));
+                if (!_spindleItems.ContainsKey(name))
+                {
+                    var json_string = JObject.FromObject(payload.veneer.LastArrivedValue).ToString();
+                    var json_schema = JsonSchema.FromSampleJson(json_string).ToJson();
+                    logger.Trace($"[{this._machine.Id}] AddSpindleItem {name}, {json_string}");
+                    _spindleItems.Add(name, (payload, json_schema));
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex,$"[{this._machine.Id}] AddSpindleItem.");
             }
         }
 
         public void Finish()
         {
             IsGenerated = true;
+            logger.Trace($"[{this._machine.Id}] Finishing build.");
         }
     }
 }
