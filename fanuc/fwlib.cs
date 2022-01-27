@@ -8459,7 +8459,19 @@ namespace l99.driver.fanuc
 #endif
 
         /* read program name under execution */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_exeprgname")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_exeprgname")]
+#elif LINUX32_100
+        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_exeprgname")]
+#elif LINUX32_105
+        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_exeprgname")]
+#elif WIN64
+        [DllImport("FWLIB64.dll", EntryPoint = "cnc_exeprgname")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_exeprgname")]
+#endif
         public static extern short cnc_exeprgname(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBEXEPRG a);
 
         /* read sequence number under execution */
