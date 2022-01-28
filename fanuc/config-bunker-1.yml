@@ -2,8 +2,8 @@ machines:
   - id: bunker-sim-1
     enabled: !!bool true
     type: l99.driver.fanuc.FanucMachine, fanuc
-    strategy: l99.driver.fanuc.collectors.ProgramAndPieceCount, fanuc
-    handler: l99.driver.fanuc.handlers.Simple01, fanuc
+    strategy: l99.driver.fanuc.collectors.ThreeWay, fanuc
+    handler: l99.driver.fanuc.handlers.ThreeWay, fanuc
     
     broker:
       enabled: !!bool true
