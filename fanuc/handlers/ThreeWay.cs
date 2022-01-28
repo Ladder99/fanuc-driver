@@ -12,9 +12,6 @@ namespace l99.driver.fanuc.handlers
     {
         private readonly Formatting jsonFormatting = Formatting.None;
 
-        private readonly bool _publishSchemas = false;
-        private Dictionary<string,string> _publishedSchemas = new Dictionary<string, string>();
-        
         public ThreeWay(Machine machine) : base(machine)
         {
             
@@ -74,14 +71,6 @@ namespace l99.driver.fanuc.handlers
             var topic = $"fanuc/{veneers.Machine.Id}/{veneer.Name}{(veneer.SliceKey == null ? string.Empty : "/" + veneer.SliceKey.ToString())}";
             string payload = JObject.FromObject(onChange).ToString(jsonFormatting);
             await veneers.Machine.Broker.PublishChangeAsync(topic, payload);
-
-            if (_publishSchemas && !_publishedSchemas.ContainsKey(veneer.Name))
-            {
-                var topic_schema = $"fanuc/{veneers.Machine.Id}/{veneer.Name}/$schema";
-                string schema = JsonSchema.FromSampleJson(payload).ToJson();
-                await veneers.Machine.Broker.PublishAsync(topic_schema, schema, true);
-                _publishedSchemas.Add(veneer.Name, schema);
-            }
         }
         
         public override async Task<dynamic?> OnCollectorSweepCompleteAsync(Machine machine, dynamic? beforeSweepComplete)

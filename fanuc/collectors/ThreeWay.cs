@@ -21,7 +21,7 @@ namespace l99.driver.fanuc.collectors
             
             await Apply(typeof(fanuc.veneers.ThreeWayProductionData), "production", isCompound: true);
             
-            //await Apply(typeof(fanuc.veneers.ThreeWayAlarmData), "alarms");
+            await Apply(typeof(fanuc.veneers.ThreeWayAlarmData), "alarms");
         }
         
         public override async Task InitAxisAndSpindleAsync()
@@ -41,10 +41,6 @@ namespace l99.driver.fanuc.collectors
             await SetNative("operating-time-min", await platform.RdParamDoubleWordNoAxisAsync(6752));
             
             await SetNative("cutting-time-min", await platform.RdParamDoubleWordNoAxisAsync(6754));
-            
-            //await SetNative("alarms", await platform.RdAlmMsgAllAsync(10,20));
-                    
-            //await SetNative("message", await platform.RdOpMsgAsync(0, 6+256));
         }
 
         public override async Task CollectForEachPathAsync(short current_path, dynamic path_marker)
@@ -66,6 +62,9 @@ namespace l99.driver.fanuc.collectors
                 await SetNative("cycle-time-min", await platform.RdParamDoubleWordNoAxisAsync(6758)),
                 await SetNative("cycle-time-ms", await platform.RdParamDoubleWordNoAxisAsync(6757)));
             
+            await Peel("alarms", 
+                await SetNative("alarm", await platform.RdAlmMsgAllAsync(10,20)),
+                await SetNative("message", await platform.RdOpMsgAsync(0, 6+256)));
         }
 
         public override async Task CollectForEachAxisAsync(short current_axis, string axis_name, dynamic axis_split, dynamic axis_marker)

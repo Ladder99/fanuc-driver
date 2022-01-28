@@ -18,7 +18,6 @@ namespace l99.driver.fanuc.veneers
         
         protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
         {
-            
             if (input.success && additionalInputs[0].success)
             {
                 var fields = input.response.cnc_statinfo.statinfo.GetType().GetFields();
