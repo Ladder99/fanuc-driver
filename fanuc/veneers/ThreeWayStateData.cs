@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using l99.driver.@base;
-using l99.driver.fanuc.gcode;
 
 namespace l99.driver.fanuc.veneers
 {
@@ -18,10 +17,8 @@ namespace l99.driver.fanuc.veneers
         
         protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
         {
-            if (input.success && additionalInputs[0].success)
+            if (input.success && additionalInputs.All(o => o.success == true))
             {
-                var fields = input.response.cnc_statinfo.statinfo.GetType().GetFields();
-                
                 var current_value = new
                 {
                     input.response.cnc_statinfo.statinfo.aut,
@@ -30,9 +27,24 @@ namespace l99.driver.fanuc.veneers
                     input.response.cnc_statinfo.statinfo.mstb,
                     input.response.cnc_statinfo.statinfo.emergency,
                     input.response.cnc_statinfo.statinfo.alarm,
-                    poweron_min = additionalInputs[0].response.cnc_rdparam.param.data.ldata,
-                    operating_min = additionalInputs[1].response.cnc_rdparam.param.data.ldata,
-                    cutting_min = additionalInputs[2].response.cnc_rdparam.param.data.ldata
+                    timers = new
+                    {
+                        poweron_min = additionalInputs[0].response.cnc_rdparam.param.data.ldata,
+                        operating_min = additionalInputs[1].response.cnc_rdparam.param.data.ldata,
+                        cutting_min = additionalInputs[2].response.cnc_rdparam.param.data.ldata
+                    },
+                    @override = new {
+                        feed = 255-additionalInputs[3].response.pmc_rdpmcrng.buf.cdata[0],
+                        rapid = additionalInputs[4].response.pmc_rdpmcrng.buf.cdata[0],
+                        spindle = additionalInputs[5].response.pmc_rdpmcrng.buf.cdata[0]
+                    },
+                    modal = new
+                    {
+                        m1 = additionalInputs[6].response.cnc_modal.modal.aux.aux_data,
+                        m2 = additionalInputs[7].response.cnc_modal.modal.aux.aux_data,
+                        m3 = additionalInputs[8].response.cnc_modal.modal.aux.aux_data,
+                        t = additionalInputs[9].response.cnc_modal.modal.aux.aux_data
+                    }
                 };
                 
                 await onDataArrivedAsync(input, current_value);

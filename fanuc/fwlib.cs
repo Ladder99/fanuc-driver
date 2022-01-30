@@ -10320,7 +10320,17 @@ namespace l99.driver.fanuc
 #endif
 
         /* read program directory 3 */
+#if ARMV7
+        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdprogdir3")]
+#elif LINUX64
+        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdprogdir3")]
+#elif LINUX32_100
+        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdprogdir3")]
+#elif LINUX32_105
+        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdprogdir3")]
+#else
         [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdprogdir3")]
+#endif
         public static extern short cnc_rdprogdir3(ushort FlibHndl,
             short a, ref int b, ref short c, [Out, MarshalAs(UnmanagedType.LPStruct)] PRGDIR3 d);
 

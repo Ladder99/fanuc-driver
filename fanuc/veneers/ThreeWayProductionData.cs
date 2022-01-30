@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using l99.driver.@base;
-using l99.driver.fanuc.gcode;
 
 namespace l99.driver.fanuc.veneers
 {
@@ -22,15 +22,26 @@ namespace l99.driver.fanuc.veneers
             {
                 var current_value = new
                 {
-                    feed_override = 255-input.response.pmc_rdpmcrng.buf.cdata[0],
-                    rapid_override = additionalInputs[0].response.pmc_rdpmcrng.buf.cdata[0],
-                    spindle_override = additionalInputs[1].response.pmc_rdpmcrng.buf.cdata[0],
-                    program_name = new string(additionalInputs[2].response.cnc_exeprgname.exeprg.name).AsAscii(),
-                    pieces_produced = additionalInputs[3].response.cnc_rdparam.param.data.ldata,
-                    pieces_produced_life = additionalInputs[4].response.cnc_rdparam.param.data.ldata,
-                    pieces_remaining = additionalInputs[5].response.cnc_rdparam.param.data.ldata,
-                    cycle_time_min = additionalInputs[6].response.cnc_rdparam.param.data.ldata,
-                    cycle_time_sec = additionalInputs[7].response.cnc_rdparam.param.data.ldata / 1000
+                    program = new {
+                        name = new string(input.response.cnc_exeprgname.exeprg.name).AsAscii(),
+                        number = input.response.cnc_exeprgname.exeprg.o_num,
+                        size_b = additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.length,
+                        comment = additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.comment,
+                        modified = new DateTimeOffset(new DateTime(additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.mdate.year,
+                            additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.mdate.month,
+                            additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.mdate.day,
+                            additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.mdate.hour,
+                            additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.mdate.minute, 0)).ToUnixTimeMilliseconds()
+                    },
+                    pieces = new {
+                        produced = additionalInputs[1].response.cnc_rdparam.param.data.ldata,
+                        produced_life = additionalInputs[2].response.cnc_rdparam.param.data.ldata,
+                        remaining = additionalInputs[3].response.cnc_rdparam.param.data.ldata
+                    },
+                    timers = new {
+                        cycle_time_ms = (additionalInputs[4].response.cnc_rdparam.param.data.ldata * 60000) +
+                                        additionalInputs[5].response.cnc_rdparam.param.data.ldata
+                    }
                 };
                 
                 await onDataArrivedAsync(input, current_value);

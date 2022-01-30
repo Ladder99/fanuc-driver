@@ -58,7 +58,7 @@ namespace l99.driver.fanuc.handlers
                 },
                 state = new
                 {
-                    time = veneer.ChangeDelta,
+                    time = veneer.ChangeDelta.TotalMilliseconds,
                     data = veneer.LastChangedValue
                 }
             };

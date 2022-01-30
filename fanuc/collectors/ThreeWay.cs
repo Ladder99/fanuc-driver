@@ -49,13 +49,21 @@ namespace l99.driver.fanuc.collectors
                 await SetNative("stat-info", await platform.StatInfoAsync()),
                 Get("poweron-time-min"),
                 Get("operating-time-min"),
-                Get("cutting-time-min"));
-            
-            await Peel("production",
+                Get("cutting-time-min"),
                 await SetNative("feed-override", await platform.RdPmcRngGByteAsync(12)),
                 await SetNative("rapid-override", await platform.RdPmcRngGByteAsync(14)),
                 await SetNative("spindle-override", await platform.RdPmcRngGByteAsync(30)),
-                await SetNative("program-name", await platform.ExePrgNameAsync()),
+                await SetNative("modal-m1", await platform.ModalAsync(106,0,3)),
+                await SetNative("modal-m2", await platform.ModalAsync(125,0,3)),
+                await SetNative("modal-m3", await platform.ModalAsync(126,0,3)),
+                await SetNative("modal-t", await platform.ModalAsync(108,0,3)));
+            
+            await SetNative("program-name", await platform.ExePrgNameAsync());
+            var o_num = Get("program-name").response.cnc_exeprgname.exeprg.o_num;
+            
+            await Peel("production",
+                Get("program-name"),
+                await SetNative("prog-dir", await platform.RdProgDir3Async(o_num)),
                 await SetNative("pieces-produced", await platform.RdParamDoubleWordNoAxisAsync(6711)),
                 await SetNative("pieces-produced-life", await platform.RdParamDoubleWordNoAxisAsync(6712)),
                 await SetNative("pieces-remaining", await platform.RdParamDoubleWordNoAxisAsync(6713)),
