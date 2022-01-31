@@ -9,6 +9,13 @@ namespace l99.driver.fanuc.collectors
 {
     public class FanucCollector2 : FanucCollector
     {
+        private enum CollectorStateEnum
+        {
+            UNKNOWN,
+            OK,
+            FAILED
+        }
+        
         private enum SegmentEnum
         {
             NONE,
@@ -28,6 +35,8 @@ namespace l99.driver.fanuc.collectors
         private SegmentEnum _currentCollectSegment = SegmentEnum.NONE;
 
         private IntermediateModelGenerator _intermediateModel;
+
+        private CollectorStateEnum _collectorState = CollectorStateEnum.UNKNOWN;
         
         public FanucCollector2(Machine machine, object cfg) : base(machine, cfg)
         {
@@ -404,6 +413,17 @@ namespace l99.driver.fanuc.collectors
                 
                 if(await CollectBeginAsync())
                 {
+                    if (_collectorState == CollectorStateEnum.UNKNOWN)
+                    {
+                        logger.Info($"[{machine.Id}] Collector started.");
+                        _collectorState = CollectorStateEnum.OK;
+                    }
+                    else if (_collectorState == CollectorStateEnum.FAILED)
+                    {
+                        logger.Info($"[{machine.Id}] Collector recovered.");
+                        _collectorState = CollectorStateEnum.OK;
+                    }
+                    
                     _currentInitSegment = SegmentEnum.ROOT;
                     _currentCollectSegment = SegmentEnum.ROOT;
                     
@@ -481,6 +501,14 @@ namespace l99.driver.fanuc.collectors
 
                             await CollectForEachSpindleAsync(current_spindle, spindle_name, Get("spindle_split"), spindle_marker);
                         };
+                    }
+                }
+                else
+                {
+                    if (_collectorState == CollectorStateEnum.UNKNOWN || _collectorState == CollectorStateEnum.OK)
+                    {
+                        logger.Warn($"[{machine.Id}] Collector failed to connect.");
+                        _collectorState = CollectorStateEnum.FAILED;
                     }
                 }
                 
