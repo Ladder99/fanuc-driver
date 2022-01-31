@@ -3591,8 +3591,8 @@ namespace l99.driver.fanuc
             public short datano;
            
             public short type;
-            
-            public ODBMDL_2_UNION data
+
+            public ODBMDL_2_UNION data;
         }
         
         [StructLayout(LayoutKind.Explicit)]
