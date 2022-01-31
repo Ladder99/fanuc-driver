@@ -1,0 +1,40 @@
+version: '3.5'
+
+services:
+  portainer:
+    container_name: portainer
+    image: portainer/portainer-ce
+    restart: always
+    networks:
+      - fanuc
+    ports:
+      - '9000:9000'
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    logging:
+      driver: 'none'
+
+  dozzle:
+    container_name: dozzle
+    image: amir20/dozzle:latest
+    restart: always
+    networks:
+      - fanuc
+    ports:
+      - '8080:8080'
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    logging:
+      driver: 'none'
+
+volumes:
+  portainer_data:
+
+networks:
+  fanuc:
+    name: fanuc

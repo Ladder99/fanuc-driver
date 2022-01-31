@@ -1,0 +1,41 @@
+version: '3.5'
+
+services:
+
+  streamsheets:
+    image: cedalo/streamsheets:2-milestone-rpi
+    container_name: streamsheets
+    restart: always
+    depends_on:
+      - streamsheets-internal-mongodb
+    networks:
+      - fanuc
+    ports:
+      - "11883:1883"
+      - "8081:8081"
+    links:
+      - streamsheets-internal-mongodb
+    environment:
+      MONGO_DATABASE: streamsheets
+      MONGO_HOST: streamsheets-internal-mongodb
+      MONGO_PORT: 27017
+      MONGO_USER_DB_URI: mongodb://streamsheets-internal-mongodb:27017/userDB
+    logging:
+      options:
+        max-size: "20m"
+
+  streamsheets-internal-mongodb:
+    image: andresvidal/rpi3-mongodb3
+    container_name: streamsheets-internal-mongodb
+    restart: always
+    volumes:
+      - ~/fanuc-volumes/mongo/data/db:/data/db:rw
+    networks:
+      - fanuc
+    logging:
+      options:
+        max-size: "20m"
+
+networks:
+  fanuc:
+    name: fanuc
