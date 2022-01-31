@@ -227,6 +227,12 @@ namespace l99.driver.fanuc.collectors
         
         public override async Task<dynamic?> InitializeAsync()
         {
+            int initMinutes = 0;
+            var initStopwatch = new Stopwatch();
+            initStopwatch.Start();
+            
+            logger.Info($"[{machine.Id}] Collector initializing.");
+            
             try
             {
                 _currentInitSegment = SegmentEnum.NONE;
@@ -300,9 +306,18 @@ namespace l99.driver.fanuc.collectors
                         machine.VeneersApplied = true;
                         
                         _currentInitSegment = SegmentEnum.NONE;
+                        
+                        logger.Info($"[{machine.Id}] Collector initialized.");
                     }
                     else
                     {
+                        if (initMinutes == 0 || initStopwatch.ElapsedMilliseconds > 60000)
+                        {
+                            logger.Warn($"[{machine.Id}] Collector initialization pending ({initMinutes} min).");
+                            initMinutes++;
+                            initStopwatch.Restart();
+                        }
+
                         await Task.Delay(sweepMs);
                     }
                 }
@@ -312,6 +327,8 @@ namespace l99.driver.fanuc.collectors
                 logger.Error(ex, $"[{machine.Id}] Collector initialization failed.");
             }
 
+            initStopwatch.Stop();
+            
             return null;
         }
 
