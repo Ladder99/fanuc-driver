@@ -3474,14 +3474,15 @@ namespace l99.driver.fanuc
         } /* In case that the number of alarm is 10 */
 
         /* cnc_modal:read modal data */
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        [StructLayout(LayoutKind.Sequential)]
         public class MODAL_AUX_data
         {
             public int aux_data;
             public byte flag1;
             public byte flag2;
         }
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        
+        [StructLayout(LayoutKind.Sequential)]
         public class MODAL_RAUX1_data
         {
             public MODAL_AUX_data data1 = new MODAL_AUX_data();
@@ -3513,7 +3514,7 @@ namespace l99.driver.fanuc
             public MODAL_AUX_data data27 = new MODAL_AUX_data();
         }
 #if M_AXIS2
-    [StructLayout(LayoutKind.Sequential,Pack=4)]
+    [StructLayout(LayoutKind.Sequential)]
     public class MODAL_RAUX2_data
     {
         public MODAL_AUX_data data1 = new MODAL_AUX_data();
@@ -3542,7 +3543,7 @@ namespace l99.driver.fanuc
         public MODAL_AUX_data data24= new MODAL_AUX_data();
     }
 #elif FS15D
-    [StructLayout(LayoutKind.Sequential,Pack=4)]
+    [StructLayout(LayoutKind.Sequential)]
     public class MODAL_RAUX2_data
     {
         public MODAL_AUX_data data1 = new MODAL_AUX_data();
@@ -3557,7 +3558,7 @@ namespace l99.driver.fanuc
         public MODAL_AUX_data data10= new MODAL_AUX_data();
     }
 #else
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        [StructLayout(LayoutKind.Sequential)]
         public class MODAL_RAUX2_data
         {
             public MODAL_AUX_data data1 = new MODAL_AUX_data();
@@ -3571,45 +3572,54 @@ namespace l99.driver.fanuc
         }
 #endif
 
-        [StructLayout(LayoutKind.Explicit)]
+        [StructLayout(LayoutKind.Sequential)]
         public class ODBMDL_1
         {
-            [FieldOffset(0)]
+            
             public short datano;
-            [FieldOffset(2)]
+            
             public short type;
-            [FieldOffset(4)]
+            
             public byte g_data;
         }
-        [StructLayout(LayoutKind.Explicit)]
+
+        
+        [StructLayout(LayoutKind.Sequential)]
         public class ODBMDL_2
         {
-            [FieldOffset(0)]
+            
             public short datano;
-            [FieldOffset(2)]
+           
             public short type;
-            [FieldOffset(4),
-           MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+            
+            public ODBMDL_2_UNION data
+        }
+        
+        [StructLayout(LayoutKind.Explicit)]
+        public class ODBMDL_2_UNION
+        {
+            [FieldOffset(0), MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
             public byte[] g_1shot = new byte[4];
-            [FieldOffset(4),
-           MarshalAs(UnmanagedType.ByValArray, SizeConst = 35)]
+            
+            [FieldOffset(0), MarshalAs(UnmanagedType.ByValArray, SizeConst = 35)]
             public byte[] g_rdata = new byte[35];
         }
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        
+        [StructLayout(LayoutKind.Sequential)]
         public class ODBMDL_3
         {
             public short datano;
             public short type;
             public MODAL_AUX_data aux = new MODAL_AUX_data();
         }
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        [StructLayout(LayoutKind.Sequential)]
         public class ODBMDL_4
         {
             public short datano;
             public short type;
             public MODAL_RAUX1_data raux1 = new MODAL_RAUX1_data();
         }
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        [StructLayout(LayoutKind.Sequential)]
         public class ODBMDL_5
         {
             public short datano;
