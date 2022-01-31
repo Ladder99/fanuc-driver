@@ -3,7 +3,7 @@ version: '3.5'
 services:
   fanuc_driver:
     container_name: fanuc_driver
-    image: ladder99/fanuc-driver:latest
+    image: ladder99/fanuc-driver:${FOCAS_TGT}
     restart: always
     depends_on:
       - mosquitto
