@@ -18,6 +18,8 @@ namespace l99.driver.fanuc.collectors
         
         public override async Task InitPathsAsync()
         {
+            await Apply(typeof(fanuc.veneers.SysInfo), "sys-info");
+            
             await Apply(typeof(fanuc.veneers.ThreeWayStateData), "state", isCompound: true);
             
             await Apply(typeof(fanuc.veneers.ThreeWayProductionData), "production", isCompound: true);
@@ -46,6 +48,8 @@ namespace l99.driver.fanuc.collectors
 
         public override async Task CollectForEachPathAsync(short current_path, dynamic path_marker)
         {
+            await SetNativeAndPeel("sys-info", await platform.SysInfoAsync());
+            
             await Peel("state",
                 await SetNative("stat-info", await platform.StatInfoAsync()),
                 Get("poweron-time-min"),

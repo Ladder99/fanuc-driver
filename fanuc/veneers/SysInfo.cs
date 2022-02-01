@@ -151,9 +151,12 @@ namespace l99.driver.fanuc.veneers
                     compound_machining,
                     transfer_line,
                     model,
+                    model_code = info_bytes[0],
                     input.response.cnc_sysinfo.sysinfo.max_axis,
                     cnc_type,
+                    cnc_type_code = cnc_type_code.Trim(),
                     mt_type,
+                    mt_type_code = mt_type_code.Trim(), 
                     series = string.Join("", input.response.cnc_sysinfo.sysinfo.series),
                     version = string.Join("", input.response.cnc_sysinfo.sysinfo.version),
                     axes

@@ -30,7 +30,7 @@ namespace l99.driver.fanuc.handlers
                 },
                 state = new
                 {
-                    time = veneer.ArrivalDelta,
+                    time = veneer.ArrivalDelta.TotalMilliseconds,
                     data = veneer.LastArrivedValue
                 }
             };
