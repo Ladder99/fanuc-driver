@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using l99.driver.@base;
 
 namespace l99.driver.fanuc.collectors

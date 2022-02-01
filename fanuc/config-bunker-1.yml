@@ -11,9 +11,9 @@ machines:
       net_port: !!int 1883
       auto_connect: !!bool true
       publish_status: !!bool true
-      publish_arrivals: !!bool false
+      publish_arrivals: !!bool true
       publish_changes: !!bool true
-      publish_disco: !!bool false
+      publish_disco: !!bool true
       disco_base_topic: fanuc
       anonymous: !!bool true
       user: 
