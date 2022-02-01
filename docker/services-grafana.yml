@@ -1,0 +1,28 @@
+version: '3.5'
+
+services:
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:latest
+    restart: always
+    depends_on:
+      - mosquitto
+    networks:
+      - fanuc
+    ports:
+      - '3000:3000'
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ~/fanuc-volumes/grafana/etc:/etc/grafana:rw
+      - ~/fanuc-volumes/grafana/var:/var/lib/grafana:rw
+      - ~/fanuc-volumes/grafana/dash:/etc/dashboards:rw
+    environment:
+      GF_INSTALL_PLUGINS: mqtt-datasource
+    logging:
+      options:
+        max-size: "20m"
+
+networks:
+  fanuc:
+    name: fanuc
