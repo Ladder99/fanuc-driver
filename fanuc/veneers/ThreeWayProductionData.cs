@@ -38,6 +38,24 @@ namespace l99.driver.fanuc.veneers
             if (input.success && additionalInputs.All(o => o.success == true))
             {
                 bool has_prog = input.response.cnc_exeprgname.exeprg.o_num > 0;
+                long modified = 0;
+
+                try
+                {
+                    modified = has_prog
+                        ? new DateTimeOffset(new DateTime(
+                                additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.mdate.year,
+                                additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.mdate.month,
+                                additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.mdate.day,
+                                additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.mdate.hour,
+                                additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.mdate.minute, 0))
+                            .ToUnixTimeMilliseconds()
+                        : 0;
+                }
+                catch
+                {
+                   
+                }
                 
                 var current_value = new
                 {
@@ -46,11 +64,7 @@ namespace l99.driver.fanuc.veneers
                         number = input.response.cnc_exeprgname.exeprg.o_num,
                         size_b = additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.length,
                         comment = additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.comment,
-                        modified = has_prog ? new DateTimeOffset(new DateTime(additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.mdate.year,
-                            additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.mdate.month,
-                            additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.mdate.day,
-                            additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.mdate.hour,
-                            additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.mdate.minute, 0)).ToUnixTimeMilliseconds(): 0
+                        modified
                     },
                     pieces = new {
                         produced = additionalInputs[1].response.cnc_rdparam.param.data.ldata,
