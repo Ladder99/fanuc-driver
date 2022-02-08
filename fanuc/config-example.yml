@@ -1,0 +1,21 @@
+machines:
+  - id: example-sim
+    enabled: !!bool true
+    type: l99.driver.fanuc.FanucMachine, fanuc
+    strategy: l99.driver.fanuc.collectors.ThreeWay, fanuc
+    handler: l99.driver.fanuc.handlers.ThreeWay, fanuc
+    transport: l99.driver.fanuc.transports.MQTT, fanuc
+    
+    l99.driver.fanuc.FanucMachine, fanuc:
+      sweep_ms: !!int 1000
+      net_ip: 10.1.10.211
+      net_port: !!int 8193
+      net_timeout_s: !!int 3
+    
+    l99.driver.fanuc.transports.MQTT, fanuc:
+      enabled: !!bool true
+      net_ip: 10.1.10.210
+      net_port: !!int 1883
+      anonymous: !!bool true
+      user:
+      password:

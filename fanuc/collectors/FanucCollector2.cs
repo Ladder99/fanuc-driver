@@ -609,7 +609,7 @@ namespace l99.driver.fanuc.collectors
                     
             LastSuccess = Get("connect").success;
 
-            await Machine.Broker.ConnectAsync();
+            await Machine.Transport.ConnectAsync();
         }
     }
 }

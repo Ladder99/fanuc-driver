@@ -55,9 +55,6 @@
       <None Update="libfwlib32-linux-x86.so.1.0.5">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="config.yml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
       <None Update="nlog.config">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
@@ -112,10 +109,7 @@
       <Content Include="lua\*">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
-      <None Update="config-t.yml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="config-bunker-1.yml">
+      <None Update="config-example.yml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>
@@ -136,17 +130,8 @@
       <Compile Include="..\base-driver\base\Machines.cs">
         <Link>base\Machines.cs</Link>
       </Compile>
-      <Compile Include="..\base-driver\base\mqtt\Broker.cs">
-        <Link>base\mqtt\Broker.cs</Link>
-      </Compile>
-      <Compile Include="..\base-driver\base\mqtt\Brokers.cs">
-        <Link>base\mqtt\Brokers.cs</Link>
-      </Compile>
-      <Compile Include="..\base-driver\base\mqtt\Disco.cs">
-        <Link>base\mqtt\Disco.cs</Link>
-      </Compile>
-      <Compile Include="..\base-driver\base\mqtt\SparkplugB.cs">
-        <Link>base\mqtt\SparkplugB.cs</Link>
+      <Compile Include="..\base-driver\base\Transport.cs">
+        <Link>base\Transport.cs</Link>
       </Compile>
       <Compile Include="..\base-driver\base\Veneer.cs">
         <Link>base\Veneer.cs</Link>
