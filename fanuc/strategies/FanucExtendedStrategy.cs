@@ -5,11 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using l99.driver.@base;
 
-namespace l99.driver.fanuc.collectors
+namespace l99.driver.fanuc.strategies
 {
-    public class FanucCollector2 : FanucCollector
+    public class FanucExtendedStrategy : FanucStrategy
     {
-        private enum CollectorStateEnum
+        private enum StrategyStateEnum
         {
             UNKNOWN,
             OK,
@@ -37,15 +37,15 @@ namespace l99.driver.fanuc.collectors
 
         private IntermediateModelGenerator _intermediateModel;
 
-        private CollectorStateEnum _collectorState = CollectorStateEnum.UNKNOWN;
+        private StrategyStateEnum _strategyState = StrategyStateEnum.UNKNOWN;
 
-        public FanucCollector2(Machine machine, object cfg) : base(machine, cfg)
+        public FanucExtendedStrategy(Machine machine, object cfg) : base(machine, cfg)
         {
             sweepRemaining = sweepMs;
             propertyBag = new Dictionary<string, dynamic>();
             _intermediateModel = new IntermediateModelGenerator();
         }
-        
+
         protected void catchFocasPerformance(dynamic focasNativeReturnObject)
         {
             focasInvocations.Add(new
@@ -246,7 +246,7 @@ namespace l99.driver.fanuc.collectors
             var initStopwatch = new Stopwatch();
             initStopwatch.Start();
             
-            logger.Info($"[{machine.Id}] Collector initializing.");
+            logger.Info($"[{machine.Id}] Strategy initializing.");
             
             try
             {
@@ -322,13 +322,13 @@ namespace l99.driver.fanuc.collectors
                         
                         _currentInitSegment = SegmentEnum.NONE;
                         
-                        logger.Info($"[{machine.Id}] Collector initialized.");
+                        logger.Info($"[{machine.Id}] Strategy initialized.");
                     }
                     else
                     {
                         if (initMinutes == 0 || initStopwatch.ElapsedMilliseconds > 60000)
                         {
-                            logger.Warn($"[{machine.Id}] Collector initialization pending ({initMinutes} min).");
+                            logger.Warn($"[{machine.Id}] Strategy initialization pending ({initMinutes} min).");
                             initMinutes++;
                             initStopwatch.Restart();
                         }
@@ -339,7 +339,7 @@ namespace l99.driver.fanuc.collectors
             }
             catch (Exception ex)
             {
-                logger.Error(ex, $"[{machine.Id}] Collector initialization failed.");
+                logger.Error(ex, $"[{machine.Id}] Strategy initialization failed.");
             }
 
             initStopwatch.Stop();
@@ -420,15 +420,15 @@ namespace l99.driver.fanuc.collectors
                 
                 if(await CollectBeginAsync())
                 {
-                    if (_collectorState == CollectorStateEnum.UNKNOWN)
+                    if (_strategyState == StrategyStateEnum.UNKNOWN)
                     {
-                        logger.Info($"[{machine.Id}] Collector started.");
-                        _collectorState = CollectorStateEnum.OK;
+                        logger.Info($"[{machine.Id}] Strategy started.");
+                        _strategyState = StrategyStateEnum.OK;
                     }
-                    else if (_collectorState == CollectorStateEnum.FAILED)
+                    else if (_strategyState == StrategyStateEnum.FAILED)
                     {
-                        logger.Info($"[{machine.Id}] Collector recovered.");
-                        _collectorState = CollectorStateEnum.OK;
+                        logger.Info($"[{machine.Id}] Strategy recovered.");
+                        _strategyState = StrategyStateEnum.OK;
                     }
                     
                     _currentInitSegment = SegmentEnum.ROOT;
@@ -512,10 +512,10 @@ namespace l99.driver.fanuc.collectors
                 }
                 else
                 {
-                    if (_collectorState == CollectorStateEnum.UNKNOWN || _collectorState == CollectorStateEnum.OK)
+                    if (_strategyState == StrategyStateEnum.UNKNOWN || _strategyState == StrategyStateEnum.OK)
                     {
-                        logger.Warn($"[{machine.Id}] Collector failed to connect.");
-                        _collectorState = CollectorStateEnum.FAILED;
+                        logger.Warn($"[{machine.Id}] Strategy failed to connect.");
+                        _strategyState = StrategyStateEnum.FAILED;
                     }
                 }
                 
@@ -532,7 +532,7 @@ namespace l99.driver.fanuc.collectors
             }
             catch (Exception ex)
             {
-                logger.Error(ex, $"[{machine.Id}] Collector sweep failed at segment {_currentCollectSegment}.");
+                logger.Error(ex, $"[{machine.Id}] Strategy sweep failed at segment {_currentCollectSegment}.");
             }
 
             return null;

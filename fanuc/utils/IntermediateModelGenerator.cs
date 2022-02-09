@@ -72,9 +72,9 @@ namespace l99.driver.fanuc
                     new JProperty("name", _machine.Handler.GetType().Name),
                     new JProperty("type", _machine.Handler.GetType().FullName)
                 );
-                model["collector"] = new JObject(
-                    new JProperty("name", _machine.Collector.GetType().Name),
-                    new JProperty("type", _machine.Collector.GetType().FullName)
+                model["strategy"] = new JObject(
+                    new JProperty("name", _machine.Strategy.GetType().Name),
+                    new JProperty("type", _machine.Strategy.GetType().FullName)
                 );
                 model["observations"] = new JObject();
                 model["observations"]["root"] = obs_root;

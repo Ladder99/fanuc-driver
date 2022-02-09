@@ -90,7 +90,7 @@ namespace l99.driver.fanuc.handlers
             await veneers.Machine.Transport.SendAsync(topic, payload, true);
         }
         
-        public override async Task<dynamic?> OnCollectorSweepCompleteAsync(Machine machine, dynamic? beforeSweepComplete)
+        public override async Task<dynamic?> OnStrategySweepCompleteAsync(Machine machine, dynamic? beforeSweepComplete)
         {
             dynamic payload = new
             {
@@ -104,8 +104,8 @@ namespace l99.driver.fanuc.handlers
                 {
                     data = new
                     {
-                        online = machine.CollectorSuccess,
-                        healthy = machine.CollectorHealthy
+                        online = machine.StrategySuccess,
+                        healthy = machine.StrategyHealthy
                     }
                 }
             };

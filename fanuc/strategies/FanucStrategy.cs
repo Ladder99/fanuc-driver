@@ -1,18 +1,18 @@
 ﻿using l99.driver.@base;
 
-namespace l99.driver.fanuc.collectors
+namespace l99.driver.fanuc.strategies
 {
-    public class FanucCollector : Collector
+    public class FanucStrategy : Strategy
     {
         protected dynamic platform;
         
-        public FanucCollector(Machine machine, object cfg) : base(machine, cfg)
+        public FanucStrategy(Machine machine, object cfg) : base(machine, cfg)
         {
             platform = base.machine["platform"];
             platform.StartupProcess(3, "focas2.log");
         }
         
-        ~FanucCollector()
+        ~FanucStrategy()
         {
             // TODO: verify invocation
             platform.ExitProcess();
@@ -20,7 +20,7 @@ namespace l99.driver.fanuc.collectors
         
         protected dynamic PathMarker(dynamic path)
         {
-            return new {path.request.cnc_setpath.path_no};
+            return new { path.request.cnc_setpath.path_no };
         }
 
         protected dynamic axisName(dynamic axis)

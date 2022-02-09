@@ -1,18 +1,18 @@
 ﻿using System.Threading.Tasks;
-using l99.driver.@base;
+using l99.driver.fanuc.strategies;
 
 namespace l99.driver.fanuc.collectors
 {
-    public class SpindleData : FanucCollector2
+    public class SpindleData : FanucMultiStrategyCollector
     {
-        public SpindleData(Machine machine, object cfg) : base(machine, cfg)
+        public SpindleData(FanucMultiStrategy strategy) : base(strategy)
         {
             
         }
         
         public override async Task InitAxisAndSpindleAsync()
         {
-            await Apply(typeof(fanuc.veneers.SpindleData), "spindle_data", isCompound: true);
+            await strategy.Apply(typeof(fanuc.veneers.SpindleData), "spindle_data", isCompound: true);
         }
         
         public override async Task CollectForEachPathAsync(short current_path, dynamic path_marker)
@@ -21,7 +21,7 @@ namespace l99.driver.fanuc.collectors
             // speed RPM,mm/rev... and feed mm/min...
             //dynamic speed_feed = await machine["platform"].RdSpeedAsync(0);
             //dynamic speed_speed = await machine["platform"].RdSpeedAsync(1);
-            await SetNative("sp_speed", await platform.RdSpeedAsync(-1));
+            await strategy.SetNative("sp_speed", await strategy.Platform.RdSpeedAsync(-1));
 
             // TODO: does not work
             //dynamic spindles_data = await machine["platform"].Acts2Async(-1);
@@ -38,17 +38,17 @@ namespace l99.driver.fanuc.collectors
         public override async Task CollectForEachSpindleAsync(short current_spindle, string spindle_name, dynamic spindle_split, dynamic spindle_marker)
         {
             // rotational spindle speed
-            await SetNative("sp_acts", await platform.Acts2Async(current_spindle));
+            await strategy.SetNative("sp_acts", await strategy.Platform.Acts2Async(current_spindle));
             
             //dynamic load_meter = await machine["platform"].RdSpMeterAsync(0, current_spindle);
             //dynamic motor_speed = await machine["platform"].RdSpMeterAsync(1, current_spindle);
-            await SetNative("sp_meter", await platform.RdSpMeterAsync(-1, current_spindle));
+            await strategy.SetNative("sp_meter", await strategy.Platform.RdSpMeterAsync(-1, current_spindle));
 
             // max rpm ratio
-            await SetNative("sp_maxrpm", await platform.RdSpMaxRpmAsync(current_spindle));
+            await strategy.SetNative("sp_maxrpm", await strategy.Platform.RdSpMaxRpmAsync(current_spindle));
 
             // spindle gear ratio
-            await SetNative("sp_gear", await platform.RdSpGearAsync(current_spindle));
+            await strategy.SetNative("sp_gear", await strategy.Platform.RdSpGearAsync(current_spindle));
             
             // not sure what units the response data is
             //dynamic spload = await machine["platform"].RdSpLoadAsync(current_spindle);
@@ -62,10 +62,10 @@ namespace l99.driver.fanuc.collectors
             
             // diagnose values
             // 400 bit 7 = LNK/1    comms with spindle control established
-            await SetNative("diag_lnk", await platform.DiagnossByteFirstAxisAsync(400));
+            await strategy.SetNative("diag_lnk", await strategy.Platform.DiagnossByteFirstAxisAsync(400));
             
             // 403 byte             temp of winding spindle motor (C) 0-255
-            await SetNative("diag_temp", await platform.DiagnossByteFirstAxisAsync(403));
+            await strategy.SetNative("diag_temp", await strategy.Platform.DiagnossByteFirstAxisAsync(403));
             
             // 408                  spindle comms (causes of SP0749)
             //  0 CRE               CRC 
@@ -75,58 +75,58 @@ namespace l99.driver.fanuc.collectors
             //  4 CME               no response
             //  5 SCA               comm amplifier alarm
             //  7 SSA               spindle amplifier alarm
-            await SetNative("diag_comms", await platform.DiagnossByteFirstAxisAsync(408));
+            await strategy.SetNative("diag_comms", await strategy.Platform.DiagnossByteFirstAxisAsync(408));
             
             // 410 word             spindle load (%)
-            await SetNative("diag_load_perc", await platform.DiagnossWordFirstAxisAsync(410));
+            await strategy.SetNative("diag_load_perc", await strategy.Platform.DiagnossWordFirstAxisAsync(410));
             
             // 411 word             spindle load (min)
-            await SetNative("diag_load_min", await platform.DiagnossWordFirstAxisAsync(411));
+            await strategy.SetNative("diag_load_min", await strategy.Platform.DiagnossWordFirstAxisAsync(411));
             
             // 417 dword            spindle position coder feedback (detection units)
-            await SetNative("diag_coder", await platform.DiagnossDoubleWordFirstAxisAsync(417));
+            await strategy.SetNative("diag_coder", await strategy.Platform.DiagnossDoubleWordFirstAxisAsync(417));
             
             // 418 dword            position loop deviation (detection units)
-            await SetNative("diag_loop_dev", await platform.DiagnossDoubleWordFirstAxisAsync(418));
+            await strategy.SetNative("diag_loop_dev", await strategy.Platform.DiagnossDoubleWordFirstAxisAsync(418));
             
             // 425 dword            sync error (detection unit)
-            await SetNative("diag_sync_error", await platform.DiagnossDoubleWordFirstAxisAsync(425));
+            await strategy.SetNative("diag_sync_error", await strategy.Platform.DiagnossDoubleWordFirstAxisAsync(425));
             
             // 445 word             position data (pulse) 0-4095 , valid only when param3117=1
-            await SetNative("diag_pos_data", await platform.DiagnossDoubleWordFirstAxisAsync(445));
+            await strategy.SetNative("diag_pos_data", await strategy.Platform.DiagnossDoubleWordFirstAxisAsync(445));
             
             // 710 word             spindle error
-            await SetNative("diag_error", await platform.DiagnossWordFirstAxisAsync(710));
+            await strategy.SetNative("diag_error", await strategy.Platform.DiagnossWordFirstAxisAsync(710));
             
             // 712 word             spindle warning
-            await SetNative("diag_warn", await platform.DiagnossWordFirstAxisAsync(712));
+            await strategy.SetNative("diag_warn", await strategy.Platform.DiagnossWordFirstAxisAsync(712));
             
             // 1520 dword           spindle rev count 1 (1000 min)
-            await SetNative("diag_rev_1", await platform.DiagnossDoubleWordFirstAxisAsync(1520));
+            await strategy.SetNative("diag_rev_1", await strategy.Platform.DiagnossDoubleWordFirstAxisAsync(1520));
             
             // 1521 dword           spindle rev count 2 (1000 min)
-            await SetNative("diag_rev_2", await platform.DiagnossDoubleWordFirstAxisAsync(1521));
+            await strategy.SetNative("diag_rev_2", await strategy.Platform.DiagnossDoubleWordFirstAxisAsync(1521));
             
-            await Peel("spindle_data", 
+            await strategy.Peel("spindle_data", 
                 current_spindle,
-                Get("spindle_names"), 
-                Get("sp_speed"), 
-                Get("sp_meter"), 
-                Get("sp_maxrpm"), 
-                Get("sp_gear"),
-                Get("diag_lnk"),
-                Get("diag_temp"),
-                Get("diag_comms"),
-                Get("diag_load_perc"),
-                Get("diag_load_min"),
-                Get("diag_coder"),
-                Get("diag_loop_dev"),
-                Get("diag_sync_error"),
-                Get("diag_pos_data"),
-                Get("diag_error"),
-                Get("diag_warn"),
-                Get("diag_rev_1"),
-                Get("diag_rev_2"));
+                strategy.Get("spindle_names"), 
+                strategy.Get("sp_speed"), 
+                strategy.Get("sp_meter"), 
+                strategy.Get("sp_maxrpm"), 
+                strategy.Get("sp_gear"),
+                strategy.Get("diag_lnk"),
+                strategy.Get("diag_temp"),
+                strategy.Get("diag_comms"),
+                strategy.Get("diag_load_perc"),
+                strategy.Get("diag_load_min"),
+                strategy.Get("diag_coder"),
+                strategy.Get("diag_loop_dev"),
+                strategy.Get("diag_sync_error"),
+                strategy.Get("diag_pos_data"),
+                strategy.Get("diag_error"),
+                strategy.Get("diag_warn"),
+                strategy.Get("diag_rev_1"),
+                strategy.Get("diag_rev_2"));
         }
     }
 }

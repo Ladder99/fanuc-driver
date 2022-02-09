@@ -2,7 +2,8 @@ machines:
   - id: example-sim
     enabled: !!bool true
     type: l99.driver.fanuc.FanucMachine, fanuc
-    strategy: l99.driver.fanuc.collectors.GCodeData, fanuc
+    strategy: l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc
+    #strategy: l99.driver.fanuc.strategies.GCodeData, fanuc
     handler: l99.driver.fanuc.handlers.FanucOne, fanuc
     transport: l99.driver.fanuc.transports.MQTT, fanuc
     #transport: l99.driver.fanuc.transports.SHDR, fanuc
@@ -13,6 +14,10 @@ machines:
       #net_ip: 172.16.13.100
       net_port: !!int 8193
       net_timeout_s: !!int 3
+    
+    l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
+      - l99.driver.fanuc.collectors.GCodeData, fanuc
+      - l99.driver.fanuc.collectors.SpindleData, fanuc
     
     l99.driver.fanuc.transports.MQTT, fanuc:
       enabled: !!bool true

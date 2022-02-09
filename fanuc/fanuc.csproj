@@ -118,8 +118,8 @@
       <Compile Include="..\base-driver\base\Bootstrap.cs">
         <Link>base\Bootstrap.cs</Link>
       </Compile>
-      <Compile Include="..\base-driver\base\Collector.cs">
-        <Link>base\Collector.cs</Link>
+      <Compile Include="..\base-driver\base\Strategy.cs">
+        <Link>base\Strategy.cs</Link>
       </Compile>
       <Compile Include="..\base-driver\base\Handler.cs">
         <Link>base\Handler.cs</Link>
