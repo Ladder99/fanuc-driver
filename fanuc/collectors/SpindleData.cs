@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using l99.driver.@base;
-using Newtonsoft.Json.Linq;
 
 namespace l99.driver.fanuc.collectors
 {
@@ -15,43 +10,13 @@ namespace l99.driver.fanuc.collectors
             
         }
         
-        public override async Task InitRootAsync()
-        {
-            await Apply(typeof(fanuc.veneers.CNCId), "cnc_id");
-            
-            await Apply(typeof(fanuc.veneers.RdParamLData), "power_on_time");
-        }
-        
-        public override async Task InitPathsAsync()
-        {
-            await Apply(typeof(fanuc.veneers.SysInfo), "sys_info");
-            
-            await Apply(typeof(fanuc.veneers.StatInfoText), "stat_info");
-        }
-        
         public override async Task InitAxisAndSpindleAsync()
         {
             await Apply(typeof(fanuc.veneers.SpindleData), "spindle_data", isCompound: true);
         }
         
-        public override async Task<bool> CollectBeginAsync()
-        {
-            return await base.CollectBeginAsync();
-        }
-        
-        public override async Task CollectRootAsync()
-        {
-            await SetNativeAndPeel("cnc_id", await platform.CNCIdAsync());
-                    
-            await SetNativeAndPeel("power_on_time", await platform.RdParamDoubleWordNoAxisAsync(6750));
-        }
-
         public override async Task CollectForEachPathAsync(short current_path, dynamic path_marker)
         {
-            await SetNativeAndPeel("sys_info", await platform.SysInfoAsync());
-                        
-            await SetNativeAndPeel("stat_info", await platform.StatInfoAsync());
-            
             // main spindle displayed in cnc position screen
             // speed RPM,mm/rev... and feed mm/min...
             //dynamic speed_feed = await machine["platform"].RdSpeedAsync(0);
@@ -68,11 +33,6 @@ namespace l99.driver.fanuc.collectors
                         
             // TODO: does not work
             //dynamic spload_all = await machine["platform"].RdSpLoadAsync(-1);
-        }
-
-        public override async Task CollectForEachAxisAsync(short current_axis, string axis_name, dynamic axis_split, dynamic axis_marker)
-        {
-            
         }
 
         public override async Task CollectForEachSpindleAsync(short current_spindle, string spindle_name, dynamic spindle_split, dynamic spindle_marker)
@@ -133,13 +93,13 @@ namespace l99.driver.fanuc.collectors
             await SetNative("diag_sync_error", await platform.DiagnossDoubleWordFirstAxisAsync(425));
             
             // 445 word             position data (pulse) 0-4095 , valid only when param3117=1
-            await SetNative("diag_pos_data", await platform.DiagnossWordFirstAxisAsync(445));
+            await SetNative("diag_pos_data", await platform.DiagnossDoubleWordFirstAxisAsync(445));
             
             // 710 word             spindle error
             await SetNative("diag_error", await platform.DiagnossWordFirstAxisAsync(710));
             
-            // 711 word             spindle warning
-            await SetNative("diag_warn", await platform.DiagnossWordFirstAxisAsync(711));
+            // 712 word             spindle warning
+            await SetNative("diag_warn", await platform.DiagnossWordFirstAxisAsync(712));
             
             // 1520 dword           spindle rev count 1 (1000 min)
             await SetNative("diag_rev_1", await platform.DiagnossDoubleWordFirstAxisAsync(1520));
@@ -167,11 +127,6 @@ namespace l99.driver.fanuc.collectors
                 Get("diag_warn"),
                 Get("diag_rev_1"),
                 Get("diag_rev_2"));
-        }
-
-        public override async Task CollectEndAsync()
-        {
-            await base.CollectEndAsync();
         }
     }
 }

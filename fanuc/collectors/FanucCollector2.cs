@@ -29,6 +29,7 @@ namespace l99.driver.fanuc.collectors
         
         protected Dictionary<string, dynamic> propertyBag;
         protected List<dynamic> focasInvocations = new List<dynamic>();
+        protected int failedInvocationCountDuringSweep = 0;
         protected Stopwatch sweepWatch = new Stopwatch();
         protected int sweepRemaining = 1000;
         private SegmentEnum _currentInitSegment = SegmentEnum.NONE;
@@ -37,7 +38,7 @@ namespace l99.driver.fanuc.collectors
         private IntermediateModelGenerator _intermediateModel;
 
         private CollectorStateEnum _collectorState = CollectorStateEnum.UNKNOWN;
-        
+
         public FanucCollector2(Machine machine, object cfg) : base(machine, cfg)
         {
             sweepRemaining = sweepMs;
@@ -53,6 +54,11 @@ namespace l99.driver.fanuc.collectors
                 focasNativeReturnObject.invocationMs,
                 focasNativeReturnObject.rc
             });
+
+            if (focasNativeReturnObject.rc != 0)
+            {
+                failedInvocationCountDuringSweep++;
+            }
         }
 
         public dynamic? Get(string propertyBagKey)
@@ -254,9 +260,9 @@ namespace l99.driver.fanuc.collectors
                     {
                         _currentInitSegment = SegmentEnum.ROOT;
 
-                        await Apply(typeof(fanuc.veneers.FocasPerf), "focas_perf", true);
-                        await Apply(typeof(fanuc.veneers.Connect), "connect");
-                        await Apply(typeof(fanuc.veneers.GetPath), "paths");
+                        await Apply(typeof(fanuc.veneers.FocasPerf), "focas_perf", isInternal:true, isCompound: true);
+                        await Apply(typeof(fanuc.veneers.Connect), "connect", isInternal: true);
+                        await Apply(typeof(fanuc.veneers.GetPath), "paths", isInternal: true);
                         
                         await InitRootAsync();
                         
@@ -272,8 +278,8 @@ namespace l99.driver.fanuc.collectors
 
                         await InitPathsAsync();
                         
-                        await Apply(typeof(fanuc.veneers.RdAxisname), "axis_names");
-                        await Apply(typeof(fanuc.veneers.RdSpindlename), "spindle_names");
+                        await Apply(typeof(fanuc.veneers.RdAxisname), "axis_names", isInternal: true);
+                        await Apply(typeof(fanuc.veneers.RdSpindlename), "spindle_names", isInternal: true);
                         
                         _currentInitSegment = SegmentEnum.AXIS;
                         
@@ -405,6 +411,7 @@ namespace l99.driver.fanuc.collectors
                 _currentInitSegment = SegmentEnum.NONE;
                 
                 focasInvocations.Clear();
+                failedInvocationCountDuringSweep = 0;
                 
                 _currentCollectSegment = SegmentEnum.BEGIN;
                 
@@ -607,7 +614,9 @@ namespace l99.driver.fanuc.collectors
                 sweepMs = sweepWatch.ElapsedMilliseconds, focas_invocations = focasInvocations
             });
                     
+            //TODO: make veneer
             LastSuccess = Get("connect").success;
+            IsHealthy = failedInvocationCountDuringSweep == 0;
 
             await Machine.Transport.ConnectAsync();
         }

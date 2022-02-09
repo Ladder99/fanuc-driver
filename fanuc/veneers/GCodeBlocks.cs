@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using l99.driver.@base;
@@ -33,6 +34,21 @@ namespace l99.driver.fanuc.veneers
                     blocks = _blocks.ExecutedBlocks
                 };
                 
+                
+                //Console.WriteLine(_blocks.ToString(showMissedBlocks: true));
+                /*
+                if (current_value.blocks.Count() > 0)
+                {
+                    Console.WriteLine("--- executed ---");
+                    foreach (var block in current_value.blocks)
+                    {
+                        Console.WriteLine(block.ToString());
+                    }
+
+                    Console.WriteLine("");
+                }
+                */
+
                 await onDataArrivedAsync(input, current_value);
                 
                 var last_keys = ((List<gcode.Block>)lastChangedValue.blocks).Select(x => x.BlockNumber);

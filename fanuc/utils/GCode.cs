@@ -93,24 +93,43 @@ namespace l99.driver.fanuc.gcode
             IsPointerValid = true;
             
             int baseBlockPointer = blockCounter - 1;
+            
             string[] blockTextArray = string.Join("", nativeBlockText).Trim().Split('\n');
             
-            for (int blockPointerOffset = 0; blockPointerOffset < blockTextArray.Length - (dropLast?1:0); blockPointerOffset++)
+            for (int blockPointerOffset = 0; 
+                 blockPointerOffset < blockTextArray.Length - (dropLast?1:0); 
+                 blockPointerOffset++)
             {
-                if (!_blocks.ContainsKey(baseBlockPointer + blockPointerOffset))
+                int blockNumber = baseBlockPointer + blockPointerOffset;
+                
+                if (!_blocks.ContainsKey(blockNumber))
                 {
-                    _blocks.Add(baseBlockPointer + blockPointerOffset, 
-                        new Block()
-                        {
-                            BlockNumber = baseBlockPointer + blockPointerOffset,
-                            BlockText =  blockTextArray[blockPointerOffset]
-                        });
+                    string blockText = blockTextArray[blockPointerOffset];
+                    
+                    var block = new Block() 
+                    { 
+                        BlockNumber = blockNumber,
+                        BlockText = blockText
+                    };
+
+                    //var cursor = blockNumber == baseBlockPointer ? "(.add) now" : "(.add) ahd";
+                    //Console.WriteLine($"{cursor} {block.ToString()}");
+                    
+                    _blocks.Add(blockNumber, block);
                 }
             }
 
             PreviousBlockPointer = CurrentBlockPointer;
             CurrentBlockPointer = baseBlockPointer;
-
+            
+            /*
+            if (PreviousBlockPointer != CurrentBlockPointer)
+            {
+                //Console.WriteLine($"(.add) mv  [{PreviousBlockPointer}] -> [{CurrentBlockPointer}]");
+                Console.WriteLine($"(.add) >>> {_blocks[CurrentBlockPointer].ToString()}");
+            }
+            */
+            
             return true;
         }
         
@@ -164,6 +183,7 @@ namespace l99.driver.fanuc.gcode
             get
             {
                 List<Block> blocks = new List<Block>();
+                
                 if(_blocks.ContainsKey(CurrentBlockPointer))
                     blocks.Add(_blocks[CurrentBlockPointer]);
                 
