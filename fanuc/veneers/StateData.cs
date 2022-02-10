@@ -5,9 +5,9 @@ using l99.driver.@base;
 
 namespace l99.driver.fanuc.veneers
 {
-    public class ThreeWayStateData : Veneer
+    public class StateData : Veneer
     {
-        public ThreeWayStateData(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
+        public StateData(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
             lastChangedValue = new
             {

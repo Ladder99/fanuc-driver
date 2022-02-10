@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using l99.driver.@base;
 using Newtonsoft.Json.Linq;
+using NLog.Targets;
 
 namespace l99.driver.fanuc.veneers
 {
@@ -72,6 +73,7 @@ namespace l99.driver.fanuc.veneers
                 var diag_rev_1 = additionalInputs[16];
                 var diag_rev_2 = additionalInputs[17];
                 var diag_power = additionalInputs[18];
+                var sp_acts = additionalInputs[19];
 
                 var spindle_fields = spindle_names.response.cnc_rdspdlname.spdlname.GetType().GetFields();
                 var spindle_value = spindle_fields[current_spindle - 1]
@@ -86,7 +88,8 @@ namespace l99.driver.fanuc.veneers
                     name = spindle_name,
                     //feed = sp_speed.response.cnc_rdspeed.speed.actf.data,
                     //feed_eu = speed_feed_EU(sp_speed.response.cnc_rdspeed.speed.actf.unit),
-                    speed = sp_speed.response.cnc_rdspeed.speed.acts.data / Math.Pow(10.0, sp_speed.response.cnc_rdspeed.speed.acts.dec),
+                    //speed = sp_speed.response.cnc_rdspeed.speed.acts.data / Math.Pow(10.0, sp_speed.response.cnc_rdspeed.speed.acts.dec),
+                    speed = sp_acts.response.cnc_acts2.actualspindle.data[0],
                     speed_eu = speed_feed_EU(sp_speed.response.cnc_rdspeed.speed.acts.unit),
                     load = sp_meter.response.cnc_rdspmeter.loadmeter.spload1.spload.data / Math.Pow(10.0, sp_meter.response.cnc_rdspmeter.loadmeter.spload1.spload.dec),
                     load_eu = load_EU(sp_meter.response.cnc_rdspmeter.loadmeter.spload1.spload.unit),
@@ -95,7 +98,7 @@ namespace l99.driver.fanuc.veneers
                     gearratio = sp_gear.response.cnc_rdspgear.serialspindle.data[0],
                     temperature = diag_temp.response.cnc_diagnoss.diag.cdata,
                     temperature_eu = "celsius",
-                    power = diag_temp.response.cnc_diagnoss.diag.ldata,
+                    power = diag_power.response.cnc_diagnoss.diag.ldata,
                     power_eu = "watt",
                     status_lnk = (diag_lnk.response.cnc_diagnoss.diag.cdata & (1 << 7)) != 0,
                     status_ssa = (diag_comms.response.cnc_diagnoss.diag.cdata & (1 << 7)) != 0,

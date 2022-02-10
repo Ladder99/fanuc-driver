@@ -12,12 +12,12 @@ namespace l99.driver.fanuc.collectors
         
         public override async Task InitPathsAsync()
         {
-            await strategy.Apply(typeof(fanuc.veneers.SysInfo), "sys_info");
+            await strategy.Apply(typeof(fanuc.veneers.SysInfo), "machine");
         }
         
         public override async Task CollectForEachPathAsync(short current_path, dynamic path_marker)
         {
-            await strategy.SetNativeAndPeel("sys_info", await strategy.Platform.SysInfoAsync());
+            await strategy.SetNativeAndPeel("machine", await strategy.Platform.SysInfoAsync());
         }
     }
 }

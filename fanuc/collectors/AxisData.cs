@@ -17,12 +17,12 @@ namespace l99.driver.fanuc.collectors
 
         public override async Task InitAxisAndSpindleAsync()
         {
-            await strategy.Apply(typeof(fanuc.veneers.AxisData), "axis_data", isCompound: true );
+            await strategy.Apply(typeof(fanuc.veneers.AxisData), "axis", isCompound: true );
         }
         
         public override async Task CollectForEachPathAsync(short current_path, dynamic path_marker)
         {
-            await strategy.SetNativeAndPeel("figures", await strategy.Platform.GetFigureAsync(0, 32));
+            await strategy.SetNative("figures", await strategy.Platform.GetFigureAsync(0, 32));
             
             await strategy.SetNative("axis_load", await strategy.Platform.RdSvMeterAsync());
         }
@@ -45,7 +45,7 @@ namespace l99.driver.fanuc.collectors
             
             await strategy.SetNative("axis_dynamic", await strategy.Platform.RdDynamic2Async(current_axis, 44, 2));
             
-            await strategy.Peel("axis_data",
+            await strategy.Peel("axis",
                 current_axis,
                 strategy.Get("axis_names"),
                 strategy.Get("axis_dynamic"), 

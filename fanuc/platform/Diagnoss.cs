@@ -32,6 +32,11 @@ namespace l99.driver.fanuc
             return await Task.FromResult(Diagnoss(number, axis, 4+1*1, 1));
         }
         
+        public async Task<dynamic> DiagnossWordAsync(short number = 0, short axis = 0)
+        {
+            return await Task.FromResult(Diagnoss(number, axis, 4+2*1, 1));
+        }
+        
         public async Task<dynamic> DiagnossDoubleWordAsync(short number = 0, short axis = 0)
         {
             return await Task.FromResult(Diagnoss(number, axis, 4+4*1, 1));
