@@ -16,7 +16,9 @@ machines:
       net_timeout_s: !!int 3
     
     l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
+      - l99.driver.fanuc.collectors.MachineInfo, fanuc
       - l99.driver.fanuc.collectors.GCodeData, fanuc
+      - l99.driver.fanuc.collectors.AxisData, fanuc
       - l99.driver.fanuc.collectors.SpindleData, fanuc
     
     l99.driver.fanuc.transports.MQTT, fanuc:

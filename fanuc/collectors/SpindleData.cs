@@ -107,6 +107,9 @@ namespace l99.driver.fanuc.collectors
             // 1521 dword           spindle rev count 2 (1000 min)
             await strategy.SetNative("diag_rev_2", await strategy.Platform.DiagnossDoubleWordFirstAxisAsync(1521));
             
+            // 4902 dword           spindle power consumption (watt)
+            await strategy.SetNative("diag_power", await strategy.Platform.DiagnossDoubleWordFirstAxisAsync(4902));
+            
             await strategy.Peel("spindle_data", 
                 current_spindle,
                 strategy.Get("spindle_names"), 
@@ -126,7 +129,8 @@ namespace l99.driver.fanuc.collectors
                 strategy.Get("diag_error"),
                 strategy.Get("diag_warn"),
                 strategy.Get("diag_rev_1"),
-                strategy.Get("diag_rev_2"));
+                strategy.Get("diag_rev_2"),
+                strategy.Get("diag_power"));
         }
     }
 }
