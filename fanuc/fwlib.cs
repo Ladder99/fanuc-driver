@@ -14,139 +14,159 @@ using System.Runtime.InteropServices;
 
 namespace l99.driver.fanuc
 {
+    static class FocasLibConstants
+    {
+        public const string FileName =
+#if ARMV7
+            "libfwlib32-linux-armv7.so.1.0.5";
+#elif LINUX64
+            "libfwlib32-linux-x64.so.1.0.5";
+#elif LINUX32_100
+            "libfwlib32-linux-x86.so.1.0.0";
+#elif LINUX32_105
+            "libfwlib32-linux-x86.so.1.0.5";
+#elif WIN64
+            "FWLIB64.dll";
+#else
+            "FWLIB32.dll";
+#endif
+    }
+
     public class Focas
     {
         /* Axis define */
 #if FS30D
-    public const short MAX_AXIS = 32;
+        public const short MAX_AXIS = 32;
 #elif M_AXIS2
-    public const short MAX_AXIS = 24;
+        public const short MAX_AXIS = 24;
 #elif FS15D
-    public const short MAX_AXIS = 10;
+        public const short MAX_AXIS = 10;
 #else
-    public const short MAX_AXIS = 8;
+        public const short MAX_AXIS = 8;
 #endif
 
-    public const short ALL_AXES     = (-1);
-    public const short ALL_SPINDLES = (-1);
-    public const short EW_OK        = (short)focas_ret.EW_OK;
+        public const short ALL_AXES     = (-1);
+        public const short ALL_SPINDLES = (-1);
+        public const short EW_OK        = (short)focas_ret.EW_OK;
 
-    /* Error Codes */
-    public enum focas_ret {
-        EW_PROTOCOL =     (-17),           /* protocol error */
-        EW_SOCKET   =     (-16),           /* Windows socket error */
-        EW_NODLL    =     (-15),           /* DLL not exist error */
-        EW_BUS      =     (-11),           /* bus error */
-        EW_SYSTEM2  =     (-10),           /* system error */
-        EW_HSSB     =     (-9) ,           /* hssb communication error */
-        EW_HANDLE   =     (-8) ,           /* Windows library handle error */
-        EW_VERSION  =     (-7) ,           /* CNC/pmc version missmatch */
-        EW_UNEXP    =     (-6) ,           /* abnormal error */
-        EW_SYSTEM   =     (-5) ,           /* system error */
-        EW_PARITY   =     (-4) ,           /* shared RAM parity error */
-        EW_MMCSYS   =     (-3) ,           /* emm386 or mmcsys install error */
-        EW_RESET    =     (-2) ,           /* reset or stop occured error */
-        EW_BUSY     =     (-1) ,           /* busy error */
-        EW_OK       =     0    ,           /* no problem */
-        EW_FUNC     =     1    ,           /* command prepare error */
-        EW_NOPMC    =     1    ,           /* pmc not exist */
-        EW_LENGTH   =     2    ,           /* data block length error */
-        EW_NUMBER   =     3    ,           /* data number error */
-        EW_RANGE    =     3    ,           /* address range error */
-        EW_ATTRIB   =     4    ,           /* data attribute error */
-        EW_TYPE     =     4    ,           /* data type error */
-        EW_DATA     =     5    ,           /* data error */
-        EW_NOOPT    =     6    ,           /* no option error */
-        EW_PROT     =     7    ,           /* write protect error */
-        EW_OVRFLOW  =     8    ,           /* memory overflow error */
-        EW_PARAM    =     9    ,           /* cnc parameter not correct error */
-        EW_BUFFER   =     10   ,           /* buffer error */
-        EW_PATH     =     11   ,           /* path error */
-        EW_MODE     =     12   ,           /* cnc mode error */
-        EW_REJECT   =     13   ,           /* execution rejected error */
-        EW_DTSRVR   =     14   ,           /* data server error */
-        EW_ALARM    =     15   ,           /* alarm has been occurred */
-        EW_STOP     =     16   ,           /* CNC is not running */
-        EW_PASSWD   =     17   ,           /* protection data error */
-    /*
-        Result codes of DNC operation
-    */
-        DNC_NORMAL  =  (-1)    ,           /* normal completed */
-        DNC_CANCEL  =  (-32768),           /* DNC operation was canceled by CNC */
-        DNC_OPENERR =  (-514)  ,           /* file open error */
-        DNC_NOFILE  =  (-516)  ,           /* file not found */
-        DNC_READERR =  (-517)              /* read error */
-    };
+        /* Error Codes */
+        public enum focas_ret {
+            EW_PROTOCOL =     (-17),           /* protocol error */
+            EW_SOCKET   =     (-16),           /* Windows socket error */
+            EW_NODLL    =     (-15),           /* DLL not exist error */
+            EW_BUS      =     (-11),           /* bus error */
+            EW_SYSTEM2  =     (-10),           /* system error */
+            EW_HSSB     =     (-9) ,           /* hssb communication error */
+            EW_HANDLE   =     (-8) ,           /* Windows library handle error */
+            EW_VERSION  =     (-7) ,           /* CNC/pmc version missmatch */
+            EW_UNEXP    =     (-6) ,           /* abnormal error */
+            EW_SYSTEM   =     (-5) ,           /* system error */
+            EW_PARITY   =     (-4) ,           /* shared RAM parity error */
+            EW_MMCSYS   =     (-3) ,           /* emm386 or mmcsys install error */
+            EW_RESET    =     (-2) ,           /* reset or stop occured error */
+            EW_BUSY     =     (-1) ,           /* busy error */
+            EW_OK       =     0    ,           /* no problem */
+            EW_FUNC     =     1    ,           /* command prepare error */
+            EW_NOPMC    =     1    ,           /* pmc not exist */
+            EW_LENGTH   =     2    ,           /* data block length error */
+            EW_NUMBER   =     3    ,           /* data number error */
+            EW_RANGE    =     3    ,           /* address range error */
+            EW_ATTRIB   =     4    ,           /* data attribute error */
+            EW_TYPE     =     4    ,           /* data type error */
+            EW_DATA     =     5    ,           /* data error */
+            EW_NOOPT    =     6    ,           /* no option error */
+            EW_PROT     =     7    ,           /* write protect error */
+            EW_OVRFLOW  =     8    ,           /* memory overflow error */
+            EW_PARAM    =     9    ,           /* cnc parameter not correct error */
+            EW_BUFFER   =     10   ,           /* buffer error */
+            EW_PATH     =     11   ,           /* path error */
+            EW_MODE     =     12   ,           /* cnc mode error */
+            EW_REJECT   =     13   ,           /* execution rejected error */
+            EW_DTSRVR   =     14   ,           /* data server error */
+            EW_ALARM    =     15   ,           /* alarm has been occurred */
+            EW_STOP     =     16   ,           /* CNC is not running */
+            EW_PASSWD   =     17   ,           /* protection data error */
+        /*
+            Result codes of DNC operation
+        */
+            DNC_NORMAL  =  (-1)    ,           /* normal completed */
+            DNC_CANCEL  =  (-32768),           /* DNC operation was canceled by CNC */
+            DNC_OPENERR =  (-514)  ,           /* file open error */
+            DNC_NOFILE  =  (-516)  ,           /* file not found */
+            DNC_READERR =  (-517)              /* read error */
+        };
 
-/*--------------------*/
-/*                    */
-/* Structure Template */
-/*                    */
-/*--------------------*/
-/*-------------------------------------*/
-/* CNC: Control axis / spindle related */
-/*-------------------------------------*/
+        /*--------------------*/
+        /*                    */
+        /* Structure Template */
+        /*                    */
+        /*--------------------*/
+        /*-------------------------------------*/
+        /* CNC: Control axis / spindle related */
+        /*-------------------------------------*/
 
-    /* cnc_actf:read actual axis feedrate(F) */
-    /* cnc_acts:read actual spindle speed(S) */
-    [StructLayout(LayoutKind.Sequential,Pack=4)]
-    public class ODBACT 
-    {
-        [MarshalAs(UnmanagedType.ByValArray,SizeConst=2)]
-        public short[]  dummy;      /* dummy */
-        public int      data ;      /* actual feed / actual spindle */
-    }
+        /* cnc_actf:read actual axis feedrate(F) */
+        /* cnc_acts:read actual spindle speed(S) */
+        [StructLayout(LayoutKind.Sequential,Pack=4)]
+        public class ODBACT 
+        {
+            [MarshalAs(UnmanagedType.ByValArray,SizeConst=2)]
+            public short[]  dummy;      /* dummy */
+            public int      data ;      /* actual feed / actual spindle */
+        }
 
-    /* cnc_acts2:read actual spindle speed(S) */
-    /* (All or specified ) */
-    [StructLayout(LayoutKind.Sequential,Pack=4)]
-    public class ODBACT2 
-    {
-        public short    datano;     /* spindle number */
-        public short    type;       /* dummy */
-        [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
-        public int[]    data;       /* spindle data */
-    }
+        /* cnc_acts2:read actual spindle speed(S) */
+        /* (All or specified ) */
+        [StructLayout(LayoutKind.Sequential,Pack=4)]
+        public class ODBACT2 
+        {
+            public short    datano;     /* spindle number */
+            public short    type;       /* dummy */
+            [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
+            public int[]    data;       /* spindle data */
+        }
 
-    /* cnc_absolute:read absolute axis position */
-    /* cnc_machine:read machine axis position */
-    /* cnc_relative:read relative axis position */
-    /* cnc_distance:read distance to go */
-    /* cnc_skip:read skip position */
-    /* cnc_srvdelay:read servo delay value */
-    /* cnc_accdecdly:read acceleration/deceleration delay value */
-    /* cnc_absolute2:read absolute axis position 2 */
-    /* cnc_relative2:read relative axis position 2 */
-    [StructLayout(LayoutKind.Sequential,Pack=4)]
-    public class ODBAXIS 
-    {
-        public short    dummy ;  /* dummy */
-        public short    type ;   /* axis number */
-        [MarshalAs(UnmanagedType.ByValArray,SizeConst=MAX_AXIS)]
-        public int[]    data;      /* data value */
-    }
+        /* cnc_absolute:read absolute axis position */
+        /* cnc_machine:read machine axis position */
+        /* cnc_relative:read relative axis position */
+        /* cnc_distance:read distance to go */
+        /* cnc_skip:read skip position */
+        /* cnc_srvdelay:read servo delay value */
+        /* cnc_accdecdly:read acceleration/deceleration delay value */
+        /* cnc_absolute2:read absolute axis position 2 */
+        /* cnc_relative2:read relative axis position 2 */
+        [StructLayout(LayoutKind.Sequential,Pack=4)]
+        public class ODBAXIS 
+        {
+            public short    dummy ;  /* dummy */
+            public short    type ;   /* axis number */
+            [MarshalAs(UnmanagedType.ByValArray,SizeConst=MAX_AXIS)]
+            public int[]    data;      /* data value */
+        }
 
-    /* cnc_rddynamic:read all dynamic data */
-    [StructLayout(LayoutKind.Sequential,Pack=4)]
-    public class FAXIS 
-    {
-        [MarshalAs(UnmanagedType.ByValArray,SizeConst=MAX_AXIS)]
-        public int[]    absolute;    /* absolute position */
-        [MarshalAs(UnmanagedType.ByValArray,SizeConst=MAX_AXIS)]
-        public int[]    machine;     /* machine position */
-        [MarshalAs(UnmanagedType.ByValArray,SizeConst=MAX_AXIS)]
-        public int[]    relative;    /* relative position */
-        [MarshalAs(UnmanagedType.ByValArray,SizeConst=MAX_AXIS)]
-        public int[]    distance;    /* distance to go */
-    }
-    [StructLayout(LayoutKind.Sequential,Pack=4)]
-    public class OAXIS 
-    {
-        public int absolute ;  /* absolute position */
-        public int machine ;   /* machine position */
-        public int relative ;  /* relative position */
-        public int distance ;  /* distance to go */
-    }
+        /* cnc_rddynamic:read all dynamic data */
+        [StructLayout(LayoutKind.Sequential,Pack=4)]
+        public class FAXIS 
+        {
+            [MarshalAs(UnmanagedType.ByValArray,SizeConst=MAX_AXIS)]
+            public int[]    absolute;    /* absolute position */
+            [MarshalAs(UnmanagedType.ByValArray,SizeConst=MAX_AXIS)]
+            public int[]    machine;     /* machine position */
+            [MarshalAs(UnmanagedType.ByValArray,SizeConst=MAX_AXIS)]
+            public int[]    relative;    /* relative position */
+            [MarshalAs(UnmanagedType.ByValArray,SizeConst=MAX_AXIS)]
+            public int[]    distance;    /* distance to go */
+        }
+        
+        [StructLayout(LayoutKind.Sequential,Pack=4)]
+        public class OAXIS 
+        {
+            public int absolute ;  /* absolute position */
+            public int machine ;   /* machine position */
+            public int relative ;  /* relative position */
+            public int distance ;  /* distance to go */
+        }
+        
 #if (!ONO8D)
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class ODBDY_1
@@ -176,32 +196,33 @@ namespace l99.driver.fanuc
             public OAXIS pos = new OAXIS();
         }
 #else
-    [StructLayout(LayoutKind.Sequential, Pack=4)]
-    public class ODBDY_1
-    {
-        public short  dummy ;
-        public short  axis ;      /* axis number */
-        public short  alarm ;     /* alarm status */
-        public int    prgnum ;    /* current program number */
-        public int    prgmnum ;   /* main program number */
-        public int    seqnum ;    /* current sequence number */
-        public int    actf ;      /* actual feedrate */
-        public int    acts ;      /* actual spindle speed */
-        public FAXIS  pos = new FAXIS();
-    }
-    [StructLayout(LayoutKind.Sequential, Pack=4)]
-    public class ODBDY_2
-    {
-        public short  dummy ;
-        public short  axis ;      /* axis number */
-        public short  alarm ;     /* alarm status */
-        public int    prgnum ;    /* current program number */
-        public int    prgmnum ;   /* main program number */
-        public int    seqnum ;    /* current sequence number */
-        public int    actf ;      /* actual feedrate */
-        public int    acts ;      /* actual spindle speed */
-        public OAXIS  pos = new OAXIS();
-    }
+        [StructLayout(LayoutKind.Sequential, Pack=4)]
+        public class ODBDY_1
+        {
+            public short  dummy ;
+            public short  axis ;      /* axis number */
+            public short  alarm ;     /* alarm status */
+            public int    prgnum ;    /* current program number */
+            public int    prgmnum ;   /* main program number */
+            public int    seqnum ;    /* current sequence number */
+            public int    actf ;      /* actual feedrate */
+            public int    acts ;      /* actual spindle speed */
+            public FAXIS  pos = new FAXIS();
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack=4)]
+        public class ODBDY_2
+        {
+            public short  dummy ;
+            public short  axis ;      /* axis number */
+            public short  alarm ;     /* alarm status */
+            public int    prgnum ;    /* current program number */
+            public int    prgmnum ;   /* main program number */
+            public int    seqnum ;    /* current sequence number */
+            public int    actf ;      /* actual feedrate */
+            public int    acts ;      /* actual spindle speed */
+            public OAXIS  pos = new OAXIS();
+        }
 #endif
 
         /* cnc_rddynamic2:read all dynamic data */
@@ -218,6 +239,7 @@ namespace l99.driver.fanuc
             public int acts;      /* actual spindle speed */
             public FAXIS pos = new FAXIS();
         }
+        
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class ODBDY2_2
         {
@@ -296,53 +318,54 @@ namespace l99.driver.fanuc
         }
 
 #if M_AXIS2
-    [StructLayout(LayoutKind.Sequential,Pack=4)]
-    public class ODBPOS
-    {
-        public POSELMALL p1=new POSELMALL();
-        public POSELMALL p2=new POSELMALL();
-        public POSELMALL p3=new POSELMALL();
-        public POSELMALL p4=new POSELMALL();
-        public POSELMALL p5=new POSELMALL();
-        public POSELMALL p6=new POSELMALL();
-        public POSELMALL p7=new POSELMALL();
-        public POSELMALL p8=new POSELMALL();
-        public POSELMALL p9=new POSELMALL();
-        public POSELMALL p10=new POSELMALL();
-        public POSELMALL p11=new POSELMALL();
-        public POSELMALL p12=new POSELMALL();
-        public POSELMALL p13=new POSELMALL();
-        public POSELMALL p14=new POSELMALL();
-        public POSELMALL p15=new POSELMALL();
-        public POSELMALL p16=new POSELMALL();
-        public POSELMALL p17=new POSELMALL();
-        public POSELMALL p18=new POSELMALL();
-        public POSELMALL p19=new POSELMALL();
-        public POSELMALL p20=new POSELMALL();
-        public POSELMALL p21=new POSELMALL();
-        public POSELMALL p22=new POSELMALL();
-        public POSELMALL p23=new POSELMALL();
-        public POSELMALL p24=new POSELMALL();
-        // In case of 24 axes.
-        // if you need the more information, you must be add the member.
-    }
+        [StructLayout(LayoutKind.Sequential,Pack=4)]
+        public class ODBPOS
+        {
+            public POSELMALL p1=new POSELMALL();
+            public POSELMALL p2=new POSELMALL();
+            public POSELMALL p3=new POSELMALL();
+            public POSELMALL p4=new POSELMALL();
+            public POSELMALL p5=new POSELMALL();
+            public POSELMALL p6=new POSELMALL();
+            public POSELMALL p7=new POSELMALL();
+            public POSELMALL p8=new POSELMALL();
+            public POSELMALL p9=new POSELMALL();
+            public POSELMALL p10=new POSELMALL();
+            public POSELMALL p11=new POSELMALL();
+            public POSELMALL p12=new POSELMALL();
+            public POSELMALL p13=new POSELMALL();
+            public POSELMALL p14=new POSELMALL();
+            public POSELMALL p15=new POSELMALL();
+            public POSELMALL p16=new POSELMALL();
+            public POSELMALL p17=new POSELMALL();
+            public POSELMALL p18=new POSELMALL();
+            public POSELMALL p19=new POSELMALL();
+            public POSELMALL p20=new POSELMALL();
+            public POSELMALL p21=new POSELMALL();
+            public POSELMALL p22=new POSELMALL();
+            public POSELMALL p23=new POSELMALL();
+            public POSELMALL p24=new POSELMALL();
+            // In case of 24 axes.
+            // if you need the more information, you must be add the member.
+        }
 #elif FS15D
-    [StructLayout(LayoutKind.Sequential,Pack=4)]
-    public class ODBPOS
-    {
-        public POSELMALL p1=new POSELMALL();
-        public POSELMALL p2=new POSELMALL();
-        public POSELMALL p3=new POSELMALL();
-        public POSELMALL p4=new POSELMALL();
-        public POSELMALL p5=new POSELMALL();
-        public POSELMALL p6=new POSELMALL();
-        public POSELMALL p7=new POSELMALL();
-        public POSELMALL p8=new POSELMALL();
-        public POSELMALL p9=new POSELMALL();
-        public POSELMALL p10=new POSELMALL();
-        // In case of 10 axes.
-        // if you need the more information, you must be add the member.
-    }
+
+        [StructLayout(LayoutKind.Sequential,Pack=4)]
+        public class ODBPOS
+        {
+            public POSELMALL p1=new POSELMALL();
+            public POSELMALL p2=new POSELMALL();
+            public POSELMALL p3=new POSELMALL();
+            public POSELMALL p4=new POSELMALL();
+            public POSELMALL p5=new POSELMALL();
+            public POSELMALL p6=new POSELMALL();
+            public POSELMALL p7=new POSELMALL();
+            public POSELMALL p8=new POSELMALL();
+            public POSELMALL p9=new POSELMALL();
+            public POSELMALL p10=new POSELMALL();
+            // In case of 10 axes.
+            // if you need the more information, you must be add the member.
+        }
 #else
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class ODBPOS
@@ -367,54 +390,55 @@ namespace l99.driver.fanuc
             public POSELM input = new POSELM();   /* input unit */
             public POSELM output = new POSELM();  /* output unit */
         }
+        
 #if M_AXIS2
-    [StructLayout(LayoutKind.Sequential,Pack=4)]
-    public class ODBHND
-    {
-        public ODBHND_data p1=new ODBHND_data();
-        public ODBHND_data p2=new ODBHND_data();
-        public ODBHND_data p3=new ODBHND_data();
-        public ODBHND_data p4=new ODBHND_data();
-        public ODBHND_data p5=new ODBHND_data();
-        public ODBHND_data p6=new ODBHND_data();
-        public ODBHND_data p7=new ODBHND_data();
-        public ODBHND_data p8=new ODBHND_data();
-        public ODBHND_data p9=new ODBHND_data();
-        public ODBHND_data p10=new ODBHND_data();
-        public ODBHND_data p11=new ODBHND_data();
-        public ODBHND_data p12=new ODBHND_data();
-        public ODBHND_data p13=new ODBHND_data();
-        public ODBHND_data p14=new ODBHND_data();
-        public ODBHND_data p15=new ODBHND_data();
-        public ODBHND_data p16=new ODBHND_data();
-        public ODBHND_data p17=new ODBHND_data();
-        public ODBHND_data p18=new ODBHND_data();
-        public ODBHND_data p19=new ODBHND_data();
-        public ODBHND_data p20=new ODBHND_data();
-        public ODBHND_data p21=new ODBHND_data();
-        public ODBHND_data p22=new ODBHND_data();
-        public ODBHND_data p23=new ODBHND_data();
-        public ODBHND_data p24=new ODBHND_data();
-        // In case of 24 axes.
-        // if you need the more information, you must be add the member.
-    }
+        [StructLayout(LayoutKind.Sequential,Pack=4)]
+        public class ODBHND
+        {
+            public ODBHND_data p1=new ODBHND_data();
+            public ODBHND_data p2=new ODBHND_data();
+            public ODBHND_data p3=new ODBHND_data();
+            public ODBHND_data p4=new ODBHND_data();
+            public ODBHND_data p5=new ODBHND_data();
+            public ODBHND_data p6=new ODBHND_data();
+            public ODBHND_data p7=new ODBHND_data();
+            public ODBHND_data p8=new ODBHND_data();
+            public ODBHND_data p9=new ODBHND_data();
+            public ODBHND_data p10=new ODBHND_data();
+            public ODBHND_data p11=new ODBHND_data();
+            public ODBHND_data p12=new ODBHND_data();
+            public ODBHND_data p13=new ODBHND_data();
+            public ODBHND_data p14=new ODBHND_data();
+            public ODBHND_data p15=new ODBHND_data();
+            public ODBHND_data p16=new ODBHND_data();
+            public ODBHND_data p17=new ODBHND_data();
+            public ODBHND_data p18=new ODBHND_data();
+            public ODBHND_data p19=new ODBHND_data();
+            public ODBHND_data p20=new ODBHND_data();
+            public ODBHND_data p21=new ODBHND_data();
+            public ODBHND_data p22=new ODBHND_data();
+            public ODBHND_data p23=new ODBHND_data();
+            public ODBHND_data p24=new ODBHND_data();
+            // In case of 24 axes.
+            // if you need the more information, you must be add the member.
+        }
 #elif FS15D
-    [StructLayout(LayoutKind.Sequential,Pack=4)]
-    public class ODBHND
-    {
-        public ODBHND_data p1=new ODBHND_data();
-        public ODBHND_data p2=new ODBHND_data();
-        public ODBHND_data p3=new ODBHND_data();
-        public ODBHND_data p4=new ODBHND_data();
-        public ODBHND_data p5=new ODBHND_data();
-        public ODBHND_data p6=new ODBHND_data();
-        public ODBHND_data p7=new ODBHND_data();
-        public ODBHND_data p8=new ODBHND_data();
-        public ODBHND_data p9=new ODBHND_data();
-        public ODBHND_data p10=new ODBHND_data();
-        // In case of 10 axes.
-        // if you need the more information, you must be add the member.
-    }
+        [StructLayout(LayoutKind.Sequential,Pack=4)]
+        public class ODBHND
+        {
+            public ODBHND_data p1=new ODBHND_data();
+            public ODBHND_data p2=new ODBHND_data();
+            public ODBHND_data p3=new ODBHND_data();
+            public ODBHND_data p4=new ODBHND_data();
+            public ODBHND_data p5=new ODBHND_data();
+            public ODBHND_data p6=new ODBHND_data();
+            public ODBHND_data p7=new ODBHND_data();
+            public ODBHND_data p8=new ODBHND_data();
+            public ODBHND_data p9=new ODBHND_data();
+            public ODBHND_data p10=new ODBHND_data();
+            // In case of 10 axes.
+            // if you need the more information, you must be add the member.
+        }
 #else
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class ODBHND
@@ -466,49 +490,49 @@ namespace l99.driver.fanuc
         }
 
 #if M_AXIS2
-    [StructLayout(LayoutKind.Sequential,Pack=4)]
-    public class ODBSVLOAD
-    {
-        public LOADELM svload1 = new LOADELM();     /* servo load meter */
-        public LOADELM svload2 = new LOADELM();     /* servo load meter */
-        public LOADELM svload3 = new LOADELM();     /* servo load meter */
-        public LOADELM svload4 = new LOADELM();     /* servo load meter */
-        public LOADELM svload5 = new LOADELM();     /* servo load meter */
-        public LOADELM svload6 = new LOADELM();     /* servo load meter */
-        public LOADELM svload7 = new LOADELM();     /* servo load meter */
-        public LOADELM svload8 = new LOADELM();     /* servo load meter */
-        public LOADELM svload9 = new LOADELM();     /* servo load meter */
-        public LOADELM svload10= new LOADELM();     /* servo load meter */
-        public LOADELM svload11= new LOADELM();     /* servo load meter */
-        public LOADELM svload12= new LOADELM();     /* servo load meter */
-        public LOADELM svload13= new LOADELM();     /* servo load meter */
-        public LOADELM svload14= new LOADELM();     /* servo load meter */
-        public LOADELM svload15= new LOADELM();     /* servo load meter */
-        public LOADELM svload16= new LOADELM();     /* servo load meter */
-        public LOADELM svload17= new LOADELM();     /* servo load meter */
-        public LOADELM svload18= new LOADELM();     /* servo load meter */
-        public LOADELM svload19= new LOADELM();     /* servo load meter */
-        public LOADELM svload20= new LOADELM();     /* servo load meter */
-        public LOADELM svload21= new LOADELM();     /* servo load meter */
-        public LOADELM svload22= new LOADELM();     /* servo load meter */
-        public LOADELM svload23= new LOADELM();     /* servo load meter */
-        public LOADELM svload24= new LOADELM();     /* servo load meter */
-    }
+        [StructLayout(LayoutKind.Sequential,Pack=4)]
+        public class ODBSVLOAD
+        {
+            public LOADELM svload1 = new LOADELM();     /* servo load meter */
+            public LOADELM svload2 = new LOADELM();     /* servo load meter */
+            public LOADELM svload3 = new LOADELM();     /* servo load meter */
+            public LOADELM svload4 = new LOADELM();     /* servo load meter */
+            public LOADELM svload5 = new LOADELM();     /* servo load meter */
+            public LOADELM svload6 = new LOADELM();     /* servo load meter */
+            public LOADELM svload7 = new LOADELM();     /* servo load meter */
+            public LOADELM svload8 = new LOADELM();     /* servo load meter */
+            public LOADELM svload9 = new LOADELM();     /* servo load meter */
+            public LOADELM svload10= new LOADELM();     /* servo load meter */
+            public LOADELM svload11= new LOADELM();     /* servo load meter */
+            public LOADELM svload12= new LOADELM();     /* servo load meter */
+            public LOADELM svload13= new LOADELM();     /* servo load meter */
+            public LOADELM svload14= new LOADELM();     /* servo load meter */
+            public LOADELM svload15= new LOADELM();     /* servo load meter */
+            public LOADELM svload16= new LOADELM();     /* servo load meter */
+            public LOADELM svload17= new LOADELM();     /* servo load meter */
+            public LOADELM svload18= new LOADELM();     /* servo load meter */
+            public LOADELM svload19= new LOADELM();     /* servo load meter */
+            public LOADELM svload20= new LOADELM();     /* servo load meter */
+            public LOADELM svload21= new LOADELM();     /* servo load meter */
+            public LOADELM svload22= new LOADELM();     /* servo load meter */
+            public LOADELM svload23= new LOADELM();     /* servo load meter */
+            public LOADELM svload24= new LOADELM();     /* servo load meter */
+        }
 #elif FS15D
-    [StructLayout(LayoutKind.Sequential,Pack=4)]
-    public class ODBSVLOAD
-    {
-        public LOADELM svload1 = new LOADELM();     /* servo load meter */
-        public LOADELM svload2 = new LOADELM();     /* servo load meter */
-        public LOADELM svload3 = new LOADELM();     /* servo load meter */
-        public LOADELM svload4 = new LOADELM();     /* servo load meter */
-        public LOADELM svload5 = new LOADELM();     /* servo load meter */
-        public LOADELM svload6 = new LOADELM();     /* servo load meter */
-        public LOADELM svload7 = new LOADELM();     /* servo load meter */
-        public LOADELM svload8 = new LOADELM();     /* servo load meter */
-        public LOADELM svload9 = new LOADELM();     /* servo load meter */
-        public LOADELM svload10= new LOADELM();     /* servo load meter */
-    }
+        [StructLayout(LayoutKind.Sequential,Pack=4)]
+        public class ODBSVLOAD
+        {
+            public LOADELM svload1 = new LOADELM();     /* servo load meter */
+            public LOADELM svload2 = new LOADELM();     /* servo load meter */
+            public LOADELM svload3 = new LOADELM();     /* servo load meter */
+            public LOADELM svload4 = new LOADELM();     /* servo load meter */
+            public LOADELM svload5 = new LOADELM();     /* servo load meter */
+            public LOADELM svload6 = new LOADELM();     /* servo load meter */
+            public LOADELM svload7 = new LOADELM();     /* servo load meter */
+            public LOADELM svload8 = new LOADELM();     /* servo load meter */
+            public LOADELM svload9 = new LOADELM();     /* servo load meter */
+            public LOADELM svload10= new LOADELM();     /* servo load meter */
+        }
 #else
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class ODBSVLOAD
@@ -538,6 +562,7 @@ namespace l99.driver.fanuc
             public LOADELM spload = new LOADELM();     /* spindle load meter */
             public LOADELM spspeed = new LOADELM();    /* spindle speed */
         }
+        
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class ODBSPLOAD
         {
@@ -597,20 +622,20 @@ namespace l99.driver.fanuc
             public char[] data; /* data */
         } /* In case that the number of data is 256 */
 
-    public class ODBUP3
-    {
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 256)]
-        public char[] data; /* data */
-    } /* In case that the number of data is 256 */
+        public class ODBUP3
+        {
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 256)]
+            public char[] data; /* data */
+        } /* In case that the number of data is 256 */
 
-    /* cnc_buff:read buffer status for downloading/verification NC program */
-    [StructLayout(LayoutKind.Sequential,Pack=4)]
-    public class ODBBUF
-    {
-        [MarshalAs(UnmanagedType.ByValArray,SizeConst=2)]
-        public short[] dummy;  /* dummy */
-        public short   data ;  /* buffer status */
-    }
+        /* cnc_buff:read buffer status for downloading/verification NC program */
+        [StructLayout(LayoutKind.Sequential,Pack=4)]
+        public class ODBBUF
+        {
+            [MarshalAs(UnmanagedType.ByValArray,SizeConst=2)]
+            public short[] dummy;  /* dummy */
+            public short   data ;  /* buffer status */
+        }
 
         /* cnc_rdprogdir:read program directory */
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
@@ -639,6 +664,7 @@ namespace l99.driver.fanuc
 
         /* cnc_rdprgnum:read program number under execution */
 #if (!ONO8D)
+        
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class ODBPRO
         {
@@ -648,14 +674,14 @@ namespace l99.driver.fanuc
             public short mdata;     /* main program number */
         }
 #else
-    [StructLayout(LayoutKind.Sequential,Pack=4)]
-    public class ODBPRO
-    {
-        [MarshalAs(UnmanagedType.ByValArray,SizeConst=2)]
-        public short[] dummy ;     /* dummy */
-        public int     data ;      /* running program number */
-        public int     mdata ;     /* main program number */
-    }
+        [StructLayout(LayoutKind.Sequential,Pack=4)]
+        public class ODBPRO
+        {
+            [MarshalAs(UnmanagedType.ByValArray,SizeConst=2)]
+            public short[] dummy ;     /* dummy */
+            public int     data ;      /* running program number */
+            public int     mdata ;     /* main program number */
+        }
 #endif
 
         /* cnc_exeprgname:read program name under execution */
@@ -678,6 +704,7 @@ namespace l99.driver.fanuc
 
         /* cnc_rdmdipntr:read execution pointer for MDI operation */
 #if (!ONO8D)
+        
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class ODBMDIP
         {
@@ -687,14 +714,14 @@ namespace l99.driver.fanuc
             public int crntpntr;   /* prepare pointer */
         }
 #else
-    [StructLayout(LayoutKind.Sequential,Pack=4)]
-    public class ODBMDIP
-    {
-        public int     mdiprog;    /* exec. program number */
-        public int     mdipntr;    /* exec. pointer */
-        public int     crntprog;   /* prepare program number */
-        public int     crntpntr;   /* prepare pointer */
-    }
+        [StructLayout(LayoutKind.Sequential,Pack=4)]
+        public class ODBMDIP
+        {
+            public int     mdiprog;    /* exec. program number */
+            public int     mdipntr;    /* exec. pointer */
+            public int     crntprog;   /* prepare program number */
+            public int     crntpntr;   /* prepare pointer */
+        }
 #endif
 
         /* cnc_rdaxisdata:read various axis data */
@@ -709,6 +736,7 @@ namespace l99.driver.fanuc
             public short flag;                       /* flags */
             public short reserve;                    /* reserve */
         }
+        
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class ODBAXDT
         {
@@ -1003,18 +1031,21 @@ namespace l99.driver.fanuc
            MarshalAs(UnmanagedType.ByValArray, SizeConst = 5)]
             public int[] t_ofs = new int[5];     /* T Each, 4-byte */
         } /* In case that the number of data is 5 */
+        
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class OFS_2
         {
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2 * 5)]
             public int[] m_ofs_b = new int[10];  /* M-B All */
         } /* In case that the number of data is 5 */
+        
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class OFS_3
         {
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4 * 5)]
             public int[] m_ofs_c = new int[20];   /* M-C All */
         } /* In case that the number of data is 5 */
+        
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class T_OFS_A
         {
@@ -1022,6 +1053,7 @@ namespace l99.driver.fanuc
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
             public int[] data;
         } /* T-A All */
+        
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class T_OFS_A_data
         {
@@ -1031,6 +1063,7 @@ namespace l99.driver.fanuc
             public T_OFS_A data4 = new T_OFS_A();
             public T_OFS_A data5 = new T_OFS_A();
         } /* In case that the number of data is 5 */
+        
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class T_OFS_B
         {
@@ -1038,6 +1071,7 @@ namespace l99.driver.fanuc
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
             public int[] data;
         } /* T-B All */
+        
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class T_OFS_B_data
         {
@@ -1047,6 +1081,7 @@ namespace l99.driver.fanuc
             public T_OFS_B data4 = new T_OFS_B();
             public T_OFS_B data5 = new T_OFS_B();
         } /* In case that the number of data is 5 */
+        
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class IODBTO_1_1
         {
@@ -1055,6 +1090,7 @@ namespace l99.driver.fanuc
             public short datano_e;  /* end offset number */
             public OFS_1 ofs = new OFS_1();
         }
+        
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class IODBTO_1_2
         {
@@ -1063,6 +1099,7 @@ namespace l99.driver.fanuc
             public short datano_e;  /* end offset number */
             public OFS_2 ofs = new OFS_2();
         }
+        
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class IODBTO_1_3
         {
@@ -1071,6 +1108,7 @@ namespace l99.driver.fanuc
             public short datano_e;  /* end offset number */
             public OFS_3 ofs = new OFS_3();
         }
+        
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class IODBTO_2
         {
@@ -1079,6 +1117,7 @@ namespace l99.driver.fanuc
             public short datano_e;  /* end offset number */
             public T_OFS_A_data tofsa = new T_OFS_A_data();
         }
+        
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class IODBTO_3
         {
@@ -1137,50 +1176,51 @@ namespace l99.driver.fanuc
             public int prm_val;     /* data of real parameter */
             public int dec_val;     /* decimal point of real parameter */
         }
+        
 #if M_AXIS2
-    [StructLayout(LayoutKind.Sequential,Pack=4)]
-    public class REALPRMS
-    {
-        public REALPRM rdata1=new REALPRM();
-        public REALPRM rdata2=new REALPRM();
-        public REALPRM rdata3=new REALPRM();
-        public REALPRM rdata4=new REALPRM();
-        public REALPRM rdata5=new REALPRM();
-        public REALPRM rdata6=new REALPRM();
-        public REALPRM rdata7=new REALPRM();
-        public REALPRM rdata8=new REALPRM();
-        public REALPRM rdata9=new REALPRM();
-        public REALPRM rdata10=new REALPRM();
-        public REALPRM rdata11=new REALPRM();
-        public REALPRM rdata12=new REALPRM();
-        public REALPRM rdata13=new REALPRM();
-        public REALPRM rdata14=new REALPRM();
-        public REALPRM rdata15=new REALPRM();
-        public REALPRM rdata16=new REALPRM();
-        public REALPRM rdata17=new REALPRM();
-        public REALPRM rdata18=new REALPRM();
-        public REALPRM rdata19=new REALPRM();
-        public REALPRM rdata20=new REALPRM();
-        public REALPRM rdata21=new REALPRM();
-        public REALPRM rdata22=new REALPRM();
-        public REALPRM rdata23=new REALPRM();
-        public REALPRM rdata24=new REALPRM();
-    } /* In case that the number of alarm is 24 */
+        [StructLayout(LayoutKind.Sequential,Pack=4)]
+        public class REALPRMS
+        {
+            public REALPRM rdata1=new REALPRM();
+            public REALPRM rdata2=new REALPRM();
+            public REALPRM rdata3=new REALPRM();
+            public REALPRM rdata4=new REALPRM();
+            public REALPRM rdata5=new REALPRM();
+            public REALPRM rdata6=new REALPRM();
+            public REALPRM rdata7=new REALPRM();
+            public REALPRM rdata8=new REALPRM();
+            public REALPRM rdata9=new REALPRM();
+            public REALPRM rdata10=new REALPRM();
+            public REALPRM rdata11=new REALPRM();
+            public REALPRM rdata12=new REALPRM();
+            public REALPRM rdata13=new REALPRM();
+            public REALPRM rdata14=new REALPRM();
+            public REALPRM rdata15=new REALPRM();
+            public REALPRM rdata16=new REALPRM();
+            public REALPRM rdata17=new REALPRM();
+            public REALPRM rdata18=new REALPRM();
+            public REALPRM rdata19=new REALPRM();
+            public REALPRM rdata20=new REALPRM();
+            public REALPRM rdata21=new REALPRM();
+            public REALPRM rdata22=new REALPRM();
+            public REALPRM rdata23=new REALPRM();
+            public REALPRM rdata24=new REALPRM();
+        } /* In case that the number of alarm is 24 */
 #elif FS15D
-    [StructLayout(LayoutKind.Sequential,Pack=4)]
-    public class REALPRMS
-    {
-        public REALPRM rdata1=new REALPRM();
-        public REALPRM rdata2=new REALPRM();
-        public REALPRM rdata3=new REALPRM();
-        public REALPRM rdata4=new REALPRM();
-        public REALPRM rdata5=new REALPRM();
-        public REALPRM rdata6=new REALPRM();
-        public REALPRM rdata7=new REALPRM();
-        public REALPRM rdata8=new REALPRM();
-        public REALPRM rdata9=new REALPRM();
-        public REALPRM rdata10=new REALPRM();
-    } /* In case that the number of alarm is 10 */
+        [StructLayout(LayoutKind.Sequential,Pack=4)]
+        public class REALPRMS
+        {
+            public REALPRM rdata1=new REALPRM();
+            public REALPRM rdata2=new REALPRM();
+            public REALPRM rdata3=new REALPRM();
+            public REALPRM rdata4=new REALPRM();
+            public REALPRM rdata5=new REALPRM();
+            public REALPRM rdata6=new REALPRM();
+            public REALPRM rdata7=new REALPRM();
+            public REALPRM rdata8=new REALPRM();
+            public REALPRM rdata9=new REALPRM();
+            public REALPRM rdata10=new REALPRM();
+        } /* In case that the number of alarm is 10 */
 #else
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class REALPRMS
@@ -1307,12 +1347,14 @@ namespace l99.driver.fanuc
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 10)]
             public int[] prm = new int[10];
         }
+        
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class IODBPRM_data
         {
             public int prm_val;   /* parameter / setting data */
             public int dec_val;
         }
+        
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class IODBPRM1
         {
@@ -1349,6 +1391,7 @@ namespace l99.driver.fanuc
             public IODBPRM_data data31 = new IODBPRM_data();
             public IODBPRM_data data32 = new IODBPRM_data();
         }
+        
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class IODBPRM2
         {
@@ -1359,6 +1402,7 @@ namespace l99.driver.fanuc
             public short unit;      /* unit information */
             public IODBPRM1 data = new IODBPRM1();
         }
+        
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class IODBPRM
         {
@@ -1404,6 +1448,7 @@ namespace l99.driver.fanuc
             public int mcr_val;   /* macro variable */
             public short dec_val;   /* decimal point */
         }
+        
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class IODBMR1
         {
@@ -1413,6 +1458,7 @@ namespace l99.driver.fanuc
             public IODBMR_data data4 = new IODBMR_data();
             public IODBMR_data data5 = new IODBMR_data();
         }  /* In case that the number of data is 5 */
+        
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class IODBMR
         {
@@ -1440,6 +1486,7 @@ namespace l99.driver.fanuc
             public int mcr_val;   /* macro variable */
             public short dec_val;   /* decimal point */
         }
+        
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class IODBPR1
         {
@@ -1449,6 +1496,7 @@ namespace l99.driver.fanuc
             public IODBPR_data data4 = new IODBPR_data();
             public IODBPR_data data5 = new IODBPR_data();
         }  /* In case that the number of data is 5 */
+        
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class IODBPR
         {
@@ -1489,7 +1537,7 @@ namespace l99.driver.fanuc
         {
             public short use_no1;
 #if PCD_UWORD
-        public ushort  use_no2;
+            public ushort  use_no2;
 #else
             public short use_no2;
 #endif
@@ -7943,281 +7991,171 @@ namespace l99.driver.fanuc
         /*-------------------------------------*/
 
         /* read actual axis feedrate(F) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_actf")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_actf")]
         public static extern short cnc_actf(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBACT a);
 
         /* read absolute axis position */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_absolute")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_absolute")]
         public static extern short cnc_absolute(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBAXIS c);
 
         /* read machine axis position */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_machine")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_machine")]
         public static extern short cnc_machine(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBAXIS c);
 
         /* read relative axis position */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_relative")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_relative")]
         public static extern short cnc_relative(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBAXIS c);
 
         /* read distance to go */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_distance")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_distance")]
         public static extern short cnc_distance(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBAXIS c);
 
         /* read skip position */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_skip")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_skip")]
         public static extern short cnc_skip(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBAXIS c);
 
         /* read servo delay value */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_srvdelay")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_srvdelay")]
         public static extern short cnc_srvdelay(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBAXIS c);
 
         /* read acceleration/deceleration delay value */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_accdecdly")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_accdecdly")]
         public static extern short cnc_accdecdly(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBAXIS c);
 
         /* read all dynamic data */
 #if (!ONO8D)
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rddynamic")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rddynamic")]
         public static extern short cnc_rddynamic(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBDY_1 c);
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rddynamic")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rddynamic")]
         public static extern short cnc_rddynamic(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBDY_2 c);
 #else
-    [DllImport("FWLIB32.dll", EntryPoint="cnc_rddynamico8")]
+    [DllImport(FocasLibConstants.FileName, EntryPoint="cnc_rddynamico8")]
     public static extern short cnc_rddynamic(ushort FlibHndl,
         short a, short b, [Out,MarshalAs(UnmanagedType.LPStruct)] ODBDY_1 c);
-    [DllImport("FWLIB32.dll", EntryPoint="cnc_rddynamico8")]
+    [DllImport(FocasLibConstants.FileName, EntryPoint="cnc_rddynamico8")]
     public static extern short cnc_rddynamic(ushort FlibHndl,
         short a, short b, [Out,MarshalAs(UnmanagedType.LPStruct)] ODBDY_2 c);
 #endif
 
         /* read all dynamic data */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rddynamic2")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rddynamic2")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rddynamic2")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rddynamic2")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rddynamic2")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rddynamic2")]
         public static extern short cnc_rddynamic2(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBDY2_1 c);
         
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rddynamic2")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rddynamic2")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rddynamic2")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rddynamic2")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rddynamic2")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rddynamic2")]
         public static extern short cnc_rddynamic2(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBDY2_2 c);
 
         /* read actual spindle speed(S) */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_acts")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_acts")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_acts")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_acts")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_acts")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_acts")]
         public static extern short cnc_acts(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBACT a);
 
         /* read actual spindle speed(S) (All or spesified) */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_acts2")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_acts2")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_acts2")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_acts2")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_acts2")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_acts2")]
         public static extern short cnc_acts2(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBACT2 b);
 
         /* set origin / preset relative axis position */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrrelpos")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrrelpos")]
         public static extern short cnc_wrrelpos(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IDBWRR b);
 
         /* preset work coordinate */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_prstwkcd")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_prstwkcd")]
         public static extern short cnc_prstwkcd(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IDBWRA b);
 
         /* read manual overlapped motion value */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdmovrlap")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdmovrlap")]
         public static extern short cnc_rdmovrlap(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBOVL c);
 
         /* cancel manual overlapped motion value */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_canmovrlap")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_canmovrlap")]
         public static extern short cnc_canmovrlap(ushort FlibHndl, short a);
 
         /* read load information of serial spindle */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdspload")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdspload")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdspload")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdspload")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdspload")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdspload")]
         public static extern short cnc_rdspload(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSPN b);
 
         /* read maximum r.p.m. ratio of serial spindle */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdspmaxrpm")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdspmaxrpm")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdspmaxrpm")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdspmaxrpm")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdspmaxrpm")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdspmaxrpm")]
         public static extern short cnc_rdspmaxrpm(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSPN b);
 
         /* read gear ratio of serial spindle */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdspgear")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdspgear")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdspgear")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdspgear")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdspgear")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdspgear")]
         public static extern short cnc_rdspgear(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSPN b);
 
         /* read absolute axis position 2 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_absolute2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_absolute2")]
         public static extern short cnc_absolute2(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBAXIS c);
 
         /* read relative axis position 2 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_relative2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_relative2")]
         public static extern short cnc_relative2(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBAXIS c);
 
         /* set wire vertival position */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_setvrtclpos")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_setvrtclpos")]
         public static extern short cnc_setvrtclpos(ushort FlibHndl, short a);
 
         /* set wire threading position */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_setthrdngpos")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_setthrdngpos")]
         public static extern short cnc_setthrdngpos(ushort FlibHndl);
 
         /* read tool position */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdposition")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdposition")]
         public static extern short cnc_rdposition(ushort FlibHndl,
             short a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBPOS c);
 
         /* read current speed */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdspeed")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdspeed")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdspeed")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdspeed")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdspeed")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdspeed")]
         public static extern short cnc_rdspeed(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSPEED b);
 
         /* read servo load meter */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdsvmeter")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdsvmeter")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdsvmeter")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdsvmeter")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdsvmeter")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdsvmeter")]
         public static extern short cnc_rdsvmeter(ushort FlibHndl,
             ref short a, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSVLOAD b);
 
         /* read spindle load meter */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdspmeter")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdspmeter")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdspmeter")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdspmeter")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdspmeter")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdspmeter")]
         public static extern short cnc_rdspmeter(ushort FlibHndl,
             short a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSPLOAD c);
 
         /* read manual feed for 5-axis machining */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rd5axmandt")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rd5axmandt")]
         public static extern short cnc_rd5axmandt(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODB5AXMAN a);
 
         /* read amount of machine axes movement of manual feed for 5-axis machining */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rd5axovrlap")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rd5axovrlap")]
         public static extern short cnc_rd5axovrlap(ushort FlibHndl, short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBAXIS c);
 
         /* read handle interruption */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdhndintrpt")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdhndintrpt")]
         public static extern short cnc_rdhndintrpt(ushort FlibHndl,
             short a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBHND c);
 
         /* clear pulse values of manual feed for 5-axis machining */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_clr5axpls")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_clr5axpls")]
         public static extern short cnc_clr5axpls(ushort FlibHndl, short a);
 
         /* read constant surface speed */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdspcss")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdspcss")]
         public static extern short cnc_rdspcss(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBCSS a);
 
         /* read execution program pointer */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdexecpt")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdexecpt")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdexecpt")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdexecpt")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdexecpt")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdexecpt")]
         public static extern short cnc_rdexecpt(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] PRGPNT a, [Out, MarshalAs(UnmanagedType.LPStruct)] PRGPNT b);
 
         /* read various axis data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdaxisdata")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdaxisdata")]
         public static extern short cnc_rdaxisdata(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.AsAny)] Object b, short c, ref short d, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBAXDT e);
 
         /*----------------------*/
@@ -8225,293 +8163,247 @@ namespace l99.driver.fanuc
         /*----------------------*/
 
         /* start downloading NC program */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dwnstart")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dwnstart")]
         public static extern short cnc_dwnstart(ushort FlibHndl);
 
         /* download NC program */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_download")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_download")]
         public static extern short cnc_download(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a, short b);
 
         /* download NC program(conditional) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_cdownload")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_cdownload")]
         public static extern short cnc_cdownload(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a, short b);
 
         /* end of downloading NC program */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dwnend")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dwnend")]
         public static extern short cnc_dwnend(ushort FlibHndl);
 
         /* end of downloading NC program 2 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dwnend2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dwnend2")]
         public static extern short cnc_dwnend2(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* start downloading NC program 3 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dwnstart3")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dwnstart3")]
         public static extern short cnc_dwnstart3(ushort FlibHndl, short a);
 
         /* start downloading NC program 3 special */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dwnstart3_f")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dwnstart3_f")]
         public static extern short cnc_dwnstart3_f(ushort FlibHndl,
             short a, [In, MarshalAs(UnmanagedType.AsAny)] Object b, [In, MarshalAs(UnmanagedType.AsAny)] Object c);
 
         /* download NC program 3 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_download3")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_download3")]
         public static extern short cnc_download3(ushort FlibHndl, ref int a, [In, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* end of downloading NC program 3 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dwnend3")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dwnend3")]
         public static extern short cnc_dwnend3(ushort FlibHndl);
 
         /* start downloading NC program 4 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dwnstart4")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dwnstart4")]
         public static extern short cnc_dwnstart4(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* download NC program 4 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_download4")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_download4")]
         public static extern short cnc_download4(ushort FlibHndl, ref int a, [In, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* end of downloading NC program 4 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dwnend4")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dwnend4")]
         public static extern short cnc_dwnend4(ushort FlibHndl);
 
         /* start verification of NC program */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_vrfstart")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_vrfstart")]
         public static extern short cnc_vrfstart(ushort FlibHndl);
 
         /* verify NC program */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_verify")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_verify")]
         public static extern short cnc_verify(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a, short b);
 
         /* verify NC program(conditional) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_cverify")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_cverify")]
         public static extern short cnc_cverify(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a, short b);
 
         /* end of verification */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_vrfend")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_vrfend")]
         public static extern short cnc_vrfend(ushort FlibHndl);
 
         /* start verification of NC program */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_vrfstart4")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_vrfstart4")]
         public static extern short cnc_vrfstart4(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* verify NC program */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_verify4")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_verify4")]
         public static extern short cnc_verify4(ushort FlibHndl, ref int a, [In, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* end of verification */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_vrfend4")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_vrfend4")]
         public static extern short cnc_vrfend4(ushort FlibHndl);
 
         /* start downloading DNC program */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dncstart")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dncstart")]
         public static extern short cnc_dncstart(ushort FlibHndl);
 
         /* download DNC program */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dnc")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dnc")]
         public static extern short cnc_dnc(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a, ushort b);
 
         /* download DNC program(conditional) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_cdnc")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_cdnc")]
         public static extern short cnc_cdnc(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a, ushort b);
 
         /* end of downloading DNC program */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dncend")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dncend")]
         public static extern short cnc_dncend(ushort FlibHndl);
 
         /* start downloading DNC program 2 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dncstart2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dncstart2")]
         public static extern short cnc_dncstart2(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* download DNC program 2 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dnc2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dnc2")]
         public static extern short cnc_dnc2(ushort FlibHndl, ref int a, [In, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* end of downloading DNC program 2 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dncend2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dncend2")]
         public static extern short cnc_dncend2(ushort FlibHndl, short a);
 
         /* read the diagnosis data of DNC operation */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rddncdgndt")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rddncdgndt")]
         public static extern short cnc_rddncdgndt(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBDNCDGN a);
 
         /* start uploading NC program */
 #if (!ONO8D)
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_upstart")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_upstart")]
         public static extern short cnc_upstart(ushort FlibHndl, short a);
 #else
-    [DllImport("FWLIB32.dll", EntryPoint="cnc_upstarto8")]
+    [DllImport(FocasLibConstants.FileName, EntryPoint="cnc_upstarto8")]
     public static extern short cnc_upstart( ushort FlibHndl, int a );
 #endif
 
         /* upload NC program */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_upload")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_upload")]
         public static extern short cnc_upload(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBUP a, ref ushort b);
 
         /* upload NC program(conditional) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_cupload")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_cupload")]
         public static extern short cnc_cupload(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBUP a, ref ushort b);
 
         /* end of uploading NC program */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_upend")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_upend")]
         public static extern short cnc_upend(ushort FlibHndl);
 
         /* start uploading NC program 3 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_upstart3")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_upstart3")]
         public static extern short cnc_upstart3(ushort FlibHndl, short a, int b, int c);
 
         /* start uploading NC program special 3 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_upstart3_f")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_upstart3_f")]
         public static extern short cnc_upstart3_f(ushort FlibHndl,
             short a, [In, MarshalAs(UnmanagedType.AsAny)] Object b, [In, MarshalAs(UnmanagedType.AsAny)] Object c);
 
     /* upload NC program 3 */
-    [DllImport("FWLIB32.dll", EntryPoint="cnc_upload3")]
+    [DllImport(FocasLibConstants.FileName, EntryPoint="cnc_upload3")]
     public static extern short cnc_upload3( ushort FlibHndl, ref int a, [Out,MarshalAs(UnmanagedType.LPStruct)] ODBUP3 b );
 
         /* end of uploading NC program 3 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_upend3")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_upend3")]
         public static extern short cnc_upend3(ushort FlibHndl);
 
         /* start uploading NC program 4 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_upstart4")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_upstart4")]
         public static extern short cnc_upstart4(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* upload NC program 4 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_upload4")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_upload4")]
         public static extern short cnc_upload4(ushort FlibHndl, ref int a, [Out, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* end of uploading NC program 4 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_upend4")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_upend4")]
         public static extern short cnc_upend4(ushort FlibHndl);
 
         /* read buffer status for downloading/verification NC program */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_buff")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_buff")]
         public static extern short cnc_buff(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBBUF a);
 
         /* search specified program */
 #if (!ONO8D)
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_search")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_search")]
         public static extern short cnc_search(ushort FlibHndl, short a);
 #else
-    [DllImport("FWLIB32.dll", EntryPoint="cnc_searcho8")]
+    [DllImport(FocasLibConstants.FileName, EntryPoint="cnc_searcho8")]
     public static extern short cnc_search( ushort FlibHndl, int a );
 #endif
 
         /* search specified program */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_search2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_search2")]
         public static extern short cnc_search2(ushort FlibHndl, int a);
 
         /* delete all programs */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_delall")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_delall")]
         public static extern short cnc_delall(ushort FlibHndl);
 
         /* delete specified program */
 #if (!ONO8D)
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_delete")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_delete")]
         public static extern short cnc_delete(ushort FlibHndl, short a);
 #else
-    [DllImport("FWLIB32.dll", EntryPoint="cnc_deleteo8")]
+    [DllImport(FocasLibConstants.FileName, EntryPoint="cnc_deleteo8")]
     public static extern short cnc_delete( ushort FlibHndl, int a );
 #endif
 
         /* delete program (area specified) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_delrange")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_delrange")]
         public static extern short cnc_delrange(ushort FlibHndl, int a, int b);
 
         /* read program directory */
 #if (!ONO8D)
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdprogdir")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdprogdir")]
         public static extern short cnc_rdprogdir(ushort FlibHndl,
             short a, short b, short c, ushort d, [Out, MarshalAs(UnmanagedType.LPStruct)] PRGDIR e);
 #else
-    [DllImport("FWLIB32.dll", EntryPoint="cnc_rdprogdiro8")]
+    [DllImport(FocasLibConstants.FileName, EntryPoint="cnc_rdprogdiro8")]
     public static extern short cnc_rdprogdir( ushort FlibHndl, 
         short a, short b, short c, ushort d, [Out,MarshalAs(UnmanagedType.LPStruct)] PRGDIR e );
 #endif
 
         /* read program information */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdproginfo")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdproginfo")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdproginfo")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdproginfo")]
-#elif WIN64
-        [DllImport("FWLIB64.dll", EntryPoint = "cnc_rdproginfo")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdproginfo")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdproginfo")]
         public static extern short cnc_rdproginfo(ushort FlibHndl, short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBNC_1 c);
         
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdproginfo")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdproginfo")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdproginfo")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdproginfo")]
-#elif WIN64
-        [DllImport("FWLIB64.dll", EntryPoint = "cnc_rdproginfo")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdproginfo")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdproginfo")]
         public static extern short cnc_rdproginfo(ushort FlibHndl, short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBNC_2 c);
 
         /* read program number under execution */
 #if (!ONO8D)
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdprgnum")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdprgnum")]
         public static extern short cnc_rdprgnum(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBPRO a);
 #else
-    [DllImport("FWLIB32.dll", EntryPoint="cnc_rdprgnumo8")]
+    [DllImport(FocasLibConstants.FileName, EntryPoint="cnc_rdprgnumo8")]
     public static extern short cnc_rdprgnum( ushort FlibHndl, [Out,MarshalAs(UnmanagedType.LPStruct)] ODBPRO a );
 #endif
 
         /* read program name under execution */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_exeprgname")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_exeprgname")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_exeprgname")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_exeprgname")]
-#elif WIN64
-        [DllImport("FWLIB64.dll", EntryPoint = "cnc_exeprgname")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_exeprgname")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_exeprgname")]
         public static extern short cnc_exeprgname(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBEXEPRG a);
 
         /* read sequence number under execution */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdseqnum")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdseqnum")]
         public static extern short cnc_rdseqnum(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSEQ a);
 
         /* search specified sequence number */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_seqsrch")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_seqsrch")]
         public static extern short cnc_seqsrch(ushort FlibHndl, int a);
 
         /* search specified sequence number (2) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_seqsrch2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_seqsrch2")]
         public static extern short cnc_seqsrch2(ushort FlibHndl, int a);
 
         /* rewind cursor of NC program */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rewind")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rewind")]
         public static extern short cnc_rewind(ushort FlibHndl);
-
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdblkcount")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdblkcount")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdblkcount")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdblkcount")]
-#else
+        
         /* read block counter */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdblkcount")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdblkcount")]
         public static extern short cnc_rdblkcount(ushort FlibHndl, out int a);
 
     /* cnc_rdopmsg3:read operator's message */
@@ -8526,213 +8418,193 @@ namespace l99.driver.fanuc
     } /* In case that the data length is 256 */
 
     /* read program under execution */
-#if ARMV7
-    [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdexecprog")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdexecprog")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdexecprog")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdexecprog")]
-#else
-    [DllImport("FWLIB32.dll", EntryPoint="cnc_rdexecprog")]
-#endif
+    [DllImport(FocasLibConstants.FileName, EntryPoint="cnc_rdexecprog")]
     public static extern short cnc_rdexecprog( ushort FlibHndl, ref ushort a, out short b, [Out,MarshalAs(UnmanagedType.AsAny)] Object c );
 
         /* read program for MDI operation */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdmdiprog")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdmdiprog")]
         public static extern short cnc_rdmdiprog(ushort FlibHndl, ref short a, [Out, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* write program for MDI operation */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrmdiprog")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrmdiprog")]
         public static extern short cnc_wrmdiprog(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* read execution pointer for MDI operation */
 #if (!ONO8D)
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdmdipntr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdmdipntr")]
         public static extern short cnc_rdmdipntr(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBMDIP a);
 #else
-    [DllImport("FWLIB32.dll", EntryPoint="cnc_rdmdipntro8")]
+    [DllImport(FocasLibConstants.FileName, EntryPoint="cnc_rdmdipntro8")]
     public static extern short cnc_rdmdipntr( ushort FlibHndl, [Out,MarshalAs(UnmanagedType.LPStruct)] ODBMDIP a );
 #endif
 
         /* write execution pointer for MDI operation */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrmdipntr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrmdipntr")]
         public static extern short cnc_wrmdipntr(ushort FlibHndl, int a);
 
         /* register new program */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_newprog")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_newprog")]
         public static extern short cnc_newprog(ushort FlibHndl, int a);
 
         /* copy program */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_copyprog")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_copyprog")]
         public static extern short cnc_copyprog(ushort FlibHndl, int a, int b);
 
         /* rename program */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_renameprog")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_renameprog")]
         public static extern short cnc_renameprog(ushort FlibHndl, int a, int b);
 
         /* condense program */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_condense")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_condense")]
         public static extern short cnc_condense(ushort FlibHndl, short a, int b);
 
         /* merge program */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_mergeprog")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_mergeprog")]
         public static extern short cnc_mergeprog(ushort FlibHndl, short a, int b, uint c, int d);
 
         /* read current program and its pointer */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdactpt")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdactpt")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdactpt")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdactpt")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdactpt")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdactpt")]
         public static extern short cnc_rdactpt(ushort FlibHndl, out int a, out int b);
 
         /* read current program and its pointer and UV macro pointer */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rduvactpt")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rduvactpt")]
         public static extern short cnc_rduvactpt(ushort FlibHndl, out int a, out int b, out int c);
 
         /* set current program and its pointer */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wractpt")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wractpt")]
         public static extern short cnc_wractpt(ushort FlibHndl, int a, short b, ref int c);
 
         /* line edit (read program) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdprogline")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdprogline")]
         public static extern short cnc_rdprogline(ushort FlibHndl,
             int a, uint b, [Out, MarshalAs(UnmanagedType.AsAny)] Object c, ref uint d, ref uint e);
 
         /* line edit (read program) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdprogline2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdprogline2")]
         public static extern short cnc_rdprogline2(ushort FlibHndl,
             int a, uint b, [Out, MarshalAs(UnmanagedType.AsAny)] Object c, ref uint d, ref uint e);
 
         /* line edit (write program) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrprogline")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrprogline")]
         public static extern short cnc_wrprogline(ushort FlibHndl, int a, uint b, [In, MarshalAs(UnmanagedType.AsAny)] Object c, uint d);
 
         /* line edit (delete line in program) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_delprogline")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_delprogline")]
         public static extern short cnc_delprogline(ushort FlibHndl, int a, uint b, uint c);
 
         /* line edit (search string) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_searchword")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_searchword")]
         public static extern short cnc_searchword(ushort FlibHndl,
             int a, uint b, short c, short d, uint e, [In, MarshalAs(UnmanagedType.AsAny)] Object f);
 
         /* line edit (search string) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_searchresult")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_searchresult")]
         public static extern short cnc_searchresult(ushort FlibHndl, out uint a);
 
         /* line edit (read program by file name) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdpdf_line")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdpdf_line")]
         public static extern short cnc_rdpdf_line(ushort FlibHndl,
             [In, MarshalAs(UnmanagedType.AsAny)] Object a, uint b, [Out, MarshalAs(UnmanagedType.AsAny)] Object c, ref uint d, ref uint e);
 
         /* program lock */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_setpglock")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_setpglock")]
         public static extern short cnc_setpglock(ushort FlibHndl, int a);
 
         /* program unlock */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_resetpglock")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_resetpglock")]
         public static extern short cnc_resetpglock(ushort FlibHndl, int a);
 
         /* read the status of the program lock */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdpglockstat")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdpglockstat")]
         public static extern short cnc_rdpglockstat(ushort FlibHndl, out int a, out int b);
 
         /* create file or directory */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_pdf_add")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_pdf_add")]
         public static extern short cnc_pdf_add(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* condense program file */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_pdf_cond")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_pdf_cond")]
         public static extern short cnc_pdf_cond(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* change attribute of program file and directory */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrpdf_attr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrpdf_attr")]
         public static extern short cnc_wrpdf_attr(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a, [Out, MarshalAs(UnmanagedType.LPStruct)] IDBPDFTDIR b);
 
         /* copy program file */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_pdf_copy")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_pdf_copy")]
         public static extern short cnc_pdf_copy(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a, [In, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* delete file or directory */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_pdf_del")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_pdf_del")]
         public static extern short cnc_pdf_del(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* line edit (write program by file name) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrpdf_line")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrpdf_line")]
         public static extern short cnc_wrpdf_line(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a, uint b, [In, MarshalAs(UnmanagedType.AsAny)] Object c, uint d);
 
         /* line edit (delete line by file name) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_pdf_delline")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_pdf_delline")]
         public static extern short cnc_pdf_delline(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a, uint b, uint c);
 
         /* move program file */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_pdf_move")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_pdf_move")]
         public static extern short cnc_pdf_move(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a, [In, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* read current program and its pointer */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_pdf_rdactpt")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_pdf_rdactpt")]
         public static extern short cnc_pdf_rdactpt(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.AsAny)] Object a, out int b);
 
         /* read selected file name */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_pdf_rdmain")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_pdf_rdmain")]
         public static extern short cnc_pdf_rdmain(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* rename file or directory */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_pdf_rename")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_pdf_rename")]
         public static extern short cnc_pdf_rename(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a, [In, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* line edit (search string) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_pdf_searchword")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_pdf_searchword")]
         public static extern short cnc_pdf_searchword(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a, uint b, uint c, uint d, uint e, [In, MarshalAs(UnmanagedType.AsAny)] Object f);
 
         /* line edit (search string) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_pdf_searchresult")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_pdf_searchresult")]
         public static extern short cnc_pdf_searchresult(ushort FlibHndl, out uint a);
 
         /* select program file */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_pdf_slctmain")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_pdf_slctmain")]
         public static extern short cnc_pdf_slctmain(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* set current program and its pointer */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_pdf_wractpt")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_pdf_wractpt")]
         public static extern short cnc_pdf_wractpt(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a, short b, ref int c);
 
         /* read program drive information */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdpdf_inf")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdpdf_inf")]
         public static extern short cnc_rdpdf_inf(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a, short b, [Out, MarshalAs(UnmanagedType.AsAny)] Object c);
 
         /* read program drive directory */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdpdf_drive")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdpdf_drive")]
         public static extern short cnc_rdpdf_drive(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* read current directory */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdpdf_curdir")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdpdf_curdir")]
         public static extern short cnc_rdpdf_curdir(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* set current directory */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrpdf_curdir")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrpdf_curdir")]
         public static extern short cnc_wrpdf_curdir(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* read directory (sub directories) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdpdf_subdir")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdpdf_subdir")]
         public static extern short cnc_rdpdf_subdir(ushort FlibHndl,
             ref short a, [In, MarshalAs(UnmanagedType.LPStruct)] IDBPDFSDIR b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBPDFSDIR c);
 
         /* read directory (all files) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdpdf_alldir")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdpdf_alldir")]
         public static extern short cnc_rdpdf_alldir(ushort FlibHndl, ref short a, [In, MarshalAs(UnmanagedType.AsAny)] Object b, [Out, MarshalAs(UnmanagedType.AsAny)] Object c);
 
         /* read file count in directory */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdpdf_subdirn")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdpdf_subdirn")]
         public static extern short cnc_rdpdf_subdirn(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBPDFNFIL b);
 
         /*---------------------------*/
@@ -8740,352 +8612,294 @@ namespace l99.driver.fanuc
         /*---------------------------*/
 
         /* read tool offset value */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdtofs")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdtofs")]
         public static extern short cnc_rdtofs(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBTOFS d);
 
         /* write tool offset value */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrtofs")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrtofs")]
         public static extern short cnc_wrtofs(ushort FlibHndl, short a, short b, short c, int d);
 
         /* read tool offset value(area specified) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdtofsr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdtofsr")]
         public static extern short cnc_rdtofsr(ushort FlibHndl,
             short a, short b, short c, short d, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBTO_1_1 e);
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdtofsr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdtofsr")]
         public static extern short cnc_rdtofsr(ushort FlibHndl,
             short a, short b, short c, short d, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBTO_1_2 e);
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdtofsr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdtofsr")]
         public static extern short cnc_rdtofsr(ushort FlibHndl,
             short a, short b, short c, short d, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBTO_1_3 e);
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdtofsr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdtofsr")]
         public static extern short cnc_rdtofsr(ushort FlibHndl,
             short a, short b, short c, short d, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBTO_2 e);
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdtofsr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdtofsr")]
         public static extern short cnc_rdtofsr(ushort FlibHndl,
             short a, short b, short c, short d, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBTO_3 e);
 
         /* write tool offset value(area specified) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrtofsr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrtofsr")]
         public static extern short cnc_wrtofsr(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBTO_1_1 b);
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrtofsr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrtofsr")]
         public static extern short cnc_wrtofsr(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBTO_1_2 b);
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrtofsr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrtofsr")]
         public static extern short cnc_wrtofsr(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBTO_1_3 b);
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrtofsr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrtofsr")]
         public static extern short cnc_wrtofsr(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBTO_2 b);
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrtofsr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrtofsr")]
         public static extern short cnc_wrtofsr(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBTO_3 b);
 
         /* read work zero offset value */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdzofs")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdzofs")]
         public static extern short cnc_rdzofs(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBZOFS d);
 
         /* write work zero offset value */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrzofs")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrzofs")]
         public static extern short cnc_wrzofs(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBZOFS b);
 
         /* read work zero offset value(area specified) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdzofsr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdzofsr")]
         public static extern short cnc_rdzofsr(ushort FlibHndl,
             short a, short b, short c, short d, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBZOR e);
 
         /* write work zero offset value(area specified) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrzofsr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrzofsr")]
         public static extern short cnc_wrzofsr(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBZOR b);
 
         /* read mesured point value */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdmsptype")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdmsptype")]
         public static extern short cnc_rdmsptype(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBMSTP d);
 
         /* write mesured point value */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrmsptype")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrmsptype")]
         public static extern short cnc_wrmsptype(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBMSTP d);
 
         /* read parameter */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdparam")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdparam")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdparam")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdparam")]
-#elif WIN64
-        [DllImport("FWLIB64.dll", EntryPoint = "cnc_rdparam")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdparam")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdparam")]
         public static extern short cnc_rdparam(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBPSD_1 d);
         
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdparam")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdparam")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdparam")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdparam")]
-#elif WIN64
-        [DllImport("FWLIB64.dll", EntryPoint = "cnc_rdparam")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdparam")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdparam")]
         public static extern short cnc_rdparam(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBPSD_2 d);
         
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdparam")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdparam")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdparam")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdparam")]
-#elif WIN64
-        [DllImport("FWLIB64.dll", EntryPoint = "cnc_rdparam")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdparam")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdparam")]
         public static extern short cnc_rdparam(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBPSD_3 d);
         
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdparam")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdparam")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdparam")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdparam")]
-#elif WIN64
-        [DllImport("FWLIB64.dll", EntryPoint = "cnc_rdparam")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdparam")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdparam")]
         public static extern short cnc_rdparam(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBPSD_4 d);
 
         /* write parameter */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrparam")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrparam")]
         public static extern short cnc_wrparam(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBPSD_1 b);
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrparam")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrparam")]
         public static extern short cnc_wrparam(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBPSD_2 b);
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrparam")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrparam")]
         public static extern short cnc_wrparam(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBPSD_3 b);
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrparam")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrparam")]
         public static extern short cnc_wrparam(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBPSD_4 b);
 
         /* read parameter(area specified) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdparar")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdparar")]
         public static extern short cnc_rdparar(ushort FlibHndl,
             ref short a, short b, ref short c, ref short d, [Out, MarshalAs(UnmanagedType.AsAny)] Object e);
-        //  [DllImport("FWLIB32.dll", EntryPoint="cnc_rdparar")]
+        //  [DllImport(FocasLibConstants.FileName, EntryPoint="cnc_rdparar")]
         //  public static extern short cnc_rdparar( ushort FlibHndl,
         //      ref short a, short b, ref short c, ref short d, [Out,MarshalAs(UnmanagedType.LPStruct)] IODBPSD_A e );
-        //  [DllImport("FWLIB32.dll", EntryPoint="cnc_rdparar")]
+        //  [DllImport(FocasLibConstants.FileName, EntryPoint="cnc_rdparar")]
         //  public static extern short cnc_rdparar( ushort FlibHndl,
         //      ref short a, short b, ref short c, ref short d, [Out,MarshalAs(UnmanagedType.LPStruct)] IODBPSD_B e );
-        //  [DllImport("FWLIB32.dll", EntryPoint="cnc_rdparar")]
+        //  [DllImport(FocasLibConstants.FileName, EntryPoint="cnc_rdparar")]
         //  public static extern short cnc_rdparar( ushort FlibHndl,
         //      ref short a, short b, ref short c, ref short d, [Out,MarshalAs(UnmanagedType.LPStruct)] IODBPSD_C e );
-        //  [DllImport("FWLIB32.dll", EntryPoint="cnc_rdparar")]
+        //  [DllImport(FocasLibConstants.FileName, EntryPoint="cnc_rdparar")]
         //  public static extern short cnc_rdparar( ushort FlibHndl,
         //      ref short a, short b, ref short c, ref short d, [Out,MarshalAs(UnmanagedType.LPStruct)] IODBPSD_D e );
 
         /* write parameter(area specified) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrparas")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrparas")]
         public static extern short cnc_wrparas(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* read setting data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdset")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdset")]
         public static extern short cnc_rdset(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBPSD_1 d);
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdset")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdset")]
         public static extern short cnc_rdset(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBPSD_2 d);
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdset")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdset")]
         public static extern short cnc_rdset(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBPSD_3 d);
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdset")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdset")]
         public static extern short cnc_rdset(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBPSD_4 d);
 
         /* write setting data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrset")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrset")]
         public static extern short cnc_wrset(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBPSD_1 b);
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrset")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrset")]
         public static extern short cnc_wrset(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBPSD_2 b);
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrset")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrset")]
         public static extern short cnc_wrset(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBPSD_3 b);
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrset")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrset")]
         public static extern short cnc_wrset(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBPSD_4 b);
 
         /* read setting data(area specified) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdsetr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdsetr")]
         public static extern short cnc_rdsetr(ushort FlibHndl,
             ref short a, short b, ref short c, ref short d, [Out, MarshalAs(UnmanagedType.AsAny)] Object e);
 
         /* write setting data(area specified) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrsets")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrsets")]
         public static extern short cnc_wrsets(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* read parameters */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdparam_ext")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdparam_ext")]
         public static extern short cnc_rdparam_ext(ushort FlibHndl,
             [In, Out, MarshalAs(UnmanagedType.LPStruct)] IODBPRMNO a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBPRM c);
 
         /* read parameter */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdparam3")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdparam3")]
         public static extern short cnc_rdparam3(ushort FlibHndl,
             short a, short b, short c, short d, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBPSD_1 e);
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdparam3")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdparam3")]
         public static extern short cnc_rdparam3(ushort FlibHndl,
             short a, short b, short c, short d, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBPSD_2 e);
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdparam3")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdparam3")]
         public static extern short cnc_rdparam3(ushort FlibHndl,
             short a, short b, short c, short d, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBPSD_3 e);
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdparam3")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdparam3")]
         public static extern short cnc_rdparam3(ushort FlibHndl,
             short a, short b, short c, short d, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBPSD_4 e);
 
         /* async parameter write start */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_start_async_wrparam")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_start_async_wrparam")]
         public static extern short cnc_start_async_wrparam(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IODBPRM a);
 
         /* async parameter write end */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_end_async_wrparam")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_end_async_wrparam")]
         public static extern short cnc_end_async_wrparam(ushort FlibHndl, out short a);
 
         /* read cause of busy for async parameter write */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_async_busy_state")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_async_busy_state")]
         public static extern short cnc_async_busy_state(ushort FlibHndl, out short a);
 
         /* read diagnosis data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rddiag_ext")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rddiag_ext")]
         public static extern short cnc_rddiag_ext(ushort FlibHndl,
             [In, Out, MarshalAs(UnmanagedType.LPStruct)] IODBPRMNO a, short b, [In, MarshalAs(UnmanagedType.LPStruct)] IODBPRM c);
 
         /* read pitch error compensation data(area specified) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdpitchr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdpitchr")]
         public static extern short cnc_rdpitchr(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBPI d);
 
         /* write pitch error compensation data(area specified) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrpitchr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrpitchr")]
         public static extern short cnc_wrpitchr(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBPI b);
 
         /* read custom macro variable */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdmacro")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdmacro")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdmacro")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdmacro")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdmacro")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdmacro")]
         public static extern short cnc_rdmacro(ushort FlibHndl, short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBM c);
 
         /* write custom macro variable */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrmacro")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrmacro")]
         public static extern short cnc_wrmacro(ushort FlibHndl, short a, short b, int c, short d);
 
         /* read custom macro variables(area specified) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdmacror")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdmacror")]
         public static extern short cnc_rdmacror(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBMR d);
 
         /* write custom macro variables(area specified) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrmacror")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrmacror")]
         public static extern short cnc_wrmacror(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBMR b);
 
         /* read custom macro variables(IEEE double version) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdmacror2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdmacror2")]
         public static extern short cnc_rdmacror2(ushort FlibHndl, int a, ref int b, [Out, MarshalAs(UnmanagedType.AsAny)] Object c);
 
         /* write custom macro variables(IEEE double version) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrmacror2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrmacror2")]
         public static extern short cnc_wrmacror2(ushort FlibHndl, int a, ref int b, [In, MarshalAs(UnmanagedType.AsAny)] Object c);
 
         /* read P code macro variable */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdpmacro")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdpmacro")]
         public static extern short cnc_rdpmacro(ushort FlibHndl, int a, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBPM b);
 
         /* write P code macro variable */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrpmacro")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrpmacro")]
         public static extern short cnc_wrpmacro(ushort FlibHndl, int a, int b, short c);
 
         /* read P code macro variables(area specified) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdpmacror")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdpmacror")]
         public static extern short cnc_rdpmacror(ushort FlibHndl,
             int a, int b, ushort c, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBPR d);
 
         /* write P code macro variables(area specified) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrpmacror")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrpmacror")]
         public static extern short cnc_wrpmacror(ushort FlibHndl, ushort a, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBPR b);
 
         /* read P code macro variables(IEEE double version) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdpmacror2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdpmacror2")]
         public static extern short cnc_rdpmacror2(ushort FlibHndl, uint a, ref uint b, ushort c, [Out, MarshalAs(UnmanagedType.AsAny)] Object d);
 
         /* write P code macro variables(IEEE double version) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrpmacror2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrpmacror2")]
         public static extern short cnc_wrpmacror2(ushort FlibHndl, uint a, ref uint b, ushort c, [In, MarshalAs(UnmanagedType.AsAny)] Object d);
 
         /* read tool offset information */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdtofsinfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdtofsinfo")]
         public static extern short cnc_rdtofsinfo(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBTLINF a);
 
         /* read tool offset information(2) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdtofsinfo2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdtofsinfo2")]
         public static extern short cnc_rdtofsinfo2(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBTLINF2 a);
 
         /* read work zero offset information */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdzofsinfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdzofsinfo")]
         public static extern short cnc_rdzofsinfo(ushort FlibHndl, out short a);
 
         /* read pitch error compensation data information */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdpitchinfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdpitchinfo")]
         public static extern short cnc_rdpitchinfo(ushort FlibHndl, out short a);
 
         /* read custom macro variable information */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdmacroinfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdmacroinfo")]
         public static extern short cnc_rdmacroinfo(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBMVINF a);
 
         /* read P code macro variable information */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdpmacroinfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdpmacroinfo")]
         public static extern short cnc_rdpmacroinfo(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBPMINF a);
 
         /* read validity of tool offset */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_tofs_rnge")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_tofs_rnge")]
         public static extern short cnc_tofs_rnge(ushort FlibHndl, short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBDATRNG c);
 
         /* read validity of work zero offset */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_zofs_rnge")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_zofs_rnge")]
         public static extern short cnc_zofs_rnge(ushort FlibHndl, short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBDATRNG c);
 
         /* read validity of work zero offset */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wksft_rnge")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wksft_rnge")]
         public static extern short cnc_wksft_rnge(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBDATRNG b);
 
         /* read the information for function cnc_rdhsparam() */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdhsprminfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdhsprminfo")]
         public static extern short cnc_rdhsprminfo(ushort FlibHndl, int a, [Out, MarshalAs(UnmanagedType.LPStruct)] HSPINFO_data b);
 
         /* read parameters at the high speed */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdhsparam")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdhsparam")]
         public static extern short cnc_rdhsparam(ushort FlibHndl, int a, [In, MarshalAs(UnmanagedType.LPStruct)] HSPINFO b, [Out, MarshalAs(UnmanagedType.LPStruct)] HSPDATA_1 c);
 
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdhsparam")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdhsparam")]
         public static extern short cnc_rdhsparam(ushort FlibHndl, int a, [In, MarshalAs(UnmanagedType.LPStruct)] HSPINFO b, [Out, MarshalAs(UnmanagedType.LPStruct)] HSPDATA_2 c);
 
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdhsparam")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdhsparam")]
         public static extern short cnc_rdhsparam(ushort FlibHndl, int a, [In, MarshalAs(UnmanagedType.LPStruct)] HSPINFO b, [Out, MarshalAs(UnmanagedType.LPStruct)] HSPDATA_3 c);
 
         /*----------------------------------------*/
@@ -9093,188 +8907,188 @@ namespace l99.driver.fanuc
         /*----------------------------------------*/
 
         /* read tool life management data(tool group number) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdgrpid")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdgrpid")]
         public static extern short cnc_rdgrpid(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBTLIFE1 b);
 
         /* read tool life management data(number of tool groups) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdngrp")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdngrp")]
         public static extern short cnc_rdngrp(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBTLIFE2 a);
 
         /* read tool life management data(number of tools) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdntool")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdntool")]
         public static extern short cnc_rdntool(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBTLIFE3 b);
 
         /* read tool life management data(tool life) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdlife")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdlife")]
         public static extern short cnc_rdlife(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBTLIFE3 b);
 
         /* read tool life management data(tool lift counter) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdcount")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdcount")]
         public static extern short cnc_rdcount(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBTLIFE3 b);
 
         /* read tool life management data(tool length number-1) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rd1length")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rd1length")]
         public static extern short cnc_rd1length(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBTLIFE4 c);
 
         /* read tool life management data(tool length number-2) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rd2length")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rd2length")]
         public static extern short cnc_rd2length(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBTLIFE4 c);
 
         /* read tool life management data(cutter compensation no.-1) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rd1radius")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rd1radius")]
         public static extern short cnc_rd1radius(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBTLIFE4 c);
 
         /* read tool life management data(cutter compensation no.-2) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rd2radius")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rd2radius")]
         public static extern short cnc_rd2radius(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBTLIFE4 c);
 
         /* read tool life management data(tool information-1) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_t1info")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_t1info")]
         public static extern short cnc_t1info(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBTLIFE4 c);
 
         /* read tool life management data(tool information-2) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_t2info")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_t2info")]
         public static extern short cnc_t2info(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBTLIFE4 c);
 
         /* read tool life management data(tool number) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_toolnum")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_toolnum")]
         public static extern short cnc_toolnum(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBTLIFE4 c);
 
         /* read tool life management data(tool number, tool life, tool life counter)(area specified) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdtoolrng")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdtoolrng")]
         public static extern short cnc_rdtoolrng(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBTR d);
 
         /* read tool life management data(all data within group) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdtoolgrp")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdtoolgrp")]
         public static extern short cnc_rdtoolgrp(ushort FlibHndl, short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBTG c);
 
         /* write tool life management data(tool life counter) (area specified) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrcountr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrcountr")]
         public static extern short cnc_wrcountr(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IDBWRC b);
 
         /* read tool life management data(used tool group number) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdusegrpid")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdusegrpid")]
         public static extern short cnc_rdusegrpid(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBUSEGR a);
 
         /* read tool life management data(max. number of tool groups) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdmaxgrp")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdmaxgrp")]
         public static extern short cnc_rdmaxgrp(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBLFNO a);
 
         /* read tool life management data(maximum number of tool within group) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdmaxtool")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdmaxtool")]
         public static extern short cnc_rdmaxtool(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBLFNO a);
 
         /* read tool life management data(used tool no. within group) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdusetlno")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdusetlno")]
         public static extern short cnc_rdusetlno(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBTLUSE d);
 
         /* read tool life management data(tool data1) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rd1tlifedata")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rd1tlifedata")]
         public static extern short cnc_rd1tlifedata(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBTD c);
 
         /* read tool life management data(tool data2) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rd2tlifedata")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rd2tlifedata")]
         public static extern short cnc_rd2tlifedata(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBTD c);
 
         /* write tool life management data(tool data1) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wr1tlifedata")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wr1tlifedata")]
         public static extern short cnc_wr1tlifedata(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IODBTD a);
 
         /* write tool life management data(tool data2) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wr2tlifedata")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wr2tlifedata")]
         public static extern short cnc_wr2tlifedata(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IODBTD a);
 
         /* read tool life management data(tool group information) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdgrpinfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdgrpinfo")]
         public static extern short cnc_rdgrpinfo(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBTGI d);
 
         /* read tool life management data(tool group information 2) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdgrpinfo2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdgrpinfo2")]
         public static extern short cnc_rdgrpinfo2(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBTGI2 d);
 
         /* read tool life management data(tool group information 3) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdgrpinfo3")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdgrpinfo3")]
         public static extern short cnc_rdgrpinfo3(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBTGI3 d);
 
         /* read tool life management data(tool group information 4) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdgrpinfo4")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdgrpinfo4")]
         public static extern short cnc_rdgrpinfo4(ushort FlibHndl,
             short a, short b, short c, out short d, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBTGI4 e);
 
         /* write tool life management data(tool group information) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrgrpinfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrgrpinfo")]
         public static extern short cnc_wrgrpinfo(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBTGI b);
 
         /* write tool life management data(tool group information 2) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrgrpinfo2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrgrpinfo2")]
         public static extern short cnc_wrgrpinfo2(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBTGI2 b);
 
         /* write tool life management data(tool group information 3) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrgrpinfo3")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrgrpinfo3")]
         public static extern short cnc_wrgrpinfo3(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBTGI3 b);
 
         /* delete tool life management data(tool group) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_deltlifegrp")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_deltlifegrp")]
         public static extern short cnc_deltlifegrp(ushort FlibHndl, short a);
 
         /* insert tool life management data(tool data) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_instlifedt")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_instlifedt")]
         public static extern short cnc_instlifedt(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IDBITD a);
 
         /* delete tool life management data(tool data) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_deltlifedt")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_deltlifedt")]
         public static extern short cnc_deltlifedt(ushort FlibHndl, short a, short b);
 
         /* clear tool life management data(tool life counter, tool information)(area specified) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_clrcntinfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_clrcntinfo")]
         public static extern short cnc_clrcntinfo(ushort FlibHndl, short a, short b);
 
         /* read tool life management data(tool group number) 2 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdgrpid2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdgrpid2")]
         public static extern short cnc_rdgrpid2(ushort FlibHndl, int a, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBTLIFE5 b);
 
         /* read tool life management data(tool data1) 2 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rd1tlifedat2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rd1tlifedat2")]
         public static extern short cnc_rd1tlifedat2(ushort FlibHndl,
             short a, int b, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBTD2 c);
 
         /* write tool life management data(tool data1) 2 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wr1tlifedat2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wr1tlifedat2")]
         public static extern short cnc_wr1tlifedat2(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IODBTD2 a);
 
         /* read tool life management data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdtlinfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdtlinfo")]
         public static extern short cnc_rdtlinfo(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBTLINFO a);
 
         /* read tool life management data(used tool group number) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdtlusegrp")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdtlusegrp")]
         public static extern short cnc_rdtlusegrp(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBUSEGRP a);
 
         /* read tool life management data(tool group information 2) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdtlgrp")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdtlgrp")]
         public static extern short cnc_rdtlgrp(ushort FlibHndl,
             int a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBTLGRP c);
 
         /* read tool life management data (tool data1) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdtltool")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdtltool")]
         public static extern short cnc_rdtltool(ushort FlibHndl,
             int a, int b, ref short c, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBTLTOOL d);
 
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdexchgtgrp")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdexchgtgrp")]
         public static extern short cnc_rdexchgtgrp(ushort FlibHndl,
             ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBEXGP c);
 
@@ -9283,55 +9097,55 @@ namespace l99.driver.fanuc
         /*-----------------------------------*/
 
         /* new registration of tool management data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_regtool")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_regtool")]
         public static extern short cnc_regtool(ushort FlibHndl,
             short a, ref short b, [In, MarshalAs(UnmanagedType.LPStruct)] IODBTLMNG c);
 
         /* new registration of tool management data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_regtool_f2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_regtool_f2")]
         public static extern short cnc_regtool_f2(ushort FlibHndl,
             short a, ref short b, [In, MarshalAs(UnmanagedType.LPStruct)] IODBTLMNG_F2 c);
 
         /* deletion of tool management data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_deltool")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_deltool")]
         public static extern short cnc_deltool(ushort FlibHndl, short a, ref short b);
 
         /* lead of tool management data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdtool")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdtool")]
         public static extern short cnc_rdtool(ushort FlibHndl,
             short a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBTLMNG c);
 
         /* lead of tool management data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdtool_f2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdtool_f2")]
         public static extern short cnc_rdtool_f2(ushort FlibHndl,
             short a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBTLMNG_F2 c);
 
         /* write of tool management data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrtool")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrtool")]
         public static extern short cnc_wrtool(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBTLMNG b);
 
         /* write of individual data of tool management data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrtool2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrtool2")]
         public static extern short cnc_wrtool2(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IDBTLM b);
 
         /* write tool management data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrtool_f2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrtool_f2")]
         public static extern short cnc_wrtool_f2(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBTLMNG_F2_data b);
 
         /* new registration of magazine management data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_regmagazine")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_regmagazine")]
         public static extern short cnc_regmagazine(ushort FlibHndl, ref short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBTLMAG b);
 
         /* deletion of magazine management data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_delmagazine")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_delmagazine")]
         public static extern short cnc_delmagazine(ushort FlibHndl, ref short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBTLMAG2 b);
 
         /* lead of magazine management data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdmagazine")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdmagazine")]
         public static extern short cnc_rdmagazine(ushort FlibHndl, ref short a, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBTLMAG b);
 
         /* Individual write of magazine management data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrmagazine")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrmagazine")]
         public static extern short cnc_wrmagazine(ushort FlibHndl, short a, short b, short c);
 
 
@@ -9340,131 +9154,131 @@ namespace l99.driver.fanuc
         /*-------------------------------------*/
 
         /* stop logging operation history data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_stopophis")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_stopophis")]
         public static extern short cnc_stopophis(ushort FlibHndl);
 
         /* restart logging operation history data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_startophis")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_startophis")]
         public static extern short cnc_startophis(ushort FlibHndl);
 
         /* read number of operation history data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdophisno")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdophisno")]
         public static extern short cnc_rdophisno(ushort FlibHndl, out ushort a);
 
         /* read operation history data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdophistry")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdophistry")]
         public static extern short cnc_rdophistry(ushort FlibHndl,
             ushort a, ushort b, ushort c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBHIS d);
 
         /* read operation history data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdophistry2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdophistry2")]
         public static extern short cnc_rdophistry2(ushort FlibHndl,
             ushort a, ref ushort b, ref ushort c, [Out, MarshalAs(UnmanagedType.AsAny)] Object d);
 
         /* read operation history data F30i*/
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdophistry4")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdophistry4")]
         public static extern short cnc_rdophistry4(ushort FlibHndl,
             ushort a, ref ushort b, ref ushort c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBOPHIS4_1 d);
 
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdophistry4")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdophistry4")]
         public static extern short cnc_rdophistry4(ushort FlibHndl,
             ushort a, ref ushort b, ref ushort c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBOPHIS4_2 d);
 
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdophistry4")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdophistry4")]
         public static extern short cnc_rdophistry4(ushort FlibHndl,
             ushort a, ref ushort b, ref ushort c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBOPHIS4_3 d);
 
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdophistry4")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdophistry4")]
         public static extern short cnc_rdophistry4(ushort FlibHndl,
             ushort a, ref ushort b, ref ushort c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBOPHIS4_4 d);
 
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdophistry4")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdophistry4")]
         public static extern short cnc_rdophistry4(ushort FlibHndl,
             ushort a, ref ushort b, ref ushort c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBOPHIS4_5 d);
 
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdophistry4")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdophistry4")]
         public static extern short cnc_rdophistry4(ushort FlibHndl,
             ushort a, ref ushort b, ref ushort c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBOPHIS4_6 d);
 
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdophistry4")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdophistry4")]
         public static extern short cnc_rdophistry4(ushort FlibHndl,
             ushort a, ref ushort b, ref ushort c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBOPHIS4_7 d);
 
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdophistry4")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdophistry4")]
         public static extern short cnc_rdophistry4(ushort FlibHndl,
             ushort a, ref ushort b, ref ushort c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBOPHIS4_8 d);
 
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdophistry4")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdophistry4")]
         public static extern short cnc_rdophistry4(ushort FlibHndl,
             ushort a, ref ushort b, ref ushort c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBOPHIS4_9 d);
 
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdophistry4")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdophistry4")]
         public static extern short cnc_rdophistry4(ushort FlibHndl,
             ushort a, ref ushort b, ref ushort c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBOPHIS4_10 d);
 
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdophistry4")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdophistry4")]
         public static extern short cnc_rdophistry4(ushort FlibHndl,
             ushort a, ref ushort b, ref ushort c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBOPHIS4_11 d);
 
         /* read number of alarm history data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdalmhisno")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdalmhisno")]
         public static extern short cnc_rdalmhisno(ushort FlibHndl, out ushort a);
 
         /* read alarm history data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdalmhistry")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdalmhistry")]
         public static extern short cnc_rdalmhistry(ushort FlibHndl,
             ushort a, ushort b, ushort c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBAHIS d);
 
         /* read alarm history data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdalmhistry_w")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdalmhistry_w")]
         public static extern short cnc_rdalmhistry_w(ushort FlibHndl,
             ushort a, ushort b, ushort c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBAHIS d);
 
         /* read alarm history data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdalmhistry2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdalmhistry2")]
         public static extern short cnc_rdalmhistry2(ushort FlibHndl,
             ushort a, ushort b, ushort c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBAHIS2 d);
 
         /* read alarm history data F30i*/
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdalmhistry3")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdalmhistry3")]
         public static extern short cnc_rdalmhistry3(ushort FlibHndl,
             ushort a, ushort b, ushort c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBAHIS3 d);
 
         /* read alarm history data F30i*/
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdalmhistry5")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdalmhistry5")]
         public static extern short cnc_rdalmhistry5(ushort FlibHndl,
             ushort a, ushort b, ushort c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBAHIS5 d);
 
         /* clear operation history data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_clearophis")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_clearophis")]
         public static extern short cnc_clearophis(ushort FlibHndl, short a);
 
         /* read signals related operation history */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdhissgnl")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdhissgnl")]
         public static extern short cnc_rdhissgnl(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBSIG a);
 
         /* read signals related operation history 2 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdhissgnl2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdhissgnl2")]
         public static extern short cnc_rdhissgnl2(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBSIG2 a);
 
         /* read signals related operation history 3 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdhissgnl3")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdhissgnl3")]
         public static extern short cnc_rdhissgnl3(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBSIG3 a);
 
         /* write signals related operation history */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrhissgnl")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrhissgnl")]
         public static extern short cnc_wrhissgnl(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IODBSIG a);
 
         /* write signals related operation history 2 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrhissgnl2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrhissgnl2")]
         public static extern short cnc_wrhissgnl2(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IODBSIG2 a);
 
         /* write signals related operation history for F30i*/
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrhissgnl3")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrhissgnl3")]
         public static extern short cnc_wrhissgnl3(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IODBSIG3 a);
 
         /* read number of operater message history data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdomhisno")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdomhisno")]
         public static extern short cnc_rdomhisno(ushort FlibHndl, out ushort a);
 
         /*-------------*/
@@ -9472,1543 +9286,1279 @@ namespace l99.driver.fanuc
         /*-------------*/
 
         /* read CNC system information */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_sysinfo")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_sysinfo")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_sysinfo")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_sysinfo")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_sysinfo")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_sysinfo")]
         public static extern short cnc_sysinfo(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSYS a);
 
         /* read CNC status information */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_statinfo")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_statinfo")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_statinfo")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_statinfo")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_statinfo")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_statinfo")]
         public static extern short cnc_statinfo(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBST a);
 
         /* read alarm status */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_alarm")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_alarm")]
         public static extern short cnc_alarm(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBALM a);
 
         /* read alarm status */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_alarm2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_alarm2")]
         public static extern short cnc_alarm2(ushort FlibHndl, out int a);
 
         /* read alarm information */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdalminfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdalminfo")]
         public static extern short cnc_rdalminfo(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] ALMINFO_1 d);
 
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdalminfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdalminfo")]
         public static extern short cnc_rdalminfo(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] ALMINFO_2 d);
 
         /* read alarm message */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdalmmsg")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdalmmsg")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdalmmsg")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdalmmsg")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdalmmsg")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdalmmsg")]
         public static extern short cnc_rdalmmsg(ushort FlibHndl,
             short a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBALMMSG c);
 
         /* read alarm message(2) */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdalmmsg2")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdalmmsg2")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdalmmsg2")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdalmmsg2")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdalmmsg2")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdalmmsg2")]
         public static extern short cnc_rdalmmsg2(ushort FlibHndl,
             short a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBALMMSG2 c);
 
         /* clear CNC alarm */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_clralm")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_clralm")]
         public static extern short cnc_clralm(ushort FlibHndl, short a);
 
         /* read modal data */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_modal")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_modal")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_modal")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_modal")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_modal")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_modal")]
         public static extern short cnc_modal(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBMDL_1 c);
         
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_modal")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_modal")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_modal")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_modal")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_modal")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_modal")]
         public static extern short cnc_modal(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBMDL_2 c);
-            
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_modal")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_modal")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_modal")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_modal")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_modal")]
-#endif
+        
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_modal")]
         public static extern short cnc_modal(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBMDL_3 c);
         
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_modal")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_modal")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_modal")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_modal")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_modal")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_modal")]
         public static extern short cnc_modal(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBMDL_4 c);
         
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_modal")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_modal")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_modal")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_modal")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_modal")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_modal")]
         public static extern short cnc_modal(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBMDL_5 c);
 
         /* read G code */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdgcode")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdgcode")]
         public static extern short cnc_rdgcode(ushort FlibHndl,
             short a, short b, ref short c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBGCD d);
 
         /* read command value */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdcommand")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdcommand")]
         public static extern short cnc_rdcommand(ushort FlibHndl,
             short a, short b, ref short c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBCMD d);
 
         /* read diagnosis data */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_diagnoss")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_diagnoss")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_diagnoss")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_diagnoss")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_diagnoss")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_diagnoss")]
         public static extern short cnc_diagnoss(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBDGN_1 d);
         
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_diagnoss")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_diagnoss")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_diagnoss")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_diagnoss")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_diagnoss")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_diagnoss")]
         public static extern short cnc_diagnoss(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBDGN_2 d);
         
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_diagnoss")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_diagnoss")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_diagnoss")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_diagnoss")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_diagnoss")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_diagnoss")]
         public static extern short cnc_diagnoss(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBDGN_3 d);
         
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_diagnoss")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_diagnoss")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_diagnoss")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_diagnoss")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_diagnoss")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_diagnoss")]
         public static extern short cnc_diagnoss(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBDGN_4 d);
 
         /* read diagnosis data(area specified) */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_diagnosr")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_diagnosr")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_diagnosr")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_diagnosr")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_diagnosr")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_diagnosr")]
         public static extern short cnc_diagnosr(ushort FlibHndl,
             ref short a, short b, ref short c, ref short d, [Out, MarshalAs(UnmanagedType.AsAny)] Object e);
-        //  [DllImport("FWLIB32.dll", EntryPoint="cnc_diagnosr")]
+        //  [DllImport(FocasLibConstants.FileName, EntryPoint="cnc_diagnosr")]
         //  public static extern short cnc_diagnosr( ushort FlibHndl,
         //      ref short a, short b, ref short c, ref short d, [Out,MarshalAs(UnmanagedType.LPStruct)] ODBDGN e );
 
         /* read A/D conversion data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_adcnv")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_adcnv")]
         public static extern short cnc_adcnv(ushort FlibHndl, short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBAD c);
 
         /* read operator's message */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdopmsg")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdopmsg")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdopmsg")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdopmsg")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdopmsg")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdopmsg")]
         public static extern short cnc_rdopmsg(ushort FlibHndl, short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] OPMSG c);
 
         /* read operator's message */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdopmsg2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdopmsg2")]
         public static extern short cnc_rdopmsg2(ushort FlibHndl, short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] OPMSG2 c);
 
         /* read operator's message */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdopmsg3")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdopmsg3")]
         public static extern short cnc_rdopmsg3(ushort FlibHndl,
             short a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] OPMSG3 c);
 
         /* set path number(for 4 axes lathes, multi-path) */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_setpath")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_setpath")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_setpath")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_setpath")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_setpath")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_setpath")]
         public static extern short cnc_setpath(ushort FlibHndl, short a);
 
         /* get path number(for 4 axes lathes, multi-path) */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_getpath")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_getpath")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_getpath")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_getpath")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_getpath")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_getpath")]
         public static extern short cnc_getpath(ushort FlibHndl, out short a, out short b);
 
         /* allocate library handle */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_allclibhndl")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_allclibhndl")]
         public static extern short cnc_allclibhndl(out ushort FlibHndl);
 
         /* free library handle */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_freelibhndl")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_freelibhndl")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_freelibhndl")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_freelibhndl")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_freelibhndl")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_freelibhndl")]
         public static extern short cnc_freelibhndl(ushort FlibHndl);
 
         /* get library option */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_getlibopt")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_getlibopt")]
         public static extern short cnc_getlibopt(ushort FlibHndl, int a, [Out, MarshalAs(UnmanagedType.AsAny)] Object b, ref int c);
 
         /* set library option */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_setlibopt")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_setlibopt")]
         public static extern short cnc_setlibopt(ushort FlibHndl, int a, [In, MarshalAs(UnmanagedType.AsAny)] Object b, int c);
 
         /* get custom macro type */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_getmactype")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_getmactype")]
         public static extern short cnc_getmactype(ushort FlibHndl, out short a);
 
         /* set custom macro type */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_setmactype")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_setmactype")]
         public static extern short cnc_setmactype(ushort FlibHndl, short a);
 
         /* get P code macro type */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_getpmactype")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_getpmactype")]
         public static extern short cnc_getpmactype(ushort FlibHndl, out short a);
 
         /* set P code macro type */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_setpmactype")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_setpmactype")]
         public static extern short cnc_setpmactype(ushort FlibHndl, short a);
 
         /* get screen status */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_getcrntscrn")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_getcrntscrn")]
         public static extern short cnc_getcrntscrn(ushort FlibHndl, out short a);
 
         /* change screen mode */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_slctscrn")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_slctscrn")]
         public static extern short cnc_slctscrn(ushort FlibHndl, short a);
 
         /* read CNC configuration information */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_sysconfig")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_sysconfig")]
         public static extern short cnc_sysconfig(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSYSC a);
 
         /* read program restart information */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdprstrinfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdprstrinfo")]
         public static extern short cnc_rdprstrinfo(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBPRS a);
 
         /* search sequence number for program restart */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rstrseqsrch")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rstrseqsrch")]
         public static extern short cnc_rstrseqsrch(ushort FlibHndl, int a, int b, short c, short d);
 
         /* search sequence number for program restart 2 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rstrseqsrch2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rstrseqsrch2")]
         public static extern short cnc_rstrseqsrch2(ushort FlibHndl, int a, int b, short c, short d, int e);
 
         /* read output signal image of software operator's panel  */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdopnlsgnl")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdopnlsgnl")]
         public static extern short cnc_rdopnlsgnl(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBSGNL b);
 
         /* write output signal of software operator's panel  */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wropnlsgnl")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wropnlsgnl")]
         public static extern short cnc_wropnlsgnl(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IODBSGNL a);
 
         /* read general signal image of software operator's panel  */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdopnlgnrl")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdopnlgnrl")]
         public static extern short cnc_rdopnlgnrl(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBGNRL b);
 
         /* write general signal image of software operator's panel  */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wropnlgnrl")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wropnlgnrl")]
         public static extern short cnc_wropnlgnrl(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IODBGNRL a);
 
         /* read general signal name of software operator's panel  */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdopnlgsname")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdopnlgsname")]
         public static extern short cnc_rdopnlgsname(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBRDNA b);
 
         /* write general signal name of software operator's panel  */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wropnlgsname")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wropnlgsname")]
         public static extern short cnc_wropnlgsname(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IODBRDNA a);
 
         /* get detail error */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_getdtailerr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_getdtailerr")]
         public static extern short cnc_getdtailerr(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBERR a);
 
         /* read informations of CNC parameter */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdparainfo")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdparainfo")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdparainfo")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdparainfo")]
-#elif WIN64
-        [DllImport("FWLIB64.dll", EntryPoint = "cnc_rdparainfo")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdparainfo")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdparainfo")]
         public static extern short cnc_rdparainfo(ushort FlibHndl,
             short a, ushort b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBPARAIF c);
 
         /* read informations of CNC setting data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdsetinfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdsetinfo")]
         public static extern short cnc_rdsetinfo(ushort FlibHndl,
             short a, ushort b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSETIF c);
 
         /* read informations of CNC diagnose data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rddiaginfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rddiaginfo")]
         public static extern short cnc_rddiaginfo(ushort FlibHndl,
             short a, ushort b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBDIAGIF c);
 
         /* read maximum, minimum and total number of CNC parameter */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdparanum")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdparanum")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdparanum")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdparanum")]
-#elif WIN64
-        [DllImport("FWLIB64.dll", EntryPoint = "cnc_rdparanum")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdparanum")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdparanum")]
         public static extern short cnc_rdparanum(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBPARANUM a);
 
         /* read maximum, minimum and total number of CNC setting data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdsetnum")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdsetnum")]
         public static extern short cnc_rdsetnum(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSETNUM a);
 
         /* read maximum, minimum and total number of CNC diagnose data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rddiagnum")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rddiagnum")]
         public static extern short cnc_rddiagnum(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBDIAGNUM a);
 
         /* get maximum valid figures and number of decimal places */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_getfigure")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_getfigure")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_getfigure")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_getfigure")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_getfigure")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_getfigure")]
         public static extern short cnc_getfigure(ushort FlibHndl,
             short a, out short b, [Out, MarshalAs(UnmanagedType.AsAny)] Object c, [Out, MarshalAs(UnmanagedType.AsAny)] Object d);
 
         /* read F-ROM information on CNC  */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdfrominfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdfrominfo")]
         public static extern short cnc_rdfrominfo(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBFINFO b);
 
         /* start of reading F-ROM data from CNC */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_fromsvstart")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_fromsvstart")]
         public static extern short cnc_fromsvstart(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.AsAny)] Object b, int c);
 
         /* read F-ROM data from CNC */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_fromsave")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_fromsave")]
         public static extern short cnc_fromsave(ushort FlibHndl, out short a, [Out, MarshalAs(UnmanagedType.AsAny)] Object b, ref int c);
 
         /* end of reading F-ROM data from CNC */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_fromsvend")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_fromsvend")]
         public static extern short cnc_fromsvend(ushort FlibHndl);
 
         /* start of writing F-ROM data to CNC */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_fromldstart")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_fromldstart")]
         public static extern short cnc_fromldstart(ushort FlibHndl, short a, int b);
 
         /* write F-ROM data to CNC */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_fromload")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_fromload")]
         public static extern short cnc_fromload(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a, ref int b);
 
         /* end of writing F-ROM data to CNC */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_fromldend")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_fromldend")]
         public static extern short cnc_fromldend(ushort FlibHndl);
 
         /* delete F-ROM data on CNC */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_fromdelete")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_fromdelete")]
         public static extern short cnc_fromdelete(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.AsAny)] Object b, int c);
 
         /* read S-RAM information on CNC */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdsraminfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdsraminfo")]
         public static extern short cnc_rdsraminfo(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSINFO a);
 
         /* start of reading S-RAM data from CNC */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_srambkstart")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_srambkstart")]
         public static extern short cnc_srambkstart(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a, int b);
 
         /* read S-RAM data from CNC */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_srambackup")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_srambackup")]
         public static extern short cnc_srambackup(ushort FlibHndl, out short a, [Out, MarshalAs(UnmanagedType.AsAny)] Object b, ref int c);
 
         /* end of reading S-RAM data from CNC */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_srambkend")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_srambkend")]
         public static extern short cnc_srambkend(ushort FlibHndl);
 
         /* read F-ROM information on CNC  */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_getfrominfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_getfrominfo")]
         public static extern short cnc_getfrominfo(ushort FlibHndl,
             short a, out short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBFINFORM c);
 
         /* start of reading F-ROM data from CNC */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_fromgetstart")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_fromgetstart")]
         public static extern short cnc_fromgetstart(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* read F-ROM data from CNC */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_fromget")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_fromget")]
         public static extern short cnc_fromget(ushort FlibHndl, out short a, [Out, MarshalAs(UnmanagedType.AsAny)] Object b, ref int c);
 
         /* end of reading F-ROM data from CNC */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_fromgetend")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_fromgetend")]
         public static extern short cnc_fromgetend(ushort FlibHndl);
 
         /* start of writing F-ROM data to CNC */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_fromputstart")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_fromputstart")]
         public static extern short cnc_fromputstart(ushort FlibHndl, short a);
 
         /* write F-ROM data to CNC */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_fromput")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_fromput")]
         public static extern short cnc_fromput(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a, ref int b);
 
         /* end of writing F-ROM data to CNC */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_fromputend")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_fromputend")]
         public static extern short cnc_fromputend(ushort FlibHndl);
 
         /* delete F-ROM data on CNC */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_fromremove")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_fromremove")]
         public static extern short cnc_fromremove(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* read S-RAM information on CNC */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_getsraminfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_getsraminfo")]
         public static extern short cnc_getsraminfo(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSINFO a);
 
         /* start of reading S-RAM data from CNC */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_sramgetstart")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_sramgetstart")]
         public static extern short cnc_sramgetstart(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* start of reading S-RAM data from CNC (2) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_sramgetstart2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_sramgetstart2")]
         public static extern short cnc_sramgetstart2(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* read S-RAM data from CNC */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_sramget")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_sramget")]
         public static extern short cnc_sramget(ushort FlibHndl, out short a, [Out, MarshalAs(UnmanagedType.AsAny)] Object b, ref int c);
 
         /* read S-RAM data from CNC (2) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_sramget2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_sramget2")]
         public static extern short cnc_sramget2(ushort FlibHndl, out short a, [Out, MarshalAs(UnmanagedType.AsAny)] Object b, ref int c);
 
         /* end of reading S-RAM data from CNC */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_sramgetend")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_sramgetend")]
         public static extern short cnc_sramgetend(ushort FlibHndl);
 
         /* end of reading S-RAM data from CNC (2) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_sramgetend2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_sramgetend2")]
         public static extern short cnc_sramgetend2(ushort FlibHndl);
 
         /* read number of S-RAM data kind on CNC */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdsramnum")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdsramnum")]
         public static extern short cnc_rdsramnum(ushort FlibHndl, out short a);
 
         /* read S-RAM data address information on CNC */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdsramaddr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdsramaddr")]
         public static extern short cnc_rdsramaddr(ushort FlibHndl, out short a, [Out, MarshalAs(UnmanagedType.LPStruct)] SRAMADDR b);
 
         /* get current NC data protection information */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_getlockstat")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_getlockstat")]
         public static extern short cnc_getlockstat(ushort FlibHndl, short a, out byte b);
 
         /* change NC data protection status */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_chgprotbit")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_chgprotbit")]
         public static extern short cnc_chgprotbit(ushort FlibHndl, short a, ref byte b, int c);
 
         /* transfer a file from host computer to CNC by FTP */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dtsvftpget")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dtsvftpget")]
         public static extern short cnc_dtsvftpget(ushort FlibHndl,
             [In, MarshalAs(UnmanagedType.AsAny)] Object a, [In, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* transfer a file from CNC to host computer by FTP */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dtsvftpput")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dtsvftpput")]
         public static extern short cnc_dtsvftpput(ushort FlibHndl,
             [In, MarshalAs(UnmanagedType.AsAny)] Object a, [In, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* get transfer status for FTP */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dtsvftpstat")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dtsvftpstat")]
         public static extern short cnc_dtsvftpstat(ushort FlibHndl);
 
         /* read file directory in Data Server */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dtsvrdpgdir")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dtsvrdpgdir")]
         public static extern short cnc_dtsvrdpgdir(ushort FlibHndl,
             [In, MarshalAs(UnmanagedType.AsAny)] Object a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBDSDIR c);
 
         /* delete files in Data Server */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dtsvdelete")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dtsvdelete")]
         public static extern short cnc_dtsvdelete(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* down load from CNC (transfer a file from CNC to MMC) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dtsvdownload")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dtsvdownload")]
         public static extern short cnc_dtsvdownload(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* up load to CNC (transfer a file from MMC to CNC) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dtsvupload")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dtsvupload")]
         public static extern short cnc_dtsvupload(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* close upload/download between Data Server and CNC */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dtsvcnclupdn")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dtsvcnclupdn")]
         public static extern short cnc_dtsvcnclupdn(ushort FlibHndl);
 
         /* get transfer status for up/down load */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dtsvupdnstat")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dtsvupdnstat")]
         public static extern short cnc_dtsvupdnstat(ushort FlibHndl);
 
         /* get file name for DNC operation in Data Server */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dtsvgetdncpg")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dtsvgetdncpg")]
         public static extern short cnc_dtsvgetdncpg(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* set program number of DNC oparation to CNC */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dtsvsetdncpg")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dtsvsetdncpg")]
         public static extern short cnc_dtsvsetdncpg(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* read setting data for Data Server */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dtsvrdset")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dtsvrdset")]
         public static extern short cnc_dtsvrdset(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBDSSET a);
 
         /* write setting data for Data Server */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dtsvwrset")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dtsvwrset")]
         public static extern short cnc_dtsvwrset(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IODBDSSET a);
 
         /* check hard disk in Data Server */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dtsvchkdsk")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dtsvchkdsk")]
         public static extern short cnc_dtsvchkdsk(ushort FlibHndl);
 
         /* format hard disk in Data Server */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dtsvhdformat")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dtsvhdformat")]
         public static extern short cnc_dtsvhdformat(ushort FlibHndl);
 
         /* save interface area in Data Server */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dtsvsavecram")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dtsvsavecram")]
         public static extern short cnc_dtsvsavecram(ushort FlibHndl);
 
         /* get interface area in Data Server */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dtsvrdcram")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dtsvrdcram")]
         public static extern short cnc_dtsvrdcram(ushort FlibHndl, int a, ref int b, [Out, MarshalAs(UnmanagedType.AsAny)] Object c);
 
         /* read maintenance information for Data Server */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dtsvmntinfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dtsvmntinfo")]
         public static extern short cnc_dtsvmntinfo(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBDSMNT a);
 
         /* get Data Server mode */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dtsvgetmode")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dtsvgetmode")]
         public static extern short cnc_dtsvgetmode(ushort FlibHndl, out short a);
 
         /* set Data Server mode */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dtsvsetmode")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dtsvsetmode")]
         public static extern short cnc_dtsvsetmode(ushort FlibHndl, short a);
 
         /* read error message for Data Server */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dtsvrderrmsg")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dtsvrderrmsg")]
         public static extern short cnc_dtsvrderrmsg(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* transfar file from Pc to Data Server */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dtsvwrfile")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dtsvwrfile")]
         public static extern short cnc_dtsvwrfile(ushort FlibHndl,
             [In, MarshalAs(UnmanagedType.AsAny)] Object a, [In, MarshalAs(UnmanagedType.AsAny)] Object b, short c);
 
         /* transfar file from Data Server to Pc */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dtsvrdfile")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dtsvrdfile")]
         public static extern short cnc_dtsvrdfile(ushort FlibHndl,
             [In, MarshalAs(UnmanagedType.AsAny)] Object a, [In, MarshalAs(UnmanagedType.AsAny)] Object b, short c);
 
         /* read the loop gain for each axis */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdloopgain")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdloopgain")]
         public static extern short cnc_rdloopgain(ushort FlibHndl, out int a);
 
         /* read the actual current for each axis */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdcurrent")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdcurrent")]
         public static extern short cnc_rdcurrent(ushort FlibHndl, out short a);
 
         /* read the actual speed for each axis */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdsrvspeed")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdsrvspeed")]
         public static extern short cnc_rdsrvspeed(ushort FlibHndl, out int a);
 
         /* read the operation mode */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdopmode")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdopmode")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdopmode")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdopmode")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdopmode")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdopmode")]
         public static extern short cnc_rdopmode(ushort FlibHndl, out short a);
 
         /* read the position deviation S */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdposerrs")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdposerrs")]
         public static extern short cnc_rdposerrs(ushort FlibHndl, out int a);
 
         /* read the position deviation S1 and S2 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdposerrs2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdposerrs2")]
         public static extern short cnc_rdposerrs2(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBPSER a);
 
         /* read the position deviation Z in the rigid tap mode */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdposerrz")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdposerrz")]
         public static extern short cnc_rdposerrz(ushort FlibHndl, out int a);
 
         /* read the synchronous error in the synchronous control mode */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdsynerrsy")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdsynerrsy")]
         public static extern short cnc_rdsynerrsy(ushort FlibHndl, out int a);
 
         /* read the synchronous error in the rigid tap mode */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdsynerrrg")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdsynerrrg")]
         public static extern short cnc_rdsynerrrg(ushort FlibHndl, out int a);
 
         /* read the spindle alarm */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdspdlalm")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdspdlalm")]
         public static extern short cnc_rdspdlalm(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* read the control input signal */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdctrldi")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdctrldi")]
         public static extern short cnc_rdctrldi(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSPDI a);
 
         /* read the control output signal */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdctrldo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdctrldo")]
         public static extern short cnc_rdctrldo(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSPDO a);
 
         /* read the number of controled spindle */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdnspdl")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdnspdl")]
         public static extern short cnc_rdnspdl(ushort FlibHndl, out short a);
 
         /* read data from FANUC BUS */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdfbusmem")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdfbusmem")]
         public static extern short cnc_rdfbusmem(ushort FlibHndl,
             short a, short b, int c, int d, [Out, MarshalAs(UnmanagedType.AsAny)] Object e);
 
         /* write data to FANUC BUS */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrfbusmem")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrfbusmem")]
         public static extern short cnc_wrfbusmem(ushort FlibHndl,
             short a, short b, int c, int d, [In, MarshalAs(UnmanagedType.AsAny)] Object e);
 
         /* read the parameter of wave diagnosis */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdwaveprm")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdwaveprm")]
         public static extern short cnc_rdwaveprm(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBWAVE a);
 
         /* write the parameter of wave diagnosis */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrwaveprm")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrwaveprm")]
         public static extern short cnc_wrwaveprm(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IODBWAVE a);
 
         /* read the parameter of wave diagnosis 2 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdwaveprm2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdwaveprm2")]
         public static extern short cnc_rdwaveprm2(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBWVPRM a);
 
         /* write the parameter of wave diagnosis 2 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrwaveprm2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrwaveprm2")]
         public static extern short cnc_wrwaveprm2(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IODBWVPRM a);
 
         /* start the sampling for wave diagnosis */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wavestart")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wavestart")]
         public static extern short cnc_wavestart(ushort FlibHndl);
 
         /* stop the sampling for wave diagnosis */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wavestop")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wavestop")]
         public static extern short cnc_wavestop(ushort FlibHndl);
 
         /* read the status of wave diagnosis */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wavestat")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wavestat")]
         public static extern short cnc_wavestat(ushort FlibHndl, out short a);
 
         /* read the data of wave diagnosis */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdwavedata")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdwavedata")]
         public static extern short cnc_rdwavedata(ushort FlibHndl,
             short a, short b, int c, ref int d, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBWVDT e);
 
         /* read the parameter of wave diagnosis for remort diagnosis */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdrmtwaveprm")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdrmtwaveprm")]
         public static extern short cnc_rdrmtwaveprm(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBRMTPRM a, short b);
 
         /* write the parameter of wave diagnosis for remort diagnosis */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrrmtwaveprm")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrrmtwaveprm")]
         public static extern short cnc_wrrmtwaveprm(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IODBRMTPRM a);
 
         /* start the sampling for wave diagnosis for remort diagnosis */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rmtwavestart")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rmtwavestart")]
         public static extern short cnc_rmtwavestart(ushort FlibHndl);
 
         /* stop the sampling for wave diagnosis for remort diagnosis */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rmtwavestop")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rmtwavestop")]
         public static extern short cnc_rmtwavestop(ushort FlibHndl);
 
         /* read the status of wave diagnosis for remort diagnosis*/
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rmtwavestat")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rmtwavestat")]
         public static extern short cnc_rmtwavestat(ushort FlibHndl, out short a);
 
         /* read the data of wave diagnosis for remort diagnosis */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdrmtwavedt")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdrmtwavedt")]
         public static extern short cnc_rdrmtwavedt(ushort FlibHndl,
             short a, int b, ref int c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBRMTDT d);
 
         /* read of address for PMC signal batch save */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdsavsigadr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdsavsigadr")]
         public static extern short cnc_rdsavsigadr(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBSIGAD a, short b);
 
         /* write of address for PMC signal batch save */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrsavsigadr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrsavsigadr")]
         public static extern short cnc_wrsavsigadr(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IODBSIGAD a, out short b);
 
         /* read of data for PMC signal batch save */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdsavsigdata")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdsavsigdata")]
         public static extern short cnc_rdsavsigdata(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.AsAny)] Object c, ref short d);
 
         /* read M-code group data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdmgrpdata")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdmgrpdata")]
         public static extern short cnc_rdmgrpdata(ushort FlibHndl,
             short a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBMGRP c);
 
         /* write M-code group data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrmgrpdata")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrmgrpdata")]
         public static extern short cnc_wrmgrpdata(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IDBMGRP a);
 
         /* read executing M-code group data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdexecmcode")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdexecmcode")]
         public static extern short cnc_rdexecmcode(ushort FlibHndl,
             short a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBEXEM c);
 
         /* read program restart M-code group data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdrstrmcode")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdrstrmcode")]
         public static extern short cnc_rdrstrmcode(ushort FlibHndl,
             short a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBRSTRM c);
 
         /* read processing time stamp data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdproctime")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdproctime")]
         public static extern short cnc_rdproctime(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBPTIME a);
 
         /* read MDI program stat */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdmdiprgstat")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdmdiprgstat")]
         public static extern short cnc_rdmdiprgstat(ushort FlibHndl, out ushort a);
 
         /* read program directory for processing time data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdprgdirtime")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdprgdirtime")]
         public static extern short cnc_rdprgdirtime(ushort FlibHndl,
             ref int a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] PRGDIRTM c);
 
         /* read program directory 2 */
 #if (!ONO8D)
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdprogdir2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdprogdir2")]
         public static extern short cnc_rdprogdir2(ushort FlibHndl,
             short a, ref short b, ref short c, [Out, MarshalAs(UnmanagedType.LPStruct)] PRGDIR2 d);
 #else
-    [DllImport("FWLIB32.dll", EntryPoint="cnc_rdprogdir2o8")]
+    [DllImport(FocasLibConstants.FileName, EntryPoint="cnc_rdprogdir2o8")]
     public static extern short cnc_rdprogdir2( ushort FlibHndl,
         short a, ref short b, ref short c, [Out,MarshalAs(UnmanagedType.LPStruct)] PRGDIR2 d );
 #endif
 
         /* read program directory 3 */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdprogdir3")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdprogdir3")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdprogdir3")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdprogdir3")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdprogdir3")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdprogdir3")]
         public static extern short cnc_rdprogdir3(ushort FlibHndl,
             short a, ref int b, ref short c, [Out, MarshalAs(UnmanagedType.LPStruct)] PRGDIR3 d);
 
         /* read program directory 4 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdprogdir4")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdprogdir4")]
         public static extern short cnc_rdprogdir4(ushort FlibHndl,
             short a, int b, ref short c, [Out, MarshalAs(UnmanagedType.LPStruct)] PRGDIR4 d);
 
         /* read DNC file name for DNC1, DNC2, OSI-Ethernet */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rddncfname")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rddncfname")]
         public static extern short cnc_rddncfname(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* write DNC file name for DNC1, DNC2, OSI-Ethernet */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrdncfname")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrdncfname")]
         public static extern short cnc_wrdncfname(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* read communication parameter for DNC1, DNC2, OSI-Ethernet */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdcomparam")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdcomparam")]
         public static extern short cnc_rdcomparam(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBCPRM a);
 
         /* write communication parameter for DNC1, DNC2, OSI-Ethernet */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrcomparam")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrcomparam")]
         public static extern short cnc_wrcomparam(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IODBCPRM a);
 
         /* read log message for DNC2 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdcomlogmsg")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdcomlogmsg")]
         public static extern short cnc_rdcomlogmsg(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* read operator message for DNC1, DNC2 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdcomopemsg")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdcomopemsg")]
         public static extern short cnc_rdcomopemsg(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* read recieve message for OSI-Ethernet */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdrcvmsg")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdrcvmsg")]
         public static extern short cnc_rdrcvmsg(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* read send message for OSI-Ethernet */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdsndmsg")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdsndmsg")]
         public static extern short cnc_rdsndmsg(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* send message for OSI-Ethernet */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_sendmessage")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_sendmessage")]
         public static extern short cnc_sendmessage(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* clear message buffer for OSI-Ethernet */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_clrmsgbuff")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_clrmsgbuff")]
         public static extern short cnc_clrmsgbuff(ushort FlibHndl, short a);
 
         /* read message recieve status for OSI-Ethernet */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdrcvstat")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdrcvstat")]
         public static extern short cnc_rdrcvstat(ushort FlibHndl, out ushort a);
 
         /* read interference check */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdintchk")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdintchk")]
         public static extern short cnc_rdintchk(ushort FlibHndl,
             short a, short b, short c, short d, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBINT e);
 
         /* write interference check */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrintchk")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrintchk")]
         public static extern short cnc_wrintchk(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBINT b);
 
         /* read interference check information */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdintinfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdintinfo")]
         public static extern short cnc_rdintinfo(ushort FlibHndl, out short a);
 
         /* read work coordinate shift */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdwkcdshft")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdwkcdshft")]
         public static extern short cnc_rdwkcdshft(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBWCSF c);
 
         /* write work coordinate shift */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrwkcdshft")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrwkcdshft")]
         public static extern short cnc_wrwkcdshft(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBWCSF b);
 
         /* read work coordinate shift measure */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdwkcdsfms")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdwkcdsfms")]
         public static extern short cnc_rdwkcdsfms(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBWCSF c);
 
         /* write work coordinate shift measure */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrwkcdsfms")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrwkcdsfms")]
         public static extern short cnc_wrwkcdsfms(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBWCSF b);
 
         /* stop the sampling for operator message history */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_stopomhis")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_stopomhis")]
         public static extern short cnc_stopomhis(ushort FlibHndl);
 
         /* start the sampling for operator message history */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_startomhis")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_startomhis")]
         public static extern short cnc_startomhis(ushort FlibHndl);
 
         /* read operator message history information */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdomhisinfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdomhisinfo")]
         public static extern short cnc_rdomhisinfo(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBOMIF a);
 
         /* read operator message history */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdomhistry")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdomhistry")]
         public static extern short cnc_rdomhistry(ushort FlibHndl,
             ushort a, ref ushort b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBOMHIS c);
 
         /* read operater message history data F30i */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdomhistry2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdomhistry2")]
         public static extern short cnc_rdomhistry2(ushort FlibHndl,
             ushort a, ushort b, ushort c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBOMHIS2 d);
 
         /* write external key operation history for F30i*/
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrkeyhistry")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrkeyhistry")]
         public static extern short cnc_wrkeyhistry(ushort FlibHndl, byte a);
 
         /* clear operator message history */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_clearomhis")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_clearomhis")]
         public static extern short cnc_clearomhis(ushort FlibHndl);
 
         /* read b-axis tool offset value(area specified) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdbtofsr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdbtofsr")]
         public static extern short cnc_rdbtofsr(ushort FlibHndl,
             short a, short b, short c, short d, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBBTO e);
 
         /* write b-axis tool offset value(area specified) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrbtofsr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrbtofsr")]
         public static extern short cnc_wrbtofsr(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBBTO b);
 
         /* read b-axis tool offset information */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdbtofsinfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdbtofsinfo")]
         public static extern short cnc_rdbtofsinfo(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBBTLINF a);
 
         /* read b-axis command */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdbaxis")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdbaxis")]
         public static extern short cnc_rdbaxis(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBBAXIS a);
 
         /* read CNC system soft series and version */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdsyssoft")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdsyssoft")]
         public static extern short cnc_rdsyssoft(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSYSS a);
 
         /* read CNC system soft series and version (2) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdsyssoft2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdsyssoft2")]
         public static extern short cnc_rdsyssoft2(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSYSS2 a);
 
         /* read CNC module configuration information */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdmdlconfig")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdmdlconfig")]
         public static extern short cnc_rdmdlconfig(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBMDLC a);
 
         /* read CNC module configuration information 2 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdmdlconfig2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdmdlconfig2")]
         public static extern short cnc_rdmdlconfig2(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* read processing condition file (processing data) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdpscdproc")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdpscdproc")]
         public static extern short cnc_rdpscdproc(ushort FlibHndl,
             short a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBPSCD c);
 
         /* write processing condition file (processing data) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrpscdproc")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrpscdproc")]
         public static extern short cnc_wrpscdproc(ushort FlibHndl,
             short a, ref short b, [In, MarshalAs(UnmanagedType.LPStruct)] IODBPSCD c);
 
         /* read processing condition file (piercing data) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdpscdpirc")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdpscdpirc")]
         public static extern short cnc_rdpscdpirc(ushort FlibHndl,
             short a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBPIRC c);
 
         /* write processing condition file (piercing data) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrpscdpirc")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrpscdpirc")]
         public static extern short cnc_wrpscdpirc(ushort FlibHndl,
             short a, ref short b, [In, MarshalAs(UnmanagedType.LPStruct)] IODBPIRC c);
 
         /* read processing condition file (edging data) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdpscdedge")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdpscdedge")]
         public static extern short cnc_rdpscdedge(ushort FlibHndl,
             short a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBEDGE c);
 
         /* write processing condition file (edging data) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrpscdedge")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrpscdedge")]
         public static extern short cnc_wrpscdedge(ushort FlibHndl,
             short a, ref short b, [In, MarshalAs(UnmanagedType.LPStruct)] IODBEDGE c);
 
         /* read processing condition file (slope data) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdpscdslop")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdpscdslop")]
         public static extern short cnc_rdpscdslop(ushort FlibHndl,
             short a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBSLOP c);
 
         /* write processing condition file (slope data) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrpscdslop")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrpscdslop")]
         public static extern short cnc_wrpscdslop(ushort FlibHndl,
             short a, ref short b, [In, MarshalAs(UnmanagedType.LPStruct)] IODBSLOP c);
 
         /* read power controll duty data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdlpwrdty")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdlpwrdty")]
         public static extern short cnc_rdlpwrdty(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBLPWDT a);
 
         /* write power controll duty data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrlpwrdty")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrlpwrdty")]
         public static extern short cnc_wrlpwrdty(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IODBLPWDT a);
 
         /* read laser power data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdlpwrdat")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdlpwrdat")]
         public static extern short cnc_rdlpwrdat(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBLOPDT a);
 
         /* read power complement */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdlpwrcpst")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdlpwrcpst")]
         public static extern short cnc_rdlpwrcpst(ushort FlibHndl, out short a);
 
         /* write power complement */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrlpwrcpst")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrlpwrcpst")]
         public static extern short cnc_wrlpwrcpst(ushort FlibHndl, short a);
 
         /* read laser assist gas selection */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdlagslt")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdlagslt")]
         public static extern short cnc_rdlagslt(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBLAGSL a);
 
         /* write laser assist gas selection */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrlagslt")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrlagslt")]
         public static extern short cnc_wrlagslt(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IODBLAGSL a);
 
         /* read laser assist gas flow */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdlagst")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdlagst")]
         public static extern short cnc_rdlagst(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBLAGST a);
 
         /* write laser assist gas flow */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrlagst")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrlagst")]
         public static extern short cnc_wrlagst(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IODBLAGST a);
 
         /* read laser power for edge processing */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdledgprc")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdledgprc")]
         public static extern short cnc_rdledgprc(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBLEGPR a);
 
         /* write laser power for edge processing */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrledgprc")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrledgprc")]
         public static extern short cnc_wrledgprc(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IODBLEGPR a);
 
         /* read laser power for piercing */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdlprcprc")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdlprcprc")]
         public static extern short cnc_rdlprcprc(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBLPCPR a);
 
         /* write laser power for piercing */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrlprcprc")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrlprcprc")]
         public static extern short cnc_wrlprcprc(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IODBLPCPR a);
 
         /* read laser command data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdlcmddat")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdlcmddat")]
         public static extern short cnc_rdlcmddat(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBLCMDT a);
 
         /* read displacement */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdldsplc")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdldsplc")]
         public static extern short cnc_rdldsplc(ushort FlibHndl, out short a);
 
         /* write displacement */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrldsplc")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrldsplc")]
         public static extern short cnc_wrldsplc(ushort FlibHndl, short a);
 
         /* read error for axis z */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdlerrz")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdlerrz")]
         public static extern short cnc_rdlerrz(ushort FlibHndl, out short a);
 
         /* read active number */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdlactnum")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdlactnum")]
         public static extern short cnc_rdlactnum(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBLACTN a);
 
         /* read laser comment */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdlcmmt")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdlcmmt")]
         public static extern short cnc_rdlcmmt(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBLCMMT a);
 
         /* read laser power select */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdlpwrslt")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdlpwrslt")]
         public static extern short cnc_rdlpwrslt(ushort FlibHndl, out short a);
 
         /* write laser power select */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrlpwrslt")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrlpwrslt")]
         public static extern short cnc_wrlpwrslt(ushort FlibHndl, short a);
 
         /* read laser power controll */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdlpwrctrl")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdlpwrctrl")]
         public static extern short cnc_rdlpwrctrl(ushort FlibHndl, out short a);
 
         /* write laser power controll */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrlpwrctrl")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrlpwrctrl")]
         public static extern short cnc_wrlpwrctrl(ushort FlibHndl, short a);
 
         /* read power correction factor history data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdpwofsthis")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdpwofsthis")]
         public static extern short cnc_rdpwofsthis(ushort FlibHndl,
             int a, ref int b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBPWOFST c);
 
         /* read management time */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdmngtime")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdmngtime")]
         public static extern short cnc_rdmngtime(ushort FlibHndl,
             int a, ref int b, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBMNGTIME c);
 
         /* write management time */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrmngtime")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrmngtime")]
         public static extern short cnc_wrmngtime(ushort FlibHndl, int a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBMNGTIME b);
 
         /* read data related to electrical discharge at power correction ends */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rddischarge")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rddischarge")]
         public static extern short cnc_rddischarge(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBDISCHRG a);
 
         /* read alarm history data related to electrical discharg */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rddischrgalm")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rddischrgalm")]
         public static extern short cnc_rddischrgalm(ushort FlibHndl,
             int a, ref int b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBDISCHRGALM c);
 
         /* get date and time from cnc */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_gettimer")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_gettimer")]
         public static extern short cnc_gettimer(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBTIMER a);
 
         /* set date and time for cnc */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_settimer")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_settimer")]
         public static extern short cnc_settimer(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IODBTIMER a);
 
         /* read timer data from cnc */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdtimer")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdtimer")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdtimer")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdtimer")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdtimer")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdtimer")]
         public static extern short cnc_rdtimer(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBTIME b);
 
         /* write timer data for cnc */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrtimer")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrtimer")]
         public static extern short cnc_wrtimer(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBTIME b);
 
         /* read tool controll data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdtlctldata")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdtlctldata")]
         public static extern short cnc_rdtlctldata(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBTLCTL a);
 
         /* write tool controll data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrtlctldata")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrtlctldata")]
         public static extern short cnc_wrtlctldata(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IODBTLCTL a);
 
         /* read tool data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdtooldata")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdtooldata")]
         public static extern short cnc_rdtooldata(ushort FlibHndl,
             short a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBTLDT c);
 
         /* read tool data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrtooldata")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrtooldata")]
         public static extern short cnc_wrtooldata(ushort FlibHndl,
             short a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBTLDT c);
 
         /* read multi tool data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdmultitldt")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdmultitldt")]
         public static extern short cnc_rdmultitldt(ushort FlibHndl,
             short a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBMLTTL c);
 
         /* write multi tool data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrmultitldt")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrmultitldt")]
         public static extern short cnc_wrmultitldt(ushort FlibHndl,
             short a, ref short b, [In, MarshalAs(UnmanagedType.LPStruct)] IODBMLTTL c);
 
         /* read multi tap data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdmtapdata")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdmtapdata")]
         public static extern short cnc_rdmtapdata(ushort FlibHndl,
             short a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBMTAP c);
 
         /* write multi tap data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrmtapdata")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrmtapdata")]
         public static extern short cnc_wrmtapdata(ushort FlibHndl,
             short a, ref short b, [In, MarshalAs(UnmanagedType.LPStruct)] IODBMTAP c);
 
         /* read multi-piece machining number */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdmultipieceno")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdmultipieceno")]
         public static extern short cnc_rdmultipieceno(ushort FlibHndl, out int a);
 
         /* read tool information */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdtoolinfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdtoolinfo")]
         public static extern short cnc_rdtoolinfo(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBPTLINF a);
 
         /* read safetyzone data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdsafetyzone")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdsafetyzone")]
         public static extern short cnc_rdsafetyzone(ushort FlibHndl,
             short a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBSAFE c);
 
         /* write safetyzone data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrsafetyzone")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrsafetyzone")]
         public static extern short cnc_wrsafetyzone(ushort FlibHndl,
             short a, ref short b, [In, MarshalAs(UnmanagedType.LPStruct)] IODBSAFE c);
 
         /* read toolzone data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdtoolzone")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdtoolzone")]
         public static extern short cnc_rdtoolzone(ushort FlibHndl,
             short a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBTLZN c);
 
         /* write toolzone data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrtoolzone")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrtoolzone")]
         public static extern short cnc_wrtoolzone(ushort FlibHndl,
             short a, ref short b, [In, MarshalAs(UnmanagedType.LPStruct)] IODBTLZN c);
 
         /* read active toolzone data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdacttlzone")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdacttlzone")]
         public static extern short cnc_rdacttlzone(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBACTTLZN a);
 
         /* read setzone number */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdsetzone")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdsetzone")]
         public static extern short cnc_rdsetzone(ushort FlibHndl, out short a);
 
         /* write setzone number */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrsetzone")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrsetzone")]
         public static extern short cnc_wrsetzone(ushort FlibHndl, short a);
 
         /* read block restart information */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdbrstrinfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdbrstrinfo")]
         public static extern short cnc_rdbrstrinfo(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBBRS a);
 
         /* read menu switch signal */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdmenuswitch")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdmenuswitch")]
         public static extern short cnc_rdmenuswitch(ushort FlibHndl, out short a);
 
         /* write menu switch signal */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrmenuswitch")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrmenuswitch")]
         public static extern short cnc_wrmenuswitch(ushort FlibHndl, short a, short b);
 
         /* read tool radius offset for position data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdradofs")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdradofs")]
         public static extern short cnc_rdradofs(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBROFS a);
 
         /* read tool length offset for position data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdlenofs")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdlenofs")]
         public static extern short cnc_rdlenofs(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBLOFS a);
 
         /* read fixed cycle for position data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdfixcycle")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdfixcycle")]
         public static extern short cnc_rdfixcycle(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBFIX a);
 
         /* read coordinate rotate for position data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdcdrotate")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdcdrotate")]
         public static extern short cnc_rdcdrotate(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBROT a);
 
         /* read 3D coordinate convert for position data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rd3dcdcnv")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rd3dcdcnv")]
         public static extern short cnc_rd3dcdcnv(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODB3DCD a);
 
         /* read programable mirror image for position data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdmirimage")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdmirimage")]
         public static extern short cnc_rdmirimage(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBMIR a);
 
         /* read scaling for position data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdscaling")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdscaling")]
         public static extern short cnc_rdscaling(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSCL a);
 
         /* read 3D tool offset for position data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rd3dtofs")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rd3dtofs")]
         public static extern short cnc_rd3dtofs(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODB3DTO a);
 
         /* read tool position offset for position data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdposofs")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdposofs")]
         public static extern short cnc_rdposofs(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBPOFS a);
 
         /* read hpcc setting data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdhpccset")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdhpccset")]
         public static extern short cnc_rdhpccset(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBHPST a);
 
         /* write hpcc setting data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrhpccset")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrhpccset")]
         public static extern short cnc_wrhpccset(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IODBHPST a);
 
         /* hpcc data auto setting data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_hpccatset")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_hpccatset")]
         public static extern short cnc_hpccatset(ushort FlibHndl);
 
         /* read hpcc tuning data ( parameter input ) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdhpcctupr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdhpcctupr")]
         public static extern short cnc_rdhpcctupr(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBHPPR a);
 
         /* write hpcc tuning data ( parameter input ) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrhpcctupr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrhpcctupr")]
         public static extern short cnc_wrhpcctupr(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IODBHPPR a);
 
         /* read hpcc tuning data ( acc input ) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdhpcctuac")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdhpcctuac")]
         public static extern short cnc_rdhpcctuac(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBHPAC a);
 
         /* write hpcc tuning data ( acc input ) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrhpcctuac")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrhpcctuac")]
         public static extern short cnc_wrhpcctuac(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IODBHPAC a);
 
         /* hpcc data auto tuning */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_hpccattune")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_hpccattune")]
         public static extern short cnc_hpccattune(ushort FlibHndl, short a, out short b);
 
         /* read hpcc fine level */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_hpccactfine")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_hpccactfine")]
         public static extern short cnc_hpccactfine(ushort FlibHndl, out short a);
 
         /* select hpcc fine level */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_hpccselfine")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_hpccselfine")]
         public static extern short cnc_hpccselfine(ushort FlibHndl, short a);
 
         /* read active fixture offset */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdactfixofs")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdactfixofs")]
         public static extern short cnc_rdactfixofs(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBZOFS b);
 
         /* read fixture offset */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdfixofs")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdfixofs")]
         public static extern short cnc_rdfixofs(ushort FlibHndl,
             short a, short b, short c, short d, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBZOR e);
 
         /* write fixture offset */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrfixofs")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrfixofs")]
         public static extern short cnc_wrfixofs(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBZOR b);
 
         /* read tip of tool for 3D handle */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rd3dtooltip")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rd3dtooltip")]
         public static extern short cnc_rd3dtooltip(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODB3DHDL a);
 
         /* read pulse for 3D handle */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rd3dpulse")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rd3dpulse")]
         public static extern short cnc_rd3dpulse(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODB3DPLS a);
 
         /* read move overrlap of tool for 3D handle */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rd3dmovrlap")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rd3dmovrlap")]
         public static extern short cnc_rd3dmovrlap(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODB3DHDL a);
 
         /* read change offset for 3D handle */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rd3dofschg")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rd3dofschg")]
         public static extern short cnc_rd3dofschg(ushort FlibHndl, ref int a);
 
         /* clear pulse and change offset for 3D handle */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_clr3dplsmov")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_clr3dplsmov")]
         public static extern short cnc_clr3dplsmov(ushort FlibHndl, short a);
 
         /* cycle start */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_start")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_start")]
         public static extern short cnc_start(ushort FlibHndl);
 
         /* reset CNC */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_reset")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_reset")]
         public static extern short cnc_reset(ushort FlibHndl);
 
         /* reset CNC 2 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_reset2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_reset2")]
         public static extern short cnc_reset2(ushort FlibHndl);
 
         /* read axis name */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdaxisname")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdaxisname")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdaxisname")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdaxisname")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdaxisname")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdaxisname")]
         public static extern short cnc_rdaxisname(ushort FlibHndl,
             ref short a, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBAXISNAME b);
 
         /* read spindle name */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdspdlname")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdspdlname")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdspdlname")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdspdlname")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdspdlname")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdspdlname")]
         public static extern short cnc_rdspdlname(ushort FlibHndl,
             ref short a, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSPDLNAME b);
 
         /* read extended axis name */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_exaxisname")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_exaxisname")]
         public static extern short cnc_exaxisname(ushort FlibHndl,
             short a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBEXAXISNAME c);
 
         /* read SRAM variable area for C language executor */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdcexesram")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdcexesram")]
         public static extern short cnc_rdcexesram(ushort FlibHndl, int a, [In, MarshalAs(UnmanagedType.AsAny)] Object b, ref int c);
 
         /* write SRAM variable area for C language executor */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrcexesram")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrcexesram")]
         public static extern short cnc_wrcexesram(ushort FlibHndl, int a, [In, MarshalAs(UnmanagedType.AsAny)] Object b, ref int c);
 
         /* read maximum size and linear address of SRAM variable area for C language executor */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_cexesraminfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_cexesraminfo")]
         public static extern short cnc_cexesraminfo(ushort FlibHndl, out short a, out int b, out int c);
 
         /* read maximum size of SRAM variable area for C language executor */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_cexesramsize")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_cexesramsize")]
         public static extern short cnc_cexesramsize(ushort FlibHndl, out int a);
 
         /* read additional workpiece coordinate systems number */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdcoordnum")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdcoordnum")]
         public static extern short cnc_rdcoordnum(ushort FlibHndl, out short a);
 
         /* converts from FANUC code to Shift JIS code */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_ftosjis")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_ftosjis")]
         public static extern short cnc_ftosjis(ushort FlibHndl,
             [In, MarshalAs(UnmanagedType.AsAny)] Object a, [Out, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* Set the unsolicited message parameters */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrunsolicprm")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrunsolicprm")]
         public static extern short cnc_wrunsolicprm(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBUNSOLIC b);
 
         /* Get the unsolicited message parameters */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdunsolicprm")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdunsolicprm")]
         public static extern short cnc_rdunsolicprm(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBUNSOLIC b);
 
         /* Start of unsolicited message */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_unsolicstart")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_unsolicstart")]
         public static extern short cnc_unsolicstart(ushort FlibHndl, short a, int hWnd, uint c, short d, out short e);
 
         /* End of unsolicited message */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_unsolicstop")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_unsolicstop")]
         public static extern short cnc_unsolicstop(ushort FlibHndl, short a);
 
         /* Reads the unsolicited message data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdunsolicmsg")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdunsolicmsg")]
         public static extern short cnc_rdunsolicmsg(short a, [In, Out] IDBUNSOLICMSG b);
 
         /* read machine specific maintenance item */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdpm_mcnitem")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdpm_mcnitem")]
         public static extern short cnc_rdpm_mcnitem(ushort FlibHndl, short a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBITEM c);
 
         /* write machine specific maintenance item */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrpm_mcnitem")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrpm_mcnitem")]
         public static extern short cnc_wrpm_mcnitem(ushort FlibHndl, short a, short b, [In, MarshalAs(UnmanagedType.LPStruct)] IODBITEM c);
 
         /* read cnc maintenance item */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdpm_cncitem")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdpm_cncitem")]
         public static extern short cnc_rdpm_cncitem(ushort FlibHndl, short a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBITEM c);
 
         /* read maintenance item status */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdpm_item")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdpm_item")]
         public static extern short cnc_rdpm_item(ushort FlibHndl, short a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBPMAINTE c);
 
         /* write maintenance item status */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrpm_item")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrpm_item")]
         public static extern short cnc_wrpm_item(ushort FlibHndl, short a, short b, short c, [In, MarshalAs(UnmanagedType.LPStruct)] IODBPMAINTE d);
 
         /* Display of optional message */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_dispoptmsg")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_dispoptmsg")]
         public static extern short cnc_dispoptmsg(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* Reading of answer for optional message display */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_optmsgans")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_optmsgans")]
         public static extern short cnc_optmsgans(ushort FlibHndl, out short a);
 
         /* Get CNC Model */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_getcncmodel")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_getcncmodel")]
         public static extern short cnc_getcncmodel(ushort FlibHndl, out short a);
 
         /* read number of repeats */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdrepeatval")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdrepeatval")]
         public static extern short cnc_rdrepeatval(ushort FlibHndl, out int a);
 
         /* read CNC system hard info */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdsyshard")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdsyshard")]
         public static extern short cnc_rdsyshard(ushort FlibHndl, short a, ref short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSYSH c);
 
         /* read CNC system soft series and version (3) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdsyssoft3")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdsyssoft3")]
         public static extern short cnc_rdsyssoft3(ushort FlibHndl, short a, ref short b, out short c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSYSS3 d);
 
         /* read digit of program number */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_progdigit")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_progdigit")]
         public static extern short cnc_progdigit(ushort FlibHndl, out short a);
 
         /* read CNC system path information */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_sysinfo_ex")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_sysinfo_ex")]
         public static extern short cnc_sysinfo_ex(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSYSEX a);
 
         /*------------------*/
@@ -11016,52 +10566,52 @@ namespace l99.driver.fanuc
         /*------------------*/
 
         /* Get reservation of service channel for SERCOS I/F */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_srcsrsvchnl")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_srcsrsvchnl")]
         public static extern short cnc_srcsrsvchnl(ushort FlibHndl);
 
         /* Read ID information of SERCOS I/F */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_srcsrdidinfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_srcsrdidinfo")]
         public static extern short cnc_srcsrdidinfo(ushort FlibHndl,
             int a, short b, short c, [Out, MarshalAs(UnmanagedType.AsAny)] IODBIDINF d);
 
         /* Write ID information of SERCOS I/F */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_srcswridinfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_srcswridinfo")]
         public static extern short cnc_srcswridinfo(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IODBIDINF a);
 
         /* Start of reading operation data from drive of SERCOS I/F */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_srcsstartrd")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_srcsstartrd")]
         public static extern short cnc_srcsstartrd(ushort FlibHndl, int a, short b);
 
         /* Start of writing operation data to drive of SERCOS I/F */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_srcsstartwrt")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_srcsstartwrt")]
         public static extern short cnc_srcsstartwrt(ushort FlibHndl, int a, short b);
 
         /* Stop of reading/writing operation data from/to drive of SERCOS I/F */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_srcsstopexec")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_srcsstopexec")]
         public static extern short cnc_srcsstopexec(ushort FlibHndl);
 
         /* Get execution status of reading/writing operation data of SERCOS I/F */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_srcsrdexstat")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_srcsrdexstat")]
         public static extern short cnc_srcsrdexstat(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSRCSST a);
 
         /* Read operation data from data buffer for SERCOS I/F */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_srcsrdopdata")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_srcsrdopdata")]
         public static extern short cnc_srcsrdopdata(ushort FlibHndl, int a, ref int b, [Out, MarshalAs(UnmanagedType.AsAny)] Object c);
 
         /* Write operation data to data buffer for SERCOS I/F */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_srcswropdata")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_srcswropdata")]
         public static extern short cnc_srcswropdata(ushort FlibHndl, int a, int b, [In, MarshalAs(UnmanagedType.AsAny)] Object c);
 
         /* Free reservation of service channel for SERCOS I/F */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_srcsfreechnl")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_srcsfreechnl")]
         public static extern short cnc_srcsfreechnl(ushort FlibHndl);
 
         /* Read drive assign of SERCOS I/F */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_srcsrdlayout")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_srcsrdlayout")]
         public static extern short cnc_srcsrdlayout(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSRCSLYT a);
 
         /* Read communication phase of drive of SERCOS I/F */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_srcsrddrvcp")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_srcsrddrvcp")]
         public static extern short cnc_srcsrddrvcp(ushort FlibHndl, out short a);
 
 
@@ -11070,35 +10620,35 @@ namespace l99.driver.fanuc
         /*----------------------------*/
 
         /* Start drawing position */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_startdrawpos")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_startdrawpos")]
         public static extern short cnc_startdrawpos(ushort FlibHndl);
 
         /* Stop drawing position */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_stopdrawpos")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_stopdrawpos")]
         public static extern short cnc_stopdrawpos(ushort FlibHndl);
 
         /* Start dynamic graphic */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_startdyngrph")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_startdyngrph")]
         public static extern short cnc_startdyngrph(ushort FlibHndl);
 
         /* Stop dynamic graphic */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_stopdyngrph")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_stopdyngrph")]
         public static extern short cnc_stopdyngrph(ushort FlibHndl);
 
         /* Read graphic command data */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdgrphcmd")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdgrphcmd")]
         public static extern short cnc_rdgrphcmd(ushort FlibHndl, ref short a, [Out, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* Update graphic command read pointer */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrgrphcmdptr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrgrphcmdptr")]
         public static extern short cnc_wrgrphcmdptr(ushort FlibHndl, short a);
 
         /* Read cancel flag */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdgrphcanflg")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdgrphcanflg")]
         public static extern short cnc_rdgrphcanflg(ushort FlibHndl, out short a);
 
         /* Clear graphic command */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_clrgrphcmd")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_clrgrphcmd")]
         public static extern short cnc_clrgrphcmd(ushort FlibHndl);
 
 
@@ -11107,32 +10657,32 @@ namespace l99.driver.fanuc
         /*---------------------------*/
 
         /* Servo learning data read start */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_svdtstartrd")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_svdtstartrd")]
         public static extern short cnc_svdtstartrd(ushort FlibHndl, short a);
 
         /* Servo learning data write start */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_svdtstartwr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_svdtstartwr")]
         public static extern short cnc_svdtstartwr(ushort FlibHndl, short a);
 
         /* Servo learning data read end */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_svdtendrd")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_svdtendrd")]
         public static extern short cnc_svdtendrd(ushort FlibHndl);
 
         /* Servo learning data write end */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_svdtendwr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_svdtendwr")]
         public static extern short cnc_svdtendwr(ushort FlibHndl);
 
         /* Servo learning data read/write stop */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_svdtstopexec")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_svdtstopexec")]
         public static extern short cnc_svdtstopexec(ushort FlibHndl);
 
         /* Servo learning data read from I/F buffer */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_svdtrddata")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_svdtrddata")]
         public static extern short cnc_svdtrddata(ushort FlibHndl,
             out short a, ref int b, [Out, MarshalAs(UnmanagedType.AsAny)] Object c);
 
         /* Servo learning data write to I/F buffer */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_svdtwrdata")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_svdtwrdata")]
         public static extern short cnc_svdtwrdata(ushort FlibHndl,
             out short a, ref int b, [In, MarshalAs(UnmanagedType.AsAny)] Object c);
 
@@ -11141,58 +10691,58 @@ namespace l99.driver.fanuc
         /* CNC : Servo Guide          */
         /*----------------------------*/
         /* Servo Guide (Channel data set) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_sdsetchnl")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_sdsetchnl")]
         public static extern short cnc_sdsetchnl(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IDBCHAN b);
 
         /* Servo Guide (Channel data clear) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_sdclrchnl")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_sdclrchnl")]
         public static extern short cnc_sdclrchnl(ushort FlibHndl);
 
         /* Servo Guide (Sampling start) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_sdstartsmpl")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_sdstartsmpl")]
         public static extern short cnc_sdstartsmpl(ushort FlibHndl, short a, int b, [Out, MarshalAs(UnmanagedType.AsAny)] Object c);
 
         /* Servo Guide (Sampling cancel) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_sdcancelsmpl")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_sdcancelsmpl")]
         public static extern short cnc_sdcancelsmpl(ushort FlibHndl);
 
         /* Servo Guide (read Sampling data) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_sdreadsmpl")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_sdreadsmpl")]
         public static extern short cnc_sdreadsmpl(ushort FlibHndl,
             out short a, int b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSD c);
 
         /* Servo Guide (Sampling end) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_sdendsmpl")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_sdendsmpl")]
         public static extern short cnc_sdendsmpl(ushort FlibHndl);
 
         /* Servo Guide (read 1 shot data) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_sdread1shot")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_sdread1shot")]
         public static extern short cnc_sdread1shot(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* Servo feedback data (Channel data set) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_sfbsetchnl")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_sfbsetchnl")]
         public static extern short cnc_sfbsetchnl(ushort FlibHndl,
             short a, int b, [In, MarshalAs(UnmanagedType.LPStruct)] IDBSFBCHAN c);
 
         /* Servo feedback data (Channel data clear) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_sfbclrchnl")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_sfbclrchnl")]
         public static extern short cnc_sfbclrchnl(ushort FlibHndl);
 
         /* Servo feedback data (Sampling start) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_sfbstartsmpl")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_sfbstartsmpl")]
         public static extern short cnc_sfbstartsmpl(ushort FlibHndl, short a, int b);
 
         /* Servo feedback data (Sampling cancel) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_sfbcancelsmpl")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_sfbcancelsmpl")]
         public static extern short cnc_sfbcancelsmpl(ushort FlibHndl);
 
         /* Servo feedback data (read Sampling data) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_sfbreadsmpl")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_sfbreadsmpl")]
         public static extern short cnc_sfbreadsmpl(ushort FlibHndl,
             out short a, int b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSD c);
 
         /* Servo feedback data (Sampling end) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_sfbendsmpl")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_sfbendsmpl")]
         public static extern short cnc_sfbendsmpl(ushort FlibHndl);
 
 
@@ -11201,19 +10751,19 @@ namespace l99.driver.fanuc
         /*----------------------------*/
 
         /* Start NC display */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_startnccmd")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_startnccmd")]
         public static extern short cnc_startnccmd(ushort FlibHndl);
 
         /* Start NC display (2) */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_startnccmd2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_startnccmd2")]
         public static extern short cnc_startnccmd2(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* Stop NC display */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_stopnccmd")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_stopnccmd")]
         public static extern short cnc_stopnccmd(ushort FlibHndl);
 
         /* Get NC display mode */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_getdspmode")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_getdspmode")]
         public static extern short cnc_getdspmode(ushort FlibHndl, out short a);
 
 
@@ -11222,27 +10772,27 @@ namespace l99.driver.fanuc
         /*------------------------------------*/
 
         /* Start remote diagnostics function */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_startrmtdgn")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_startrmtdgn")]
         public static extern short cnc_startrmtdgn(ushort FlibHndl);
 
         /* Stop remote diagnostics function */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_stoprmtdgn")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_stoprmtdgn")]
         public static extern short cnc_stoprmtdgn(ushort FlibHndl);
 
         /* Read data from remote diagnostics I/F */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdrmtdgn")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdrmtdgn")]
         public static extern short cnc_rdrmtdgn(ushort FlibHndl, out int a, [Out, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* Write data to remote diagnostics I/F */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrrmtdgn")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrrmtdgn")]
         public static extern short cnc_wrrmtdgn(ushort FlibHndl, ref int a, [In, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* Set CommStatus of remote diagnostics I/F area */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrcommstatus")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrcommstatus")]
         public static extern short cnc_wrcommstatus(ushort FlibHndl, short a);
 
         /* Check remote diagnostics I/F */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_chkrmtdgn")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_chkrmtdgn")]
         public static extern short cnc_chkrmtdgn(ushort FlibHndl);
 
 
@@ -11251,21 +10801,21 @@ namespace l99.driver.fanuc
         /*-------------------------*/
 
         /* read allowance */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_allowance")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_allowance")]
         public static extern short cnc_allowance(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBAXIS c);
 
         /* read allowanced state */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_allowcnd")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_allowcnd")]
         public static extern short cnc_allowcnd(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBCAXIS c);
 
         /* set work zero */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_workzero")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_workzero")]
         public static extern short cnc_workzero(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBZOFS b);
 
         /* set slide position */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_slide")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_slide")]
         public static extern short cnc_slide(ushort FlibHndl,
             short a, short b, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBAXIS c);
 
@@ -11275,23 +10825,23 @@ namespace l99.driver.fanuc
         /*----------------------------------*/
 
         /* Teaching data get start */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_startgetdgdat")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_startgetdgdat")]
         public static extern short cnc_startgetdgdat(ushort FlibHndl);
 
         /* Teaching data get stop */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_stopgetdgdat")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_stopgetdgdat")]
         public static extern short cnc_stopgetdgdat(ushort FlibHndl);
 
         /* Teaching data read */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rddgdat")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rddgdat")]
         public static extern short cnc_rddgdat(ushort FlibHndl, ref short a, [Out, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* Teaching data read pointer write */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrdgdatptr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrdgdatptr")]
         public static extern short cnc_wrdgdatptr(ushort FlibHndl, short a);
 
         /* Teaching data clear */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_clrdgdat")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_clrdgdat")]
         public static extern short cnc_clrdgdat(ushort FlibHndl);
 
 
@@ -11300,23 +10850,23 @@ namespace l99.driver.fanuc
         /*---------------------------------*/
 
         /* open C-EXE SRAM file */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_opencexefile")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_opencexefile")]
         public static extern short cnc_opencexefile(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a, short b, short c);
 
         /* close C-EXE SRAM file */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_closecexefile")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_closecexefile")]
         public static extern short cnc_closecexefile(ushort FlibHndl);
 
         /* read C-EXE SRAM file */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdcexefile")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdcexefile")]
         public static extern short cnc_rdcexefile(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.AsAny)] Object a, ref uint b);
 
         /* write C-EXE SRAM file */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_wrcexefile")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_wrcexefile")]
         public static extern short cnc_wrcexefile(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a, ref uint b);
 
         /* read C-EXE SRAM disk directory */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_cexedirectory")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_cexedirectory")]
         public static extern short cnc_cexedirectory(ushort FlibHndl,
             [In, MarshalAs(UnmanagedType.AsAny)] Object a, ref ushort b, ushort c, [Out, MarshalAs(UnmanagedType.LPStruct)] CFILEINFO d);
 
@@ -11326,205 +10876,175 @@ namespace l99.driver.fanuc
         /*-----*/
 
         /* read message from PMC to MMC */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_rdmsg")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_rdmsg")]
         public static extern short pmc_rdmsg(ushort FlibHndl, ref short a, [Out, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* write message from MMC to PMC */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_wrmsg")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_wrmsg")]
         public static extern short pmc_wrmsg(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* read message from PMC to MMC(conditional) */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_crdmsg")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_crdmsg")]
         public static extern short pmc_crdmsg(ushort FlibHndl, ref short a, [Out, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* write message from MMC to PMC(conditional) */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_cwrmsg")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_cwrmsg")]
         public static extern short pmc_cwrmsg(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* read PMC data(area specified) */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "pmc_rdpmcrng")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "pmc_rdpmcrng")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "pmc_rdpmcrng")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "pmc_rdpmcrng")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_rdpmcrng")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_rdpmcrng")]
         public static extern short pmc_rdpmcrng(ushort FlibHndl,
             short a, short b, ushort c, ushort d, ushort e, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBPMC0 f);
         
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "pmc_rdpmcrng")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "pmc_rdpmcrng")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "pmc_rdpmcrng")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "pmc_rdpmcrng")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_rdpmcrng")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_rdpmcrng")]
         public static extern short pmc_rdpmcrng(ushort FlibHndl,
             short a, short b, ushort c, ushort d, ushort e, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBPMC1 f);
         
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "pmc_rdpmcrng")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "pmc_rdpmcrng")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "pmc_rdpmcrng")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "pmc_rdpmcrng")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_rdpmcrng")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_rdpmcrng")]
         public static extern short pmc_rdpmcrng(ushort FlibHndl,
             short a, short b, ushort c, ushort d, ushort e, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBPMC2 f);
 
         /* write PMC data(area specified) */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_wrpmcrng")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_wrpmcrng")]
         public static extern short pmc_wrpmcrng(ushort FlibHndl, ushort a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBPMC0 b);
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_wrpmcrng")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_wrpmcrng")]
         public static extern short pmc_wrpmcrng(ushort FlibHndl, ushort a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBPMC1 b);
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_wrpmcrng")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_wrpmcrng")]
         public static extern short pmc_wrpmcrng(ushort FlibHndl, ushort a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBPMC2 b);
 
         /* read data from extended backup memory */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_rdkpm")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_rdkpm")]
         public static extern short pmc_rdkpm(ushort FlibHndl, uint a, [Out, MarshalAs(UnmanagedType.AsAny)] Object b, ushort c);
 
         /* write data to extended backup memory */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_wrkpm")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_wrkpm")]
         public static extern short pmc_wrkpm(ushort FlibHndl, uint a, [In, MarshalAs(UnmanagedType.AsAny)] Object b, ushort c);
 
         /* read data from extended backup memory 2 */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_rdkpm2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_rdkpm2")]
         public static extern short pmc_rdkpm2(ushort FlibHndl, uint a, [Out, MarshalAs(UnmanagedType.AsAny)] Object b, uint c);
 
         /* write data to extended backup memory 2 */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_wrkpm2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_wrkpm2")]
         public static extern short pmc_wrkpm2(ushort FlibHndl, uint a, [In, MarshalAs(UnmanagedType.AsAny)] Object b, uint c);
 
         /* read maximum size of extended backup memory */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_kpmsiz")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_kpmsiz")]
         public static extern short pmc_kpmsiz(ushort FlibHndl, out uint a);
 
         /* read informations of PMC data */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_rdpmcinfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_rdpmcinfo")]
         public static extern short pmc_rdpmcinfo(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBPMCINF b);
 
         /* read PMC parameter data table contorol data */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_rdcntldata")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_rdcntldata")]
         public static extern short pmc_rdcntldata(ushort FlibHndl,
             short a, short b, short c, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBPMCCNTL d);
 
         /* write PMC parameter data table contorol data */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_wrcntldata")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_wrcntldata")]
         public static extern short pmc_wrcntldata(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBPMCCNTL b);
 
         /* read PMC parameter data table contorol data group number */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_rdcntlgrp")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_rdcntlgrp")]
         public static extern short pmc_rdcntlgrp(ushort FlibHndl, out short a);
 
         /* write PMC parameter data table contorol data group number */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_wrcntlgrp")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_wrcntlgrp")]
         public static extern short pmc_wrcntlgrp(ushort FlibHndl, short a);
 
         /* read PMC alarm message */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_rdalmmsg")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_rdalmmsg")]
         public static extern short pmc_rdalmmsg(ushort FlibHndl,
             short a, ref short b, out short c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBPMCALM d);
 
         /* get detail error for pmc */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_getdtailerr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_getdtailerr")]
         public static extern short pmc_getdtailerr(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBPMCERR a);
 
         /* read PMC memory data */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_rdpmcmem")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_rdpmcmem")]
         public static extern short pmc_rdpmcmem(ushort FlibHndl,
             short a, int b, int c, [Out, MarshalAs(UnmanagedType.AsAny)] Object d);
 
         /* write PMC memory data */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_wrpmcmem")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_wrpmcmem")]
         public static extern short pmc_wrpmcmem(ushort FlibHndl,
             short a, int b, int c, [In, MarshalAs(UnmanagedType.AsAny)] Object d);
 
         /* read PMC-SE memory data */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_rdpmcsemem")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_rdpmcsemem")]
         public static extern short pmc_rdpmcsemem(ushort FlibHndl,
             short a, int b, int c, [Out, MarshalAs(UnmanagedType.AsAny)] Object d);
 
         /* write PMC-SE memory data */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_wrpmcsemem")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_wrpmcsemem")]
         public static extern short pmc_wrpmcsemem(ushort FlibHndl,
             short a, int b, int c, [In, MarshalAs(UnmanagedType.AsAny)] Object d);
 
         /* read pmc title data */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_rdpmctitle")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_rdpmctitle")]
         public static extern short pmc_rdpmctitle(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBPMCTITLE a);
 
         /* read PMC parameter start */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_rdprmstart")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_rdprmstart")]
         public static extern short pmc_rdprmstart(ushort FlibHndl);
 
         /* read PMC parameter */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_rdpmcparam")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_rdpmcparam")]
         public static extern short pmc_rdpmcparam(ushort FlibHndl, ref int a, [Out, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* read PMC parameter end */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_rdprmend")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_rdprmend")]
         public static extern short pmc_rdprmend(ushort FlibHndl);
 
         /* write PMC parameter start */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_wrprmstart")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_wrprmstart")]
         public static extern short pmc_wrprmstart(ushort FlibHndl);
 
         /* write PMC parameter */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_wrpmcparam")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_wrpmcparam")]
         public static extern short pmc_wrpmcparam(ushort FlibHndl, ref int a, [In, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* write PMC parameter end */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_wrprmend")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_wrprmend")]
         public static extern short pmc_wrprmend(ushort FlibHndl);
 
         /* read PMC data */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_rdpmcrng_ext")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_rdpmcrng_ext")]
         public static extern short pmc_rdpmcrng_ext(ushort FlibHndl,
             short a, [In, Out, MarshalAs(UnmanagedType.LPStruct)] IODBPMCEXT b);
 
         /* write PMC I/O link assigned data */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_wriolinkdat")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_wriolinkdat")]
         public static extern short pmc_wriolinkdat(ushort FlibHndl, uint a, [In, MarshalAs(UnmanagedType.AsAny)] Object b, uint c);
 
         /* read PMC address information */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_rdpmcaddr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_rdpmcaddr")]
         public static extern short pmc_rdpmcaddr(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBPMCADR a);
 
         /* select PMC unit */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_select_pmc_unit")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_select_pmc_unit")]
         public static extern short pmc_select_pmc_unit(ushort FlibHndl, int a);
 
         /* get current PMC unit */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_get_current_pmc_unit")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_get_current_pmc_unit")]
         public static extern short pmc_get_current_pmc_unit(ushort FlibHndl, ref int a);
 
         /* get number of PMC */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_get_number_of_pmc")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_get_number_of_pmc")]
         public static extern short pmc_get_number_of_pmc(ushort FlibHndl, ref int a);
 
         /* get PMC unit types */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_get_pmc_unit_types")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_get_pmc_unit_types")]
         public static extern short pmc_get_pmc_unit_types(ushort FlibHndl, int[] a, ref int b);
 
         /* set PMC Timer type */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_set_timer_type")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_set_timer_type")]
         public static extern short pmc_set_timer_type(ushort FlibHndl, ushort a, ushort b, ref short c);
 
         /* get PMC Timer type */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_get_timer_type")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_get_timer_type")]
         public static extern short pmc_get_timer_type(ushort FlibHndl, ushort a, ushort b, ref short c);
 
         /*----------------------------*/
@@ -11532,87 +11052,87 @@ namespace l99.driver.fanuc
         /*----------------------------*/
 
         /* read PROFIBUS configration data */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_prfrdconfig")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_prfrdconfig")]
         public static extern short pmc_prfrdconfig(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBPRFCNF a);
 
         /* read bus parameter for master function */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_prfrdbusprm")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_prfrdbusprm")]
         public static extern short pmc_prfrdbusprm(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBBUSPRM a);
 
         /* write bus parameter for master function */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_prfwrbusprm")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_prfwrbusprm")]
         public static extern short pmc_prfwrbusprm(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IODBBUSPRM a);
 
         /* read slave parameter for master function */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_prfrdslvprm")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_prfrdslvprm")]
         public static extern short pmc_prfrdslvprm(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBSLVPRM b);
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_prfrdslvprm")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_prfrdslvprm")]
         public static extern short pmc_prfrdslvprm(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBSLVPRM2 b);
 
         /* write slave parameter for master function */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_prfwrslvprm")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_prfwrslvprm")]
         public static extern short pmc_prfwrslvprm(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBSLVPRM b);
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_prfwrslvprm")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_prfwrslvprm")]
         public static extern short pmc_prfwrslvprm(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBSLVPRM2 b);
 
         /* read allocation address for master function */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_prfrdallcadr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_prfrdallcadr")]
         public static extern short pmc_prfrdallcadr(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBPRFADR b);
 
         /* set allocation address for master function */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_prfwrallcadr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_prfwrallcadr")]
         public static extern short pmc_prfwrallcadr(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBPRFADR b);
 
         /* read allocation address for slave function */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_prfrdslvaddr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_prfrdslvaddr")]
         public static extern short pmc_prfrdslvaddr(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBSLVADR a);
 
         /* set allocation address for slave function */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_prfwrslvaddr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_prfwrslvaddr")]
         public static extern short pmc_prfwrslvaddr(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IODBSLVADR a);
 
         /* read status for slave function */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_prfrdslvstat")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_prfrdslvstat")]
         public static extern short pmc_prfrdslvstat(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBSLVST a);
 
         /* Reads slave index data of master function */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_prfrdslvid")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_prfrdslvid")]
         public static extern short pmc_prfrdslvid(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBSLVID b);
 
         /* Writes slave index data of master function */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_prfwrslvid")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_prfwrslvid")]
         public static extern short pmc_prfwrslvid(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBSLVID b);
 
         /* Reads slave parameter of master function(2) */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_prfrdslvprm2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_prfrdslvprm2")]
         public static extern short pmc_prfrdslvprm2(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBSLVPRM3 b);
 
         /* Writes slave parameter of master function(2) */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_prfwrslvprm2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_prfwrslvprm2")]
         public static extern short pmc_prfwrslvprm2(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBSLVPRM3 b);
 
         /* Reads DI/DO parameter of master function */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_prfrddido")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_prfrddido")]
         public static extern short pmc_prfrddido(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBDIDO b);
 
         /* Writes DI/DO parameter of master function */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_prfwrdido")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_prfwrdido")]
         public static extern short pmc_prfwrdido(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.LPStruct)] IODBDIDO b);
 
         /* Reads indication address of master function */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_prfrdindiadr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_prfrdindiadr")]
         public static extern short pmc_prfrdindiadr(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBINDEADR a);
 
         /* Writes indication address of master function */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_prfwrindiadr")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_prfwrindiadr")]
         public static extern short pmc_prfwrindiadr(ushort FlibHndl, [In, MarshalAs(UnmanagedType.LPStruct)] IODBINDEADR a);
 
         /* Reads operation mode of master function */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_prfrdopmode")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_prfrdopmode")]
         public static extern short pmc_prfrdopmode(ushort FlibHndl, ref short a);
 
         /* Writes operation mode of master function */
-        [DllImport("FWLIB32.dll", EntryPoint = "pmc_prfwropmode")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "pmc_prfwropmode")]
         public static extern short pmc_prfwropmode(ushort FlibHndl, short a, ref short b);
 
         /*-----------------------------------------------*/
@@ -11620,207 +11140,207 @@ namespace l99.driver.fanuc
         /*-----------------------------------------------*/
 
         /* read the parameter of the Ethernet board */
-        [DllImport("FWLIB32.dll", EntryPoint = "etb_rdparam")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "etb_rdparam")]
         public static extern short etb_rdparam(ushort FlibHndl,
             short a, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBETP_TCP b);
-        [DllImport("FWLIB32.dll", EntryPoint = "etb_rdparam")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "etb_rdparam")]
         public static extern short etb_rdparam(ushort FlibHndl,
             short a, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBETP_HOST b);
-        [DllImport("FWLIB32.dll", EntryPoint = "etb_rdparam")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "etb_rdparam")]
         public static extern short etb_rdparam(ushort FlibHndl,
             short a, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBETP_FTP b);
-        [DllImport("FWLIB32.dll", EntryPoint = "etb_rdparam")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "etb_rdparam")]
         public static extern short etb_rdparam(ushort FlibHndl,
             short a, [Out, MarshalAs(UnmanagedType.LPStruct)] IODBETP_ETB b);
 
         /* write the parameter of the Ethernet board */
-        [DllImport("FWLIB32.dll", EntryPoint = "etb_wrparam")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "etb_wrparam")]
         public static extern short etb_wrparam(ushort FlibHndl,
             [In, MarshalAs(UnmanagedType.LPStruct)] IODBETP_TCP a);
-        [DllImport("FWLIB32.dll", EntryPoint = "etb_wrparam")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "etb_wrparam")]
         public static extern short etb_wrparam(ushort FlibHndl,
             [In, MarshalAs(UnmanagedType.LPStruct)] IODBETP_HOST a);
-        [DllImport("FWLIB32.dll", EntryPoint = "etb_wrparam")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "etb_wrparam")]
         public static extern short etb_wrparam(ushort FlibHndl,
             [In, MarshalAs(UnmanagedType.LPStruct)] IODBETP_FTP a);
 
         /* read the error message of the Ethernet board */
-        [DllImport("FWLIB32.dll", EntryPoint = "etb_rderrmsg")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "etb_rderrmsg")]
         public static extern short etb_rderrmsg(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBETMSG b);
 
         /* read the mode of the Data Server */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_rdmode")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_rdmode")]
         public static extern short ds_rdmode(ushort FlibHndl, ref short a);
 
         /* write the mode of the Data Server */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_wrmode")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_wrmode")]
         public static extern short ds_wrmode(ushort FlibHndl, short a);
 
         /* read information of the Data Server's HDD */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_rdhddinfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_rdhddinfo")]
         public static extern short ds_rdhddinfo(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBHDDINF a);
 
         /* read the file list of the Data Server's HDD */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_rdhdddir")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_rdhdddir")]
         public static extern short ds_rdhdddir(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a, int b, out short c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBHDDDIR d);
 
         /* delete the file of the Data Serve's HDD */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_delhddfile")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_delhddfile")]
         public static extern short ds_delhddfile(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* copy the file of the Data Server's HDD */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_copyhddfile")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_copyhddfile")]
         public static extern short ds_copyhddfile(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a, [In, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* change the file name of the Data Server's HDD */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_renhddfile")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_renhddfile")]
         public static extern short ds_renhddfile(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a, [In, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* execute the PUT command of the FTP */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_puthddfile")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_puthddfile")]
         public static extern short ds_puthddfile(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a, [In, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* execute the MPUT command of the FTP */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_mputhddfile")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_mputhddfile")]
         public static extern short ds_mputhddfile(ushort hLib, [In, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* read information of the host */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_rdhostinfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_rdhostinfo")]
         public static extern short ds_rdhostinfo(ushort FlibHndl, out int a, int b);
 
         /* read the file list of the host */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_rdhostdir")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_rdhostdir")]
         public static extern short ds_rdhostdir(ushort FlibHndl, short a, int b, out short c, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBHOSTDIR d, int e);
 
         /* read the file list of the host 2 */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_rdhostdir2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_rdhostdir2")]
         public static extern short ds_rdhostdir2(ushort FlibHndl, short a, int b, out short c, out int d, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBHOSTDIR e, int f);
 
         /* delete the file of the host */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_delhostfile")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_delhostfile")]
         public static extern short ds_delhostfile(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a, int b);
 
         /* execute the GET command of the FTP */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_gethostfile")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_gethostfile")]
         public static extern short ds_gethostfile(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a, [In, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* execute the MGET command of the FTP */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_mgethostfile")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_mgethostfile")]
         public static extern short ds_mgethostfile(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* read the execution result */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_rdresult")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_rdresult")]
         public static extern short ds_rdresult(ushort FlibHndl);
 
         /* stop the execution of the command */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_cancel")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_cancel")]
         public static extern short ds_cancel(ushort FlibHndl);
 
         /* read the file from the Data Server */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_rdncfile")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_rdncfile")]
         public static extern short ds_rdncfile(ushort FlibHndl, short a, [In, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* read the file from the Data Server 2 */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_rdncfile2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_rdncfile2")]
         public static extern short ds_rdncfile2(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* write the file to the Data Server */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_wrncfile")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_wrncfile")]
         public static extern short ds_wrncfile(ushort FlibHndl, short a, int b);
 
         /* read the file name for the DNC operation in the Data Server's HDD */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_rddnchddfile")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_rddnchddfile")]
         public static extern short ds_rddnchddfile(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* write the file name for the DNC operation in the Data Server's HDD */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_wrdnchddfile")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_wrdnchddfile")]
         public static extern short ds_wrdnchddfile(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* read the file name for the DNC operation in the host */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_rddnchostfile")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_rddnchostfile")]
         public static extern short ds_rddnchostfile(ushort FlibHndl, out short a, [Out, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* write the file name for the DNC operation in the host */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_wrdnchostfile")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_wrdnchostfile")]
         public static extern short ds_wrdnchostfile(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* read the connecting host number */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_rdhostno")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_rdhostno")]
         public static extern short ds_rdhostno(ushort FlibHndl, out short a);
 
         /* read maintenance information */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_rdmntinfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_rdmntinfo")]
         public static extern short ds_rdmntinfo(ushort FlibHndl, short a, [Out, MarshalAs(UnmanagedType.LPStruct)]DSMNTINFO b);
 
         /* check the Data Server's HDD */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_checkhdd")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_checkhdd")]
         public static extern short ds_checkhdd(ushort FlibHndl);
 
         /* format the Data Server's HDD */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_formathdd")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_formathdd")]
         public static extern short ds_formathdd(ushort FlibHndl);
 
         /* create the directory in the Data Server's HDD */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_makehdddir")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_makehdddir")]
         public static extern short ds_makehdddir(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* delete directory in the Data Server's HDD */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_delhdddir")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_delhdddir")]
         public static extern short ds_delhdddir(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* change the current directory */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_chghdddir")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_chghdddir")]
         public static extern short ds_chghdddir(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* execute the PUT command according to the list file */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_lputhddfile")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_lputhddfile")]
         public static extern short ds_lputhddfile(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* delete files according to the list file */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_ldelhddfile")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_ldelhddfile")]
         public static extern short ds_ldelhddfile(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* execute the GET command according to the list file */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_lgethostfile")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_lgethostfile")]
         public static extern short ds_lgethostfile(ushort FlibHndl, [In, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* read the directory for M198 operation */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_rdm198hdddir")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_rdm198hdddir")]
         public static extern short ds_rdm198hdddir(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* write the directory for M198 operation */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_wrm198hdddir")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_wrm198hdddir")]
         public static extern short ds_wrm198hdddir(ushort FlibHndl);
 
         /* read the connecting host number for the M198 operation */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_rdm198host")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_rdm198host")]
         public static extern short ds_rdm198host(ushort FlibHndl, out short a);
 
         /* write the connecting host number for the M198 operation */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_wrm198host")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_wrm198host")]
         public static extern short ds_wrm198host(ushort FlibHndl);
 
         /* write the connecting host number */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_wrhostno")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_wrhostno")]
         public static extern short ds_wrhostno(ushort FlibHndl, short a);
 
         /* search string in data server program */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_searchword")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_searchword")]
         public static extern short ds_searchword(ushort FlibHndl,
                                   [In, MarshalAs(UnmanagedType.AsAny)] Object a);
 
         /* read the searching result */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_searchresult")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_searchresult")]
         public static extern short ds_searchresult(ushort FlibHndl);
 
         /* read file in the Data Server's HDD */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_rdfile")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_rdfile")]
         public static extern short ds_rdfile(ushort FlibHndl,
                                          [In, MarshalAs(UnmanagedType.AsAny)] Object a,
                                          [In, MarshalAs(UnmanagedType.AsAny)] Object b);
 
         /* write file in the Data Server's HDD */
-        [DllImport("FWLIB32.dll", EntryPoint = "ds_wrfile")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "ds_wrfile")]
         public static extern short ds_wrfile(ushort FlibHndl,
                                          [In, MarshalAs(UnmanagedType.AsAny)] Object a,
                                          [In, MarshalAs(UnmanagedType.AsAny)] Object b);
@@ -11830,19 +11350,19 @@ namespace l99.driver.fanuc
         /*--------------------------*/
 
         /* read number of node */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdnodenum")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdnodenum")]
         public static extern short cnc_rdnodenum(out int a);
 
         /* read node informations */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdnodeinfo")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdnodeinfo")]
         public static extern short cnc_rdnodeinfo(int a, [Out, MarshalAs(UnmanagedType.LPStruct)] ODBNODE b);
 
         /* set default node number */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_setdefnode")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_setdefnode")]
         public static extern short cnc_setdefnode(int a);
 
         /* allocate library handle 2 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_allclibhndl2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_allclibhndl2")]
         public static extern short cnc_allclibhndl2(int node, out ushort FlibHndl);
 
 
@@ -11851,94 +11371,42 @@ namespace l99.driver.fanuc
         /*---------------------*/
 
         /* allocate library handle 3 */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_allclibhndl3")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_allclibhndl3")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_allclibhndl3")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_allclibhndl3")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_allclibhndl3")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_allclibhndl3")]
         public static extern short cnc_allclibhndl3([In, MarshalAs(UnmanagedType.AsAny)] Object ip,
            ushort port, int timeout, out ushort FlibHndl);
 
         /* allocate library handle 4 */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_allclibhndl4")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_allclibhndl4")]
         public static extern short cnc_allclibhndl4([In, MarshalAs(UnmanagedType.AsAny)] Object ip,
            ushort port, int timeout, uint id, out ushort FlibHndl);
 
         /* set timeout for socket */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_settimeout")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_settimeout")]
         public static extern short cnc_settimeout(ushort FlibHndl, int a);
 
         /* reset all socket connection */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_resetconnect")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_resetconnect")]
         public static extern short cnc_resetconnect(ushort FlibHndl);
 
         /* get option state for FOCAS1/Ethernet */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_getfocas1opt")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_getfocas1opt")]
         public static extern short cnc_getfocas1opt(ushort FlibHndl, short a, out int b);
 
         /* read Ethernet board information */
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdetherinfo")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdetherinfo")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdetherinfo")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdetherinfo")]
-#elif WIN64
-        [DllImport("FWLIB64.dll", EntryPoint = "cnc_rdetherinfo")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdetherinfo")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdetherinfo")]
         public static extern short cnc_rdetherinfo(ushort FlibHndl, out short a, out short b);
-
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_startupprocess")]
+        
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_startupprocess")]
         public static extern short cnc_startupprocess(long level, string filename);
         
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_exitprocess")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_exitprocess")]
         public static extern short cnc_exitprocess();
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_startupprocess")]
-        public static extern short cnc_startupprocess(long level, string filename);
         
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_exitprocess")]
-        public static extern short cnc_exitprocess();
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_startupprocess")]
-        public static extern short cnc_startupprocess(long level, string filename);
-        
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_exitprocess")]
-        public static extern short cnc_exitprocess();
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_startupprocess")]
-        public static extern short cnc_startupprocess(long level, string filename);
-        
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_exitprocess")]
-        public static extern short cnc_exitprocess();
-#endif
-  
-#if ARMV7
-        [DllImport("libfwlib32-linux-armv7.so.1.0.5", EntryPoint = "cnc_rdcncid")]
-#elif LINUX64
-        [DllImport("libfwlib32-linux-x64.so.1.0.5", EntryPoint = "cnc_rdcncid")]
-#elif LINUX32_100
-        [DllImport("libfwlib32-linux-x86.so.1.0.0", EntryPoint = "cnc_rdcncid")]
-#elif LINUX32_105
-        [DllImport("libfwlib32-linux-x86.so.1.0.5", EntryPoint = "cnc_rdcncid")]
-#else
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_rdcncid")]
-#endif
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_rdcncid")]
         public static extern short cnc_rdcncid( ushort FlibHndl, uint[] cncid);
 
         /* read program name under execution */
-        [DllImport("FWLIB32.dll", EntryPoint = "cnc_exeprgname2")]
+        [DllImport(FocasLibConstants.FileName, EntryPoint = "cnc_exeprgname2")]
         public static extern short cnc_exeprgname2(ushort FlibHndl, [Out, MarshalAs(UnmanagedType.AsAny)] object b);
         
     } // End for Focas class

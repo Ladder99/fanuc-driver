@@ -16,37 +16,30 @@ namespace l99.driver.fanuc.veneers
         
         protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
         {
-            var success = true;
-            var temp_value = new List<dynamic>() ;
-            
-            foreach (var key in input.response.cnc_rdalmmsg2_ALL.Keys)
+            if(input.success == true)
             {
-                var type_success = input.response.cnc_rdalmmsg2_ALL[key].success;
+                var temp_value = new List<dynamic>() ;
 
-                if (!type_success)
+                var count = input.response.cnc_rdalmmsg2.num;
+                var alms = input.response.cnc_rdalmmsg2.almmsg;
+                
+                if (count > 0)
                 {
-                    success = false;
-                    break;
-                }
-
-                var request_data = input.response.cnc_rdalmmsg2_ALL[key].request.cnc_rdalmmsg2;
-                var response_data = input.response.cnc_rdalmmsg2_ALL[key].response.cnc_rdalmmsg2;
-                var alarm_type = request_data.type;
-                var alarm_count = response_data.num;
-
-                if (alarm_count > 0)
-                {
-                    var fields = response_data.almmsg.GetType().GetFields();
-                    for (int x = 0; x <= alarm_count - 1; x++)
+                    var fields = alms.GetType().GetFields();
+                    for (int x = 0; x <= count - 1; x++)
                     {
-                        var alm = fields[x].GetValue(response_data.almmsg);
-                        temp_value.Add(new { alm.alm_no, alm.type, alm.axis, alm_msg = ((string)alm.alm_msg).AsAscii() });
+                        var alm = fields[x].GetValue(alms);
+                        temp_value.Add(
+                            new
+                            {
+                                alm.alm_no, 
+                                alm.type, 
+                                alm.axis, 
+                                alm_msg = ((string)alm.alm_msg).AsAscii()
+                            });
                     }
                 }
-            }
             
-            if (success)
-            {
                 var current_value = new
                 {
                     alarms = temp_value
