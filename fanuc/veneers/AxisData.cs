@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using l99.driver.@base;
-using Newtonsoft.Json.Linq;
 
 namespace l99.driver.fanuc.veneers
 {
@@ -44,7 +43,7 @@ namespace l99.driver.fanuc.veneers
                     number = current_axis,
                     name = axis_name,
                     feed = axis_dynamic.actf,
-                    feed_eu = "mm/sec",
+                    feed_eu = "mm/min",
                     load = load_value.data / Math.Pow(10.0, load_value.dec),
                     load_eu = "percent",
                     servo_temp = servo_temp.response.cnc_diagnoss.diag.cdata,

@@ -10,18 +10,25 @@ machines:
     
     l99.driver.fanuc.FanucMachine, fanuc:
       sweep_ms: !!int 1000
-      #net_ip: 10.1.10.211
-      net_ip: 172.16.13.100
+      net_ip: 10.1.10.211
+      #net_ip: 172.16.13.100
       net_port: !!int 8193
       net_timeout_s: !!int 3
     
+    
+    
     l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
+      #- l99.driver.fanuc.collectors.ParameterDump, fanuc
+      #- l99.driver.fanuc.collectors.DiagnosisDump, fanuc
+      #- l99.driver.fanuc.collectors.PmcDump, fanuc
       - l99.driver.fanuc.collectors.MachineInfo, fanuc
       - l99.driver.fanuc.collectors.StateData, fanuc
       - l99.driver.fanuc.collectors.ProductionData, fanuc
-      #- l99.driver.fanuc.collectors.GCodeData, fanuc
+      - l99.driver.fanuc.collectors.GCodeData, fanuc
       - l99.driver.fanuc.collectors.AxisData, fanuc
       - l99.driver.fanuc.collectors.SpindleData, fanuc
+    
+    
     
     l99.driver.fanuc.transports.MQTT, fanuc:
       enabled: !!bool true

@@ -20,9 +20,6 @@ namespace l99.driver.fanuc
                 return (Focas.focas_ret) Focas.cnc_rdsvmeter(_handle, ref data_num_out, loadmeter);
             });
 
-            // each path
-            // loadmeter.svloadX.data / Math.Pow(10, loadmeter.svloadX.dec)
-
             var nr = new
             {
                 method = "cnc_rdsvmeter",

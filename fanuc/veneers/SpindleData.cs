@@ -86,6 +86,7 @@ namespace l99.driver.fanuc.veneers
                 {
                     number = current_spindle,
                     name = spindle_name,
+                    // feed is unnecessary here
                     //feed = sp_speed.response.cnc_rdspeed.speed.actf.data,
                     //feed_eu = speed_feed_EU(sp_speed.response.cnc_rdspeed.speed.actf.unit),
                     //speed = sp_speed.response.cnc_rdspeed.speed.acts.data / Math.Pow(10.0, sp_speed.response.cnc_rdspeed.speed.acts.dec),
