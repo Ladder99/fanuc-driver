@@ -12,14 +12,13 @@ namespace l99.driver.fanuc.collectors
         }
 
         private bool _warned = false;
-        private string _re_alm2 = "30i[A-Z]?|31i[A-Z]?|32i[A-Z]?|0i[D|F]|PMiA";
         
         public override async Task InitPathsAsync()
         {
             await strategy.Apply(typeof(fanuc.veneers.AlarmsSeries), "alarms");
         }
         
-        public override async Task CollectForEachPathAsync(short current_path, dynamic path_marker)
+        public override async Task CollectForEachPathAsync(short current_path, string[] axis, string[] spindle, dynamic path_marker)
         {
             var obs_focas_support = strategy.Get($"obs+focas_support+{current_path}");
 
@@ -36,7 +35,8 @@ namespace l99.driver.fanuc.collectors
             }
             else
             {
-                if(Regex.IsMatch(string.Join("",obs_focas_support),_re_alm2))
+                if(Regex.IsMatch(string.Join("",obs_focas_support),
+                       "30i[A-Z]?|31i[A-Z]?|32i[A-Z]?|0i[D|F]|PMi[A]?"))
                 {
                     await strategy.SetNative($"alarms+{current_path}", 
                         await strategy.Platform.RdAlmMsg2Async(-1, 10));
@@ -49,7 +49,10 @@ namespace l99.driver.fanuc.collectors
             }
 
             var obs_alarms = await strategy.Peel("alarms", 
-                strategy.Get($"alarms+{current_path}"));
+                strategy.Get($"alarms+{current_path}"),
+                current_path,
+                axis,
+                obs_focas_support);
 
             strategy.Set($"obs+alarms+{current_path}", 
                 obs_alarms.veneer.LastChangedValue.alarms);

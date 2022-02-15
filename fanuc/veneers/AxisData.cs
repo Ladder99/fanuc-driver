@@ -48,23 +48,14 @@ namespace l99.driver.fanuc.veneers
                 bool overheat = false;
                 bool servo = false;
 
-                if (obs_focas_support != null && obs_alarms != null)
+                if (obs_alarms != null)
                 {
                     var axis_alarms = obs_alarms
-                        .Where(a => a.axis == current_axis);
+                        .Where(a => a.axis_code == current_axis);
 
-                    if (Regex.IsMatch(string.Join("", obs_focas_support), "15i[A-Z]?"))
-                    {
-                        overtravel = axis_alarms.Any(a => a.type == 6);
-                        overheat = axis_alarms.Any(a => a.type == 2);
-                        servo = axis_alarms.Any(a => a.type == 12);
-                    }
-                    else
-                    {
-                        overtravel = axis_alarms.Any(a => a.type == 4);
-                        overheat = axis_alarms.Any(a => a.type == 5);
-                        servo = axis_alarms.Any(a => a.type == 6);
-                    }
+                    overtravel = axis_alarms.Any(a => a.type == "OT");
+                    overheat = axis_alarms.Any(a => a.type == "OH");
+                    servo = axis_alarms.Any(a => a.type == "SV");
                 }
 
                 bool motion = (prev_axis_dynamic != null && prev_axis_dynamic.success == true) 

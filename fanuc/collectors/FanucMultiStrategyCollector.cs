@@ -36,17 +36,17 @@ namespace l99.driver.fanuc.collectors
             
         }
 
-        public virtual async Task CollectForEachPathAsync(short current_path, dynamic path_marker)
+        public virtual async Task CollectForEachPathAsync(short current_path, string[] axis, string[] spindle, dynamic path_marker)
         {
             
         }
 
-        public virtual async Task CollectForEachAxisAsync(short current_axis, string axis_name, dynamic axis_split, dynamic axis_marker)
+        public virtual async Task CollectForEachAxisAsync(short current_path, short current_axis, string axis_name, dynamic axis_split, dynamic axis_marker)
         {
             
         }
 
-        public virtual async Task CollectForEachSpindleAsync(short current_spindle, string spindle_name, dynamic spindle_split, dynamic spindle_marker)
+        public virtual async Task CollectForEachSpindleAsync(short current_path, short current_spindle, string spindle_name, dynamic spindle_split, dynamic spindle_marker)
         {
             
         }

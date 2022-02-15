@@ -87,27 +87,27 @@ namespace l99.driver.fanuc.strategies
             }
         }
 
-        public override async Task CollectForEachPathAsync(short current_path, dynamic path_marker)
+        public override async Task CollectForEachPathAsync(short current_path, string[] axis, string[] spindle, dynamic path_marker)
         {
             foreach (var collector in _collectors)
             {
-                await collector.CollectForEachPathAsync(current_path, path_marker);
+                await collector.CollectForEachPathAsync(current_path, axis, spindle, path_marker);
             }
         }
 
-        public override async Task CollectForEachAxisAsync(short current_axis, string axis_name, dynamic axis_split, dynamic axis_marker)
+        public override async Task CollectForEachAxisAsync(short current_path, short current_axis, string axis_name, dynamic axis_split, dynamic axis_marker)
         {
             foreach (var collector in _collectors)
             {
-                await collector.CollectForEachAxisAsync(current_axis, axis_name, axis_split, axis_marker);
+                await collector.CollectForEachAxisAsync(current_path, current_axis, axis_name, axis_split, axis_marker);
             }
         }
 
-        public override async Task CollectForEachSpindleAsync(short current_spindle, string spindle_name, dynamic spindle_split, dynamic spindle_marker)
+        public override async Task CollectForEachSpindleAsync(short current_path, short current_spindle, string spindle_name, dynamic spindle_split, dynamic spindle_marker)
         {
             foreach (var collector in _collectors)
             {
-                await collector.CollectForEachSpindleAsync(current_spindle, spindle_name, spindle_split, spindle_marker);
+                await collector.CollectForEachSpindleAsync(current_path, current_spindle, spindle_name, spindle_split, spindle_marker);
             }
         }
 

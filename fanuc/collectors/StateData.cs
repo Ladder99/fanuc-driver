@@ -27,7 +27,7 @@ namespace l99.driver.fanuc.collectors
                 await strategy.Platform.RdParamDoubleWordNoAxisAsync(6754));
         }
         
-        public override async Task CollectForEachPathAsync(short current_path, dynamic path_marker)
+        public override async Task CollectForEachPathAsync(short current_path, string[] axis, string[] spindle, dynamic path_marker)
         {
             await strategy.Peel("state",
                 await strategy.SetNative($"stat_info+{current_path}", 

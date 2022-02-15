@@ -4,10 +4,10 @@ machines:
     type: l99.driver.fanuc.FanucMachine, fanuc
     strategy: l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc
     #strategy: l99.driver.fanuc.strategies.GCodeData, fanuc
-    #handler: l99.driver.fanuc.handlers.FanucOne, fanuc
-    handler: l99.driver.fanuc.handlers.FanucMTC, fanuc
-    #transport: l99.driver.fanuc.transports.MQTT, fanuc
-    transport: l99.driver.fanuc.transports.SHDR, fanuc
+    handler: l99.driver.fanuc.handlers.FanucOne, fanuc
+    #handler: l99.driver.fanuc.handlers.FanucMTC, fanuc
+    transport: l99.driver.fanuc.transports.MQTT, fanuc
+    #transport: l99.driver.fanuc.transports.SHDR, fanuc
     
     l99.driver.fanuc.FanucMachine, fanuc:
       sweep_ms: !!int 1000

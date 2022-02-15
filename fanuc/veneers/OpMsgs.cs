@@ -11,7 +11,7 @@ namespace l99.driver.fanuc.veneers
         {
             lastChangedValue = new
             {
-                msgs = new List<dynamic>() { -1 }
+                messages = new List<dynamic>() { -1 }
             };
         }
         
@@ -29,20 +29,20 @@ namespace l99.driver.fanuc.veneers
                     {
                         temp_value.Add(new
                         {
-                            msg.data,
-                            msg.datano,
-                            msg.type
+                            position = msg.type,
+                            number = msg.datano,
+                            message = msg.data
                         });
                     }
                 }
 
                 var current_value = new
                 {
-                    msgs = temp_value
+                    messages = temp_value
                 };
                 
-                var current_hc = current_value.msgs.Select(x => x.GetHashCode());
-                var last_hc = ((List<dynamic>)lastChangedValue.msgs).Select(x => x.GetHashCode());
+                var current_hc = current_value.messages.Select(x => x.GetHashCode());
+                var last_hc = ((List<dynamic>)lastChangedValue.messages).Select(x => x.GetHashCode());
                 
                 await onDataArrivedAsync(input, current_value);
                 

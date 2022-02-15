@@ -15,7 +15,7 @@ namespace l99.driver.fanuc.collectors
             await strategy.Apply(typeof(fanuc.veneers.SpindleData), "spindle", isCompound: true);
         }
         
-        public override async Task CollectForEachPathAsync(short current_path, dynamic path_marker)
+        public override async Task CollectForEachPathAsync(short current_path, string[] axis, string[] spindle, dynamic path_marker)
         {
             // main spindle displayed in cnc position screen
             // speed RPM,mm/rev... and feed mm/min...
@@ -36,10 +36,9 @@ namespace l99.driver.fanuc.collectors
             //dynamic spload_all = await machine["platform"].RdSpLoadAsync(-1);
         }
 
-        public override async Task CollectForEachSpindleAsync(short current_spindle, string spindle_name, dynamic spindle_split, dynamic spindle_marker)
+        public override async Task CollectForEachSpindleAsync(short current_path, short current_spindle, string spindle_name, dynamic spindle_split, dynamic spindle_marker)
         {
             var spindle_key = string.Join("/", spindle_split);
-            var path_key = strategy.Get("current_path");
             
             // rotational spindle speed
             await strategy.SetNative($"sp_acts+{spindle_key}", 
@@ -134,7 +133,7 @@ namespace l99.driver.fanuc.collectors
             await strategy.Peel("spindle", 
                 current_spindle,
                 strategy.Get("spindle_names"), 
-                strategy.Get($"sp_speed+{path_key}"), 
+                strategy.Get($"sp_speed+{current_path}"), 
                 strategy.Get($"sp_meter+{spindle_key}"), 
                 strategy.Get($"sp_maxrpm+{spindle_key}"), 
                 strategy.Get($"sp_gear+{spindle_key}"),

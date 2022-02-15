@@ -15,7 +15,7 @@ namespace l99.driver.fanuc.collectors
             await strategy.Apply(typeof(fanuc.veneers.ProductionData), "production", isCompound: true);
         }
         
-        public override async Task CollectForEachPathAsync(short current_path, dynamic path_marker)
+        public override async Task CollectForEachPathAsync(short current_path, string[] axis, string[] spindle, dynamic path_marker)
         {
             await strategy.SetNative($"program_name+{current_path}", 
                 await strategy.Platform.ExePrgNameAsync());

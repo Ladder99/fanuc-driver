@@ -22,7 +22,7 @@ namespace l99.driver.fanuc.collectors
             await strategy.Apply(typeof(fanuc.veneers.AxisData), "axis", isCompound: true );
         }
         
-        public override async Task CollectForEachPathAsync(short current_path, dynamic path_marker)
+        public override async Task CollectForEachPathAsync(short current_path, string[] axis, string[] spindle, dynamic path_marker)
         {
             await strategy.SetNative($"figures+{current_path}", 
                 await strategy.Platform.GetFigureAsync(0, 32));
@@ -31,13 +31,12 @@ namespace l99.driver.fanuc.collectors
                 await strategy.Platform.RdSvMeterAsync());
         }
 
-        public override async Task CollectForEachAxisAsync(short current_axis, string axis_name, dynamic axis_split, dynamic axis_marker)
+        public override async Task CollectForEachAxisAsync(short current_path, short current_axis, string axis_name, dynamic axis_split, dynamic axis_marker)
         {
             var axis_key = string.Join("/", axis_split);
-            var path_key = strategy.Get("current_path");
-            
-            var obs_focas_support = strategy.Get($"obs+focas_support+{path_key}");
-            var obs_alarms = strategy.Get($"obs+alarms+{path_key}");
+
+            var obs_focas_support = strategy.Get($"obs+focas_support+{current_path}");
+            var obs_alarms = strategy.Get($"obs+alarms+{current_path}");
 
             if (obs_alarms == null || obs_focas_support == null)
             {
@@ -69,10 +68,10 @@ namespace l99.driver.fanuc.collectors
 
             await strategy.Peel("axis",
                 current_axis,
-                strategy.Get($"axis_names"),
+                strategy.Get($"axis_names+{current_path}"),
                 strategy.Get($"axis_dynamic+{axis_key}"), 
-                strategy.Get($"figures+{path_key}"),
-                strategy.Get($"axis_load+{path_key}"),
+                strategy.Get($"figures+{current_path}"),
+                strategy.Get($"axis_load+{current_path}"),
                 strategy.Get($"diag_servo_temp+{axis_key}"),
                 strategy.Get($"diag_coder_temp+{axis_key}"),
                 strategy.Get($"diag_power+{axis_key}"),

@@ -15,7 +15,7 @@ namespace l99.driver.fanuc.collectors
             await strategy.Apply(typeof(fanuc.veneers.SysInfo), "machine");
         }
         
-        public override async Task CollectForEachPathAsync(short current_path, dynamic path_marker)
+        public override async Task CollectForEachPathAsync(short current_path, string[] axis, string[] spindle, dynamic path_marker)
         {
             await strategy.SetNative($"machine+{current_path}",
                 await strategy.Platform.SysInfoAsync());

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using l99.driver.fanuc.strategies;
 
 namespace l99.driver.fanuc.collectors
@@ -9,19 +10,44 @@ namespace l99.driver.fanuc.collectors
         {
             
         }
+
+        private bool _warned = false;
         
         public override async Task InitPathsAsync()
         {
             await strategy.Apply(typeof(fanuc.veneers.OpMsgs), "messages");
         }
         
-        public override async Task CollectForEachPathAsync(short current_path, dynamic path_marker)
+        public override async Task CollectForEachPathAsync(short current_path, string[] axis, string[] spindle, dynamic path_marker)
         {
-            await strategy.SetNative($"messages+{current_path}",
-                await strategy.Platform.RdOpMsgAsync(0, 6 + 256));
+            var obs_focas_support = strategy.Get($"obs+focas_support+{current_path}");
             
-            await strategy.Peel("messages", 
-                strategy.Get($"messages+{current_path}"));
+            short msg_type = 0;
+            short msg_length = 6 + 256;
+            
+            if (obs_focas_support == null)
+            {
+                if (!_warned)
+                {
+                    logger.Warn($"[{strategy.Machine.Id}] Machine info observation is required to correctly evaluate operator messages.");
+                    _warned = true;
+                }
+            }
+            else
+            {
+                if (Regex.IsMatch(string.Join("", obs_focas_support), "15"))
+                {
+                    msg_type = -1;
+                    msg_length = 578;
+                }
+                
+                await strategy.SetNative($"messages+{current_path}",
+                    await strategy.Platform.RdOpMsgAsync(msg_type, msg_length));
+            
+                await strategy.Peel("messages", 
+                    strategy.Get($"messages+{current_path}"));
+            }
+            
         }
     }
 }
