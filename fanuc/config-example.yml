@@ -1,5 +1,5 @@
 machines:
-  - id: example-sim
+  - id: example-sim-dev
     enabled: !!bool true
     type: l99.driver.fanuc.FanucMachine, fanuc
     strategy: l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc

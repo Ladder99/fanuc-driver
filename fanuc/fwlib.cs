@@ -3851,23 +3851,26 @@ namespace l99.driver.fanuc
             public short type;      /* axis number */
             public REALDGN rdata = new REALDGN();
         }
-        [StructLayout(LayoutKind.Explicit)]
+        
+        [StructLayout(LayoutKind.Sequential)]
         public class ODBDGN_3
         {
-            [FieldOffset(0)]
             public short datano;    /* data number */
-            [FieldOffset(2)]
             public short type;      /* axis number */
-            [FieldOffset(4),
-           MarshalAs(UnmanagedType.ByValArray, SizeConst = MAX_AXIS)]
+            public ODBDGN_3_UNION data;
+        }
+        
+        [StructLayout(LayoutKind.Explicit)]
+        public class ODBDGN_3_UNION
+        {
+            [FieldOffset(0), MarshalAs(UnmanagedType.ByValArray, SizeConst = MAX_AXIS)]
             public byte[] cdatas;
-            [FieldOffset(4),
-           MarshalAs(UnmanagedType.ByValArray, SizeConst = MAX_AXIS)]
+            [FieldOffset(0), MarshalAs(UnmanagedType.ByValArray, SizeConst = MAX_AXIS)]
             public short[] idatas;
-            [FieldOffset(4),
-           MarshalAs(UnmanagedType.ByValArray, SizeConst = MAX_AXIS)]
+            [FieldOffset(0), MarshalAs(UnmanagedType.ByValArray, SizeConst = MAX_AXIS)]
             public int[] ldatas;
         }
+        
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class ODBDGN_4
         {
