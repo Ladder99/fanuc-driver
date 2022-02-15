@@ -18,9 +18,12 @@ namespace l99.driver.fanuc.collectors
         public override async Task CollectForEachPathAsync(short current_path, dynamic path_marker)
         {
             await strategy.Peel("gcode",
-                await strategy.SetNative("blkcount", await strategy.Platform.RdBlkCountAsync()),
-                await strategy.SetNative("actpt", await strategy.Platform.RdActPtAsync()),
-                await strategy.SetNative("execprog", await strategy.Platform.RdExecProgAsync(256)));
+                await strategy.SetNative($"blkcount+{current_path}", 
+                    await strategy.Platform.RdBlkCountAsync()),
+                await strategy.SetNative($"actpt+{current_path}", 
+                    await strategy.Platform.RdActPtAsync()),
+                await strategy.SetNative($"execprog+{current_path}", 
+                    await strategy.Platform.RdExecProgAsync(256)));
         }
     }
 }

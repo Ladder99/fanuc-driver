@@ -17,23 +17,24 @@ namespace l99.driver.fanuc.collectors
         
         public override async Task CollectForEachPathAsync(short current_path, dynamic path_marker)
         {
-            await strategy.SetNative("program-name", 
+            await strategy.SetNative($"program_name+{current_path}", 
                 await strategy.Platform.ExePrgNameAsync());
-            var o_num = strategy.Get("program-name").response.cnc_exeprgname.exeprg.o_num;
+            var o_num = strategy.Get($"program_name+{current_path}")
+                .response.cnc_exeprgname.exeprg.o_num;
             
             await strategy.Peel("production",
-                strategy.Get("program-name"),
-                await strategy.SetNative("prog-dir", 
+                strategy.Get($"program_name+{current_path}"),
+                await strategy.SetNative($"prog_dir+{current_path}", 
                     await strategy.Platform.RdProgDir3Async(o_num)),
-                await strategy.SetNative("pieces-produced", 
+                await strategy.SetNative($"pieces_produced+{current_path}", 
                     await strategy.Platform.RdParamDoubleWordNoAxisAsync(6711)),
-                await strategy.SetNative("pieces-produced-life", 
+                await strategy.SetNative($"pieces_produced_life+{current_path}", 
                     await strategy.Platform.RdParamDoubleWordNoAxisAsync(6712)),
-                await strategy.SetNative("pieces-remaining", 
+                await strategy.SetNative($"pieces_remaining+{current_path}", 
                     await strategy.Platform.RdParamDoubleWordNoAxisAsync(6713)),
-                await strategy.SetNative("cycle-time-min", 
+                await strategy.SetNative($"cycle_time_min+{current_path}", 
                     await strategy.Platform.RdParamDoubleWordNoAxisAsync(6758)),
-                await strategy.SetNative("cycle-time-ms", 
+                await strategy.SetNative($"cycle_time_ms+{current_path}", 
                     await strategy.Platform.RdParamDoubleWordNoAxisAsync(6757)));
         }
     }

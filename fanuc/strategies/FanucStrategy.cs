@@ -18,9 +18,13 @@ namespace l99.driver.fanuc.strategies
             platform.ExitProcess();
         }
         
-        protected dynamic PathMarker(dynamic path)
+        protected dynamic PathMarker(short number)
         {
-            return new { path.request.cnc_setpath.path_no };
+            return new
+            {
+                number
+            };
+            //return new { path.request.cnc_setpath.path_no };
         }
 
         protected dynamic axisName(dynamic axis)
@@ -36,8 +40,15 @@ namespace l99.driver.fanuc.strategies
                    // ((char) spindle.suff3).AsAscii(); reserved
         }
 
-        protected dynamic spindleMarker(dynamic spindle)
+        protected dynamic spindleMarker(short number, string name)
         {
+            return new
+            {
+                number,
+                name
+            };
+
+            /*
             return new
             {
                 name = ((char)spindle.name).AsAscii(), 
@@ -45,15 +56,23 @@ namespace l99.driver.fanuc.strategies
                 suff2 =  ((char)spindle.suff2).AsAscii()
                 // suff3 =  ((char)spindle.suff3).AsAscii() reserved
             };
+            */
         }
 
-        protected dynamic axisMarker(dynamic axis)
+        protected dynamic axisMarker(short number, string name)
         {
+            return new
+            {
+                number,
+                name
+            };
+            /*
             return new
             {
                 name = ((char)axis.name).AsAscii(), 
                 suff =  ((char)axis.suff).AsAscii()
             };
+            */
         }
     }
 }

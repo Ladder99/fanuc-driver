@@ -17,7 +17,14 @@ namespace l99.driver.fanuc.collectors
         
         public override async Task CollectForEachPathAsync(short current_path, dynamic path_marker)
         {
-            await strategy.SetNativeAndPeel("machine", await strategy.Platform.SysInfoAsync());
+            await strategy.SetNative($"machine+{current_path}",
+                await strategy.Platform.SysInfoAsync());
+            
+            var obs_machine = await strategy.Peel($"machine", 
+                strategy.Get($"machine+{current_path}"));
+
+            strategy.Set($"obs+focas_support+{current_path}", 
+                obs_machine.veneer.LastArrivedValue.focas_support);
         }
     }
 }

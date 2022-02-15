@@ -457,7 +457,7 @@ namespace l99.driver.fanuc.strategies
                         await InitUserAxisAndSpindleAsync(current_path);
                         
                         await Set("path", await platform.SetPathAsync(current_path));
-                        dynamic path_marker = PathMarker(Get("path"));
+                        dynamic path_marker = PathMarker(Get("path").request.cnc_setpath.path_no);
                         
                         machine.MarkVeneer(current_path, path_marker);
                         
@@ -477,13 +477,14 @@ namespace l99.driver.fanuc.strategies
                             
                             dynamic axis = fields_axes[current_axis-1].GetValue(Get("axis_names").response.cnc_rdaxisname.axisname);
                             dynamic axis_name = axisName(axis);
-                            dynamic axis_marker = axisMarker(axis);
+                            dynamic axis_marker = axisMarker(current_axis, axis_name);
+                            dynamic axis_marker_full = new[] {path_marker, axis_marker};
                             await Set("axis_split", new[] {current_path, axis_name});
                             
                             if(!_intermediateModel.IsGenerated)
                                 _intermediateModel.AddAxis(current_path, axis_name);
                             
-                            machine.MarkVeneer(Get("axis_split"), new[] { path_marker, axis_marker });
+                            machine.MarkVeneer(Get("axis_split"), axis_marker_full);
 
                             await CollectForEachAxisAsync(current_axis, axis_name, Get("axis_split"), axis_marker);
                         }
@@ -498,13 +499,14 @@ namespace l99.driver.fanuc.strategies
                             
                             var spindle = fields_spindles[current_spindle - 1].GetValue(Get("spindle_names").response.cnc_rdspdlname.spdlname);
                             dynamic spindle_name = spindleName(spindle);
-                            dynamic spindle_marker = spindleMarker(spindle);
+                            dynamic spindle_marker = spindleMarker(current_spindle, spindle_name);
+                            dynamic spindle_marker_full = new[] {path_marker, spindle_marker};
                             await Set("spindle_split", new[] {current_path, spindle_name});
                                 
                             if(!_intermediateModel.IsGenerated)
                                 _intermediateModel.AddSpindle(current_path, spindle_name);
                             
-                            machine.MarkVeneer(Get("spindle_split"), new[] { path_marker, spindle_marker });
+                            machine.MarkVeneer(Get("spindle_split"), spindle_marker_full);
 
                             await CollectForEachSpindleAsync(current_spindle, spindle_name, Get("spindle_split"), spindle_marker);
                         };

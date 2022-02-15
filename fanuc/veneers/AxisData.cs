@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using l99.driver.@base;
+using MoreLinq;
 
 namespace l99.driver.fanuc.veneers
 {
@@ -17,7 +20,7 @@ namespace l99.driver.fanuc.veneers
         
         protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
         {
-            if (additionalInputs.All(o => o.success == true))
+            if (additionalInputs.Slice(0,7).All(o => o.success == true))
             {
                 var current_axis = input;
                 var axes_names = additionalInputs[0];
@@ -27,6 +30,9 @@ namespace l99.driver.fanuc.veneers
                 var servo_temp = additionalInputs[4];
                 var coder_temp = additionalInputs[5];
                 var power = additionalInputs[6];
+                var obs_focas_support = additionalInputs[7];
+                IEnumerable<dynamic> obs_alarms = additionalInputs[8];
+                var prev_axis_dynamic = additionalInputs[9];
 
                 var load_fields = axes_loads.response.cnc_rdsvmeter.loadmeter.GetType().GetFields();
                 var load_value = load_fields[current_axis - 1]
@@ -37,6 +43,33 @@ namespace l99.driver.fanuc.veneers
                     .GetValue(axes_names.response.cnc_rdaxisname.axisname);
                 var axis_name = ((char) axis_value.name).AsAscii() +
                                    ((char) axis_value.suff).AsAscii();
+
+                bool overtravel = false;
+                bool overheat = false;
+                bool servo = false;
+
+                if (obs_focas_support != null && obs_alarms != null)
+                {
+                    var axis_alarms = obs_alarms
+                        .Where(a => a.axis == current_axis);
+
+                    if (Regex.IsMatch(string.Join("", obs_focas_support), "15i[A-Z]?"))
+                    {
+                        overtravel = axis_alarms.Any(a => a.type == 6);
+                        overheat = axis_alarms.Any(a => a.type == 2);
+                        servo = axis_alarms.Any(a => a.type == 12);
+                    }
+                    else
+                    {
+                        overtravel = axis_alarms.Any(a => a.type == 4);
+                        overheat = axis_alarms.Any(a => a.type == 5);
+                        servo = axis_alarms.Any(a => a.type == 6);
+                    }
+                }
+
+                bool motion = (prev_axis_dynamic != null && prev_axis_dynamic.success == true) 
+                    ? prev_axis_dynamic.response.cnc_rddynamic2.rddynamic.pos.absolute != axis_dynamic.pos.absolute
+                    : false;
                 
                 var current_value = new
                 {
@@ -52,13 +85,20 @@ namespace l99.driver.fanuc.veneers
                     coder_temp_eu = "celsius",
                     power = power.response.cnc_diagnoss.diag.ldata,
                     power_eu = "watt",
+                    alarms = new
+                    {
+                        overtravel,
+                        overheat,
+                        servo
+                    },
                     position = new
                     {
                         absolute = axis_dynamic.pos.absolute / Math.Pow(10.0, figures[current_axis-1]),
                         machine = axis_dynamic.pos.machine / Math.Pow(10.0, figures[current_axis-1]),
                         relative = axis_dynamic.pos.relative / Math.Pow(10.0, figures[current_axis-1]),
                         distance = axis_dynamic.pos.distance / Math.Pow(10.0, figures[current_axis-1])
-                    }
+                    },
+                    motion
                 };
 
                 await onDataArrivedAsync(input, current_value);

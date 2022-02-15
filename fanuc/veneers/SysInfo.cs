@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using l99.driver.@base;
 
@@ -10,17 +11,22 @@ namespace l99.driver.fanuc.veneers
         {
             lastChangedValue = new
             {
+                focas_suport = new string[4],
                 loader_control = false,
                 i_series = false,
                 compound_machining = false,
                 transfer_line = false,
                 model = string.Empty,
+                model_code = -1,
                 max_axis = -1,
                 cnc_type = string.Empty,
+                cnc_type_code = -1,
                 mt_type = string.Empty,
+                mt_type_code = -1,
                 series = string.Empty,
                 version = string.Empty,
-                axes = -1
+                axes = -1,
+                focas_series = string.Empty
             };
         }
         
@@ -28,6 +34,8 @@ namespace l99.driver.fanuc.veneers
         {
             if (input.success)
             {
+                string[] focas_support = new string[4];
+                
                 // ADDITIONAL INFO
                 byte[] info_bytes = BitConverter.GetBytes(input.response.cnc_sysinfo.sysinfo.addinfo);
                 
@@ -35,77 +43,90 @@ namespace l99.driver.fanuc.veneers
                 var i_series = (info_bytes[0] & 2) == 2;;
                 var compound_machining = (info_bytes[0] & 4) == 4;;
                 var transfer_line = (info_bytes[0] & 8) == 8;;
+
+                focas_support[1] = i_series ? "i" : "";
                 
                 var model = "Unknown";
                 switch(info_bytes[1])
                 {
                     case 0:
                         model = "MODEL information is not supported";
+                        focas_support[2] = "";
                         break;
                     case 1:
                         model = "MODEL A";
+                        focas_support[2] = "A";
                         break;
                     case 2:
                         model = "MODEL B";
+                        focas_support[2] = "B";
                         break;
                     case 3:
                         model = "MODEL C";
+                        focas_support[2] = "C";
                         break;
                     case 4:
                         model = "MODEL D";
+                        focas_support[2] = "D";
                         break;
                     case 6:
                         model = "MODEL F";
+                        focas_support[2] = "F";
                         break;
                 }
                 
                 // CNC TYPE
                 var cnc_type_code = string.Join("", input.response.cnc_sysinfo.sysinfo.cnc_type);
                 var cnc_type = "Unknown";
-
+                focas_support[0] = cnc_type_code.Trim();
+                
                 switch (cnc_type_code)
                 {
                         case "15"	:
-                            cnc_type = "Series 15/15i";
+                            cnc_type = "Series 15" + (i_series?"i":"");
                             break;
                         case "16"	:
-                            cnc_type = "Series 16/16i";
+                            cnc_type = "Series 16" + (i_series?"i":"");
                             break;
                         case "18"	: 
-                            cnc_type = "Series 18/18i";
+                            cnc_type = "Series 18" + (i_series?"i":"");
                             break;
                         case "21"	: 
-                            cnc_type = "Series 21/21i";
+                            cnc_type = "Series 21" + (i_series?"i":"");
                             break;
                         case "30"	: 
-                            cnc_type = "Series 30i";
+                            cnc_type = "Series 30" + (i_series?"i":"");
                             break;
                         case "31"	: 
-                            cnc_type = "Series 31i";
+                            cnc_type = "Series 31" + (i_series?"i":"");
                             break;
                         case "32"	: 
-                            cnc_type = "Series 32i";
+                            cnc_type = "Series 32" + (i_series?"i":"");
                             break;
                         case "35"	: 
-                            cnc_type = "Series 35i";
+                            cnc_type = "Series 35" + (i_series?"i":"");
                             break;
                         case " 0"	: 
-                            cnc_type = "Series 0i";
+                            cnc_type = "Series 0" + (i_series?"i":"");
                             break;
                         case "PD"	: 
-                            cnc_type = "Power Mate i-D";
+                            cnc_type = "Power Mate D";
+                            if (i_series) cnc_type = "Power Mate i-D";
                             break;
                         case "PH"	: 
-                            cnc_type = "Power Mate i-H";
+                            cnc_type = "Power Mate H";
+                            if (i_series) cnc_type = "Power Mate i-H";
                             break;
                         case "PM"	: 
-                            cnc_type = "Power Motion i";
+                            cnc_type = "Power Motion";
+                            if (i_series) cnc_type = "Power Motion i";
                             break;
                 }
 
                 // MT TYPE
                 var mt_type_code = string.Join("", input.response.cnc_sysinfo.sysinfo.mt_type);
                 var mt_type = "Unknown";
+                focas_support[3] = ((char)input.response.cnc_sysinfo.sysinfo.mt_type[1]).AsAscii();
 
                 switch (mt_type_code)
                 {
@@ -146,6 +167,7 @@ namespace l99.driver.fanuc.veneers
                 
                 var current_value = new
                 {
+                    focas_support,
                     loader_control,
                     i_series,
                     compound_machining,
