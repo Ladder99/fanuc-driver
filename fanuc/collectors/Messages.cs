@@ -20,7 +20,7 @@ namespace l99.driver.fanuc.collectors
         
         public override async Task CollectForEachPathAsync(short current_path, string[] axis, string[] spindle, dynamic path_marker)
         {
-            var obs_focas_support = strategy.Get($"obs+focas_support+{current_path}");
+            var obs_focas_support = strategy.GetKeyed($"obs+focas_support");
             
             short msg_type = 0;
             short msg_length = 6 + 256;
@@ -41,11 +41,11 @@ namespace l99.driver.fanuc.collectors
                     msg_length = 578;
                 }
                 
-                await strategy.SetNative($"messages+{current_path}",
+                await strategy.SetNativeKeyed($"messages",
                     await strategy.Platform.RdOpMsgAsync(msg_type, msg_length));
             
                 await strategy.Peel("messages", 
-                    strategy.Get($"messages+{current_path}"));
+                    strategy.GetKeyed($"messages"));
             }
             
         }

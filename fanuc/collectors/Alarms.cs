@@ -20,7 +20,7 @@ namespace l99.driver.fanuc.collectors
         
         public override async Task CollectForEachPathAsync(short current_path, string[] axis, string[] spindle, dynamic path_marker)
         {
-            var obs_focas_support = strategy.Get($"obs+focas_support+{current_path}");
+            var obs_focas_support = strategy.GetKeyed($"obs+focas_support");
 
             if (obs_focas_support == null)
             {
@@ -30,7 +30,7 @@ namespace l99.driver.fanuc.collectors
                     _warned = true;
                 }
                 
-                await strategy.SetNative($"alarms+{current_path}", 
+                await strategy.SetNativeKeyed($"alarms", 
                     await strategy.Platform.RdAlmMsg2Async(-1, 10));
             }
             else
@@ -38,23 +38,23 @@ namespace l99.driver.fanuc.collectors
                 if(Regex.IsMatch(string.Join("",obs_focas_support),
                        "30i[A-Z]?|31i[A-Z]?|32i[A-Z]?|0i[D|F]|PMi[A]?"))
                 {
-                    await strategy.SetNative($"alarms+{current_path}", 
+                    await strategy.SetNativeKeyed($"alarms", 
                         await strategy.Platform.RdAlmMsg2Async(-1, 10));
                 }
                 else
                 {
-                    await strategy.SetNative($"alarms+{current_path}", 
+                    await strategy.SetNativeKeyed($"alarms", 
                         await strategy.Platform.RdAlmMsgAsync(-1, 10));
                 }
             }
 
             var obs_alarms = await strategy.Peel("alarms", 
-                strategy.Get($"alarms+{current_path}"),
+                strategy.GetKeyed($"alarms"),
                 current_path,
                 axis,
                 obs_focas_support);
 
-            strategy.Set($"obs+alarms+{current_path}", 
+            strategy.SetKeyed($"obs+alarms", 
                 obs_alarms.veneer.LastChangedValue.alarms);
         }
     }

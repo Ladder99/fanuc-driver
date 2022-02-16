@@ -17,24 +17,24 @@ namespace l99.driver.fanuc.collectors
         
         public override async Task CollectForEachPathAsync(short current_path, string[] axis, string[] spindle, dynamic path_marker)
         {
-            await strategy.SetNative($"program_name+{current_path}", 
+            await strategy.SetNativeKeyed($"program_name", 
                 await strategy.Platform.ExePrgNameAsync());
-            var o_num = strategy.Get($"program_name+{current_path}")
+            var o_num = strategy.GetKeyed($"program_name")
                 .response.cnc_exeprgname.exeprg.o_num;
             
             await strategy.Peel("production",
-                strategy.Get($"program_name+{current_path}"),
-                await strategy.SetNative($"prog_dir+{current_path}", 
+                strategy.GetKeyed($"program_name"),
+                await strategy.SetNativeKeyed($"prog_dir", 
                     await strategy.Platform.RdProgDir3Async(o_num)),
-                await strategy.SetNative($"pieces_produced+{current_path}", 
+                await strategy.SetNativeKeyed($"pieces_produced", 
                     await strategy.Platform.RdParamDoubleWordNoAxisAsync(6711)),
-                await strategy.SetNative($"pieces_produced_life+{current_path}", 
+                await strategy.SetNativeKeyed($"pieces_produced_life", 
                     await strategy.Platform.RdParamDoubleWordNoAxisAsync(6712)),
-                await strategy.SetNative($"pieces_remaining+{current_path}", 
+                await strategy.SetNativeKeyed($"pieces_remaining", 
                     await strategy.Platform.RdParamDoubleWordNoAxisAsync(6713)),
-                await strategy.SetNative($"cycle_time_min+{current_path}", 
+                await strategy.SetNativeKeyed($"cycle_time_min", 
                     await strategy.Platform.RdParamDoubleWordNoAxisAsync(6758)),
-                await strategy.SetNative($"cycle_time_ms+{current_path}", 
+                await strategy.SetNativeKeyed($"cycle_time_ms", 
                     await strategy.Platform.RdParamDoubleWordNoAxisAsync(6757)));
         }
     }

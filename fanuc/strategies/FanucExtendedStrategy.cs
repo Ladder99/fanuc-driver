@@ -61,6 +61,29 @@ namespace l99.driver.fanuc.strategies
             }
         }
 
+        private dynamic? getCurrentPropertyBagKey()
+        {
+            switch (_currentCollectSegment)
+            {
+                case SegmentEnum.NONE:
+                case SegmentEnum.BEGIN:
+                case SegmentEnum.ROOT:
+                case SegmentEnum.END:
+                    return "none";
+                
+                case SegmentEnum.PATH:
+                    return Get("current_path");
+                    
+                case SegmentEnum.AXIS:
+                    return string.Join("/", Get("axis_split"));
+                
+                case SegmentEnum.SPINDLE:
+                    return string.Join("/", Get("spindle_split"));
+            }
+
+            return "none";
+        }
+        
         public dynamic? Get(string propertyBagKey)
         {
             if (propertyBag.ContainsKey(propertyBagKey))
@@ -73,15 +96,39 @@ namespace l99.driver.fanuc.strategies
             }
         }
 
+        public dynamic? GetKeyed(string propertyBagKey)
+        {
+            return Get($"{propertyBagKey}+{getCurrentPropertyBagKey()}");
+        }
+
+        public bool Has(string propertyBagKey)
+        {
+            return propertyBag.ContainsKey(propertyBagKey);
+        }
+        
+        public bool HasKeyed(string propertyBagKey)
+        {
+            return Has($"{propertyBagKey}+{getCurrentPropertyBagKey()}");
+        }
+
         public async Task<dynamic?> Set(string propertyBagKey, dynamic? value)
         {
             return await set(propertyBagKey, value, false, false);
         }
         
+        public async Task<dynamic?> SetKeyed(string propertyBagKey, dynamic? value)
+        {
+            return await set($"{propertyBagKey}+{getCurrentPropertyBagKey()}", value, false, false);
+        }
+        
         public async Task<dynamic?> SetNative(string propertyBagKey, dynamic? value)
         {
-            var a =  await set(propertyBagKey, value, true, false);
-            return a;
+            return await set(propertyBagKey, value, true, false);
+        }
+        
+        public async Task<dynamic?> SetNativeKeyed(string propertyBagKey, dynamic? value)
+        {
+            return await set($"{propertyBagKey}+{getCurrentPropertyBagKey()}", value, true, false);
         }
         
         public async Task<dynamic?> SetNativeAndPeel(string propertyBagKey, dynamic? value)
@@ -227,7 +274,7 @@ namespace l99.driver.fanuc.strategies
                     break;
             }
         }
-        
+       
         public override async Task SweepAsync(int delayMs = -1)
         {
             sweepRemaining = sweepMs - (int)sweepWatch.ElapsedMilliseconds;
@@ -260,9 +307,9 @@ namespace l99.driver.fanuc.strategies
                     {
                         _currentInitSegment = SegmentEnum.ROOT;
 
-                        await Apply(typeof(fanuc.veneers.FocasPerf), "focas_perf", isInternal:true, isCompound: true);
-                        await Apply(typeof(fanuc.veneers.Connect), "connect", isInternal: true);
-                        await Apply(typeof(fanuc.veneers.GetPath), "paths", isInternal: true);
+                        await Apply(typeof(veneers.FocasPerf), "focas_perf", isInternal:true, isCompound: true);
+                        await Apply(typeof(veneers.Connect), "connect", isInternal: true);
+                        await Apply(typeof(veneers.GetPath), "paths", isInternal: true);
                         
                         await InitRootAsync();
                         
@@ -278,8 +325,8 @@ namespace l99.driver.fanuc.strategies
 
                         await InitPathsAsync();
                         
-                        await Apply(typeof(fanuc.veneers.RdAxisname), "axis_names", isInternal: true);
-                        await Apply(typeof(fanuc.veneers.RdSpindlename), "spindle_names", isInternal: true);
+                        await Apply(typeof(veneers.RdAxisname), "axis_names", isInternal: true);
+                        await Apply(typeof(veneers.RdSpindlename), "spindle_names", isInternal: true);
                         
                         _currentInitSegment = SegmentEnum.AXIS;
                         
@@ -434,7 +481,8 @@ namespace l99.driver.fanuc.strategies
                     _currentInitSegment = SegmentEnum.ROOT;
                     _currentCollectSegment = SegmentEnum.ROOT;
                     
-                    await SetNativeAndPeel("paths", await platform.GetPathAsync());
+                    await SetNativeAndPeel("paths", 
+                        await platform.GetPathAsync());
 
                     await InitUserRootAsync();
                     await CollectRootAsync();
@@ -461,15 +509,15 @@ namespace l99.driver.fanuc.strategies
                         
                         machine.MarkVeneer(current_path, path_marker);
 
-                        await SetNative($"axis_names+{current_path}",
+                        await SetNativeKeyed($"axis_names",
                             await platform.RdAxisNameAsync());
                         await Peel("axis_names",
-                            Get($"axis_names+{current_path}"));
+                            GetKeyed($"axis_names"));
 
-                        var fields_axes = Get($"axis_names+{current_path}")
+                        var fields_axes = GetKeyed($"axis_names")
                             .response.cnc_rdaxisname.axisname.GetType().GetFields();
 
-                        short axis_count = Get($"axis_names+{current_path}")
+                        short axis_count = GetKeyed($"axis_names")
                             .response.cnc_rdaxisname.data_num;
 
                         string[] axis_names = new string[axis_count]; 
@@ -477,19 +525,19 @@ namespace l99.driver.fanuc.strategies
                         for (short i = 0; i < axis_count; i++)
                         {
                             axis_names[i] = axisName(fields_axes[i]
-                                .GetValue(Get($"axis_names+{current_path}")
+                                .GetValue(GetKeyed($"axis_names")
                                     .response.cnc_rdaxisname.axisname));
                         }
 
-                        await SetNative($"spindle_names+{current_path}",
+                        await SetNativeKeyed($"spindle_names",
                             await platform.RdSpdlNameAsync());
                         await SetNativeAndPeel("spindle_names", 
-                            Get($"spindle_names+{current_path}"));
+                            GetKeyed($"spindle_names"));
                         
-                        var fields_spindles = Get($"spindle_names+{current_path}")
+                        var fields_spindles = GetKeyed($"spindle_names")
                             .response.cnc_rdspdlname.spdlname.GetType().GetFields();
                         
-                        short spindle_count = Get($"spindle_names+{current_path}")
+                        short spindle_count = GetKeyed($"spindle_names")
                             .response.cnc_rdspdlname.data_num;
 
                         string[] spindle_names = new string[spindle_count]; 
@@ -497,24 +545,15 @@ namespace l99.driver.fanuc.strategies
                         for (short i = 0; i < spindle_count; i++)
                         {
                             spindle_names[i] = spindleName(fields_spindles[i]
-                                .GetValue(Get($"spindle_names+{current_path}")
+                                .GetValue(GetKeyed($"spindle_names")
                                     .response.cnc_rdspdlname.spdlname));
                         }
                         
                         await CollectForEachPathAsync(current_path, axis_names, spindle_names, path_marker);
                         
-                        /*for (short current_axis = 1;
-                            current_axis <= Get($"axis_names+{current_path}")
-                                .response.cnc_rdaxisname.data_num;
-                            current_axis++)*/
                         for (short current_axis = 1; current_axis <= axis_names.Length; current_axis ++)
                         {
                             _currentCollectSegment = SegmentEnum.AXIS;
-                            
-                            //dynamic axis = fields_axes[current_axis-1]
-                            //    .GetValue(Get($"axis_names+{current_path}")
-                            //        .response.cnc_rdaxisname.axisname);
-                            //dynamic axis_name = axisName(axis);
                             dynamic axis_name = axis_names[current_axis-1];
                             dynamic axis_marker = axisMarker(current_axis, axis_name);
                             dynamic axis_marker_full = new[] {path_marker, axis_marker};
@@ -528,18 +567,9 @@ namespace l99.driver.fanuc.strategies
                             await CollectForEachAxisAsync(current_path, current_axis, axis_name, Get("axis_split"), axis_marker);
                         }
 
-                        /*for (short current_spindle = 1;
-                            current_spindle <= Get($"spindle_names+{current_path}")
-                                .response.cnc_rdspdlname.data_num;
-                            current_spindle++)*/
                         for (short current_spindle = 1; current_spindle <= spindle_names.Length; current_spindle ++)
                         {
                             _currentCollectSegment = SegmentEnum.SPINDLE;
-                            
-                            //var spindle = fields_spindles[current_spindle - 1]
-                            //    .GetValue(Get($"spindle_names+{current_path}")
-                            //        .response.cnc_rdspdlname.spdlname);
-                            //dynamic spindle_name = spindleName(spindle);
                             dynamic spindle_name = spindle_names[current_spindle-1];
                             dynamic spindle_marker = spindleMarker(current_spindle, spindle_name);
                             dynamic spindle_marker_full = new[] {path_marker, spindle_marker};

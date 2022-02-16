@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using l99.driver.fanuc.strategies;
 
 namespace l99.driver.fanuc.collectors
@@ -9,7 +10,7 @@ namespace l99.driver.fanuc.collectors
         {
             
         }
-        
+
         public override async Task InitPathsAsync()
         {
             await strategy.Apply(typeof(fanuc.veneers.SysInfo), "machine");
@@ -17,13 +18,18 @@ namespace l99.driver.fanuc.collectors
         
         public override async Task CollectForEachPathAsync(short current_path, string[] axis, string[] spindle, dynamic path_marker)
         {
-            await strategy.SetNative($"machine+{current_path}",
+            if (strategy.HasKeyed($"{this.GetType().Name}"))
+                return;
+
+            await strategy.SetKeyed($"{this.GetType().Name}", true);
+            
+            await strategy.SetNativeKeyed($"machine",
                 await strategy.Platform.SysInfoAsync());
             
             var obs_machine = await strategy.Peel($"machine", 
-                strategy.Get($"machine+{current_path}"));
+                strategy.GetKeyed($"machine"));
 
-            strategy.Set($"obs+focas_support+{current_path}", 
+            strategy.SetKeyed($"obs+focas_support", 
                 obs_machine.veneer.LastArrivedValue.focas_support);
         }
     }

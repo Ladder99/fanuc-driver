@@ -30,24 +30,24 @@ namespace l99.driver.fanuc.collectors
         public override async Task CollectForEachPathAsync(short current_path, string[] axis, string[] spindle, dynamic path_marker)
         {
             await strategy.Peel("state",
-                await strategy.SetNative($"stat_info+{current_path}", 
+                await strategy.SetNativeKeyed($"stat_info", 
                     await strategy.Platform.StatInfoAsync()),
                 strategy.Get("poweron_time_min"),
                 strategy.Get("operating_time_min"),
                 strategy.Get("cutting_time_min"),
-                await strategy.SetNative($"feed_override+{current_path}", 
+                await strategy.SetNativeKeyed($"feed_override", 
                     await strategy.Platform.RdPmcRngGByteAsync(12)),
-                await strategy.SetNative($"rapid_override+{current_path}", 
+                await strategy.SetNativeKeyed($"rapid_override", 
                     await strategy.Platform.RdPmcRngGByteAsync(14)),
-                await strategy.SetNative($"spindle_override+{current_path}", 
+                await strategy.SetNativeKeyed($"spindle_override", 
                     await strategy.Platform.RdPmcRngGByteAsync(30)),
-                await strategy.SetNative($"modal_m1+{current_path}", 
+                await strategy.SetNativeKeyed($"modal_m1", 
                     await strategy.Platform.ModalAsync(106,0,3)),
-                await strategy.SetNative($"modal_m2+{current_path}", 
+                await strategy.SetNativeKeyed($"modal_m2", 
                     await strategy.Platform.ModalAsync(125,0,3)),
-                await strategy.SetNative($"modal_m3+{current_path}", 
+                await strategy.SetNativeKeyed($"modal_m3", 
                     await strategy.Platform.ModalAsync(126,0,3)),
-                await strategy.SetNative($"modal_t+{current_path}", 
+                await strategy.SetNativeKeyed($"modal_t", 
                     await strategy.Platform.ModalAsync(108,0,3)));
         }
     }
