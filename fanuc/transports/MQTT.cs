@@ -12,7 +12,7 @@ namespace l99.driver.fanuc.transports
 {
     public class MQTT : Transport
     {
-        private MqttClientOptions _options;
+        private IMqttClientOptions _options;
         private IMqttClient _client;
         private dynamic _config;
 
@@ -24,26 +24,34 @@ namespace l99.driver.fanuc.transports
         {
             _config = cfg;
             
-            _key = $"{_config.transport["net_ip"]}:{_config.transport["net_port"]}/{machine.Id}";
+            _key = $"{_config.transport["net_type"]}://{_config.transport["net_ip"]}:{_config.transport["net_port"]}/{machine.Id}";
             
-            var factory = new MqttFactory();
-            _options = new MqttClientOptionsBuilder()
-                .WithTcpServer(_config.transport["net_ip"], _config.transport["net_port"])
-                .Build();
+            IMqttFactory factory = new MqttFactory();
+            MqttClientOptionsBuilder builder;
 
+            switch (_config.transport["net_type"])
+            {
+                case "ws":
+                    builder = new MqttClientOptionsBuilder()
+                        .WithWebSocketServer($"{_config.transport["net_ip"]}:{_config.transport["net_port"]}");
+                    break;
+                default:
+                    builder = new MqttClientOptionsBuilder()
+                        .WithTcpServer(_config.transport["net_ip"], _config.transport["net_port"]);
+                    break;
+            }
+            
             if (!_config.transport["anonymous"])
             {
-                var creds = new MqttClientCredentials();
                 byte[] passwordBuffer = null;
 
                 if (_config.transport["password"] != null)
                     passwordBuffer = Encoding.UTF8.GetBytes(_config.transport["password"]);
-                
-                creds.Username = _config.transport["user"];
-                creds.Password = passwordBuffer;
-                _options.Credentials = creds;
+
+                builder = builder.WithCredentials(_config.transport["user"], passwordBuffer);
             }
-            
+
+            _options = builder.Build();
             _client = factory.CreateMqttClient();
         }
 
