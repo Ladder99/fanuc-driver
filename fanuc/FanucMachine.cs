@@ -41,9 +41,15 @@ namespace l99.driver.fanuc
         
         public FanucMachine(Machines machines, bool enabled, string id, object config) : base(machines, enabled, id, config)
         {
-            dynamic cfg = (dynamic) config;
-            _focasEndpoint = new FocasEndpoint(cfg.type["net_ip"], (ushort)cfg.type["net_port"], (short)cfg.type["net_timeout_s"]);
+            dynamic cfg = config;
             this["platform"] = new Platform(this);
+            
+            //TODO: validate config
+            _focasEndpoint = new FocasEndpoint(
+                cfg.type["net"]["ip"], 
+                (ushort)cfg.type["net"]["port"], 
+                (short)cfg.type["net"]["timeout_s"]);
+            
         }
     }
 }

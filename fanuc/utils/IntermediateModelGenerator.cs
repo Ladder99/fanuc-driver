@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using l99.driver.@base;
 using Newtonsoft.Json.Linq;
-using NJsonSchema;
 using NLog;
 
 namespace l99.driver.fanuc
@@ -237,7 +236,7 @@ namespace l99.driver.fanuc
                 if (!_spindleItems.ContainsKey(name))
                 {
                     var json_string = JObject.FromObject(payload.veneer.LastArrivedValue).ToString();
-                    var json_schema = JsonSchema.FromSampleJson(json_string).ToJson();
+                    var json_schema = string.Empty; // JsonSchema.FromSampleJson(json_string).ToJson();
                     logger.Trace($"[{this._machine.Id}] AddSpindleItem {name}, {json_string}");
                     _spindleItems.Add(name, (payload, json_schema));
                 }

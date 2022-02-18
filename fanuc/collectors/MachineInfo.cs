@@ -13,7 +13,7 @@ namespace l99.driver.fanuc.collectors
 
         public override async Task InitPathsAsync()
         {
-            await strategy.Apply(typeof(fanuc.veneers.SysInfo), "machine");
+            await strategy.Apply(typeof(veneers.SysInfo), "machine");
         }
         
         public override async Task CollectForEachPathAsync(short current_path, string[] axis, string[] spindle, dynamic path_marker)

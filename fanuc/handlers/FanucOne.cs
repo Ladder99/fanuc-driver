@@ -3,21 +3,19 @@ using System.Threading.Tasks;
 using l99.driver.@base;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Scriban;
 
 namespace l99.driver.fanuc.handlers
 {
     public class FanucOne: Handler
     {
-        private readonly Formatting jsonFormatting = Formatting.None;
-
+        private dynamic _cfg;
+        private Template _topicTemplate;
         public FanucOne(Machine machine, object cfg) : base(machine, cfg)
         {
-            
-        }
-
-        private string topicEval(Veneer veneer)
-        {
-            return $"fanuc/{machine.Id}/{veneer.Name}{(veneer.SliceKey == null ? string.Empty : "/" + veneer.SliceKey.ToString())}";
+            _cfg = cfg;
+            //TODO: validate config
+            _topicTemplate = Template.Parse(_cfg.handler["JSON"]["topic"]);
         }
         
         public override async Task<dynamic?> OnDataArrivalAsync(Veneers veneers, Veneer veneer, dynamic? beforeArrival)
@@ -49,10 +47,19 @@ namespace l99.driver.fanuc.handlers
         {
             if (onArrival == null)
                 return;
-            
-            var topic = topicEval(veneer);
-            string payload = JObject.FromObject(onArrival).ToString(jsonFormatting);
-            await veneers.Machine.Transport.SendAsync(topic, payload, true);
+
+            switch (_cfg.handler["transfer"])
+            {
+                case "JSON":
+                    var topic = await _topicTemplate.RenderAsync(new { machine, veneer}, member => member.Name);
+                    string payload = JObject.FromObject(onArrival).ToString(Formatting.None);
+                    await veneers.Machine.Transport.SendAsync(topic, payload, true);
+                    break;
+                
+                default:
+                    await veneers.Machine.Transport.SendAsync("DATA_ARRIVE", veneer, onArrival);
+                    break;
+            }
         }
 
         public override async Task<dynamic?> OnDataChangeAsync(Veneers veneers, Veneer veneer, dynamic? beforeChange)
@@ -85,9 +92,18 @@ namespace l99.driver.fanuc.handlers
             if (onChange == null)
                 return;
             
-            var topic = topicEval(veneer);
-            string payload = JObject.FromObject(onChange).ToString(jsonFormatting);
-            await veneers.Machine.Transport.SendAsync(topic, payload, true);
+            switch (_cfg.handler["transfer"])
+            {
+                case "JSON":
+                    var topic = await _topicTemplate.RenderAsync(new { machine, veneer}, member => member.Name);
+                    string payload = JObject.FromObject(onChange).ToString(Formatting.None);
+                    await veneers.Machine.Transport.SendAsync(topic, payload, true);
+                    break;
+                
+                default:
+                    await veneers.Machine.Transport.SendAsync("DATA_CHANGE", veneer, onChange);
+                    break;
+            }
         }
         
         public override async Task<dynamic?> OnStrategySweepCompleteAsync(Machine machine, dynamic? beforeSweepComplete)
@@ -115,15 +131,33 @@ namespace l99.driver.fanuc.handlers
         
         protected override async Task afterSweepCompleteAsync(Machine machine, dynamic? onSweepComplete)
         {
-            string topic = $"fanuc/{machine.Id}/sweep";
-            string payload = JObject.FromObject(onSweepComplete).ToString(jsonFormatting);
-            await machine.Transport.SendAsync(topic, payload, true);
+            switch (_cfg.handler["transfer"])
+            {
+                case "JSON":
+                    string topic = $"fanuc/{machine.Id}/sweep";
+                    string payload = JObject.FromObject(onSweepComplete).ToString(Formatting.None);
+                    await machine.Transport.SendAsync(topic, payload, true);
+                    break;
+                
+                default:
+                    await machine.Transport.SendAsync("SWEEP_END", null, onSweepComplete);
+                    break;
+            }
         }
 
         public override async Task OnGenerateIntermediateModel(string json)
         {
-            var topic = $"fanuc/{machine.Id}/$model";
-            await machine.Transport.SendAsync(topic, json, true);
+            switch (_cfg.handler["transfer"])
+            {
+                case "JSON":
+                    var topic = $"fanuc/{machine.Id}/$model";
+                    await machine.Transport.SendAsync(topic, json, true);
+                    break;
+                
+                default:
+                    await machine.Transport.SendAsync("INT_MODEL", null, json);
+                    break;
+            }
         }
     }
 }

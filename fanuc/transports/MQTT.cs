@@ -24,20 +24,21 @@ namespace l99.driver.fanuc.transports
         {
             _config = cfg;
             
-            _key = $"{_config.transport["net_type"]}://{_config.transport["net_ip"]}:{_config.transport["net_port"]}/{machine.Id}";
+            //TODO: validate config
+            _key = $"{_config.transport["net"]["type"]}://{_config.transport["net"]["ip"]}:{_config.transport["net"]["port"]}/{machine.Id}";
             
             IMqttFactory factory = new MqttFactory();
             MqttClientOptionsBuilder builder;
 
-            switch (_config.transport["net_type"])
+            switch (_config.transport["net"]["type"])
             {
                 case "ws":
                     builder = new MqttClientOptionsBuilder()
-                        .WithWebSocketServer($"{_config.transport["net_ip"]}:{_config.transport["net_port"]}");
+                        .WithWebSocketServer($"{_config.transport["net"]["ip"]}:{_config.transport["net"]["port"]}");
                     break;
                 default:
                     builder = new MqttClientOptionsBuilder()
-                        .WithTcpServer(_config.transport["net_ip"], _config.transport["net_port"]);
+                        .WithTcpServer(_config.transport["net"]["ip"], _config.transport["net"]["port"]);
                     break;
             }
             

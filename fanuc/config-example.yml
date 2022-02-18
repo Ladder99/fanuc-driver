@@ -1,20 +1,20 @@
 machines:
-  - id: example-sim-dev
+  - id: example-sim-t
     enabled: !!bool true
     type: l99.driver.fanuc.FanucMachine, fanuc
     strategy: l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc
-    #strategy: l99.driver.fanuc.strategies.GCodeData, fanuc
     handler: l99.driver.fanuc.handlers.FanucOne, fanuc
-    #handler: l99.driver.fanuc.handlers.FanucMTC, fanuc
-    transport: l99.driver.fanuc.transports.MQTT, fanuc
+    #transport: l99.driver.fanuc.transports.MQTT, fanuc
+    transport: l99.driver.fanuc.transports.InfluxLP, fanuc
     #transport: l99.driver.fanuc.transports.SHDR, fanuc
     
     l99.driver.fanuc.FanucMachine, fanuc:
       sweep_ms: !!int 1000
-      net_ip: 10.1.10.211
-      #net_ip: 172.16.13.100
-      net_port: !!int 8193
-      net_timeout_s: !!int 3
+      net:
+        ip: 10.1.10.211
+        #ip: 172.16.13.100
+        port: !!int 8193
+        timeout_s: !!int 3
     
     l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
       #- l99.driver.fanuc.collectors.ParameterDump, fanuc
@@ -29,21 +29,37 @@ machines:
       - l99.driver.fanuc.collectors.AxisData, fanuc
       - l99.driver.fanuc.collectors.SpindleData, fanuc
     
+    l99.driver.fanuc.handlers.FanucOne, fanuc:
+      transfer: .
+      JSON:
+        topic: "fanuc/{{machine.Id}}/{{veneer.Name}}{{if veneer.SliceKey}}/{{veneer.SliceKey}}{{end}}"
+        
     l99.driver.fanuc.transports.MQTT, fanuc:
-      enabled: !!bool true
-      net_type: tcp
-      net_ip: 10.1.10.210
-      net_port: !!int 1883
-      #net_type: ws
-      #net_ip: test.mosquitto.org
-      #net_port: !!int 8080
+      net:
+        type: tcp
+        ip: 10.1.10.210
+        port: !!int 1883
+        #type: ws
+        #ip: test.mosquitto.org
+        #port: !!int 8080
       anonymous: !!bool true
       user:
       password:
-    
+        
+    l99.driver.fanuc.transports.InfluxLP, fanuc:
+      host: "https://us-east-1-1.aws.cloud2.influxdata.com"
+      token: "your-token"
+      org: "your-org"
+      bucket: "your-bucket"
+      transformers:
+        l99.driver.fanuc.veneers.SysInfo, fanuc: "{{observation.name}},machine={{observation.machine}},path={{observation.marker.number}} model={{data.model}},cnc_type={{data.cnc_type}},mt_type={{data.mt_type}},series={{data.series}},version={{data.version}},axes={{data.axes}}"
+        l99.driver.fanuc.veneers.ProductionData, fanuc: "{{observation.name}},machine={{observation.machine}},path={{observation.marker.number}} program_name={{data.program.name}},program_comment={{data.program.comment}},program_modified={{data.program.modified}},pieces_produced={{data.pieces.produced}},pieces_produced_life={{data.pieces.produced_life}},pieces_remaining={{data.pieces.remaining}},cycle_time={{data.timers.cycle_time_ms}}"
+        l99.driver.fanuc.veneers.AxisData, fanuc: "{{observation.name}},machine={{observation.machine}},path={{observation.marker[0].number}},axis={{observation.marker[1].name}} position_machine={{data.position.machine}},position_absolute={{data.position.absolute}},feed={{data.feed}},motion={{data.motion}},servo_temp={{data.servo_temp}},coder_temp={{data.coder_temp}},load={{data.load}},power={{data.power}},alarm_overtravel={{data.alarms.overtravel}},alarm_overheat={{data.alarms.overheat}},alarm_servo={{data.alarms.servo}}"
+        l99.driver.fanuc.veneers.SpindleData, fanuc: "{{observation.name}},machine={{observation.machine}},path={{observation.marker[0].number}},spindle={{observation.marker[1].name}} speed={{data.speed}},load={{data.load}},temperature={{data.temperature}},power={{data.power}}"
+        
     l99.driver.fanuc.transports.SHDR, fanuc:
-      enabled: !!bool true
-      net_port: !!int 7878
+      net:
+        port: !!int 7878
       dataitems:
         - observation: "${machine}.connect+avail"
           category: EVENT
