@@ -1,51 +1,82 @@
-machines:
-  - id: example-sim-t
+defaults:
+  machine-base-mqtt: &machine-base-mqtt
     enabled: !!bool true
     type: l99.driver.fanuc.FanucMachine, fanuc
     strategy: l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc
     handler: l99.driver.fanuc.handlers.FanucOne, fanuc
-    #transport: l99.driver.fanuc.transports.MQTT, fanuc
+    transport: l99.driver.fanuc.transports.MQTT, fanuc
+  machine-base-influx: &machine-base-influx
+    enabled: !!bool true
+    type: l99.driver.fanuc.FanucMachine, fanuc
+    strategy: l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc
+    handler: l99.driver.fanuc.handlers.FanucOne, fanuc
     transport: l99.driver.fanuc.transports.InfluxLP, fanuc
-    #transport: l99.driver.fanuc.transports.SHDR, fanuc
-    
+  machine-base-shdr: &machine-base-shdr
+    enabled: !!bool true
+    type: l99.driver.fanuc.FanucMachine, fanuc
+    strategy: l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc
+    handler: l99.driver.fanuc.handlers.FanucOne, fanuc
+    transport: l99.driver.fanuc.transports.SHDR, fanuc
+  source-1: &source-1
     l99.driver.fanuc.FanucMachine, fanuc:
       sweep_ms: !!int 1000
       net:
         ip: 10.1.10.211
-        #ip: 172.16.13.100
         port: !!int 8193
         timeout_s: !!int 3
-    
+  source-2: &source-2
+    l99.driver.fanuc.FanucMachine, fanuc:
+      sweep_ms: !!int 1000
+      net:
+        ip: 172.16.13.100
+        port: !!int 8193
+        timeout_s: !!int 3
+  collector-0: &collector-0
     l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
-      #- l99.driver.fanuc.collectors.ParameterDump, fanuc
-      #- l99.driver.fanuc.collectors.DiagnosisDump, fanuc
-      #- l99.driver.fanuc.collectors.PmcDump, fanuc
+      - l99.driver.fanuc.collectors.ParameterDump, fanuc
+      - l99.driver.fanuc.collectors.DiagnosisDump, fanuc
+      - l99.driver.fanuc.collectors.PmcDump, fanuc
+  collector-1: &collector-1
+    l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
       - l99.driver.fanuc.collectors.MachineInfo, fanuc
       - l99.driver.fanuc.collectors.Alarms, fanuc
       - l99.driver.fanuc.collectors.Messages, fanuc
       - l99.driver.fanuc.collectors.StateData, fanuc
-      - l99.driver.fanuc.collectors.ProductionData, fanuc
+      #- l99.driver.fanuc.collectors.ProductionData, fanuc
       #- l99.driver.fanuc.collectors.GCodeData, fanuc
       - l99.driver.fanuc.collectors.AxisData, fanuc
       - l99.driver.fanuc.collectors.SpindleData, fanuc
-    
+  json-transfer: &json-transfer
+    l99.driver.fanuc.handlers.FanucOne, fanuc:
+      transfer: JSON
+      JSON:
+        topic: "fanuc/{{machine.Id}}/{{veneer.Name}}{{if veneer.SliceKey}}/{{veneer.SliceKey}}{{end}}"
+  object-transfer: &object-transfer
     l99.driver.fanuc.handlers.FanucOne, fanuc:
       transfer: .
       JSON:
-        topic: "fanuc/{{machine.Id}}/{{veneer.Name}}{{if veneer.SliceKey}}/{{veneer.SliceKey}}{{end}}"
-        
+        topic: ""
+  target-mqtt-1: &target-mqtt-1
     l99.driver.fanuc.transports.MQTT, fanuc:
+      enabled: !!bool true
       net:
         type: tcp
         ip: 10.1.10.210
         port: !!int 1883
-        #type: ws
-        #ip: test.mosquitto.org
-        #port: !!int 8080
       anonymous: !!bool true
       user:
       password:
-        
+  target-mqtt-2: &target-mqtt-2
+    l99.driver.fanuc.transports.MQTT, fanuc:
+      enabled: !!bool true
+      net:
+        type: ws
+        ip: test.mosquitto.org
+        port: !!int 8080
+      anonymous: !!bool true
+      user:
+      password:
+  target-influx-1: &target-influx-1
     l99.driver.fanuc.transports.InfluxLP, fanuc:
       host: "https://us-east-1-1.aws.cloud2.influxdata.com"
       token: "your-token"
@@ -56,85 +87,27 @@ machines:
         l99.driver.fanuc.veneers.ProductionData, fanuc: "{{observation.name}},machine={{observation.machine}},path={{observation.marker.number}} program_name={{data.program.name}},program_comment={{data.program.comment}},program_modified={{data.program.modified}},pieces_produced={{data.pieces.produced}},pieces_produced_life={{data.pieces.produced_life}},pieces_remaining={{data.pieces.remaining}},cycle_time={{data.timers.cycle_time_ms}}"
         l99.driver.fanuc.veneers.AxisData, fanuc: "{{observation.name}},machine={{observation.machine}},path={{observation.marker[0].number}},axis={{observation.marker[1].name}} position_machine={{data.position.machine}},position_absolute={{data.position.absolute}},feed={{data.feed}},motion={{data.motion}},servo_temp={{data.servo_temp}},coder_temp={{data.coder_temp}},load={{data.load}},power={{data.power}},alarm_overtravel={{data.alarms.overtravel}},alarm_overheat={{data.alarms.overheat}},alarm_servo={{data.alarms.servo}}"
         l99.driver.fanuc.veneers.SpindleData, fanuc: "{{observation.name}},machine={{observation.machine}},path={{observation.marker[0].number}},spindle={{observation.marker[1].name}} speed={{data.speed}},load={{data.load}},temperature={{data.temperature}},power={{data.power}}"
-        
+  target-shdr-1: &target-shdr-1
     l99.driver.fanuc.transports.SHDR, fanuc:
       net:
         port: !!int 7878
-      dataitems:
-        - observation: "${machine}.connect+avail"
-          category: EVENT
-          script: |
-            return NV == true and 'AVAILABLE' or 'UNAVAILABLE'
-        - observation: "${machine}.${path}.machine+hwver"
-          foreach: !!bool true
-          category: EVENT
-          script: |
-            return NV.mt_type .. ' ' .. 
-                    NV.cnc_type .. ' ' ..
-                    NV.series .. ' ' ..
-                    NV.model .. ' ' ..
-                    NV.version
-        - observation: "${machine}.${path}.${axis}.axis+abs"
-          foreach: !!bool true
-          category: SAMPLE
-          script: |
-            return NV.position.absolute
-        #- observation: "${machine}.${path}.${axis}.axis+dis"
-        #  foreach: !!bool true
-        #  category: SAMPLE
-        #  script: |
-        #    return NV.position.distance
-        #- observation: "${machine}.${path}.${axis}.axis+mach"
-        #  foreach: !!bool true
-        #  category: SAMPLE
-        #  script: |
-        #    return NV.position.machine
-        - observation: "${machine}.${path}.${axis}.axis+rel"
-          foreach: !!bool true
-          category: SAMPLE
-          script: |
-            return NV.position.relative
-        - observation: "${machine}.${path}.${axis}.axis+rel"
-          foreach: !!bool true
-          category: SAMPLE
-          script: |
-        - observation: "${machine}.${path}.${axis}.axis+travel"
-          foreach: !!bool true
-          category: CONDITION
-          script: |
-            return NV.overtravel == true and 'FAULT' or 'NORMAL'
-        - observation: "${machine}.${path}.${axis}.axis+heat"
-          foreach: !!bool true
-          category: CONDITION
-          script: |
-            return NV.overheat == true and 'FAULT' or 'NORMAL'
-        - observation: "${machine}.${path}.${axis}.axis+servo"
-          foreach: !!bool true
-          category: CONDITION
-          script: |
-            return NV.overtravel == true and 'FAULT' or 'NORMAL'
-        - observation: "${machine}.${path}.${axis}.axis+frt"
-          foreach: !!bool true
-          category: SAMPLE
-          script: |
-            return NV.feed
-        - observation: "${machine}.${path}.${axis}.axis+servotemp"
-          foreach: !!bool true
-          category: SAMPLE
-          script: |
-            return NV.servo_temp
-        - observation: "${machine}.${path}.${axis}.axis+codertemp"
-          foreach: !!bool true
-          category: SAMPLE
-          script: |
-            return NV.coder_temp
-        - observation: "${machine}.${path}.${axis}.axis+power"
-          foreach: !!bool true
-          category: SAMPLE
-          script: |
-            return NV.power
-        - observation: "${machine}.${path}.${axis}.axis+state"
-          foreach: !!bool true
-          category: EVENT
-          script: |
-            return NV.motion == true and 'TRAVEL' or 'STOPPED'
+
+machines:
+  - id: example-mqtt
+    << : *machine-base-mqtt
+    << : *source-1
+    << : *collector-1
+    << : *json-transfer
+    << : *target-mqtt-1
+  - id: example-influx
+    << : *machine-base-influx
+    << : *source-1
+    << : *collector-1
+    << : *object-transfer
+    << : *target-influx-1
+  - id: example-shdr
+    << : *machine-base-shdr
+    << : *source-1
+    << : *collector-1
+    << : *object-transfer
+    << : *target-shdr-1
