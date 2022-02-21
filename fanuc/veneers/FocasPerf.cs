@@ -13,6 +13,7 @@ namespace l99.driver.fanuc.veneers
         {
             lastChangedValue = new
             {
+                sweepMs = -1,
                 invocation = new
                 {
                     count = -1,
@@ -37,16 +38,16 @@ namespace l99.driver.fanuc.veneers
             
             var current_value = new
             {
-                input.sweepMs,
+                sweep_ms = input.sweepMs,
                 invocation = new
                 {
                     count = input.focas_invocations.Count,
-                    maxMethod = max.method,
-                    maxMs = max.invocationMs,
-                    minMs = min.invocationMs,
-                    avgMs = avg,
-                    sumMs = sum,
-                    failedMethods
+                    max_method = max.method,
+                    max_ms = max.invocationMs,
+                    min_ms = min.invocationMs,
+                    avg_ms = avg,
+                    sum_ms = sum,
+                    failed_methods = failedMethods
                 }
             };;
                 

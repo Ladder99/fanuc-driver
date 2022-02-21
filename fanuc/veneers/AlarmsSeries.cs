@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using l99.driver.@base;
@@ -8,25 +7,42 @@ namespace l99.driver.fanuc.veneers
 {
     public class AlarmsSeries : Veneer
     {
-        public AlarmsSeries(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
+        public AlarmsSeries(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound,
+            isInternal)
         {
-            lastChangedValue = new 
+            lastChangedValue = new
             {
-                alarms = new List<dynamic>() { -1 }
+                alarms = new List<dynamic>() {-1}
             };
         }
 
-        private string rex1 = "15i[A-Z]?";
-        private enum map1 { ALL=-1,BG,PS,OH,SB,SN,SW,OT,PC,EX,NU9,SR,NU11,SV,IO,PW,NU15,EX2,EX3,EX4,MC,SP };
-
-        private string rex2 = "16i[A-Z]?|18i[A-Z]?|21i[A-Z]?|0i[A|B|C]";
-        private enum map2 { ALL=-1,PS100,PS000,PS101,PS,OT,OH,SV,NU7,APC,SP,PSPP,LS,NU12,RT,NU14,EX };
-
-        //private string rex3 = "";
-        //private enum map3 { ALL=-1,SW,PW,IO,PS,OT,OH,SV,SR,MC,SP,DS,IE,BH,SN,RV16,RV17,RV18,PC };
-
-        private string rex4 = "30i[A-Z]?|31i[A-Z]?|32i[A-Z]?|0i[D|F]|PMi[A]?";
-        private enum map4 { ALL=-1,SW,PW,IO,PS,OT,OH,SV,SR,MC,SP,DS,IE,BG,SN,RV14,EX,RV16,RV17,RV18,PC,NU20,NU21,NU22,NU23,NU24,NU25,NU26,NU27,NU28,NU29,NU30,NU31};
+        private List<SupportMap> _alarmTypeMaps = new List<SupportMap>
+        {
+            new SupportMap
+            {
+                Expression = "15i[A-Z]?",
+                Map = new Dictionary<short, string>
+                {
+                    {-1,"ALL"},{0,"BG"},{1,"PS"},{2,"OH"},{3,"SB"},{4,"SN"},{5,"SW"},{6,"OT"},{7,"PC"},{8,"EX"},{9,"??"},{10,"SR"},{11,"??"},{12,"SV"},{13,"IO"},{14,"PW"},{15,"??"},{16,"EX"},{17,"EX"},{18,"EX"},{19,"MC"},{20,"SP"}
+                }
+            },
+            new SupportMap
+            {
+                Expression = "16i[A-Z]?|18i[A-Z]?|21i[A-Z]?|0i[A|B|C]",
+                Map = new Dictionary<short, string>
+                {
+                    {-1,"ALL"},{0,"PS"},{1,"PS"},{2,"PS"},{3,"PS"},{4,"OT"},{5,"OH"},{6,"SV"},{7,"??"},{8,"APC"},{9,"SP"},{10,"PSPP"},{11,"LS"},{12,"??"},{13,"RT"},{14,"??"},{15,"EX"},{16,""},{17,""},{18,""},{19,""},{20,""}
+                }
+            },
+            new SupportMap
+            {
+                Expression = "30i[A-Z]?|31i[A-Z]?|32i[A-Z]?|0i[D|F]|PMi[A]?",
+                Map = new Dictionary<short, string>
+                {
+                    {-1,"ALL"},{0,"SW"},{1,"PW"},{2,"IO"},{3,"PS"},{4,"OT"},{5,"OH"},{6,"SV"},{7,"SR"},{8,"MC"},{9,"SP"},{10,"DS"},{11,"IE"},{12,"BG"},{13,"SN"},{14,"??"},{15,"EX"},{16,"??"},{17,"??"},{18,"??"},{19,"PC"},{20,"??"}
+                }
+            }
+        };
         
         protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
         {
@@ -34,44 +50,27 @@ namespace l99.driver.fanuc.veneers
             {
                 var path = additionalInputs[0];
                 var axis = additionalInputs[1];
-                var obs_focas_support = additionalInputs[2];
+                var obsFocasSupport = additionalInputs[2];
+                var previousInput = additionalInputs[3];
+
+                AlarmResponse previousResponse = getAlarmCountAndObjectFromInput(previousInput);
+                AlarmResponse response = getAlarmCountAndObjectFromInput(input);
+
+                // TODO: addedd vs removed alarms
+                //  who keeps state?
+                List<dynamic> previousAlarmList = getAlarmListFromResponse(previousResponse, path, axis, obsFocasSupport);
+                List<dynamic> alarmList = getAlarmListFromResponse(response, path, axis, obsFocasSupport);
                 
-                
-                var temp_value = new List<dynamic>() ;
-                var response = input.response.GetType().GetProperty(input.method).GetValue(input.response);
-                var count = response.num;
-                var alms = response.almmsg;
-                
-                if (count > 0)
+                var currentValue = new
                 {
-                    var fields = alms.GetType().GetFields();
-                    for (int x = 0; x <= count - 1; x++)
-                    {
-                        var alm = fields[x].GetValue(alms);
-                        temp_value.Add(
-                            new
-                            {
-                                path,
-                                axis_code = alm.axis,
-                                axis = axis[alm.axis],
-                                number = alm.alm_no, 
-                                message = ((string)alm.alm_msg).AsAscii(),
-                                type_code = alm.type, 
-                                type = getAlmType(obs_focas_support, alm.type)
-                            });
-                    }
-                }
-            
-                var current_value = new
-                {
-                    alarms = temp_value
+                    alarms = alarmList
                 };
                 
-                await onDataArrivedAsync(input, current_value);
+                await onDataArrivedAsync(input, currentValue);
                 
-                if(current_value.alarms.IsDifferentHash((List<dynamic>)lastChangedValue.alarms))
+                if(currentValue.alarms.IsDifferentHash((List<dynamic>)lastChangedValue.alarms))
                 {
-                    await onDataChangedAsync(input, current_value);
+                    await onDataChangedAsync(input, currentValue);
                 }
             }
             else
@@ -82,24 +81,72 @@ namespace l99.driver.fanuc.veneers
             return new { veneer = this };
         }
 
-        string getAlmType(string[] focas_support, short type_code)
+        private List<dynamic> getAlarmListFromResponse(AlarmResponse response, short path, string[] axis, string[] obsFocasSupport)
         {
-            string almType = "";
+            List<dynamic> list = new List<dynamic>();
             
-            if(Regex.IsMatch(string.Join("",focas_support),rex4))
+            if (response.Count > 0)
             {
-                almType = Enum.GetName(typeof(map4), type_code);
-            }
-            else if(Regex.IsMatch(string.Join("",focas_support),rex2))
-            {
-                almType = Enum.GetName(typeof(map2), type_code);
-            }
-            if(Regex.IsMatch(string.Join("",focas_support),rex1))
-            {
-                almType = Enum.GetName(typeof(map1), type_code);
+                var fields = response.Object.GetType().GetFields();
+                for (int x = 0; x <= response.Count - 1; x++)
+                {
+                    var alarmObject = fields[x].GetValue(response.Object);
+                    list.Add(
+                        new
+                        {
+                            path,
+                            axis_code = alarmObject.axis,
+                            axis = alarmObject.axis > 0 ? axis[alarmObject.axis-1] : "",
+                            number = alarmObject.alm_no, 
+                            message = ((string)alarmObject.alm_msg).AsAscii(),
+                            type_code = alarmObject.type, 
+                            type = getAlarmTypeFromAlarmCode(obsFocasSupport, alarmObject.type)
+                        });
+                }
             }
 
-            return almType;
+            return list;
+        }
+        
+        struct AlarmResponse
+        {
+            public dynamic Count;
+            public dynamic Object;
+        }
+        
+        private AlarmResponse getAlarmCountAndObjectFromInput(dynamic input)
+        {
+            if (input == null)
+                return new AlarmResponse { Count = 0, Object = null };
+            
+            var response = input.response
+                .GetType().GetProperty(input.method)
+                .GetValue(input.response);
+            return new AlarmResponse { Count = response.num, Object = response.almmsg };
+        }
+        
+        private string getAlarmTypeFromAlarmCode(string[] obsFocasSupport, short typeCode)
+        {
+            string alarmType = "";
+
+            string focasSupport = string.Join("", obsFocasSupport);
+            
+            foreach(var map in _alarmTypeMaps)
+            {
+                if (Regex.IsMatch(focasSupport, map.Expression))
+                {
+                    alarmType = map.Map[typeCode];
+                    break;
+                }
+            }
+            
+            return alarmType;
+        }
+
+        public struct SupportMap
+        {
+            public string Expression;
+            public Dictionary<short, string> Map;
         }
     }
 }

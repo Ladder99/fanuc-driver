@@ -20,9 +20,9 @@ namespace l99.driver.fanuc.collectors
         
         public override async Task CollectForEachPathAsync(short current_path, string[] axis, string[] spindle, dynamic path_marker)
         {
-            var obs_focas_support = strategy.GetKeyed($"obs+focas_support");
+            var obsFocasSupport = strategy.GetKeyed($"obs+focas_support");
 
-            if (obs_focas_support == null)
+            if (obsFocasSupport == null)
             {
                 if (!_warned)
                 {
@@ -35,7 +35,7 @@ namespace l99.driver.fanuc.collectors
             }
             else
             {
-                if(Regex.IsMatch(string.Join("",obs_focas_support),
+                if(Regex.IsMatch(string.Join("",obsFocasSupport),
                        "30i[A-Z]?|31i[A-Z]?|32i[A-Z]?|0i[D|F]|PMi[A]?"))
                 {
                     await strategy.SetNativeKeyed($"alarms", 
@@ -48,14 +48,18 @@ namespace l99.driver.fanuc.collectors
                 }
             }
 
-            var obs_alarms = await strategy.Peel("alarms", 
+            var obsAlarms = await strategy.Peel("alarms", 
                 strategy.GetKeyed($"alarms"),
                 current_path,
                 axis,
-                obs_focas_support);
+                obsFocasSupport,
+                strategy.GetKeyed($"alarms+last"));
 
+            strategy.SetKeyed($"alarms+last", 
+                strategy.GetKeyed($"alarms"));
+            
             strategy.SetKeyed($"obs+alarms", 
-                obs_alarms.veneer.LastChangedValue.alarms);
+                obsAlarms.veneer.LastChangedValue.alarms);
         }
     }
 }

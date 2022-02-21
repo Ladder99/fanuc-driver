@@ -49,42 +49,86 @@ namespace l99.driver.fanuc.transports
             var veneer = parameters[1];
             var data = parameters[2];
 
-            if (@event == "DATA_ARRIVAL" || @event == "DATA_CHANGE")
+            switch (@event)
             {
-                if (!_templateLookup.ContainsKey(veneer.Name))
-                {
-                    addTemplate(veneer);
-                }
+                case "DATA_ARRIVE": 
+                case "DATA_CHANGE":
 
-                if (_templateLookup.ContainsKey(veneer.Name))
-                {
-                    string lp = _templateLookup[veneer.Name].Render(new { data.observation, data.state.data });
+                    if (hasTransform(veneer))
+                    {
+                        string lp = _templateLookup[veneer.Name]
+                            .Render(new { data.observation, data.state.data });
 
-                    //Console.WriteLine(lp);
+                        Console.WriteLine(lp);
                     
-                    _client.GetWriteApiAsync()
-                        .WriteRecordAsync(
-                            _config.transport["bucket"],
-                            _config.transport["org"],
-                            WritePrecision.Ms,
-                            lp);
-                }
+                        _client.GetWriteApiAsync()
+                            .WriteRecordAsync(
+                                _config.transport["bucket"],
+                                _config.transport["org"],
+                                WritePrecision.Ms,
+                                lp);
+                    }
+                    
+                    break;
+                
+                case "SWEEP_END":
+
+                    if (hasTransform("SWEEP_END"))
+                    {
+                        string lp = _templateLookup["SWEEP_END"]
+                            .Render(new { data.observation, data.state.data });
+
+                        Console.WriteLine(lp);
+                    
+                        _client.GetWriteApiAsync()
+                            .WriteRecordAsync(
+                                _config.transport["bucket"],
+                                _config.transport["org"],
+                                WritePrecision.Ms,
+                                lp);
+                    }
+                    
+                    break;
+                
+                case "INT_MODEL":
+
+                    break;
             }
         }
 
-        void addTemplate(Veneer veneer)
+        bool hasTransform(string templateName, string transformName = null)
         {
-            string veneerFullType = $"{veneer.GetType().FullName}, {veneer.GetType().Assembly.GetName().Name}";
-
-            if (_transformLookup.ContainsKey(veneerFullType))
+            if (transformName == null)
+                transformName = templateName;
+            
+            // template exists and has been cached
+            if (_templateLookup.ContainsKey(templateName))
             {
-                string transform = _transformLookup[veneerFullType];
-
-                if (!_templateLookup.ContainsKey(veneer.Name))
-                {
-                    _templateLookup.Add(veneer.Name, Template.Parse(transform));
-                }
+                return true;
             }
+            
+            // transform exists in config, create a template and cache it
+            if (_transformLookup.ContainsKey(transformName))
+            {
+                string transform = _transformLookup[transformName];
+                Template template = Template.Parse(transform);
+                if (template.HasErrors)
+                {
+                    logger.Error($"'{templateName}' template transform has errors");
+                }
+                _templateLookup.Add(templateName, template);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        
+        bool hasTransform(Veneer veneer)
+        {
+            return hasTransform(veneer.Name,
+                $"{veneer.GetType().FullName}, {veneer.GetType().Assembly.GetName().Name}");
         }
     }
 }

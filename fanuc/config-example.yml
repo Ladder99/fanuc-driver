@@ -1,4 +1,10 @@
-defaults:
+---
+#
+# system configuration section
+#
+system:
+  machine-disabled: &machine-disabled
+    enabled: !!bool false
   machine-base-mqtt: &machine-base-mqtt
     enabled: !!bool true
     type: l99.driver.fanuc.FanucMachine, fanuc
@@ -17,35 +23,6 @@ defaults:
     strategy: l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc
     handler: l99.driver.fanuc.handlers.FanucOne, fanuc
     transport: l99.driver.fanuc.transports.SHDR, fanuc
-  source-1: &source-1
-    l99.driver.fanuc.FanucMachine, fanuc:
-      sweep_ms: !!int 1000
-      net:
-        ip: 10.1.10.211
-        port: !!int 8193
-        timeout_s: !!int 3
-  source-2: &source-2
-    l99.driver.fanuc.FanucMachine, fanuc:
-      sweep_ms: !!int 1000
-      net:
-        ip: 172.16.13.100
-        port: !!int 8193
-        timeout_s: !!int 3
-  collector-0: &collector-0
-    l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
-      - l99.driver.fanuc.collectors.ParameterDump, fanuc
-      - l99.driver.fanuc.collectors.DiagnosisDump, fanuc
-      - l99.driver.fanuc.collectors.PmcDump, fanuc
-  collector-1: &collector-1
-    l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
-      - l99.driver.fanuc.collectors.MachineInfo, fanuc
-      - l99.driver.fanuc.collectors.Alarms, fanuc
-      - l99.driver.fanuc.collectors.Messages, fanuc
-      - l99.driver.fanuc.collectors.StateData, fanuc
-      #- l99.driver.fanuc.collectors.ProductionData, fanuc
-      #- l99.driver.fanuc.collectors.GCodeData, fanuc
-      - l99.driver.fanuc.collectors.AxisData, fanuc
-      - l99.driver.fanuc.collectors.SpindleData, fanuc
   json-transfer: &json-transfer
     l99.driver.fanuc.handlers.FanucOne, fanuc:
       transfer: JSON
@@ -56,7 +33,59 @@ defaults:
       transfer: .
       JSON:
         topic: ""
+  default-influx-transformers: &default-influx-transformers
+    transformers:
+      SWEEP_END: "{{observation.name}},machine={{observation.machine}} online={{data.online}},healthy={{data.healthy}}"
+      l99.driver.fanuc.veneers.FocasPerf, fanuc: "{{observation.name}},machine={{observation.machine}} sweep_ms={{data.sweep_ms}}"
+      l99.driver.fanuc.veneers.SysInfo, fanuc: "{{observation.name}},machine={{observation.machine}},path={{observation.marker.number}} model=\"{{data.model}}\",cnc_type=\"{{data.cnc_type}}\",mt_type=\"{{data.mt_type}}\",series=\"{{data.series}}\",version=\"{{data.version}}\",axes={{data.axes}}"
+      l99.driver.fanuc.veneers.StateData, fanuc: "{{observation.name}},machine={{observation.machine}},path={{observation.marker.number}} poweron_min={{data.timers.poweron_min}},operating_min={{data.timers.operating_min}},cutting_min={{data.timers.cutting_min}},fovr={{data.override.feed}},rovr={{data.override.rapid}},sovr={{data.override.spindle}},tool={{data.modal.t}}"
+      l99.driver.fanuc.veneers.ProductionData, fanuc: "{{observation.name}},machine={{observation.machine}},path={{observation.marker.number}} program_name=\"{{data.program.name}}\",program_comment=\"{{data.program.comment}}\",program_modified={{data.program.modified}},pieces_produced={{data.pieces.produced}},pieces_produced_life={{data.pieces.produced_life}},pieces_remaining={{data.pieces.remaining}},cycle_time={{data.timers.cycle_time_ms}}"
+      l99.driver.fanuc.veneers.AlarmsSeries, fanuc: "{{for alarm in data.alarms}}{{observation.name}},machine={{observation.machine}},path={{observation.marker.number}} axis=\"{{alarm.axis}}\",type=\"{{alarm.type}}\",number={{alarm.number}},message=\"{{alarm.message}}\"\n{{end}}"
+      l99.driver.fanuc.veneers.OpMsgs, fanuc: "{{for msg in data.messages}}{{observation.name}},machine={{observation.machine}},path={{observation.marker.number}} position={{msg.position}},number={{msg.number}},message=\"{{msg.message}}\"\n{{end}}"
+      l99.driver.fanuc.veneers.AxisData, fanuc: "{{observation.name}},machine={{observation.machine}},path={{observation.marker[0].number}},axis={{observation.marker[1].name}} position_machine={{data.position.machine}},position_absolute={{data.position.absolute}},feed={{data.feed}},motion={{data.motion}},servo_temp={{data.servo_temp}},coder_temp={{data.coder_temp}},load={{data.load}},power={{data.power}},alarm_overtravel={{data.alarms.overtravel}},alarm_overheat={{data.alarms.overheat}},alarm_servo={{data.alarms.servo}}"
+      l99.driver.fanuc.veneers.SpindleData, fanuc: "{{observation.name}},machine={{observation.machine}},path={{observation.marker[0].number}},spindle={{observation.marker[1].name}} speed={{data.speed}},load={{data.load}},temperature={{data.temperature}},power={{data.power}}"
+#
+# user configuration section
+#
+user:
+  # focas sources
+  source-1: &source-1
+    # example fanuc source
+    l99.driver.fanuc.FanucMachine, fanuc:
+      sweep_ms: !!int 1000
+      net:
+        ip: 10.1.10.211
+        port: !!int 8193
+        timeout_s: !!int 3
+  source-2: &source-2
+    # example fanuc source
+    l99.driver.fanuc.FanucMachine, fanuc:
+      sweep_ms: !!int 1000
+      net:
+        ip: 172.16.13.100
+        port: !!int 8193
+        timeout_s: !!int 3
+  # collectors
+  collector-0: &collector-0
+    # example collector
+    l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
+      - l99.driver.fanuc.collectors.ParameterDump, fanuc
+      - l99.driver.fanuc.collectors.DiagnosisDump, fanuc
+      - l99.driver.fanuc.collectors.PmcDump, fanuc
+  collector-1: &collector-1
+    # example collector
+    l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
+      - l99.driver.fanuc.collectors.MachineInfo, fanuc
+      - l99.driver.fanuc.collectors.Alarms, fanuc
+      - l99.driver.fanuc.collectors.Messages, fanuc
+      - l99.driver.fanuc.collectors.StateData, fanuc
+      - l99.driver.fanuc.collectors.ProductionData, fanuc
+      #- l99.driver.fanuc.collectors.GCodeData, fanuc
+      - l99.driver.fanuc.collectors.AxisData, fanuc
+      - l99.driver.fanuc.collectors.SpindleData, fanuc
+  # targets
   target-mqtt-1: &target-mqtt-1
+    # send to tcp mqtt broker
     l99.driver.fanuc.transports.MQTT, fanuc:
       enabled: !!bool true
       net:
@@ -67,6 +96,7 @@ defaults:
       user:
       password:
   target-mqtt-2: &target-mqtt-2
+    # send to websocket mqtt broker
     l99.driver.fanuc.transports.MQTT, fanuc:
       enabled: !!bool true
       net:
@@ -77,24 +107,39 @@ defaults:
       user:
       password:
   target-influx-1: &target-influx-1
+    # send to cloud influx instance
     l99.driver.fanuc.transports.InfluxLP, fanuc:
+      << : *default-influx-transformers
       host: "https://us-east-1-1.aws.cloud2.influxdata.com"
-      token: "your-token"
-      org: "your-org"
-      bucket: "your-bucket"
-      transformers:
-        l99.driver.fanuc.veneers.SysInfo, fanuc: "{{observation.name}},machine={{observation.machine}},path={{observation.marker.number}} model={{data.model}},cnc_type={{data.cnc_type}},mt_type={{data.mt_type}},series={{data.series}},version={{data.version}},axes={{data.axes}}"
-        l99.driver.fanuc.veneers.ProductionData, fanuc: "{{observation.name}},machine={{observation.machine}},path={{observation.marker.number}} program_name={{data.program.name}},program_comment={{data.program.comment}},program_modified={{data.program.modified}},pieces_produced={{data.pieces.produced}},pieces_produced_life={{data.pieces.produced_life}},pieces_remaining={{data.pieces.remaining}},cycle_time={{data.timers.cycle_time_ms}}"
-        l99.driver.fanuc.veneers.AxisData, fanuc: "{{observation.name}},machine={{observation.machine}},path={{observation.marker[0].number}},axis={{observation.marker[1].name}} position_machine={{data.position.machine}},position_absolute={{data.position.absolute}},feed={{data.feed}},motion={{data.motion}},servo_temp={{data.servo_temp}},coder_temp={{data.coder_temp}},load={{data.load}},power={{data.power}},alarm_overtravel={{data.alarms.overtravel}},alarm_overheat={{data.alarms.overheat}},alarm_servo={{data.alarms.servo}}"
-        l99.driver.fanuc.veneers.SpindleData, fanuc: "{{observation.name}},machine={{observation.machine}},path={{observation.marker[0].number}},spindle={{observation.marker[1].name}} speed={{data.speed}},load={{data.load}},temperature={{data.temperature}},power={{data.power}}"
+      token: "12JxowiuaUXuOlxVZMTtLzVA9JvRCwvpm-5uffFRfFTkoTBSroO18F6DHDOYc85Bp-FXCFURYkdCdMRsRjBqlQ=="
+      org: "cmisztur@mriiot.com"
+      bucket: "fanuc001"
   target-shdr-1: &target-shdr-1
+    # open tcp socket for mtconnect agent
     l99.driver.fanuc.transports.SHDR, fanuc:
       net:
         port: !!int 7878
-
+#
+# runtime configuration section
+#
 machines:
+  # each machine must have a unique 'id' value
+  # each machine must consist of the following references:
+  #  base: driver configuration including transport
+  #    *machine-base-mqtt, *machine-base-influx, *machine-base-shdr
+  #  disabled override: (optional) set machine inactive
+  #    *machine-disabled
+  #  source: where to get data
+  #    -- user defined
+  #  collector: what data to collect
+  #    -- user defined
+  #  transfer: veneer to transport serialization
+  #    *json-transfer, *object-transfer
+  #  target: where to send data
+  #    -- user defined
   - id: example-mqtt
     << : *machine-base-mqtt
+    << : *machine-disabled
     << : *source-1
     << : *collector-1
     << : *json-transfer
@@ -107,6 +152,7 @@ machines:
     << : *target-influx-1
   - id: example-shdr
     << : *machine-base-shdr
+    << : *machine-disabled
     << : *source-1
     << : *collector-1
     << : *object-transfer
