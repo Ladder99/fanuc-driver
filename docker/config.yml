@@ -110,10 +110,10 @@ user:
     # send to cloud influx instance
     l99.driver.fanuc.transports.InfluxLP, fanuc:
       << : *default-influx-transformers
-      host: "https://us-east-1-1.aws.cloud2.influxdata.com"
-      token: "12JxowiuaUXuOlxVZMTtLzVA9JvRCwvpm-5uffFRfFTkoTBSroO18F6DHDOYc85Bp-FXCFURYkdCdMRsRjBqlQ=="
-      org: "cmisztur@mriiot.com"
-      bucket: "fanuc001"
+      host: "https://region-x.influxdata.com"
+      token: "my-token"
+      org: "my-org"
+      bucket: "my-bucket"
   target-shdr-1: &target-shdr-1
     # open tcp socket for mtconnect agent
     l99.driver.fanuc.transports.SHDR, fanuc:
