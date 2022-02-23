@@ -4,16 +4,26 @@ using System.Linq;
 using System.Threading.Tasks;
 using l99.driver.@base;
 using MTConnect.Adapters.Shdr;
+using NLog.Targets;
+using Scriban;
 
 namespace l99.driver.fanuc.transports
 {
     public class SHDR : Transport
     {
+        private class ConfigDataItem
+        {
+            public string Id;
+            public string TransformFormat;
+            public Template TransformTemplate;
+            public bool TemplateHasErrors => TransformTemplate?.HasErrors ?? true;
+        }
+        
         private dynamic _config;
 
-        private Dictionary<string, dynamic> _dataItems = new Dictionary<string, dynamic>();
+        private List<ConfigDataItem> _dataItems = new List<ConfigDataItem>();
 
-        private Dictionary<string, Dictionary<string, (dynamic, dynamic)>> _observations = new Dictionary<string, Dictionary<string, (dynamic, dynamic)>>();
+        private Dictionary<string, Dictionary<string, dynamic>> _observations = new Dictionary<string, Dictionary<string, dynamic>>();
         
         private ShdrAdapter _adapter;
 
@@ -25,9 +35,17 @@ namespace l99.driver.fanuc.transports
         public override async Task<dynamic?> CreateAsync()
         {
             _dataItems = (_config.transport["dataitems"] as List<dynamic>)
-                .ToDictionary(
-                    o => (string) o["id"],
-                    o => o);
+                .ConvertAll(
+                    o => new ConfigDataItem() { 
+                        Id = (string) o["id"],
+                        TransformFormat = (string) o["transform"],
+                        TransformTemplate = Template.Parse((string) o["transform"])
+                    });
+
+            if (_dataItems.Any(di => di.TemplateHasErrors))
+            {
+                logger.Error($"[{machine.Id}] Some templates have errors.");
+            }
             
             _adapter = new ShdrAdapter(
                 _config.transport["device_name"],
@@ -61,17 +79,19 @@ namespace l99.driver.fanuc.transports
                     {
                         _observations.Add(
                             veneer.Name,
-                            new Dictionary<string, (dynamic, dynamic)>());
+                            new Dictionary<string, dynamic>());
                     }
-                    
+
                     if (!_observations[veneer.Name].ContainsKey(sliceKey))
                     {
                         _observations[veneer.Name].Add(
-                            sliceKey, (data.observation, data.state));
+                            sliceKey, new { 
+                                data.observation, 
+                                data.state });
                     }
                     else
                     {
-                        _observations[veneer.Name][sliceKey] = (data.observation, data.state);
+                        _observations[veneer.Name][sliceKey] = new { data.observation, data.state };
                     }
                     
                     break;
@@ -82,21 +102,35 @@ namespace l99.driver.fanuc.transports
                     {
                         _observations.Add(
                             "sweep",
-                            new Dictionary<string, (dynamic, dynamic)>());
+                            new Dictionary<string, dynamic>());
                         
                         _observations["sweep"].Add(
-                            "", (data.observation, data.state));
+                            "", new { data.observation, data.state });
                     }
                     else
                     {
-                        _observations["sweep"][""] = (data.observation, data.state);
+                        _observations["sweep"][""] = new { data.observation, data.state };
                     }
+
+                    await renderAllAsync();
                     
                     break;
                 
                 case "INT_MODEL":
 
                     break;
+            }
+        }
+
+        private async Task renderAllAsync()
+        {
+            foreach (var dataitem in _dataItems)
+            {
+                Console.WriteLine("------");
+                Console.WriteLine(dataitem.Id);
+                Console.WriteLine(dataitem.TransformFormat);
+                var a = await dataitem.TransformTemplate.RenderAsync(new {observations = _observations});
+                Console.WriteLine(a);
             }
         }
     }

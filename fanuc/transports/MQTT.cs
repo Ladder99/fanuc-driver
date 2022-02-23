@@ -122,29 +122,29 @@ namespace l99.driver.fanuc.transports
                 {
                     if (_connectionFailCount == 0)
                     {
-                        logger.Info($"Connecting broker '{_key}': {_options.ChannelOptions}");
+                        logger.Info($"[{machine.Id}] Connecting broker '{_key}': {_options.ChannelOptions}");
                     }
                     else
                     {
-                        logger.Debug($"Connecting broker '{_key}': {_options.ChannelOptions}");
+                        logger.Debug($"[{machine.Id}] Connecting broker '{_key}': {_options.ChannelOptions}");
                     }
                     
                     try
                     {
                         await _client.ConnectAsync(_options, CancellationToken.None);
                         //_client.UseApplicationMessageReceivedHandler(async (e) => { await handleIncomingMessage(e); });
-                        logger.Info($"Connected broker '{_key}': {_options.ChannelOptions}");
+                        logger.Info($"[{machine.Id}] Connected broker '{_key}': {_options.ChannelOptions}");
                         _connectionFailCount = 0;
                     }
                     catch (MqttCommunicationTimedOutException tex)
                     {
                         if (_connectionFailCount == 0)
                         {
-                            logger.Warn($"Broker connection timeout '{_key}': {_options.ChannelOptions}");
+                            logger.Warn($"[{machine.Id}] Broker connection timeout '{_key}': {_options.ChannelOptions}");
                         }
                         else
                         {
-                            logger.Debug($"Broker connection timeout '{_key}': {_options.ChannelOptions}");
+                            logger.Debug($"[{machine.Id}] Broker connection timeout '{_key}': {_options.ChannelOptions}");
                         }
 
                         _connectionFailCount++;
@@ -153,11 +153,11 @@ namespace l99.driver.fanuc.transports
                     {
                         if (_connectionFailCount == 0)
                         {
-                            logger.Warn($"Broker connection failed '{_key}': {_options.ChannelOptions}");
+                            logger.Warn($"[{machine.Id}] Broker connection failed '{_key}': {_options.ChannelOptions}");
                         }
                         else
                         {
-                            logger.Debug($"Broker connection failed '{_key}': {_options.ChannelOptions}");
+                            logger.Debug($"[{machine.Id}] Broker connection failed '{_key}': {_options.ChannelOptions}");
                         }
                         
                         _connectionFailCount++;
@@ -168,7 +168,7 @@ namespace l99.driver.fanuc.transports
             {
                 if (!_connectionSkipped)
                 {
-                    logger.Info($"Skipping broker connection '{_key}': {_options.ChannelOptions}");
+                    logger.Info($"[{machine.Id}] Skipping broker connection '{_key}': {_options.ChannelOptions}");
                     _connectionSkipped = true;
                 }
             }

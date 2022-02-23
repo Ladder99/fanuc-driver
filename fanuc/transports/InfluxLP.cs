@@ -60,13 +60,16 @@ namespace l99.driver.fanuc.transports
                             .Render(new { data.observation, data.state.data });
 
                         Console.WriteLine(lp);
-                    
-                        _client.GetWriteApiAsync()
-                            .WriteRecordAsync(
-                                _config.transport["bucket"],
-                                _config.transport["org"],
-                                WritePrecision.Ms,
-                                lp);
+
+                        if (!string.IsNullOrEmpty(lp))
+                        {
+                            _client.GetWriteApiAsync()
+                                .WriteRecordAsync(
+                                    _config.transport["bucket"],
+                                    _config.transport["org"],
+                                    WritePrecision.Ms,
+                                    lp);
+                        }
                     }
                     
                     break;
@@ -114,7 +117,7 @@ namespace l99.driver.fanuc.transports
                 Template template = Template.Parse(transform);
                 if (template.HasErrors)
                 {
-                    logger.Error($"'{templateName}' template transform has errors");
+                    logger.Error($"[{machine.Id}] '{templateName}' template transform has errors");
                 }
                 _templateLookup.Add(templateName, template);
                 return true;
