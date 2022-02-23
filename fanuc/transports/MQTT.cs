@@ -7,6 +7,9 @@ using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Client.Options;
 using MQTTnet.Exceptions;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Scriban;
 
 namespace l99.driver.fanuc.transports
 {
@@ -20,11 +23,17 @@ namespace l99.driver.fanuc.transports
         private int _connectionFailCount = 0;
         private bool _connectionSkipped = false;
         
+        private Template _topicTemplate;
+        
         public MQTT(Machine machine, object cfg) : base(machine, cfg)
         {
             _config = cfg;
-            
+        }
+
+        public override async Task<dynamic?> CreateAsync()
+        {
             //TODO: validate config
+            _topicTemplate = Template.Parse(_config.transport["topic"]);
             _key = $"{_config.transport["net"]["type"]}://{_config.transport["net"]["ip"]}:{_config.transport["net"]["port"]}/{machine.Id}";
             
             IMqttFactory factory = new MqttFactory();
@@ -54,24 +63,47 @@ namespace l99.driver.fanuc.transports
 
             _options = builder.Build();
             _client = factory.CreateMqttClient();
-        }
-
-        public override async Task<dynamic?> CreateAsync()
-        {
+            
             await ConnectAsync();
             return null;
         }
         
         public override async Task SendAsync(params dynamic[] parameters)
         {
-            string topic = parameters[0];
-            string payload = parameters[1];
-            bool retained = parameters[2];
+            var @event = parameters[0];
+            var veneer = parameters[1];
+            var data = parameters[2];
+
+            string topic = "";
+            string payload = "{}";
+            bool retained = true;
             
-            logger.Trace($"{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds()} PUB {payload.Length}b => {topic}\n{payload}");
+            switch (@event)
+            {
+                case "DATA_ARRIVE":
+                case "DATA_CHANGE":
+                    topic = await _topicTemplate.RenderAsync(new { machine, veneer}, member => member.Name);
+                    payload = JObject.FromObject(data).ToString(Formatting.None);
+                    break;
+                
+                case "SWEEP_END":
+                    topic = $"fanuc/{machine.Id}/sweep";
+                    payload = JObject.FromObject(data).ToString(Formatting.None);
+                    break;
+                
+                case "INT_MODEL":
+                    topic = $"fanuc/{machine.Id}/$model";
+                    payload = data;
+                    break;
+
+                default:
+                    return;
+            }
             
             if (_client.IsConnected)
             {
+                logger.Trace($"{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds()} PUB {payload.Length}b => {topic}\n{payload}");
+                
                 var msg = new MqttApplicationMessageBuilder()
                     .WithRetainFlag(retained)
                     .WithTopic(topic)

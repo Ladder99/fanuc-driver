@@ -24,17 +24,17 @@ namespace l99.driver.fanuc.transports
         public InfluxLP(Machine machine, object cfg) : base(machine, cfg)
         {
             _config = cfg;
+        }
 
+        public override async Task<dynamic?> CreateAsync()
+        {
             _client = InfluxDBClientFactory.Create(_config.transport["host"], _config.transport["token"]);
             
             _transformLookup = (_config.transport["transformers"] as Dictionary<dynamic,dynamic>)
                 .ToDictionary(
                     kv => (string)kv.Key, 
                     kv => (string)kv.Value);
-        }
-
-        public override async Task<dynamic?> CreateAsync()
-        {
+            
             return null;
         }
 

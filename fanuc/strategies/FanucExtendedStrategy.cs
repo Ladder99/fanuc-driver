@@ -506,8 +506,8 @@ namespace l99.driver.fanuc.strategies
                         
                         await Set("path", await platform.SetPathAsync(current_path));
                         dynamic path_marker = PathMarker(Get("path").request.cnc_setpath.path_no);
-                        
-                        machine.MarkVeneer(current_path, path_marker);
+                        dynamic path_marker_full = new[] {path_marker};
+                        machine.MarkVeneer(current_path, path_marker_full);
 
                         await SetNativeKeyed($"axis_names",
                             await platform.RdAxisNameAsync());
@@ -549,7 +549,7 @@ namespace l99.driver.fanuc.strategies
                                     .response.cnc_rdspdlname.spdlname));
                         }
                         
-                        await CollectForEachPathAsync(current_path, axis_names, spindle_names, path_marker);
+                        await CollectForEachPathAsync(current_path, axis_names, spindle_names, path_marker_full);
                         
                         for (short current_axis = 1; current_axis <= axis_names.Length; current_axis ++)
                         {
@@ -564,7 +564,7 @@ namespace l99.driver.fanuc.strategies
                             
                             machine.MarkVeneer(Get("axis_split"), axis_marker_full);
 
-                            await CollectForEachAxisAsync(current_path, current_axis, axis_name, Get("axis_split"), axis_marker);
+                            await CollectForEachAxisAsync(current_path, current_axis, axis_name, Get("axis_split"), axis_marker_full);
                         }
 
                         for (short current_spindle = 1; current_spindle <= spindle_names.Length; current_spindle ++)
@@ -580,7 +580,7 @@ namespace l99.driver.fanuc.strategies
                             
                             machine.MarkVeneer(Get("spindle_split"), spindle_marker_full);
 
-                            await CollectForEachSpindleAsync(current_path, current_spindle, spindle_name, Get("spindle_split"), spindle_marker);
+                            await CollectForEachSpindleAsync(current_path, current_spindle, spindle_name, Get("spindle_split"), spindle_marker_full);
                         };
                     }
                 }

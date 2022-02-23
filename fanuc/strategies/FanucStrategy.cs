@@ -22,9 +22,9 @@ namespace l99.driver.fanuc.strategies
         {
             return new
             {
+                type = "path",
                 number
             };
-            //return new { path.request.cnc_setpath.path_no };
         }
 
         protected dynamic axisName(dynamic axis)
@@ -44,35 +44,20 @@ namespace l99.driver.fanuc.strategies
         {
             return new
             {
+                type = "spindle",
                 number,
                 name
             };
-
-            /*
-            return new
-            {
-                name = ((char)spindle.name).AsAscii(), 
-                suff1 =  ((char)spindle.suff1).AsAscii(),
-                suff2 =  ((char)spindle.suff2).AsAscii()
-                // suff3 =  ((char)spindle.suff3).AsAscii() reserved
-            };
-            */
         }
 
         protected dynamic axisMarker(short number, string name)
         {
             return new
             {
+                type = "axis",
                 number,
                 name
             };
-            /*
-            return new
-            {
-                name = ((char)axis.name).AsAscii(), 
-                suff =  ((char)axis.suff).AsAscii()
-            };
-            */
         }
     }
 }

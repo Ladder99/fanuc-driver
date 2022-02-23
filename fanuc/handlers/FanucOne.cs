@@ -1,21 +1,16 @@
 using System;
 using System.Threading.Tasks;
 using l99.driver.@base;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Scriban;
 
 namespace l99.driver.fanuc.handlers
 {
     public class FanucOne: Handler
     {
         private dynamic _cfg;
-        private Template _topicTemplate;
+        
         public FanucOne(Machine machine, object cfg) : base(machine, cfg)
         {
             _cfg = cfg;
-            //TODO: validate config
-            _topicTemplate = Template.Parse(_cfg.handler["JSON"]["topic"]);
         }
         
         public override async Task<dynamic?> OnDataArrivalAsync(Veneers veneers, Veneer veneer, dynamic? beforeArrival)
@@ -47,19 +42,8 @@ namespace l99.driver.fanuc.handlers
         {
             if (onArrival == null)
                 return;
-
-            switch (_cfg.handler["transfer"])
-            {
-                case "JSON":
-                    var topic = await _topicTemplate.RenderAsync(new { machine, veneer}, member => member.Name);
-                    string payload = JObject.FromObject(onArrival).ToString(Formatting.None);
-                    await veneers.Machine.Transport.SendAsync(topic, payload, true);
-                    break;
-                
-                default:
-                    await veneers.Machine.Transport.SendAsync("DATA_ARRIVE", veneer, onArrival);
-                    break;
-            }
+            
+            await veneers.Machine.Transport.SendAsync("DATA_ARRIVE", veneer, onArrival);
         }
 
         public override async Task<dynamic?> OnDataChangeAsync(Veneers veneers, Veneer veneer, dynamic? beforeChange)
@@ -92,18 +76,7 @@ namespace l99.driver.fanuc.handlers
             if (onChange == null)
                 return;
             
-            switch (_cfg.handler["transfer"])
-            {
-                case "JSON":
-                    var topic = await _topicTemplate.RenderAsync(new { machine, veneer}, member => member.Name);
-                    string payload = JObject.FromObject(onChange).ToString(Formatting.None);
-                    await veneers.Machine.Transport.SendAsync(topic, payload, true);
-                    break;
-                
-                default:
-                    await veneers.Machine.Transport.SendAsync("DATA_CHANGE", veneer, onChange);
-                    break;
-            }
+            await veneers.Machine.Transport.SendAsync("DATA_CHANGE", veneer, onChange);
         }
         
         public override async Task<dynamic?> OnStrategySweepCompleteAsync(Machine machine, dynamic? beforeSweepComplete)
@@ -131,33 +104,12 @@ namespace l99.driver.fanuc.handlers
         
         protected override async Task afterSweepCompleteAsync(Machine machine, dynamic? onSweepComplete)
         {
-            switch (_cfg.handler["transfer"])
-            {
-                case "JSON":
-                    string topic = $"fanuc/{machine.Id}/sweep";
-                    string payload = JObject.FromObject(onSweepComplete).ToString(Formatting.None);
-                    await machine.Transport.SendAsync(topic, payload, true);
-                    break;
-                
-                default:
-                    await machine.Transport.SendAsync("SWEEP_END", null, onSweepComplete);
-                    break;
-            }
+            await machine.Transport.SendAsync("SWEEP_END", null, onSweepComplete);
         }
 
         public override async Task OnGenerateIntermediateModel(string json)
         {
-            switch (_cfg.handler["transfer"])
-            {
-                case "JSON":
-                    var topic = $"fanuc/{machine.Id}/$model";
-                    await machine.Transport.SendAsync(topic, json, true);
-                    break;
-                
-                default:
-                    await machine.Transport.SendAsync("INT_MODEL", null, json);
-                    break;
-            }
+            await machine.Transport.SendAsync("INT_MODEL", null, json);
         }
     }
 }

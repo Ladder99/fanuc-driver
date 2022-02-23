@@ -5,45 +5,40 @@
 system:
   machine-disabled: &machine-disabled
     enabled: !!bool false
-  machine-base-mqtt: &machine-base-mqtt
+  machine-base: &machine-base
     enabled: !!bool true
     type: l99.driver.fanuc.FanucMachine, fanuc
     strategy: l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc
     handler: l99.driver.fanuc.handlers.FanucOne, fanuc
-    transport: l99.driver.fanuc.transports.MQTT, fanuc
-  machine-base-influx: &machine-base-influx
-    enabled: !!bool true
-    type: l99.driver.fanuc.FanucMachine, fanuc
-    strategy: l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc
-    handler: l99.driver.fanuc.handlers.FanucOne, fanuc
-    transport: l99.driver.fanuc.transports.InfluxLP, fanuc
-  machine-base-shdr: &machine-base-shdr
-    enabled: !!bool true
-    type: l99.driver.fanuc.FanucMachine, fanuc
-    strategy: l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc
-    handler: l99.driver.fanuc.handlers.FanucOne, fanuc
-    transport: l99.driver.fanuc.transports.SHDR, fanuc
-  json-transfer: &json-transfer
-    l99.driver.fanuc.handlers.FanucOne, fanuc:
-      transfer: JSON
-      JSON:
-        topic: "fanuc/{{machine.Id}}/{{veneer.Name}}{{if veneer.SliceKey}}/{{veneer.SliceKey}}{{end}}"
-  object-transfer: &object-transfer
-    l99.driver.fanuc.handlers.FanucOne, fanuc:
-      transfer: .
-      JSON:
-        topic: ""
+  default-mqtt-options: &default-mqtt-options
+    topic: "fanuc/{{machine.Id}}/{{veneer.Name}}{{if veneer.SliceKey}}/{{veneer.SliceKey}}{{end}}"
   default-influx-transformers: &default-influx-transformers
     transformers:
       SWEEP_END: "{{observation.name}},machine={{observation.machine}} online={{data.online}},healthy={{data.healthy}}"
       l99.driver.fanuc.veneers.FocasPerf, fanuc: "{{observation.name}},machine={{observation.machine}} sweep_ms={{data.sweep_ms}}"
-      l99.driver.fanuc.veneers.SysInfo, fanuc: "{{observation.name}},machine={{observation.machine}},path={{observation.marker.number}} model=\"{{data.model}}\",cnc_type=\"{{data.cnc_type}}\",mt_type=\"{{data.mt_type}}\",series=\"{{data.series}}\",version=\"{{data.version}}\",axes={{data.axes}}"
-      l99.driver.fanuc.veneers.StateData, fanuc: "{{observation.name}},machine={{observation.machine}},path={{observation.marker.number}} poweron_min={{data.timers.poweron_min}},operating_min={{data.timers.operating_min}},cutting_min={{data.timers.cutting_min}},fovr={{data.override.feed}},rovr={{data.override.rapid}},sovr={{data.override.spindle}},tool={{data.modal.t}}"
-      l99.driver.fanuc.veneers.ProductionData, fanuc: "{{observation.name}},machine={{observation.machine}},path={{observation.marker.number}} program_name=\"{{data.program.name}}\",program_comment=\"{{data.program.comment}}\",program_modified={{data.program.modified}},pieces_produced={{data.pieces.produced}},pieces_produced_life={{data.pieces.produced_life}},pieces_remaining={{data.pieces.remaining}},cycle_time={{data.timers.cycle_time_ms}}"
-      l99.driver.fanuc.veneers.AlarmsSeries, fanuc: "{{for alarm in data.alarms}}{{observation.name}},machine={{observation.machine}},path={{observation.marker.number}} axis=\"{{alarm.axis}}\",type=\"{{alarm.type}}\",number={{alarm.number}},message=\"{{alarm.message}}\"\n{{end}}"
+      l99.driver.fanuc.veneers.SysInfo, fanuc: "{{observation.name}},machine={{observation.machine}},path={{observation.marker[0].number}} model=\"{{data.model}}\",cnc_type=\"{{data.cnc_type}}\",mt_type=\"{{data.mt_type}}\",series=\"{{data.series}}\",version=\"{{data.version}}\",axes={{data.axes}}"
+      l99.driver.fanuc.veneers.StateData, fanuc: "{{observation.name}},machine={{observation.machine}},path={{observation.marker[0].number}} poweron_min={{data.timers.poweron_min}},operating_min={{data.timers.operating_min}},cutting_min={{data.timers.cutting_min}},fovr={{data.override.feed}},rovr={{data.override.rapid}},sovr={{data.override.spindle}},tool={{data.modal.t}}"
+      l99.driver.fanuc.veneers.ProductionData, fanuc: "{{observation.name}},machine={{observation.machine}},path={{observation.marker[0].number}} program_name=\"{{data.program.name}}\",program_comment=\"{{data.program.comment}}\",program_modified={{data.program.modified}},pieces_produced={{data.pieces.produced}},pieces_produced_life={{data.pieces.produced_life}},pieces_remaining={{data.pieces.remaining}},cycle_time={{data.timers.cycle_time_ms}}"
+      l99.driver.fanuc.veneers.AlarmsSeries, fanuc: "{{for alarm in data.alarms}}{{observation.name}},machine={{observation.machine}},path={{observation.marker[0].number}} axis=\"{{alarm.axis}}\",type=\"{{alarm.type}}\",number={{alarm.number}},message=\"{{alarm.message}}\"\n{{end}}"
       l99.driver.fanuc.veneers.OpMsgs, fanuc: "{{for msg in data.messages}}{{observation.name}},machine={{observation.machine}},path={{observation.marker.number}} position={{msg.position}},number={{msg.number}},message=\"{{msg.message}}\"\n{{end}}"
       l99.driver.fanuc.veneers.AxisData, fanuc: "{{observation.name}},machine={{observation.machine}},path={{observation.marker[0].number}},axis={{observation.marker[1].name}} position_machine={{data.position.machine}},position_absolute={{data.position.absolute}},feed={{data.feed}},motion={{data.motion}},servo_temp={{data.servo_temp}},coder_temp={{data.coder_temp}},load={{data.load}},power={{data.power}},alarm_overtravel={{data.alarms.overtravel}},alarm_overheat={{data.alarms.overheat}},alarm_servo={{data.alarms.servo}}"
       l99.driver.fanuc.veneers.SpindleData, fanuc: "{{observation.name}},machine={{observation.machine}},path={{observation.marker[0].number}},spindle={{observation.marker[1].name}} speed={{data.speed}},load={{data.load}},temperature={{data.temperature}},power={{data.power}}"
+  default-shdr-dataitems: &default-shdr-dataitems
+    dataitems:
+      - id: "avail"
+        transforms: >-2
+          "{{
+          observation['sweep'][null].data.online
+          }}"
+      - id: "x_load"
+        transform: >-2
+          "aaa"
+  transport-base-mqtt: &transport-base-mqtt
+    transport: l99.driver.fanuc.transports.MQTT, fanuc
+  transport-base-influx: &transport-base-influx
+    transport: l99.driver.fanuc.transports.InfluxLP, fanuc
+  transport-base-shdr: &transport-base-shdr
+    transport: l99.driver.fanuc.transports.SHDR, fanuc
 #
 # user configuration section
 #
@@ -86,7 +81,9 @@ user:
   # targets
   target-mqtt-1: &target-mqtt-1
     # send to tcp mqtt broker
+    << : *transport-base-mqtt
     l99.driver.fanuc.transports.MQTT, fanuc:
+      << : *default-mqtt-options
       enabled: !!bool true
       net:
         type: tcp
@@ -97,7 +94,9 @@ user:
       password:
   target-mqtt-2: &target-mqtt-2
     # send to websocket mqtt broker
+    << : *transport-base-mqtt
     l99.driver.fanuc.transports.MQTT, fanuc:
+      << : *default-mqtt-options
       enabled: !!bool true
       net:
         type: ws
@@ -108,6 +107,7 @@ user:
       password:
   target-influx-1: &target-influx-1
     # send to cloud influx instance
+    << : *transport-base-influx
     l99.driver.fanuc.transports.InfluxLP, fanuc:
       << : *default-influx-transformers
       host: "https://region-x.influxdata.com"
@@ -116,44 +116,44 @@ user:
       bucket: "my-bucket"
   target-shdr-1: &target-shdr-1
     # open tcp socket for mtconnect agent
+    << : *transport-base-shdr
     l99.driver.fanuc.transports.SHDR, fanuc:
+      << : *default-shdr-dataitems
+      device_name: device1
       net:
         port: !!int 7878
+        heartbeat_ms: !!int 10000
 #
 # runtime configuration section
 #
 machines:
   # each machine must have a unique 'id' value
   # each machine must consist of the following references:
-  #  base: driver configuration including transport
-  #    *machine-base-mqtt, *machine-base-influx, *machine-base-shdr
+  #  base: driver configuration
+  #    *machine-base
   #  disabled override: (optional) set machine inactive
   #    *machine-disabled
   #  source: where to get data
-  #    -- user defined
+  #    -- user defined reference
   #  collector: what data to collect
-  #    -- user defined
-  #  transfer: veneer to transport serialization
-  #    *json-transfer, *object-transfer
+  #    -- user defined reference
   #  target: where to send data
-  #    -- user defined
+  #    -- user defined reference
   - id: example-mqtt
-    << : *machine-base-mqtt
+    << : *machine-base        # base Fanuc configuration
+    << : *machine-disabled    # omit this machine setup from runtime; remove to make active
+    << : *source-2            # where to get data
+    << : *collector-1         # what data to get and how to transform data
+    << : *target-mqtt-1       # where to send data
+  - id: example-influx
+    << : *machine-base
     << : *machine-disabled
     << : *source-1
     << : *collector-1
-    << : *json-transfer
-    << : *target-mqtt-1
-  - id: example-influx
-    << : *machine-base-influx
-    << : *source-1
-    << : *collector-1
-    << : *object-transfer
     << : *target-influx-1
   - id: example-shdr
-    << : *machine-base-shdr
+    << : *machine-base
     << : *machine-disabled
     << : *source-1
     << : *collector-1
-    << : *object-transfer
     << : *target-shdr-1
