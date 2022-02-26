@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using l99.driver.@base;
 using l99.driver.fanuc.strategies;
 using NLog;
@@ -31,6 +32,11 @@ namespace l99.driver.fanuc.collectors
             
         }
 
+        public virtual async Task PostInitAsync(Dictionary<string, List<string>> structure)
+        {
+            
+        }
+        
         public virtual async Task CollectRootAsync()
         {
             

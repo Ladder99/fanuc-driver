@@ -140,7 +140,7 @@ namespace l99.driver.fanuc
             {
                 if (!_rootItems.ContainsKey(name))
                 {
-                    var json_string = JObject.FromObject(payload.veneer.LastArrivedValue).ToString();
+                    var json_string = string.Empty; //JObject.FromObject(payload.veneer.LastArrivedValue).ToString();
                     var json_schema = string.Empty; //JsonSchema.FromSampleJson(json_string).ToJson();
                     logger.Trace($"[{this._machine.Id}] AddRootItem {json_string}, {json_schema}");
                     _rootItems.Add(name, (payload, json_schema));
@@ -173,7 +173,7 @@ namespace l99.driver.fanuc
             {
                 if (!_pathItems.ContainsKey(name))
                 {
-                    var json_string = JObject.FromObject(payload.veneer.LastArrivedValue).ToString();
+                    var json_string = string.Empty; //JObject.FromObject(payload.veneer.LastArrivedValue).ToString();
                     var json_schema = string.Empty; //JsonSchema.FromSampleJson(json_string).ToJson();
                     logger.Trace($"[{this._machine.Id}] AddPathItem {name}, {json_string}");
                     _pathItems.Add(name, (payload, json_schema));
@@ -204,7 +204,7 @@ namespace l99.driver.fanuc
             {
                 if (!_axisItems.ContainsKey(name))
                 {
-                    var json_string = JObject.FromObject(payload.veneer.LastArrivedValue).ToString();
+                    var json_string = string.Empty; //JObject.FromObject(payload.veneer.LastArrivedValue).ToString();
                     var json_schema = string.Empty; //JsonSchema.FromSampleJson(json_string).ToJson();
                     logger.Trace($"[{this._machine.Id}] AddAxisItem {name}, {json_string}");
                     _axisItems.Add(name, (payload, json_schema));
@@ -235,7 +235,7 @@ namespace l99.driver.fanuc
             {
                 if (!_spindleItems.ContainsKey(name))
                 {
-                    var json_string = JObject.FromObject(payload.veneer.LastArrivedValue).ToString();
+                    var json_string = string.Empty; // JObject.FromObject(payload.veneer.LastArrivedValue).ToString();
                     var json_schema = string.Empty; // JsonSchema.FromSampleJson(json_string).ToJson();
                     logger.Trace($"[{this._machine.Id}] AddSpindleItem {name}, {json_string}");
                     _spindleItems.Add(name, (payload, json_schema));

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using l99.driver.@base;
+using MoreLinq;
 
 namespace l99.driver.fanuc.strategies
 {
@@ -289,6 +290,7 @@ namespace l99.driver.fanuc.strategies
         
         public override async Task<dynamic?> InitializeAsync()
         {
+            Dictionary<string, (List<string>, List<string>)> structure = new Dictionary<string, (List<string>, List<string>)>();
             int initMinutes = 0;
             var initStopwatch = new Stopwatch();
             initStopwatch.Start();
@@ -301,68 +303,100 @@ namespace l99.driver.fanuc.strategies
                 
                 while (!machine.VeneersApplied)
                 {
+                    // connect focas
                     dynamic connect = await platform.ConnectAsync();
                     
+                    // init strategy if able to connect
                     if (connect.success)
                     {
+                        #region init root veneers
                         _currentInitSegment = SegmentEnum.ROOT;
 
                         await Apply(typeof(veneers.FocasPerf), "focas_perf", isInternal:true, isCompound: true);
                         await Apply(typeof(veneers.Connect), "connect", isInternal: true);
                         await Apply(typeof(veneers.GetPath), "paths", isInternal: true);
                         
+                        // init root veneers in user strategy
                         await InitRootAsync();
                         
-                        _currentInitSegment = SegmentEnum.PATH;
-                        
+                        // retrieve controller paths
                         var paths = await platform.GetPathAsync();
 
                         IEnumerable<int> path_slices = Enumerable
                             .Range(paths.response.cnc_getpath.path_no, 
                                 paths.response.cnc_getpath.maxpath_no);
-
+                        
+                        path_slices.ForEach(p => structure.Add(p.ToString(), (new List<string>(),new List<string>())));
+                        #endregion
+                        
+                        #region init path veneers
+                        _currentInitSegment = SegmentEnum.PATH;
+                        
+                        // following veneers will be applied over each path
                         machine.SliceVeneer(path_slices.ToArray());
 
-                        await InitPathsAsync();
-                        
                         await Apply(typeof(veneers.RdAxisname), "axis_names", isInternal: true);
                         await Apply(typeof(veneers.RdSpindlename), "spindle_names", isInternal: true);
                         
+                        // init path veneers in user strategy
+                        await InitPathsAsync();
+                        #endregion
+                        
+                        #region init axis+spindle veneers
                         _currentInitSegment = SegmentEnum.AXIS;
                         
+                        // iterate paths
                         for (short current_path = paths.response.cnc_getpath.path_no;
                             current_path <= paths.response.cnc_getpath.maxpath_no;
                             current_path++)
                         {
+                            // set current path
                             dynamic path = await platform.SetPathAsync(current_path);
-                            
+                            // read axes and spindles for current path
                             dynamic axes = await platform.RdAxisNameAsync();
                             dynamic spindles = await platform.RdSpdlNameAsync();
                             dynamic axis_spindle_slices = new List<dynamic> { };
 
-                            var fields_axes = axes.response.cnc_rdaxisname.axisname.GetType().GetFields();
+                            // axes - get fields from focas response
+                            var fields_axes = axes.response
+                                .cnc_rdaxisname.axisname.GetType().GetFields();
                             for (int x = 0; x <= axes.response.cnc_rdaxisname.data_num - 1; x++)
                             {
-                                var axis = fields_axes[x].GetValue(axes.response.cnc_rdaxisname.axisname);
+                                // get axis name
+                                var axis = fields_axes[x]
+                                    .GetValue(axes.response.cnc_rdaxisname.axisname);
+                                structure[current_path.ToString()].Item1.Add(axisName(axis));
                                 axis_spindle_slices.Add(axisName(axis));
                             }
                             
-                            var fields_spindles = spindles.response.cnc_rdspdlname.spdlname.GetType().GetFields();
+                            // spindles - get fields from focas response
+                            var fields_spindles = spindles.response
+                                .cnc_rdspdlname.spdlname.GetType().GetFields();
                             for (int x = 0; x <= spindles.response.cnc_rdspdlname.data_num - 1; x++)
                             {
-                                var spindle = fields_spindles[x].GetValue(spindles.response.cnc_rdspdlname.spdlname);
+                                // get spindle name
+                                var spindle = fields_spindles[x]
+                                    .GetValue(spindles.response.cnc_rdspdlname.spdlname);
+                                structure[current_path.ToString()].Item2.Add(spindleName(spindle));
                                 axis_spindle_slices.Add(spindleName(spindle));
                             };
 
-                            machine.SliceVeneer(current_path, axis_spindle_slices.ToArray());
-
+                            // following veneers will be applied over axes+spindles
+                            machine.SliceVeneer(
+                                current_path, 
+                                axis_spindle_slices.ToArray()); 
+                            
+                            // store current path
                             await Set("current_path", current_path);
                             
+                            // init axes+spindles veneers in user strategy
                             await InitAxisAndSpindleAsync();
                         }
+                        #endregion
                         
                         await PostInitAsync();
                         
+                        // disconnect focas
                         dynamic disconnect = await platform.DisconnectAsync();
                         
                         machine.VeneersApplied = true;
@@ -391,7 +425,7 @@ namespace l99.driver.fanuc.strategies
 
             initStopwatch.Stop();
             
-            return null;
+            return structure;
         }
 
         public virtual async Task PostInitAsync()
@@ -557,7 +591,7 @@ namespace l99.driver.fanuc.strategies
                             dynamic axis_name = axis_names[current_axis-1];
                             dynamic axis_marker = axisMarker(current_axis, axis_name);
                             dynamic axis_marker_full = new[] {path_marker, axis_marker};
-                            await Set("axis_split", new[] {current_path, axis_name});
+                            await Set("axis_split", new[] {current_path.ToString(), axis_name});
                             
                             if(!_intermediateModel.IsGenerated)
                                 _intermediateModel.AddAxis(current_path, axis_name);
@@ -573,7 +607,7 @@ namespace l99.driver.fanuc.strategies
                             dynamic spindle_name = spindle_names[current_spindle-1];
                             dynamic spindle_marker = spindleMarker(current_spindle, spindle_name);
                             dynamic spindle_marker_full = new[] {path_marker, spindle_marker};
-                            await Set("spindle_split", new[] {current_path, spindle_name});
+                            await Set("spindle_split", new[] {current_path.ToString(), spindle_name});
                                 
                             if(!_intermediateModel.IsGenerated)
                                 _intermediateModel.AddSpindle(current_path, spindle_name);

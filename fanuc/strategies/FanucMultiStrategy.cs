@@ -58,11 +58,6 @@ namespace l99.driver.fanuc.strategies
             }
         }
 
-        public override async Task PostInitAsync()
-        {
-            
-        }
-
         public override async Task<dynamic?> CollectAsync()
         {
             // user code before starting sweep

@@ -99,18 +99,30 @@ system:
         {{-}}load={{data.load}},
         {{-}}temperature={{data.temperature}},
         {{-}}power={{data.power}}
-  default-shdr-dataitems: &default-shdr-dataitems
-    dataitems:
-      - id: "avail"
-        transform: >-
-          {{if observations['sweep'][''].state.data.online-}}
-          AVAILABLE
-          {{-else-}}
-          UNAVAILABLE
-          {{-end}}
-      - id: "x_load"
-        transform: >-2
-          "aaa"
+  default-shdr-transformers: &default-shdr-transformers
+    transformers:
+      SWEEP_END: >-
+        if data.online
+          ShdrEvent `avail` `AVAILABLE`
+        else
+          ShdrEvent `avail` `UNAVAILABLE`
+        end
+      l99.driver.fanuc.veneers.FocasPerf, fanuc: >-
+        ShdrSample observation.name 5
+      l99.driver.fanuc.veneers.SysInfo, fanuc: >-
+        ShdrSample observation.name 5
+      l99.driver.fanuc.veneers.StateData, fanuc: >-
+        ShdrSample observation.name 5
+      l99.driver.fanuc.veneers.ProductionData, fanuc: >-
+        ShdrSample observation.name 5
+      l99.driver.fanuc.veneers.AlarmsSeries, fanuc: >-
+        ShdrSample observation.name 5
+      l99.driver.fanuc.veneers.OpMsgs, fanuc: >-
+        ShdrSample observation.name 5
+      l99.driver.fanuc.veneers.AxisData, fanuc: >-
+        ShdrSample observation.name 5
+      l99.driver.fanuc.veneers.SpindleData, fanuc: >-
+        ShdrSample observation.name 5
   transport-base-mqtt: &transport-base-mqtt
     transport: l99.driver.fanuc.transports.MQTT, fanuc
   transport-base-influx: &transport-base-influx
@@ -185,9 +197,9 @@ user:
       password:
   target-influx-1: &target-influx-1
     # send to cloud influx instance
-    << : *transport-base-influx
+    <<: *transport-base-influx
     l99.driver.fanuc.transports.InfluxLP, fanuc:
-      << : *default-influx-transformers
+      <<: *default-influx-transformers
       host: "https://region-x.influxdata.com"
       token: "my-token"
       org: "my-org"
@@ -196,7 +208,7 @@ user:
     # open tcp socket for mtconnect agent
     << : *transport-base-shdr
     l99.driver.fanuc.transports.SHDR, fanuc:
-      << : *default-shdr-dataitems
+      << : *default-shdr-transformers
       device_name: device1
       net:
         port: !!int 7878
