@@ -13,71 +13,11 @@ namespace l99.driver.fanuc.transports
 {
     public class SHDR : Transport
     {
-        public class SHDRAdapterWrapper
-        {
-            private ShdrAdapter _adapter;
-
-            public SHDRAdapterWrapper(ShdrAdapter adapter)
-            {
-                _adapter = adapter;
-            }
-
-            public void Sample(string key, object value)
-            {
-                Console.WriteLine(key);
-                Console.WriteLine(value);
-                _adapter.AddDataItem(key,value);
-            }
-            
-            public void SampleUnavailable(string key)
-            {
-                _adapter.AddDataItem(key, "UNAVAILABLE");
-            }
-            
-            public void Event(string key, object value)
-            {
-                _adapter.AddDataItem(key,value);
-            }
-            
-            public void EventUnavailable(string key)
-            {
-                _adapter.AddDataItem(key, "UNAVAILABLE");
-            }
-            
-            public void ConditionNormal(string key)
-            {
-                _adapter.AddCondition(new ShdrCondition(key, ConditionLevel.NORMAL));
-            }
-            
-            public void ConditionFault(string key)
-            {
-                _adapter.AddCondition(new ShdrCondition(key, ConditionLevel.FAULT));
-            }
-            
-            public void ConditionUnavailable(string key)
-            {
-                _adapter.AddCondition(new ShdrCondition(key, ConditionLevel.UNAVAILABLE));
-            }
-        }
-        
-        /*private class ConfigDataItem
-        {
-            public string Id;
-            public string TransformFormat;
-            public Template TransformTemplate;
-            public bool TemplateHasErrors => TransformTemplate?.HasErrors ?? true;
-        }*/
-        
         private dynamic _config;
 
         private Dictionary<string, (List<string>, List<string>)> _machineStructure =
             new Dictionary<string, (List<string>, List<string>)>();
         
-        //private List<ConfigDataItem> _dataItems = new List<ConfigDataItem>();
-
-        //private Dictionary<string, Dictionary<string, dynamic>> _observations = 
-        //    new Dictionary<string, Dictionary<string, dynamic>>();
-
         // config - veneer type, template text
         private Dictionary<string, string> _transformLookup = new Dictionary<string, string>();
         
@@ -96,20 +36,6 @@ namespace l99.driver.fanuc.transports
 
         public override async Task<dynamic?> CreateAsync()
         {
-            /*
-            _dataItems = (_config.transport["dataitems"] as List<dynamic>)
-                .ConvertAll(
-                    o => new ConfigDataItem() { 
-                        Id = (string) o["id"],
-                        TransformFormat = (string) o["transform"],
-                        TransformTemplate = Template.Parse((string) o["transform"])
-                    });
-
-            if (_dataItems.Any(di => di.TemplateHasErrors))
-            {
-                logger.Error($"[{machine.Id}] Some templates have errors.");
-            }*/
-            
             _adapter = new ShdrAdapter(
                 _config.transport["device_name"],
                 _config.transport["net"]["port"],
@@ -229,90 +155,5 @@ namespace l99.driver.fanuc.transports
                     break;
             }
         }
-
-        /*
-        public override async Task SendAsync(params dynamic[] parameters)
-        {
-            var @event = parameters[0];
-            var veneer = parameters[1];
-            var data = parameters[2];
-            
-            switch (@event)
-            {
-                case "DATA_ARRIVE":
-                case "DATA_CHANGE":
-
-                    var sliceKey = veneer.SliceKey == null ? "" : veneer.SliceKey;
-                    
-                    if (!_observations.ContainsKey(veneer.Name))
-                    {
-                        _observations.Add(
-                            veneer.Name,
-                            new Dictionary<string, dynamic>());
-                    }
-
-                    if (!_observations[veneer.Name].ContainsKey(sliceKey))
-                    {
-                        _observations[veneer.Name].Add(
-                            sliceKey, new { 
-                                data.observation, 
-                                data.state });
-                    }
-                    else
-                    {
-                        _observations[veneer.Name][sliceKey] = new { data.observation, data.state };
-                    }
-                    
-                    break;
-                
-                case "SWEEP_END":
-
-                    if (!_observations.ContainsKey("sweep"))
-                    {
-                        _observations.Add(
-                            "sweep",
-                            new Dictionary<string, dynamic>());
-                        
-                        _observations["sweep"].Add(
-                            "", new { data.observation, data.state });
-                    }
-                    else
-                    {
-                        _observations["sweep"][""] = new { data.observation, data.state };
-                    }
-
-                    await renderAllAsync();
-                    
-                    break;
-                
-                case "INT_MODEL":
-
-                    break;
-            }
-        }
-
-        private async Task renderAllAsync()
-        {
-            foreach (var dataitem in _dataItems)
-            {
-                var value = await dataitem.TransformTemplate.RenderAsync(new {observations = _observations});
-               
-                Console.WriteLine("------");
-                Console.WriteLine(dataitem.Id);
-                Console.WriteLine(dataitem.TransformFormat);
-                Console.WriteLine(value);
-
-                switch (dataitem.Category)
-                {
-                    case "CONDITION":
-                        bool parsed = Enum.TryParse(value, true, out ConditionLevel level);
-                        _adapter.AddCondition(new ShdrCondition(dataitem.Id, parsed?level:ConditionLevel.UNAVAILABLE));
-                        break;
-                    default:
-                        _adapter.AddDataItem(dataitem.Id, value);
-                        break;
-                }
-            }
-        }*/
     }
 }
