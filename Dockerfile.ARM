@@ -16,7 +16,7 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 RUN mkdir -p /etc/fanuc
-COPY docker/config.yml /etc/fanuc
-COPY docker/nlog.config /etc/fanuc
+COPY docker/config-example.yml /etc/fanuc/nlog.config
+COPY docker/nlog-example-linux.config /etc/fanuc/nlog.config
 
 ENTRYPOINT ["dotnet", "fanuc.dll", "--nlog", "/etc/fanuc/nlog.config", "--config", "/etc/fanuc/config.yml"]
