@@ -11,10 +11,13 @@ namespace l99.driver.fanuc
         protected ILogger logger;
         private Machine _machine;
 
-        private Dictionary<string, (dynamic, string)> _rootItems = new Dictionary<string, (dynamic, string)>();
-        private Dictionary<string, (dynamic, string)> _pathItems = new Dictionary<string, (dynamic, string)>();
-        private Dictionary<string, (dynamic, string)> _axisItems = new Dictionary<string, (dynamic, string)>();
-        private Dictionary<string, (dynamic, string)> _spindleItems = new Dictionary<string, (dynamic, string)>();
+        private Dictionary<string, (List<string>, List<string>)> _structure =
+            new Dictionary<string, (List<string>, List<string>)>();
+        
+        private Dictionary<string, Type> _rootItems = new Dictionary<string, Type>();
+        private Dictionary<string, Type> _pathItems = new Dictionary<string, Type>();
+        private Dictionary<string, Type> _axisItems = new Dictionary<string, Type>();
+        private Dictionary<string, Type> _spindleItems = new Dictionary<string, Type>();
         
         private List<short> _paths = new List<short>();
         private Dictionary<short, List<string>> _axes = new Dictionary<short, List<string>>();
@@ -22,7 +25,7 @@ namespace l99.driver.fanuc
         
         public bool IsGenerated { get; private set; }
 
-        public string Model
+        public dynamic Model
         {
             get
             {
@@ -31,8 +34,7 @@ namespace l99.driver.fanuc
                 {
                     obs_root.Add(new JObject(
                         new JProperty("name", item.Key),
-                        new JProperty("veneer", item.Value.Item1.veneer.GetType().FullName)
-                        //new JProperty("schema", JObject.Parse(item.Value.Item2))
+                        new JProperty("veneer", item.Value.FullName)
                     ));
                 }
                 
@@ -41,8 +43,7 @@ namespace l99.driver.fanuc
                 {
                     obs_path.Add(new JObject(
                         new JProperty("name", item.Key),
-                        new JProperty("veneer", item.Value.Item1.veneer.GetType().FullName)
-                        //new JProperty("schema", JObject.Parse(item.Value.Item2))
+                        new JProperty("veneer", item.Value.FullName)
                     ));
                 }
                 
@@ -51,8 +52,7 @@ namespace l99.driver.fanuc
                 {
                     obs_axis.Add(new JObject(
                         new JProperty("name", item.Key),
-                        new JProperty("veneer", item.Value.Item1.veneer.GetType().FullName)
-                        //new JProperty("schema", JObject.Parse(item.Value.Item2))
+                        new JProperty("veneer", item.Value.FullName)
                     ));
                 }
                 
@@ -61,8 +61,7 @@ namespace l99.driver.fanuc
                 {
                     obs_spindle.Add(new JObject(
                         new JProperty("name", item.Key),
-                        new JProperty("type", item.Value.Item1.veneer.GetType().FullName)
-                        //new JProperty("schema", JObject.Parse(item.Value.Item2))
+                        new JProperty("type", item.Value.FullName)
                     ));
                 }
                 
@@ -118,8 +117,7 @@ namespace l99.driver.fanuc
 
                 model["structure"]["path"] = path_array;
                 
-                var j = model.ToString();
-                return j;
+                return new { structure = _structure, model = model.ToString()};
             }
         }
 
@@ -134,21 +132,19 @@ namespace l99.driver.fanuc
             _machine = machine;
         }
         
-        public void AddRootItem(string name, dynamic payload)
+        public void AddRootItem(string name, Type type)
         {
             try
             {
                 if (!_rootItems.ContainsKey(name))
                 {
-                    var json_string = string.Empty; //JObject.FromObject(payload.veneer.LastArrivedValue).ToString();
-                    var json_schema = string.Empty; //JsonSchema.FromSampleJson(json_string).ToJson();
-                    logger.Trace($"[{this._machine.Id}] AddRootItem {json_string}, {json_schema}");
-                    _rootItems.Add(name, (payload, json_schema));
+                    logger.Trace($"[{this._machine.Id}] AddRootItem {name}, {type}");
+                    _rootItems.Add(name, type);
                 }
             }
             catch (Exception ex)
             {
-                logger.Warn(ex,$"[{this._machine.Id}] AddRootItem.");
+                logger.Warn(ex,$"[{this._machine.Id}] AddRootItem {name}, {type}");
             }
         }
 
@@ -160,6 +156,7 @@ namespace l99.driver.fanuc
                 _paths.Add(path);
                 _axes.Add(path, new List<string>());
                 _spindles.Add(path, new List<string>());
+                _structure.Add($"{path}", (new List<string>(), new List<string>()));
             }
             catch (Exception ex)
             {
@@ -167,21 +164,19 @@ namespace l99.driver.fanuc
             }
         }
         
-        public void AddPathItem(string name, dynamic payload)
+        public void AddPathItem(string name, Type type)
         {
             try
             {
                 if (!_pathItems.ContainsKey(name))
                 {
-                    var json_string = string.Empty; //JObject.FromObject(payload.veneer.LastArrivedValue).ToString();
-                    var json_schema = string.Empty; //JsonSchema.FromSampleJson(json_string).ToJson();
-                    logger.Trace($"[{this._machine.Id}] AddPathItem {name}, {json_string}");
-                    _pathItems.Add(name, (payload, json_schema));
+                    logger.Trace($"[{this._machine.Id}] AddPathItem {name}, {type}");
+                    _pathItems.Add(name, type);
                 }
             }
             catch (Exception ex)
             {
-                logger.Warn(ex,$"[{this._machine.Id}] AddPathItem.");
+                logger.Warn(ex,$"[{this._machine.Id}] AddPathItem {name}, {type}");
             }
         }
 
@@ -191,6 +186,7 @@ namespace l99.driver.fanuc
             {
                 logger.Trace($"[{this._machine.Id}] AddAxis {path}, {name}");
                 _axes[path].Add(name);
+                _structure[$"{path}"].Item1.Add(name);
             }
             catch (Exception ex)
             {
@@ -198,21 +194,19 @@ namespace l99.driver.fanuc
             }
         }
         
-        public void AddAxisItem(string name, dynamic payload)
+        public void AddAxisItem(string name, Type type)
         {
             try
             {
                 if (!_axisItems.ContainsKey(name))
                 {
-                    var json_string = string.Empty; //JObject.FromObject(payload.veneer.LastArrivedValue).ToString();
-                    var json_schema = string.Empty; //JsonSchema.FromSampleJson(json_string).ToJson();
-                    logger.Trace($"[{this._machine.Id}] AddAxisItem {name}, {json_string}");
-                    _axisItems.Add(name, (payload, json_schema));
+                    logger.Trace($"[{this._machine.Id}] AddAxisItem {name}, {type}");
+                    _axisItems.Add(name, type);
                 }
             }
             catch (Exception ex)
             {
-                logger.Warn(ex,$"[{this._machine.Id}] AddAxisItem.");
+                logger.Warn(ex,$"[{this._machine.Id}] AddAxisItem {name}, {type}");
             }
         }
 
@@ -222,6 +216,7 @@ namespace l99.driver.fanuc
             {
                 logger.Trace($"[{this._machine.Id}] AddSpindle {path}, {name}");
                 _spindles[path].Add(name);
+                _structure[$"{path}"].Item2.Add(name);
             }
             catch (Exception ex)
             {
@@ -229,21 +224,19 @@ namespace l99.driver.fanuc
             }
         }
 
-        public void AddSpindleItem(string name, dynamic payload)
+        public void AddSpindleItem(string name, Type type)
         {
             try
             {
                 if (!_spindleItems.ContainsKey(name))
                 {
-                    var json_string = string.Empty; // JObject.FromObject(payload.veneer.LastArrivedValue).ToString();
-                    var json_schema = string.Empty; // JsonSchema.FromSampleJson(json_string).ToJson();
-                    logger.Trace($"[{this._machine.Id}] AddSpindleItem {name}, {json_string}");
-                    _spindleItems.Add(name, (payload, json_schema));
+                    logger.Trace($"[{this._machine.Id}] AddSpindleItem {name}, {type}");
+                    _spindleItems.Add(name, type);
                 }
             }
             catch (Exception ex)
             {
-                logger.Warn(ex,$"[{this._machine.Id}] AddSpindleItem.");
+                logger.Warn(ex,$"[{this._machine.Id}] AddSpindleItem {name}, {type}");
             }
         }
 

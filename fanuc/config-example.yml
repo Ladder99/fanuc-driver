@@ -107,7 +107,7 @@ system:
         ShdrEvent `adapter_port` adapter.port;
         ShdrEvent `machine_ip` machine.focas_endpoint.ipaddress;
         ShdrEvent `machine_port` machine.focas_endpoint.port;
-        ShdrConditionFaultIf `adapter_health` data.healthy;
+        ShdrConditionFaultIf `adapter_health` (!data.healthy);
       l99.driver.fanuc.veneers.SysInfo, fanuc: >-
         p = `p`+observation.marker[0].number;
         v = array.join [data.mt_type,data.cnc_type,data.series,data.model,data.version] ` `;
@@ -119,16 +119,16 @@ system:
         p = `p`+observation.marker[0].number;
         if observation.marker[0].number == 1; ShdrEventIf `estop` data.emergency==1 `TRIGGERED` `ARMED`; end;
         ShdrConditionFaultIf p+`_alm` data.alarm==1;
-        ShdrSample p+`_tmr_powered` data.timers.poweron_min*60;
-        ShdrSample p+`_tmr_operating` data.timers.operating_min*60;
-        ShdrSample p+`_tmr_loaded` data.timers.cutting_min*60;
+        ShdrSample p+`_tmr_powered` (data.timers.poweron_min*60);
+        ShdrSample p+`_tmr_operating` (data.timers.operating_min*60);
+        ShdrSample p+`_tmr_loaded` (data.timers.cutting_min*60);
         ShdrEvent p+`_tool_num` data.modal.t;
         ShdrEvent p+`_ovr_feed` data.override.feed;
         ShdrEvent p+`_ovr_rapid` data.override.rapid;
         ShdrEvent p+`_ovr_spindle` data.override.spindle;
       l99.driver.fanuc.veneers.ProductionData, fanuc: >-
         p = `p`+observation.marker[0].number;
-        ShdrSample p+`_tmr_cycle` data.timers.cycle_time_ms/1000;
+        ShdrSample p+`_tmr_cycle` (data.timers.cycle_time_ms/1000);
         ShdrEvent p+`_part_count_life` data.pieces.produced_life;
         ShdrEvent p+`_part_count_complete` data.pieces.produced;
         ShdrEvent p+`_part_count_remain` data.pieces.remaining;
@@ -136,22 +136,28 @@ system:
         ShdrEvent p+`_prg_cmt` data.program.comment;
         ShdrEvent p+`_prg_size` data.program.size_b;
         ShdrEvent p+`_prg_mod` data.program.modified;
-      l99.driver.fanuc.veneers.AlarmsSeries, fanuc: >-
-        p = `p`+observation.marker[0].number;
-        if (array.size data.alarms) == 0
-          ShdrEvent p+`_alarm` ``;
-        else
-          m = array.map data.alarms `message`;
-          ShdrEvent p+`_alarms` (array.join m `;`);
-        end;
-      l99.driver.fanuc.veneers.OpMsgs, fanuc: >-
-        p = `p`+observation.marker[0].number;
-        if (array.size data.messages) == 0
-          ShdrEvent p+`_message` ``;
-        else
-          m = array.map data.messages `message`;
-          ShdrEvent p+`_message` (array.join m `;`);
-        end;
+      #l99.driver.fanuc.veneers.AlarmsSeries, fanuc: >-
+      #  p = `p`+observation.marker[0].number;
+      #  if (array.size data.alarms) == 0
+      #    ShdrEvent p+`_alarm` ``;
+      #  else
+      #    m = array.map data.alarms `message`;
+      #    ShdrEvent p+`_alarms` (array.join m `;`);
+      #  end;
+      #l99.driver.fanuc.veneers.OpMsgs, fanuc: >-
+      #  p = `p`+observation.marker[0].number;
+      #  if (array.size data.messages) == 0
+      #    ShdrEvent p+`_message` ``;
+      #  else
+      #    m = array.map data.messages `message`;
+      #    ShdrEvent p+`_message` (array.join m `;`);
+      #  end;
+      #l99.driver.fanuc.veneers.AlarmsSeries, fanuc: >-
+      #  p = `p`+observation.marker[0].number;
+      #  ShdrEvent p+`_alarm` `NOALARM`;
+      #l99.driver.fanuc.veneers.OpMsgs, fanuc: >-
+      #  p = `p`+observation.marker[0].number;
+      #  ShdrEvent p+`_message` `NOMESSAGE`;
       l99.driver.fanuc.veneers.AxisData, fanuc: >-
         p = `p`+observation.marker[0].number+`_`+observation.marker[1].name;
         ShdrSample p+`_pos_absolute` data.position.absolute;
@@ -162,7 +168,7 @@ system:
         ShdrSample p+`_temp_servo` data.servo_temp;
         ShdrSample p+`_temp_coder` data.coder_temp;
         ShdrSample p+`_power` data.power;
-        ShdrSample p+`_feed` data.feed*60;
+        ShdrSample p+`_feed` (data.feed*60);
         ShdrEventIf p+`_state` data.motion `TRAVEL` `STOPPED`;
         ShdrConditionFaultIf p+`_alm_heat` data.alarms.overheat;
         ShdrConditionFaultIf p+`_alm_travel` data.alarms.overtravel;
@@ -176,9 +182,10 @@ system:
         ShdrSample p+`_temp` data.temperature;
         ShdrSample p+`_power` data.power;
         ShdrSample p+`_speed` data.speed;
-        ShdrConditionFaultIf p+`_alm_lnk` !data.status_lnk;
+        ShdrEventIf p+`_state` (data.speed>0) `TRAVEL` `STOPPED`;
+        ShdrConditionFaultIf p+`_alm_lnk` (!data.status_lnk);
         ShdrEvent p+`_rotary` `SPINDLE`;
-        ShdrConditionSeverity p+`_alm_amp` data.error>0 data.warning>0 data.error==0&&data.warning==0;
+        ShdrConditionSeverity p+`_alm_amp` (data.error > 0) (data.warning > 0) (data.error == 0 && data.warning == 0);
   transport-base-mqtt: &transport-base-mqtt
     transport: l99.driver.fanuc.transports.MQTT, fanuc
   transport-base-influx: &transport-base-influx
@@ -288,7 +295,7 @@ machines:
   - id: example-mqtt
     << : *machine-base        # base Fanuc configuration
     << : *machine-disabled    # omit this machine setup from runtime; remove to make active
-    << : *source-2            # where to get data
+    << : *source-1            # where to get data
     << : *collector-1         # what data to get and how to transform data
     << : *target-mqtt-1       # where to send data
   - id: example-influx

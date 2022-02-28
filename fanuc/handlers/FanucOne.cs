@@ -106,10 +106,5 @@ namespace l99.driver.fanuc.handlers
         {
             await machine.Transport.SendAsync("SWEEP_END", null, onSweepComplete);
         }
-
-        public override async Task OnGenerateIntermediateModel(string json)
-        {
-            await machine.Transport.SendAsync("INT_MODEL", null, json);
-        }
     }
 }

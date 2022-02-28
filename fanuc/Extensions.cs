@@ -10,7 +10,8 @@ namespace l99.driver.fanuc
         public static string AsAscii(this string text)
         {
             return Regex
-                .Replace(text, @"[^\u0000-\u007F]+", string.Empty)
+                //.Replace(text, @"[^\u0000-\u007F]+", string.Empty)
+                .Replace(text, @"\p{C}+", string.Empty)
                 .Replace("\0", string.Empty);
         }
 

@@ -27,7 +27,12 @@ namespace l99.driver.fanuc.collectors
             
         }
 
-        public virtual async Task InitAxisAndSpindleAsync()
+        public virtual async Task InitAxisAsync()
+        {
+            
+        }
+        
+        public virtual async Task InitSpindleAsync()
         {
             
         }

@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using l99.driver.@base;
-using MoreLinq;
 
 namespace l99.driver.fanuc.strategies
 {
@@ -173,52 +172,22 @@ namespace l99.driver.fanuc.strategies
                     break;
                 
                 case SegmentEnum.BEGIN:
-                    var beginObj = await machine.PeelVeneerAsync(veneerKey, input, additionalInputs);
-                
-                    if(!_intermediateModel.IsGenerated)
-                        _intermediateModel.AddRootItem(veneerKey, beginObj);
-
-                    return beginObj;
+                    return await machine.PeelVeneerAsync(veneerKey, input, additionalInputs);
                 
                 case SegmentEnum.ROOT:
-                    var rootObj = await machine.PeelVeneerAsync(veneerKey, input, additionalInputs);
-                    
-                    if(!_intermediateModel.IsGenerated)
-                        _intermediateModel.AddRootItem(veneerKey, rootObj);
+                    return await machine.PeelVeneerAsync(veneerKey, input, additionalInputs);
 
-                    return rootObj;
-                
                 case SegmentEnum.PATH:
-                    var pathObj = await machine.PeelAcrossVeneerAsync(Get("current_path"),veneerKey, input, additionalInputs);
-                    
-                    if(!_intermediateModel.IsGenerated)
-                        _intermediateModel.AddPathItem(veneerKey, pathObj);
+                    return await machine.PeelAcrossVeneerAsync(Get("current_path"),veneerKey, input, additionalInputs);
 
-                    return pathObj;
-                    
                 case SegmentEnum.AXIS:
-                    var axisObj = await machine.PeelAcrossVeneerAsync(Get("axis_split"), veneerKey, input, additionalInputs);
-                    
-                    if(!_intermediateModel.IsGenerated)
-                        _intermediateModel.AddAxisItem(veneerKey, axisObj);
+                    return await machine.PeelAcrossVeneerAsync(Get("axis_split"), veneerKey, input, additionalInputs);
 
-                    return axisObj;
-                
                 case SegmentEnum.SPINDLE:
-                    var spindleObj = await machine.PeelAcrossVeneerAsync(Get("spindle_split"), veneerKey, input, additionalInputs);
-                    
-                    if(!_intermediateModel.IsGenerated)
-                        _intermediateModel.AddSpindleItem(veneerKey, spindleObj);
+                    return await machine.PeelAcrossVeneerAsync(Get("spindle_split"), veneerKey, input, additionalInputs);
 
-                    return spindleObj;
-                
                 case SegmentEnum.END:
-                    var endObj = await machine.PeelVeneerAsync(veneerKey, input, additionalInputs);
-                
-                    if(!_intermediateModel.IsGenerated)
-                        _intermediateModel.AddRootItem(veneerKey, endObj);
-
-                    return endObj;
+                    return await machine.PeelVeneerAsync(veneerKey, input, additionalInputs);
             }
 
             return null;
@@ -258,17 +227,22 @@ namespace l99.driver.fanuc.strategies
                 
                 case SegmentEnum.ROOT:
                     machine.ApplyVeneer(veneerType, veneerName, isCompound, isInternal);
+                    _intermediateModel.AddRootItem(veneerName, veneerType);
                     break;
                 
                 case SegmentEnum.PATH:
                     machine.ApplyVeneerAcrossSlices(veneerType, veneerName, isCompound, isInternal);
+                    _intermediateModel.AddPathItem(veneerName, veneerType);
                     break;
                     
                 case SegmentEnum.AXIS:
                     machine.ApplyVeneerAcrossSlices(Get("current_path"), veneerType, veneerName, isCompound, isInternal);
+                    _intermediateModel.AddAxisItem(veneerName, veneerType);
                     break;
                 
                 case SegmentEnum.SPINDLE:
+                    machine.ApplyVeneerAcrossSlices(Get("current_path"), veneerType, veneerName, isCompound, isInternal);
+                    _intermediateModel.AddSpindleItem(veneerName, veneerType);
                     break;
                 
                 case SegmentEnum.END:
@@ -290,7 +264,6 @@ namespace l99.driver.fanuc.strategies
         
         public override async Task<dynamic?> InitializeAsync()
         {
-            Dictionary<string, (List<string>, List<string>)> structure = new Dictionary<string, (List<string>, List<string>)>();
             int initMinutes = 0;
             var initStopwatch = new Stopwatch();
             initStopwatch.Start();
@@ -309,6 +282,9 @@ namespace l99.driver.fanuc.strategies
                     // init strategy if able to connect
                     if (connect.success)
                     {
+                        // build intermediate model
+                        _intermediateModel.Start(machine);
+                        
                         #region init root veneers
                         _currentInitSegment = SegmentEnum.ROOT;
 
@@ -318,22 +294,23 @@ namespace l99.driver.fanuc.strategies
                         
                         // init root veneers in user strategy
                         await InitRootAsync();
-                        
-                        // retrieve controller paths
-                        var paths = await platform.GetPathAsync();
-
-                        IEnumerable<int> path_slices = Enumerable
-                            .Range(paths.response.cnc_getpath.path_no, 
-                                paths.response.cnc_getpath.maxpath_no);
-                        
-                        path_slices.ForEach(p => structure.Add(p.ToString(), (new List<string>(),new List<string>())));
                         #endregion
                         
                         #region init path veneers
                         _currentInitSegment = SegmentEnum.PATH;
                         
+                        // retrieve controller paths
+                        var paths = await platform.GetPathAsync();
+
+                        var path_numbers = Enumerable
+                            .Range(
+                                (int) paths.response.cnc_getpath.path_no,
+                                (int) paths.response.cnc_getpath.maxpath_no)
+                            .ToList()
+                            .ConvertAll(x => (short)x);
+                        
                         // following veneers will be applied over each path
-                        machine.SliceVeneer(path_slices.ToArray());
+                        machine.SliceVeneer(path_numbers.Cast<dynamic>());
 
                         await Apply(typeof(veneers.RdAxisname), "axis_names", isInternal: true);
                         await Apply(typeof(veneers.RdSpindlename), "spindle_names", isInternal: true);
@@ -343,13 +320,13 @@ namespace l99.driver.fanuc.strategies
                         #endregion
                         
                         #region init axis+spindle veneers
-                        _currentInitSegment = SegmentEnum.AXIS;
+                        //_currentInitSegment = SegmentEnum.AXIS;
                         
                         // iterate paths
-                        for (short current_path = paths.response.cnc_getpath.path_no;
-                            current_path <= paths.response.cnc_getpath.maxpath_no;
-                            current_path++)
+                        foreach(var current_path in path_numbers)
                         {
+                            // build intermediate model
+                            _intermediateModel.AddPath(current_path);
                             // set current path
                             dynamic path = await platform.SetPathAsync(current_path);
                             // read axes and spindles for current path
@@ -365,7 +342,10 @@ namespace l99.driver.fanuc.strategies
                                 // get axis name
                                 var axis = fields_axes[x]
                                     .GetValue(axes.response.cnc_rdaxisname.axisname);
-                                structure[current_path.ToString()].Item1.Add(axisName(axis));
+                                
+                                // build intermediate model
+                                _intermediateModel.AddAxis(current_path, axisName(axis));
+                                
                                 axis_spindle_slices.Add(axisName(axis));
                             }
                             
@@ -377,7 +357,10 @@ namespace l99.driver.fanuc.strategies
                                 // get spindle name
                                 var spindle = fields_spindles[x]
                                     .GetValue(spindles.response.cnc_rdspdlname.spdlname);
-                                structure[current_path.ToString()].Item2.Add(spindleName(spindle));
+                                
+                                // build intermediate model
+                                _intermediateModel.AddSpindle(current_path, spindleName(spindle));
+                                
                                 axis_spindle_slices.Add(spindleName(spindle));
                             };
 
@@ -389,8 +372,13 @@ namespace l99.driver.fanuc.strategies
                             // store current path
                             await Set("current_path", current_path);
                             
-                            // init axes+spindles veneers in user strategy
-                            await InitAxisAndSpindleAsync();
+                            // init axis veneers in user strategy
+                            _currentInitSegment = SegmentEnum.AXIS;
+                            await InitAxisAsync();
+                            
+                            // init spindle veneers in user strategy
+                            _currentInitSegment = SegmentEnum.SPINDLE;
+                            await InitSpindleAsync();
                         }
                         #endregion
                         
@@ -402,6 +390,11 @@ namespace l99.driver.fanuc.strategies
                         machine.VeneersApplied = true;
                         
                         _currentInitSegment = SegmentEnum.NONE;
+                        
+                        // build intermediate model
+                        _intermediateModel.Finish();
+                        await machine.Handler.OnGenerateIntermediateModelAsync(_intermediateModel.Model);
+                        await machine.Transport.OnGenerateIntermediateModelAsync(_intermediateModel.Model);
                         
                         logger.Info($"[{machine.Id}] Strategy initialized.");
                     }
@@ -424,8 +417,8 @@ namespace l99.driver.fanuc.strategies
             }
 
             initStopwatch.Stop();
-            
-            return structure;
+
+            return null;
         }
 
         public virtual async Task PostInitAsync()
@@ -475,7 +468,12 @@ namespace l99.driver.fanuc.strategies
         ///     RdAxisname as "axis_names",
         ///     RdSpindlename as "spindle_names"
         /// </summary>
-        public virtual async Task InitAxisAndSpindleAsync()
+        public virtual async Task InitAxisAsync()
+        {
+            
+        }
+        
+        public virtual async Task InitSpindleAsync()
         {
             
         }
@@ -495,9 +493,6 @@ namespace l99.driver.fanuc.strategies
                 failedInvocationCountDuringSweep = 0;
                 
                 _currentCollectSegment = SegmentEnum.BEGIN;
-                
-                if(!_intermediateModel.IsGenerated)
-                    _intermediateModel.Start(machine);
                 
                 if(await CollectBeginAsync())
                 {
@@ -530,9 +525,6 @@ namespace l99.driver.fanuc.strategies
                         current_path++)
                     {
                         _currentCollectSegment = SegmentEnum.PATH;
-                        
-                        if(!_intermediateModel.IsGenerated)
-                            _intermediateModel.AddPath(current_path);
                         
                         await Set("current_path", current_path);
 
@@ -593,9 +585,6 @@ namespace l99.driver.fanuc.strategies
                             dynamic axis_marker_full = new[] {path_marker, axis_marker};
                             await Set("axis_split", new[] {current_path.ToString(), axis_name});
                             
-                            if(!_intermediateModel.IsGenerated)
-                                _intermediateModel.AddAxis(current_path, axis_name);
-                            
                             machine.MarkVeneer(Get("axis_split"), axis_marker_full);
 
                             await CollectForEachAxisAsync(current_path, current_axis, axis_name, Get("axis_split"), axis_marker_full);
@@ -608,9 +597,6 @@ namespace l99.driver.fanuc.strategies
                             dynamic spindle_marker = spindleMarker(current_spindle, spindle_name);
                             dynamic spindle_marker_full = new[] {path_marker, spindle_marker};
                             await Set("spindle_split", new[] {current_path.ToString(), spindle_name});
-                                
-                            if(!_intermediateModel.IsGenerated)
-                                _intermediateModel.AddSpindle(current_path, spindle_name);
                             
                             machine.MarkVeneer(Get("spindle_split"), spindle_marker_full);
 
@@ -631,12 +617,6 @@ namespace l99.driver.fanuc.strategies
                 _currentCollectSegment = SegmentEnum.END;
 
                 await CollectEndAsync();
-                
-                if (!_intermediateModel.IsGenerated)
-                {
-                    _intermediateModel.Finish();
-                    await machine.Handler.OnGenerateIntermediateModel(_intermediateModel.Model);
-                }
             }
             catch (Exception ex)
             {
@@ -725,8 +705,6 @@ namespace l99.driver.fanuc.strategies
             //TODO: make veneer
             LastSuccess = Get("connect").success;
             IsHealthy = failedInvocationCountDuringSweep == 0;
-
-            await Machine.Transport.ConnectAsync();
         }
     }
 }

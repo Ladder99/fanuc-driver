@@ -24,6 +24,7 @@ namespace l99.driver.fanuc.transports
         private bool _connectionSkipped = false;
         
         private Template _topicTemplate;
+        private dynamic _model;
         
         public MQTT(Machine machine, object cfg) : base(machine, cfg)
         {
@@ -89,13 +90,16 @@ namespace l99.driver.fanuc.transports
                 case "SWEEP_END":
                     topic = $"fanuc/{machine.Id}/sweep";
                     payload = JObject.FromObject(data).ToString(Formatting.None);
+
+                    await ConnectAsync();
+                    
                     break;
                 
                 case "INT_MODEL":
                     topic = $"fanuc/{machine.Id}/$model";
                     payload = data;
                     break;
-
+                
                 default:
                     return;
             }
@@ -172,6 +176,12 @@ namespace l99.driver.fanuc.transports
                     _connectionSkipped = true;
                 }
             }
+        }
+        
+        public override async Task OnGenerateIntermediateModelAsync(dynamic model)
+        {
+            _model = model;
+            await SendAsync("INT_MODEL", null, model.model);
         }
     }
 }

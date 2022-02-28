@@ -17,7 +17,7 @@ namespace l99.driver.fanuc.collectors
             await strategy.Apply(typeof(fanuc.veneers.Figures), "figures");
         }
 
-        public override async Task InitAxisAndSpindleAsync()
+        public override async Task InitAxisAsync()
         {
             await strategy.Apply(typeof(fanuc.veneers.AxisData), "axis", isCompound: true );
         }

@@ -10,7 +10,7 @@ namespace l99.driver.fanuc.collectors
             
         }
         
-        public override async Task InitAxisAndSpindleAsync()
+        public override async Task InitSpindleAsync()
         {
             await strategy.Apply(typeof(fanuc.veneers.SpindleData), "spindle", isCompound: true);
         }

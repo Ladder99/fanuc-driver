@@ -16,10 +16,7 @@ namespace l99.driver.fanuc.strategies
         private dynamic _config;
         private List<FanucMultiStrategyCollector> _collectors = new List<FanucMultiStrategyCollector>();
         
-        public Platform Platform
-        {
-            get => platform;
-        }
+        public Platform Platform => platform;
         
         public override async Task<dynamic?> CreateAsync()
         {
@@ -50,11 +47,19 @@ namespace l99.driver.fanuc.strategies
             }
         }
 
-        public override async Task InitAxisAndSpindleAsync()
+        public override async Task InitAxisAsync()
         {
             foreach (var collector in _collectors)
             {
-                await collector.InitAxisAndSpindleAsync();
+                await collector.InitAxisAsync();
+            }
+        }
+        
+        public override async Task InitSpindleAsync()
+        {
+            foreach (var collector in _collectors)
+            {
+                await collector.InitSpindleAsync();
             }
         }
 

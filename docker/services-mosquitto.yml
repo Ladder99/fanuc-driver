@@ -1,0 +1,26 @@
+version: '3.5'
+
+services:
+  mosquitto:
+    container_name: mosquitto
+    image: eclipse-mosquitto
+    restart: always
+    networks:
+      - fanuc
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ~/fanuc-volumes/mosquitto/config:/mosquitto/config:rw
+      - ~/fanuc-volumes/mosquitto/data:/mosquitto/data:rw
+      - ~/fanuc-volumes/mosquitto/log:/mosquitto/log:rw
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+
+networks:
+  fanuc:
+    name: fanuc

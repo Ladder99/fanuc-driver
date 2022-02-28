@@ -5,6 +5,7 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using l99.driver.@base;
+using MoreLinq;
 using MTConnect.Adapters.Shdr;
 using MTConnect.Streams;
 using Scriban;
@@ -16,17 +17,15 @@ namespace l99.driver.fanuc.transports
     {
         private dynamic _config;
 
-        private Dictionary<string, (List<string>, List<string>)> _machineStructure =
-            new Dictionary<string, (List<string>, List<string>)>();
+        // paths,axes,spindles received from strategy
+        private dynamic _model;
         
         // config - veneer type, template text
         private Dictionary<string, string> _transformLookup = new Dictionary<string, string>();
         
-        // runtime - veneer name, template
-        private Dictionary<string, Template> _templateLookup = new Dictionary<string, Template>();
-        
         private ShdrAdapter _adapter;
-        private AdapterInfo _adapterInfo;
+        private Dictionary<string, ShdrDataItem> _cacheShdrDataItems;
+        private Dictionary<string, ShdrCondition> _cacheShdrConditions;
         
         private ScriptObject _globalScriptObject;
         private TemplateContext _globalTemplateContext;
@@ -42,140 +41,37 @@ namespace l99.driver.fanuc.transports
             _config = cfg;
         }
 
-        private static List<string> GetAllLocalIPv4()
+        private void cacheShdrDataItem(ShdrDataItem dataItem)
         {
-            return NetworkInterface.GetAllNetworkInterfaces()
-                //.Where(x => x.NetworkInterfaceType == type && x.OperationalStatus == OperationalStatus.Up)
-                .Where(x => x.OperationalStatus == OperationalStatus.Up)
-                .SelectMany(x => x.GetIPProperties().UnicastAddresses)
-                .Where(x => x.Address.AddressFamily == AddressFamily.InterNetwork)
-                .Select(x => x.Address.ToString())
-                .ToList();
+            Console.WriteLine($"{dataItem.Key}:{dataItem.Value}");
+            if (_cacheShdrDataItems.ContainsKey(dataItem.Key))
+            {
+                _cacheShdrDataItems[dataItem.Key] = dataItem;
+            }
+            else
+            {
+                _cacheShdrDataItems.Add(dataItem.Key, dataItem);
+            }
+        }
+        
+        private void cacheShdrCondition(ShdrCondition dataItem)
+        {
+            Console.WriteLine($"{dataItem.Key}:{dataItem.Level}");
+            if (_cacheShdrConditions.ContainsKey(dataItem.Key))
+            {
+                _cacheShdrConditions[dataItem.Key] = dataItem;
+            }
+            else
+            {
+                _cacheShdrConditions.Add(dataItem.Key, dataItem);
+            }
         }
         
         public override async Task<dynamic?> CreateAsync()
         {
-            _adapter = new ShdrAdapter(
-                _config.transport["device_name"],
-                _config.transport["net"]["port"],
-                _config.transport["net"]["heartbeat_ms"]);
+            await initAdapterAsync();
 
-            _adapterInfo = new AdapterInfo()
-            {
-                IPAddress = string.Join(';', GetAllLocalIPv4()),
-                Port = _config.transport["net"]["port"]
-            };
-            
-            _adapter.Start();
-
-            _globalScriptObject = new ScriptObject();
-            
-            _globalScriptObject.Import("machinePaths", 
-                new Func<object> (() =>
-                {
-                    return _machineStructure.Keys.ToArray();
-                }));
-            
-            _globalScriptObject.Import("machineAxisNamesForPath", 
-                new Func<object,object> ((p) =>
-                {
-                    return _machineStructure[p.ToString()].Item1.ToArray();
-                }));
-            
-            _globalScriptObject.Import("machineSpindleNamesForPath", 
-                new Func<object,object> ((p) =>
-                {
-                    return _machineStructure[p.ToString()].Item2.ToArray();
-                }));
-            
-            _globalScriptObject.Import("ShdrSample", 
-                new Action<string,object> ((k,v) =>
-                {
-                    Console.WriteLine($"{k}:{v}");
-                    _adapter.AddDataItem(k,v); 
-                }));
-            
-            _globalScriptObject.Import("ShdrSampleUnavailable", 
-                new Action<string> ((k) =>
-                {
-                    _adapter.AddDataItem(k,"UNAVAILABLE"); 
-                }));
-            
-            _globalScriptObject.Import("ShdrEvent", 
-                new Action<string,object> ((k,v) =>
-                {
-                    Console.WriteLine($"{k}:{v}");
-                    _adapter.AddDataItem(k,v); 
-                }));
-            
-            _globalScriptObject.Import("ShdrEventIf", 
-                new Action<string,object,object,object> ((k,x,y,z) =>
-                {
-                    _adapter.AddDataItem(k, 
-                        Convert.ToBoolean(x) ? y : z); 
-                }));
-            
-            _globalScriptObject.Import("ShdrEventUnavailable", 
-                new Action<string> ((k) =>
-                {
-                    _adapter.AddDataItem(k,"UNAVAILABLE"); 
-                }));
-            
-            _globalScriptObject.Import("ShdrConditionNormal", 
-                new Action<string> ((k) =>
-                {
-                    var c = new ShdrCondition(k, ConditionLevel.NORMAL);
-                    _adapter.AddCondition(c); 
-                }));
-            
-            _globalScriptObject.Import("ShdrConditionWarning", 
-                new Action<string> ((k) =>
-                {
-                    var c = new ShdrCondition(k, ConditionLevel.WARNING);
-                    _adapter.AddCondition(c); 
-                }));
-            
-            _globalScriptObject.Import("ShdrConditionFault", 
-                new Action<string> ((k) =>
-                {
-                    var c = new ShdrCondition(k, ConditionLevel.FAULT);
-                    _adapter.AddCondition(c); 
-                }));
-            
-            _globalScriptObject.Import("ShdrConditionFaultIf", 
-                new Action<string,object> ((k,v) =>
-                {
-                    _adapter.AddCondition(new ShdrCondition(k, 
-                        Convert.ToBoolean(v) ? ConditionLevel.FAULT : ConditionLevel.NORMAL)); 
-                }));
-            
-            _globalScriptObject.Import("ShdrConditionSeverity", 
-                new Action<string,object,object,object> ((k,f,w,n) =>
-                {
-                    var c = Convert.ToBoolean(f) ? ConditionLevel.FAULT :
-                        Convert.ToBoolean(w) ? ConditionLevel.WARNING :
-                        Convert.ToBoolean(n) ? ConditionLevel.NORMAL :
-                        ConditionLevel.UNAVAILABLE;
-                    _adapter.AddCondition(new ShdrCondition(k, c)); 
-                }));
-            
-            _globalScriptObject.Import("ShdrConditionUnavailable", 
-                new Action<string> ((k) =>
-                {
-                    _adapter.AddCondition(new ShdrCondition(k, ConditionLevel.UNAVAILABLE)); 
-                }));
-            
-            _globalScriptObject.Import("ShdrAllUnavailable", 
-                new Action (() =>
-                {
-                    _adapter.SetUnavailable(); 
-                }));
-
-            _globalScriptObject.SetValue("machine", this.machine, true);
-            _globalScriptObject.SetValue("adapter", this._adapterInfo, true);
-            
-            _globalTemplateContext = new TemplateContext();
-            _globalTemplateContext.PushGlobal(_globalScriptObject);
+            await initScriptContextAsync();
             
             _transformLookup = (_config.transport["transformers"] as Dictionary<dynamic,dynamic>)
                 .ToDictionary(
@@ -185,16 +81,11 @@ namespace l99.driver.fanuc.transports
             return null;
         }
 
-        public override async Task StrategyInitializedAsync(dynamic? strategyInit)
-        {
-            _machineStructure = strategyInit;
-        }
-
         public override async Task ConnectAsync()
         {
-            
+            _adapter.Start();
         }
-        
+
         public override async Task SendAsync(params dynamic[] parameters)
         {
             var @event = parameters[0];
@@ -211,9 +102,16 @@ namespace l99.driver.fanuc.transports
                     
                     if (_transformLookup.ContainsKey(transformName))
                     {
-                        _globalScriptObject.SetValue("observation", data.observation, true);
-                        _globalScriptObject.SetValue("data", data.state.data, true);
-                        await Template.EvaluateAsync(_transformLookup[transformName], _globalTemplateContext);
+                        try
+                        {
+                            _globalScriptObject.SetValue("observation", data.observation, true);
+                            _globalScriptObject.SetValue("data", data.state.data, true);
+                            await Template.EvaluateAsync(_transformLookup[transformName], _globalTemplateContext);
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.Warn(ex, $@"[{{machine.Id}} SHDR evaluation failed for '{transformName}'");
+                        }
                     }
                     
                     break;
@@ -222,17 +120,187 @@ namespace l99.driver.fanuc.transports
 
                     if (_transformLookup.ContainsKey("SWEEP_END"))
                     {
-                        _globalScriptObject.SetValue("observation", data.observation, true);
-                        _globalScriptObject.SetValue("data", data.state.data, true);
-                        await Template.EvaluateAsync(_transformLookup["SWEEP_END"], _globalTemplateContext);
+                        try
+                        {
+                            _globalScriptObject.SetValue("observation", data.observation, true);
+                            _globalScriptObject.SetValue("data", data.state.data, true);
+                            await Template.EvaluateAsync(_transformLookup["SWEEP_END"], _globalTemplateContext);
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.Warn(ex, $@"[{{machine.Id}} SHDR evaluation failed for 'SWEEP_END'");
+                        }
                     }
                     
-                    break;
-                
-                case "INT_MODEL":
-
+                    _cacheShdrDataItems
+                        .ForEach(di => _adapter.AddDataItem(di.Value));
+                    _cacheShdrConditions
+                        .ForEach(di => _adapter.AddCondition(di.Value));
+                    
+                    //_adapter.AddConditions(_cacheShdrConditions.Values);
+                    //_adapter.AddDataItems(_cacheShdrDataItems.Values);
+                    
                     break;
             }
+        }
+
+        public override async Task OnGenerateIntermediateModelAsync(dynamic model)
+        {
+            _model = model;
+        }
+        
+        private async Task initAdapterAsync()
+        {
+            _cacheShdrDataItems = new Dictionary<string, ShdrDataItem>();
+            _cacheShdrConditions = new Dictionary<string, ShdrCondition>();
+            
+            _adapter = new ShdrAdapter(
+                _config.transport["device_name"],
+                _config.transport["net"]["port"],
+                _config.transport["net"]["heartbeat_ms"]);
+            
+            _adapter.SendError = (sender, args) =>
+            {
+                Console.WriteLine(args.Message);
+            };
+
+            _adapter.LineSent = (sender, args) =>
+            {
+                Console.WriteLine(args.Message);
+            };
+
+            await ConnectAsync();
+        }
+        
+        private async Task initScriptContextAsync()
+        {
+            _globalScriptObject = new ScriptObject();
+            
+            _globalScriptObject.Import("machinePaths", 
+                new Func<object> (() =>
+                {
+                    return _model.structure.Keys.ToArray();
+                }));
+            
+            _globalScriptObject.Import("machineAxisNamesForPath", 
+                new Func<object,object> ((p) =>
+                {
+                    return _model.structure[p.ToString()].Item1.ToArray();
+                }));
+            
+            _globalScriptObject.Import("machineSpindleNamesForPath", 
+                new Func<object,object> ((p) =>
+                {
+                    return _model.structure[p.ToString()].Item2.ToArray();
+                }));
+            
+            _globalScriptObject.Import("ShdrSample", 
+                new Action<string,object> ((k,v) =>
+                {
+                    cacheShdrDataItem(new ShdrDataItem(k,v));
+                }));
+            
+            _globalScriptObject.Import("ShdrSampleUnavailable", 
+                new Action<string> ((k) =>
+                {
+                    cacheShdrDataItem(new ShdrDataItem(k,"UNAVAILABLE"));
+                }));
+            
+            _globalScriptObject.Import("ShdrEvent", 
+                new Action<string,object> ((k,v) =>
+                {
+                    cacheShdrDataItem(new ShdrDataItem(k,v));
+                }));
+            
+            _globalScriptObject.Import("ShdrEventIf", 
+                new Action<string,object,object,object> ((k,x,y,z) =>
+                {
+                    var v = Convert.ToBoolean(x) ? y : z;
+                    cacheShdrDataItem(new ShdrDataItem(k,v));
+                }));
+            
+            _globalScriptObject.Import("ShdrEventUnavailable", 
+                new Action<string> ((k) =>
+                {
+                    cacheShdrDataItem(new ShdrDataItem(k,"UNAVAILABLE"));
+                }));
+            
+            _globalScriptObject.Import("ShdrConditionNormal", 
+                new Action<string> ((k) =>
+                {
+                    var c = new ShdrCondition(k, ConditionLevel.NORMAL);
+                    cacheShdrCondition(c);
+                }));
+            
+            _globalScriptObject.Import("ShdrConditionWarning", 
+                new Action<string> ((k) =>
+                {
+                    var c = new ShdrCondition(k, ConditionLevel.WARNING);
+                    cacheShdrCondition(c); 
+                }));
+            
+            _globalScriptObject.Import("ShdrConditionFault", 
+                new Action<string> ((k) =>
+                {
+                    var c = new ShdrCondition(k, ConditionLevel.FAULT);
+                    cacheShdrCondition(c);
+                }));
+            
+            _globalScriptObject.Import("ShdrConditionFaultIf", 
+                new Action<string,object> ((k,v) =>
+                {
+                    var c = new ShdrCondition(k, 
+                        Convert.ToBoolean(v) ? ConditionLevel.FAULT : ConditionLevel.NORMAL);
+                    cacheShdrCondition(c);
+                }));
+            
+            _globalScriptObject.Import("ShdrConditionSeverity", 
+                new Action<string,object,object,object> ((k,f,w,n) =>
+                {
+                    var l = Convert.ToBoolean(f) ? ConditionLevel.FAULT :
+                        Convert.ToBoolean(w) ? ConditionLevel.WARNING :
+                        Convert.ToBoolean(n) ? ConditionLevel.NORMAL :
+                        ConditionLevel.UNAVAILABLE;
+                    var c = new ShdrCondition(k, l);
+                    cacheShdrCondition(c);
+                }));
+            
+            _globalScriptObject.Import("ShdrConditionUnavailable", 
+                new Action<string> ((k) =>
+                {
+                    var c = new ShdrCondition(k, ConditionLevel.UNAVAILABLE);
+                    cacheShdrCondition(c);
+                }));
+            
+            /*
+            _globalScriptObject.Import("ShdrAllUnavailable", 
+                new Action (() =>
+                {
+                    _adapter.SetUnavailable(); 
+                }));
+            */
+            
+            _globalScriptObject.SetValue("machine", this.machine, true);
+            _globalScriptObject.SetValue("adapter", 
+                new AdapterInfo()
+                {
+                    IPAddress = string.Join(';', this.getAllLocalIPv4()),
+                    Port = _config.transport["net"]["port"]
+                }, true);
+            
+            _globalTemplateContext = new TemplateContext();
+            _globalTemplateContext.PushGlobal(_globalScriptObject);
+        }
+        
+        private List<string> getAllLocalIPv4()
+        {
+            return NetworkInterface.GetAllNetworkInterfaces()
+                //.Where(x => x.NetworkInterfaceType == type && x.OperationalStatus == OperationalStatus.Up)
+                .Where(x => x.OperationalStatus == OperationalStatus.Up)
+                .SelectMany(x => x.GetIPProperties().UnicastAddresses)
+                .Where(x => x.Address.AddressFamily == AddressFamily.InterNetwork)
+                .Select(x => x.Address.ToString())
+                .ToList();
         }
     }
 }
