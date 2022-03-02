@@ -19,8 +19,103 @@ namespace l99.driver.fanuc.veneers
         {
             if (input.success && additionalInputs.All(o => o.success == true))
             {
+                var execution = "UNAVAILABLE";
+
+                switch ((int)input.response.cnc_statinfo.statinfo.emergency)
+                {
+                    case 0:
+                        switch ((int)input.response.cnc_statinfo.statinfo.run)
+                        {
+                            case 0:
+                                execution = "READY";
+                                break;
+                            case 1:
+                                switch ((int)additionalInputs[6].response.cnc_modal.modal.aux.aux_data)
+                                {
+                                    case 0:
+                                        execution = "PROGRAM_STOPPED";
+                                        break;
+                                    case 1:
+                                        execution = "OPTIONAL_STOP";
+                                        break;
+                                    case 2:
+                                        execution = "PROGRAM_COMPLETED";
+                                        break;
+                                    default:
+                                        execution = "STOPPED";
+                                        break;
+                                }
+
+                                break;
+                            case 2:
+                                execution = "FEED_HOLD";
+                                break;
+                            case 3:
+                                if (255 - additionalInputs[3].response.pmc_rdpmcrng.buf.cdata[0] == 0)
+                                {
+                                    execution = "INTERRUPTED";
+                                }
+                                else
+                                {
+                                    switch ((int)input.response.cnc_statinfo.statinfo.motion)
+                                    {
+                                        case 0:
+                                            switch ((int)additionalInputs[6].response.cnc_modal.modal.aux.aux_data)
+                                            {
+                                                case 0:
+                                                    execution = "PROGRAM_STOPPED";
+                                                    break;
+                                                case 1:
+                                                    execution = "OPTIONAL_STOP";
+                                                    break;
+                                                case 2:
+                                                    execution = "PROGRAM_COMPLETED";
+                                                    break;
+                                                //case M<prog_stop>:
+                                                //    execution = "PROGRAM_STOPPED";
+                                                //    break;
+                                                default:
+                                                    execution = "ACTIVE";
+                                                    break;
+                                            }
+                                            break;
+                                        default:
+                                            execution = "ACTIVE";
+                                            break;
+                                    }
+                                }
+                                break;
+                        }
+                        break;
+                    case 1:
+                        execution = "STOPPED";
+                        break;
+                }
+                
+                var mode = "UNAVAILABLE";
+
+                switch ((int)input.response.cnc_statinfo.statinfo.aut)
+                {
+                    case 0:
+                        mode = "MANUAL_DATA_INPUT";
+                        break;
+                    case 1:
+                    case 10:
+                        mode = "AUTOMATIC";
+                        break;
+                    case 3:
+                        mode = "EDIT";
+                        break;
+                    default:
+                        mode = "MANUAL";
+                        break;
+                }
+                
+                
                 var current_value = new
                 {
+                    mode,
+                    execution,
                     input.response.cnc_statinfo.statinfo.aut,
                     input.response.cnc_statinfo.statinfo.run,
                     input.response.cnc_statinfo.statinfo.motion,

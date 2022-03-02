@@ -47,7 +47,7 @@ namespace l99.driver.fanuc.collectors
             
             // 200-206                  servo, coder status
 
-            // 300                      servo error
+            // 300                      servo position error
 
             // 308 byte                 motor temperature (c)
             await strategy.SetNativeKeyed($"diag_servo_temp", 

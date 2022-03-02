@@ -122,10 +122,16 @@ system:
         ShdrSample p+`_tmr_powered` (data.timers.poweron_min*60);
         ShdrSample p+`_tmr_operating` (data.timers.operating_min*60);
         ShdrSample p+`_tmr_loaded` (data.timers.cutting_min*60);
+        ShdrEvent p+`_ctl_mode` data.mode;
+        ShdrEvent p+`_ctl_exec` data.execution;
         ShdrEvent p+`_tool_num` data.modal.t;
         ShdrEvent p+`_ovr_feed` data.override.feed;
         ShdrEvent p+`_ovr_rapid` data.override.rapid;
         ShdrEvent p+`_ovr_spindle` data.override.spindle;
+      l99.driver.fanuc.veneers.ToolData, fanuc: >-
+        p = `p`+observation.marker[0].number;
+        ShdrEvent p+`_tool_num` data.tool;
+        ShdrEventIf p+`_tool_grp` (data.group > 0) data.group `UNAVAILABLE`;
       l99.driver.fanuc.veneers.ProductionData, fanuc: >-
         p = `p`+observation.marker[0].number;
         ShdrSample p+`_tmr_cycle` (data.timers.cycle_time_ms/1000);
@@ -136,28 +142,32 @@ system:
         ShdrEvent p+`_prg_cmt` data.program.comment;
         ShdrEvent p+`_prg_size` data.program.size_b;
         ShdrEvent p+`_prg_mod` data.program.modified;
-      #l99.driver.fanuc.veneers.AlarmsSeries, fanuc: >-
-      #  p = `p`+observation.marker[0].number;
-      #  if (array.size data.alarms) == 0
-      #    ShdrEvent p+`_alarm` ``;
-      #  else
-      #    m = array.map data.alarms `message`;
-      #    ShdrEvent p+`_alarms` (array.join m `;`);
-      #  end;
-      #l99.driver.fanuc.veneers.OpMsgs, fanuc: >-
-      #  p = `p`+observation.marker[0].number;
-      #  if (array.size data.messages) == 0
-      #    ShdrEvent p+`_message` ``;
-      #  else
-      #    m = array.map data.messages `message`;
-      #    ShdrEvent p+`_message` (array.join m `;`);
-      #  end;
-      #l99.driver.fanuc.veneers.AlarmsSeries, fanuc: >-
-      #  p = `p`+observation.marker[0].number;
-      #  ShdrEvent p+`_alarm` `NOALARM`;
-      #l99.driver.fanuc.veneers.OpMsgs, fanuc: >-
-      #  p = `p`+observation.marker[0].number;
-      #  ShdrEvent p+`_message` `NOMESSAGE`;
+      l99.driver.fanuc.veneers.GCodeBlocks, fanuc: >-
+        p = `p`+observation.marker[0].number;
+        if (array.size data.blocks) == 0
+          ShdrEvent p+`_block` `UNAVAILABLE`;
+          ShdrEvent p+`_line` `UNAVAILABLE`;
+        else
+          m = array.map data.blocks `block_text`;
+          ShdrEvent p+`_block` data.blocks[0].block_number;
+          ShdrEvent p+`_line` (array.join m `;`);
+        end;
+      l99.driver.fanuc.veneers.AlarmsSeries, fanuc: >-
+        p = `p`+observation.marker[0].number;
+        if (array.size data.alarms) == 0
+          ShdrEvent p+`_alarm` `UNAVAILABLE`;
+        else
+          m = array.map data.alarms `message`;
+          ShdrEvent p+`_alarm` (array.join m `;`);
+        end;
+      l99.driver.fanuc.veneers.OpMsgs, fanuc: >-
+        p = `p`+observation.marker[0].number;
+        if (array.size data.messages) == 0
+          ShdrEvent p+`_message` `UNAVAILABLE`;
+        else
+          m = array.map data.messages `message`;
+          ShdrEvent p+`_message` (array.join m `;`);
+        end;
       l99.driver.fanuc.veneers.AxisData, fanuc: >-
         p = `p`+observation.marker[0].number+`_`+observation.marker[1].name;
         ShdrSample p+`_pos_absolute` data.position.absolute;
@@ -177,7 +187,7 @@ system:
         is_index = array.contains [`A`,`B`,`C`] axis_letter;
         if is_index; ShdrEvent p+`_rotary` `INDEX`; end;
       l99.driver.fanuc.veneers.SpindleData, fanuc: >-
-        p = `p`+observation.marker[0].number+`_`+observation.marker[1].name+observation.marker[1].number;
+        p = `p`+observation.marker[0].number+`_`+observation.marker[1].name;
         ShdrSample p+`_load` data.load;
         ShdrSample p+`_temp` data.temperature;
         ShdrSample p+`_power` data.power;
@@ -227,6 +237,7 @@ user:
       - l99.driver.fanuc.collectors.Alarms, fanuc
       - l99.driver.fanuc.collectors.Messages, fanuc
       - l99.driver.fanuc.collectors.StateData, fanuc
+      - l99.driver.fanuc.collectors.ToolData, fanuc
       - l99.driver.fanuc.collectors.ProductionData, fanuc
       #- l99.driver.fanuc.collectors.GCodeData, fanuc
       - l99.driver.fanuc.collectors.AxisData, fanuc
