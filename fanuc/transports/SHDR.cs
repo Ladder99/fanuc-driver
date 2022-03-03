@@ -110,7 +110,7 @@ namespace l99.driver.fanuc.transports
                         }
                         catch (Exception ex)
                         {
-                            logger.Warn(ex, $@"[{{machine.Id}} SHDR evaluation failed for '{transformName}'");
+                            logger.Warn(ex, $"[{machine.Id} SHDR evaluation failed for '{transformName}'");
                         }
                     }
                     
@@ -128,7 +128,7 @@ namespace l99.driver.fanuc.transports
                         }
                         catch (Exception ex)
                         {
-                            logger.Warn(ex, $@"[{{machine.Id}} SHDR evaluation failed for 'SWEEP_END'");
+                            logger.Warn(ex, $"[{machine.Id} SHDR evaluation failed for 'SWEEP_END'");
                         }
                     }
                     

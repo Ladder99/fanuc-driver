@@ -2,7 +2,7 @@
   <Header creationTime="2022-02-22T00:00:00Z" sender="SENDER_ID" instanceId="" version="1.8.0.0" deviceModelChangeTime="2022-02-22T00:00:00Z" assetBufferSize="8096" assetCount="140" bufferSize="4096">
   </Header>
   <Devices>
-    <Device id="d1" name="d1_NAME" uuid="UUID">
+    <Device id="d1" name="d1" uuid="UUID">
       <Description manufacturer="MFG" serialNumber="SN">Description</Description>
       <DataItems>
         <DataItem category="EVENT" discrete="true" id="asset_changed" type="ASSET_CHANGED"/>
@@ -11,23 +11,9 @@
         <DataItem category="EVENT" id="adapter_ip" type="NETWORK" subType="IPV4_ADDRESS"/>
         <DataItem category="EVENT" id="adapter_port" type="NETWORK" subType="x:PORT"/>
         <DataItem category="CONDITION" id="adapter_health" type="CONNECTION_STATUS"/>
-        <!--
-        <DataItem category="EVENT" id="functionalmode" type="FUNCTIONAL_MODE"/>
-        <DataItem category="EVENT" id="emloaded" subType="LOADED" type="EQUIPMENT_MODE"/>
-        <DataItem category="EVENT" id="emworking" subType="WORKING" type="EQUIPMENT_MODE"/>
-        <DataItem category="EVENT" id="emoperating" subType="OPERATING" type="EQUIPMENT_MODE"/>
-        <DataItem category="EVENT" id="empowered" subType="POWERED" type="EQUIPMENT_MODE"/>
-        <DataItem category="EVENT" id="emdelay" subType="DELAY" type="EQUIPMENT_MODE"/>
-      -->
       </DataItems>
       <Components>
         <Axes id="axes">
-          <DataItems>
-            <!--
-            <DataItem category="CONDITION" id="servo_cond" type="ACTUATOR"/>
-            <DataItem category="CONDITION" id="spindle_cond" type="SYSTEM"/>
-          -->
-          </DataItems>
           <Components>
             <Linear id="p1_X">
               <DataItems>
@@ -129,11 +115,6 @@
         </Axes>
         <Controller id="controller">
           <DataItems>
-            <!--
-            <DataItem category="CONDITION" id="comms_cond" type="COMMUNICATIONS"/>
-            <DataItem category="CONDITION" id="logic_cond" type="LOGIC_PROGRAM"/>
-            <DataItem category="CONDITION" id="system_cond" type="SYSTEM"/>
-          -->
             <DataItem category="EVENT" id="estop" type="EMERGENCY_STOP"/>
             <DataItem category="EVENT" id="machine_ip" type="NETWORK" subType="IPV4_ADDRESS"/>
             <DataItem category="EVENT" id="machine_port" type="NETWORK" subType="x:PORT"/>
@@ -141,6 +122,12 @@
           <Components>
             <Path id="p1">
               <DataItems>
+                <DataItem category="CONDITION" id="p1_alm_comms" type="COMMUNICATIONS"/>
+                <DataItem category="CONDITION" id="p1_alm_logic" type="LOGIC_PROGRAM"/>
+                <DataItem category="CONDITION" id="p1_alm_motion" type="MOTION_PROGRAM"/>
+                <DataItem category="CONDITION" id="p1_alm_system" type="SYSTEM"/>
+                <DataItem category="CONDITION" id="p1_alm_spindles" type="SYSTEM"/>
+                <DataItem category="CONDITION" id="p1_alm_axes" type="SYSTEM"/>
                 <DataItem category="EVENT" id="p1_alarm" type="x:MESSAGE"/>
                 <DataItem category="EVENT" id="p1_message" type="x:MESSAGE"/>
                 <!-- SYSTEM -->
@@ -149,7 +136,6 @@
                 <!-- STAT -->
                 <DataItem category="EVENT" id="p1_ctl_mode" type="CONTROLLER_MODE"/>
                 <DataItem category="EVENT" id="p1_ctl_exec" type="EXECUTION"/>
-                <DataItem category="CONDITION" id="p1_alm" type="SYSTEM"/>
                 <DataItem category="EVENT" id="p1_tmr_powered" type="EQUIPMENT_TIMER" subType="POWERED"/>
                 <DataItem category="EVENT" id="p1_tmr_operating" type="EQUIPMENT_TIMER" subType="OPERATING"/>
                 <DataItem category="EVENT" id="p1_tmr_loaded" type="EQUIPMENT_TIMER" subType="LOADED"/>
@@ -170,40 +156,6 @@
                 <!-- G -->
                 <DataItem category="EVENT" id="p1_block" type="BLOCK"/>
                 <DataItem category="EVENT" id="p1_line" type="x:MESSAGE"/>
-                <!--
-                <DataItem category="EVENT" id="peditmode" type="PROGRAM_EDIT"/>
-                <DataItem category="EVENT" id="peditname" type="PROGRAM_EDIT_NAME"/>
-                <DataItem category="EVENT" id="hd1chuckstate" type="CHUCK_STATE"/>
-                
-                <DataItem category="EVENT" id="program" subType="MAIN" type="PROGRAM"/>
-                <DataItem category="EVENT" id="activeprog" subType="ACTIVE" type="PROGRAM"/>
-                
-                <DataItem category="SAMPLE" id="Fact" nativeUnits="MILLIMETER/SECOND" subType="ACTUAL" type="PATH_FEEDRATE" units="MILLIMETER/SECOND"/>
-                
-                <DataItem category="EVENT" id="Tool_group" type="TOOL_GROUP"/>
-
-                <DataItem category="EVENT" id="waitstate" type="WAIT_STATE"/>
-                
-                
-                <DataItem category="EVENT" id="activeprogram_cmt" subType="ACTIVE" type="PROGRAM_COMMENT"/>
-                <DataItem category="CONDITION" id="motion_cond" type="MOTION_PROGRAM"/>
-                <DataItem category="CONDITION" id="path_system" type="SYSTEM"/>
-                <DataItem category="EVENT" id="cmomachineaxislock" subType="MACHINE_AXIS_LOCK" type="CONTROLLER_MODE_OVERRIDE"/>
-                <DataItem category="EVENT" id="cmosingleblock" subType="SINGLE_BLOCK" type="CONTROLLER_MODE_OVERRIDE"/>
-                <DataItem category="EVENT" id="cmodryrun" subType="DRY_RUN" type="CONTROLLER_MODE_OVERRIDE"/>
-                <DataItem category="EVENT" id="linelabel" type="LINE_LABEL"/>
-                <DataItem category="EVENT" id="linenumber" subType="INCREMENTAL" type="LINE_NUMBER"/>
-                <DataItem category="EVENT" id="cvars" representation="DATA_SET" type="VARIABLE"/>
-                <DataItem category="SAMPLE" id="cspeed" nativeUnits="MILLIMETER/SECOND" subType="ACTUAL" type="CUTTING_SPEED" units="MILLIMETER/SECOND"/>
-                <DataItem category="EVENT" id="workoffsettrans" nativeUnits="MILLIMETER_3D" type="TRANSLATION" units="MILLIMETER_3D"/>
-                <DataItem category="EVENT" id="workoffsetrot" nativeUnits="DEGREE_3D" type="ROTATION" units="DEGREE_3D"/>
-                <DataItem category="EVENT" id="woffset" type="WORK_OFFSET"/>
-                
-                <DataItem category="SAMPLE" id="pathpos" nativeUnits="MILLIMETER_3D" type="PATH_POSITION" units="MILLIMETER_3D"/>
-                <DataItem category="SAMPLE" id="orientation" nativeUnits="DEGREE_3D" type="ORIENTATION" units="DEGREE_3D"/>
-                <DataItem category="EVENT" id="partnumber" subType="PART_NUMBER" type="PART_UNIQUE_ID"/>
-                <DataItem category="EVENT" id="partserialnumber" subType="SERIAL_NUMBER" type="PART_UNIQUE_ID"/>
-              -->
               </DataItems>
             </Path>
           </Components>
