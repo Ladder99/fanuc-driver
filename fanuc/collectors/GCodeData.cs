@@ -17,9 +17,14 @@ namespace l99.driver.fanuc.collectors
         
         public override async Task CollectForEachPathAsync(short current_path, string[] axis, string[] spindle, dynamic path_marker)
         {
+            //TODO: make configurable
+            /*
+            await strategy.SetNativeKeyed($"blkcount", 
+                    await strategy.Platform.RdBlkCountAsync())
+            */
+            
             await strategy.Peel("gcode",
-                await strategy.SetNativeKeyed($"blkcount", 
-                    await strategy.Platform.RdBlkCountAsync()),
+                null,
                 await strategy.SetNativeKeyed($"actpt", 
                     await strategy.Platform.RdActPtAsync()),
                 await strategy.SetNativeKeyed($"execprog", 

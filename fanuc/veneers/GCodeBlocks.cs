@@ -23,12 +23,20 @@ namespace l99.driver.fanuc.veneers
         
         protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
         {
-            if (input.success && additionalInputs[0].success && additionalInputs[1].success)
+            if (additionalInputs[0].success && additionalInputs[1].success)
             {
-                _blocks.Add(input.response.cnc_rdblkcount.prog_bc, 
-                    additionalInputs[0].response.cnc_rdactpt.blk_no, 
-                    additionalInputs[1].response.cnc_rdexecprog.data);
-                
+                if (input!= null && input.success)
+                {
+                    _blocks.Add2(input.response.cnc_rdblkcount.prog_bc,
+                        additionalInputs[0].response.cnc_rdactpt.blk_no,
+                        additionalInputs[1].response.cnc_rdexecprog.data);
+                }
+                else
+                {
+                    _blocks.Add1(additionalInputs[0].response.cnc_rdactpt.blk_no,
+                        additionalInputs[1].response.cnc_rdexecprog.data);
+                }
+
                 var current_value = new
                 {
                     blocks = _blocks.ExecutedBlocks
@@ -61,7 +69,7 @@ namespace l99.driver.fanuc.veneers
             }
             else
             {
-                await onErrorAsync(input);
+                await onErrorAsync(input!=null ? input : additionalInputs[0]);
             }
 
             return new { veneer = this };

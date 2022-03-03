@@ -147,6 +147,86 @@ namespace l99.driver.fanuc.transports
         public override async Task OnGenerateIntermediateModelAsync(dynamic model)
         {
             _model = model;
+
+            if (!_config.transport["generator"]["enabled"])
+                return;
+            
+            try
+            {
+                var generator = _config.transport["generator"];
+
+                Template tp = null;
+                var so = new ScriptObject();
+                var tc = new TemplateContext();
+
+                var paths = model.structure.Keys;
+
+                var axes = new Dictionary<string, List<string>>();
+                var spindles = new Dictionary<string, List<string>>();
+
+                foreach (var path in model.structure.Keys)
+                {
+                    axes.Add(path, model.structure[path].Item1);
+                    spindles.Add(path, model.structure[path].Item2);
+                }
+
+                so.Import("GenerateAxis",
+                    new Func<string, string, string, object>((section, path, axis) =>
+                    {
+                        so.SetValue("path", path, true);
+                        so.SetValue("axis", axis, true);
+                        so.SetValue("spindle", null, true);
+                        tp = Template.Parse(section);
+                        var x = tp.Render(tc);
+                        so.SetValue("path", null, true);
+                        so.SetValue("axis", null, true);
+                        return x;
+                    }));
+
+                so.Import("GenerateSpindle",
+                    new Func<string, string, string, object>((section, path, spindle) =>
+                    {
+                        so.SetValue("path", path, true);
+                        so.SetValue("axis", null, true);
+                        so.SetValue("spindle", spindle, true);
+                        tp = Template.Parse(section);
+                        var x = tp.Render(tc);
+                        so.SetValue("path", null, true);
+                        so.SetValue("spindle", null, true);
+                        return x;
+                    }));
+
+                so.Import("GeneratePath",
+                    new Func<string, string, object>((section, path) =>
+                    {
+                        so.SetValue("path", path, true);
+                        so.SetValue("axis", null, true);
+                        so.SetValue("spindle", null, true);
+                        tp = Template.Parse(section);
+                        var x = tp.Render(tc);
+                        so.SetValue("path", null, true);
+                        return x;
+                    }));
+
+                tc.PushGlobal(so);
+
+                so.SetValue("generator", generator, true);
+                so.SetValue("device", _config.transport["device_name"], true);
+                so.SetValue("paths", paths, true);
+                so.SetValue("axes", axes, true);
+                so.SetValue("spindles", spindles, true);
+                tp = Template.Parse(generator["root"]);
+                var xml = tp.Render(tc);
+
+                tp = Template.Parse(generator["output"]);
+                var file_out = tp.Render(tc);
+
+                System.IO.File.WriteAllText(file_out, xml);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, $"[{machine.Id} MTC device model generation failed!" );
+            }
         }
         
         private async Task initAdapterAsync()
@@ -158,15 +238,40 @@ namespace l99.driver.fanuc.transports
                 _config.transport["device_name"],
                 _config.transport["net"]["port"],
                 _config.transport["net"]["heartbeat_ms"]);
+
+            _adapter.AgentConnectionError = (sender, s) =>
+            {
+                logger.Info($"[{machine.Id} MTC Agent connection error. {s}");
+            };
+            
+            _adapter.AgentDisconnected = (sender, s) =>
+            {
+                logger.Info($"[{machine.Id} MTC Agent disconnected error. {s}");
+            };
+            
+            _adapter.AgentConnected = (sender, s) =>
+            {
+                logger.Info($"[{machine.Id} MTC Agent connected. {s}");
+            };
             
             _adapter.SendError = (sender, args) =>
             {
-                Console.WriteLine(args.Message);
+                logger.Info($"[{machine.Id} MTC Agent send error. {args.Message}");
             };
 
             _adapter.LineSent = (sender, args) =>
             {
-                Console.WriteLine(args.Message);
+                logger.Info($"[{machine.Id} MTC Agent line send. {args.Message}");
+            };
+
+            _adapter.PingReceived = (sender, s) =>
+            {
+                logger.Info($"[{machine.Id} MTC Agent ping received. {s}");
+            };
+
+            _adapter.PongSent = (sender, s) =>
+            {
+                logger.Info($"[{machine.Id} MTC Agent pong sent. {s}");
             };
 
             await ConnectAsync();
@@ -281,6 +386,7 @@ namespace l99.driver.fanuc.transports
             */
             
             _globalScriptObject.SetValue("machine", this.machine, true);
+            _globalScriptObject.SetValue("device", _config.transport["device_name"], true);
             _globalScriptObject.SetValue("adapter", 
                 new AdapterInfo()
                 {

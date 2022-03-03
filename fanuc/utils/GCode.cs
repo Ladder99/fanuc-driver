@@ -75,6 +75,8 @@ namespace l99.driver.fanuc.gcode
             return sb.ToString();
         }
 
+        private bool DEBUG = false;
+        
         private Dictionary<int,Block> _blocks = new Dictionary<int,Block>();
 
         public int InitializedBlockPointer = -1;
@@ -82,7 +84,16 @@ namespace l99.driver.fanuc.gcode
         public int CurrentBlockPointer=-1;
         public bool IsPointerValid = false;
 
-        public bool Add(int blockCounter, int blockPointer, char[] nativeBlockText, bool dropLast = true)
+        public bool Add1(int blockPointer, char[] nativeBlockText, bool dropLast = true)
+        {
+            IsPointerValid = true;
+
+            int baseBlockPointer = blockPointer;
+
+            return add(baseBlockPointer, nativeBlockText, dropLast);
+        }
+        
+        public bool Add2(int blockCounter, int blockPointer, char[] nativeBlockText, bool dropLast = true)
         {
             if (blockCounter - blockPointer > 1)
             {
@@ -94,6 +105,11 @@ namespace l99.driver.fanuc.gcode
             
             int baseBlockPointer = blockCounter - 1;
             
+            return add(baseBlockPointer, nativeBlockText, dropLast);
+        }
+
+        private bool add(int baseBlockPointer, char[] nativeBlockText, bool dropLast = true)
+        {
             string[] blockTextArray = string.Join("", nativeBlockText).Trim().Split('\n');
             
             for (int blockPointerOffset = 0; 
@@ -112,24 +128,28 @@ namespace l99.driver.fanuc.gcode
                         BlockText = blockText
                     };
 
-                    //var cursor = blockNumber == baseBlockPointer ? "(.add) now" : "(.add) ahd";
-                    //Console.WriteLine($"{cursor} {block.ToString()}");
-                    
+                    if (DEBUG)
+                    {
+                        var cursor = blockNumber == baseBlockPointer ? "(.add) now" : "(.add) ahd";
+                        Console.WriteLine($"{cursor} {block.ToString()}");
+                    }
+
                     _blocks.Add(blockNumber, block);
                 }
             }
 
             PreviousBlockPointer = CurrentBlockPointer;
             CurrentBlockPointer = baseBlockPointer;
-            
-            /*
-            if (PreviousBlockPointer != CurrentBlockPointer)
+
+            if (DEBUG)
             {
-                //Console.WriteLine($"(.add) mv  [{PreviousBlockPointer}] -> [{CurrentBlockPointer}]");
-                Console.WriteLine($"(.add) >>> {_blocks[CurrentBlockPointer].ToString()}");
+                if (PreviousBlockPointer != CurrentBlockPointer)
+                {
+                    Console.WriteLine($"(.add) mv  [{PreviousBlockPointer}] -> [{CurrentBlockPointer}]");
+                    Console.WriteLine($"(.add) >>> {_blocks[CurrentBlockPointer].ToString()}");
+                }
             }
-            */
-            
+
             return true;
         }
         
