@@ -1,15 +1,7 @@
-﻿ARG DOT_NET_RUN_TAG=3.1
-ARG DOT_NET_SDK_TAG=3.1
-ARG ARCH_CONST=LINUX64
-RUN echo ${DOT_NET_RUN_TAG}
-FROM mcr.microsoft.com/dotnet/core/runtime:${DOT_NET_RUN_TAG} AS base
+﻿FROM mcr.microsoft.com/dotnet/core/runtime:3.1-buster-slim-arm32v7 AS base
 WORKDIR /app
 
-ARG DOT_NET_SDK_TAG
-RUN echo ${DOT_NET_SDK_TAG}
-FROM mcr.microsoft.com/dotnet/core/sdk:${DOT_NET_SDK_TAG} AS build
-ARG ARCH_CONST
-RUN echo ${ARCH_CONST}
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster-arm32v7 AS build
 WORKDIR /src
 COPY ["fanuc/fanuc.csproj", "fanuc/"]
 RUN dotnet restore "fanuc/fanuc.csproj"
@@ -22,7 +14,7 @@ RUN dotnet build "fanuc.csproj" \
 	/nowarn:CS8632 \
 	/nowarn:CS1998 \
 	/nowarn:CS8032 \
-	-p:DefineConstants=${ARCH_CONST}
+	-p:DefineConstants=ARMV7
 FROM build AS publish
 RUN dotnet publish "fanuc.csproj" \
 	-c Release \
@@ -31,7 +23,7 @@ RUN dotnet publish "fanuc.csproj" \
 	/nowarn:CS8632 \
 	/nowarn:CS1998 \
 	/nowarn:CS8032 \
-	-p:DefineConstants=${ARCH_CONST}
+	-p:DefineConstants=ARMV7
 
 FROM base AS final
 WORKDIR /app
