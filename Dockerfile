@@ -1,10 +1,12 @@
 ﻿ARG DOT_NET_RUN_TAG=3.1
+ARG DOT_NET_SDK_TAG=3.1
+ARG ARCH_CONST=LINUX64
 FROM mcr.microsoft.com/dotnet/core/runtime:$DOT_NET_RUN_TAG AS base
 WORKDIR /app
 
-ARG DOT_NET_SDK_TAG=3.1
+ARG DOT_NET_SDK_TAG
 FROM mcr.microsoft.com/dotnet/core/sdk:$DOT_NET_SDK_TAG AS build
-ARG ARCH_CONST=LINUX64
+ARG ARCH_CONST
 WORKDIR /src
 COPY ["fanuc/fanuc.csproj", "fanuc/"]
 RUN dotnet restore "fanuc/fanuc.csproj"
