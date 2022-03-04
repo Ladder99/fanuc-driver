@@ -99,6 +99,8 @@ services:
     restart: always
     networks:
       - ladder99
+    ports:
+      - "7878:7878/tcp"
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
