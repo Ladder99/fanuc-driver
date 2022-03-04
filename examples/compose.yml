@@ -1,0 +1,115 @@
+version: '3.5'
+
+services:
+  portainer:
+    profiles:
+      - all
+      - admin
+      - mqtt
+      - influx
+      - mtc
+    container_name: portainer
+    image: portainer/portainer-ce
+    restart: always
+    networks:
+      - ladder99
+    ports:
+      - "9000:9000/tcp"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    logging:
+      driver: 'none'
+
+  dozzle:
+    profiles:
+      - all
+      - admin
+      - mqtt
+      - influx
+      - mtc
+    container_name: dozzle
+    image: amir20/dozzle:latest
+    restart: always
+    networks:
+      - ladder99
+    ports:
+      - "8080:8080/tcp"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    logging:
+      driver: 'none'
+
+  agent:
+    profiles:
+      - all
+      - mtc
+    container_name: agent
+    image: ladder99/agent:latest
+    restart: always
+    networks:
+      - ladder99
+    ports:
+      - "5000:5000"
+    working_dir: /data/agent
+    command: agent run debug agent.cfg
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ../../volumes/agent:/data/agent
+    logging:
+      options:
+        max-size: '20m'
+
+  mosquitto:
+    profiles:
+      - all
+      - mqtt
+    container_name: mosquitto
+    image: eclipse-mosquitto
+    restart: always
+    networks:
+      - ladder99
+    ports:
+      - "1883:1883/tcp"
+      - "9001:9001/tcp"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ../../volumes/mosquitto/config:/mosquitto/config:rw
+      - ../../volumes/mosquitto/data:/mosquitto/data:rw
+      - ../../volumes/mosquitto/log:/mosquitto/log:rw
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+
+  fanuc_driver:
+    profiles:
+      - all
+      - mqtt
+      - influx
+      - mtc
+    container_name: fanuc_driver
+    image: ladder99/fanuc-driver:${FOCAS_TGT}
+    restart: always
+    networks:
+      - ladder99
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ../../volumes/fanuc-driver:/etc/fanuc:rw
+    logging:
+      options:
+        max-size: "20m"
+
+volumes:
+  portainer_data:
+
+networks:
+  ladder99:
+    name: ladder99
