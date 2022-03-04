@@ -1,9 +1,9 @@
 ﻿ARG DOT_NET_TAG=3.1
-FROM mcr.microsoft.com/dotnet/core/runtime:$DOT_NET_TAG AS base
+FROM mcr.microsoft.com/dotnet/core/runtime:$DOT_NET_RUN_TAG AS base
 WORKDIR /app
 
-ARG DOT_NET_TAG
-FROM mcr.microsoft.com/dotnet/core/sdk:$DOT_NET_TAG AS build
+ARG DOT_NET_SDK_TAG=3.1
+FROM mcr.microsoft.com/dotnet/core/sdk:$DOT_NET_SDK_TAG AS build
 ARG ARCH_CONST=LINUX64
 WORKDIR /src
 COPY ["fanuc/fanuc.csproj", "fanuc/"]
