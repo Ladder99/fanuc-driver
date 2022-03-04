@@ -1,4 +1,4 @@
-﻿ARG DOT_NET_TAG=3.1
+﻿ARG DOT_NET_RUN_TAG=3.1
 FROM mcr.microsoft.com/dotnet/core/runtime:$DOT_NET_RUN_TAG AS base
 WORKDIR /app
 
