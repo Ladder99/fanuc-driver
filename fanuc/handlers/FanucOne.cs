@@ -15,9 +15,12 @@ namespace l99.driver.fanuc.handlers
         
         public override async Task<dynamic?> OnDataArrivalAsync(Veneers veneers, Veneer veneer, dynamic? beforeArrival)
         {
-            // only allow focas performance
-            if (veneer.GetType().Name != "FocasPerf")
-                return null;
+            if (_cfg.handler["change_only"] == true)
+            {
+                // only allow focas performance
+                if (veneer.GetType().Name != "FocasPerf")
+                    return null;
+            }
             
             dynamic payload = new
             {
