@@ -1,8 +1,5 @@
 #!/bin/bash
 
-mkdir ~/fanuc
-cd ~/fanuc
-
 # stop and remove containers
 docker container stop fanuc_driver
 docker container stop agent
@@ -14,6 +11,9 @@ docker container prune
 docker rmi $(docker images --format '{{.Repository}}:{{.Tag}}' | grep 'ladder99/fanuc-driver')
 docker rmi $(docker images --format '{{.Repository}}:{{.Tag}}' | grep 'ladder99/agent')
 docker image prune
+
+mkdir ~/fanuc
+cd ~/fanuc
 
 # remove directories
 sudo rm -rf volumes
