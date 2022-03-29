@@ -25,6 +25,7 @@ namespace l99.driver.fanuc.transports
         
         private ShdrAdapter _adapter;
         private Dictionary<string, ShdrDataItem> _cacheShdrDataItems;
+        private Dictionary<string, ShdrMessage> _cacheShdrMessages;
         private Dictionary<string, ShdrCondition> _cacheShdrConditions;
         
         private ScriptObject _globalScriptObject;
@@ -51,6 +52,19 @@ namespace l99.driver.fanuc.transports
             else
             {
                 _cacheShdrDataItems.Add(dataItem.DataItemKey, dataItem);
+            }
+        }
+        
+        private void cacheShdrMessage(ShdrMessage dataItem)
+        {
+            //Console.WriteLine($"{dataItem.Key}:{dataItem.Value}");
+            if (_cacheShdrMessages.ContainsKey(dataItem.DataItemKey))
+            {
+                _cacheShdrMessages[dataItem.DataItemKey] = dataItem;
+            }
+            else
+            {
+                _cacheShdrMessages.Add(dataItem.DataItemKey, dataItem);
             }
         }
         
@@ -134,6 +148,8 @@ namespace l99.driver.fanuc.transports
                     
                     _cacheShdrDataItems
                         .ForEach(di => _adapter.AddDataItem(di.Value));
+                    _cacheShdrMessages
+                        .ForEach(di => _adapter.AddMessage(di.Value));
                     _cacheShdrConditions
                         .ForEach(di => _adapter.AddCondition(di.Value));
                     
@@ -232,6 +248,7 @@ namespace l99.driver.fanuc.transports
         private async Task initAdapterAsync()
         {
             _cacheShdrDataItems = new Dictionary<string, ShdrDataItem>();
+            _cacheShdrMessages = new Dictionary<string, ShdrMessage>();
             _cacheShdrConditions = new Dictionary<string, ShdrCondition>();
             
             _adapter = new ShdrAdapter(
@@ -314,7 +331,7 @@ namespace l99.driver.fanuc.transports
             _globalScriptObject.Import("ShdrMessage", 
                 new Action<string,object> ((k,v) =>
                 {
-                    cacheShdrDataItem(new ShdrMessage(k,v));
+                    cacheShdrMessage(new ShdrMessage(k,v));
                 }));
             
             _globalScriptObject.Import("ShdrEvent", 
