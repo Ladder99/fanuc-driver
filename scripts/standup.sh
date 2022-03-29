@@ -1,7 +1,9 @@
 #!/bin/bash
 
-cd ~
+mkdir ~/fanuc
+cd ~/fanuc
 
+sudo rm -rf volumes
 sudo rm -rf fanuc-driver
 
 git clone --recurse-submodules -j8 https://github.com/Ladder99/fanuc-driver.git
@@ -11,7 +13,7 @@ git checkout develop
 cd base-driver
 git checkout develop
 
-cd ..
+cd ~/fanuc/fanuc-driver
 
 profile=mtc
 os=LINUX64
@@ -23,7 +25,7 @@ docker build \
 	-f Dockerfile.$os \
   --tag=$image:$tag .
 
-cd ../examples
+cd ~/fanuc/fanuc-driver/examples
 
 mkdir -p ../../volumes/fanuc-driver
 cp fanuc-driver/nlog-example-linux.config ../../volumes/fanuc-driver/nlog.config
