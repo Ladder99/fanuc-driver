@@ -261,7 +261,7 @@ namespace l99.driver.fanuc.transports
 
             _adapter.LineSent = (sender, args) =>
             {
-                //logger.Info($"[{machine.Id} MTC Agent line send. {args.Message}");
+                logger.Info($"[{machine.Id} MTC Agent line send. {args.Message}");
             };
 
             _adapter.PingReceived = (sender, s) =>
