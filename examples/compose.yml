@@ -96,7 +96,7 @@ services:
     ports:
       - "7878:7878/tcp"
       - "7879:7879/tcp"
-      - "7879:7879/tcp"
+      - "7880:7880/tcp"
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
