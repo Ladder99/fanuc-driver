@@ -175,8 +175,8 @@ system:
               <DataItem category="CONDITION" id="{{device}}_p{{path}}_alm_system" type="SYSTEM"/>
               <DataItem category="CONDITION" id="{{device}}_p{{path}}_alm_spindles" type="SYSTEM"/>
               <DataItem category="CONDITION" id="{{device}}_p{{path}}_alm_axes" type="SYSTEM"/>
-              <DataItem category="EVENT" id="{{device}}_p{{path}}_alarm" type="x:MESSAGE"/>
-              <DataItem category="EVENT" id="{{device}}_p{{path}}_message" type="x:MESSAGE"/>
+              <DataItem category="EVENT" id="{{device}}_p{{path}}_alarm" type="MESSAGE"/>
+              <DataItem category="EVENT" id="{{device}}_p{{path}}_message" type="MESSAGE"/>
               <!-- SYSTEM -->
               <DataItem category="EVENT" id="{{device}}_p{{path}}_hwver" type="HARDWARE" subType="VERSION"/>
               <DataItem category="EVENT" id="{{device}}_p{{path}}_axes" type="ACTIVE_AXES"/>
@@ -202,7 +202,7 @@ system:
               <DataItem category="EVENT" id="{{device}}_p{{path}}_prg_mod" type="x:PROGRAM_MODIFIED"/>
               <!-- G -->
               <DataItem category="EVENT" id="{{device}}_p{{path}}_block" type="BLOCK"/>
-              <DataItem category="EVENT" id="{{device}}_p{{path}}_line" type="x:MESSAGE"/>
+              <DataItem category="EVENT" id="{{device}}_p{{path}}_line" type="MESSAGE"/>
             </DataItems>
           </Path>
       axis:
@@ -313,16 +313,16 @@ system:
         p = device+`_p`+observation.marker[0].number;
         if (array.size data.blocks) == 0
           ShdrEvent p+`_block` `UNAVAILABLE`;
-          ShdrEvent p+`_line` `UNAVAILABLE`;
+          ShdrMessage p+`_line` `UNAVAILABLE`;
         else
           m = array.map data.blocks `block_text`;
           ShdrEvent p+`_block` data.blocks[0].block_number;
-          ShdrEvent p+`_line` (array.join m `;`);
+          ShdrMessage p+`_line` (array.join m `;`);
         end;
       l99.driver.fanuc.veneers.AlarmsSeries, fanuc: >-
         p = device+`_p`+observation.marker[0].number;
         if (array.size data.alarms) == 0
-          ShdrEvent p+`_alarm` `UNAVAILABLE`;
+          ShdrMessage p+`_alarm` `UNAVAILABLE`;
           ShdrConditionNormal p+`_alm_comms`;
           ShdrConditionNormal p+`_alm_logic`;
           ShdrConditionNormal p+`_alm_motion`;
@@ -331,7 +331,7 @@ system:
           ShdrConditionNormal p+`_alm_spindles`;
         else
           m = array.map data.alarms `message`;
-          ShdrEvent p+`_alarm` (array.join m `;`);
+          ShdrMessage p+`_alarm` (array.join m `;`);
           t = array.uniq (array.map data.alarms `type`);
           f_comms = ((array.contains t `IO`)||(array.contains t `SR`));
           f_logic = ((array.contains t `SW`)||(array.contains t `PC`));
@@ -356,10 +356,10 @@ system:
       l99.driver.fanuc.veneers.OpMsgs, fanuc: >-
         p = device+`_p`+observation.marker[0].number;
         if (array.size data.messages) == 0
-          ShdrEvent p+`_message` `UNAVAILABLE`;
+          ShdrMessage p+`_message` `UNAVAILABLE`;
         else
           m = array.map data.messages `message`;
-          ShdrEvent p+`_message` (array.join m `;`);
+          ShdrMessage p+`_message` (array.join m `;`);
         end;
       l99.driver.fanuc.veneers.AxisData, fanuc: >-
         p = device+`_p`+observation.marker[0].number+`_`+observation.marker[1].name;
@@ -452,7 +452,7 @@ user:
       enabled: !!bool true
       net:
         type: tcp
-        ip: 10.1.10.210
+        ip: 10.1.10.2
         port: !!int 1883
       anonymous: !!bool true
       user:
@@ -544,21 +544,21 @@ machines:
     <<: *change-filter
   - id: f_sim
     <<: *machine-base
-    <<: *machine-disabled
+    #<<: *machine-disabled
     <<: *source-1
     <<: *collector-1
     <<: *target-shdr-1
     <<: *change-filter
   - id: f13_50
     <<: *machine-base
-    <<: *machine-disabled
+    #<<: *machine-disabled
     <<: *source-2
     <<: *collector-1
     <<: *target-shdr-2
     <<: *change-filter
   - id: f13_100
     <<: *machine-base
-    <<: *machine-disabled
+    #<<: *machine-disabled
     <<: *source-3
     <<: *collector-1
     <<: *target-shdr-3

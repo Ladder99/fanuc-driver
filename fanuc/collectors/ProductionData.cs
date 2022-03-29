@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Diagnostics;
+using System.Threading.Tasks;
 using l99.driver.fanuc.strategies;
 
 namespace l99.driver.fanuc.collectors
@@ -17,10 +18,15 @@ namespace l99.driver.fanuc.collectors
         
         public override async Task CollectForEachPathAsync(short current_path, string[] axis, string[] spindle, dynamic path_marker)
         {
+            await strategy.SetNativeKeyed($"program_number",
+                await strategy.Platform.RdPrgNumAsync());
+            var b = strategy.GetKeyed($"program_number");
+            
             await strategy.SetNativeKeyed($"program_name", 
                 await strategy.Platform.ExePrgNameAsync());
             var o_num = strategy.GetKeyed($"program_name")
                 .response.cnc_exeprgname.exeprg.o_num;
+            //System.Console.WriteLine($"{this.strategy.Machine.Id} {current_path} {b.response.cnc_rdprgnum.prgnum.data} {b.response.cnc_rdprgnum.prgnum.mdata}");
             
             await strategy.Peel("production",
                 strategy.GetKeyed($"program_name"),

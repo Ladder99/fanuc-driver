@@ -230,8 +230,8 @@
     <DataItem category="CONDITION" id="f13_50_p1_alm_system" type="SYSTEM"/>
     <DataItem category="CONDITION" id="f13_50_p1_alm_spindles" type="SYSTEM"/>
     <DataItem category="CONDITION" id="f13_50_p1_alm_axes" type="SYSTEM"/>
-    <DataItem category="EVENT" id="f13_50_p1_alarm" type="x:MESSAGE"/>
-    <DataItem category="EVENT" id="f13_50_p1_message" type="x:MESSAGE"/>
+    <DataItem category="EVENT" id="f13_50_p1_alarm" type="MESSAGE"/>
+    <DataItem category="EVENT" id="f13_50_p1_message" type="MESSAGE"/>
     <!-- SYSTEM -->
     <DataItem category="EVENT" id="f13_50_p1_hwver" type="HARDWARE" subType="VERSION"/>
     <DataItem category="EVENT" id="f13_50_p1_axes" type="ACTIVE_AXES"/>
@@ -257,7 +257,7 @@
     <DataItem category="EVENT" id="f13_50_p1_prg_mod" type="x:PROGRAM_MODIFIED"/>
     <!-- G -->
     <DataItem category="EVENT" id="f13_50_p1_block" type="BLOCK"/>
-    <DataItem category="EVENT" id="f13_50_p1_line" type="x:MESSAGE"/>
+    <DataItem category="EVENT" id="f13_50_p1_line" type="MESSAGE"/>
   </DataItems>
 </Path>
 
@@ -269,8 +269,8 @@
     <DataItem category="CONDITION" id="f13_50_p2_alm_system" type="SYSTEM"/>
     <DataItem category="CONDITION" id="f13_50_p2_alm_spindles" type="SYSTEM"/>
     <DataItem category="CONDITION" id="f13_50_p2_alm_axes" type="SYSTEM"/>
-    <DataItem category="EVENT" id="f13_50_p2_alarm" type="x:MESSAGE"/>
-    <DataItem category="EVENT" id="f13_50_p2_message" type="x:MESSAGE"/>
+    <DataItem category="EVENT" id="f13_50_p2_alarm" type="MESSAGE"/>
+    <DataItem category="EVENT" id="f13_50_p2_message" type="MESSAGE"/>
     <!-- SYSTEM -->
     <DataItem category="EVENT" id="f13_50_p2_hwver" type="HARDWARE" subType="VERSION"/>
     <DataItem category="EVENT" id="f13_50_p2_axes" type="ACTIVE_AXES"/>
@@ -296,7 +296,7 @@
     <DataItem category="EVENT" id="f13_50_p2_prg_mod" type="x:PROGRAM_MODIFIED"/>
     <!-- G -->
     <DataItem category="EVENT" id="f13_50_p2_block" type="BLOCK"/>
-    <DataItem category="EVENT" id="f13_50_p2_line" type="x:MESSAGE"/>
+    <DataItem category="EVENT" id="f13_50_p2_line" type="MESSAGE"/>
   </DataItems>
 </Path>
 </Components>
@@ -471,8 +471,8 @@
     <DataItem category="CONDITION" id="f13_100_p1_alm_system" type="SYSTEM"/>
     <DataItem category="CONDITION" id="f13_100_p1_alm_spindles" type="SYSTEM"/>
     <DataItem category="CONDITION" id="f13_100_p1_alm_axes" type="SYSTEM"/>
-    <DataItem category="EVENT" id="f13_100_p1_alarm" type="x:MESSAGE"/>
-    <DataItem category="EVENT" id="f13_100_p1_message" type="x:MESSAGE"/>
+    <DataItem category="EVENT" id="f13_100_p1_alarm" type="MESSAGE"/>
+    <DataItem category="EVENT" id="f13_100_p1_message" type="MESSAGE"/>
     <!-- SYSTEM -->
     <DataItem category="EVENT" id="f13_100_p1_hwver" type="HARDWARE" subType="VERSION"/>
     <DataItem category="EVENT" id="f13_100_p1_axes" type="ACTIVE_AXES"/>
@@ -498,7 +498,7 @@
     <DataItem category="EVENT" id="f13_100_p1_prg_mod" type="x:PROGRAM_MODIFIED"/>
     <!-- G -->
     <DataItem category="EVENT" id="f13_100_p1_block" type="BLOCK"/>
-    <DataItem category="EVENT" id="f13_100_p1_line" type="x:MESSAGE"/>
+    <DataItem category="EVENT" id="f13_100_p1_line" type="MESSAGE"/>
   </DataItems>
 </Path>
 </Components>

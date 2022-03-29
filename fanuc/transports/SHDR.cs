@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using l99.driver.@base;
 using MoreLinq;
 using MTConnect.Adapters.Shdr;
-using MTConnect.Streams;
+using MTConnect.Observations;
 using Scriban;
 using Scriban.Runtime;
 
@@ -43,27 +43,27 @@ namespace l99.driver.fanuc.transports
 
         private void cacheShdrDataItem(ShdrDataItem dataItem)
         {
-            Console.WriteLine($"{dataItem.Key}:{dataItem.Value}");
-            if (_cacheShdrDataItems.ContainsKey(dataItem.Key))
+            //Console.WriteLine($"{dataItem.Key}:{dataItem.Value}");
+            if (_cacheShdrDataItems.ContainsKey(dataItem.DataItemKey))
             {
-                _cacheShdrDataItems[dataItem.Key] = dataItem;
+                _cacheShdrDataItems[dataItem.DataItemKey] = dataItem;
             }
             else
             {
-                _cacheShdrDataItems.Add(dataItem.Key, dataItem);
+                _cacheShdrDataItems.Add(dataItem.DataItemKey, dataItem);
             }
         }
         
         private void cacheShdrCondition(ShdrCondition dataItem)
         {
-            Console.WriteLine($"{dataItem.Key}:{dataItem.Level}");
-            if (_cacheShdrConditions.ContainsKey(dataItem.Key))
+            //Console.WriteLine($"{dataItem.Key}:{dataItem.Level}");
+            if (_cacheShdrConditions.ContainsKey(dataItem.DataItemKey))
             {
-                _cacheShdrConditions[dataItem.Key] = dataItem;
+                _cacheShdrConditions[dataItem.DataItemKey] = dataItem;
             }
             else
             {
-                _cacheShdrConditions.Add(dataItem.Key, dataItem);
+                _cacheShdrConditions.Add(dataItem.DataItemKey, dataItem);
             }
         }
         
@@ -261,17 +261,17 @@ namespace l99.driver.fanuc.transports
 
             _adapter.LineSent = (sender, args) =>
             {
-                logger.Info($"[{machine.Id} MTC Agent line send. {args.Message}");
+                //logger.Info($"[{machine.Id} MTC Agent line send. {args.Message}");
             };
 
             _adapter.PingReceived = (sender, s) =>
             {
-                logger.Info($"[{machine.Id} MTC Agent ping received. {s}");
+                //logger.Info($"[{machine.Id} MTC Agent ping received. {s}");
             };
 
             _adapter.PongSent = (sender, s) =>
             {
-                logger.Info($"[{machine.Id} MTC Agent pong sent. {s}");
+                //logger.Info($"[{machine.Id} MTC Agent pong sent. {s}");
             };
 
             await ConnectAsync();
@@ -309,6 +309,12 @@ namespace l99.driver.fanuc.transports
                 new Action<string> ((k) =>
                 {
                     cacheShdrDataItem(new ShdrDataItem(k,"UNAVAILABLE"));
+                }));
+            
+            _globalScriptObject.Import("ShdrMessage", 
+                new Action<string,object> ((k,v) =>
+                {
+                    cacheShdrDataItem(new ShdrMessage(k,v));
                 }));
             
             _globalScriptObject.Import("ShdrEvent", 
@@ -377,14 +383,13 @@ namespace l99.driver.fanuc.transports
                     cacheShdrCondition(c);
                 }));
             
-            /*
             _globalScriptObject.Import("ShdrAllUnavailable", 
                 new Action (() =>
                 {
+                    // TODO
                     _adapter.SetUnavailable(); 
                 }));
-            */
-            
+
             _globalScriptObject.SetValue("machine", this.machine, true);
             _globalScriptObject.SetValue("device", _config.transport["device_name"], true);
             _globalScriptObject.SetValue("adapter", 
