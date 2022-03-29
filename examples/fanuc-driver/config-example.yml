@@ -497,7 +497,7 @@ user:
       <<: *default-shdr-model-genny
       device_name: f13_50
       net:
-        port: !!int 7978
+        port: !!int 7979
         heartbeat_ms: !!int 10000
   target-shdr-3: &target-shdr-3
     # open tcp socket for mtconnect agent
@@ -507,7 +507,7 @@ user:
       <<: *default-shdr-model-genny
       device_name: f13_100
       net:
-        port: !!int 7979
+        port: !!int 7880
         heartbeat_ms: !!int 10000
 #
 # runtime configuration section

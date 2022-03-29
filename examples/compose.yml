@@ -5,9 +5,6 @@ services:
     profiles:
       - all
       - admin
-      - mqtt
-      - influx
-      - mtc
     container_name: portainer
     image: portainer/portainer-ce
     restart: always
@@ -27,9 +24,6 @@ services:
     profiles:
       - all
       - admin
-      - mqtt
-      - influx
-      - mtc
     container_name: dozzle
     image: amir20/dozzle:latest
     restart: always
@@ -101,6 +95,8 @@ services:
       - ladder99
     ports:
       - "7878:7878/tcp"
+      - "7879:7879/tcp"
+      - "7879:7879/tcp"
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
