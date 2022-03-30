@@ -270,6 +270,7 @@ system:
       SWEEP_END: >-
         p = device;
         ShdrEventIf p+`_availability` data.online `AVAILABLE` `UNAVAILABLE`;
+        if !data.online; ShdrAllUnavailable; end;
         ShdrEvent p+`_adapter_ip` adapter.ipaddress;
         ShdrEvent p+`_adapter_port` adapter.port;
         ShdrEvent p+`_machine_ip` machine.focas_endpoint.ipaddress;
@@ -435,14 +436,14 @@ user:
     # example collector
     l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
       - l99.driver.fanuc.collectors.MachineInfo, fanuc
-      - l99.driver.fanuc.collectors.Alarms, fanuc
-      - l99.driver.fanuc.collectors.Messages, fanuc
-      - l99.driver.fanuc.collectors.StateData, fanuc
-      - l99.driver.fanuc.collectors.ToolData, fanuc
-      - l99.driver.fanuc.collectors.ProductionData, fanuc
-      - l99.driver.fanuc.collectors.GCodeData, fanuc
-      - l99.driver.fanuc.collectors.AxisData, fanuc
-      - l99.driver.fanuc.collectors.SpindleData, fanuc
+      #- l99.driver.fanuc.collectors.Alarms, fanuc
+      #- l99.driver.fanuc.collectors.Messages, fanuc
+      #- l99.driver.fanuc.collectors.StateData, fanuc
+      #- l99.driver.fanuc.collectors.ToolData, fanuc
+      #- l99.driver.fanuc.collectors.ProductionData, fanuc
+      #- l99.driver.fanuc.collectors.GCodeData, fanuc
+      #- l99.driver.fanuc.collectors.AxisData, fanuc
+      #- l99.driver.fanuc.collectors.SpindleData, fanuc
   # targets
   target-mqtt-1: &target-mqtt-1
     # send to tcp mqtt broker
@@ -489,6 +490,7 @@ user:
       net:
         port: !!int 7878
         heartbeat_ms: !!int 10000
+        interval_ms: !!int 1000
   target-shdr-2: &target-shdr-2
     # open tcp socket for mtconnect agent
     <<: *transport-base-shdr
@@ -499,6 +501,7 @@ user:
       net:
         port: !!int 7879
         heartbeat_ms: !!int 10000
+        interval_ms: !!int 1000
   target-shdr-3: &target-shdr-3
     # open tcp socket for mtconnect agent
     <<: *transport-base-shdr
@@ -509,6 +512,7 @@ user:
       net:
         port: !!int 7880
         heartbeat_ms: !!int 10000
+        interval_ms: !!int 1000
 #
 # runtime configuration section
 #
@@ -548,17 +552,18 @@ machines:
     <<: *source-1
     <<: *collector-1
     <<: *target-shdr-1
-    <<: *change-filter
+    #<<: *change-filter
+    <<: *no-filter
   - id: f13_50
     <<: *machine-base
-    #<<: *machine-disabled
+    <<: *machine-disabled
     <<: *source-2
     <<: *collector-1
     <<: *target-shdr-2
     <<: *change-filter
   - id: f13_100
     <<: *machine-base
-    #<<: *machine-disabled
+    <<: *machine-disabled
     <<: *source-3
     <<: *collector-1
     <<: *target-shdr-3

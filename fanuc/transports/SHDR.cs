@@ -8,168 +8,33 @@ using l99.driver.@base;
 using MoreLinq;
 using MTConnect.Adapters.Shdr;
 using MTConnect.Observations;
+using NLog;
 using Scriban;
 using Scriban.Runtime;
 
 namespace l99.driver.fanuc.transports
 {
-    public class SHDR : Transport
+    public class MTCDeviceModelGenerator
     {
-        private dynamic _config;
-
-        // paths,axes,spindles received from strategy
-        private dynamic _model;
+        private ILogger _logger;
+        private Machine _machine;
+        private dynamic _transport;
         
-        // config - veneer type, template text
-        private Dictionary<string, string> _transformLookup = new Dictionary<string, string>();
-        
-        private ShdrAdapter _adapter;
-        private Dictionary<string, ShdrDataItem> _cacheShdrDataItems;
-        private Dictionary<string, ShdrMessage> _cacheShdrMessages;
-        private Dictionary<string, ShdrCondition> _cacheShdrConditions;
-        
-        private ScriptObject _globalScriptObject;
-        private TemplateContext _globalTemplateContext;
-
-        private struct AdapterInfo
+        public MTCDeviceModelGenerator(Machine machine, dynamic transport)
         {
-            public string IPAddress;
-            public int Port;
-        }
-
-        public SHDR(Machine machine, object cfg) : base(machine, cfg)
-        {
-            _config = cfg;
-        }
-
-        private void cacheShdrDataItem(ShdrDataItem dataItem)
-        {
-            //Console.WriteLine($"{dataItem.Key}:{dataItem.Value}");
-            if (_cacheShdrDataItems.ContainsKey(dataItem.DataItemKey))
-            {
-                _cacheShdrDataItems[dataItem.DataItemKey] = dataItem;
-            }
-            else
-            {
-                _cacheShdrDataItems.Add(dataItem.DataItemKey, dataItem);
-            }
+            _logger = LogManager.GetLogger(this.GetType().FullName);
+            _machine = machine;
+            _transport = transport;
         }
         
-        private void cacheShdrMessage(ShdrMessage dataItem)
+        public void Generate(dynamic model)
         {
-            //Console.WriteLine($"{dataItem.Key}:{dataItem.Value}");
-            if (_cacheShdrMessages.ContainsKey(dataItem.DataItemKey))
-            {
-                _cacheShdrMessages[dataItem.DataItemKey] = dataItem;
-            }
-            else
-            {
-                _cacheShdrMessages.Add(dataItem.DataItemKey, dataItem);
-            }
-        }
-        
-        private void cacheShdrCondition(ShdrCondition dataItem)
-        {
-            //Console.WriteLine($"{dataItem.Key}:{dataItem.Level}");
-            if (_cacheShdrConditions.ContainsKey(dataItem.DataItemKey))
-            {
-                _cacheShdrConditions[dataItem.DataItemKey] = dataItem;
-            }
-            else
-            {
-                _cacheShdrConditions.Add(dataItem.DataItemKey, dataItem);
-            }
-        }
-        
-        public override async Task<dynamic?> CreateAsync()
-        {
-            await initAdapterAsync();
-
-            await initScriptContextAsync();
-            
-            _transformLookup = (_config.transport["transformers"] as Dictionary<dynamic,dynamic>)
-                .ToDictionary(
-                    kv => (string)kv.Key, 
-                    kv => (string)kv.Value);
-            
-            return null;
-        }
-
-        public override async Task ConnectAsync()
-        {
-            _adapter.Start();
-        }
-
-        public override async Task SendAsync(params dynamic[] parameters)
-        {
-            var @event = parameters[0];
-            var veneer = parameters[1];
-            var data = parameters[2];
-
-            switch (@event)
-            {
-                case "DATA_ARRIVE": 
-                case "DATA_CHANGE":
-
-                    string transformName = 
-                        $"{veneer.GetType().FullName}, {veneer.GetType().Assembly.GetName().Name}";
-                    
-                    if (_transformLookup.ContainsKey(transformName))
-                    {
-                        try
-                        {
-                            _globalScriptObject.SetValue("observation", data.observation, true);
-                            _globalScriptObject.SetValue("data", data.state.data, true);
-                            await Template.EvaluateAsync(_transformLookup[transformName], _globalTemplateContext);
-                        }
-                        catch (Exception ex)
-                        {
-                            logger.Warn(ex, $"[{machine.Id} SHDR evaluation failed for '{transformName}'");
-                        }
-                    }
-                    
-                    break;
-                
-                case "SWEEP_END":
-
-                    if (_transformLookup.ContainsKey("SWEEP_END"))
-                    {
-                        try
-                        {
-                            _globalScriptObject.SetValue("observation", data.observation, true);
-                            _globalScriptObject.SetValue("data", data.state.data, true);
-                            await Template.EvaluateAsync(_transformLookup["SWEEP_END"], _globalTemplateContext);
-                        }
-                        catch (Exception ex)
-                        {
-                            logger.Warn(ex, $"[{machine.Id} SHDR evaluation failed for 'SWEEP_END'");
-                        }
-                    }
-                    
-                    _cacheShdrDataItems
-                        .ForEach(di => _adapter.AddDataItem(di.Value));
-                    _cacheShdrMessages
-                        .ForEach(di => _adapter.AddMessage(di.Value));
-                    _cacheShdrConditions
-                        .ForEach(di => _adapter.AddCondition(di.Value));
-                    
-                    //_adapter.AddConditions(_cacheShdrConditions.Values);
-                    //_adapter.AddDataItems(_cacheShdrDataItems.Values);
-                    
-                    break;
-            }
-        }
-
-        public override async Task OnGenerateIntermediateModelAsync(dynamic model)
-        {
-            _model = model;
-
-            if (!_config.transport["generator"]["enabled"])
+            if (!_transport["generator"]["enabled"])
                 return;
             
             try
             {
-                var generator = _config.transport["generator"];
+                var generator = _transport["generator"];
 
                 Template tp = null;
                 var so = new ScriptObject();
@@ -227,7 +92,7 @@ namespace l99.driver.fanuc.transports
                 tc.PushGlobal(so);
 
                 so.SetValue("generator", generator, true);
-                so.SetValue("device", _config.transport["device_name"], true);
+                so.SetValue("device", _transport["device_name"], true);
                 so.SetValue("paths", paths, true);
                 so.SetValue("axes", axes, true);
                 so.SetValue("spindles", spindles, true);
@@ -241,8 +106,191 @@ namespace l99.driver.fanuc.transports
             }
             catch (Exception ex)
             {
-                logger.Error(ex, $"[{machine.Id} MTC device model generation failed!" );
+                _logger.Error(ex, $"[{_machine.Id} MTC device model generation failed!" );
             }
+        }
+    }
+    
+    public class SHDR : Transport
+    {
+        private dynamic _config;
+
+        // paths,axes,spindles received from strategy
+        private dynamic _model;
+        
+        // config - veneer type, template text
+        private Dictionary<string, string> _transformLookup = new Dictionary<string, string>();
+        
+        private ShdrAdapter _adapter;
+        private Dictionary<string, ShdrDataItem> _cacheShdrDataItems;
+        private Dictionary<string, ShdrMessage> _cacheShdrMessages;
+        private Dictionary<string, ShdrCondition> _cacheShdrConditions;
+        private bool _shdrInvalidated = false;
+
+        private bool shdrInvalidated
+        {
+            get
+            {
+                bool flag = _shdrInvalidated;
+                _shdrInvalidated = false;
+                return flag;
+            }
+        }
+        
+        private ScriptObject _globalScriptObject;
+        private TemplateContext _globalTemplateContext;
+
+        private MTCDeviceModelGenerator _deviceModelGenerator;
+
+        private struct AdapterInfo
+        {
+            public string IPAddress;
+            public int Port;
+        }
+
+        public SHDR(Machine machine, object cfg) : base(machine, cfg)
+        {
+            _config = cfg;
+        }
+
+        private void cacheShdrDataItem(ShdrDataItem dataItem)
+        {
+            _adapter.AddDataItem(dataItem);
+            //Console.WriteLine($"{dataItem.DataItemKey}:{string.Join(',', dataItem.Values.Select(v=>v.Value))}");
+            return;
+            
+            //Console.WriteLine($"{dataItem.Key}:{dataItem.Value}");
+            if (_cacheShdrDataItems.ContainsKey(dataItem.DataItemKey))
+            {
+                _cacheShdrDataItems[dataItem.DataItemKey] = dataItem;
+            }
+            else
+            {
+                _cacheShdrDataItems.Add(dataItem.DataItemKey, dataItem);
+            }
+        }
+        
+        private void cacheShdrMessage(ShdrMessage dataItem)
+        {
+            _adapter.AddMessage(dataItem);
+            return;
+            
+            //Console.WriteLine($"{dataItem.Key}:{dataItem.Value}");
+            if (_cacheShdrMessages.ContainsKey(dataItem.DataItemKey))
+            {
+                _cacheShdrMessages[dataItem.DataItemKey] = dataItem;
+            }
+            else
+            {
+                _cacheShdrMessages.Add(dataItem.DataItemKey, dataItem);
+            }
+        }
+        
+        private void cacheShdrCondition(ShdrCondition dataItem)
+        {
+            _adapter.AddCondition(dataItem);
+            return;
+            
+            //Console.WriteLine($"{dataItem.Key}:{dataItem.Level}");
+            if (_cacheShdrConditions.ContainsKey(dataItem.DataItemKey))
+            {
+                _cacheShdrConditions[dataItem.DataItemKey] = dataItem;
+            }
+            else
+            {
+                _cacheShdrConditions.Add(dataItem.DataItemKey, dataItem);
+            }
+        }
+        
+        public override async Task<dynamic?> CreateAsync()
+        {
+            _deviceModelGenerator = new MTCDeviceModelGenerator(machine, _config.transport);
+            
+            await initAdapterAsync();
+
+            await initScriptContextAsync();
+            
+            _transformLookup = (_config.transport["transformers"] as Dictionary<dynamic,dynamic>)
+                .ToDictionary(
+                    kv => (string)kv.Key, 
+                    kv => (string)kv.Value);
+            
+            return null;
+        }
+
+        public override async Task ConnectAsync()
+        {
+            _adapter.Start();
+        }
+
+        public override async Task SendAsync(params dynamic[] parameters)
+        {
+            var @event = parameters[0];
+            var veneer = parameters[1];
+            var data = parameters[2];
+
+            switch (@event)
+            {
+                case "DATA_ARRIVE": 
+                //case "DATA_CHANGE":  //TODO: no-filter will double up events coming in
+
+                    string transformName = 
+                        $"{veneer.GetType().FullName}, {veneer.GetType().Assembly.GetName().Name}";
+                    
+                    if (_transformLookup.ContainsKey(transformName))
+                    {
+                        try
+                        {
+                            _globalScriptObject.SetValue("observation", data.observation, true);
+                            _globalScriptObject.SetValue("data", data.state.data, true);
+                            await Template.EvaluateAsync(_transformLookup[transformName], _globalTemplateContext);
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.Warn(ex, $"[{machine.Id} SHDR evaluation failed for '{transformName}'");
+                        }
+                    }
+                    
+                    break;
+                
+                case "SWEEP_END":
+
+                    if (_transformLookup.ContainsKey("SWEEP_END"))
+                    {
+                        try
+                        {
+                            _globalScriptObject.SetValue("observation", data.observation, true);
+                            _globalScriptObject.SetValue("data", data.state.data, true);
+                            await Template.EvaluateAsync(_transformLookup["SWEEP_END"], _globalTemplateContext);
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.Warn(ex, $"[{machine.Id} SHDR evaluation failed for 'SWEEP_END'");
+                        }
+                    }
+                    
+                    /*
+                    _cacheShdrDataItems
+                        .ForEach(di => _adapter.AddDataItem(di.Value));
+                    _cacheShdrMessages
+                        .ForEach(di => _adapter.AddMessage(di.Value));
+                    _cacheShdrConditions
+                        .ForEach(di => _adapter.AddCondition(di.Value));
+                    */
+                    
+                    if (shdrInvalidated)
+                    {
+                        _adapter.SetUnavailable();
+                    }
+
+                    break;
+            }
+        }
+
+        public override async Task OnGenerateIntermediateModelAsync(dynamic model)
+        {
+            _model = model;
+            _deviceModelGenerator.Generate(model);
         }
         
         private async Task initAdapterAsync()
@@ -256,6 +304,8 @@ namespace l99.driver.fanuc.transports
                 _config.transport["net"]["port"],
                 _config.transport["net"]["heartbeat_ms"]);
 
+            _adapter.Interval = _config.transport["net"]["interval_ms"];
+            
             _adapter.AgentConnectionError = (sender, s) =>
             {
                 logger.Info($"[{machine.Id} MTC Agent connection error. {s}");
@@ -403,8 +453,7 @@ namespace l99.driver.fanuc.transports
             _globalScriptObject.Import("ShdrAllUnavailable", 
                 new Action (() =>
                 {
-                    // TODO
-                    _adapter.SetUnavailable(); 
+                    _shdrInvalidated = true;
                 }));
 
             _globalScriptObject.SetValue("machine", this.machine, true);

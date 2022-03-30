@@ -18,8 +18,10 @@ namespace l99.driver.fanuc.collectors
         
         public override async Task CollectForEachPathAsync(short current_path, string[] axis, string[] spindle, dynamic path_marker)
         {
-            if (strategy.HasKeyed($"{this.GetType().Name}"))
-                return;
+            // TODO: shdr transport, no-filter, requires continuous
+            //  evaluation, otherwise item never gets set to UNAVAILABLE
+            //if (strategy.HasKeyed($"{this.GetType().Name}"))
+            //    return;
 
             await strategy.SetKeyed($"{this.GetType().Name}", true);
             
