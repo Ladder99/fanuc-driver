@@ -38,6 +38,33 @@ services:
     logging:
       driver: 'none'
 
+  influx:
+    profiles:
+      - all
+      - influx
+    container_name: influx
+    image: influxdb:latest
+    restart: always
+    networks:
+      - ladder99
+    ports:
+      - "8086:8086"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ../../volumes/influx/data:/var/lib/influxdb2:rw
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=password
+      - DOCKER_INFLUXDB_INIT_ORG=fanuc
+      - DOCKER_INFLUXDB_INIT_BUCKET=fanuc
+      - DOCKER_INFLUXDB_INIT_RETENTION=140h
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=dewlnpy0CmcikwWmMBlqoxcoeuUWpdlDQi8yH7QyGU0tcfn0avMMcpPWYJ-ZUmLD8iHXNl27M3GBHGC4n4_EwA==
+    logging:
+      options:
+        max-size: "20m"
+
   agent:
     profiles:
       - all
@@ -48,7 +75,7 @@ services:
     networks:
       - ladder99
     ports:
-      - "5000:5000"
+      - "5000:5000/tcp"
     working_dir: /data/agent
     command: agent debug agent.cfg
     volumes:
@@ -56,6 +83,7 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - ../../volumes/agent:/data/agent
     logging:
+      driver: "json-file"
       options:
         max-size: '20m'
 
@@ -102,6 +130,7 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - ../../volumes/fanuc-driver:/etc/fanuc:rw
     logging:
+      driver: "json-file"
       options:
         max-size: "20m"
 

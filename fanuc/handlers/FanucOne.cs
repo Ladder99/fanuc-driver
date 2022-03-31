@@ -51,8 +51,7 @@ namespace l99.driver.fanuc.handlers
 
         public override async Task<dynamic?> OnDataChangeAsync(Veneers veneers, Veneer veneer, dynamic? beforeChange)
         {
-            // skip internal veneers
-            if (veneer.IsInternal == true)
+            if (_cfg.handler["skip_internal"] == true && veneer.IsInternal == true)
                 return null;
             
             dynamic payload = new

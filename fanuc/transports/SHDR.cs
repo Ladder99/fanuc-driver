@@ -122,9 +122,6 @@ namespace l99.driver.fanuc.transports
         private Dictionary<string, string> _transformLookup = new Dictionary<string, string>();
         
         private ShdrAdapter _adapter;
-        private Dictionary<string, ShdrDataItem> _cacheShdrDataItems;
-        private Dictionary<string, ShdrMessage> _cacheShdrMessages;
-        private Dictionary<string, ShdrCondition> _cacheShdrConditions;
         private bool _shdrInvalidated = false;
 
         private bool shdrInvalidated
@@ -157,49 +154,18 @@ namespace l99.driver.fanuc.transports
         {
             _adapter.AddDataItem(dataItem);
             //Console.WriteLine($"{dataItem.DataItemKey}:{string.Join(',', dataItem.Values.Select(v=>v.Value))}");
-            return;
-            
-            //Console.WriteLine($"{dataItem.Key}:{dataItem.Value}");
-            if (_cacheShdrDataItems.ContainsKey(dataItem.DataItemKey))
-            {
-                _cacheShdrDataItems[dataItem.DataItemKey] = dataItem;
-            }
-            else
-            {
-                _cacheShdrDataItems.Add(dataItem.DataItemKey, dataItem);
-            }
         }
         
         private void cacheShdrMessage(ShdrMessage dataItem)
         {
             _adapter.AddMessage(dataItem);
-            return;
-            
-            //Console.WriteLine($"{dataItem.Key}:{dataItem.Value}");
-            if (_cacheShdrMessages.ContainsKey(dataItem.DataItemKey))
-            {
-                _cacheShdrMessages[dataItem.DataItemKey] = dataItem;
-            }
-            else
-            {
-                _cacheShdrMessages.Add(dataItem.DataItemKey, dataItem);
-            }
+            //Console.WriteLine($"{dataItem.DataItemKey}:{string.Join(',', dataItem.Values.Select(v=>v.Value))}");
         }
         
         private void cacheShdrCondition(ShdrCondition dataItem)
         {
             _adapter.AddCondition(dataItem);
-            return;
-            
-            //Console.WriteLine($"{dataItem.Key}:{dataItem.Level}");
-            if (_cacheShdrConditions.ContainsKey(dataItem.DataItemKey))
-            {
-                _cacheShdrConditions[dataItem.DataItemKey] = dataItem;
-            }
-            else
-            {
-                _cacheShdrConditions.Add(dataItem.DataItemKey, dataItem);
-            }
+            //Console.WriteLine($"{dataItem.DataItemKey}:{string.Join(',', dataItem.Values.Select(v=>v.Value))}");
         }
         
         public override async Task<dynamic?> CreateAsync()
@@ -269,15 +235,6 @@ namespace l99.driver.fanuc.transports
                         }
                     }
                     
-                    /*
-                    _cacheShdrDataItems
-                        .ForEach(di => _adapter.AddDataItem(di.Value));
-                    _cacheShdrMessages
-                        .ForEach(di => _adapter.AddMessage(di.Value));
-                    _cacheShdrConditions
-                        .ForEach(di => _adapter.AddCondition(di.Value));
-                    */
-                    
                     if (shdrInvalidated)
                     {
                         _adapter.SetUnavailable();
@@ -295,10 +252,6 @@ namespace l99.driver.fanuc.transports
         
         private async Task initAdapterAsync()
         {
-            _cacheShdrDataItems = new Dictionary<string, ShdrDataItem>();
-            _cacheShdrMessages = new Dictionary<string, ShdrMessage>();
-            _cacheShdrConditions = new Dictionary<string, ShdrCondition>();
-            
             _adapter = new ShdrAdapter(
                 _config.transport["device_name"],
                 _config.transport["net"]["port"],

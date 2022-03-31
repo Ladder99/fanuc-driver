@@ -120,7 +120,7 @@ namespace l99.driver.fanuc.transports
         
         public override async Task ConnectAsync()
         {
-            if (_config.transport["enabled"])
+            if (_config.machine.enabled)
             {
                 if (!_client.IsConnected)
                 {
