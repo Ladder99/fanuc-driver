@@ -28,7 +28,8 @@ namespace l99.driver.fanuc.transports
 
         public override async Task<dynamic?> CreateAsync()
         {
-            _client = InfluxDBClientFactory.Create(_config.transport["host"], _config.transport["token"]);
+            _client = InfluxDBClientFactory
+                .Create(_config.transport["host"], _config.transport["token"]);
             
             _transformLookup = (_config.transport["transformers"] as Dictionary<dynamic,dynamic>)
                 .ToDictionary(
@@ -51,7 +52,28 @@ namespace l99.driver.fanuc.transports
 
             switch (@event)
             {
-                case "DATA_ARRIVE": 
+                case "DATA_ARRIVE":
+
+                    if (veneer.GetType().Name == "FocasPerf" && hasTransform(veneer))
+                    {
+                        string lp = _templateLookup[veneer.Name]
+                            .Render(new { data.observation, data.state.data });
+
+                        if (!string.IsNullOrEmpty(lp))
+                        {
+                            logger.Info($"[{machine.Id}] {lp}");
+                            
+                            _client.GetWriteApiAsync()
+                                .WriteRecordAsync(
+                                    _config.transport["bucket"],
+                                    _config.transport["org"],
+                                    WritePrecision.Ms,
+                                    lp);
+                        }
+                    }
+
+                    break;
+                    
                 case "DATA_CHANGE":
 
                     if (hasTransform(veneer))
@@ -59,10 +81,10 @@ namespace l99.driver.fanuc.transports
                         string lp = _templateLookup[veneer.Name]
                             .Render(new { data.observation, data.state.data });
 
-                        Console.WriteLine(lp);
-
                         if (!string.IsNullOrEmpty(lp))
                         {
+                            logger.Info($"[{machine.Id}] {lp}");
+                            
                             _client.GetWriteApiAsync()
                                 .WriteRecordAsync(
                                     _config.transport["bucket"],
@@ -81,7 +103,7 @@ namespace l99.driver.fanuc.transports
                         string lp = _templateLookup["SWEEP_END"]
                             .Render(new { data.observation, data.state.data });
 
-                        Console.WriteLine(lp);
+                        logger.Info($"[{machine.Id}] {lp}");
                     
                         _client.GetWriteApiAsync()
                             .WriteRecordAsync(
@@ -135,3 +157,31 @@ namespace l99.driver.fanuc.transports
         }
     }
 }
+
+/*
+
+from(bucket: "fanuc")
+  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+  |> filter(fn: (r) => r["_measurement"] == "gcode")
+  |> map(fn: (r) => ({r with _value: string(v: r._value)}))
+  |> group(columns: ["machine", "path", "_measurement", "_time"])
+  |> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")
+  |> group()
+  |> drop(columns: ["_measurement"])
+  |> yield()
+
+from(bucket: "fanuc")
+  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+  |> filter(fn: (r) => r["_measurement"] == "state")
+  |> filter(fn: (r) => r["_field"] == "execution")
+  |> stateDuration(
+    fn: (r) => r._value == "READY",
+    column: "ready_duration",
+    unit: 1s)
+  |> stateDuration(
+    fn: (r) => r._value == "ACTIVE",
+    column: "active_duration",
+    unit: 1s)
+  |> yield()
+  
+*/

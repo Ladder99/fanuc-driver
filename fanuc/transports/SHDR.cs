@@ -186,7 +186,8 @@ namespace l99.driver.fanuc.transports
 
         public override async Task ConnectAsync()
         {
-            _adapter.Start();
+            if (_config.machine.enabled)
+                _adapter.Start();
         }
 
         public override async Task SendAsync(params dynamic[] parameters)

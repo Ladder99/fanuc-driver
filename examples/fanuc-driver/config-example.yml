@@ -30,7 +30,8 @@ system:
       l99.driver.fanuc.veneers.FocasPerf, fanuc: >-
         {{observation.name}},
         {{-}}machine={{observation.machine}}
-        sweep_ms={{data.sweep_ms}}
+        sweep_ms={{data.sweep_ms}},
+        {{-}}failed="{{array.join (array.map data.invocation.failed_methods `method`) `;`}}"
       l99.driver.fanuc.veneers.SysInfo, fanuc: >-
         {{observation.name}},
         {{-}}machine={{observation.machine}},
@@ -45,13 +46,18 @@ system:
         {{observation.name}},
         {{-}}machine={{observation.machine}},
         {{-}}path={{observation.marker[0].number}}
-        poweron_min={{data.timers.poweron_min}},
+        mode="{{data.mode}}",
+        {{-}}execution="{{data.execution}}",
+        {{-}}estop="{{if data.emergency==1}}TRIGGERED{{else}}ARMED{{end}}",
+        {{-}}poweron_min={{data.timers.poweron_min}},
         {{-}}operating_min={{data.timers.operating_min}},
         {{-}}cutting_min={{data.timers.cutting_min}},
+        {{-}}tool_num={{data.modal.t}},
         {{-}}fovr={{data.override.feed}},
         {{-}}rovr={{data.override.rapid}},
         {{-}}sovr={{data.override.spindle}},
-        {{-}}tool={{data.modal.t}}
+        {{-}}tool={{data.modal.t}},
+        {{-}}alarm={{if data.alarm==1}}TRUE{{else}}FALSE{{end}}
       l99.driver.fanuc.veneers.ProductionData, fanuc: >-
         {{observation.name}},
         {{-}}machine={{observation.machine}},
@@ -63,6 +69,12 @@ system:
         {{-}}pieces_produced_life={{data.pieces.produced_life}},
         {{-}}pieces_remaining={{data.pieces.remaining}},
         {{-}}cycle_time={{data.timers.cycle_time_ms}}
+      l99.driver.fanuc.veneers.GCodeBlocks, fanuc: >-
+        {{observation.name}},
+        {{-}}machine={{observation.machine}},
+        {{-}}path={{observation.marker[0].number}}
+        block={{if (array.size data.blocks)==0}}-1{{else}}{{data.blocks[0].block_number}}{{end}},
+        {{-}}line="{{array.join (array.map data.blocks `block_text`) `;`}}"
       l99.driver.fanuc.veneers.AlarmsSeries, fanuc: >-
         {{-for alarm in data.alarms-}}
         {{observation.name}},
@@ -77,7 +89,7 @@ system:
         {{-for msg in data.messages-}}
         {{observation.name}},
         {{-}}machine={{observation.machine}},
-        {{-}}path={{observation.marker.number}}
+        {{-}}path={{observation.marker[0].number}}
         position={{msg.position}},
         {{-}}number={{msg.number}},
         {{-}}message="{{msg.message}}"{{'\n'}}
@@ -478,7 +490,7 @@ user:
     <<: *transport-base-influx
     l99.driver.fanuc.transports.InfluxLP, fanuc:
       <<: *default-influx-transformers
-      host: "http://influx:8086"
+      host: "http://10.1.10.170:8086"
       token: "dewlnpy0CmcikwWmMBlqoxcoeuUWpdlDQi8yH7QyGU0tcfn0avMMcpPWYJ-ZUmLD8iHXNl27M3GBHGC4n4_EwA=="
       org: "fanuc"
       bucket: "fanuc"
@@ -536,21 +548,21 @@ machines:
   #    *no-filter - send all data, regardless of change
   - id: example-mqtt
     <<: *machine-base        # base Fanuc configuration
-    #<<: *machine-disabled    # omit this machine setup from runtime; remove to make active
+    <<: *machine-disabled    # omit this machine setup from runtime; remove to make active
     <<: *source-1            # where to get data
     <<: *collector-1         # what data to get and how to transform data
     <<: *target-mqtt-1       # where to send data
     <<: *change-filter       # data filter
   - id: example-influx
     <<: *machine-base
-    <<: *machine-disabled
+    #<<: *machine-disabled
     <<: *source-1
     <<: *collector-1
     <<: *target-influx-1
     <<: *change-filter
   - id: f_sim
     <<: *machine-base
-    #<<: *machine-disabled
+    <<: *machine-disabled
     <<: *source-1
     <<: *collector-1
     <<: *target-shdr-1
