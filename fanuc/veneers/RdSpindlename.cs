@@ -39,21 +39,9 @@ namespace l99.driver.fanuc.veneers
                 };
                 
                 await onDataArrivedAsync(input, current_value);
-                
-                if(current_value.spindles.IsDifferentHash((List<dynamic>)lastChangedValue.spindles))
+
+                if (current_value.spindles.IsDifferentHash((List<dynamic>) lastChangedValue.spindles))
                     await onDataChangedAsync(input, current_value);
-                
-                /*
-                var current_hc = current_value.spindles.Select(x => x.GetHashCode());
-                var last_hc = ((List<dynamic>)lastChangedValue.spindles).Select(x => x.GetHashCode());
-                
-                await onDataArrivedAsync(input, current_value);
-                
-                if(current_hc.Except(last_hc).Count() + last_hc.Except(current_hc).Count() > 0)
-                {
-                    await onDataChangedAsync(input, current_value);
-                }
-                */
             }
             else
             {

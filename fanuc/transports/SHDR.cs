@@ -5,7 +5,6 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using l99.driver.@base;
-using MoreLinq;
 using MTConnect.Adapters.Shdr;
 using MTConnect.Observations;
 using NLog;
@@ -198,8 +197,7 @@ namespace l99.driver.fanuc.transports
 
             switch (@event)
             {
-                case "DATA_ARRIVE": 
-                //case "DATA_CHANGE":  //TODO: no-filter will double up events coming in
+                case "DATA_ARRIVE":
 
                     string transformName = 
                         $"{veneer.GetType().FullName}, {veneer.GetType().Assembly.GetName().Name}";

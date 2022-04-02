@@ -20,6 +20,7 @@ namespace l99.driver.fanuc.transports
         private Dictionary<string, Template> _templateLookup = new Dictionary<string, Template>();
 
         private InfluxDBClient _client;
+        private WriteApiAsync _writeApi;
 
         public InfluxLP(Machine machine, object cfg) : base(machine, cfg)
         {
@@ -30,6 +31,8 @@ namespace l99.driver.fanuc.transports
         {
             _client = InfluxDBClientFactory
                 .Create(_config.transport["host"], _config.transport["token"]);
+
+            _writeApi = _client.GetWriteApiAsync();
             
             _transformLookup = (_config.transport["transformers"] as Dictionary<dynamic,dynamic>)
                 .ToDictionary(
@@ -54,28 +57,6 @@ namespace l99.driver.fanuc.transports
             {
                 case "DATA_ARRIVE":
 
-                    if (veneer.GetType().Name == "FocasPerf" && hasTransform(veneer))
-                    {
-                        string lp = _templateLookup[veneer.Name]
-                            .Render(new { data.observation, data.state.data });
-
-                        if (!string.IsNullOrEmpty(lp))
-                        {
-                            logger.Info($"[{machine.Id}] {lp}");
-                            
-                            _client.GetWriteApiAsync()
-                                .WriteRecordAsync(
-                                    _config.transport["bucket"],
-                                    _config.transport["org"],
-                                    WritePrecision.Ms,
-                                    lp);
-                        }
-                    }
-
-                    break;
-                    
-                case "DATA_CHANGE":
-
                     if (hasTransform(veneer))
                     {
                         string lp = _templateLookup[veneer.Name]
@@ -84,18 +65,17 @@ namespace l99.driver.fanuc.transports
                         if (!string.IsNullOrEmpty(lp))
                         {
                             logger.Info($"[{machine.Id}] {lp}");
-                            
-                            _client.GetWriteApiAsync()
+                            _writeApi
                                 .WriteRecordAsync(
-                                    _config.transport["bucket"],
-                                    _config.transport["org"],
+                                    lp,
                                     WritePrecision.Ms,
-                                    lp);
+                                    _config.transport["bucket"],
+                                    _config.transport["org"]);
                         }
                     }
-                    
+
                     break;
-                
+
                 case "SWEEP_END":
 
                     if (hasTransform("SWEEP_END"))
@@ -105,12 +85,12 @@ namespace l99.driver.fanuc.transports
 
                         logger.Info($"[{machine.Id}] {lp}");
                     
-                        _client.GetWriteApiAsync()
+                        _writeApi
                             .WriteRecordAsync(
-                                _config.transport["bucket"],
-                                _config.transport["org"],
+                                lp,
                                 WritePrecision.Ms,
-                                lp);
+                                _config.transport["bucket"],
+                                _config.transport["org"]);
                     }
                     
                     break;

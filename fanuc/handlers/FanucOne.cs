@@ -15,11 +15,22 @@ namespace l99.driver.fanuc.handlers
         
         public override async Task<dynamic?> OnDataArrivalAsync(Veneers veneers, Veneer veneer, dynamic? beforeArrival)
         {
-            if (_cfg.handler["change_only"] == true)
+            if (veneer.GetType().Name == "FocasPerf")
             {
-                // only allow focas performance
-                if (veneer.GetType().Name != "FocasPerf")
+                // always allow perf
+            }
+            else if (_cfg.handler["change_only"] == true)
+            {
+                // change only
+                return null;
+            }
+            else
+            {
+                if (_cfg.handler["skip_internal"] == true && veneer.IsInternal == true)
+                {
+                    // all data, but skip internals
                     return null;
+                }
             }
             
             dynamic payload = new
@@ -51,6 +62,9 @@ namespace l99.driver.fanuc.handlers
 
         public override async Task<dynamic?> OnDataChangeAsync(Veneers veneers, Veneer veneer, dynamic? beforeChange)
         {
+            if (_cfg.handler["change_only"] == false)
+                return null;
+            
             if (_cfg.handler["skip_internal"] == true && veneer.IsInternal == true)
                 return null;
             
@@ -78,7 +92,7 @@ namespace l99.driver.fanuc.handlers
             if (onChange == null)
                 return;
             
-            await veneers.Machine.Transport.SendAsync("DATA_CHANGE", veneer, onChange);
+            await veneers.Machine.Transport.SendAsync("DATA_ARRIVE", veneer, onChange);
         }
         
         public override async Task<dynamic?> OnStrategySweepCompleteAsync(Machine machine, dynamic? beforeSweepComplete)

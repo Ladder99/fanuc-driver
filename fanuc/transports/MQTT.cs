@@ -82,7 +82,6 @@ namespace l99.driver.fanuc.transports
             switch (@event)
             {
                 case "DATA_ARRIVE":
-                case "DATA_CHANGE":
                     topic = await _topicTemplate.RenderAsync(new { machine, veneer}, member => member.Name);
                     payload = JObject.FromObject(data).ToString(Formatting.None);
                     break;

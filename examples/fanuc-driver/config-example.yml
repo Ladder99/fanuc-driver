@@ -404,12 +404,16 @@ system:
         ShdrEvent p+`_rotary` `SPINDLE`;
         ShdrConditionFaultIf p+`_alm_lnk` (! data.status_lnk);
         ShdrConditionSeverity p+`_alm_amp` (data.error > 0) (data.warning > 0) (data.error == 0 && data.warning == 0);
+  transport-base-null: &transport-base-null
+    transport: l99.driver.fanuc.transports.Null, fanuc
   transport-base-mqtt: &transport-base-mqtt
     transport: l99.driver.fanuc.transports.MQTT, fanuc
   transport-base-influx: &transport-base-influx
     transport: l99.driver.fanuc.transports.InfluxLP, fanuc
   transport-base-shdr: &transport-base-shdr
     transport: l99.driver.fanuc.transports.SHDR, fanuc
+  transport-base-spb: &transport-base-spb
+    transport: l99.driver.fanuc.transports.SpB, fanuc
 #
 # user configuration section
 #
@@ -459,6 +463,11 @@ user:
       - l99.driver.fanuc.collectors.AxisData, fanuc
       - l99.driver.fanuc.collectors.SpindleData, fanuc
   # targets
+  target-null: &target-null
+    # send to nothing
+    << : *transport-base-null
+    l99.driver.fanuc.transports.Null, fanuc:
+      enabled: !!bool true
   target-mqtt-1: &target-mqtt-1
     # send to tcp mqtt broker
     << : *transport-base-mqtt
@@ -467,7 +476,7 @@ user:
       enabled: !!bool true
       net:
         type: tcp
-        ip: 10.1.10.2
+        ip: 10.1.10.170
         port: !!int 1883
       anonymous: !!bool true
       user:
@@ -490,10 +499,22 @@ user:
     <<: *transport-base-influx
     l99.driver.fanuc.transports.InfluxLP, fanuc:
       <<: *default-influx-transformers
-      host: "http://10.1.10.170:8086"
+      host: "http://influx:8086"
       token: "dewlnpy0CmcikwWmMBlqoxcoeuUWpdlDQi8yH7QyGU0tcfn0avMMcpPWYJ-ZUmLD8iHXNl27M3GBHGC4n4_EwA=="
       org: "fanuc"
       bucket: "fanuc"
+  target-spb-1: &target-spb-1
+    # send to tcp mqtt broker
+    << : *transport-base-spb
+    l99.driver.fanuc.transports.SpB, fanuc:
+      enabled: !!bool true
+      net:
+        type: tcp
+        ip: 10.1.10.2
+        port: !!int 1883
+      anonymous: !!bool true
+      user:
+      password:
   target-shdr-1: &target-shdr-1
     # open tcp socket for mtconnect agent
     << : *transport-base-shdr
@@ -546,6 +567,13 @@ machines:
   #  filter: how to filter data
   #    *change-filter - send only when data changes
   #    *no-filter - send all data, regardless of change
+  - id: example-null
+    <<: *machine-base
+    <<: *machine-disabled
+    <<: *source-1
+    <<: *collector-1
+    <<: *target-null
+    <<: *change-filter
   - id: example-mqtt
     <<: *machine-base        # base Fanuc configuration
     <<: *machine-disabled    # omit this machine setup from runtime; remove to make active
@@ -555,10 +583,17 @@ machines:
     <<: *change-filter       # data filter
   - id: example-influx
     <<: *machine-base
-    #<<: *machine-disabled
+    <<: *machine-disabled
     <<: *source-1
     <<: *collector-1
     <<: *target-influx-1
+    <<: *change-filter
+  - id: example-spb
+    <<: *machine-base
+    <<: *machine-disabled
+    <<: *source-1
+    <<: *collector-1
+    <<: *target-spb-1
     <<: *change-filter
   - id: f_sim
     <<: *machine-base
@@ -567,14 +602,14 @@ machines:
     <<: *collector-1
     <<: *target-shdr-1
     <<: *no-filter
-  - id: f13_50
+  - id: f13_50                # StarCNC SR38-A
     <<: *machine-base
     <<: *machine-disabled
     <<: *source-2
     <<: *collector-1
     <<: *target-shdr-2
     <<: *no-filter
-  - id: f13_100
+  - id: f13_100               # Nakamura AS200i
     <<: *machine-base
     <<: *machine-disabled
     <<: *source-3
