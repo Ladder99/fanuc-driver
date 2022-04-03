@@ -6,8 +6,10 @@ using l99.driver.@base;
 using JsonFlatten;
 using MoreLinq;
 using Newtonsoft.Json.Linq;
+using SparkplugNet.Core.Node;
+using SparkplugNet.VersionB;
 using SparkplugNet.VersionB.Data;
-using SpBB = SparkplugNet.VersionB;
+
 
 namespace l99.driver.fanuc.transports
 {
@@ -18,7 +20,7 @@ namespace l99.driver.fanuc.transports
         private Dictionary<string, dynamic> _previous = new Dictionary<string, dynamic>();
         private Dictionary<string, dynamic> _current = new Dictionary<string, dynamic>();
 
-        private SpBB.SparkplugNode _node;
+        private SparkplugNode _node;
         
         public SpB(Machine machine, object cfg) : base(machine, cfg)
         {
@@ -27,16 +29,45 @@ namespace l99.driver.fanuc.transports
 
         public override async Task<dynamic?> CreateAsync()
         {
+            return null;
+            
             // create spb client
             // add device
-            List<SpBB.Data.Metric> metrics = new List<Metric>()
+            List<Metric> metrics = new List<Metric>()
             {
-                
-            };
-            _node = new SpBB.SparkplugNode(metrics, null);
 
+            };
+
+            _node = new SparkplugNode(metrics, null);
+
+            var nodeOptions = new SparkplugNodeOptions(
+                brokerAddress: null,
+                port: 0,
+                userName: null,
+                clientId: null,
+                password: null,
+                useTls: false,
+                scadaHostIdentifier: null,
+                groupIdentifier: null,
+                edgeNodeIdentifier: null,
+                reconnectInterval: TimeSpan.Zero,
+                webSocketParameters: null,
+                proxyOptions: null,
+                cancellationToken: null
+            );
+
+            await _node.Start(nodeOptions);
+
+            await _node.PublishMetrics(metrics);
+
+            _node.OnDisconnected += () => { };
+
+            _node.NodeCommandReceived += metric => { };
+
+            _node.StatusMessageReceived += s => { };
+            
             return null;
-        }
+    }
 
         public override async Task ConnectAsync()
         {
