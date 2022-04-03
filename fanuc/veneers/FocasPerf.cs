@@ -28,8 +28,9 @@ namespace l99.driver.fanuc.veneers
         
         protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
         {
-            var max = ((List<dynamic>)input.focas_invocations).MaxBy(o => o.invocationMs).First();
-            var min = ((List<dynamic>)input.focas_invocations).MinBy(o => o.invocationMs).First();
+            // TODO : fix
+            //var max = ((List<dynamic>)input.focas_invocations).MaxBy(o => o.invocationMs).First();
+            //var min = ((List<dynamic>)input.focas_invocations).MinBy(o => o.invocationMs).First();
             var avg = (int)((List<dynamic>)input.focas_invocations).Average(o => (int)o.invocationMs);
             var sum = ((List<dynamic>) input.focas_invocations).Sum(o => (int)o.invocationMs);
             var failedMethods = ((List<dynamic>) input.focas_invocations)
@@ -42,9 +43,10 @@ namespace l99.driver.fanuc.veneers
                 invocation = new
                 {
                     count = input.focas_invocations.Count,
-                    max_method = max.method,
-                    max_ms = max.invocationMs,
-                    min_ms = min.invocationMs,
+                    // TODO : fix
+                    //max_method = max.method,
+                    //max_ms = max.invocationMs,
+                    //min_ms = min.invocationMs,
                     avg_ms = avg,
                     sum_ms = sum,
                     failed_methods = failedMethods
