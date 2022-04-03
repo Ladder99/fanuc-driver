@@ -28,9 +28,12 @@ namespace l99.driver.fanuc.veneers
         
         protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
         {
-            // TODO : fix
-            //var max = ((List<dynamic>)input.focas_invocations).MaxBy(o => o.invocationMs).First();
-            //var min = ((List<dynamic>)input.focas_invocations).MinBy(o => o.invocationMs).First();
+            // TODO : review extension usage
+            //  https://stackoverflow.com/questions/69917366/net6-morelinq-call-is-ambiguous-between-system-linq-enumerable-distinctby-a
+            var max = MoreEnumerable
+                .MaxBy(((List<dynamic>)input.focas_invocations), o => o.invocationMs).First();
+            var min =  MoreEnumerable
+                .MinBy(((List<dynamic>)input.focas_invocations), o => o.invocationMs).First();
             var avg = (int)((List<dynamic>)input.focas_invocations).Average(o => (int)o.invocationMs);
             var sum = ((List<dynamic>) input.focas_invocations).Sum(o => (int)o.invocationMs);
             var failedMethods = ((List<dynamic>) input.focas_invocations)
@@ -43,10 +46,9 @@ namespace l99.driver.fanuc.veneers
                 invocation = new
                 {
                     count = input.focas_invocations.Count,
-                    // TODO : fix
-                    //max_method = max.method,
-                    //max_ms = max.invocationMs,
-                    //min_ms = min.invocationMs,
+                    max_method = max.method,
+                    max_ms = max.invocationMs,
+                    min_ms = min.invocationMs,
                     avg_ms = avg,
                     sum_ms = sum,
                     failed_methods = failedMethods
