@@ -590,7 +590,7 @@ machines:
     <<: *change-filter
   - id: example-spb
     <<: *machine-base
-    <<: *machine-disabled
+    #<<: *machine-disabled
     <<: *source-1
     <<: *collector-1
     <<: *target-spb-1
