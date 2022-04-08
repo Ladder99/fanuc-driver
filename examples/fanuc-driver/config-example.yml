@@ -512,9 +512,9 @@ user:
         type: tcp
         ip: 10.1.10.2
         port: !!int 1883
-      anonymous: !!bool true
-      user:
-      password:
+      anonymous: !!bool false
+      user: admin
+      password: password
   target-shdr-1: &target-shdr-1
     # open tcp socket for mtconnect agent
     << : *transport-base-shdr
@@ -590,7 +590,7 @@ machines:
     <<: *change-filter
   - id: example-spb
     <<: *machine-base
-    #<<: *machine-disabled
+    <<: *machine-disabled
     <<: *source-1
     <<: *collector-1
     <<: *target-spb-1

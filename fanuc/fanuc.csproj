@@ -34,7 +34,6 @@
 
     <ItemGroup>
       <PackageReference Include="InfluxDB.Client" Version="4.0.0" />
-      <PackageReference Include="JsonFlatten" Version="1.0.2" />
       <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
       <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="6.0.0" />
       <PackageReference Include="morelinq" Version="3.3.2" />
