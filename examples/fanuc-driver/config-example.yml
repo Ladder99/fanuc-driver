@@ -597,22 +597,28 @@ machines:
     <<: *change-filter
   - id: f_sim
     <<: *machine-base
-    <<: *machine-disabled
+    #<<: *machine-disabled
     <<: *source-1
     <<: *collector-1
-    <<: *target-shdr-1
-    <<: *no-filter
+    <<: *target-spb-1
+    <<: *change-filter
+    #<<: *target-shdr-1
+    #<<: *no-filter
   - id: f13_50                # StarCNC SR38-A
     <<: *machine-base
-    <<: *machine-disabled
+    #<<: *machine-disabled
     <<: *source-2
     <<: *collector-1
-    <<: *target-shdr-2
-    <<: *no-filter
+    <<: *target-spb-1
+    <<: *change-filter
+    #<<: *target-shdr-2
+    #<<: *no-filter
   - id: f13_100               # Nakamura AS200i
     <<: *machine-base
     <<: *machine-disabled
     <<: *source-3
     <<: *collector-1
-    <<: *target-shdr-3
-    <<: *no-filter
+    <<: *target-spb-1
+    <<: *change-filter
+    #<<: *target-shdr-3
+    #<<: *no-filter

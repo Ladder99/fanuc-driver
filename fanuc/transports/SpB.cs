@@ -9,7 +9,8 @@ public class SpB : Transport
     private enum DeviceStateEnum
     {
         OFFLINE,
-        ONLINE
+        ONLINE,
+        MUST_REBIRTH
     }
     
     private dynamic _config;
@@ -44,12 +45,12 @@ public class SpB : Transport
             brokerAddress: _config.transport["net"]["ip"],
             port: _config.transport["net"]["port"],
             userName: _config.transport["user"],
-            clientId: new Guid().ToString(),
+            clientId: $"fanuc_{machine.Id}",
             password: _config.transport["password"],
             useTls: false,
             scadaHostIdentifier: "scada",
-            groupIdentifier: "fanuc",
-            edgeNodeIdentifier: Environment.MachineName,    // TODO: clean up hostname to spb spec
+            groupIdentifier: $"fanuc_{machine.Id}",
+            edgeNodeIdentifier: $"{Environment.MachineName}_{machine.Id}",    // TODO: clean up hostname to spb spec
             reconnectInterval: TimeSpan.FromSeconds(30),
             webSocketParameters: null,
             proxyOptions: null,
@@ -58,7 +59,7 @@ public class SpB : Transport
         
         _node.OnDisconnected += () =>
         {
-            Console.WriteLine("disconnected");
+            logger.Warn($"[{machine.Id}] SpB node disconnected.");
         };
 
         _node.NodeCommandReceived += metric =>
@@ -83,6 +84,7 @@ public class SpB : Transport
             {
                 await _node.Start(_nodeOptions);
                 await _node.PublishMetrics(_nodeMetrics);
+                logger.Info($"[{machine.Id}] SpB node connected.");
             }
             catch (Exception ex)
             {
@@ -131,13 +133,31 @@ public class SpB : Transport
                 
                 if (data.state.data.online == true && _deviceState == DeviceStateEnum.OFFLINE)
                 {
-                    await deviceBirthAsync(changes);
-                    _deviceState = DeviceStateEnum.ONLINE;
+                    logger.Info($"[{machine.Id}] SpB device birth.");
+                    bool success = await deviceBirthAsync(_current);
+                    if (success)
+                    {
+                        _deviceState = DeviceStateEnum.ONLINE;
+                    }
+                    else
+                    {
+                        _deviceState = DeviceStateEnum.MUST_REBIRTH;
+                    }
                 }
                 else if (data.state.data.online == false && _deviceState == DeviceStateEnum.ONLINE)
                 {
+                    logger.Info($"[{machine.Id}] SpB device death.");
                     await deviceDeathAsync();
                     _deviceState = DeviceStateEnum.OFFLINE;
+                }
+                else if (data.state.data.online == true && _deviceState == DeviceStateEnum.MUST_REBIRTH)
+                {
+                    logger.Info($"[{machine.Id}] SpB device re-birth.");
+                    bool success = await deviceBirthAsync(_current);
+                    if (success)
+                    {
+                        _deviceState = DeviceStateEnum.ONLINE;
+                    }
                 }
                 else
                 {
@@ -185,30 +205,64 @@ public class SpB : Transport
             .ToDictionary(g => g.Key, g => g.First().Value);
     }
 
-    private async Task deviceBirthAsync(Dictionary<string, object> diff)
+    private async Task<bool> deviceBirthAsync(Dictionary<string, object> diff)
     {
         List<Metric> metrics = diff
             .Select(kv => makeMetric(kv.Key, kv.Value))
             .ToList();
-        
-        if(_node.IsConnected)
-            await _node.PublishDeviceBirthMessage(metrics, machine.Id);
+
+        if (_node.IsConnected)
+        {
+            try
+            {
+                await _node.PublishDeviceBirthMessage(metrics, machine.Id);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, $"[{machine.Id}] SpB device birth error.");
+                return false;
+            }
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
-    
+
     private async Task deviceDeathAsync()
     {
-        if(_node.IsConnected)
-            await _node.PublishDeviceDeathMessage(machine.Id);
+        if (_node.IsConnected)
+        {
+            try
+            {
+                await _node.PublishDeviceDeathMessage(machine.Id);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, $"[{machine.Id}] SpB device death error.");
+            }
+        }
     }
-    
+
     private async Task deviceUpdateAsync(Dictionary<string, object> diff)
     {
         List<Metric> metrics = diff
             .Select(kv => makeMetric(kv.Key, kv.Value))
             .ToList();
-        
-        if(_node.IsConnected)
-            await _node.PublishDeviceData(metrics, machine.Id);
+
+        if (_node.IsConnected)
+        {
+            try
+            {
+                await _node.PublishDeviceData(metrics, machine.Id);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, $"[{machine.Id}] SpB device data error.");
+            }
+        }
     }
 
     private Metric makeMetric(string name, object value)
