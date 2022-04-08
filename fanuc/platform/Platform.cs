@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Dynamic;
-using NLog;
+﻿using System.Diagnostics;
 
 namespace l99.driver.fanuc
 {

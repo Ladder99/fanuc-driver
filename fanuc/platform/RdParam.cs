@@ -1,6 +1,3 @@
-using System;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 
 namespace l99.driver.fanuc
 {

@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
 using l99.driver.@base;
-using Newtonsoft.Json.Linq;
-using NLog;
 
 namespace l99.driver.fanuc
 {

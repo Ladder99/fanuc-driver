@@ -1,11 +1,5 @@
 namespace l99.driver.fanuc;
 
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-
 // source: https://raw.githubusercontent.com/GFoley83/JsonFlatten/master/JsonFlatten/JsonExtensions.cs
 public static class JsonFlattenExtensions
 {

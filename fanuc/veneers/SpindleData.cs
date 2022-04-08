@@ -1,9 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using l99.driver.@base;
-using Newtonsoft.Json.Linq;
-using NLog.Targets;
+﻿using l99.driver.@base;
 
 namespace l99.driver.fanuc.veneers
 {

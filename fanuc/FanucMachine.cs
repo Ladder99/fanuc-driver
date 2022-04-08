@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using l99.driver.@base;
+﻿using l99.driver.@base;
 
 namespace l99.driver.fanuc
 {

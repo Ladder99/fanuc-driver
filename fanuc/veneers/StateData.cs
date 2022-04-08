@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using l99.driver.@base;
+﻿using l99.driver.@base;
 
 namespace l99.driver.fanuc.veneers
 {

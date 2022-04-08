@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using l99.driver.@base;
-using l99.driver.fanuc.strategies;
-using NLog;
+﻿using l99.driver.fanuc.strategies;
 
 namespace l99.driver.fanuc.collectors
 {

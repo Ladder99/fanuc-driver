@@ -1,8 +1,3 @@
-using System;
-using System.Reflection;
-using System.Reflection.Metadata.Ecma335;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 
 namespace l99.driver.fanuc
 {

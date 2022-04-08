@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using l99.driver.@base;
+﻿using l99.driver.@base;
 
 namespace l99.driver.fanuc.veneers
 {
