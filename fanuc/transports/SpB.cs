@@ -31,15 +31,15 @@ public class SpB : Transport
 
     public override async Task<dynamic?> CreateAsync()
     {
-        List<Metric> metrics = new List<Metric>()
+        _nodeMetrics = new List<Metric>()
         {
             new()
             {
                 Name = "IpAddress", DataType = (uint)DataType.String, StringValue = String.Join(';', Network.GetAllLocalIPv4())
             }
         };
-
-        _node = new SparkplugNode(metrics, null);
+        
+        _node = new SparkplugNode(_nodeMetrics, null);
 
         _nodeOptions = new SparkplugNodeOptions(
             brokerAddress: _config.transport["net"]["ip"],
