@@ -64,12 +64,12 @@ public class SpB : Transport
 
         _node.NodeCommandReceived += metric =>
         {
-            Console.WriteLine("node command incoming");
+            logger.Info($"[{machine.Id}] SpB node incoming command.");
         };
 
         _node.StatusMessageReceived += s =>
         {
-            Console.WriteLine($"status message received {s}");
+            logger.Warn($"[{machine.Id}] SpB node status message '{s}.");
         };
 
         await ConnectAsync();

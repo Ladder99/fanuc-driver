@@ -205,7 +205,7 @@ public class SHDR : Transport
                     }
                     catch (Exception ex)
                     {
-                        logger.Warn(ex, $"[{machine.Id} SHDR evaluation failed for '{transformName}'");
+                        logger.Warn(ex, $"[{machine.Id}] SHDR evaluation failed for '{transformName}'");
                     }
                 }
                 
@@ -223,7 +223,7 @@ public class SHDR : Transport
                     }
                     catch (Exception ex)
                     {
-                        logger.Warn(ex, $"[{machine.Id} SHDR evaluation failed for 'SWEEP_END'");
+                        logger.Warn(ex, $"[{machine.Id}] SHDR evaluation failed for 'SWEEP_END'");
                     }
                 }
                 
@@ -253,27 +253,27 @@ public class SHDR : Transport
         
         _adapter.AgentConnectionError = (sender, s) =>
         {
-            logger.Info($"[{machine.Id} MTC Agent connection error. {s}");
+            logger.Info($"[{machine.Id}] MTC Agent connection error. {s}");
         };
         
         _adapter.AgentDisconnected = (sender, s) =>
         {
-            logger.Info($"[{machine.Id} MTC Agent disconnected error. {s}");
+            logger.Info($"[{machine.Id}] MTC Agent disconnected error. {s}");
         };
         
         _adapter.AgentConnected = (sender, s) =>
         {
-            logger.Info($"[{machine.Id} MTC Agent connected. {s}");
+            logger.Info($"[{machine.Id}] MTC Agent connected. {s}");
         };
         
         _adapter.SendError = (sender, args) =>
         {
-            logger.Info($"[{machine.Id} MTC Agent send error. {args.Message}");
+            logger.Info($"[{machine.Id}] MTC Agent send error. {args.Message}");
         };
 
         _adapter.LineSent = (sender, args) =>
         {
-            logger.Info($"[{machine.Id} MTC Agent line send. {args.Message}");
+            logger.Debug($"[{machine.Id}] MTC Agent line send. {args.Message}");
         };
 
         _adapter.PingReceived = (sender, s) =>
