@@ -49,8 +49,8 @@ public class SpB : Transport
             password: _config.transport["password"],
             useTls: false,
             scadaHostIdentifier: "scada",
-            groupIdentifier: $"fanuc_{machine.Id}",
-            edgeNodeIdentifier: $"{Environment.MachineName}_{machine.Id}",    // TODO: clean up hostname to spb spec
+            groupIdentifier: $"fanuc",
+            edgeNodeIdentifier: $"{Environment.MachineName}",    // TODO: clean up hostname to spb spec
             reconnectInterval: TimeSpan.FromSeconds(30),
             webSocketParameters: null,
             proxyOptions: null,
