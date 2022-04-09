@@ -78,17 +78,20 @@ public class SpB : Transport
 
     public override async Task ConnectAsync()
     {
-        if (!_node.IsConnected)
+        if (_config.machine.enabled)
         {
-            try
+            if (!_node.IsConnected)
             {
-                await _node.Start(_nodeOptions);
-                await _node.PublishMetrics(_nodeMetrics);
-                logger.Info($"[{machine.Id}] SpB node connected.");
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex,$"[{machine.Id}] Broker connection error.");
+                try
+                {
+                    await _node.Start(_nodeOptions);
+                    await _node.PublishMetrics(_nodeMetrics);
+                    logger.Info($"[{machine.Id}] SpB node connected.");
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex, $"[{machine.Id}] Broker connection error.");
+                }
             }
         }
     }

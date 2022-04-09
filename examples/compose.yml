@@ -116,6 +116,7 @@ services:
       - mqtt
       - influx
       - mtc
+      - spb
     container_name: fanuc_driver
     image: ladder99/fanuc-driver:${FOCAS_TGT}
     restart: always
