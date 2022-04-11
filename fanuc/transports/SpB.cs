@@ -50,7 +50,7 @@ public class SpB : Transport
             useTls: false,
             scadaHostIdentifier: "scada",
             groupIdentifier: $"fanuc",
-            edgeNodeIdentifier: $"{Environment.MachineName}",    // TODO: clean up hostname to spb spec
+            edgeNodeIdentifier: $"{Environment.MachineName}_{machine.Id}",    // TODO: clean up hostname to spb spec
             reconnectInterval: TimeSpan.FromSeconds(30),
             webSocketParameters: null,
             proxyOptions: null,
