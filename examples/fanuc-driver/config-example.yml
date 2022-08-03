@@ -62,9 +62,9 @@ system:
         {{observation.name}},
         {{-}}machine={{observation.machine}},
         {{-}}path={{observation.marker[0].number}}
-        program_name="{{data.program.name}}",
-        {{-}}program_comment="{{data.program.comment}}",
-        {{-}}program_modified={{data.program.modified}},
+        program_name="{{data.program.main.name}}",
+        {{-}}program_comment="{{data.program.main.comment}}",
+        {{-}}program_modified={{data.program.main.modified}},
         {{-}}pieces_produced={{data.pieces.produced}},
         {{-}}pieces_produced_life={{data.pieces.produced_life}},
         {{-}}pieces_remaining={{data.pieces.remaining}},
@@ -320,10 +320,10 @@ system:
         ShdrEvent p+`_part_count_life` data.pieces.produced_life;
         ShdrEvent p+`_part_count_complete` data.pieces.produced;
         ShdrEvent p+`_part_count_remain` data.pieces.remaining;
-        ShdrEvent p+`_prg_name` data.program.name;
-        ShdrEvent p+`_prg_cmt` data.program.comment;
-        ShdrEvent p+`_prg_size` data.program.size_b;
-        ShdrEvent p+`_prg_mod` data.program.modified;
+        ShdrEvent p+`_prg_name` data.program.main.name;
+        ShdrEvent p+`_prg_cmt` data.program.main.comment;
+        ShdrEvent p+`_prg_size` data.program.main.size_b;
+        ShdrEvent p+`_prg_mod` data.program.main.modified;
       l99.driver.fanuc.veneers.GCodeBlocks, fanuc: >-
         p = device+`_p`+observation.marker[0].number;
         if (array.size data.blocks) == 0
@@ -443,6 +443,14 @@ user:
         ip: 172.16.13.50
         port: !!int 8193
         timeout_s: !!int 3
+  source-4: &source-4
+    # example fanuc source
+    l99.driver.fanuc.FanucMachine, fanuc:
+      sweep_ms: !!int 1000
+      net:
+        ip: 192.168.1.50
+        port: !!int 8193
+        timeout_s: !!int 3
   # collectors
   collector-0: &collector-0
     # example collector
@@ -476,7 +484,7 @@ user:
       enabled: !!bool true
       net:
         type: tcp
-        ip: 10.1.10.170
+        ip: localhost
         port: !!int 1883
       anonymous: !!bool true
       user:
@@ -597,7 +605,7 @@ machines:
     <<: *change-filter
   - id: f_sim
     <<: *machine-base
-    #<<: *machine-disabled
+    <<: *machine-disabled
     <<: *source-1
     <<: *collector-1
     <<: *target-spb-1
@@ -606,7 +614,7 @@ machines:
     #<<: *no-filter
   - id: f13_50                # StarCNC SR38-A
     <<: *machine-base
-    #<<: *machine-disabled
+    <<: *machine-disabled
     <<: *source-2
     <<: *collector-1
     <<: *target-spb-1
@@ -621,4 +629,13 @@ machines:
     <<: *target-spb-1
     <<: *change-filter
     #<<: *target-shdr-3
+    #<<: *no-filter
+  - id: f1_50                 # Takisawa TMM-250               
+    <<: *machine-base
+    #<<: *machine-disabled
+    <<: *source-4
+    <<: *collector-1
+    <<: *target-mqtt-1
+    #<<: *target-null
+    <<: *change-filter
     #<<: *no-filter

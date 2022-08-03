@@ -46,7 +46,9 @@ namespace l99.driver.fanuc.veneers
         
         protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
         {
-            if (additionalInputs.All(o => o.success == true))
+            // let the data output even if incorrect
+            // TODO
+            //if (additionalInputs.All(o => o.success == true))
             {
                 var current_spindle = input;
                 var spindle_names = additionalInputs[0];
@@ -122,9 +124,9 @@ namespace l99.driver.fanuc.veneers
                     await onDataChangedAsync(input, current_value);
                 }
             }
-            else
+            //else
             {
-                await onErrorAsync(input);
+            //    await onErrorAsync(input);
             }
             
             return new { veneer = this };

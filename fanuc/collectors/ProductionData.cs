@@ -22,14 +22,26 @@ namespace l99.driver.fanuc.collectors
             
             await strategy.SetNativeKeyed($"program_name", 
                 await strategy.Platform.ExePrgNameAsync());
-            var o_num = strategy.GetKeyed($"program_name")
-                .response.cnc_exeprgname.exeprg.o_num;
+            
+            // not supported on 16i
+            //var o_num = strategy.GetKeyed($"program_name")
+            //    .response.cnc_exeprgname.exeprg.o_num;
+            
+            var running_num = strategy.GetKeyed($"program_number")
+                .response.cnc_rdprgnum.prgnum.data;
+            
+            var main_num = strategy.GetKeyed($"program_number")
+                .response.cnc_rdprgnum.prgnum.mdata;
+            
             //System.Console.WriteLine($"{this.strategy.Machine.Id} {current_path} {b.response.cnc_rdprgnum.prgnum.data} {b.response.cnc_rdprgnum.prgnum.mdata}");
             
             await strategy.Peel("production",
                 strategy.GetKeyed($"program_name"),
+                strategy.GetKeyed("program_number"),
                 await strategy.SetNativeKeyed($"prog_dir", 
-                    await strategy.Platform.RdProgDir3Async(o_num)),
+                    await strategy.Platform.RdProgDir3Async(running_num)),
+                await strategy.SetNativeKeyed($"prog_dir", 
+                    await strategy.Platform.RdProgDir3Async(main_num)),
                 await strategy.SetNativeKeyed($"pieces_produced", 
                     await strategy.Platform.RdParamDoubleWordNoAxisAsync(6711)),
                 await strategy.SetNativeKeyed($"pieces_produced_life", 

@@ -14,7 +14,8 @@ namespace l99.driver.fanuc.veneers
         
         protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
         {
-            if (additionalInputs.Slice(0,7).All(o => o.success == true))
+            // skip index 7 - power consumption
+            if (additionalInputs.Slice(0,6).All(o => o.success == true))
             {
                 var current_axis = input;
                 var axes_names = additionalInputs[0];

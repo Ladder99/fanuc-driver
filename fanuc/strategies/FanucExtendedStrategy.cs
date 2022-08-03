@@ -577,6 +577,7 @@ namespace l99.driver.fanuc.strategies
                         {
                             _currentCollectSegment = SegmentEnum.AXIS;
                             dynamic axis_name = axis_names[current_axis-1];
+                            //Debug.Print($"PATH:{current_path} AXIS:{axis_name}");
                             dynamic axis_marker = axisMarker(current_axis, axis_name);
                             dynamic axis_marker_full = new[] {path_marker, axis_marker};
                             await Set("axis_split", new[] {current_path.ToString(), axis_name});
@@ -590,6 +591,7 @@ namespace l99.driver.fanuc.strategies
                         {
                             _currentCollectSegment = SegmentEnum.SPINDLE;
                             dynamic spindle_name = spindle_names[current_spindle-1];
+                            //Debug.Print($"PATH:{current_path} SPINDLE:{spindle_name}");
                             dynamic spindle_marker = spindleMarker(current_spindle, spindle_name);
                             dynamic spindle_marker_full = new[] {path_marker, spindle_marker};
                             await Set("spindle_split", new[] {current_path.ToString(), spindle_name});

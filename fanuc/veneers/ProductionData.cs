@@ -10,11 +10,20 @@ namespace l99.driver.fanuc.veneers
             {
                 program = new
                 {
-                    name = string.Empty,
-                    number = -1,
-                    size_b = -1,
-                    comment = string.Empty,
-                    modified = -1
+                    running = new {
+                        name = string.Empty,
+                        number = -1,
+                        size_b = -1,
+                        comment = string.Empty,
+                        modified = -1
+                    },
+                    main = new {
+                        name = string.Empty,
+                        number = -1,
+                        size_b = -1,
+                        comment = string.Empty,
+                        modified = -1
+                    }
                 },
                 pieces = new
                 {
@@ -31,22 +40,37 @@ namespace l99.driver.fanuc.veneers
         
         protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
         {
-            if (input.success && additionalInputs.All(o => o.success == true))
+            // remove input.success check for 16i
+            if (additionalInputs.All(o => o.success == true))
             {
-                bool has_prog = input.response.cnc_exeprgname.exeprg.o_num > 0;
-                long modified = 0;
+                bool has_prog_name_running = input.response.cnc_exeprgname.exeprg.o_num > 0;
+                long modified_running = 0;
+                long modified_main = 0;
 
                 try
                 {
-                    modified = has_prog
-                        ? new DateTimeOffset(new DateTime(
-                                additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.mdate.year,
-                                additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.mdate.month,
-                                additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.mdate.day,
-                                additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.mdate.hour,
-                                additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.mdate.minute, 0))
-                            .ToUnixTimeMilliseconds()
-                        : 0;
+                    modified_running = new DateTimeOffset(new DateTime(
+                            additionalInputs[1].response.cnc_rdprogdir3.buf.dir1.mdate.year,
+                            additionalInputs[1].response.cnc_rdprogdir3.buf.dir1.mdate.month,
+                            additionalInputs[1].response.cnc_rdprogdir3.buf.dir1.mdate.day,
+                            additionalInputs[1].response.cnc_rdprogdir3.buf.dir1.mdate.hour,
+                            additionalInputs[1].response.cnc_rdprogdir3.buf.dir1.mdate.minute, 0))
+                        .ToUnixTimeMilliseconds();
+                }
+                catch
+                {
+                   
+                }
+                
+                try
+                {
+                    modified_main = new DateTimeOffset(new DateTime(
+                            additionalInputs[2].response.cnc_rdprogdir3.buf.dir1.mdate.year,
+                            additionalInputs[2].response.cnc_rdprogdir3.buf.dir1.mdate.month,
+                            additionalInputs[2].response.cnc_rdprogdir3.buf.dir1.mdate.day,
+                            additionalInputs[2].response.cnc_rdprogdir3.buf.dir1.mdate.hour,
+                            additionalInputs[2].response.cnc_rdprogdir3.buf.dir1.mdate.minute, 0))
+                        .ToUnixTimeMilliseconds();
                 }
                 catch
                 {
@@ -56,20 +80,29 @@ namespace l99.driver.fanuc.veneers
                 var current_value = new
                 {
                     program = new {
-                        name = has_prog ? new string(input.response.cnc_exeprgname.exeprg.name).AsAscii() : "",
-                        number = input.response.cnc_exeprgname.exeprg.o_num,
-                        size_b = additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.length,
-                        comment = additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.comment,
-                        modified
+                        running = new {
+                            name = has_prog_name_running ? new string(input.response.cnc_exeprgname.exeprg.name).AsAscii() : "",
+                            number = additionalInputs[0].response.cnc_rdprgnum.prgnum.data,
+                            size_b = additionalInputs[1].response.cnc_rdprogdir3.buf.dir1.length,
+                            comment = additionalInputs[1].response.cnc_rdprogdir3.buf.dir1.comment,
+                            modified = modified_running
+                        },
+                        main = new {
+                            name = "",
+                            number = additionalInputs[0].response.cnc_rdprgnum.prgnum.mdata,
+                            size_b = additionalInputs[2].response.cnc_rdprogdir3.buf.dir1.length,
+                            comment = additionalInputs[2].response.cnc_rdprogdir3.buf.dir1.comment,
+                            modified = modified_main
+                        }
                     },
                     pieces = new {
-                        produced = additionalInputs[1].response.cnc_rdparam.param.data.ldata,
-                        produced_life = additionalInputs[2].response.cnc_rdparam.param.data.ldata,
-                        remaining = additionalInputs[3].response.cnc_rdparam.param.data.ldata
+                        produced = additionalInputs[3].response.cnc_rdparam.param.data.ldata,
+                        produced_life = additionalInputs[4].response.cnc_rdparam.param.data.ldata,
+                        remaining = additionalInputs[5].response.cnc_rdparam.param.data.ldata
                     },
                     timers = new {
-                        cycle_time_ms = (additionalInputs[4].response.cnc_rdparam.param.data.ldata * 60000) +
-                                        additionalInputs[5].response.cnc_rdparam.param.data.ldata
+                        cycle_time_ms = (additionalInputs[6].response.cnc_rdparam.param.data.ldata * 60000) +
+                                        additionalInputs[7].response.cnc_rdparam.param.data.ldata
                     }
                 };
             

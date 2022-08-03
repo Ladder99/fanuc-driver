@@ -183,7 +183,7 @@ namespace l99.driver.fanuc.veneers
                 
                 await onDataArrivedAsync(input, current_value);
                 
-                if (!current_value.Equals(this.lastChangedValue))
+                if (current_value.IsDifferentString((object)lastChangedValue))
                 {
                     await onDataChangedAsync(input, current_value);
                 }
