@@ -221,7 +221,7 @@ system:
           </Path>
       axis:
         linear: |-
-          <Linear id="{{device}}_p{{path}}_{{axis}}">
+          <Linear id="{{device}}_p{{path}}_{{axis}}" name="{{axis}}">
             <DataItems>
               <DataItem category="SAMPLE" id="{{device}}_p{{path}}_{{axis}}_pos_absolute" type="POSITION" subType="ACTUAL" units="MILLIMETER"/>
               <DataItem category="SAMPLE" id="{{device}}_p{{path}}_{{axis}}_pos_distance" type="POSITION" subType="ACTUAL" units="MILLIMETER"/>
@@ -242,7 +242,7 @@ system:
             </Compositions>
           </Linear>
         rotary: |-
-          <Rotary id="{{device}}_p{{path}}_{{axis}}">
+          <Rotary id="{{device}}_p{{path}}_{{axis}}" name="{{axis}}>
             <DataItems>
               <DataItem category="SAMPLE" id="{{device}}_p{{path}}_{{axis}}_pos_absolute" type="POSITION" subType="ACTUAL" units="DEGREE"/>
               <DataItem category="SAMPLE" id="{{device}}_p{{path}}_{{axis}}_pos_distance" type="POSITION" subType="ACTUAL" units="DEGREE"/>
@@ -264,7 +264,7 @@ system:
             </Compositions>
           </Rotary>
         spindle: |-
-          <Rotary id="{{device}}_p{{path}}_{{spindle}}">
+          <Rotary id="{{device}}_p{{path}}_{{spindle}} name="{{spindle}}">
             <DataItems>
               <DataItem category="SAMPLE" id="{{device}}_p{{path}}_{{spindle}}_load" type="LOAD" units="PERCENT"/>
               <DataItem category="SAMPLE" id="{{device}}_p{{path}}_{{spindle}}_temp" type="TEMPERATURE" units="CELSIUS" compositionId="{{device}}_p{{path}}_{{spindle}}_motor"/>
