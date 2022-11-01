@@ -16,10 +16,12 @@ namespace l99.driver.fanuc.collectors
         
         public override async Task CollectForEachPathAsync(short current_path, string[] axis, string[] spindle, dynamic path_marker)
         {
+            // cnc_rdprgnum
             await strategy.SetNativeKeyed($"program_number",
                 await strategy.Platform.RdPrgNumAsync());
             var b = strategy.GetKeyed($"program_number");
             
+            // cnc_exeprgname
             await strategy.SetNativeKeyed($"program_name", 
                 await strategy.Platform.ExePrgNameAsync());
             

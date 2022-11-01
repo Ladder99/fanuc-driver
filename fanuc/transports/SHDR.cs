@@ -145,19 +145,19 @@ public class SHDR : Transport
     private void cacheShdrDataItem(ShdrDataItem dataItem)
     {
         _adapter.AddDataItem(dataItem);
-        //Console.WriteLine($"{dataItem.DataItemKey}:{string.Join(',', dataItem.Values.Select(v=>v.Value))}");
+        logger.Trace($"[{machine.Id}] {dataItem.DataItemKey}:{string.Join(',', dataItem.Values.Select(v=>v.Value))}");
     }
     
     private void cacheShdrMessage(ShdrMessage dataItem)
     {
         _adapter.AddMessage(dataItem);
-        //Console.WriteLine($"{dataItem.DataItemKey}:{string.Join(',', dataItem.Values.Select(v=>v.Value))}");
+        logger.Trace($"[{machine.Id}] {dataItem.DataItemKey}:{string.Join(',', dataItem.Values.Select(v=>v.Value))}");
     }
     
     private void cacheShdrCondition(ShdrCondition dataItem)
     {
         _adapter.AddCondition(dataItem);
-        //Console.WriteLine($"{dataItem.DataItemKey}:{string.Join(',', dataItem.Values.Select(v=>v.Value))}");
+        logger.Trace($"[{machine.Id}] {dataItem.DataItemKey}:{string.Join(',', dataItem.FaultStates.Select(v=>v.Level))}");
     }
     
     public override async Task<dynamic?> CreateAsync()

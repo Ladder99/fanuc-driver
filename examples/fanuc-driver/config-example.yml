@@ -325,7 +325,7 @@ system:
         ShdrEvent p+`_part_count_life` data.pieces.produced_life;
         ShdrEvent p+`_part_count_complete` data.pieces.produced;
         ShdrEvent p+`_part_count_remain` data.pieces.remaining;
-        ShdrEvent p+`_prg_name` data.program.main.name;
+        ShdrEvent p+`_prg_name` (data.program.running.name == `` ? data.program.main.name : data.program.running.name);
         ShdrEvent p+`_prg_cmt` data.program.main.comment;
         ShdrEvent p+`_prg_size` data.program.main.size_b;
         ShdrEvent p+`_prg_mod` data.program.main.modified;
