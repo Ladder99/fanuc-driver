@@ -127,7 +127,7 @@ system:
       # if you don't specify a full path then the generated file will reside
       #   in the working directory.  if this is containarized then the file will be
       #   inside the container file system.
-      output: "device_{{device}}.xml"
+      output: "/etc/fanuc/device_{{device}}.xml"
       root: |-
         <Device id="{{device}}" name="{{device}}" uuid="{{device}}">
           <Description manufacturer="xxx" serialNumber="xxx">xxx</Description>
