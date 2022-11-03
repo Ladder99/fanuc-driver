@@ -29,7 +29,9 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 RUN mkdir -p /etc/fanuc
-COPY examples/fanuc-driver/config-example.yml /etc/fanuc/nlog.config
+COPY examples/fanuc-driver/config-example.system.yml /etc/fanuc/config.system.yml
+COPY examples/fanuc-driver/config-example.user.yml /etc/fanuc/config.user.yml
+COPY examples/fanuc-driver/config-example.machines.yml /etc/fanuc/config.machines.yml
 COPY examples/fanuc-driver/nlog-example-linux.config /etc/fanuc/nlog.config
 EXPOSE 7800-7900
-ENTRYPOINT ["dotnet", "fanuc.dll", "--nlog", "/etc/fanuc/nlog.config", "--config", "/etc/fanuc/config.yml"]
+ENTRYPOINT ["dotnet", "fanuc.dll", "--nlog", "/etc/fanuc/nlog.config", "--config", "/etc/fanuc/config.system.yml,/etc/fanuc/config.user.yml,/etc/fanuc/config.machines.yml"]
