@@ -1,4 +1,3 @@
----
 #
 # system configuration section
 #
@@ -62,9 +61,12 @@ system:
         {{observation.name}},
         {{-}}machine={{observation.machine}},
         {{-}}path={{observation.marker[0].number}}
-        program_name="{{data.program.main.name}}",
-        {{-}}program_comment="{{data.program.main.comment}}",
-        {{-}}program_modified={{data.program.main.modified}},
+        program_name_selected="{{data.program.selected.name}}",
+        {{-}}program_comment_selected="{{data.program.selected.comment}}",
+        {{-}}program_modified_selected={{data.program.selected.modified}},
+        {{-}}program_name_current="{{data.program.current.name}}",
+        {{-}}program_comment_current="{{data.program.current.comment}}",
+        {{-}}program_modified_current={{data.program.current.modified}},
         {{-}}pieces_produced={{data.pieces.produced}},
         {{-}}pieces_produced_life={{data.pieces.produced_life}},
         {{-}}pieces_remaining={{data.pieces.remaining}},
@@ -215,10 +217,14 @@ system:
               <DataItem category="EVENT" id="{{device}}_p{{path}}_part_count_life" type="PART_COUNT" subType="ALL"/>
               <DataItem category="EVENT" id="{{device}}_p{{path}}_part_count_complete" type="PART_COUNT" subType="COMPLETE"/>
               <DataItem category="EVENT" id="{{device}}_p{{path}}_part_count_remain" type="PART_COUNT" subType="REMAINING"/>
-              <DataItem category="EVENT" id="{{device}}_p{{path}}_prg_name" type="PROGRAM"/>
-              <DataItem category="EVENT" id="{{device}}_p{{path}}_prg_cmt" type="PROGRAM_COMMENT"/>
-              <DataItem category="EVENT" id="{{device}}_p{{path}}_prg_size" type="x:PROGRAM_SIZE"/>
-              <DataItem category="EVENT" id="{{device}}_p{{path}}_prg_mod" type="x:PROGRAM_MODIFIED"/>
+              <DataItem category="EVENT" id="{{device}}_p{{path}}_prg_name_selected" type="PROGRAM" subType="MAIN"/>
+              <DataItem category="EVENT" id="{{device}}_p{{path}}_prg_cmt_selected" type="PROGRAM_COMMENT" subType="MAIN"/>
+              <DataItem category="EVENT" id="{{device}}_p{{path}}_prg_size_selected" type="x:PROGRAM_SIZE" subType="MAIN"/>
+              <DataItem category="EVENT" id="{{device}}_p{{path}}_prg_mod_selected" type="x:PROGRAM_MODIFIED" subType="MAIN"/>
+              <DataItem category="EVENT" id="{{device}}_p{{path}}_prg_name_current" type="PROGRAM" subType="ACTIVE"/>
+              <DataItem category="EVENT" id="{{device}}_p{{path}}_prg_cmt_current" type="PROGRAM_COMMENT" subType="ACTIVE"/>
+              <DataItem category="EVENT" id="{{device}}_p{{path}}_prg_size_current" type="x:PROGRAM_SIZE" subType="ACTIVE"/>
+              <DataItem category="EVENT" id="{{device}}_p{{path}}_prg_mod_current" type="x:PROGRAM_MODIFIED" subType="ACTIVE"/>
               <!-- G -->
               <DataItem category="EVENT" id="{{device}}_p{{path}}_block" type="BLOCK"/>
               <DataItem category="EVENT" id="{{device}}_p{{path}}_line" type="MESSAGE"/>
@@ -325,10 +331,14 @@ system:
         ShdrEvent p+`_part_count_life` data.pieces.produced_life;
         ShdrEvent p+`_part_count_complete` data.pieces.produced;
         ShdrEvent p+`_part_count_remain` data.pieces.remaining;
-        ShdrEvent p+`_prg_name` (data.program.running.name == `` ? data.program.main.name : data.program.running.name);
-        ShdrEvent p+`_prg_cmt` data.program.main.comment;
-        ShdrEvent p+`_prg_size` data.program.main.size_b;
-        ShdrEvent p+`_prg_mod` data.program.main.modified;
+        ShdrEvent p+`_prg_name_selected` data.program.selected.name;
+        ShdrEvent p+`_prg_cmt_selected` data.program.selected.comment;
+        ShdrEvent p+`_prg_size_selected` data.program.selected.size_b;
+        ShdrEvent p+`_prg_mod_selected` data.program.selected.modified;
+        ShdrEvent p+`_prg_name_current` data.program.current.name;
+        ShdrEvent p+`_prg_cmt_current` data.program.current.comment;
+        ShdrEvent p+`_prg_size_current` data.program.current.size_b;
+        ShdrEvent p+`_prg_mod_current` data.program.current.modified;
       l99.driver.fanuc.veneers.GCodeBlocks, fanuc: >-
         p = device+`_p`+observation.marker[0].number;
         if (array.size data.blocks) == 0
@@ -419,195 +429,3 @@ system:
     transport: l99.driver.fanuc.transports.SHDR, fanuc
   transport-base-spb: &transport-base-spb
     transport: l99.driver.fanuc.transports.SpB, fanuc
-#
-# user configuration section
-#
-user:
-  # focas sources
-  source-1: &source-1
-    # example fanuc source
-    l99.driver.fanuc.FanucMachine, fanuc:
-      sweep_ms: !!int 1000
-      net:
-        ip: 10.1.10.211
-        port: !!int 8193
-        timeout_s: !!int 3
-  # collectors
-  collector-0: &collector-0
-    # example collector
-    l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
-      - l99.driver.fanuc.collectors.ParameterDump, fanuc
-      - l99.driver.fanuc.collectors.DiagnosisDump, fanuc
-      - l99.driver.fanuc.collectors.PmcDump, fanuc
-  collector-1: &collector-1
-    # example collector
-    l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
-      - l99.driver.fanuc.collectors.MachineInfo, fanuc
-      - l99.driver.fanuc.collectors.Alarms, fanuc
-      - l99.driver.fanuc.collectors.Messages, fanuc
-      - l99.driver.fanuc.collectors.StateData, fanuc
-      - l99.driver.fanuc.collectors.ToolData, fanuc
-      - l99.driver.fanuc.collectors.ProductionData, fanuc
-      - l99.driver.fanuc.collectors.GCodeData, fanuc
-      - l99.driver.fanuc.collectors.AxisData, fanuc
-      - l99.driver.fanuc.collectors.SpindleData, fanuc
-  # targets
-  target-null: &target-null
-    # send to nothing
-    << : *transport-base-null
-    l99.driver.fanuc.transports.Null, fanuc:
-      enabled: !!bool true
-  target-mqtt-1: &target-mqtt-1
-    # send to tcp mqtt broker
-    << : *transport-base-mqtt
-    l99.driver.fanuc.transports.MQTT, fanuc:
-      << : *default-mqtt-options
-      enabled: !!bool true
-      net:
-        type: tcp
-        ip: localhost
-        port: !!int 1883
-      anonymous: !!bool true
-      user:
-      password:
-  target-mqtt-2: &target-mqtt-2
-    # send to websocket mqtt broker
-    << : *transport-base-mqtt
-    l99.driver.fanuc.transports.MQTT, fanuc:
-      << : *default-mqtt-options
-      enabled: !!bool true
-      net:
-        type: ws
-        ip: test.mosquitto.org
-        port: !!int 8080
-      anonymous: !!bool true
-      user:
-      password:
-  target-influx-1: &target-influx-1
-    # send to cloud influx instance
-    <<: *transport-base-influx
-    l99.driver.fanuc.transports.InfluxLP, fanuc:
-      <<: *default-influx-transformers
-      host: "http://influx:8086"
-      token: "dewlnpy0CmcikwWmMBlqoxcoeuUWpdlDQi8yH7QyGU0tcfn0avMMcpPWYJ-ZUmLD8iHXNl27M3GBHGC4n4_EwA=="
-      org: "fanuc"
-      bucket: "fanuc"
-  target-spb-1: &target-spb-1
-    # send to tcp mqtt broker
-    << : *transport-base-spb
-    l99.driver.fanuc.transports.SpB, fanuc:
-      enabled: !!bool true
-      net:
-        type: tcp
-        ip: 10.1.10.2
-        port: !!int 1883
-      anonymous: !!bool false
-      user: admin
-      password: password
-  target-shdr-1: &target-shdr-1
-    # open tcp socket for mtconnect agent
-    << : *transport-base-shdr
-    l99.driver.fanuc.transports.SHDR, fanuc:
-      << : *default-shdr-transformers
-      << : *default-shdr-model-genny
-      device_name: f_sim
-      net:
-        port: !!int 7878
-        heartbeat_ms: !!int 10000
-        interval_ms: !!int 1000
-#
-# runtime configuration section
-#
-machines:
-  # SHORT VERSION
-  # each machine must have a unique 'id' value
-  # each machine must consist of the following references:
-  #  base: driver configuration
-  #    *machine-base
-  #  disabled override: (optional) set machine inactive
-  #    *machine-disabled
-  #  source: where to get data
-  #    -- user defined reference
-  #  collector: what data to collect
-  #    -- user defined reference
-  #  target: where to send data
-  #    -- user defined reference
-  #  filter: how to filter data
-  #    *change-filter - send only when data changes
-  #    *no-filter - send all data, regardless of change
-
-  #- id: example-null
-  #  <<: *machine-base
-  #  <<: *machine-disabled
-  #  <<: *source-1
-  #  <<: *collector-1
-  #  <<: *target-null
-  #  <<: *change-filter
-
-  #- id: example-mqtt
-  #  <<: *machine-base        # base Fanuc configuration
-  #  <<: *machine-disabled    # omit this machine setup from runtime; remove to make active
-  #  <<: *source-1            # where to get data
-  #  <<: *collector-1         # what data to get and how to transform data
-  #  <<: *target-mqtt-1       # where to send data
-  #  <<: *change-filter       # data filter
-
-  #- id: example-influx
-  #  <<: *machine-base
-  #  <<: *machine-disabled
-  #  <<: *source-1
-  #  <<: *collector-1
-  #  <<: *target-influx-1
-  #  <<: *change-filter
-
-  #- id: example-spb
-  #  <<: *machine-base
-  #  <<: *machine-disabled
-  #  <<: *source-1
-  #  <<: *collector-1
-  #  <<: *target-spb-1
-  #  <<: *change-filter
-
-  #- id: f_sim_mtc_short
-  #  <<: *machine-base
-  #  #  <<: *machine-disabled
-  #  <<: *source-1
-  #  <<: *collector-1
-  #  <<: *target-shdr-1
-  #  <<: *no-filter
-  
-  # LONG VERSION
-  - id: f_sim_mtc_long
-    enabled: !!bool true
-    type: l99.driver.fanuc.FanucMachine, fanuc
-    strategy: l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc
-    handler: l99.driver.fanuc.handlers.FanucOne, fanuc
-    transport: l99.driver.fanuc.transports.SHDR, fanuc
-    l99.driver.fanuc.FanucMachine, fanuc:
-      sweep_ms: !!int 1000
-      net:
-        ip: 10.1.10.211
-        port: !!int 8193
-        timeout_s: !!int 3
-    l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
-      - l99.driver.fanuc.collectors.MachineInfo, fanuc
-      #- l99.driver.fanuc.collectors.Alarms, fanuc
-      #- l99.driver.fanuc.collectors.Messages, fanuc
-      #- l99.driver.fanuc.collectors.StateData, fanuc
-      #- l99.driver.fanuc.collectors.ToolData, fanuc
-      #- l99.driver.fanuc.collectors.ProductionData, fanuc
-      #- l99.driver.fanuc.collectors.GCodeData, fanuc
-      #- l99.driver.fanuc.collectors.AxisData, fanuc
-      #- l99.driver.fanuc.collectors.SpindleData, fanuc
-    l99.driver.fanuc.handlers.FanucOne, fanuc:
-      change_only: !!bool false
-      skip_internal: !!bool true
-    l99.driver.fanuc.transports.SHDR, fanuc:
-      << : *default-shdr-transformers
-      << : *default-shdr-model-genny
-      device_name: f_sim
-      net:
-        port: !!int 7878
-        heartbeat_ms: !!int 10000
-        interval_ms: !!int 1000
-    

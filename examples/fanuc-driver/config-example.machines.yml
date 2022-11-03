@@ -1,0 +1,96 @@
+#
+# runtime configuration section
+#
+machines:
+  # SHORT VERSION
+  # each machine must have a unique 'id' value
+  # each machine must consist of the following references:
+  #  base: driver configuration
+  #    *machine-base
+  #  disabled override: (optional) set machine inactive
+  #    *machine-disabled
+  #  source: where to get data
+  #    -- user defined reference
+  #  collector: what data to collect
+  #    -- user defined reference
+  #  target: where to send data
+  #    -- user defined reference
+  #  filter: how to filter data
+  #    *change-filter - send only when data changes
+  #    *no-filter - send all data, regardless of change
+
+  #- id: example-null
+  #  <<: *machine-base
+  #  <<: *machine-disabled
+  #  <<: *source-1
+  #  <<: *collector-1
+  #  <<: *target-null
+  #  <<: *change-filter
+
+  #- id: example-mqtt
+  #  <<: *machine-base        # base Fanuc configuration
+  #  <<: *machine-disabled    # omit this machine setup from runtime; remove to make active
+  #  <<: *source-1            # where to get data
+  #  <<: *collector-1         # what data to get and how to transform data
+  #  <<: *target-mqtt-1       # where to send data
+  #  <<: *change-filter       # data filter
+
+  #- id: example-influx
+  #  <<: *machine-base
+  #  <<: *machine-disabled
+  #  <<: *source-1
+  #  <<: *collector-1
+  #  <<: *target-influx-1
+  #  <<: *change-filter
+
+  #- id: example-spb
+  #  <<: *machine-base
+  #  <<: *machine-disabled
+  #  <<: *source-1
+  #  <<: *collector-1
+  #  <<: *target-spb-1
+  #  <<: *change-filter
+
+  #- id: f_sim_mtc_short
+  #  <<: *machine-base
+  #  #  <<: *machine-disabled
+  #  <<: *source-1
+  #  <<: *collector-1
+  #  <<: *target-shdr-1
+  #  <<: *no-filter
+  
+  # LONG VERSION
+  - id: f_sim_mtc_long
+    enabled: !!bool true
+    type: l99.driver.fanuc.FanucMachine, fanuc
+    strategy: l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc
+    handler: l99.driver.fanuc.handlers.FanucOne, fanuc
+    transport: l99.driver.fanuc.transports.SHDR, fanuc
+    l99.driver.fanuc.FanucMachine, fanuc:
+      sweep_ms: !!int 1000
+      net:
+        ip: 10.1.10.211
+        port: !!int 8193
+        timeout_s: !!int 3
+    l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
+      - l99.driver.fanuc.collectors.MachineInfo, fanuc
+      #- l99.driver.fanuc.collectors.Alarms, fanuc
+      #- l99.driver.fanuc.collectors.Messages, fanuc
+      #- l99.driver.fanuc.collectors.StateData, fanuc
+      #- l99.driver.fanuc.collectors.ToolData, fanuc
+      #- l99.driver.fanuc.collectors.ProductionData, fanuc
+      #- l99.driver.fanuc.collectors.GCodeData, fanuc
+      #- l99.driver.fanuc.collectors.AxisData, fanuc
+      #- l99.driver.fanuc.collectors.SpindleData, fanuc
+    l99.driver.fanuc.handlers.FanucOne, fanuc:
+      change_only: !!bool false
+      skip_internal: !!bool true
+    l99.driver.fanuc.transports.SHDR, fanuc:
+      << : *default-shdr-transformers
+      << : *default-shdr-model-genny
+      device_name: f_sim
+      net:
+        port: !!int 7878
+        heartbeat_ms: !!int 10000
+        interval_ms: !!int 1000
+    

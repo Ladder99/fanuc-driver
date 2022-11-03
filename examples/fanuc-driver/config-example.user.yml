@@ -1,0 +1,96 @@
+#
+# user configuration section
+#
+user:
+  # focas sources
+  source-1: &source-1
+    # example fanuc source
+    l99.driver.fanuc.FanucMachine, fanuc:
+      sweep_ms: !!int 1000
+      net:
+        ip: 10.1.10.211
+        port: !!int 8193
+        timeout_s: !!int 3
+  # collectors
+  collector-0: &collector-0
+    # example collector
+    l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
+      - l99.driver.fanuc.collectors.ParameterDump, fanuc
+      - l99.driver.fanuc.collectors.DiagnosisDump, fanuc
+      - l99.driver.fanuc.collectors.PmcDump, fanuc
+  collector-1: &collector-1
+    # example collector
+    l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
+      - l99.driver.fanuc.collectors.MachineInfo, fanuc
+      - l99.driver.fanuc.collectors.Alarms, fanuc
+      - l99.driver.fanuc.collectors.Messages, fanuc
+      - l99.driver.fanuc.collectors.StateData, fanuc
+      - l99.driver.fanuc.collectors.ToolData, fanuc
+      - l99.driver.fanuc.collectors.ProductionData, fanuc
+      - l99.driver.fanuc.collectors.GCodeData, fanuc
+      - l99.driver.fanuc.collectors.AxisData, fanuc
+      - l99.driver.fanuc.collectors.SpindleData, fanuc
+  # targets
+  target-null: &target-null
+    # send to nothing
+    << : *transport-base-null
+    l99.driver.fanuc.transports.Null, fanuc:
+      enabled: !!bool true
+  target-mqtt-1: &target-mqtt-1
+    # send to tcp mqtt broker
+    << : *transport-base-mqtt
+    l99.driver.fanuc.transports.MQTT, fanuc:
+      << : *default-mqtt-options
+      enabled: !!bool true
+      net:
+        type: tcp
+        ip: localhost
+        port: !!int 1883
+      anonymous: !!bool true
+      user:
+      password:
+  target-mqtt-2: &target-mqtt-2
+    # send to websocket mqtt broker
+    << : *transport-base-mqtt
+    l99.driver.fanuc.transports.MQTT, fanuc:
+      << : *default-mqtt-options
+      enabled: !!bool true
+      net:
+        type: ws
+        ip: test.mosquitto.org
+        port: !!int 8080
+      anonymous: !!bool true
+      user:
+      password:
+  target-influx-1: &target-influx-1
+    # send to cloud influx instance
+    <<: *transport-base-influx
+    l99.driver.fanuc.transports.InfluxLP, fanuc:
+      <<: *default-influx-transformers
+      host: "http://influx:8086"
+      token: "dewlnpy0CmcikwWmMBlqoxcoeuUWpdlDQi8yH7QyGU0tcfn0avMMcpPWYJ-ZUmLD8iHXNl27M3GBHGC4n4_EwA=="
+      org: "fanuc"
+      bucket: "fanuc"
+  target-spb-1: &target-spb-1
+    # send to tcp mqtt broker
+    << : *transport-base-spb
+    l99.driver.fanuc.transports.SpB, fanuc:
+      enabled: !!bool true
+      net:
+        type: tcp
+        ip: 10.1.10.2
+        port: !!int 1883
+      anonymous: !!bool false
+      user: admin
+      password: password
+  target-shdr-1: &target-shdr-1
+    # open tcp socket for mtconnect agent
+    << : *transport-base-shdr
+    l99.driver.fanuc.transports.SHDR, fanuc:
+      << : *default-shdr-transformers
+      << : *default-shdr-model-genny
+      device_name: f_sim
+      net:
+        port: !!int 7878
+        heartbeat_ms: !!int 10000
+        interval_ms: !!int 1000
