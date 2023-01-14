@@ -1,5 +1,8 @@
-﻿using l99.driver.@base;
+﻿#pragma warning disable CS8602
 
+using l99.driver.@base;
+
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.veneers
 {
     public class StateData : Veneer
@@ -109,7 +112,7 @@ namespace l99.driver.fanuc.veneers
                 }
                 
                 
-                var current_value = new
+                var currentValue = new
                 {
                     mode,
                     execution,
@@ -139,11 +142,11 @@ namespace l99.driver.fanuc.veneers
                     }
                 };
                 
-                await onDataArrivedAsync(input, current_value);
+                await OnDataArrivedAsync(input, currentValue);
                 
-                if (current_value.IsDifferentString((object)lastChangedValue))
+                if (currentValue.IsDifferentString((object)lastChangedValue))
                 {
-                    await onDataChangedAsync(input, current_value);
+                    await OnDataChangedAsync(input, currentValue);
                 }
             }
             else
@@ -155,3 +158,4 @@ namespace l99.driver.fanuc.veneers
         }
     }
 }
+#pragma warning restore CS8602

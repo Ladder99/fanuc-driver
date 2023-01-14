@@ -16,3 +16,4 @@ global using System.Net.NetworkInformation;
 global using System.Net.Sockets;
 
 global using NLog;
+global using NLog.Extensions.Logging;

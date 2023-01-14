@@ -35,10 +35,10 @@ namespace l99.driver.fanuc.veneers
                     spindles = temp_value
                 };
                 
-                await onDataArrivedAsync(input, current_value);
+                await OnDataArrivedAsync(input, current_value);
 
                 if (current_value.spindles.IsDifferentHash((List<dynamic>) lastChangedValue.spindles))
-                    await onDataChangedAsync(input, current_value);
+                    await OnDataChangedAsync(input, current_value);
             }
             else
             {

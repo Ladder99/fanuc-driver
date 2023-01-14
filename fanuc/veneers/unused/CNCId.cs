@@ -23,11 +23,11 @@ namespace l99.driver.fanuc.veneers
                     cncid = string.Join("-", ((uint[])input.response.cnc_rdcncid.cncid).Select(x => x.ToString("X")).ToArray())
                 };
                 
-                await onDataArrivedAsync(input, current_value);
+                await OnDataArrivedAsync(input, current_value);
                 
                 if (!current_value.Equals(lastChangedValue))
                 {
-                    await onDataChangedAsync(input, current_value);
+                    await OnDataChangedAsync(input, current_value);
                 }
             }
             else

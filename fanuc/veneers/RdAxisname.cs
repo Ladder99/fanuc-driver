@@ -34,10 +34,10 @@ namespace l99.driver.fanuc.veneers
                     axes = temp_value
                 };
                 
-                await onDataArrivedAsync(input, current_value);
+                await OnDataArrivedAsync(input, current_value);
                 
                 if(current_value.axes.IsDifferentHash((List<dynamic>)lastChangedValue.axes))
-                    await onDataChangedAsync(input, current_value);
+                    await OnDataChangedAsync(input, current_value);
             }
             else
             {

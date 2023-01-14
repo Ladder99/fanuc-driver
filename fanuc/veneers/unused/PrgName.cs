@@ -25,11 +25,11 @@ namespace l99.driver.fanuc.veneers
                     number = input.response.cnc_exeprgname.exeprg.o_num
                 };
                 
-                await onDataArrivedAsync(input, current_value);
+                await OnDataArrivedAsync(input, current_value);
                 
                 if (!current_value.Equals(lastChangedValue))
                 {
-                    await onDataChangedAsync(input, current_value);
+                    await OnDataChangedAsync(input, current_value);
                 }
             }
             else

@@ -1,3 +1,4 @@
+#pragma warning disable CS0618, CS8618
 /*-------------------------------------------------------------------*/
 /* fwlib32.cs                                                        */
 /*                                                                   */
@@ -11414,3 +11415,4 @@ namespace l99.driver.fanuc
         
     } // End for Focas class
 }
+#pragma warning restore CS0618, CS8618

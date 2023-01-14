@@ -21,11 +21,11 @@ namespace l99.driver.fanuc.veneers
                 
                 var current_value = new { ldata = input.response.cnc_rdparam.param.data.ldata };
                 
-                await onDataArrivedAsync(input, current_value);
+                await OnDataArrivedAsync(input, current_value);
                 
                 if (!current_value.Equals(lastChangedValue))
                 {
-                    await onDataChangedAsync(input, current_value);
+                    await OnDataChangedAsync(input, current_value);
                 }
             }
             else

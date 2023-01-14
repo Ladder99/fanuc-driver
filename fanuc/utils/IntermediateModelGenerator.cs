@@ -1,23 +1,23 @@
 using l99.driver.@base;
 
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc
 {
     public class IntermediateModelGenerator
     {
-        protected ILogger logger;
+        private readonly ILogger _logger;
         private Machine _machine;
 
-        private Dictionary<string, (List<string>, List<string>)> _structure =
-            new Dictionary<string, (List<string>, List<string>)>();
+        private readonly Dictionary<string, (List<string>, List<string>)> _structure = new();
         
-        private Dictionary<string, Type> _rootItems = new Dictionary<string, Type>();
-        private Dictionary<string, Type> _pathItems = new Dictionary<string, Type>();
-        private Dictionary<string, Type> _axisItems = new Dictionary<string, Type>();
-        private Dictionary<string, Type> _spindleItems = new Dictionary<string, Type>();
+        private readonly Dictionary<string, Type> _rootItems = new();
+        private readonly Dictionary<string, Type> _pathItems = new();
+        private readonly Dictionary<string, Type> _axisItems = new();
+        private readonly Dictionary<string, Type> _spindleItems = new();
         
-        private List<short> _paths = new List<short>();
-        private Dictionary<short, List<string>> _axes = new Dictionary<short, List<string>>();
-        private Dictionary<short, List<string>> _spindles = new Dictionary<short, List<string>>();
+        private readonly List<short> _paths = new();
+        private readonly Dictionary<short, List<string>> _axes = new();
+        private readonly Dictionary<short, List<string>> _spindles = new();
         
         public bool IsGenerated { get; private set; }
 
@@ -25,37 +25,37 @@ namespace l99.driver.fanuc
         {
             get
             {
-                var obs_root = new JArray();
+                var obsRoot = new JArray();
                 foreach (var item in _rootItems)
                 {
-                    obs_root.Add(new JObject(
+                    obsRoot.Add(new JObject(
                         new JProperty("name", item.Key),
                         new JProperty("veneer", item.Value.FullName)
                     ));
                 }
                 
-                var obs_path = new JArray();
+                var obsPath = new JArray();
                 foreach (var item in _pathItems)
                 {
-                    obs_path.Add(new JObject(
+                    obsPath.Add(new JObject(
                         new JProperty("name", item.Key),
                         new JProperty("veneer", item.Value.FullName)
                     ));
                 }
                 
-                var obs_axis = new JArray();
+                var obsAxis = new JArray();
                 foreach (var item in _axisItems)
                 {
-                    obs_axis.Add(new JObject(
+                    obsAxis.Add(new JObject(
                         new JProperty("name", item.Key),
                         new JProperty("veneer", item.Value.FullName)
                     ));
                 }
                 
-                var obs_spindle = new JArray();
+                var obsSpindle = new JArray();
                 foreach (var item in _spindleItems)
                 {
-                    obs_spindle.Add(new JObject(
+                    obsSpindle.Add(new JObject(
                         new JProperty("name", item.Key),
                         new JProperty("type", item.Value.FullName)
                     ));
@@ -71,47 +71,47 @@ namespace l99.driver.fanuc
                     new JProperty("type", _machine.Strategy.GetType().FullName)
                 );
                 model["observations"] = new JObject();
-                model["observations"]["root"] = obs_root;
-                model["observations"]["path"] = obs_path;
-                model["observations"]["axis"] = obs_axis;
-                model["observations"]["spindle"] = obs_spindle;
+                model["observations"]["root"] = obsRoot;
+                model["observations"]["path"] = obsPath;
+                model["observations"]["axis"] = obsAxis;
+                model["observations"]["spindle"] = obsSpindle;
 
                 model["structure"] = new JObject();
                 model["structure"]["observations"] = new JObject(
                     new JProperty("$ref", "#/observations/root"));
 
-                var path_array = new JArray();
+                var pathArray = new JArray();
                 
                 foreach (short path in _paths)
                 {
-                    var axis_array = new JArray();
+                    var axisArray = new JArray();
                     //var axes = new JObject();
                     foreach (string axis in _axes[path])
                     {
-                        axis_array.Add(new JObject(
+                        axisArray.Add(new JObject(
                             new JProperty("name", axis),
                             new JProperty("observations", new JObject(new JProperty("$ref", "#/observations/axis")))
                         ));
                     }
 
-                    var spindle_array = new JArray();
+                    var spindleArray = new JArray();
                     //var spindles = new JObject();
                     foreach (string spindle in _spindles[path])
                     {
-                        spindle_array.Add(new JObject(
+                        spindleArray.Add(new JObject(
                             new JProperty("name", spindle),
                             new JProperty("observations", new JObject(new JProperty("$ref", "#/observations/spindle")))
                         ));
                     }
 
-                    path_array.Add(new JObject(
+                    pathArray.Add(new JObject(
                         new JProperty("name", path),
                         new JProperty("observations", new JObject(new JProperty("$ref", "#/observations/path"))),
-                        new JProperty("axis", axis_array),
-                        new JProperty("spindle", spindle_array)));
+                        new JProperty("axis", axisArray),
+                        new JProperty("spindle", spindleArray)));
                 }
 
-                model["structure"]["path"] = path_array;
+                model["structure"]["path"] = pathArray;
                 
                 return new { structure = _structure, model = model.ToString()};
             }
@@ -119,12 +119,12 @@ namespace l99.driver.fanuc
 
         public IntermediateModelGenerator()
         {
-            logger = LogManager.GetLogger(this.GetType().FullName);
+            _logger = LogManager.GetLogger(GetType().FullName);
         }
         
         public void Start(Machine machine)
         {
-            logger.Trace($"[{machine.Id}] Starting build.");
+            _logger.Trace($"[{machine.Id}] Starting build.");
             _machine = machine;
         }
         
@@ -134,13 +134,13 @@ namespace l99.driver.fanuc
             {
                 if (!_rootItems.ContainsKey(name))
                 {
-                    logger.Trace($"[{this._machine.Id}] AddRootItem {name}, {type}");
+                    _logger.Trace($"[{_machine.Id}] AddRootItem {name}, {type}");
                     _rootItems.Add(name, type);
                 }
             }
             catch (Exception ex)
             {
-                logger.Warn(ex,$"[{this._machine.Id}] AddRootItem {name}, {type}");
+                _logger.Warn(ex,$"[{_machine.Id}] AddRootItem {name}, {type}");
             }
         }
 
@@ -148,7 +148,7 @@ namespace l99.driver.fanuc
         {
             try
             {
-                logger.Trace($"[{this._machine.Id}] AddPath {path}");
+                _logger.Trace($"[{_machine.Id}] AddPath {path}");
                 _paths.Add(path);
                 _axes.Add(path, new List<string>());
                 _spindles.Add(path, new List<string>());
@@ -156,7 +156,7 @@ namespace l99.driver.fanuc
             }
             catch (Exception ex)
             {
-                logger.Warn(ex,$"[{this._machine.Id}] AddPath.");
+                _logger.Warn(ex,$"[{_machine.Id}] AddPath.");
             }
         }
         
@@ -166,13 +166,13 @@ namespace l99.driver.fanuc
             {
                 if (!_pathItems.ContainsKey(name))
                 {
-                    logger.Trace($"[{this._machine.Id}] AddPathItem {name}, {type}");
+                    _logger.Trace($"[{_machine.Id}] AddPathItem {name}, {type}");
                     _pathItems.Add(name, type);
                 }
             }
             catch (Exception ex)
             {
-                logger.Warn(ex,$"[{this._machine.Id}] AddPathItem {name}, {type}");
+                _logger.Warn(ex,$"[{_machine.Id}] AddPathItem {name}, {type}");
             }
         }
 
@@ -180,13 +180,13 @@ namespace l99.driver.fanuc
         {
             try
             {
-                logger.Trace($"[{this._machine.Id}] AddAxis {path}, {name}");
+                _logger.Trace($"[{this._machine.Id}] AddAxis {path}, {name}");
                 _axes[path].Add(name);
                 _structure[$"{path}"].Item1.Add(name);
             }
             catch (Exception ex)
             {
-                logger.Warn(ex,$"[{this._machine.Id}] AddAxis.");
+                _logger.Warn(ex,$"[{this._machine.Id}] AddAxis.");
             }
         }
         
@@ -196,13 +196,13 @@ namespace l99.driver.fanuc
             {
                 if (!_axisItems.ContainsKey(name))
                 {
-                    logger.Trace($"[{this._machine.Id}] AddAxisItem {name}, {type}");
+                    _logger.Trace($"[{this._machine.Id}] AddAxisItem {name}, {type}");
                     _axisItems.Add(name, type);
                 }
             }
             catch (Exception ex)
             {
-                logger.Warn(ex,$"[{this._machine.Id}] AddAxisItem {name}, {type}");
+                _logger.Warn(ex,$"[{this._machine.Id}] AddAxisItem {name}, {type}");
             }
         }
 
@@ -210,13 +210,13 @@ namespace l99.driver.fanuc
         {
             try
             {
-                logger.Trace($"[{this._machine.Id}] AddSpindle {path}, {name}");
+                _logger.Trace($"[{this._machine.Id}] AddSpindle {path}, {name}");
                 _spindles[path].Add(name);
                 _structure[$"{path}"].Item2.Add(name);
             }
             catch (Exception ex)
             {
-                logger.Warn(ex,$"[{this._machine.Id}] AddSpindle.");
+                _logger.Warn(ex,$"[{this._machine.Id}] AddSpindle.");
             }
         }
 
@@ -226,20 +226,20 @@ namespace l99.driver.fanuc
             {
                 if (!_spindleItems.ContainsKey(name))
                 {
-                    logger.Trace($"[{this._machine.Id}] AddSpindleItem {name}, {type}");
+                    _logger.Trace($"[{this._machine.Id}] AddSpindleItem {name}, {type}");
                     _spindleItems.Add(name, type);
                 }
             }
             catch (Exception ex)
             {
-                logger.Warn(ex,$"[{this._machine.Id}] AddSpindleItem {name}, {type}");
+                _logger.Warn(ex,$"[{this._machine.Id}] AddSpindleItem {name}, {type}");
             }
         }
 
         public void Finish()
         {
             IsGenerated = true;
-            logger.Trace($"[{this._machine.Id}] Finishing build.");
+            _logger.Trace($"[{this._machine.Id}] Finishing build.");
         }
     }
 }

@@ -43,7 +43,7 @@ namespace l99.driver.fanuc.veneers
                     d.pos
                 };
                 
-                await onDataArrivedAsync(input, current_value);
+                await OnDataArrivedAsync(input, current_value);
                 
                 // TODO: equality or hash code do not match on this object (x86)
                 //if (!current_value.Equals(_lastValue))
@@ -52,7 +52,7 @@ namespace l99.driver.fanuc.veneers
                 //if(!JObject.FromObject(current_value).ToString().Equals(JObject.FromObject(lastChangedValue).ToString()))
                 if(current_value.IsDifferentString((object)lastChangedValue))
                 {
-                    await onDataChangedAsync(input, current_value);
+                    await OnDataChangedAsync(input, current_value);
                 }
             }
             else

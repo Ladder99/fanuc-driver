@@ -26,11 +26,11 @@ namespace l99.driver.fanuc.veneers
                     input.response.cnc_rdtimer.time.msec
                 };
                 
-                await onDataArrivedAsync(input, current_value);
+                await OnDataArrivedAsync(input, current_value);
                 
                 if (!current_value.Equals(this.lastChangedValue))
                 {
-                    await onDataChangedAsync(input, current_value);
+                    await OnDataChangedAsync(input, current_value);
                 }
             }
             else

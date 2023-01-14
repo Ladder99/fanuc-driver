@@ -24,11 +24,11 @@ namespace l99.driver.fanuc.veneers
                     cdata = input.response.pmc_rdpmcrng.buf.cdata[0]
                 };
                 
-                await onDataArrivedAsync(input, current_value);
+                await OnDataArrivedAsync(input, current_value);
                 
                 if (!current_value.Equals(lastChangedValue))
                 {
-                    await onDataChangedAsync(input, current_value);
+                    await OnDataChangedAsync(input, current_value);
                 }
             }
             else

@@ -10,8 +10,8 @@ namespace l99.driver.fanuc.handlers
         {
             _cfg = cfg;
         }
-        
-        public override async Task<dynamic?> OnDataArrivalAsync(Veneers veneers, Veneer veneer, dynamic? beforeArrival)
+
+        protected override async Task<dynamic?> OnDataArrivalAsync(Veneers veneers, Veneer veneer, dynamic? beforeArrival)
         {
             if (veneer.GetType().Name == "FocasPerf")
             {
@@ -50,7 +50,7 @@ namespace l99.driver.fanuc.handlers
             return payload;
         }
 
-        protected override async Task afterDataArrivalAsync(Veneers veneers, Veneer veneer, dynamic? onArrival)
+        protected override async Task AfterDataArrivalAsync(Veneers veneers, Veneer veneer, dynamic? onArrival)
         {
             if (onArrival == null)
                 return;
@@ -58,7 +58,7 @@ namespace l99.driver.fanuc.handlers
             await veneers.Machine.Transport.SendAsync("DATA_ARRIVE", veneer, onArrival);
         }
 
-        public override async Task<dynamic?> OnDataChangeAsync(Veneers veneers, Veneer veneer, dynamic? beforeChange)
+        protected override async Task<dynamic?> OnDataChangeAsync(Veneers veneers, Veneer veneer, dynamic? beforeChange)
         {
             if (_cfg.handler["change_only"] == false)
                 return null;
@@ -85,15 +85,15 @@ namespace l99.driver.fanuc.handlers
             return payload;
         }
 
-        protected override async Task afterDataChangeAsync(Veneers veneers, Veneer veneer, dynamic? onChange)
+        protected override async Task AfterDataChangeAsync(Veneers veneers, Veneer veneer, dynamic? onChange)
         {
             if (onChange == null)
                 return;
             
             await veneers.Machine.Transport.SendAsync("DATA_ARRIVE", veneer, onChange);
         }
-        
-        public override async Task<dynamic?> OnStrategySweepCompleteAsync(Machine machine, dynamic? beforeSweepComplete)
+
+        protected override async Task<dynamic?> OnStrategySweepCompleteAsync(Machine machine, dynamic? beforeSweepComplete)
         {
             dynamic payload = new
             {
@@ -116,7 +116,7 @@ namespace l99.driver.fanuc.handlers
             return payload;
         }
         
-        protected override async Task afterSweepCompleteAsync(Machine machine, dynamic? onSweepComplete)
+        protected override async Task AfterSweepCompleteAsync(Machine machine, dynamic? onSweepComplete)
         {
             await machine.Transport.SendAsync("SWEEP_END", null, onSweepComplete);
         }

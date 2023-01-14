@@ -29,10 +29,10 @@ namespace l99.driver.fanuc.veneers
         
         protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
         {
-            if (input.success && additionalInputs[0].success)
+            if (input.success && additionalInputs[0]?.success)
             {
                 dynamic ad = input.response.cnc_rddynamic2.rddynamic;
-                dynamic fig_in = additionalInputs[0].response.cnc_getfigure.dec_fig_in;
+                dynamic figIn = additionalInputs[0]?.response.cnc_getfigure.dec_fig_in;
                 
                 var current_value = new
                 {
@@ -45,14 +45,14 @@ namespace l99.driver.fanuc.veneers
                     pos = new
                     {
                         // TODO: should index be current axis number?
-                        absolute = ad.pos.absolute / Math.Pow(10.0, fig_in[additionalInputs[1]]),
-                        machine = ad.pos.machine / Math.Pow(10.0, fig_in[additionalInputs[1]]),
-                        relative = ad.pos.relative / Math.Pow(10.0, fig_in[additionalInputs[1]]),
-                        distance = ad.pos.distance / Math.Pow(10.0, fig_in[additionalInputs[1]])
+                        absolute = ad.pos.absolute / Math.Pow(10.0, figIn[additionalInputs[1]]),
+                        machine = ad.pos.machine / Math.Pow(10.0, figIn[additionalInputs[1]]),
+                        relative = ad.pos.relative / Math.Pow(10.0, figIn[additionalInputs[1]]),
+                        distance = ad.pos.distance / Math.Pow(10.0, figIn[additionalInputs[1]])
                     }
                 };
 
-                await onDataArrivedAsync(input, current_value);
+                await OnDataArrivedAsync(input, current_value);
                 
                 // TODO: equality or hash code do not match on this object (x86)
                 //if (!current_value.Equals(_lastValue))
@@ -61,7 +61,7 @@ namespace l99.driver.fanuc.veneers
                 //if(!JObject.FromObject(current_value).ToString().Equals(JObject.FromObject(lastChangedValue).ToString()))
                 if(current_value.IsDifferentString((object)lastChangedValue))
                 {
-                    await onDataChangedAsync(input, current_value);
+                    await OnDataChangedAsync(input, current_value);
                 }
             }
             else

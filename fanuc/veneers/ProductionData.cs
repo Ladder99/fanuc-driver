@@ -1,6 +1,9 @@
-﻿using System.Globalization;
+﻿#pragma warning disable CS8602
+
+using System.Globalization;
 using l99.driver.@base;
 
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.veneers
 {
     public class ProductionData : Veneer
@@ -43,12 +46,12 @@ namespace l99.driver.fanuc.veneers
         {
             if (input.success && additionalInputs.All(o => o.success == true))
             {
-                string modified_current = "";
-                string modified_selected = "";
+                string modifiedCurrent = "";
+                string modifiedSelected = "";
 
                 try
                 {
-                    modified_current = new DateTimeOffset(new DateTime(
+                    modifiedCurrent = new DateTimeOffset(new DateTime(
                             additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.mdate.year,
                             additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.mdate.month,
                             additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.mdate.day,
@@ -58,12 +61,12 @@ namespace l99.driver.fanuc.veneers
                 }
                 catch
                 {
-                   
+                    // ignored
                 }
-                
+
                 try
                 {
-                    modified_selected = new DateTimeOffset(new DateTime(
+                    modifiedSelected = new DateTimeOffset(new DateTime(
                             additionalInputs[1].response.cnc_rdprogdir3.buf.dir1.mdate.year,
                             additionalInputs[1].response.cnc_rdprogdir3.buf.dir1.mdate.month,
                             additionalInputs[1].response.cnc_rdprogdir3.buf.dir1.mdate.day,
@@ -76,7 +79,7 @@ namespace l99.driver.fanuc.veneers
                    
                 }
                 
-                var current_value = new
+                var currentValue = new
                 {
                     program = new {
                         current = new {
@@ -84,14 +87,14 @@ namespace l99.driver.fanuc.veneers
                             number = input.response.cnc_rdprgnum.prgnum.data,
                             size_b = additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.length,
                             comment = additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.comment,
-                            modified = modified_current
+                            modified = modifiedCurrent
                         },
                         selected = new {
                             name = $"O{input.response.cnc_rdprgnum.prgnum.mdata}",
                             number = input.response.cnc_rdprgnum.prgnum.mdata,
                             size_b = additionalInputs[1].response.cnc_rdprogdir3.buf.dir1.length,
                             comment = additionalInputs[1].response.cnc_rdprogdir3.buf.dir1.comment,
-                            modified = modified_selected
+                            modified = modifiedSelected
                         }
                     },
                     pieces = new {
@@ -105,11 +108,11 @@ namespace l99.driver.fanuc.veneers
                     }
                 };
 
-                await onDataArrivedAsync(input, current_value);
+                await OnDataArrivedAsync(input, currentValue);
 
-                if (current_value.IsDifferentString((object)lastChangedValue))
+                if (currentValue.IsDifferentString((object)lastChangedValue))
                 {
-                    await onDataChangedAsync(input, current_value);
+                    await OnDataChangedAsync(input, currentValue);
                 }
             }
             else
@@ -121,3 +124,4 @@ namespace l99.driver.fanuc.veneers
         }
     }
 }
+#pragma warning restore CS8602

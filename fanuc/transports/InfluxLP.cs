@@ -60,7 +60,7 @@ public class InfluxLP : Transport
 
                     if (!string.IsNullOrEmpty(lp))
                     {
-                        logger.Info($"[{machine.Id}] {lp}");
+                        Logger.Info($"[{machine.Id}] {lp}");
                         _writeApi
                             .WriteRecordAsync(
                                 lp,
@@ -79,7 +79,7 @@ public class InfluxLP : Transport
                     string lp = _templateLookup["SWEEP_END"]
                         .Render(new { data.observation, data.state.data });
 
-                    logger.Info($"[{machine.Id}] {lp}");
+                    Logger.Info($"[{machine.Id}] {lp}");
                 
                     _writeApi
                         .WriteRecordAsync(
@@ -115,7 +115,7 @@ public class InfluxLP : Transport
             Template template = Template.Parse(transform);
             if (template.HasErrors)
             {
-                logger.Error($"[{machine.Id}] '{templateName}' template transform has errors");
+                Logger.Error($"[{machine.Id}] '{templateName}' template transform has errors");
             }
             _templateLookup.Add(templateName, template);
             return true;

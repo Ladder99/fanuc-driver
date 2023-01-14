@@ -26,11 +26,11 @@ namespace l99.driver.fanuc.veneers
                     bits = b.Cast<bool>().Select(bit => bit ? 1 : 0).Reverse().ToArray()
                 };
                 
-                await onDataArrivedAsync(input, current_value);
+                await OnDataArrivedAsync(input, current_value);
                 
                 if (current_value.IsDifferentString((object)lastChangedValue))
                 {
-                    await onDataChangedAsync(input, current_value);
+                    await OnDataChangedAsync(input, current_value);
                 }
             }
             else

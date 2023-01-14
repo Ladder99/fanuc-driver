@@ -13,8 +13,8 @@ namespace l99.driver.fanuc.veneers
         {
             var current_value = new {input.success};
             
-            await onDataArrivedAsync(input, current_value);
-            await onDataChangedAsync(input, current_value);
+            await OnDataArrivedAsync(input, current_value);
+            await OnDataChangedAsync(input, current_value);
 
             return new { veneer = this };
         }
@@ -23,11 +23,11 @@ namespace l99.driver.fanuc.veneers
         {
             var current_value = new {input.success };
             
-            await onDataArrivedAsync(input, current_value);
+            await OnDataArrivedAsync(input, current_value);
             
             if (!current_value.Equals(lastChangedValue))
             {
-                await onDataChangedAsync(input, current_value);
+                await OnDataChangedAsync(input, current_value);
             }
             
             return new { veneer = this };

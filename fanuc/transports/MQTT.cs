@@ -1,26 +1,28 @@
 ﻿using l99.driver.@base;
 using MQTTnet;
 using MQTTnet.Client;
-using MQTTnet.Client.Options;
 using MQTTnet.Exceptions;
 using Scriban;
 
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.transports;
 
+// ReSharper disable once InconsistentNaming
 public class MQTT : Transport
 {
-    private IMqttClientOptions _options;
+    private MqttClientOptions _options;
     private IMqttClient _client;
-    private dynamic _config;
+    private readonly dynamic _config;
 
     private string _key = string.Empty;
-    private int _connectionFailCount = 0;
-    private bool _connectionSkipped = false;
+    private int _connectionFailCount;
+    private bool _connectionSkipped;
     
     private Template _topicTemplate;
-    private dynamic _model;
     
+#pragma warning disable CS8618
     public MQTT(Machine machine, object cfg) : base(machine, cfg)
+#pragma warning restore CS8618
     {
         _config = cfg;
     }
@@ -31,7 +33,7 @@ public class MQTT : Transport
         _topicTemplate = Template.Parse(_config.transport["topic"]);
         _key = $"{_config.transport["net"]["type"]}://{_config.transport["net"]["ip"]}:{_config.transport["net"]["port"]}/{machine.Id}";
         
-        IMqttFactory factory = new MqttFactory();
+        var factory = new MqttFactory();
         MqttClientOptionsBuilder builder;
 
         switch (_config.transport["net"]["type"])
@@ -48,7 +50,7 @@ public class MQTT : Transport
         
         if (!_config.transport["anonymous"])
         {
-            byte[] passwordBuffer = null;
+            byte[]? passwordBuffer = null;
 
             if (_config.transport["password"] != null)
                 passwordBuffer = Encoding.UTF8.GetBytes(_config.transport["password"]);
@@ -69,8 +71,8 @@ public class MQTT : Transport
         var veneer = parameters[1];
         var data = parameters[2];
 
-        string topic = "";
-        string payload = "{}";
+        string topic;
+        string payload;
         bool retained = true;
         
         switch (@event)
@@ -99,7 +101,7 @@ public class MQTT : Transport
         
         if (_client.IsConnected)
         {
-            logger.Trace($"{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds()} PUB {payload.Length}b => {topic}\n{payload}");
+            Logger.Trace($"{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds()} PUB {payload.Length}b => {topic}\n{payload}");
             
             var msg = new MqttApplicationMessageBuilder()
                 .WithRetainFlag(retained)
@@ -119,42 +121,42 @@ public class MQTT : Transport
             {
                 if (_connectionFailCount == 0)
                 {
-                    logger.Info($"[{machine.Id}] Connecting broker '{_key}': {_options.ChannelOptions}");
+                    Logger.Info($"[{machine.Id}] Connecting broker '{_key}': {_options.ChannelOptions}");
                 }
                 else
                 {
-                    logger.Debug($"[{machine.Id}] Connecting broker '{_key}': {_options.ChannelOptions}");
+                    Logger.Debug($"[{machine.Id}] Connecting broker '{_key}': {_options.ChannelOptions}");
                 }
                 
                 try
                 {
                     await _client.ConnectAsync(_options, CancellationToken.None);
                     //_client.UseApplicationMessageReceivedHandler(async (e) => { await handleIncomingMessage(e); });
-                    logger.Info($"[{machine.Id}] Connected broker '{_key}': {_options.ChannelOptions}");
+                    Logger.Info($"[{machine.Id}] Connected broker '{_key}': {_options.ChannelOptions}");
                     _connectionFailCount = 0;
                 }
-                catch (MqttCommunicationTimedOutException tex)
+                catch (MqttCommunicationTimedOutException)
                 {
                     if (_connectionFailCount == 0)
                     {
-                        logger.Warn($"[{machine.Id}] Broker connection timeout '{_key}': {_options.ChannelOptions}");
+                        Logger.Warn($"[{machine.Id}] Broker connection timeout '{_key}': {_options.ChannelOptions}");
                     }
                     else
                     {
-                        logger.Debug($"[{machine.Id}] Broker connection timeout '{_key}': {_options.ChannelOptions}");
+                        Logger.Debug($"[{machine.Id}] Broker connection timeout '{_key}': {_options.ChannelOptions}");
                     }
 
                     _connectionFailCount++;
                 }
-                catch (MqttCommunicationException ex)
+                catch (MqttCommunicationException)
                 {
                     if (_connectionFailCount == 0)
                     {
-                        logger.Warn($"[{machine.Id}] Broker connection failed '{_key}': {_options.ChannelOptions}");
+                        Logger.Warn($"[{machine.Id}] Broker connection failed '{_key}': {_options.ChannelOptions}");
                     }
                     else
                     {
-                        logger.Debug($"[{machine.Id}] Broker connection failed '{_key}': {_options.ChannelOptions}");
+                        Logger.Debug($"[{machine.Id}] Broker connection failed '{_key}': {_options.ChannelOptions}");
                     }
                     
                     _connectionFailCount++;
@@ -165,7 +167,7 @@ public class MQTT : Transport
         {
             if (!_connectionSkipped)
             {
-                logger.Info($"[{machine.Id}] Skipping broker connection '{_key}': {_options.ChannelOptions}");
+                Logger.Info($"[{machine.Id}] Skipping broker connection '{_key}': {_options.ChannelOptions}");
                 _connectionSkipped = true;
             }
         }
@@ -173,7 +175,6 @@ public class MQTT : Transport
     
     public override async Task OnGenerateIntermediateModelAsync(dynamic model)
     {
-        _model = model;
         await SendAsync("INT_MODEL", null, model.model);
     }
 }

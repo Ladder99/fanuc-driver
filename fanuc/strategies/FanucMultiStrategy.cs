@@ -10,17 +10,17 @@ namespace l99.driver.fanuc.strategies
             _config = cfg;
         }
 
-        private dynamic _config;
-        private List<FanucMultiStrategyCollector> _collectors = new List<FanucMultiStrategyCollector>();
+        private readonly dynamic _config;
+        private readonly List<FanucMultiStrategyCollector> _collectors = new();
         
         public Platform Platform => platform;
         
         public override async Task<dynamic?> CreateAsync()
         {
-            foreach (var collector_type in _config.strategy)
+            foreach (var collectorType in _config.strategy)
             {
-                logger.Info($"[{machine.Id}] Creating collector: {collector_type}");
-                var type = Type.GetType(collector_type);
+                Logger.Info($"[{machine.Id}] Creating collector: {collectorType}");
+                var type = Type.GetType(collectorType);
                 var collector = (FanucMultiStrategyCollector) Activator.CreateInstance(type, new object[] { this });
                 _collectors.Add(collector);
             }
@@ -60,7 +60,7 @@ namespace l99.driver.fanuc.strategies
             }
         }
 
-        public override async Task<dynamic?> CollectAsync()
+        protected override async Task<dynamic?> CollectAsync()
         {
             // user code before starting sweep
             
@@ -84,27 +84,27 @@ namespace l99.driver.fanuc.strategies
             }
         }
 
-        public override async Task CollectForEachPathAsync(short current_path, string[] axis, string[] spindle, dynamic path_marker)
+        public override async Task CollectForEachPathAsync(short currentPath, string[] axis, string[] spindle, dynamic pathMarker)
         {
             foreach (var collector in _collectors)
             {
-                await collector.CollectForEachPathAsync(current_path, axis, spindle, path_marker);
+                await collector.CollectForEachPathAsync(currentPath, axis, spindle, pathMarker);
             }
         }
 
-        public override async Task CollectForEachAxisAsync(short current_path, short current_axis, string axis_name, dynamic axis_split, dynamic axis_marker)
+        public override async Task CollectForEachAxisAsync(short currentPath, short currentAxis, string axis_name, dynamic axisSplit, dynamic axis_marker)
         {
             foreach (var collector in _collectors)
             {
-                await collector.CollectForEachAxisAsync(current_path, current_axis, axis_name, axis_split, axis_marker);
+                await collector.CollectForEachAxisAsync(currentPath, currentAxis, axis_name, axisSplit, axis_marker);
             }
         }
 
-        public override async Task CollectForEachSpindleAsync(short current_path, short current_spindle, string spindle_name, dynamic spindle_split, dynamic spindle_marker)
+        public override async Task CollectForEachSpindleAsync(short currentPath, short currentSpindle, string spindle_name, dynamic spindleSplit, dynamic spindle_marker)
         {
             foreach (var collector in _collectors)
             {
-                await collector.CollectForEachSpindleAsync(current_path, current_spindle, spindle_name, spindle_split, spindle_marker);
+                await collector.CollectForEachSpindleAsync(currentPath, currentSpindle, spindle_name, spindleSplit, spindle_marker);
             }
         }
 

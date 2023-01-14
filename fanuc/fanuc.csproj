@@ -16,6 +16,7 @@
         <Copyright>MRIIOT LLC</Copyright>
         <PackageProjectUrl>https://mriiot.com</PackageProjectUrl>
         <LangVersion>10</LangVersion>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug 32bit' ">
@@ -33,17 +34,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="InfluxDB.Client" Version="4.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="6.0.0" />
+      <PackageReference Include="InfluxDB.Client" Version="4.9.0" />
+      <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="7.0.0" />
       <PackageReference Include="morelinq" Version="3.3.2" />
-      <PackageReference Include="MQTTnet" Version="3.1.2" />
-      <PackageReference Include="MTConnect.NET" Version="3.2.0" />
-      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-      <PackageReference Include="NLog.Extensions.Logging" Version="1.7.4" />
-      <PackageReference Include="Scriban" Version="5.4.2" />
-      <PackageReference Include="SparkplugNet" Version="0.7.0" />
-      <PackageReference Include="YamlDotNet" Version="11.2.1" />
+      <PackageReference Include="MQTTnet" Version="4.1.4.563" />
+      <PackageReference Include="MTConnect.NET" Version="4.6.0" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+      <PackageReference Include="NLog.Extensions.Logging" Version="5.2.1" />
+      <PackageReference Include="Scriban" Version="5.5.2" />
+      <PackageReference Include="SparkplugNet" Version="1.2.0" />
+      <PackageReference Include="YamlDotNet" Version="12.3.1" />
     </ItemGroup>
 
     <ItemGroup>

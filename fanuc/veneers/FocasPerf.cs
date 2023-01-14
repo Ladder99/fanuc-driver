@@ -50,7 +50,7 @@ namespace l99.driver.fanuc.veneers
                 }
             };;
                 
-            await onDataArrivedAsync(input, current_value);
+            await OnDataArrivedAsync(input, current_value);
                 
             return new { veneer = this };
         }

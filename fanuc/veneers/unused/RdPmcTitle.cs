@@ -41,11 +41,11 @@ namespace l99.driver.fanuc.veneers
                     input.response.pmc_rdpmctitle.title.remarks
                 };
                 
-                await onDataArrivedAsync(input, current_value);
+                await OnDataArrivedAsync(input, current_value);
                 
                 if (current_value.IsDifferentString((object)lastChangedValue))
                 {
-                    await onDataChangedAsync(input, current_value);
+                    await OnDataChangedAsync(input, current_value);
                 }
             }
             else

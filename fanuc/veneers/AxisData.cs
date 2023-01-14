@@ -1,5 +1,8 @@
-﻿using l99.driver.@base;
+﻿#pragma warning disable CS8602, CS8600
 
+using l99.driver.@base;
+
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.veneers
 {
     public class AxisData : Veneer
@@ -17,81 +20,85 @@ namespace l99.driver.fanuc.veneers
             // skip index 7 - power consumption
             if (additionalInputs.Slice(0,6).All(o => o.success == true))
             {
-                var current_axis = input;
-                var axes_names = additionalInputs[0];
-                var axis_dynamic = additionalInputs[1].response.cnc_rddynamic2.rddynamic;
+                var currentAxis = input;
+                var axesNames = additionalInputs[0];
+                var axisDynamic = additionalInputs[1].response.cnc_rddynamic2.rddynamic;
                 var figures = additionalInputs[2].response.cnc_getfigure.dec_fig_in;
-                var axes_loads = additionalInputs[3];
-                var servo_temp = additionalInputs[4];
-                var coder_temp = additionalInputs[5];
+                var axesLoads = additionalInputs[3];
+                var servoTemp = additionalInputs[4];
+                var coderTemp = additionalInputs[5];
                 var power = additionalInputs[6];
-                var obs_focas_support = additionalInputs[7];
-                IEnumerable<dynamic> obs_alarms = additionalInputs[8];
-                var prev_axis_dynamic = additionalInputs[9];
+                // ReSharper disable once UnusedVariable
+                var obsFocasSupport = additionalInputs[7];
+                IEnumerable<dynamic> obsAlarms = additionalInputs[8];
+                var prevAxisDynamic = additionalInputs[9];
 
-                var load_fields = axes_loads.response.cnc_rdsvmeter.loadmeter.GetType().GetFields();
-                var load_value = load_fields[current_axis - 1]
-                    .GetValue(axes_loads.response.cnc_rdsvmeter.loadmeter);
+                var loadFields = axesLoads.response.cnc_rdsvmeter.loadmeter.GetType().GetFields();
+                var loadValue = loadFields[currentAxis - 1]
+                    .GetValue(axesLoads.response.cnc_rdsvmeter.loadmeter);
                 
-                var axes_fields = axes_names.response.cnc_rdaxisname.axisname.GetType().GetFields();
-                var axis_value = axes_fields[current_axis - 1]
-                    .GetValue(axes_names.response.cnc_rdaxisname.axisname);
-                var axis_name = ((char) axis_value.name).AsAscii() +
-                                   ((char) axis_value.suff).AsAscii();
+                var axesFields = axesNames.response.cnc_rdaxisname.axisname.GetType().GetFields();
+                var axisValue = axesFields[currentAxis - 1]
+                    .GetValue(axesNames.response.cnc_rdaxisname.axisname);
+                var axisName = ((char) axisValue.name).AsAscii() +
+                                   ((char) axisValue.suff).AsAscii();
 
-                bool overtravel = false;
+                bool overTravel = false;
                 bool overheat = false;
                 bool servo = false;
 
-                if (obs_alarms != null)
+                if (obsAlarms != null)
                 {
-                    var axis_alarms = obs_alarms
-                        .Where(a => a.axis_code == current_axis);
+                    var axisAlarms = obsAlarms
+                        .Where(a => a.axis_code == currentAxis);
 
-                    overtravel = axis_alarms.Any(a => a.type == "OT");
-                    overheat = axis_alarms.Any(a => a.type == "OH");
-                    servo = axis_alarms.Any(a => a.type == "SV");
+                    // ReSharper disable once PossibleMultipleEnumeration
+                    overTravel = axisAlarms.Any(a => a.type == "OT");
+                    // ReSharper disable once PossibleMultipleEnumeration
+                    overheat = axisAlarms.Any(a => a.type == "OH");
+                    // ReSharper disable once PossibleMultipleEnumeration
+                    servo = axisAlarms.Any(a => a.type == "SV");
                 }
 
-                bool motion = (prev_axis_dynamic != null && prev_axis_dynamic.success == true) 
-                    ? prev_axis_dynamic.response.cnc_rddynamic2.rddynamic.pos.absolute != axis_dynamic.pos.absolute
+                bool motion = (prevAxisDynamic != null && prevAxisDynamic.success == true) 
+                    ? prevAxisDynamic.response.cnc_rddynamic2.rddynamic.pos.absolute != axisDynamic.pos.absolute
                     : false;
                 
-                var current_value = new
+                var currentValue = new
                 {
-                    number = current_axis,
-                    name = axis_name,
-                    feed = axis_dynamic.actf,
+                    number = currentAxis,
+                    name = axisName,
+                    feed = axisDynamic.actf,
                     feed_eu = "mm/min",
-                    load = load_value.data / Math.Pow(10.0, load_value.dec),
+                    load = loadValue.data / Math.Pow(10.0, loadValue.dec),
                     load_eu = "percent",
-                    servo_temp = servo_temp.response.cnc_diagnoss.diag.cdata,
+                    servo_temp = servoTemp.response.cnc_diagnoss.diag.cdata,
                     servo_temp_eu = "celsius",
-                    coder_temp = coder_temp.response.cnc_diagnoss.diag.cdata,
+                    coder_temp = coderTemp.response.cnc_diagnoss.diag.cdata,
                     coder_temp_eu = "celsius",
                     power = power.response.cnc_diagnoss.diag.ldata,
                     power_eu = "watt",
                     alarms = new
                     {
-                        overtravel,
+                        overtravel = overTravel,
                         overheat,
                         servo
                     },
                     position = new
                     {
-                        absolute = axis_dynamic.pos.absolute / Math.Pow(10.0, figures[current_axis-1]),
-                        machine = axis_dynamic.pos.machine / Math.Pow(10.0, figures[current_axis-1]),
-                        relative = axis_dynamic.pos.relative / Math.Pow(10.0, figures[current_axis-1]),
-                        distance = axis_dynamic.pos.distance / Math.Pow(10.0, figures[current_axis-1])
+                        absolute = axisDynamic.pos.absolute / Math.Pow(10.0, figures[currentAxis-1]),
+                        machine = axisDynamic.pos.machine / Math.Pow(10.0, figures[currentAxis-1]),
+                        relative = axisDynamic.pos.relative / Math.Pow(10.0, figures[currentAxis-1]),
+                        distance = axisDynamic.pos.distance / Math.Pow(10.0, figures[currentAxis-1])
                     },
                     motion
                 };
 
-                await onDataArrivedAsync(input, current_value);
+                await OnDataArrivedAsync(input, currentValue);
                 
-                if(current_value.IsDifferentString((object)lastChangedValue))
+                if(currentValue.IsDifferentString((object)lastChangedValue))
                 {
-                    await onDataChangedAsync(input, current_value);
+                    await OnDataChangedAsync(input, currentValue);
                 }
             }
             else
@@ -103,3 +110,4 @@ namespace l99.driver.fanuc.veneers
         }
     }
 }
+#pragma warning restore CS8602, CS8600

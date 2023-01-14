@@ -68,14 +68,14 @@ namespace l99.driver.fanuc.veneers
                     info = temp_value
                 };
                 
-                await onDataArrivedAsync(input, current_value);
+                await OnDataArrivedAsync(input, current_value);
                 
                 //todo: has to be a better way to compare dynamic
                 if(!current_value.info_no.Equals(lastChangedValue.info_no) ||
                    !current_value.prev_no.Equals(lastChangedValue.prev_no) ||
                    !current_value.next_no.Equals(lastChangedValue.next_no) ||
                     current_value.info.IsDifferentHash((List<dynamic>)lastChangedValue.info))
-                    await onDataChangedAsync(input, current_value);
+                    await OnDataChangedAsync(input, current_value);
                 
             }
             else

@@ -1,5 +1,8 @@
-﻿using l99.driver.@base;
+﻿#pragma warning disable CS8602
 
+using l99.driver.@base;
+
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.veneers
 {
     public class ToolData : Veneer
@@ -17,26 +20,26 @@ namespace l99.driver.fanuc.veneers
         {
             if (input.success || additionalInputs[0].success)
             {
-                var toolnum = additionalInputs[0];
+                var toolNum = additionalInputs[0];
                 
-                var tool = toolnum.success 
-                    ? toolnum.response.cnc_toolnum.toolnum.data :
+                var tool = toolNum.success 
+                    ? toolNum.response.cnc_toolnum.toolnum.data :
                         input.success ? input.response.cnc_modal.modal.aux.aux_data : -1;
                 
-                var group = toolnum.success 
-                    ? toolnum.response.cnc_toolnum.toolnum.datano : -1;
+                var group = toolNum.success 
+                    ? toolNum.response.cnc_toolnum.toolnum.datano : -1;
                 
-                var current_value = new
+                var currentValue = new
                 {
                     tool,
                     group
                 };
                 
-                await onDataArrivedAsync(input, current_value);
+                await OnDataArrivedAsync(input, currentValue);
                 
-                if (!current_value.Equals(this.lastChangedValue))
+                if (!currentValue.Equals(this.lastChangedValue))
                 {
-                    await onDataChangedAsync(input, current_value);
+                    await OnDataChangedAsync(input, currentValue);
                 }
             }
             else
@@ -48,3 +51,4 @@ namespace l99.driver.fanuc.veneers
         }
     }
 }
+#pragma warning restore CS8602

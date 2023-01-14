@@ -19,21 +19,21 @@ namespace l99.driver.fanuc.veneers
         
         protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
         {
-            if (additionalInputs[0].success && additionalInputs[1].success)
+            if (additionalInputs[0]?.success && additionalInputs[1]?.success)
             {
-                if (input!= null && input.success)
+                if (input!= null && input?.success)
                 {
-                    _blocks.Add2(input.response.cnc_rdblkcount.prog_bc,
-                        additionalInputs[0].response.cnc_rdactpt.blk_no,
-                        additionalInputs[1].response.cnc_rdexecprog.data);
+                    _blocks.Add2(input?.response.cnc_rdblkcount.prog_bc,
+                        additionalInputs[0]?.response.cnc_rdactpt.blk_no,
+                        additionalInputs[1]?.response.cnc_rdexecprog.data);
                 }
                 else
                 {
-                    _blocks.Add1(additionalInputs[0].response.cnc_rdactpt.blk_no,
-                        additionalInputs[1].response.cnc_rdexecprog.data);
+                    _blocks.Add1(additionalInputs[0]?.response.cnc_rdactpt.blk_no,
+                        additionalInputs[1]?.response.cnc_rdexecprog.data);
                 }
 
-                var current_value = new
+                var currentValue = new
                 {
                     blocks = _blocks.ExecutedBlocks
                 };
@@ -53,14 +53,14 @@ namespace l99.driver.fanuc.veneers
                 }
                 */
 
-                await onDataArrivedAsync(input, current_value);
+                await OnDataArrivedAsync(input, currentValue);
                 
-                var last_keys = ((List<gcode.Block>)lastChangedValue.blocks).Select(x => x.BlockNumber);
-                var current_keys = ((List<gcode.Block>)current_value.blocks).Select(x => x.BlockNumber);
+                var lastKeys = ((List<gcode.Block>)lastChangedValue.blocks).Select(x => x.BlockNumber);
+                var currentKeys = ((List<gcode.Block>)currentValue.blocks).Select(x => x.BlockNumber);
 
-                if (last_keys.Except(current_keys).Count() + current_keys.Except(last_keys).Count() > 0)
+                if (lastKeys.Except(currentKeys).Count() + currentKeys.Except(lastKeys).Count() > 0)
                 {
-                    await onDataChangedAsync(input, current_value);
+                    await OnDataChangedAsync(input, currentValue);
                 }
             }
             else

@@ -7,44 +7,44 @@ namespace l99.driver.fanuc.strategies
     {
         private enum StrategyStateEnum
         {
-            UNKNOWN,
-            OK,
-            FAILED
+            Unknown,
+            Ok,
+            Failed
         }
         
         private enum SegmentEnum
         {
-            NONE,
-            BEGIN,
-            ROOT,
-            PATH,
-            AXIS,
-            SPINDLE,
-            END
+            None,
+            Begin,
+            Root,
+            Path,
+            Axis,
+            Spindle,
+            End
         }
-        
-        protected Dictionary<string, dynamic> propertyBag;
-        protected List<dynamic> focasInvocations = new List<dynamic>();
-        protected int failedInvocationCountDuringSweep = 0;
-        protected Stopwatch sweepWatch = new Stopwatch();
-        protected int sweepRemaining = 1000;
-        private SegmentEnum _currentInitSegment = SegmentEnum.NONE;
-        private SegmentEnum _currentCollectSegment = SegmentEnum.NONE;
 
-        private IntermediateModelGenerator _intermediateModel;
+        private readonly Dictionary<string, dynamic> _propertyBag;
+        private readonly List<dynamic> _focasInvocations = new();
+        private int _failedInvocationCountDuringSweep = 0;
+        private readonly Stopwatch _sweepWatch = new();
+        private int _sweepRemaining = 1000;
+        private SegmentEnum _currentInitSegment = SegmentEnum.None;
+        private SegmentEnum _currentCollectSegment = SegmentEnum.None;
 
-        private StrategyStateEnum _strategyState = StrategyStateEnum.UNKNOWN;
+        private readonly IntermediateModelGenerator _intermediateModel;
 
-        public FanucExtendedStrategy(Machine machine, object cfg) : base(machine, cfg)
+        private StrategyStateEnum _strategyState = StrategyStateEnum.Unknown;
+
+        protected FanucExtendedStrategy(Machine machine, object cfg) : base(machine, cfg)
         {
-            sweepRemaining = sweepMs;
-            propertyBag = new Dictionary<string, dynamic>();
+            _sweepRemaining = SweepMs;
+            _propertyBag = new Dictionary<string, dynamic>();
             _intermediateModel = new IntermediateModelGenerator();
         }
 
-        protected void catchFocasPerformance(dynamic focasNativeReturnObject)
+        private void CatchFocasPerformance(dynamic focasNativeReturnObject)
         {
-            focasInvocations.Add(new
+            _focasInvocations.Add(new
             {
                 focasNativeReturnObject.method,
                 focasNativeReturnObject.invocationMs,
@@ -53,27 +53,27 @@ namespace l99.driver.fanuc.strategies
 
             if (focasNativeReturnObject.rc != 0)
             {
-                failedInvocationCountDuringSweep++;
+                _failedInvocationCountDuringSweep++;
             }
         }
 
-        private dynamic? getCurrentPropertyBagKey()
+        private dynamic? GetCurrentPropertyBagKey()
         {
             switch (_currentCollectSegment)
             {
-                case SegmentEnum.NONE:
-                case SegmentEnum.BEGIN:
-                case SegmentEnum.ROOT:
-                case SegmentEnum.END:
+                case SegmentEnum.None:
+                case SegmentEnum.Begin:
+                case SegmentEnum.Root:
+                case SegmentEnum.End:
                     return "none";
                 
-                case SegmentEnum.PATH:
+                case SegmentEnum.Path:
                     return Get("current_path");
                     
-                case SegmentEnum.AXIS:
+                case SegmentEnum.Axis:
                     return string.Join("/", Get("axis_split"));
                 
-                case SegmentEnum.SPINDLE:
+                case SegmentEnum.Spindle:
                     return string.Join("/", Get("spindle_split"));
             }
 
@@ -82,9 +82,9 @@ namespace l99.driver.fanuc.strategies
         
         public dynamic? Get(string propertyBagKey)
         {
-            if (propertyBag.ContainsKey(propertyBagKey))
+            if (_propertyBag.ContainsKey(propertyBagKey))
             {
-                return propertyBag[propertyBagKey];
+                return _propertyBag[propertyBagKey];
             }
             else
             {
@@ -94,27 +94,27 @@ namespace l99.driver.fanuc.strategies
 
         public dynamic? GetKeyed(string propertyBagKey)
         {
-            return Get($"{propertyBagKey}+{getCurrentPropertyBagKey()}");
+            return Get($"{propertyBagKey}+{GetCurrentPropertyBagKey()}");
         }
 
-        public bool Has(string propertyBagKey)
+        private bool Has(string propertyBagKey)
         {
-            return propertyBag.ContainsKey(propertyBagKey);
+            return _propertyBag.ContainsKey(propertyBagKey);
         }
         
         public bool HasKeyed(string propertyBagKey)
         {
-            return Has($"{propertyBagKey}+{getCurrentPropertyBagKey()}");
+            return Has($"{propertyBagKey}+{GetCurrentPropertyBagKey()}");
         }
 
-        public async Task<dynamic?> Set(string propertyBagKey, dynamic? value)
+        private async Task<dynamic?> Set(string propertyBagKey, dynamic? value)
         {
             return await set(propertyBagKey, value, false, false);
         }
         
         public async Task<dynamic?> SetKeyed(string propertyBagKey, dynamic? value)
         {
-            return await set($"{propertyBagKey}+{getCurrentPropertyBagKey()}", value, false, false);
+            return await set($"{propertyBagKey}+{GetCurrentPropertyBagKey()}", value, false, false);
         }
         
         public async Task<dynamic?> SetNative(string propertyBagKey, dynamic? value)
@@ -124,35 +124,35 @@ namespace l99.driver.fanuc.strategies
         
         public async Task<dynamic?> SetNativeKeyed(string propertyBagKey, dynamic? value)
         {
-            return await set($"{propertyBagKey}+{getCurrentPropertyBagKey()}", value, true, false);
+            return await set($"{propertyBagKey}+{GetCurrentPropertyBagKey()}", value, true, false);
         }
-        
-        public async Task<dynamic?> SetNativeAndPeel(string propertyBagKey, dynamic? value)
+
+        private async Task<dynamic?> SetNativeAndPeel(string propertyBagKey, dynamic? value)
         {
             return await set(propertyBagKey, value, true, true);
         }
 
         private async Task<dynamic?> set(string propertyBagKey, dynamic? value, bool nativeResponse = true, bool peel = true)
         {
-            if (propertyBag.ContainsKey(propertyBagKey))
+            if (_propertyBag.ContainsKey(propertyBagKey))
             {
-                propertyBag[propertyBagKey] = value;
+                _propertyBag[propertyBagKey] = value;
                 if (nativeResponse == true)
-                    return await handleNativeResponsePropertyBagAssignment(propertyBagKey, value, peel);
+                    return await HandleNativeResponsePropertyBagAssignment(propertyBagKey, value, peel);
             }
             else
             {
-                propertyBag.Add(propertyBagKey, value);
+                _propertyBag.Add(propertyBagKey, value);
                 if (nativeResponse == true)
-                    return await handleNativeResponsePropertyBagAssignment(propertyBagKey, value, peel);
+                    return await HandleNativeResponsePropertyBagAssignment(propertyBagKey, value, peel);
             }
 
             return value;
         }
         
-        private async Task<dynamic?> handleNativeResponsePropertyBagAssignment(string key, dynamic value, bool peel)
+        private async Task<dynamic?> HandleNativeResponsePropertyBagAssignment(string key, dynamic value, bool peel)
         {
-            catchFocasPerformance(value);
+            CatchFocasPerformance(value);
 
             if (!peel)
                 return value;
@@ -164,25 +164,25 @@ namespace l99.driver.fanuc.strategies
         {
             switch (_currentCollectSegment)
             {
-                case SegmentEnum.NONE:
+                case SegmentEnum.None:
                     break;
                 
-                case SegmentEnum.BEGIN:
+                case SegmentEnum.Begin:
                     return await machine.PeelVeneerAsync(veneerKey, input, additionalInputs);
                 
-                case SegmentEnum.ROOT:
+                case SegmentEnum.Root:
                     return await machine.PeelVeneerAsync(veneerKey, input, additionalInputs);
 
-                case SegmentEnum.PATH:
+                case SegmentEnum.Path:
                     return await machine.PeelAcrossVeneerAsync(Get("current_path"),veneerKey, input, additionalInputs);
 
-                case SegmentEnum.AXIS:
+                case SegmentEnum.Axis:
                     return await machine.PeelAcrossVeneerAsync(Get("axis_split"), veneerKey, input, additionalInputs);
 
-                case SegmentEnum.SPINDLE:
+                case SegmentEnum.Spindle:
                     return await machine.PeelAcrossVeneerAsync(Get("spindle_split"), veneerKey, input, additionalInputs);
 
-                case SegmentEnum.END:
+                case SegmentEnum.End:
                     return await machine.PeelVeneerAsync(veneerKey, input, additionalInputs);
             }
 
@@ -215,47 +215,47 @@ namespace l99.driver.fanuc.strategies
         {
             switch (_currentInitSegment)
             {
-                case SegmentEnum.NONE:
+                case SegmentEnum.None:
                     break;
                 
-                case SegmentEnum.BEGIN:
+                case SegmentEnum.Begin:
                     break;
                 
-                case SegmentEnum.ROOT:
+                case SegmentEnum.Root:
                     machine.ApplyVeneer(veneerType, veneerName, isCompound, isInternal);
                     _intermediateModel.AddRootItem(veneerName, veneerType);
                     break;
                 
-                case SegmentEnum.PATH:
+                case SegmentEnum.Path:
                     machine.ApplyVeneerAcrossSlices(veneerType, veneerName, isCompound, isInternal);
                     _intermediateModel.AddPathItem(veneerName, veneerType);
                     break;
                     
-                case SegmentEnum.AXIS:
+                case SegmentEnum.Axis:
                     machine.ApplyVeneerAcrossSlices(Get("current_path"), veneerType, veneerName, isCompound, isInternal);
                     _intermediateModel.AddAxisItem(veneerName, veneerType);
                     break;
                 
-                case SegmentEnum.SPINDLE:
+                case SegmentEnum.Spindle:
                     machine.ApplyVeneerAcrossSlices(Get("current_path"), veneerType, veneerName, isCompound, isInternal);
                     _intermediateModel.AddSpindleItem(veneerName, veneerType);
                     break;
                 
-                case SegmentEnum.END:
+                case SegmentEnum.End:
                     break;
             }
         }
        
         public override async Task SweepAsync(int delayMs = -1)
         {
-            sweepRemaining = sweepMs - (int)sweepWatch.ElapsedMilliseconds;
-            if (sweepRemaining < 0)
+            _sweepRemaining = SweepMs - (int)_sweepWatch.ElapsedMilliseconds;
+            if (_sweepRemaining < 0)
             {
-                sweepRemaining = sweepMs;
+                _sweepRemaining = SweepMs;
             }
-            logger.Trace($"[{machine.Id}] Sweep delay: {sweepRemaining}ms");
+            Logger.Trace($"[{machine.Id}] Sweep delay: {_sweepRemaining}ms");
 
-            await base.SweepAsync(sweepRemaining);
+            await base.SweepAsync(_sweepRemaining);
         }
         
         public override async Task<dynamic?> InitializeAsync()
@@ -264,11 +264,11 @@ namespace l99.driver.fanuc.strategies
             var initStopwatch = new Stopwatch();
             initStopwatch.Start();
             
-            logger.Info($"[{machine.Id}] Strategy initializing.");
+            Logger.Info($"[{machine.Id}] Strategy initializing.");
             
             try
             {
-                _currentInitSegment = SegmentEnum.NONE;
+                _currentInitSegment = SegmentEnum.None;
                 
                 while (!machine.VeneersApplied)
                 {
@@ -282,7 +282,7 @@ namespace l99.driver.fanuc.strategies
                         _intermediateModel.Start(machine);
                         
                         #region init root veneers
-                        _currentInitSegment = SegmentEnum.ROOT;
+                        _currentInitSegment = SegmentEnum.Root;
 
                         await Apply(typeof(veneers.FocasPerf), "focas_perf", isInternal:true, isCompound: true);
                         await Apply(typeof(veneers.Connect), "connect", isInternal: true);
@@ -293,7 +293,7 @@ namespace l99.driver.fanuc.strategies
                         #endregion
                         
                         #region init path veneers
-                        _currentInitSegment = SegmentEnum.PATH;
+                        _currentInitSegment = SegmentEnum.Path;
                         
                         // retrieve controller paths
                         var paths = await platform.GetPathAsync();
@@ -369,11 +369,11 @@ namespace l99.driver.fanuc.strategies
                             await Set("current_path", current_path);
                             
                             // init axis veneers in user strategy
-                            _currentInitSegment = SegmentEnum.AXIS;
+                            _currentInitSegment = SegmentEnum.Axis;
                             await InitAxisAsync();
                             
                             // init spindle veneers in user strategy
-                            _currentInitSegment = SegmentEnum.SPINDLE;
+                            _currentInitSegment = SegmentEnum.Spindle;
                             await InitSpindleAsync();
                         }
                         #endregion
@@ -385,31 +385,31 @@ namespace l99.driver.fanuc.strategies
                         
                         machine.VeneersApplied = true;
                         
-                        _currentInitSegment = SegmentEnum.NONE;
+                        _currentInitSegment = SegmentEnum.None;
                         
                         // build intermediate model
                         _intermediateModel.Finish();
                         await machine.Handler.OnGenerateIntermediateModelAsync(_intermediateModel.Model);
                         await machine.Transport.OnGenerateIntermediateModelAsync(_intermediateModel.Model);
                         
-                        logger.Info($"[{machine.Id}] Strategy initialized.");
+                        Logger.Info($"[{machine.Id}] Strategy initialized.");
                     }
                     else
                     {
                         if (initMinutes == 0 || initStopwatch.ElapsedMilliseconds > 60000)
                         {
-                            logger.Warn($"[{machine.Id}] Strategy initialization pending ({initMinutes} min).");
+                            Logger.Warn($"[{machine.Id}] Strategy initialization pending ({initMinutes} min).");
                             initMinutes++;
                             initStopwatch.Restart();
                         }
 
-                        await Task.Delay(sweepMs);
+                        await Task.Delay(SweepMs);
                     }
                 }
             }
             catch (Exception ex)
             {
-                logger.Error(ex, $"[{machine.Id}] Strategy initialization failed.");
+                Logger.Error(ex, $"[{machine.Id}] Strategy initialization failed.");
             }
 
             initStopwatch.Stop();
@@ -466,7 +466,7 @@ namespace l99.driver.fanuc.strategies
         /// </summary>
         public virtual async Task InitAxisAsync()
         {
-            
+           
         }
         
         public virtual async Task InitSpindleAsync()
@@ -474,37 +474,37 @@ namespace l99.driver.fanuc.strategies
             
         }
 
-        public virtual async Task InitUserAxisAndSpindleAsync(short current_path)
+        public virtual async Task InitUserAxisAndSpindleAsync(short currentPath)
         {
             
         }
-        
-        public override async Task<dynamic?> CollectAsync()
+
+        protected override async Task<dynamic?> CollectAsync()
         {
             try
             {
-                _currentInitSegment = SegmentEnum.NONE;
+                _currentInitSegment = SegmentEnum.None;
                 
-                focasInvocations.Clear();
-                failedInvocationCountDuringSweep = 0;
+                _focasInvocations.Clear();
+                _failedInvocationCountDuringSweep = 0;
                 
-                _currentCollectSegment = SegmentEnum.BEGIN;
+                _currentCollectSegment = SegmentEnum.Begin;
                 
                 if(await CollectBeginAsync())
                 {
-                    if (_strategyState == StrategyStateEnum.UNKNOWN)
+                    if (_strategyState == StrategyStateEnum.Unknown)
                     {
-                        logger.Info($"[{machine.Id}] Strategy started.");
-                        _strategyState = StrategyStateEnum.OK;
+                        Logger.Info($"[{machine.Id}] Strategy started.");
+                        _strategyState = StrategyStateEnum.Ok;
                     }
-                    else if (_strategyState == StrategyStateEnum.FAILED)
+                    else if (_strategyState == StrategyStateEnum.Failed)
                     {
-                        logger.Info($"[{machine.Id}] Strategy recovered.");
-                        _strategyState = StrategyStateEnum.OK;
+                        Logger.Info($"[{machine.Id}] Strategy recovered.");
+                        _strategyState = StrategyStateEnum.Ok;
                     }
                     
-                    _currentInitSegment = SegmentEnum.ROOT;
-                    _currentCollectSegment = SegmentEnum.ROOT;
+                    _currentInitSegment = SegmentEnum.Root;
+                    _currentCollectSegment = SegmentEnum.Root;
                     
                     await SetNativeAndPeel("paths", 
                         await platform.GetPathAsync());
@@ -512,41 +512,41 @@ namespace l99.driver.fanuc.strategies
                     await InitUserRootAsync();
                     await CollectRootAsync();
 
-                    _currentInitSegment = SegmentEnum.PATH;
+                    _currentInitSegment = SegmentEnum.Path;
                     await InitUserPathsAsync();
-                    _currentInitSegment = SegmentEnum.AXIS;
+                    _currentInitSegment = SegmentEnum.Axis;
                     
-                    for (short current_path = Get("paths").response.cnc_getpath.path_no;
-                        current_path <= Get("paths").response.cnc_getpath.maxpath_no;
-                        current_path++)
+                    for (short currentPath = Get("paths").response.cnc_getpath.path_no;
+                        currentPath <= Get("paths").response.cnc_getpath.maxpath_no;
+                        currentPath++)
                     {
-                        _currentCollectSegment = SegmentEnum.PATH;
+                        _currentCollectSegment = SegmentEnum.Path;
                         
-                        await Set("current_path", current_path);
+                        await Set("current_path", currentPath);
 
-                        await InitUserAxisAndSpindleAsync(current_path);
+                        await InitUserAxisAndSpindleAsync(currentPath);
                         
-                        await Set("path", await platform.SetPathAsync(current_path));
-                        dynamic path_marker = PathMarker(Get("path").request.cnc_setpath.path_no);
-                        dynamic path_marker_full = new[] {path_marker};
-                        machine.MarkVeneer(current_path, path_marker_full);
+                        await Set("path", await platform.SetPathAsync(currentPath));
+                        dynamic pathMarker = PathMarker(Get("path").request.cnc_setpath.path_no);
+                        dynamic pathMarkerFull = new[] {pathMarker};
+                        machine.MarkVeneer(currentPath, pathMarkerFull);
 
                         await SetNativeKeyed($"axis_names",
                             await platform.RdAxisNameAsync());
                         await Peel("axis_names",
                             GetKeyed($"axis_names"));
 
-                        var fields_axes = GetKeyed($"axis_names")
+                        var fieldsAxes = GetKeyed($"axis_names")
                             .response.cnc_rdaxisname.axisname.GetType().GetFields();
 
-                        short axis_count = GetKeyed($"axis_names")
+                        short axisCount = GetKeyed($"axis_names")
                             .response.cnc_rdaxisname.data_num;
 
-                        string[] axis_names = new string[axis_count]; 
+                        string[] axisNames = new string[axisCount]; 
 
-                        for (short i = 0; i < axis_count; i++)
+                        for (short i = 0; i < axisCount; i++)
                         {
-                            axis_names[i] = axisName(fields_axes[i]
+                            axisNames[i] = axisName(fieldsAxes[i]
                                 .GetValue(GetKeyed($"axis_names")
                                     .response.cnc_rdaxisname.axisname));
                         }
@@ -556,69 +556,69 @@ namespace l99.driver.fanuc.strategies
                         await SetNativeAndPeel("spindle_names", 
                             GetKeyed($"spindle_names"));
                         
-                        var fields_spindles = GetKeyed($"spindle_names")
+                        var fieldsSpindles = GetKeyed($"spindle_names")
                             .response.cnc_rdspdlname.spdlname.GetType().GetFields();
                         
-                        short spindle_count = GetKeyed($"spindle_names")
+                        short spindleCount = GetKeyed($"spindle_names")
                             .response.cnc_rdspdlname.data_num;
 
-                        string[] spindle_names = new string[spindle_count]; 
+                        string[] spindleNames = new string[spindleCount]; 
 
-                        for (short i = 0; i < spindle_count; i++)
+                        for (short i = 0; i < spindleCount; i++)
                         {
-                            spindle_names[i] = spindleName(fields_spindles[i]
+                            spindleNames[i] = spindleName(fieldsSpindles[i]
                                 .GetValue(GetKeyed($"spindle_names")
                                     .response.cnc_rdspdlname.spdlname));
                         }
                         
-                        await CollectForEachPathAsync(current_path, axis_names, spindle_names, path_marker_full);
+                        await CollectForEachPathAsync(currentPath, axisNames, spindleNames, pathMarkerFull);
                         
-                        for (short current_axis = 1; current_axis <= axis_names.Length; current_axis ++)
+                        for (short current_axis = 1; current_axis <= axisNames.Length; current_axis ++)
                         {
-                            _currentCollectSegment = SegmentEnum.AXIS;
-                            dynamic axis_name = axis_names[current_axis-1];
+                            _currentCollectSegment = SegmentEnum.Axis;
+                            dynamic axis_name = axisNames[current_axis-1];
                             //Debug.Print($"PATH:{current_path} AXIS:{axis_name}");
                             dynamic axis_marker = axisMarker(current_axis, axis_name);
-                            dynamic axis_marker_full = new[] {path_marker, axis_marker};
-                            await Set("axis_split", new[] {current_path.ToString(), axis_name});
+                            dynamic axis_marker_full = new[] {pathMarker, axis_marker};
+                            await Set("axis_split", new[] {currentPath.ToString(), axis_name});
                             
                             machine.MarkVeneer(Get("axis_split"), axis_marker_full);
 
-                            await CollectForEachAxisAsync(current_path, current_axis, axis_name, Get("axis_split"), axis_marker_full);
+                            await CollectForEachAxisAsync(currentPath, current_axis, axis_name, Get("axis_split"), axis_marker_full);
                         }
 
-                        for (short current_spindle = 1; current_spindle <= spindle_names.Length; current_spindle ++)
+                        for (short current_spindle = 1; current_spindle <= spindleNames.Length; current_spindle ++)
                         {
-                            _currentCollectSegment = SegmentEnum.SPINDLE;
-                            dynamic spindle_name = spindle_names[current_spindle-1];
+                            _currentCollectSegment = SegmentEnum.Spindle;
+                            dynamic spindle_name = spindleNames[current_spindle-1];
                             //Debug.Print($"PATH:{current_path} SPINDLE:{spindle_name}");
                             dynamic spindle_marker = spindleMarker(current_spindle, spindle_name);
-                            dynamic spindle_marker_full = new[] {path_marker, spindle_marker};
-                            await Set("spindle_split", new[] {current_path.ToString(), spindle_name});
+                            dynamic spindle_marker_full = new[] {pathMarker, spindle_marker};
+                            await Set("spindle_split", new[] {currentPath.ToString(), spindle_name});
                             
                             machine.MarkVeneer(Get("spindle_split"), spindle_marker_full);
 
-                            await CollectForEachSpindleAsync(current_path, current_spindle, spindle_name, Get("spindle_split"), spindle_marker_full);
+                            await CollectForEachSpindleAsync(currentPath, current_spindle, spindle_name, Get("spindle_split"), spindle_marker_full);
                         };
                     }
                 }
                 else
                 {
-                    if (_strategyState == StrategyStateEnum.UNKNOWN || _strategyState == StrategyStateEnum.OK)
+                    if (_strategyState == StrategyStateEnum.Unknown || _strategyState == StrategyStateEnum.Ok)
                     {
-                        logger.Warn($"[{machine.Id}] Strategy failed to connect.");
-                        _strategyState = StrategyStateEnum.FAILED;
+                        Logger.Warn($"[{machine.Id}] Strategy failed to connect.");
+                        _strategyState = StrategyStateEnum.Failed;
                     }
                 }
                 
-                _currentInitSegment = SegmentEnum.NONE;
-                _currentCollectSegment = SegmentEnum.END;
+                _currentInitSegment = SegmentEnum.None;
+                _currentCollectSegment = SegmentEnum.End;
 
                 await CollectEndAsync();
             }
             catch (Exception ex)
             {
-                logger.Error(ex, $"[{machine.Id}] Strategy sweep failed at segment {_currentCollectSegment}.");
+                Logger.Error(ex, $"[{machine.Id}] Strategy sweep failed at segment {_currentCollectSegment}.");
             }
 
             return null;
@@ -630,7 +630,7 @@ namespace l99.driver.fanuc.strategies
         /// </summary>
         public virtual async Task<bool> CollectBeginAsync()
         {
-            sweepWatch.Restart();
+            _sweepWatch.Restart();
             
             await SetNativeAndPeel("connect", await platform.ConnectAsync());
 
@@ -697,12 +697,12 @@ namespace l99.driver.fanuc.strategies
 
             await machine.PeelVeneerAsync("focas_perf", new
             {
-                sweepMs = sweepWatch.ElapsedMilliseconds, focas_invocations = focasInvocations
+                sweepMs = _sweepWatch.ElapsedMilliseconds, focas_invocations = _focasInvocations
             });
                     
             //TODO: make veneer
             LastSuccess = Get("connect").success;
-            IsHealthy = failedInvocationCountDuringSweep == 0;
+            IsHealthy = _failedInvocationCountDuringSweep == 0;
         }
     }
 }

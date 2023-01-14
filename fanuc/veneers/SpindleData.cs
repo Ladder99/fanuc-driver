@@ -1,5 +1,10 @@
-﻿using l99.driver.@base;
+﻿#pragma warning disable CS8602
 
+using l99.driver.@base;
+
+// ReSharper disable UnusedVariable
+
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.veneers
 {
     public class SpindleData: Veneer
@@ -50,86 +55,87 @@ namespace l99.driver.fanuc.veneers
             // TODO
             //if (additionalInputs.All(o => o.success == true))
             {
-                var current_spindle = input;
-                var spindle_names = additionalInputs[0];
-                var sp_speed = additionalInputs[1];
-                var sp_meter = additionalInputs[2];
-                var sp_maxrpm = additionalInputs[3];
-                var sp_gear = additionalInputs[4];
-                var diag_lnk = additionalInputs[5];
-                var diag_temp = additionalInputs[6];
-                var diag_comms = additionalInputs[7];
-                var diag_load_perc = additionalInputs[8];
-                var diag_load_min = additionalInputs[9];
-                var diag_coder = additionalInputs[10];
-                var diag_loop_dev = additionalInputs[11];
-                var diag_sync_error = additionalInputs[12];
-                var diag_pos_data = additionalInputs[13];
-                var diag_error = additionalInputs[14];
-                var diag_warn = additionalInputs[15];
-                var diag_rev_1 = additionalInputs[16];
-                var diag_rev_2 = additionalInputs[17];
-                var diag_power = additionalInputs[18];
-                var sp_acts = additionalInputs[19];
+                var currentSpindle = input;
+                var spindleNames = additionalInputs[0];
+                var spSpeed = additionalInputs[1];
+                var spMeter = additionalInputs[2];
+                var spMaxRpm = additionalInputs[3];
+                var spGear = additionalInputs[4];
+                var diagLnk = additionalInputs[5];
+                var diagTemp = additionalInputs[6];
+                var diagComms = additionalInputs[7];
+                var diagLoadPerc = additionalInputs[8];
+                var diagLoadMin = additionalInputs[9];
+                var diagCoder = additionalInputs[10];
+                var diagLoopDev = additionalInputs[11];
+                var diagSyncError = additionalInputs[12];
+                var diagPosData = additionalInputs[13];
+                var diagError = additionalInputs[14];
+                var diagWarn = additionalInputs[15];
+                var diagRev1 = additionalInputs[16];
+                var diagRev2 = additionalInputs[17];
+                var diagPower = additionalInputs[18];
+                var spActs = additionalInputs[19];
 
-                var spindle_fields = spindle_names.response.cnc_rdspdlname.spdlname.GetType().GetFields();
-                var spindle_value = spindle_fields[current_spindle - 1]
-                    .GetValue(spindle_names.response.cnc_rdspdlname.spdlname);
-                var spindle_name = ((char) spindle_value.name).AsAscii() +
-                                   ((char) spindle_value.suff1).AsAscii() +
-                                   ((char) spindle_value.suff2).AsAscii();
+                var spindleFields = spindleNames.response.cnc_rdspdlname.spdlname.GetType().GetFields();
+                var spindleValue = spindleFields[currentSpindle - 1]
+                    .GetValue(spindleNames.response.cnc_rdspdlname.spdlname);
+                var spindleName = ((char) spindleValue.name).AsAscii() +
+                                   ((char) spindleValue.suff1).AsAscii() +
+                                   ((char) spindleValue.suff2).AsAscii();
 
-                var current_value = new
+                var currentValue = new
                 {
-                    number = current_spindle,
-                    name = spindle_name,
+                    number = currentSpindle,
+                    name = spindleName,
                     // feed is unnecessary here
                     //feed = sp_speed.response.cnc_rdspeed.speed.actf.data,
                     //feed_eu = speed_feed_EU(sp_speed.response.cnc_rdspeed.speed.actf.unit),
                     //speed = sp_speed.response.cnc_rdspeed.speed.acts.data / Math.Pow(10.0, sp_speed.response.cnc_rdspeed.speed.acts.dec),
-                    speed = sp_acts.response.cnc_acts2.actualspindle.data[0],
-                    speed_eu = speed_feed_EU(sp_speed.response.cnc_rdspeed.speed.acts.unit),
-                    load = sp_meter.response.cnc_rdspmeter.loadmeter.spload1.spload.data / Math.Pow(10.0, sp_meter.response.cnc_rdspmeter.loadmeter.spload1.spload.dec),
-                    load_eu = load_EU(sp_meter.response.cnc_rdspmeter.loadmeter.spload1.spload.unit),
-                    maxrpm = sp_maxrpm.response.cnc_rdspmaxrpm.serialspindle.data[0],
+                    speed = spActs.response.cnc_acts2.actualspindle.data[0],
+                    speed_eu = speed_feed_EU(spSpeed.response.cnc_rdspeed.speed.acts.unit),
+                    load = spMeter.response.cnc_rdspmeter.loadmeter.spload1.spload.data / Math.Pow(10.0, spMeter.response.cnc_rdspmeter.loadmeter.spload1.spload.dec),
+                    load_eu = load_EU(spMeter.response.cnc_rdspmeter.loadmeter.spload1.spload.unit),
+                    maxrpm = spMaxRpm.response.cnc_rdspmaxrpm.serialspindle.data[0],
                     maxrpm_eu = "rpm",
-                    gearratio = sp_gear.response.cnc_rdspgear.serialspindle.data[0],
-                    temperature = diag_temp.response.cnc_diagnoss.diag.cdata,
+                    gearratio = spGear.response.cnc_rdspgear.serialspindle.data[0],
+                    temperature = diagTemp.response.cnc_diagnoss.diag.cdata,
                     temperature_eu = "celsius",
-                    power = diag_power.response.cnc_diagnoss.diag.ldata,
+                    power = diagPower.response.cnc_diagnoss.diag.ldata,
                     power_eu = "watt",
-                    status_lnk = (diag_lnk.response.cnc_diagnoss.diag.cdata & (1 << 7)) != 0,
-                    status_ssa = (diag_comms.response.cnc_diagnoss.diag.cdata & (1 << 7)) != 0,
-                    status_sca = (diag_comms.response.cnc_diagnoss.diag.cdata & (1 << 5)) != 0,
-                    status_cme = (diag_comms.response.cnc_diagnoss.diag.cdata & (1 << 4)) != 0,
-                    status_cer = (diag_comms.response.cnc_diagnoss.diag.cdata & (1 << 3)) != 0,
-                    status_sne = (diag_comms.response.cnc_diagnoss.diag.cdata & (1 << 2)) != 0,
-                    status_fre = (diag_comms.response.cnc_diagnoss.diag.cdata & (1 << 1)) != 0,
-                    status_cre = (diag_comms.response.cnc_diagnoss.diag.cdata & (1 << 10)) != 0,
-                    coder_feedback = diag_coder.response.cnc_diagnoss.diag.ldata,
-                    loop_deviation = diag_loop_dev.response.cnc_diagnoss.diag.ldata,
-                    sync_error = diag_sync_error.response.cnc_diagnoss.diag.ldata,
-                    position = diag_pos_data.response.cnc_diagnoss.diag.ldata,
+                    status_lnk = (diagLnk.response.cnc_diagnoss.diag.cdata & (1 << 7)) != 0,
+                    status_ssa = (diagComms.response.cnc_diagnoss.diag.cdata & (1 << 7)) != 0,
+                    status_sca = (diagComms.response.cnc_diagnoss.diag.cdata & (1 << 5)) != 0,
+                    status_cme = (diagComms.response.cnc_diagnoss.diag.cdata & (1 << 4)) != 0,
+                    status_cer = (diagComms.response.cnc_diagnoss.diag.cdata & (1 << 3)) != 0,
+                    status_sne = (diagComms.response.cnc_diagnoss.diag.cdata & (1 << 2)) != 0,
+                    status_fre = (diagComms.response.cnc_diagnoss.diag.cdata & (1 << 1)) != 0,
+                    status_cre = (diagComms.response.cnc_diagnoss.diag.cdata & (1 << 10)) != 0,
+                    coder_feedback = diagCoder.response.cnc_diagnoss.diag.ldata,
+                    loop_deviation = diagLoopDev.response.cnc_diagnoss.diag.ldata,
+                    sync_error = diagSyncError.response.cnc_diagnoss.diag.ldata,
+                    position = diagPosData.response.cnc_diagnoss.diag.ldata,
                     position_eu = "pulse",
-                    error = diag_error.response.cnc_diagnoss.diag.idata,
-                    warning = diag_warn.response.cnc_diagnoss.diag.idata
+                    error = diagError.response.cnc_diagnoss.diag.idata,
+                    warning = diagWarn.response.cnc_diagnoss.diag.idata
                 };
 
                 //Console.WriteLine(JObject.FromObject(current_value).ToString());
 
-                await onDataArrivedAsync(input, current_value);
+                await OnDataArrivedAsync(input, currentValue);
                 
-                if (current_value.IsDifferentString((object) lastChangedValue))
+                if (currentValue.IsDifferentString((object) lastChangedValue))
                 {
-                    await onDataChangedAsync(input, current_value);
+                    await OnDataChangedAsync(input, currentValue);
                 }
             }
             //else
             {
-            //    await onErrorAsync(input);
+                //    await onErrorAsync(input);
             }
             
             return new { veneer = this };
         }
     }
 }
+#pragma warning restore CS8602

@@ -1,28 +1,31 @@
-﻿using l99.driver.@base;
+﻿#pragma warning disable CS1998
+
+using l99.driver.@base;
 using SparkplugNet.Core.Node;
 using SparkplugNet.VersionB;
 using SparkplugNet.VersionB.Data;
 
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.transports;
 public class SpB : Transport
 {
     private enum DeviceStateEnum
     {
-        OFFLINE,
-        ONLINE,
-        MUST_REBIRTH
+        Offline,
+        Online,
+        MustRebirth
     }
     
-    private dynamic _config;
+    private readonly dynamic _config;
 
-    private Dictionary<string, dynamic> _previous = new Dictionary<string, dynamic>();
-    private Dictionary<string, dynamic> _current = new Dictionary<string, dynamic>();
+    private Dictionary<string, dynamic> _previous = new();
+    private Dictionary<string, dynamic> _current = new();
 
-    private SparkplugNode _node;
-    private SparkplugNodeOptions _nodeOptions;
-    private List<Metric> _nodeMetrics;
+    private SparkplugNode _node = null!;
+    private SparkplugNodeOptions _nodeOptions = null!;
+    private List<Metric> _nodeMetrics = null!;
     
-    private DeviceStateEnum _deviceState = DeviceStateEnum.OFFLINE;
+    private DeviceStateEnum _deviceState = DeviceStateEnum.Offline;
     
     public SpB(Machine machine, object cfg) : base(machine, cfg)
     {
@@ -35,12 +38,14 @@ public class SpB : Transport
         {
             new()
             {
-                Name = "IpAddress", DataType = (uint)DataType.String, StringValue = String.Join(';', Network.GetAllLocalIPv4())
+                Name = "IpAddress", DataType = DataType.String, StringValue = String.Join(';', Network.GetAllLocalIPv4())
             }
         };
-        
+
+        // ReSharper disable once RedundantArgumentDefaultValue
         _node = new SparkplugNode(_nodeMetrics, null);
 
+        // ReSharper disable once UseObjectOrCollectionInitializer
         _nodeOptions = new SparkplugNodeOptions(
             brokerAddress: _config.transport["net"]["ip"],
             port: _config.transport["net"]["port"],
@@ -56,20 +61,24 @@ public class SpB : Transport
             proxyOptions: null,
             cancellationToken: new CancellationToken()
         );
+
+        _nodeOptions.AddSessionNumberToDataMessages = true;
         
-        _node.OnDisconnected += () =>
+        // ReSharper disable once UnusedParameter.Local
+        _node.DisconnectedAsync += async args => 
         {
-            logger.Warn($"[{machine.Id}] SpB node disconnected.");
+            Logger.Warn($"[{machine.Id}] SpB node disconnected.");
         };
-
-        _node.NodeCommandReceived += metric =>
+        
+        // ReSharper disable once UnusedParameter.Local
+        _node.NodeCommandReceivedAsync += async args =>   
         {
-            logger.Info($"[{machine.Id}] SpB node incoming command.");
-        };
-
-        _node.StatusMessageReceived += s =>
+            Logger.Info($"[{machine.Id}] SpB node incoming command.");
+        }; 
+        
+        _node.StatusMessageReceivedAsync += async args =>
         {
-            logger.Warn($"[{machine.Id}] SpB node status message '{s}.");
+            Logger.Warn($"[{machine.Id}] SpB node status message '{args.Status}.");
         };
 
         await ConnectAsync();
@@ -86,11 +95,11 @@ public class SpB : Transport
                 {
                     await _node.Start(_nodeOptions);
                     await _node.PublishMetrics(_nodeMetrics);
-                    logger.Info($"[{machine.Id}] SpB node connected.");
+                    Logger.Info($"[{machine.Id}] SpB node connected.");
                 }
                 catch (Exception ex)
                 {
-                    logger.Error(ex, $"[{machine.Id}] Broker connection error.");
+                    Logger.Error(ex, $"[{machine.Id}] Broker connection error.");
                 }
             }
         }
@@ -107,25 +116,25 @@ public class SpB : Transport
             case "DATA_ARRIVE":
 
                 var prefix = $"{veneer.Name}{(veneer.SliceKey == null ? null : "/"+veneer.SliceKey)}";
-                processIncoming(prefix, data);
+                ProcessIncoming(prefix, data);
                 
                 break;
                 
             case "SWEEP_END":
                 
-                processIncoming("sweep", data);
+                ProcessIncoming("sweep", data);
 
                 var changes = _current
                     .Except(_previous)
                     .ToDictionary();
 
-                if (logger.IsTraceEnabled)
+                if (Logger.IsTraceEnabled)
                 {
-                    logger.Trace($"[{machine.Id}] Total metric count: {_current.Count()}");
-                    logger.Trace($"[{machine.Id}] Changed metric count: {changes.Count()}");
+                    Logger.Trace($"[{machine.Id}] Total metric count: {_current.Count()}");
+                    Logger.Trace($"[{machine.Id}] Changed metric count: {changes.Count()}");
                     changes.ForEach(x =>
                     {
-                        logger.Trace($"[{machine.Id}] Metric change: {x.Key} = {x.Value.ToString()}");
+                        Logger.Trace($"[{machine.Id}] Metric change: {x.Key} = {x.Value.ToString()}");
                     });
                 }
 
@@ -134,37 +143,30 @@ public class SpB : Transport
                         kvp => kvp.Key, 
                         kvp => kvp.Value);
                 
-                if (data.state.data.online == true && _deviceState == DeviceStateEnum.OFFLINE)
+                if (data.state.data.online == true && _deviceState == DeviceStateEnum.Offline)
                 {
-                    logger.Info($"[{machine.Id}] SpB device birth.");
-                    bool success = await deviceBirthAsync(_current);
+                    Logger.Info($"[{machine.Id}] SpB device birth.");
+                    bool success = await DeviceBirthAsync(_current);
+                    _deviceState = success ? DeviceStateEnum.Online : DeviceStateEnum.MustRebirth;
+                }
+                else if (data.state.data.online == false && _deviceState == DeviceStateEnum.Online)
+                {
+                    Logger.Info($"[{machine.Id}] SpB device death.");
+                    await DeviceDeathAsync();
+                    _deviceState = DeviceStateEnum.Offline;
+                }
+                else if (data.state.data.online == true && _deviceState == DeviceStateEnum.MustRebirth)
+                {
+                    Logger.Info($"[{machine.Id}] SpB device re-birth.");
+                    bool success = await DeviceBirthAsync(_current);
                     if (success)
                     {
-                        _deviceState = DeviceStateEnum.ONLINE;
-                    }
-                    else
-                    {
-                        _deviceState = DeviceStateEnum.MUST_REBIRTH;
-                    }
-                }
-                else if (data.state.data.online == false && _deviceState == DeviceStateEnum.ONLINE)
-                {
-                    logger.Info($"[{machine.Id}] SpB device death.");
-                    await deviceDeathAsync();
-                    _deviceState = DeviceStateEnum.OFFLINE;
-                }
-                else if (data.state.data.online == true && _deviceState == DeviceStateEnum.MUST_REBIRTH)
-                {
-                    logger.Info($"[{machine.Id}] SpB device re-birth.");
-                    bool success = await deviceBirthAsync(_current);
-                    if (success)
-                    {
-                        _deviceState = DeviceStateEnum.ONLINE;
+                        _deviceState = DeviceStateEnum.Online;
                     }
                 }
                 else
                 {
-                    await deviceUpdateAsync(changes);
+                    await DeviceUpdateAsync(changes);
                 }
                 
                 break;
@@ -175,7 +177,7 @@ public class SpB : Transport
         }
     }
 
-    void processIncoming(string prefix, dynamic data)
+    void ProcessIncoming(string prefix, dynamic data)
     {
         // flatten incoming data
         JObject jc = JObject.FromObject(data.state.data);
@@ -184,6 +186,7 @@ public class SpB : Transport
         // massage keys
         var dict = fc.Select(x=>
             {
+                // ReSharper disable once ConvertToLambdaExpression
                 return new KeyValuePair<string, object>(
                     //$"{prefix.Replace('/','.')}.{x.Key.Replace('[','_').Replace("]", string.Empty)}",
                     //$"{prefix.Replace('/','.')}.{x.Key}",
@@ -208,10 +211,10 @@ public class SpB : Transport
             .ToDictionary(g => g.Key, g => g.First().Value);
     }
 
-    private async Task<bool> deviceBirthAsync(Dictionary<string, object> diff)
+    private async Task<bool> DeviceBirthAsync(Dictionary<string, object> diff)
     {
         List<Metric> metrics = diff
-            .Select(kv => makeMetric(kv.Key, kv.Value))
+            .Select(kv => MakeMetric(kv.Key, kv.Value))
             .ToList();
 
         if (_node.IsConnected)
@@ -222,7 +225,7 @@ public class SpB : Transport
             }
             catch (Exception ex)
             {
-                logger.Error(ex, $"[{machine.Id}] SpB device birth error.");
+                Logger.Error(ex, $"[{machine.Id}] SpB device birth error.");
                 return false;
             }
 
@@ -234,7 +237,7 @@ public class SpB : Transport
         }
     }
 
-    private async Task deviceDeathAsync()
+    private async Task DeviceDeathAsync()
     {
         if (_node.IsConnected)
         {
@@ -244,15 +247,15 @@ public class SpB : Transport
             }
             catch (Exception ex)
             {
-                logger.Error(ex, $"[{machine.Id}] SpB device death error.");
+                Logger.Error(ex, $"[{machine.Id}] SpB device death error.");
             }
         }
     }
 
-    private async Task deviceUpdateAsync(Dictionary<string, object> diff)
+    private async Task DeviceUpdateAsync(Dictionary<string, object> diff)
     {
         List<Metric> metrics = diff
-            .Select(kv => makeMetric(kv.Key, kv.Value))
+            .Select(kv => MakeMetric(kv.Key, kv.Value))
             .ToList();
 
         if (_node.IsConnected)
@@ -263,19 +266,19 @@ public class SpB : Transport
             }
             catch (Exception ex)
             {
-                logger.Error(ex, $"[{machine.Id}] SpB device data error.");
+                Logger.Error(ex, $"[{machine.Id}] SpB device data error.");
             }
         }
     }
 
-    private Metric makeMetric(string name, object value)
+    private Metric MakeMetric(string name, object value)
     {
         switch (Type.GetTypeCode(value.GetType()))
         {
             case TypeCode.Byte:
                 return new Metric()
                 {
-                    Name = name, DataType = (uint)DataType.Int8, IntValue = Convert.ToUInt16(value)
+                    Name = name, DataType = DataType.Int8, IntValue = Convert.ToUInt16(value)
                 };
             case TypeCode.Int16:
             case TypeCode.Int32:
@@ -283,25 +286,26 @@ public class SpB : Transport
             case TypeCode.Double:
                 return new Metric()
                 {
-                    Name = name, DataType = (uint)DataType.Double, DoubleValue = Convert.ToDouble(value) 
+                    Name = name, DataType = DataType.Double, DoubleValue = Convert.ToDouble(value) 
                 };
             case TypeCode.Boolean:
                 return new Metric()
                 {
-                    Name = name, DataType = (uint)DataType.Boolean, BooleanValue = Convert.ToBoolean(value) 
+                    Name = name, DataType = DataType.Boolean, BooleanValue = Convert.ToBoolean(value) 
                 };
             case TypeCode.String:
                 return new Metric()
                 {
-                    Name = name, DataType = (uint)DataType.String, StringValue = Convert.ToString(value) 
+                    Name = name, DataType = DataType.String, StringValue = Convert.ToString(value) ?? string.Empty 
                 };
             default:
-                logger.Info($"[{machine.Id}] '{name}'({value.GetType().FullName}) converted to string metric.");
+                Logger.Info($"[{machine.Id}] '{name}'({value.GetType().FullName}) converted to string metric.");
                 
                 return new Metric()
                 {
-                    Name = name, DataType = (uint)DataType.String, StringValue = Convert.ToString(value) 
+                    Name = name, DataType = DataType.String, StringValue = Convert.ToString(value) ?? string.Empty 
                 };
         }
     }
 }
+#pragma warning restore CS1998

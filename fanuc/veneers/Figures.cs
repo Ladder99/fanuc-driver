@@ -21,7 +21,7 @@ namespace l99.driver.fanuc.veneers
                     input.response.cnc_getfigure
                 };
                 
-                await onDataArrivedAsync(input, current_value);
+                await OnDataArrivedAsync(input, current_value);
                 
                 //Console.WriteLine(current_value.GetHashCode() + "  ==  " + lastChangedValue.GetHashCode());
                 
@@ -29,7 +29,7 @@ namespace l99.driver.fanuc.veneers
                 //if(!JObject.FromObject(current_value).ToString().Equals(JObject.FromObject(lastChangedValue).ToString()))
                 if(current_value.IsDifferentString((object)lastChangedValue))
                 {
-                    await onDataChangedAsync(input, current_value);
+                    await OnDataChangedAsync(input, current_value);
                 }
             }
             else

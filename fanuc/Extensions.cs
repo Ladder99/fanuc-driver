@@ -1,4 +1,5 @@
 ﻿
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc
 {
     public static class Extensions
@@ -21,10 +22,10 @@ namespace l99.driver.fanuc
         
         public static bool IsDifferentHash(this IEnumerable<dynamic> one, IEnumerable<dynamic> two)
         { 
-            var one_hc = one.Select(x => x.GetHashCode());
-            var two_hc = two.Select(x => x.GetHashCode());
+            var oneHc = one.Select(x => x.GetHashCode());
+            var twoHc = two.Select(x => x.GetHashCode());
 
-            if (one_hc.Except(two_hc).Count() + two_hc.Except(one_hc).Count() > 0)
+            if (oneHc.Except(twoHc).Count() + twoHc.Except(oneHc).Count() > 0)
                 return true;
 
             return false;

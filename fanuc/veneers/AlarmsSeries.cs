@@ -63,11 +63,11 @@ namespace l99.driver.fanuc.veneers
                     alarms = alarmList
                 };
                 
-                await onDataArrivedAsync(input, currentValue);
+                await OnDataArrivedAsync(input, currentValue);
                 
                 if(currentValue.alarms.IsDifferentHash((List<dynamic>)lastChangedValue.alarms))
                 {
-                    await onDataChangedAsync(input, currentValue);
+                    await OnDataChangedAsync(input, currentValue);
                 }
             }
             else

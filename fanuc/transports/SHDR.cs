@@ -1,16 +1,22 @@
-﻿using l99.driver.@base;
+﻿#pragma warning disable CS1998
+
+using System.Diagnostics.CodeAnalysis;
+using l99.driver.@base;
 using MTConnect.Adapters.Shdr;
 using MTConnect.Observations;
+using MTConnect.Shdr;
 using Scriban;
 using Scriban.Runtime;
 
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.transports;
 
+// ReSharper disable once InconsistentNaming
 public class MTCDeviceModelGenerator
 {
-    private ILogger _logger;
-    private Machine _machine;
-    private dynamic _transport;
+    private readonly ILogger _logger;
+    private readonly Machine _machine;
+    private readonly dynamic _transport;
     
     public MTCDeviceModelGenerator(Machine machine, dynamic transport)
     {
@@ -28,7 +34,9 @@ public class MTCDeviceModelGenerator
         {
             var generator = _transport["generator"];
 
+#pragma warning disable CS8600
             Template tp = null;
+#pragma warning restore CS8600
             var so = new ScriptObject();
             var tc = new TemplateContext();
 
@@ -92,9 +100,9 @@ public class MTCDeviceModelGenerator
             var xml = tp.Render(tc);
 
             tp = Template.Parse(generator["output"]);
-            var file_out = tp.Render(tc);
+            var fileOut = tp.Render(tc);
 
-            System.IO.File.WriteAllText(file_out, xml);
+            System.IO.File.WriteAllText(fileOut, xml);
         }
         catch (Exception ex)
         {
@@ -103,20 +111,21 @@ public class MTCDeviceModelGenerator
     }
 }
 
+// ReSharper disable once InconsistentNaming
 public class SHDR : Transport
 {
-    private dynamic _config;
+    private readonly dynamic _config;
 
     // paths,axes,spindles received from strategy
     private dynamic _model;
     
     // config - veneer type, template text
-    private Dictionary<string, string> _transformLookup = new Dictionary<string, string>();
+    private Dictionary<string, string> _transformLookup = new();
     
-    private ShdrAdapter _adapter;
-    private bool _shdrInvalidated = false;
+    private ShdrIntervalQueueAdapter _adapter;
+    private bool _shdrInvalidated;
 
-    private bool shdrInvalidated
+    private bool ShdrInvalidated
     {
         get
         {
@@ -133,42 +142,49 @@ public class SHDR : Transport
 
     private struct AdapterInfo
     {
+        // ReSharper disable once InconsistentNaming
+        // ReSharper disable once NotAccessedField.Local
         public string IPAddress;
+        // ReSharper disable once NotAccessedField.Local
         public int Port;
     }
 
+#pragma warning disable CS8618
     public SHDR(Machine machine, object cfg) : base(machine, cfg)
+#pragma warning restore CS8618
     {
         _config = cfg;
     }
 
-    private void cacheShdrDataItem(ShdrDataItem dataItem)
+    private void CacheShdrDataItem(ShdrDataItem dataItem)
     {
         _adapter.AddDataItem(dataItem);
-        logger.Trace($"[{machine.Id}] {dataItem.DataItemKey}:{string.Join(',', dataItem.Values.Select(v=>v.Value))}");
+        Logger.Trace($"[{machine.Id}] {dataItem.DataItemKey}:{string.Join(',', dataItem.Values.Select(v=>v.Value))}");
     }
     
-    private void cacheShdrMessage(ShdrMessage dataItem)
+    private void CacheShdrMessage(ShdrMessage dataItem)
     {
         _adapter.AddMessage(dataItem);
-        logger.Trace($"[{machine.Id}] {dataItem.DataItemKey}:{string.Join(',', dataItem.Values.Select(v=>v.Value))}");
+        Logger.Trace($"[{machine.Id}] {dataItem.DataItemKey}:{string.Join(',', dataItem.Values.Select(v=>v.Value))}");
     }
     
-    private void cacheShdrCondition(ShdrCondition dataItem)
+    private void CacheShdrCondition(ShdrCondition dataItem)
     {
         _adapter.AddCondition(dataItem);
-        logger.Trace($"[{machine.Id}] {dataItem.DataItemKey}:{string.Join(',', dataItem.FaultStates.Select(v=>v.Level))}");
+        Logger.Trace($"[{machine.Id}] {dataItem.DataItemKey}:{string.Join(',', dataItem.FaultStates.Select(v=>v.Level))}");
     }
     
     public override async Task<dynamic?> CreateAsync()
     {
         _deviceModelGenerator = new MTCDeviceModelGenerator(machine, _config.transport);
         
-        await initAdapterAsync();
+        await InitAdapterAsync();
 
-        await initScriptContextAsync();
+        await InitScriptContextAsync();
         
+#pragma warning disable CS8604
         _transformLookup = (_config.transport["transformers"] as Dictionary<dynamic,dynamic>)
+#pragma warning restore CS8604
             .ToDictionary(
                 kv => (string)kv.Key, 
                 kv => (string)kv.Value);
@@ -205,7 +221,7 @@ public class SHDR : Transport
                     }
                     catch (Exception ex)
                     {
-                        logger.Warn(ex, $"[{machine.Id}] SHDR evaluation failed for '{transformName}'");
+                        Logger.Warn(ex, $"[{machine.Id}] SHDR evaluation failed for '{transformName}'");
                     }
                 }
                 
@@ -223,11 +239,11 @@ public class SHDR : Transport
                     }
                     catch (Exception ex)
                     {
-                        logger.Warn(ex, $"[{machine.Id}] SHDR evaluation failed for 'SWEEP_END'");
+                        Logger.Warn(ex, $"[{machine.Id}] SHDR evaluation failed for 'SWEEP_END'");
                     }
                 }
                 
-                if (shdrInvalidated)
+                if (ShdrInvalidated)
                 {
                     _adapter.SetUnavailable();
                 }
@@ -242,45 +258,54 @@ public class SHDR : Transport
         _deviceModelGenerator.Generate(model);
     }
     
-    private async Task initAdapterAsync()
+    [SuppressMessage("ReSharper", "UnusedParameter.Local")]
+    private async Task InitAdapterAsync()
     {
-        _adapter = new ShdrAdapter(
+        // ReSharper disable once UseObjectOrCollectionInitializer
+        _adapter = new ShdrIntervalQueueAdapter(
             _config.transport["device_name"],
             _config.transport["net"]["port"],
             _config.transport["net"]["heartbeat_ms"]);
-
-        _adapter.Interval = _config.transport["net"]["interval_ms"];
         
+        _adapter.Interval = _config.transport["net"]["interval_ms"];
+
+        // ReSharper disable once UnusedParameter.Local
         _adapter.AgentConnectionError = (sender, s) =>
         {
-            logger.Info($"[{machine.Id}] MTC Agent connection error. {s}");
+            Logger.Info($"[{machine.Id}] MTC Agent connection error. {s}");
         };
         
+        // ReSharper disable once UnusedParameter.Local
         _adapter.AgentDisconnected = (sender, s) =>
         {
-            logger.Info($"[{machine.Id}] MTC Agent disconnected error. {s}");
+            Logger.Info($"[{machine.Id}] MTC Agent disconnected error. {s}");
         };
         
+        // ReSharper disable once UnusedParameter.Local
         _adapter.AgentConnected = (sender, s) =>
         {
-            logger.Info($"[{machine.Id}] MTC Agent connected. {s}");
+            Logger.Info($"[{machine.Id}] MTC Agent connected. {s}");
         };
         
+        // ReSharper disable once UnusedParameter.Local
         _adapter.SendError = (sender, args) =>
         {
-            logger.Info($"[{machine.Id}] MTC Agent send error. {args.Message}");
+            Logger.Info($"[{machine.Id}] MTC Agent send error. {args.Message}");
         };
 
+        // ReSharper disable once UnusedParameter.Local
         _adapter.LineSent = (sender, args) =>
         {
-            logger.Debug($"[{machine.Id}] MTC Agent line send. {args.Message}");
+            Logger.Debug($"[{machine.Id}] MTC Agent line send. {args.Message}");
         };
 
+        
         _adapter.PingReceived = (sender, s) =>
         {
             //logger.Info($"[{machine.Id} MTC Agent ping received. {s}");
         };
 
+        // ReSharper disable once UnusedParameter.Local
         _adapter.PongSent = (sender, s) =>
         {
             //logger.Info($"[{machine.Id} MTC Agent pong sent. {s}");
@@ -289,60 +314,63 @@ public class SHDR : Transport
         await ConnectAsync();
     }
 
-    private async Task initScriptContextAsync()
+    private async Task InitScriptContextAsync()
     {
         _globalScriptObject = new ScriptObject();
 
         _globalScriptObject.Import("machinePaths",
+            // ReSharper disable once ConvertToLambdaExpression
             new Func<object>(() => { return _model.structure.Keys.ToArray(); }));
 
         _globalScriptObject.Import("machineAxisNamesForPath",
+            // ReSharper disable once ConvertToLambdaExpression
             new Func<object, object>((p) => { return _model.structure[p.ToString()].Item1.ToArray(); }));
 
         _globalScriptObject.Import("machineSpindleNamesForPath",
+            // ReSharper disable once ConvertToLambdaExpression
             new Func<object, object>((p) => { return _model.structure[p.ToString()].Item2.ToArray(); }));
 
         _globalScriptObject.Import("ShdrSample",
-            new Action<string, object>((k, v) => { cacheShdrDataItem(new ShdrDataItem(k, v)); }));
+            new Action<string, object>((k, v) => { CacheShdrDataItem(new ShdrDataItem(k, v)); }));
 
         _globalScriptObject.Import("ShdrSampleUnavailable",
-            new Action<string>((k) => { cacheShdrDataItem(new ShdrDataItem(k, "UNAVAILABLE")); }));
+            new Action<string>((k) => { CacheShdrDataItem(new ShdrDataItem(k, "UNAVAILABLE")); }));
 
         _globalScriptObject.Import("ShdrMessage",
-            new Action<string, object>((k, v) => { cacheShdrMessage(new ShdrMessage(k, v)); }));
+            new Action<string, object>((k, v) => { CacheShdrMessage(new ShdrMessage(k, v.ToString())); }));
 
         _globalScriptObject.Import("ShdrEvent",
-            new Action<string, object>((k, v) => { cacheShdrDataItem(new ShdrDataItem(k, v)); }));
+            new Action<string, object>((k, v) => { CacheShdrDataItem(new ShdrDataItem(k, v)); }));
 
         _globalScriptObject.Import("ShdrEventIf",
             new Action<string, object, object, object>((k, x, y, z) =>
             {
                 var v = Convert.ToBoolean(x) ? y : z;
-                cacheShdrDataItem(new ShdrDataItem(k, v));
+                CacheShdrDataItem(new ShdrDataItem(k, v));
             }));
 
         _globalScriptObject.Import("ShdrEventUnavailable",
-            new Action<string>((k) => { cacheShdrDataItem(new ShdrDataItem(k, "UNAVAILABLE")); }));
+            new Action<string>((k) => { CacheShdrDataItem(new ShdrDataItem(k, "UNAVAILABLE")); }));
 
         _globalScriptObject.Import("ShdrConditionNormal",
             new Action<string>((k) =>
             {
                 var c = new ShdrCondition(k, ConditionLevel.NORMAL);
-                cacheShdrCondition(c);
+                CacheShdrCondition(c);
             }));
 
         _globalScriptObject.Import("ShdrConditionWarning",
             new Action<string>((k) =>
             {
                 var c = new ShdrCondition(k, ConditionLevel.WARNING);
-                cacheShdrCondition(c);
+                CacheShdrCondition(c);
             }));
 
         _globalScriptObject.Import("ShdrConditionFault",
             new Action<string>((k) =>
             {
                 var c = new ShdrCondition(k, ConditionLevel.FAULT);
-                cacheShdrCondition(c);
+                CacheShdrCondition(c);
             }));
 
         _globalScriptObject.Import("ShdrConditionFaultIf",
@@ -350,7 +378,7 @@ public class SHDR : Transport
             {
                 var c = new ShdrCondition(k,
                     Convert.ToBoolean(v) ? ConditionLevel.FAULT : ConditionLevel.NORMAL);
-                cacheShdrCondition(c);
+                CacheShdrCondition(c);
             }));
 
         _globalScriptObject.Import("ShdrConditionSeverity",
@@ -361,14 +389,14 @@ public class SHDR : Transport
                     Convert.ToBoolean(n) ? ConditionLevel.NORMAL :
                     ConditionLevel.UNAVAILABLE;
                 var c = new ShdrCondition(k, l);
-                cacheShdrCondition(c);
+                CacheShdrCondition(c);
             }));
 
         _globalScriptObject.Import("ShdrConditionUnavailable",
             new Action<string>((k) =>
             {
                 var c = new ShdrCondition(k, ConditionLevel.UNAVAILABLE);
-                cacheShdrCondition(c);
+                CacheShdrCondition(c);
             }));
 
         _globalScriptObject.Import("ShdrAllUnavailable",
@@ -387,3 +415,4 @@ public class SHDR : Transport
         _globalTemplateContext.PushGlobal(_globalScriptObject);
     }
 }
+#pragma warning restore CS1998
