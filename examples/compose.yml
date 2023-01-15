@@ -70,7 +70,7 @@ services:
       - all
       - mtc
     container_name: agent
-    image: ladder99/agent:2.0.0.13_RC1
+    image: ladder99/agent:latest
     restart: always
     networks:
       - ladder99

@@ -1,0 +1,2 @@
+sc.exe create fanuc-driver binpath= "c:\ladder99\fanuc-driver\fanuc.exe --nlog .\user\nlog.config --config .\user\config.system.yml,.\user\config.user.yml,.\user\config.machines.yml" DisplayName= "fanuc-driver" start= auto
+sc.exe description fanuc-driver "Ladder99 Fanuc Focas data acquisition driver"
