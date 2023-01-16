@@ -1,6 +1,4 @@
-﻿#pragma warning disable CS8602
-
-using System.Globalization;
+﻿using System.Globalization;
 using l99.driver.@base;
 
 // ReSharper disable once CheckNamespace
@@ -52,11 +50,11 @@ namespace l99.driver.fanuc.veneers
                 try
                 {
                     modifiedCurrent = new DateTimeOffset(new DateTime(
-                            additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.mdate.year,
-                            additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.mdate.month,
-                            additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.mdate.day,
-                            additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.mdate.hour,
-                            additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.mdate.minute, 0))
+                            additionalInputs[0]!.response.cnc_rdprogdir3.buf.dir1.mdate.year,
+                            additionalInputs[0]!.response.cnc_rdprogdir3.buf.dir1.mdate.month,
+                            additionalInputs[0]!.response.cnc_rdprogdir3.buf.dir1.mdate.day,
+                            additionalInputs[0]!.response.cnc_rdprogdir3.buf.dir1.mdate.hour,
+                            additionalInputs[0]!.response.cnc_rdprogdir3.buf.dir1.mdate.minute, 0))
                         .ToString("o", CultureInfo.InvariantCulture);
                 }
                 catch
@@ -67,44 +65,44 @@ namespace l99.driver.fanuc.veneers
                 try
                 {
                     modifiedSelected = new DateTimeOffset(new DateTime(
-                            additionalInputs[1].response.cnc_rdprogdir3.buf.dir1.mdate.year,
-                            additionalInputs[1].response.cnc_rdprogdir3.buf.dir1.mdate.month,
-                            additionalInputs[1].response.cnc_rdprogdir3.buf.dir1.mdate.day,
-                            additionalInputs[1].response.cnc_rdprogdir3.buf.dir1.mdate.hour,
-                            additionalInputs[1].response.cnc_rdprogdir3.buf.dir1.mdate.minute, 0))
+                            additionalInputs[1]!.response.cnc_rdprogdir3.buf.dir1.mdate.year,
+                            additionalInputs[1]!.response.cnc_rdprogdir3.buf.dir1.mdate.month,
+                            additionalInputs[1]!.response.cnc_rdprogdir3.buf.dir1.mdate.day,
+                            additionalInputs[1]!.response.cnc_rdprogdir3.buf.dir1.mdate.hour,
+                            additionalInputs[1]!.response.cnc_rdprogdir3.buf.dir1.mdate.minute, 0))
                         .ToString("o", CultureInfo.InvariantCulture);
                 }
                 catch
                 {
-                   
+                    // ignored
                 }
-                
+
                 var currentValue = new
                 {
                     program = new {
                         current = new {
                             name = $"O{input.response.cnc_rdprgnum.prgnum.data}",
                             number = input.response.cnc_rdprgnum.prgnum.data,
-                            size_b = additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.length,
-                            comment = additionalInputs[0].response.cnc_rdprogdir3.buf.dir1.comment,
+                            size_b = additionalInputs[0]!.response.cnc_rdprogdir3.buf.dir1.length,
+                            comment = additionalInputs[0]!.response.cnc_rdprogdir3.buf.dir1.comment,
                             modified = modifiedCurrent
                         },
                         selected = new {
                             name = $"O{input.response.cnc_rdprgnum.prgnum.mdata}",
                             number = input.response.cnc_rdprgnum.prgnum.mdata,
-                            size_b = additionalInputs[1].response.cnc_rdprogdir3.buf.dir1.length,
-                            comment = additionalInputs[1].response.cnc_rdprogdir3.buf.dir1.comment,
+                            size_b = additionalInputs[1]!.response.cnc_rdprogdir3.buf.dir1.length,
+                            comment = additionalInputs[1]!.response.cnc_rdprogdir3.buf.dir1.comment,
                             modified = modifiedSelected
                         }
                     },
                     pieces = new {
-                        produced = additionalInputs[2].response.cnc_rdparam.param.data.ldata,
-                        produced_life = additionalInputs[3].response.cnc_rdparam.param.data.ldata,
-                        remaining = additionalInputs[4].response.cnc_rdparam.param.data.ldata
+                        produced = additionalInputs[2]!.response.cnc_rdparam.param.data.ldata,
+                        produced_life = additionalInputs[3]!.response.cnc_rdparam.param.data.ldata,
+                        remaining = additionalInputs[4]!.response.cnc_rdparam.param.data.ldata
                     },
                     timers = new {
-                        cycle_time_ms = (additionalInputs[5].response.cnc_rdparam.param.data.ldata * 60000) +
-                                        additionalInputs[6].response.cnc_rdparam.param.data.ldata
+                        cycle_time_ms = (additionalInputs[5]!.response.cnc_rdparam.param.data.ldata * 60000) +
+                                        additionalInputs[6]!.response.cnc_rdparam.param.data.ldata
                     }
                 };
 
@@ -117,11 +115,10 @@ namespace l99.driver.fanuc.veneers
             }
             else
             {
-                await onErrorAsync(input);
+                await OnHandleErrorAsync(input);
             }
 
             return new { veneer = this };
         }
     }
 }
-#pragma warning restore CS8602

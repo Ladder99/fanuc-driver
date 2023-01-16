@@ -1,5 +1,6 @@
 ﻿using l99.driver.@base;
 
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.veneers
 {
     public class Figures : Veneer
@@ -16,25 +17,25 @@ namespace l99.driver.fanuc.veneers
         {
             if (input.success)
             {
-                var current_value = new
+                var currentValue = new
                 {
                     input.response.cnc_getfigure
                 };
                 
-                await OnDataArrivedAsync(input, current_value);
+                await OnDataArrivedAsync(input, currentValue);
                 
                 //Console.WriteLine(current_value.GetHashCode() + "  ==  " + lastChangedValue.GetHashCode());
                 
                 //if (!current_value.Equals(this.lastChangedValue))
                 //if(!JObject.FromObject(current_value).ToString().Equals(JObject.FromObject(lastChangedValue).ToString()))
-                if(current_value.IsDifferentString((object)lastChangedValue))
+                if(currentValue.IsDifferentString((object)lastChangedValue))
                 {
-                    await OnDataChangedAsync(input, current_value);
+                    await OnDataChangedAsync(input, currentValue);
                 }
             }
             else
             {
-                await onErrorAsync(input);
+                await OnHandleErrorAsync(input);
             }
             
             return new { veneer = this };

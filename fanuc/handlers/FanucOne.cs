@@ -1,7 +1,9 @@
 using l99.driver.@base;
 
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.handlers
 {
+    // ReSharper disable once UnusedType.Global
     public class FanucOne: Handler
     {
         private dynamic _cfg;
@@ -63,7 +65,7 @@ namespace l99.driver.fanuc.handlers
             if (_cfg.handler["change_only"] == false)
                 return null;
             
-            if (_cfg.handler["skip_internal"] == true && veneer.IsInternal == true)
+            if (_cfg.handler["skip_internal"] == true && veneer.IsInternal)
                 return null;
             
             dynamic payload = new

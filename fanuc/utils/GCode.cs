@@ -1,4 +1,5 @@
 
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.gcode
 {
     /* block tracking usage
@@ -73,7 +74,7 @@ namespace l99.driver.fanuc.gcode
 
         private bool DEBUG = false;
         
-        private Dictionary<int,Block> _blocks = new Dictionary<int,Block>();
+        private readonly Dictionary<int,Block> _blocks = new();
 
         public int InitializedBlockPointer = -1;
         public int PreviousBlockPointer=-1;
@@ -86,7 +87,7 @@ namespace l99.driver.fanuc.gcode
 
             int baseBlockPointer = blockPointer;
 
-            return add(baseBlockPointer, nativeBlockText, dropLast);
+            return AddInternal(baseBlockPointer, nativeBlockText, dropLast);
         }
         
         public bool Add2(int blockCounter, int blockPointer, char[] nativeBlockText, bool dropLast = true)
@@ -101,10 +102,10 @@ namespace l99.driver.fanuc.gcode
             
             int baseBlockPointer = blockCounter - 1;
             
-            return add(baseBlockPointer, nativeBlockText, dropLast);
+            return AddInternal(baseBlockPointer, nativeBlockText, dropLast);
         }
 
-        private bool add(int baseBlockPointer, char[] nativeBlockText, bool dropLast = true)
+        private bool AddInternal(int baseBlockPointer, char[] nativeBlockText, bool dropLast = true)
         {
             string[] blockTextArray = string.Join("", nativeBlockText).Trim().Split('\n');
             
@@ -126,7 +127,7 @@ namespace l99.driver.fanuc.gcode
 
                     if (DEBUG)
                     {
-                        var cursor = blockNumber == baseBlockPointer ? "(.add) now" : "(.add) ahd";
+                        var cursor = blockNumber == baseBlockPointer ? "(.AddInternal) now" : "(.AddInternal) ahd";
                         Console.WriteLine($"{cursor} {block.ToString()}");
                     }
 
@@ -141,15 +142,15 @@ namespace l99.driver.fanuc.gcode
             {
                 if (PreviousBlockPointer != CurrentBlockPointer)
                 {
-                    Console.WriteLine($"(.add) mv  [{PreviousBlockPointer}] -> [{CurrentBlockPointer}]");
-                    Console.WriteLine($"(.add) >>> {_blocks[CurrentBlockPointer].ToString()}");
+                    Console.WriteLine($"(.AddInternal) mv  [{PreviousBlockPointer}] -> [{CurrentBlockPointer}]");
+                    Console.WriteLine($"(.AddInternal) >>> {_blocks[CurrentBlockPointer].ToString()}");
                 }
             }
 
             return true;
         }
-        
-        public int MissedBlockCount
+
+        private int MissedBlockCount
         {
             get
             {
@@ -172,7 +173,7 @@ namespace l99.driver.fanuc.gcode
             }
         }
 
-        public int[] MissedBlockNumbers
+        private int[] MissedBlockNumbers
         {
             get
             {
@@ -189,7 +190,7 @@ namespace l99.driver.fanuc.gcode
                 }
                 else
                 {
-                    return new int[0];
+                    return Array.Empty<int>();
                 }
             }
         }
@@ -229,8 +230,8 @@ namespace l99.driver.fanuc.gcode
 
     public class Block
     {
-        public int BlockNumber { get; set; }
-        public string BlockText { get; set; }
+        public int BlockNumber { get; init; }
+        public string BlockText { get; init; } = null!;
 
         public override string ToString()
         {

@@ -1,7 +1,9 @@
 ﻿using l99.driver.fanuc.strategies;
 
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.collectors
 {
+    // ReSharper disable once UnusedType.Global
     public class ParameterDump : FanucMultiStrategyCollector
     {
         public ParameterDump(FanucMultiStrategy strategy) : base(strategy)
@@ -9,7 +11,7 @@ namespace l99.driver.fanuc.collectors
             
         }
 
-        private bool _dumped = false;
+        private bool _dumped;
 
         public override async Task CollectRootAsync()
         {
@@ -22,7 +24,7 @@ namespace l99.driver.fanuc.collectors
             {
                 Console.WriteLine("*** PARAMETER DUMP ***");
                 
-                var paranum = await strategy.Platform.RdParaNumAsync();
+                var paranum = await Strategy.Platform.RdParaNumAsync();
                 var paranum_inner = paranum.response.cnc_rdparanum.paranum;
                 
                 Console.WriteLine($"Minimum: {paranum_inner.para_min}, " +
@@ -34,7 +36,7 @@ namespace l99.driver.fanuc.collectors
                 
                 while(!all_done)
                 {
-                    var parainfo = await strategy.Platform.RdParaInfoAsync(start, 10);
+                    var parainfo = await Strategy.Platform.RdParaInfoAsync(start, 10);
                     var parainfo_inner = parainfo.response.cnc_rdparainfo.paraif;
                     
                     if (parainfo_inner.next_no < start)
@@ -56,7 +58,7 @@ namespace l99.driver.fanuc.collectors
             }
             catch (Exception ex)
             {
-                logger.Error(ex, $"[{strategy.Machine.Id}] Parameter Dump Failed!");
+                Logger.Error(ex, $"[{Strategy.Machine.Id}] Parameter Dump Failed!");
             }
         }
     }

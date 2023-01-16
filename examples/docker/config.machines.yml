@@ -73,6 +73,7 @@ machines:
         port: !!int 8193
         timeout_s: !!int 3
     l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
+      collectors:
       - l99.driver.fanuc.collectors.MachineInfo, fanuc
       - l99.driver.fanuc.collectors.Alarms, fanuc
       - l99.driver.fanuc.collectors.Messages, fanuc
@@ -107,6 +108,7 @@ machines:
         port: !!int 8193
         timeout_s: !!int 3
     l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
+      collectors:
       - l99.driver.fanuc.collectors.MachineInfo, fanuc
       - l99.driver.fanuc.collectors.Alarms, fanuc
       - l99.driver.fanuc.collectors.Messages, fanuc
@@ -143,6 +145,7 @@ machines:
         port: !!int 8193
         timeout_s: !!int 3
     l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
+      collectors:
       - l99.driver.fanuc.collectors.MachineInfo, fanuc
       - l99.driver.fanuc.collectors.Alarms, fanuc
       - l99.driver.fanuc.collectors.Messages, fanuc
@@ -178,6 +181,7 @@ machines:
         port: !!int 8193
         timeout_s: !!int 3
     l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
+      collectors:
       - l99.driver.fanuc.collectors.MachineInfo, fanuc
       - l99.driver.fanuc.collectors.Alarms, fanuc
       - l99.driver.fanuc.collectors.Messages, fanuc

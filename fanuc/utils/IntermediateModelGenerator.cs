@@ -6,7 +6,7 @@ namespace l99.driver.fanuc
     public class IntermediateModelGenerator
     {
         private readonly ILogger _logger;
-        private Machine _machine;
+        private Machine _machine = null!;
 
         private readonly Dictionary<string, (List<string>, List<string>)> _structure = new();
         
@@ -71,13 +71,13 @@ namespace l99.driver.fanuc
                     new JProperty("type", _machine.Strategy.GetType().FullName)
                 );
                 model["observations"] = new JObject();
-                model["observations"]["root"] = obsRoot;
-                model["observations"]["path"] = obsPath;
-                model["observations"]["axis"] = obsAxis;
-                model["observations"]["spindle"] = obsSpindle;
+                model["observations"]!["root"] = obsRoot;
+                model["observations"]!["path"] = obsPath;
+                model["observations"]!["axis"] = obsAxis;
+                model["observations"]!["spindle"] = obsSpindle;
 
                 model["structure"] = new JObject();
-                model["structure"]["observations"] = new JObject(
+                model["structure"]!["observations"] = new JObject(
                     new JProperty("$ref", "#/observations/root"));
 
                 var pathArray = new JArray();
@@ -111,7 +111,7 @@ namespace l99.driver.fanuc
                         new JProperty("spindle", spindleArray)));
                 }
 
-                model["structure"]["path"] = pathArray;
+                model["structure"]!["path"] = pathArray;
                 
                 return new { structure = _structure, model = model.ToString()};
             }

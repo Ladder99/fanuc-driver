@@ -1,5 +1,6 @@
 ﻿using l99.driver.@base;
 
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.veneers
 {
     public class RdSpindlename: Veneer
@@ -16,13 +17,13 @@ namespace l99.driver.fanuc.veneers
         {
             if (input.success)
             {
-                var temp_value = new List<dynamic>();
+                var tempValue = new List<dynamic>();
                 
                 var fields = input.response.cnc_rdspdlname.spdlname.GetType().GetFields();
                 for (int x = 0; x <= input.response.cnc_rdspdlname.data_num - 1; x++)
                 {
                     var spindle = fields[x].GetValue(input.response.cnc_rdspdlname.spdlname);
-                    temp_value.Add(new
+                    tempValue.Add(new
                     {
                         name = ((char)spindle.name).AsAscii(), 
                         suff1 =  ((char)spindle.suff1).AsAscii(),
@@ -30,19 +31,19 @@ namespace l99.driver.fanuc.veneers
                     });
                 }
                 
-                var current_value = new
+                var currentValue = new
                 {
-                    spindles = temp_value
+                    spindles = tempValue
                 };
                 
-                await OnDataArrivedAsync(input, current_value);
+                await OnDataArrivedAsync(input, currentValue);
 
-                if (current_value.spindles.IsDifferentHash((List<dynamic>) lastChangedValue.spindles))
-                    await OnDataChangedAsync(input, current_value);
+                if (currentValue.spindles.IsDifferentHash((List<dynamic>) lastChangedValue.spindles))
+                    await OnDataChangedAsync(input, currentValue);
             }
             else
             {
-                await onErrorAsync(input);
+                await OnHandleErrorAsync(input);
             }
             
             return new { veneer = this };

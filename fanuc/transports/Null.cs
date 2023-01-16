@@ -1,33 +1,27 @@
-﻿#pragma warning disable CS1998
-
-using l99.driver.@base;
+﻿using l99.driver.@base;
 
 // ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.transports;
 
+// ReSharper disable once UnusedType.Global
 public class Null : Transport
 {
     // ReSharper disable once NotAccessedField.Local
-    private dynamic _config;
-    // ReSharper disable once NotAccessedField.Local
-    private dynamic _model;
+    private dynamic _model = null!;
     
-#pragma warning disable CS8618
     public Null(Machine machine, object cfg) : base(machine, cfg)
-#pragma warning restore CS8618
     {
-        _config = cfg;
+        
     }
 
     public override async Task<dynamic?> CreateAsync()
     {
-        
-        return null;
+        return await Task.FromResult(new {});
     }
 
     public override async Task ConnectAsync()
     {
-        
+        await Task.FromResult(0);
     }
 
     public override async Task SendAsync(params dynamic[] parameters)
@@ -50,11 +44,13 @@ public class Null : Transport
 
                 break;
         }
+        
+        await Task.FromResult(0);
     }
     
     public override async Task OnGenerateIntermediateModelAsync(dynamic model)
     {
         _model = model;
+        await Task.FromResult(0);
     }
 }
-#pragma warning restore CS1998

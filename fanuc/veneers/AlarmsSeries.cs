@@ -1,5 +1,6 @@
 ﻿using l99.driver.@base;
 
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.veneers
 {
     public class AlarmsSeries : Veneer
@@ -13,7 +14,7 @@ namespace l99.driver.fanuc.veneers
             };
         }
 
-        private List<SupportMap> _alarmTypeMaps = new List<SupportMap>
+        private readonly List<SupportMap> _alarmTypeMaps = new()
         {
             new SupportMap
             {
@@ -50,13 +51,13 @@ namespace l99.driver.fanuc.veneers
                 var obsFocasSupport = additionalInputs[2];
                 var previousInput = additionalInputs[3];
 
-                AlarmResponse previousResponse = getAlarmCountAndObjectFromInput(previousInput);
-                AlarmResponse response = getAlarmCountAndObjectFromInput(input);
+                AlarmResponse previousResponse = GetAlarmCountAndObjectFromInput(previousInput);
+                AlarmResponse response = GetAlarmCountAndObjectFromInput(input);
 
                 // TODO: addedd vs removed alarms
                 //  who keeps state?
-                List<dynamic> previousAlarmList = getAlarmListFromResponse(previousResponse, path, axis, obsFocasSupport);
-                List<dynamic> alarmList = getAlarmListFromResponse(response, path, axis, obsFocasSupport);
+                List<dynamic> previousAlarmList = GetAlarmListFromResponse(previousResponse, path, axis, obsFocasSupport);
+                List<dynamic> alarmList = GetAlarmListFromResponse(response, path, axis, obsFocasSupport);
                 
                 var currentValue = new
                 {
@@ -72,13 +73,13 @@ namespace l99.driver.fanuc.veneers
             }
             else
             {
-                await onErrorAsync(input);
+                await OnHandleErrorAsync(input);
             }
 
             return new { veneer = this };
         }
 
-        private List<dynamic> getAlarmListFromResponse(AlarmResponse response, short path, string[] axis, string[] obsFocasSupport)
+        private List<dynamic> GetAlarmListFromResponse(AlarmResponse response, short path, string[] axis, string[] obsFocasSupport)
         {
             List<dynamic> list = new List<dynamic>();
             
@@ -97,7 +98,7 @@ namespace l99.driver.fanuc.veneers
                             number = alarmObject.alm_no, 
                             message = ((string)alarmObject.alm_msg).AsAscii(),
                             type_code = alarmObject.type, 
-                            type = getAlarmTypeFromAlarmCode(obsFocasSupport, alarmObject.type)
+                            type = GetAlarmTypeFromAlarmCode(obsFocasSupport, alarmObject.type)
                         });
                 }
             }
@@ -111,7 +112,7 @@ namespace l99.driver.fanuc.veneers
             public dynamic Object;
         }
         
-        private AlarmResponse getAlarmCountAndObjectFromInput(dynamic input)
+        private AlarmResponse GetAlarmCountAndObjectFromInput(dynamic input)
         {
             if (input == null)
                 return new AlarmResponse { Count = 0, Object = null };
@@ -122,7 +123,7 @@ namespace l99.driver.fanuc.veneers
             return new AlarmResponse { Count = response.num, Object = response.almmsg };
         }
         
-        private string getAlarmTypeFromAlarmCode(string[] obsFocasSupport, short typeCode)
+        private string GetAlarmTypeFromAlarmCode(string[] obsFocasSupport, short typeCode)
         {
             string alarmType = "";
 
@@ -140,7 +141,7 @@ namespace l99.driver.fanuc.veneers
             return alarmType;
         }
 
-        public struct SupportMap
+        private struct SupportMap
         {
             public string Expression;
             public Dictionary<short, string> Map;

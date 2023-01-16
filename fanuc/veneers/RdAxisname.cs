@@ -1,5 +1,6 @@
 ﻿using l99.driver.@base;
 
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.veneers
 {
     public class RdAxisname: Veneer
@@ -16,32 +17,32 @@ namespace l99.driver.fanuc.veneers
         {
             if (input.success)
             {
-                var temp_value = new List<dynamic>();
+                var tempValue = new List<dynamic>();
                 
                 var fields = input.response.cnc_rdaxisname.axisname.GetType().GetFields();
                 for (int x = 0; x <= input.response.cnc_rdaxisname.data_num - 1; x++)
                 {
                     var axis = fields[x].GetValue(input.response.cnc_rdaxisname.axisname);
-                    temp_value.Add(new
+                    tempValue.Add(new
                     {
                         name = ((char)axis.name).AsAscii(), 
                         suff =  ((char)axis.suff).AsAscii()
                     });
                 }
 
-                var current_value = new
+                var currentValue = new
                 {
-                    axes = temp_value
+                    axes = tempValue
                 };
                 
-                await OnDataArrivedAsync(input, current_value);
+                await OnDataArrivedAsync(input, currentValue);
                 
-                if(current_value.axes.IsDifferentHash((List<dynamic>)lastChangedValue.axes))
-                    await OnDataChangedAsync(input, current_value);
+                if(currentValue.axes.IsDifferentHash((List<dynamic>)lastChangedValue.axes))
+                    await OnDataChangedAsync(input, currentValue);
             }
             else
             {
-                await onErrorAsync(input);
+                await OnHandleErrorAsync(input);
             }
             
             return new { veneer = this };

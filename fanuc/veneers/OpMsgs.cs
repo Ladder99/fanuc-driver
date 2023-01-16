@@ -1,5 +1,6 @@
 ﻿using l99.driver.@base;
 
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.veneers
 {
     public class OpMsgs: Veneer
@@ -16,7 +17,7 @@ namespace l99.driver.fanuc.veneers
         {
             if (input.success)
             {
-                var temp_value = new List<dynamic>();
+                var tempValue = new List<dynamic>();
 
                 var fields = input.response.cnc_rdopmsg.opmsg.GetType().GetFields();
                 for (int x = 0; x <= fields.Length - 1; x++)
@@ -24,7 +25,7 @@ namespace l99.driver.fanuc.veneers
                     var msg = fields[x].GetValue(input.response.cnc_rdopmsg.opmsg);
                     if (msg.char_num > 0)
                     {
-                        temp_value.Add(new
+                        tempValue.Add(new
                         {
                             position = msg.type,
                             number = msg.datano,
@@ -33,24 +34,24 @@ namespace l99.driver.fanuc.veneers
                     }
                 }
 
-                var current_value = new
+                var currentValue = new
                 {
-                    messages = temp_value
+                    messages = tempValue
                 };
                 
-                var current_hc = current_value.messages.Select(x => x.GetHashCode());
-                var last_hc = ((List<dynamic>)lastChangedValue.messages).Select(x => x.GetHashCode());
+                var currentHc = currentValue.messages.Select(x => x.GetHashCode());
+                var lastHc = ((List<dynamic>)lastChangedValue.messages).Select(x => x.GetHashCode());
                 
-                await OnDataArrivedAsync(input, current_value);
+                await OnDataArrivedAsync(input, currentValue);
                 
-                if(current_hc.Except(last_hc).Count() + last_hc.Except(current_hc).Count() > 0)
+                if(currentHc.Except(lastHc).Count() + lastHc.Except(currentHc).Count() > 0)
                 {
-                    await OnDataChangedAsync(input, current_value);
+                    await OnDataChangedAsync(input, currentValue);
                 }
             }
             else
             {
-                await onErrorAsync(input);
+                await OnHandleErrorAsync(input);
             }
             
             return new { veneer = this };

@@ -1,11 +1,12 @@
 ﻿using l99.driver.@base;
 using l99.driver.fanuc.gcode;
 
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.veneers
 {
     public class GCodeBlocks : Veneer
     {
-        private Blocks _blocks;
+        private readonly Blocks _blocks;
         
         public GCodeBlocks(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
@@ -65,7 +66,7 @@ namespace l99.driver.fanuc.veneers
             }
             else
             {
-                await onErrorAsync(input!=null ? input : additionalInputs[0]);
+                await OnHandleErrorAsync(input!=null ? input : additionalInputs[0]);
             }
 
             return new { veneer = this };

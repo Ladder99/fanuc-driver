@@ -1,7 +1,9 @@
 ﻿using l99.driver.fanuc.strategies;
 
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.collectors
 {
+    // ReSharper disable once UnusedType.Global
     public class PmcDump : FanucMultiStrategyCollector
     {
         public PmcDump(FanucMultiStrategy strategy) : base(strategy)
@@ -9,7 +11,7 @@ namespace l99.driver.fanuc.collectors
             
         }
 
-        private bool _dumped = false;
+        private bool _dumped;
 
         public override async Task CollectRootAsync()
         {
@@ -22,7 +24,7 @@ namespace l99.driver.fanuc.collectors
             {
                 Console.WriteLine("*** PMC DUMP ***");
                 
-                var pmcinfo = await strategy.Platform.RdPmcInfoAsync();
+                var pmcinfo = await Strategy.Platform.RdPmcInfoAsync();
                 var pmcinfo_inner = pmcinfo.response.pmc_rdpmcinfo.pmcif;
                 
                 var fields = pmcinfo_inner.info.GetType().GetFields();
@@ -41,7 +43,7 @@ namespace l99.driver.fanuc.collectors
             }
             catch (Exception ex)
             {
-                logger.Error(ex, $"[{strategy.Machine.Id}] PMC Dump Failed!");
+                Logger.Error(ex, $"[{Strategy.Machine.Id}] PMC Dump Failed!");
             }
         }
     }

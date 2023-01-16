@@ -1,7 +1,9 @@
 ﻿using l99.driver.fanuc.strategies;
 
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.collectors
 {
+    // ReSharper disable once UnusedType.Global
     public class GCodeData : FanucMultiStrategyCollector
     {
         public GCodeData(FanucMultiStrategy strategy) : base(strategy)
@@ -11,10 +13,10 @@ namespace l99.driver.fanuc.collectors
         
         public override async Task InitPathsAsync()
         {
-            await strategy.Apply(typeof(fanuc.veneers.GCodeBlocks), "gcode");
+            await Strategy.Apply(typeof(fanuc.veneers.GCodeBlocks), "gcode");
         }
         
-        public override async Task CollectForEachPathAsync(short current_path, string[] axis, string[] spindle, dynamic path_marker)
+        public override async Task CollectForEachPathAsync(short currentPath, string[] axis, string[] spindle, dynamic pathMarker)
         {
             //TODO: make configurable
             /*
@@ -22,12 +24,12 @@ namespace l99.driver.fanuc.collectors
                     await strategy.Platform.RdBlkCountAsync())
             */
             
-            await strategy.Peel("gcode",
+            await Strategy.Peel("gcode",
                 null,
-                await strategy.SetNativeKeyed($"actpt", 
-                    await strategy.Platform.RdActPtAsync()),
-                await strategy.SetNativeKeyed($"execprog", 
-                    await strategy.Platform.RdExecProgAsync(256)));
+                await Strategy.SetNativeKeyed($"actpt", 
+                    await Strategy.Platform.RdActPtAsync()),
+                await Strategy.SetNativeKeyed($"execprog", 
+                    await Strategy.Platform.RdExecProgAsync(256)));
         }
     }
 }

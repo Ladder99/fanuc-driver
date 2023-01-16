@@ -1,12 +1,12 @@
-﻿#pragma warning disable CS1998
-
-using l99.driver.@base;
+﻿using l99.driver.@base;
 using SparkplugNet.Core.Node;
 using SparkplugNet.VersionB;
 using SparkplugNet.VersionB.Data;
 
 // ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.transports;
+
+// ReSharper disable once UnusedType.Global
 public class SpB : Transport
 {
     private enum DeviceStateEnum
@@ -15,8 +15,6 @@ public class SpB : Transport
         Online,
         MustRebirth
     }
-    
-    private readonly dynamic _config;
 
     private Dictionary<string, dynamic> _previous = new();
     private Dictionary<string, dynamic> _current = new();
@@ -29,7 +27,7 @@ public class SpB : Transport
     
     public SpB(Machine machine, object cfg) : base(machine, cfg)
     {
-        _config = cfg;
+        
     }
 
     public override async Task<dynamic?> CreateAsync()
@@ -47,15 +45,15 @@ public class SpB : Transport
 
         // ReSharper disable once UseObjectOrCollectionInitializer
         _nodeOptions = new SparkplugNodeOptions(
-            brokerAddress: _config.transport["net"]["ip"],
-            port: _config.transport["net"]["port"],
-            userName: _config.transport["user"],
-            clientId: $"fanuc_{machine.Id}",
-            password: _config.transport["password"],
+            brokerAddress: Machine.Configuration.transport["net"]["ip"],
+            port: Machine.Configuration.transport["net"]["port"],
+            userName: Machine.Configuration.transport["user"],
+            clientId: $"fanuc_{Machine.Id}",
+            password: Machine.Configuration.transport["password"],
             useTls: false,
             scadaHostIdentifier: "scada",
             groupIdentifier: $"fanuc",
-            edgeNodeIdentifier: $"{Environment.MachineName}_{machine.Id}",    // TODO: clean up hostname to spb spec
+            edgeNodeIdentifier: $"{Environment.MachineName}_{Machine.Id}",    // TODO: clean up hostname to spb spec
             reconnectInterval: TimeSpan.FromSeconds(30),
             webSocketParameters: null,
             proxyOptions: null,
@@ -67,18 +65,21 @@ public class SpB : Transport
         // ReSharper disable once UnusedParameter.Local
         _node.DisconnectedAsync += async args => 
         {
-            Logger.Warn($"[{machine.Id}] SpB node disconnected.");
+            Logger.Warn($"[{Machine.Id}] SpB node disconnected.");
+            await Task.FromResult(0);
         };
         
         // ReSharper disable once UnusedParameter.Local
         _node.NodeCommandReceivedAsync += async args =>   
         {
-            Logger.Info($"[{machine.Id}] SpB node incoming command.");
+            Logger.Info($"[{Machine.Id}] SpB node incoming command.");
+            await Task.FromResult(0);
         }; 
         
         _node.StatusMessageReceivedAsync += async args =>
         {
-            Logger.Warn($"[{machine.Id}] SpB node status message '{args.Status}.");
+            Logger.Warn($"[{Machine.Id}] SpB node status message '{args.Status}.");
+            await Task.FromResult(0);
         };
 
         await ConnectAsync();
@@ -87,7 +88,7 @@ public class SpB : Transport
 
     public override async Task ConnectAsync()
     {
-        if (_config.machine.enabled)
+        if (Machine.Configuration.machine.enabled)
         {
             if (!_node.IsConnected)
             {
@@ -95,11 +96,11 @@ public class SpB : Transport
                 {
                     await _node.Start(_nodeOptions);
                     await _node.PublishMetrics(_nodeMetrics);
-                    Logger.Info($"[{machine.Id}] SpB node connected.");
+                    Logger.Info($"[{Machine.Id}] SpB node connected.");
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error(ex, $"[{machine.Id}] Broker connection error.");
+                    Logger.Error(ex, $"[{Machine.Id}] Broker connection error.");
                 }
             }
         }
@@ -130,11 +131,11 @@ public class SpB : Transport
 
                 if (Logger.IsTraceEnabled)
                 {
-                    Logger.Trace($"[{machine.Id}] Total metric count: {_current.Count()}");
-                    Logger.Trace($"[{machine.Id}] Changed metric count: {changes.Count()}");
+                    Logger.Trace($"[{Machine.Id}] Total metric count: {_current.Count()}");
+                    Logger.Trace($"[{Machine.Id}] Changed metric count: {changes.Count()}");
                     changes.ForEach(x =>
                     {
-                        Logger.Trace($"[{machine.Id}] Metric change: {x.Key} = {x.Value.ToString()}");
+                        Logger.Trace($"[{Machine.Id}] Metric change: {x.Key} = {x.Value.ToString()}");
                     });
                 }
 
@@ -145,19 +146,19 @@ public class SpB : Transport
                 
                 if (data.state.data.online == true && _deviceState == DeviceStateEnum.Offline)
                 {
-                    Logger.Info($"[{machine.Id}] SpB device birth.");
+                    Logger.Info($"[{Machine.Id}] SpB device birth.");
                     bool success = await DeviceBirthAsync(_current);
                     _deviceState = success ? DeviceStateEnum.Online : DeviceStateEnum.MustRebirth;
                 }
                 else if (data.state.data.online == false && _deviceState == DeviceStateEnum.Online)
                 {
-                    Logger.Info($"[{machine.Id}] SpB device death.");
+                    Logger.Info($"[{Machine.Id}] SpB device death.");
                     await DeviceDeathAsync();
                     _deviceState = DeviceStateEnum.Offline;
                 }
                 else if (data.state.data.online == true && _deviceState == DeviceStateEnum.MustRebirth)
                 {
-                    Logger.Info($"[{machine.Id}] SpB device re-birth.");
+                    Logger.Info($"[{Machine.Id}] SpB device re-birth.");
                     bool success = await DeviceBirthAsync(_current);
                     if (success)
                     {
@@ -221,11 +222,11 @@ public class SpB : Transport
         {
             try
             {
-                await _node.PublishDeviceBirthMessage(metrics, machine.Id);
+                await _node.PublishDeviceBirthMessage(metrics, Machine.Id);
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, $"[{machine.Id}] SpB device birth error.");
+                Logger.Error(ex, $"[{Machine.Id}] SpB device birth error.");
                 return false;
             }
 
@@ -243,11 +244,11 @@ public class SpB : Transport
         {
             try
             {
-                await _node.PublishDeviceDeathMessage(machine.Id);
+                await _node.PublishDeviceDeathMessage(Machine.Id);
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, $"[{machine.Id}] SpB device death error.");
+                Logger.Error(ex, $"[{Machine.Id}] SpB device death error.");
             }
         }
     }
@@ -262,11 +263,11 @@ public class SpB : Transport
         {
             try
             {
-                await _node.PublishDeviceData(metrics, machine.Id);
+                await _node.PublishDeviceData(metrics, Machine.Id);
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, $"[{machine.Id}] SpB device data error.");
+                Logger.Error(ex, $"[{Machine.Id}] SpB device data error.");
             }
         }
     }
@@ -299,7 +300,7 @@ public class SpB : Transport
                     Name = name, DataType = DataType.String, StringValue = Convert.ToString(value) ?? string.Empty 
                 };
             default:
-                Logger.Info($"[{machine.Id}] '{name}'({value.GetType().FullName}) converted to string metric.");
+                Logger.Info($"[{Machine.Id}] '{name}'({value.GetType().FullName}) converted to string metric.");
                 
                 return new Metric()
                 {
@@ -308,4 +309,3 @@ public class SpB : Transport
         }
     }
 }
-#pragma warning restore CS1998

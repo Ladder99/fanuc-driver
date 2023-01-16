@@ -1,21 +1,22 @@
 ﻿using l99.driver.@base;
 
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.strategies
 {
     public class FanucStrategy : Strategy
     {
-        protected dynamic platform;
-        
-        public FanucStrategy(Machine machine, object cfg) : base(machine, cfg)
+        public dynamic Platform { get; }
+
+        protected FanucStrategy(Machine machine, object cfg) : base(machine, cfg)
         {
-            platform = base.machine["platform"];
-            platform.StartupProcess(3, "focas2.log");
+            Platform = Machine["platform"]!;
+            Platform.StartupProcess(3, "focas2.log");
         }
         
         ~FanucStrategy()
         {
             // TODO: verify invocation
-            platform.ExitProcess();
+            Platform.ExitProcess();
         }
         
         protected dynamic PathMarker(short number)
@@ -27,12 +28,13 @@ namespace l99.driver.fanuc.strategies
             };
         }
 
-        protected dynamic axisName(dynamic axis)
+        protected dynamic AxisName(dynamic axis)
         {
-            return ((char) axis.name).AsAscii() + ((char) axis.suff).AsAscii();
+            return ((char) axis.name).AsAscii() + 
+                   ((char) axis.suff).AsAscii();
         }
 
-        protected dynamic spindleName(dynamic spindle)
+        protected dynamic SpindleName(dynamic spindle)
         {
             return ((char) spindle.name).AsAscii() +
                    ((char) spindle.suff1).AsAscii() +
@@ -40,7 +42,7 @@ namespace l99.driver.fanuc.strategies
                    // ((char) spindle.suff3).AsAscii(); reserved
         }
 
-        protected dynamic spindleMarker(short number, string name)
+        protected dynamic SpindleMarker(short number, string name)
         {
             return new
             {
@@ -50,7 +52,7 @@ namespace l99.driver.fanuc.strategies
             };
         }
 
-        protected dynamic axisMarker(short number, string name)
+        protected dynamic AxisMarker(short number, string name)
         {
             return new
             {

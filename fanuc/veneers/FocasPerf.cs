@@ -1,5 +1,6 @@
 ﻿using l99.driver.@base;
 
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.veneers
 {
     public class FocasPerf : Veneer
@@ -35,7 +36,7 @@ namespace l99.driver.fanuc.veneers
                 .Where(o => o.rc != 0)
                 .Select(o => new { o.method, o.rc });
             
-            var current_value = new
+            var currentValue = new
             {
                 sweep_ms = input.sweepMs,
                 invocation = new
@@ -50,7 +51,7 @@ namespace l99.driver.fanuc.veneers
                 }
             };;
                 
-            await OnDataArrivedAsync(input, current_value);
+            await OnDataArrivedAsync(input, currentValue);
                 
             return new { veneer = this };
         }

@@ -1,6 +1,4 @@
-﻿#pragma warning disable CS8602
-
-using l99.driver.@base;
+﻿using l99.driver.@base;
 
 // ReSharper disable UnusedVariable
 
@@ -92,32 +90,32 @@ namespace l99.driver.fanuc.veneers
                     //feed = sp_speed.response.cnc_rdspeed.speed.actf.data,
                     //feed_eu = speed_feed_EU(sp_speed.response.cnc_rdspeed.speed.actf.unit),
                     //speed = sp_speed.response.cnc_rdspeed.speed.acts.data / Math.Pow(10.0, sp_speed.response.cnc_rdspeed.speed.acts.dec),
-                    speed = spActs.response.cnc_acts2.actualspindle.data[0],
-                    speed_eu = speed_feed_EU(spSpeed.response.cnc_rdspeed.speed.acts.unit),
-                    load = spMeter.response.cnc_rdspmeter.loadmeter.spload1.spload.data / Math.Pow(10.0, spMeter.response.cnc_rdspmeter.loadmeter.spload1.spload.dec),
+                    speed = spActs!.response.cnc_acts2.actualspindle.data[0],
+                    speed_eu = speed_feed_EU(spSpeed!.response.cnc_rdspeed.speed.acts.unit),
+                    load = spMeter!.response.cnc_rdspmeter.loadmeter.spload1.spload.data / Math.Pow(10.0, spMeter.response.cnc_rdspmeter.loadmeter.spload1.spload.dec),
                     load_eu = load_EU(spMeter.response.cnc_rdspmeter.loadmeter.spload1.spload.unit),
-                    maxrpm = spMaxRpm.response.cnc_rdspmaxrpm.serialspindle.data[0],
+                    maxrpm = spMaxRpm!.response.cnc_rdspmaxrpm.serialspindle.data[0],
                     maxrpm_eu = "rpm",
-                    gearratio = spGear.response.cnc_rdspgear.serialspindle.data[0],
-                    temperature = diagTemp.response.cnc_diagnoss.diag.cdata,
+                    gearratio = spGear!.response.cnc_rdspgear.serialspindle.data[0],
+                    temperature = diagTemp!.response.cnc_diagnoss.diag.cdata,
                     temperature_eu = "celsius",
-                    power = diagPower.response.cnc_diagnoss.diag.ldata,
+                    power = diagPower!.response.cnc_diagnoss.diag.ldata,
                     power_eu = "watt",
-                    status_lnk = (diagLnk.response.cnc_diagnoss.diag.cdata & (1 << 7)) != 0,
-                    status_ssa = (diagComms.response.cnc_diagnoss.diag.cdata & (1 << 7)) != 0,
+                    status_lnk = (diagLnk!.response.cnc_diagnoss.diag.cdata & (1 << 7)) != 0,
+                    status_ssa = (diagComms!.response.cnc_diagnoss.diag.cdata & (1 << 7)) != 0,
                     status_sca = (diagComms.response.cnc_diagnoss.diag.cdata & (1 << 5)) != 0,
                     status_cme = (diagComms.response.cnc_diagnoss.diag.cdata & (1 << 4)) != 0,
                     status_cer = (diagComms.response.cnc_diagnoss.diag.cdata & (1 << 3)) != 0,
                     status_sne = (diagComms.response.cnc_diagnoss.diag.cdata & (1 << 2)) != 0,
                     status_fre = (diagComms.response.cnc_diagnoss.diag.cdata & (1 << 1)) != 0,
                     status_cre = (diagComms.response.cnc_diagnoss.diag.cdata & (1 << 10)) != 0,
-                    coder_feedback = diagCoder.response.cnc_diagnoss.diag.ldata,
-                    loop_deviation = diagLoopDev.response.cnc_diagnoss.diag.ldata,
-                    sync_error = diagSyncError.response.cnc_diagnoss.diag.ldata,
-                    position = diagPosData.response.cnc_diagnoss.diag.ldata,
+                    coder_feedback = diagCoder!.response.cnc_diagnoss.diag.ldata,
+                    loop_deviation = diagLoopDev!.response.cnc_diagnoss.diag.ldata,
+                    sync_error = diagSyncError!.response.cnc_diagnoss.diag.ldata,
+                    position = diagPosData!.response.cnc_diagnoss.diag.ldata,
                     position_eu = "pulse",
-                    error = diagError.response.cnc_diagnoss.diag.idata,
-                    warning = diagWarn.response.cnc_diagnoss.diag.idata
+                    error = diagError!.response.cnc_diagnoss.diag.idata,
+                    warning = diagWarn!.response.cnc_diagnoss.diag.idata
                 };
 
                 //Console.WriteLine(JObject.FromObject(current_value).ToString());
@@ -131,11 +129,10 @@ namespace l99.driver.fanuc.veneers
             }
             //else
             {
-                //    await onErrorAsync(input);
+                //    await OnHandleErrorAsync(input);
             }
             
             return new { veneer = this };
         }
     }
 }
-#pragma warning restore CS8602

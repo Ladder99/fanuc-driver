@@ -1,7 +1,9 @@
 ﻿using l99.driver.fanuc.strategies;
 
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.collectors
 {
+    // ReSharper disable once UnusedType.Global
     public class Messages : FanucMultiStrategyCollector
     {
         public Messages(FanucMultiStrategy strategy) : base(strategy)
@@ -9,41 +11,41 @@ namespace l99.driver.fanuc.collectors
             
         }
 
-        private bool _warned = false;
+        private bool _warned;
         
         public override async Task InitPathsAsync()
         {
-            await strategy.Apply(typeof(fanuc.veneers.OpMsgs), "messages");
+            await Strategy.Apply(typeof(fanuc.veneers.OpMsgs), "messages");
         }
         
-        public override async Task CollectForEachPathAsync(short current_path, string[] axis, string[] spindle, dynamic path_marker)
+        public override async Task CollectForEachPathAsync(short currentPath, string[] axis, string[] spindle, dynamic pathMarker)
         {
-            var obs_focas_support = strategy.GetKeyed($"obs+focas_support");
+            var obsFocasSupport = Strategy.GetKeyed($"obs+focas_support");
             
-            short msg_type = 0;
-            short msg_length = 6 + 256;
+            short msgType = 0;
+            short msgLength = 6 + 256;
             
-            if (obs_focas_support == null)
+            if (obsFocasSupport == null)
             {
                 if (!_warned)
                 {
-                    logger.Warn($"[{strategy.Machine.Id}] Machine info observation is required to correctly evaluate operator messages.");
+                    Logger.Warn($"[{Strategy.Machine.Id}] Machine info observation is required to correctly evaluate operator messages.");
                     _warned = true;
                 }
             }
             else
             {
-                if (Regex.IsMatch(string.Join("", obs_focas_support), "15"))
+                if (Regex.IsMatch(string.Join("", obsFocasSupport), "15"))
                 {
-                    msg_type = -1;
-                    msg_length = 578;
+                    msgType = -1;
+                    msgLength = 578;
                 }
                 
-                await strategy.SetNativeKeyed($"messages",
-                    await strategy.Platform.RdOpMsgAsync(msg_type, msg_length));
+                await Strategy.SetNativeKeyed($"messages",
+                    await Strategy.Platform.RdOpMsgAsync(msgType, msgLength));
             
-                await strategy.Peel("messages", 
-                    strategy.GetKeyed($"messages"));
+                await Strategy.Peel("messages", 
+                    Strategy.GetKeyed($"messages"));
             }
             
         }

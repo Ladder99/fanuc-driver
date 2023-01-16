@@ -1,7 +1,9 @@
 ﻿using l99.driver.fanuc.strategies;
 
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.collectors
 {
+    // ReSharper disable once UnusedType.Global
     public class AxisData : FanucMultiStrategyCollector
     {
         public AxisData(FanucMultiStrategy strategy) : base(strategy)
@@ -9,37 +11,37 @@ namespace l99.driver.fanuc.collectors
             
         }
 
-        private bool _warned = false;
+        private bool _warned;
         
         public override async Task InitPathsAsync()
         {
-            await strategy.Apply(typeof(fanuc.veneers.Figures), "figures");
+            await Strategy.Apply(typeof(fanuc.veneers.Figures), "figures");
         }
 
         public override async Task InitAxisAsync()
         {
-            await strategy.Apply(typeof(fanuc.veneers.AxisData), "axis", isCompound: true );
+            await Strategy.Apply(typeof(fanuc.veneers.AxisData), "axis", isCompound: true );
         }
         
-        public override async Task CollectForEachPathAsync(short current_path, string[] axis, string[] spindle, dynamic path_marker)
+        public override async Task CollectForEachPathAsync(short currentPath, string[] axis, string[] spindle, dynamic pathMarker)
         {
-            await strategy.SetNativeKeyed($"figures", 
-                await strategy.Platform.GetFigureAsync(0, 32));
+            await Strategy.SetNativeKeyed($"figures", 
+                await Strategy.Platform.GetFigureAsync(0, 32));
             
-            await strategy.SetNativeKeyed($"axis_load", 
-                await strategy.Platform.RdSvMeterAsync());
+            await Strategy.SetNativeKeyed($"axis_load", 
+                await Strategy.Platform.RdSvMeterAsync());
         }
 
-        public override async Task CollectForEachAxisAsync(short current_path, short current_axis, string axis_name, dynamic axis_split, dynamic axis_marker)
+        public override async Task CollectForEachAxisAsync(short currentPath, short currentAxis, string axisName, dynamic axisSplit, dynamic axisMarker)
         {
-            var obs_focas_support = strategy.Get($"obs+focas_support+{current_path}");
-            var obs_alarms = strategy.Get($"obs+alarms+{current_path}");
+            var obs_focas_support = Strategy.Get($"obs+focas_support+{currentPath}");
+            var obs_alarms = Strategy.Get($"obs+alarms+{currentPath}");
 
             if (obs_alarms == null || obs_focas_support == null)
             {
                 if (!_warned)
                 {
-                    logger.Warn($"[{strategy.Machine.Id}] Machine info and alarms observations are required to correctly evaluate axis data.");
+                    Logger.Warn($"[{Strategy.Machine.Id}] Machine info and alarms observations are required to correctly evaluate axis data.");
                     _warned = true;
                 }
             }
@@ -49,35 +51,35 @@ namespace l99.driver.fanuc.collectors
             // 300                      servo position error
 
             // 308 byte                 motor temperature (c)
-            await strategy.SetNativeKeyed($"diag_servo_temp", 
-                await strategy.Platform.DiagnossByteAsync(308, current_axis));
+            await Strategy.SetNativeKeyed($"diag_servo_temp", 
+                await Strategy.Platform.DiagnossByteAsync(308, currentAxis));
             
             // 309 byte                 coder temperature (c)
-            await strategy.SetNativeKeyed($"diag_coder_temp", 
-                await strategy.Platform.DiagnossByteAsync(309, current_axis));
+            await Strategy.SetNativeKeyed($"diag_coder_temp", 
+                await Strategy.Platform.DiagnossByteAsync(309, currentAxis));
             
             // 4901 dword               servo power consumption (watt)
-            await strategy.SetNativeKeyed($"diag_power", 
-                await strategy.Platform.DiagnossDoubleWordAsync(4901, current_axis));
+            await Strategy.SetNativeKeyed($"diag_power", 
+                await Strategy.Platform.DiagnossDoubleWordAsync(4901, currentAxis));
             
-            await strategy.SetNativeKeyed($"axis_dynamic", 
-                await strategy.Platform.RdDynamic2Async(current_axis, 44, 2));
+            await Strategy.SetNativeKeyed($"axis_dynamic", 
+                await Strategy.Platform.RdDynamic2Async(currentAxis, 44, 2));
 
-            await strategy.Peel("axis",
-                current_axis,
-                strategy.Get($"axis_names+{current_path}"),
-                strategy.GetKeyed($"axis_dynamic"), 
-                strategy.Get($"figures+{current_path}"),
-                strategy.Get($"axis_load+{current_path}"),
-                strategy.GetKeyed($"diag_servo_temp"),
-                strategy.GetKeyed($"diag_coder_temp"),
-                strategy.GetKeyed($"diag_power"),
+            await Strategy.Peel("axis",
+                currentAxis,
+                Strategy.Get($"axis_names+{currentPath}"),
+                Strategy.GetKeyed($"axis_dynamic"), 
+                Strategy.Get($"figures+{currentPath}"),
+                Strategy.Get($"axis_load+{currentPath}"),
+                Strategy.GetKeyed($"diag_servo_temp"),
+                Strategy.GetKeyed($"diag_coder_temp"),
+                Strategy.GetKeyed($"diag_power"),
                 obs_focas_support,
                 obs_alarms,
-                strategy.GetKeyed($"axis_dynamic+last"));
+                Strategy.GetKeyed($"axis_dynamic+last"));
             
-            strategy.SetKeyed($"axis_dynamic+last", 
-                strategy.GetKeyed($"axis_dynamic"));
+            Strategy.SetKeyed($"axis_dynamic+last", 
+                Strategy.GetKeyed($"axis_dynamic"));
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using l99.driver.@base;
 
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.veneers
 {
     public class GetPath : Veneer
@@ -17,22 +18,22 @@ namespace l99.driver.fanuc.veneers
         {
             if (input.success)
             {
-                var current_value = new
+                var currentValue = new
                 {
                     input.response.cnc_getpath.path_no,
                     input.response.cnc_getpath.maxpath_no
                 };
                 
-                await OnDataArrivedAsync(input, current_value);
+                await OnDataArrivedAsync(input, currentValue);
                 
-                if (!current_value.Equals(this.lastChangedValue))
+                if (!currentValue.Equals(this.lastChangedValue))
                 {
-                    await OnDataChangedAsync(input, current_value);
+                    await OnDataChangedAsync(input, currentValue);
                 }
             }
             else
             {
-                await onErrorAsync(input);
+                await OnHandleErrorAsync(input);
             }
 
             return new { veneer = this };

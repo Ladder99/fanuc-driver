@@ -1,7 +1,9 @@
 ﻿using l99.driver.fanuc.strategies;
 
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.collectors
 {
+    // ReSharper disable once UnusedType.Global
     public class SpindleData : FanucMultiStrategyCollector
     {
         public SpindleData(FanucMultiStrategy strategy) : base(strategy)
@@ -11,17 +13,17 @@ namespace l99.driver.fanuc.collectors
         
         public override async Task InitSpindleAsync()
         {
-            await strategy.Apply(typeof(fanuc.veneers.SpindleData), "spindle", isCompound: true);
+            await Strategy.Apply(typeof(fanuc.veneers.SpindleData), "spindle", isCompound: true);
         }
         
-        public override async Task CollectForEachPathAsync(short current_path, string[] axis, string[] spindle, dynamic path_marker)
+        public override async Task CollectForEachPathAsync(short currentPath, string[] axis, string[] spindle, dynamic pathMarker)
         {
             // main spindle displayed in cnc position screen
             // speed RPM,mm/rev... and feed mm/min...
             //dynamic speed_feed = await machine["platform"].RdSpeedAsync(0);
             //dynamic speed_speed = await machine["platform"].RdSpeedAsync(1);
-            await strategy.SetNativeKeyed($"sp_speed", 
-                await strategy.Platform.RdSpeedAsync(-1));
+            await Strategy.SetNativeKeyed($"sp_speed", 
+                await Strategy.Platform.RdSpeedAsync(-1));
 
             // TODO: does not work
             //dynamic spindles_data = await machine["platform"].Acts2Async(-1);
@@ -35,24 +37,24 @@ namespace l99.driver.fanuc.collectors
             //dynamic spload_all = await machine["platform"].RdSpLoadAsync(-1);
         }
 
-        public override async Task CollectForEachSpindleAsync(short current_path, short current_spindle, string spindle_name, dynamic spindle_split, dynamic spindle_marker)
+        public override async Task CollectForEachSpindleAsync(short currentPath, short currentSpindle, string spindleName, dynamic spindleSplit, dynamic spindleMarker)
         {
             // rotational spindle speed
-            await strategy.SetNativeKeyed($"sp_acts", 
-                await strategy.Platform.Acts2Async(current_spindle));
+            await Strategy.SetNativeKeyed($"sp_acts", 
+                await Strategy.Platform.Acts2Async(currentSpindle));
             
             //dynamic load_meter = await machine["platform"].RdSpMeterAsync(0, current_spindle);
             //dynamic motor_speed = await machine["platform"].RdSpMeterAsync(1, current_spindle);
-            await strategy.SetNativeKeyed($"sp_meter", 
-                await strategy.Platform.RdSpMeterAsync(-1, current_spindle));
+            await Strategy.SetNativeKeyed($"sp_meter", 
+                await Strategy.Platform.RdSpMeterAsync(-1, currentSpindle));
 
             // max rpm ratio
-            await strategy.SetNativeKeyed($"sp_maxrpm", 
-                await strategy.Platform.RdSpMaxRpmAsync(current_spindle));
+            await Strategy.SetNativeKeyed($"sp_maxrpm", 
+                await Strategy.Platform.RdSpMaxRpmAsync(currentSpindle));
 
             // spindle gear ratio
-            await strategy.SetNativeKeyed($"sp_gear", 
-                await strategy.Platform.RdSpGearAsync(current_spindle));
+            await Strategy.SetNativeKeyed($"sp_gear", 
+                await Strategy.Platform.RdSpGearAsync(currentSpindle));
             
             // not sure what units the response data is
             //dynamic spload = await machine["platform"].RdSpLoadAsync(current_spindle);
@@ -65,12 +67,12 @@ namespace l99.driver.fanuc.collectors
             
             // diagnose values
             // 400 bit 7 = LNK/1    comms with spindle control established
-            await strategy.SetNativeKeyed($"diag_lnk", 
-                await strategy.Platform.DiagnossByteAsync(400, current_spindle));
+            await Strategy.SetNativeKeyed($"diag_lnk", 
+                await Strategy.Platform.DiagnossByteAsync(400, currentSpindle));
             
             // 403 byte             temp of winding spindle motor (C) 0-255
-            await strategy.SetNativeKeyed($"diag_temp", 
-                await strategy.Platform.DiagnossByteAsync(403, current_spindle));
+            await Strategy.SetNativeKeyed($"diag_temp", 
+                await Strategy.Platform.DiagnossByteAsync(403, currentSpindle));
             
             // 408                  spindle comms (causes of SP0749)
             //  0 CRE               CRC 
@@ -80,75 +82,75 @@ namespace l99.driver.fanuc.collectors
             //  4 CME               no response
             //  5 SCA               comm amplifier alarm
             //  7 SSA               spindle amplifier alarm
-            await strategy.SetNativeKeyed($"diag_comms", 
-                await strategy.Platform.DiagnossByteAsync(408, current_spindle));
+            await Strategy.SetNativeKeyed($"diag_comms", 
+                await Strategy.Platform.DiagnossByteAsync(408, currentSpindle));
             
             // 410 word             spindle load (%)
-            await strategy.SetNativeKeyed($"diag_load_perc", 
-                await strategy.Platform.DiagnossWordAsync(410, current_spindle));
+            await Strategy.SetNativeKeyed($"diag_load_perc", 
+                await Strategy.Platform.DiagnossWordAsync(410, currentSpindle));
             
             // 411 word             spindle load (min)
-            await strategy.SetNativeKeyed($"diag_load_min", 
-                await strategy.Platform.DiagnossWordAsync(411, current_spindle));
+            await Strategy.SetNativeKeyed($"diag_load_min", 
+                await Strategy.Platform.DiagnossWordAsync(411, currentSpindle));
             
             // 417 dword            spindle position coder feedback (detection units)
-            await strategy.SetNativeKeyed($"diag_coder", 
-                await strategy.Platform.DiagnossDoubleWordAsync(417, current_spindle));
+            await Strategy.SetNativeKeyed($"diag_coder", 
+                await Strategy.Platform.DiagnossDoubleWordAsync(417, currentSpindle));
             
             // 418 dword            position loop deviation (detection units)
-            await strategy.SetNativeKeyed($"diag_loop_dev", 
-                await strategy.Platform.DiagnossDoubleWordAsync(418, current_spindle));
+            await Strategy.SetNativeKeyed($"diag_loop_dev", 
+                await Strategy.Platform.DiagnossDoubleWordAsync(418, currentSpindle));
             
             // 425 dword            sync error (detection unit)
-            await strategy.SetNativeKeyed($"diag_sync_error", 
-                await strategy.Platform.DiagnossDoubleWordAsync(425, current_spindle));
+            await Strategy.SetNativeKeyed($"diag_sync_error", 
+                await Strategy.Platform.DiagnossDoubleWordAsync(425, currentSpindle));
             
             // 445 word             position data (pulse) 0-4095 , valid only when param3117=1
-            await strategy.SetNativeKeyed($"diag_pos_data", 
-                await strategy.Platform.DiagnossDoubleWordAsync(445, current_spindle));
+            await Strategy.SetNativeKeyed($"diag_pos_data", 
+                await Strategy.Platform.DiagnossDoubleWordAsync(445, currentSpindle));
             
             // 710 word             spindle error
-            await strategy.SetNativeKeyed($"diag_error", 
-                await strategy.Platform.DiagnossWordAsync(710, current_spindle));
+            await Strategy.SetNativeKeyed($"diag_error", 
+                await Strategy.Platform.DiagnossWordAsync(710, currentSpindle));
             
             // 712 word             spindle warning
-            await strategy.SetNativeKeyed($"diag_warn", 
-                await strategy.Platform.DiagnossWordAsync(712,current_spindle));
+            await Strategy.SetNativeKeyed($"diag_warn", 
+                await Strategy.Platform.DiagnossWordAsync(712,currentSpindle));
             
             // 1520 dword           spindle rev count 1 (1000 min)
-            await strategy.SetNativeKeyed($"diag_rev_1", 
-                await strategy.Platform.DiagnossDoubleWordAsync(1520, current_spindle));
+            await Strategy.SetNativeKeyed($"diag_rev_1", 
+                await Strategy.Platform.DiagnossDoubleWordAsync(1520, currentSpindle));
             
             // 1521 dword           spindle rev count 2 (1000 min)
-            await strategy.SetNativeKeyed($"diag_rev_2", 
-                await strategy.Platform.DiagnossDoubleWordAsync(1521, current_spindle));
+            await Strategy.SetNativeKeyed($"diag_rev_2", 
+                await Strategy.Platform.DiagnossDoubleWordAsync(1521, currentSpindle));
             
             // 4902 dword           spindle power consumption (watt)
-            await strategy.SetNativeKeyed($"diag_power", 
-                await strategy.Platform.DiagnossDoubleWordAsync(4902, current_spindle));
+            await Strategy.SetNativeKeyed($"diag_power", 
+                await Strategy.Platform.DiagnossDoubleWordAsync(4902, currentSpindle));
             
-            await strategy.Peel("spindle", 
-                current_spindle,
-                strategy.Get("spindle_names"), 
-                strategy.Get($"sp_speed+{current_path}"), 
-                strategy.GetKeyed($"sp_meter"), 
-                strategy.GetKeyed($"sp_maxrpm"), 
-                strategy.GetKeyed($"sp_gear"),
-                strategy.GetKeyed($"diag_lnk"),
-                strategy.GetKeyed($"diag_temp"),
-                strategy.GetKeyed($"diag_comms"),
-                strategy.GetKeyed($"diag_load_perc"),
-                strategy.GetKeyed($"diag_load_min"),
-                strategy.GetKeyed($"diag_coder"),
-                strategy.GetKeyed($"diag_loop_dev"),
-                strategy.GetKeyed($"diag_sync_error"),
-                strategy.GetKeyed($"diag_pos_data"),
-                strategy.GetKeyed($"diag_error"),
-                strategy.GetKeyed($"diag_warn"),
-                strategy.GetKeyed($"diag_rev_1"),
-                strategy.GetKeyed($"diag_rev_2"),
-                strategy.GetKeyed($"diag_power"),
-                strategy.GetKeyed($"sp_acts"));
+            await Strategy.Peel("spindle", 
+                currentSpindle,
+                Strategy.Get("spindle_names"), 
+                Strategy.Get($"sp_speed+{currentPath}"), 
+                Strategy.GetKeyed($"sp_meter"), 
+                Strategy.GetKeyed($"sp_maxrpm"), 
+                Strategy.GetKeyed($"sp_gear"),
+                Strategy.GetKeyed($"diag_lnk"),
+                Strategy.GetKeyed($"diag_temp"),
+                Strategy.GetKeyed($"diag_comms"),
+                Strategy.GetKeyed($"diag_load_perc"),
+                Strategy.GetKeyed($"diag_load_min"),
+                Strategy.GetKeyed($"diag_coder"),
+                Strategy.GetKeyed($"diag_loop_dev"),
+                Strategy.GetKeyed($"diag_sync_error"),
+                Strategy.GetKeyed($"diag_pos_data"),
+                Strategy.GetKeyed($"diag_error"),
+                Strategy.GetKeyed($"diag_warn"),
+                Strategy.GetKeyed($"diag_rev_1"),
+                Strategy.GetKeyed($"diag_rev_2"),
+                Strategy.GetKeyed($"diag_power"),
+                Strategy.GetKeyed($"sp_acts"));
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using l99.driver.fanuc.strategies;
 
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.collectors
 {
+    // ReSharper disable once UnusedType.Global
     public class DiagnosisDump : FanucMultiStrategyCollector
     {
         public DiagnosisDump(FanucMultiStrategy strategy) : base(strategy)
@@ -22,7 +24,7 @@ namespace l99.driver.fanuc.collectors
             {
                 Console.WriteLine("*** DIAGNOSIS DUMP ***");
                 
-                var diagnum = await strategy.Platform.RdDiagNumAsync();
+                var diagnum = await Strategy.Platform.RdDiagNumAsync();
                 var diagnum_inner = diagnum.response.cnc_rddiagnum.diagnum;
                 
                 Console.WriteLine($"Minimum: {diagnum_inner.diag_min}, " +
@@ -34,7 +36,7 @@ namespace l99.driver.fanuc.collectors
                 
                 while(!all_done)
                 {
-                    var diaginfo = await strategy.Platform.RdDiagInfoAsync(start, 10);
+                    var diaginfo = await Strategy.Platform.RdDiagInfoAsync(start, 10);
                     var diaginfo_inner = diaginfo.response.cnc_rddiaginfo.diagif;
                     
                     if (diaginfo_inner.next_no < start)
@@ -56,7 +58,7 @@ namespace l99.driver.fanuc.collectors
             }
             catch (Exception ex)
             {
-                logger.Error(ex, $"[{strategy.Machine.Id}] Diagnosis Dump Failed!");
+                Logger.Error(ex, $"[{Strategy.Machine.Id}] Diagnosis Dump Failed!");
             }
         }
     }

@@ -3,34 +3,34 @@ using InfluxDB.Client.Api.Domain;
 using l99.driver.@base;
 using Scriban;
 
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.transports;
 
+// ReSharper disable once InconsistentNaming
+// ReSharper disable once UnusedType.Global
 public class InfluxLP : Transport
 {
-    private dynamic _config;
-    
     // config - veneer type, template text
-    private Dictionary<string, string> _transformLookup = new Dictionary<string, string>();
+    private Dictionary<string, string> _transformLookup = new();
     
     // runtime - veneer name, template
-    private Dictionary<string, Template> _templateLookup = new Dictionary<string, Template>();
+    private readonly Dictionary<string, Template> _templateLookup = new();
 
-    private InfluxDBClient _client;
-    private WriteApiAsync _writeApi;
+    private InfluxDBClient _client = null!;
+    private WriteApiAsync _writeApi = null!;
 
     public InfluxLP(Machine machine, object cfg) : base(machine, cfg)
     {
-        _config = cfg;
     }
 
     public override async Task<dynamic?> CreateAsync()
     {
         _client = InfluxDBClientFactory
-            .Create(_config.transport["host"], _config.transport["token"]);
+            .Create(Machine.Configuration.transport["host"], Machine.Configuration.transport["token"]);
 
         _writeApi = _client.GetWriteApiAsync();
         
-        _transformLookup = (_config.transport["transformers"] as Dictionary<dynamic,dynamic>)
+        _transformLookup = (Machine.Configuration.transport["transformers"] as Dictionary<dynamic,dynamic>)
             .ToDictionary(
                 kv => (string)kv.Key, 
                 kv => (string)kv.Value);
@@ -53,20 +53,20 @@ public class InfluxLP : Transport
         {
             case "DATA_ARRIVE":
 
-                if (hasTransform(veneer))
+                if (HasTransform(veneer))
                 {
                     string lp = _templateLookup[veneer.Name]
                         .Render(new { data.observation, data.state.data });
 
                     if (!string.IsNullOrEmpty(lp))
                     {
-                        Logger.Info($"[{machine.Id}] {lp}");
+                        Logger.Info($"[{Machine.Id}] {lp}");
                         _writeApi
                             .WriteRecordAsync(
                                 lp,
                                 WritePrecision.Ms,
-                                _config.transport["bucket"],
-                                _config.transport["org"]);
+                                Machine.Configuration.transport["bucket"],
+                                Machine.Configuration.transport["org"]);
                     }
                 }
 
@@ -74,19 +74,19 @@ public class InfluxLP : Transport
 
             case "SWEEP_END":
 
-                if (hasTransform("SWEEP_END"))
+                if (HasTransform("SWEEP_END"))
                 {
                     string lp = _templateLookup["SWEEP_END"]
                         .Render(new { data.observation, data.state.data });
 
-                    Logger.Info($"[{machine.Id}] {lp}");
+                    Logger.Info($"[{Machine.Id}] {lp}");
                 
                     _writeApi
                         .WriteRecordAsync(
                             lp,
                             WritePrecision.Ms,
-                            _config.transport["bucket"],
-                            _config.transport["org"]);
+                            Machine.Configuration.transport["bucket"],
+                            Machine.Configuration.transport["org"]);
                 }
                 
                 break;
@@ -97,7 +97,7 @@ public class InfluxLP : Transport
         }
     }
 
-    bool hasTransform(string templateName, string transformName = null)
+    private bool HasTransform(string templateName, string transformName = null!)
     {
         if (transformName == null)
             transformName = templateName;
@@ -115,7 +115,7 @@ public class InfluxLP : Transport
             Template template = Template.Parse(transform);
             if (template.HasErrors)
             {
-                Logger.Error($"[{machine.Id}] '{templateName}' template transform has errors");
+                Logger.Error($"[{Machine.Id}] '{templateName}' template transform has errors");
             }
             _templateLookup.Add(templateName, template);
             return true;
@@ -125,10 +125,10 @@ public class InfluxLP : Transport
             return false;
         }
     }
-    
-    bool hasTransform(Veneer veneer)
+
+    private bool HasTransform(Veneer veneer)
     {
-        return hasTransform(veneer.Name,
+        return HasTransform(veneer.Name,
             $"{veneer.GetType().FullName}, {veneer.GetType().Assembly.GetName().Name}");
     }
 }

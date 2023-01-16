@@ -15,12 +15,14 @@ user:
   collector-0: &collector-0
     # example collector
     l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
+      collectors:
       - l99.driver.fanuc.collectors.ParameterDump, fanuc
       - l99.driver.fanuc.collectors.DiagnosisDump, fanuc
       - l99.driver.fanuc.collectors.PmcDump, fanuc
   collector-1: &collector-1
     # example collector
     l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
+      collectors:
       - l99.driver.fanuc.collectors.MachineInfo, fanuc
       - l99.driver.fanuc.collectors.Alarms, fanuc
       - l99.driver.fanuc.collectors.Messages, fanuc

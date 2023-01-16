@@ -1,5 +1,6 @@
 ﻿using l99.driver.@base;
 
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.veneers
 {
     public class Connect : Veneer
@@ -11,23 +12,23 @@ namespace l99.driver.fanuc.veneers
 
         protected override async Task<dynamic> FirstAsync(dynamic input, params dynamic?[] additionalInputs)
         {
-            var current_value = new {input.success};
+            var currentValue = new {input.success};
             
-            await OnDataArrivedAsync(input, current_value);
-            await OnDataChangedAsync(input, current_value);
+            await OnDataArrivedAsync(input, currentValue);
+            await OnDataChangedAsync(input, currentValue);
 
             return new { veneer = this };
         }
 
         protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
         {
-            var current_value = new {input.success };
+            var currentValue = new {input.success };
             
-            await OnDataArrivedAsync(input, current_value);
+            await OnDataArrivedAsync(input, currentValue);
             
-            if (!current_value.Equals(lastChangedValue))
+            if (!currentValue.Equals(lastChangedValue))
             {
-                await OnDataChangedAsync(input, current_value);
+                await OnDataChangedAsync(input, currentValue);
             }
             
             return new { veneer = this };

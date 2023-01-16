@@ -1,5 +1,3 @@
-cd c:\ladder99\fanuc-driver
-
-fanuc.exe ^
-	--nlog .\user\nlog.config ^
-	--config .\user\config.system.yml,.\user\config.user.yml,.\user\config.machines.yml
+%~dp0..\fanuc.exe ^
+	--nlog %~dp0\nlog.config ^
+	--config %~dp0\config.system.yml,%~dp0\config.user.yml,%~dp0\config.machines.yml

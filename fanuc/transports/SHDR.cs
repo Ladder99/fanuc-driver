@@ -1,6 +1,4 @@
-﻿#pragma warning disable CS1998
-
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using l99.driver.@base;
 using MTConnect.Adapters.Shdr;
 using MTConnect.Observations;
@@ -112,17 +110,16 @@ public class MTCDeviceModelGenerator
 }
 
 // ReSharper disable once InconsistentNaming
+// ReSharper disable once UnusedType.Global
 public class SHDR : Transport
 {
-    private readonly dynamic _config;
-
     // paths,axes,spindles received from strategy
-    private dynamic _model;
+    private dynamic _model = null!;
     
     // config - veneer type, template text
     private Dictionary<string, string> _transformLookup = new();
     
-    private ShdrIntervalQueueAdapter _adapter;
+    private ShdrIntervalQueueAdapter _adapter = null!;
     private bool _shdrInvalidated;
 
     private bool ShdrInvalidated
@@ -135,10 +132,10 @@ public class SHDR : Transport
         }
     }
     
-    private ScriptObject _globalScriptObject;
-    private TemplateContext _globalTemplateContext;
+    private ScriptObject _globalScriptObject = null!;
+    private TemplateContext _globalTemplateContext = null!;
 
-    private MTCDeviceModelGenerator _deviceModelGenerator;
+    private MTCDeviceModelGenerator _deviceModelGenerator = null!;
 
     private struct AdapterInfo
     {
@@ -149,42 +146,38 @@ public class SHDR : Transport
         public int Port;
     }
 
-#pragma warning disable CS8618
     public SHDR(Machine machine, object cfg) : base(machine, cfg)
-#pragma warning restore CS8618
     {
-        _config = cfg;
+        
     }
 
     private void CacheShdrDataItem(ShdrDataItem dataItem)
     {
         _adapter.AddDataItem(dataItem);
-        Logger.Trace($"[{machine.Id}] {dataItem.DataItemKey}:{string.Join(',', dataItem.Values.Select(v=>v.Value))}");
+        Logger.Trace($"[{Machine.Id}] {dataItem.DataItemKey}:{string.Join(',', dataItem.Values.Select(v=>v.Value))}");
     }
     
     private void CacheShdrMessage(ShdrMessage dataItem)
     {
         _adapter.AddMessage(dataItem);
-        Logger.Trace($"[{machine.Id}] {dataItem.DataItemKey}:{string.Join(',', dataItem.Values.Select(v=>v.Value))}");
+        Logger.Trace($"[{Machine.Id}] {dataItem.DataItemKey}:{string.Join(',', dataItem.Values.Select(v=>v.Value))}");
     }
     
     private void CacheShdrCondition(ShdrCondition dataItem)
     {
         _adapter.AddCondition(dataItem);
-        Logger.Trace($"[{machine.Id}] {dataItem.DataItemKey}:{string.Join(',', dataItem.FaultStates.Select(v=>v.Level))}");
+        Logger.Trace($"[{Machine.Id}] {dataItem.DataItemKey}:{string.Join(',', dataItem.FaultStates.Select(v=>v.Level))}");
     }
     
     public override async Task<dynamic?> CreateAsync()
     {
-        _deviceModelGenerator = new MTCDeviceModelGenerator(machine, _config.transport);
+        _deviceModelGenerator = new MTCDeviceModelGenerator(Machine, Machine.Configuration.transport);
         
         await InitAdapterAsync();
 
         await InitScriptContextAsync();
         
-#pragma warning disable CS8604
-        _transformLookup = (_config.transport["transformers"] as Dictionary<dynamic,dynamic>)
-#pragma warning restore CS8604
+        _transformLookup = (Machine.Configuration.transport["transformers"] as Dictionary<dynamic,dynamic>)
             .ToDictionary(
                 kv => (string)kv.Key, 
                 kv => (string)kv.Value);
@@ -194,7 +187,7 @@ public class SHDR : Transport
 
     public override async Task ConnectAsync()
     {
-        if (_config.machine.enabled)
+        if (Machine.Configuration.machine.enabled)
             _adapter.Start();
     }
 
@@ -221,7 +214,7 @@ public class SHDR : Transport
                     }
                     catch (Exception ex)
                     {
-                        Logger.Warn(ex, $"[{machine.Id}] SHDR evaluation failed for '{transformName}'");
+                        Logger.Warn(ex, $"[{Machine.Id}] SHDR evaluation failed for '{transformName}'");
                     }
                 }
                 
@@ -239,7 +232,7 @@ public class SHDR : Transport
                     }
                     catch (Exception ex)
                     {
-                        Logger.Warn(ex, $"[{machine.Id}] SHDR evaluation failed for 'SWEEP_END'");
+                        Logger.Warn(ex, $"[{Machine.Id}] SHDR evaluation failed for 'SWEEP_END'");
                     }
                 }
                 
@@ -263,40 +256,40 @@ public class SHDR : Transport
     {
         // ReSharper disable once UseObjectOrCollectionInitializer
         _adapter = new ShdrIntervalQueueAdapter(
-            _config.transport["device_name"],
-            _config.transport["net"]["port"],
-            _config.transport["net"]["heartbeat_ms"]);
+            Machine.Configuration.transport["device_name"],
+            Machine.Configuration.transport["net"]["port"],
+            Machine.Configuration.transport["net"]["heartbeat_ms"]);
         
-        _adapter.Interval = _config.transport["net"]["interval_ms"];
+        _adapter.Interval = Machine.Configuration.transport["net"]["interval_ms"];
 
         // ReSharper disable once UnusedParameter.Local
         _adapter.AgentConnectionError = (sender, s) =>
         {
-            Logger.Info($"[{machine.Id}] MTC Agent connection error. {s}");
+            Logger.Info($"[{Machine.Id}] MTC Agent connection error. {s}");
         };
         
         // ReSharper disable once UnusedParameter.Local
         _adapter.AgentDisconnected = (sender, s) =>
         {
-            Logger.Info($"[{machine.Id}] MTC Agent disconnected error. {s}");
+            Logger.Info($"[{Machine.Id}] MTC Agent disconnected error. {s}");
         };
         
         // ReSharper disable once UnusedParameter.Local
         _adapter.AgentConnected = (sender, s) =>
         {
-            Logger.Info($"[{machine.Id}] MTC Agent connected. {s}");
+            Logger.Info($"[{Machine.Id}] MTC Agent connected. {s}");
         };
         
         // ReSharper disable once UnusedParameter.Local
         _adapter.SendError = (sender, args) =>
         {
-            Logger.Info($"[{machine.Id}] MTC Agent send error. {args.Message}");
+            Logger.Info($"[{Machine.Id}] MTC Agent send error. {args.Message}");
         };
 
         // ReSharper disable once UnusedParameter.Local
         _adapter.LineSent = (sender, args) =>
         {
-            Logger.Debug($"[{machine.Id}] MTC Agent line send. {args.Message}");
+            Logger.Debug($"[{Machine.Id}] MTC Agent line send. {args.Message}");
         };
 
         
@@ -402,17 +395,16 @@ public class SHDR : Transport
         _globalScriptObject.Import("ShdrAllUnavailable",
             new Action(() => { _shdrInvalidated = true; }));
 
-        _globalScriptObject.SetValue("machine", this.machine, true);
-        _globalScriptObject.SetValue("device", _config.transport["device_name"], true);
+        _globalScriptObject.SetValue("machine", Machine, true);
+        _globalScriptObject.SetValue("device", Machine.Configuration.transport["device_name"], true);
         _globalScriptObject.SetValue("adapter",
             new AdapterInfo()
             {
                 IPAddress = string.Join(';', Network.GetAllLocalIPv4()),
-                Port = _config.transport["net"]["port"]
+                Port = Machine.Configuration.transport["net"]["port"]
             }, true);
 
         _globalTemplateContext = new TemplateContext();
         _globalTemplateContext.PushGlobal(_globalScriptObject);
     }
 }
-#pragma warning restore CS1998

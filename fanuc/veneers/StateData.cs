@@ -1,6 +1,4 @@
-﻿#pragma warning disable CS8602
-
-using l99.driver.@base;
+﻿using l99.driver.@base;
 
 // ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.veneers
@@ -30,7 +28,7 @@ namespace l99.driver.fanuc.veneers
                                 execution = "READY";
                                 break;
                             case 1:
-                                switch ((int)additionalInputs[6].response.cnc_modal.modal.aux.aux_data)
+                                switch ((int)additionalInputs[6]!.response.cnc_modal.modal.aux.aux_data)
                                 {
                                     case 0:
                                         execution = "PROGRAM_STOPPED";
@@ -51,7 +49,7 @@ namespace l99.driver.fanuc.veneers
                                 execution = "FEED_HOLD";
                                 break;
                             case 3:
-                                if (255 - additionalInputs[3].response.pmc_rdpmcrng.buf.cdata[0] == 0)
+                                if (255 - additionalInputs[3]!.response.pmc_rdpmcrng.buf.cdata[0] == 0)
                                 {
                                     execution = "INTERRUPTED";
                                 }
@@ -60,7 +58,7 @@ namespace l99.driver.fanuc.veneers
                                     switch ((int)input.response.cnc_statinfo.statinfo.motion)
                                     {
                                         case 0:
-                                            switch ((int)additionalInputs[6].response.cnc_modal.modal.aux.aux_data)
+                                            switch ((int)additionalInputs[6]!.response.cnc_modal.modal.aux.aux_data)
                                             {
                                                 case 0:
                                                     execution = "PROGRAM_STOPPED";
@@ -124,21 +122,21 @@ namespace l99.driver.fanuc.veneers
                     input.response.cnc_statinfo.statinfo.alarm,
                     timers = new
                     {
-                        poweron_min = additionalInputs[0].response.cnc_rdparam.param.data.ldata,
-                        operating_min = additionalInputs[1].response.cnc_rdparam.param.data.ldata,
-                        cutting_min = additionalInputs[2].response.cnc_rdparam.param.data.ldata
+                        poweron_min = additionalInputs[0]!.response.cnc_rdparam.param.data.ldata,
+                        operating_min = additionalInputs[1]!.response.cnc_rdparam.param.data.ldata,
+                        cutting_min = additionalInputs[2]!.response.cnc_rdparam.param.data.ldata
                     },
                     @override = new {
-                        feed = 255-additionalInputs[3].response.pmc_rdpmcrng.buf.cdata[0],
-                        rapid = additionalInputs[4].response.pmc_rdpmcrng.buf.cdata[0],
-                        spindle = additionalInputs[5].response.pmc_rdpmcrng.buf.cdata[0]
+                        feed = 255-additionalInputs[3]!.response.pmc_rdpmcrng.buf.cdata[0],
+                        rapid = additionalInputs[4]!.response.pmc_rdpmcrng.buf.cdata[0],
+                        spindle = additionalInputs[5]!.response.pmc_rdpmcrng.buf.cdata[0]
                     },
                     modal = new
                     {
-                        m1 = additionalInputs[6].response.cnc_modal.modal.aux.aux_data,
-                        m2 = additionalInputs[7].response.cnc_modal.modal.aux.aux_data,
-                        m3 = additionalInputs[8].response.cnc_modal.modal.aux.aux_data,
-                        t = additionalInputs[9].response.cnc_modal.modal.aux.aux_data
+                        m1 = additionalInputs[6]!.response.cnc_modal.modal.aux.aux_data,
+                        m2 = additionalInputs[7]!.response.cnc_modal.modal.aux.aux_data,
+                        m3 = additionalInputs[8]!.response.cnc_modal.modal.aux.aux_data,
+                        t = additionalInputs[9]!.response.cnc_modal.modal.aux.aux_data
                     }
                 };
                 
@@ -151,11 +149,10 @@ namespace l99.driver.fanuc.veneers
             }
             else
             {
-                await onErrorAsync(input);
+                await OnHandleErrorAsync(input);
             }
 
             return new { veneer = this };
         }
     }
 }
-#pragma warning restore CS8602

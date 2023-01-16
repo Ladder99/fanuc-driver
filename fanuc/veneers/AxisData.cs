@@ -1,6 +1,4 @@
-﻿#pragma warning disable CS8602, CS8600
-
-using l99.driver.@base;
+﻿using l99.driver.@base;
 
 // ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.veneers
@@ -22,22 +20,22 @@ namespace l99.driver.fanuc.veneers
             {
                 var currentAxis = input;
                 var axesNames = additionalInputs[0];
-                var axisDynamic = additionalInputs[1].response.cnc_rddynamic2.rddynamic;
-                var figures = additionalInputs[2].response.cnc_getfigure.dec_fig_in;
+                var axisDynamic = additionalInputs[1]!.response.cnc_rddynamic2.rddynamic;
+                var figures = additionalInputs[2]!.response.cnc_getfigure.dec_fig_in;
                 var axesLoads = additionalInputs[3];
                 var servoTemp = additionalInputs[4];
                 var coderTemp = additionalInputs[5];
                 var power = additionalInputs[6];
                 // ReSharper disable once UnusedVariable
                 var obsFocasSupport = additionalInputs[7];
-                IEnumerable<dynamic> obsAlarms = additionalInputs[8];
+                IEnumerable<dynamic> obsAlarms = additionalInputs[8]!;
                 var prevAxisDynamic = additionalInputs[9];
 
-                var loadFields = axesLoads.response.cnc_rdsvmeter.loadmeter.GetType().GetFields();
+                var loadFields = axesLoads!.response.cnc_rdsvmeter.loadmeter.GetType().GetFields();
                 var loadValue = loadFields[currentAxis - 1]
                     .GetValue(axesLoads.response.cnc_rdsvmeter.loadmeter);
                 
-                var axesFields = axesNames.response.cnc_rdaxisname.axisname.GetType().GetFields();
+                var axesFields = axesNames!.response.cnc_rdaxisname.axisname.GetType().GetFields();
                 var axisValue = axesFields[currentAxis - 1]
                     .GetValue(axesNames.response.cnc_rdaxisname.axisname);
                 var axisName = ((char) axisValue.name).AsAscii() +
@@ -60,8 +58,8 @@ namespace l99.driver.fanuc.veneers
                     servo = axisAlarms.Any(a => a.type == "SV");
                 }
 
-                bool motion = (prevAxisDynamic != null && prevAxisDynamic.success == true) 
-                    ? prevAxisDynamic.response.cnc_rddynamic2.rddynamic.pos.absolute != axisDynamic.pos.absolute
+                bool motion = (prevAxisDynamic != null && prevAxisDynamic!.success == true) 
+                    ? prevAxisDynamic!.response.cnc_rddynamic2.rddynamic.pos.absolute != axisDynamic.pos.absolute
                     : false;
                 
                 var currentValue = new
@@ -72,11 +70,11 @@ namespace l99.driver.fanuc.veneers
                     feed_eu = "mm/min",
                     load = loadValue.data / Math.Pow(10.0, loadValue.dec),
                     load_eu = "percent",
-                    servo_temp = servoTemp.response.cnc_diagnoss.diag.cdata,
+                    servo_temp = servoTemp!.response.cnc_diagnoss.diag.cdata,
                     servo_temp_eu = "celsius",
-                    coder_temp = coderTemp.response.cnc_diagnoss.diag.cdata,
+                    coder_temp = coderTemp!.response.cnc_diagnoss.diag.cdata,
                     coder_temp_eu = "celsius",
-                    power = power.response.cnc_diagnoss.diag.ldata,
+                    power = power!.response.cnc_diagnoss.diag.ldata,
                     power_eu = "watt",
                     alarms = new
                     {
@@ -103,11 +101,10 @@ namespace l99.driver.fanuc.veneers
             }
             else
             {
-                await onErrorAsync(input);
+                await OnHandleErrorAsync(input);
             }
 
             return new { veneer = this };
         }
     }
 }
-#pragma warning restore CS8602, CS8600

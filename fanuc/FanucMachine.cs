@@ -8,40 +8,35 @@ namespace l99.driver.fanuc
     {
         public override string ToString()
         {
-#pragma warning disable CS8603
             return new
             {
                 Id,
-                _focasEndpoint.IPAddress,
-                _focasEndpoint.Port,
-                _focasEndpoint.ConnectionTimeout
-            }.ToString();
-#pragma warning restore CS8603
+                FocasEndpoint.IPAddress,
+                FocasEndpoint.Port,
+                FocasEndpoint.ConnectionTimeout
+            }.ToString()!;
         }
 
         public override dynamic Info =>
             new
             {
                 _id = Id,
-                _focasEndpoint.IPAddress,
-                _focasEndpoint.Port,
-                _focasEndpoint.ConnectionTimeout
+                FocasEndpoint.IPAddress,
+                FocasEndpoint.Port,
+                FocasEndpoint.ConnectionTimeout
             };
 
-        public FocasEndpoint FocasEndpoint => _focasEndpoint;
+        public FocasEndpoint FocasEndpoint { get; }
 
-        private readonly FocasEndpoint _focasEndpoint;
-        
-        public FanucMachine(Machines machines, bool enabled, string id, object config) : base(machines, enabled, id, config)
+        public FanucMachine(Machines machines, object config) : base(machines, config)
         {
-            dynamic cfg = config;
             this["platform"] = new Platform(this);
             
             //TODO: validate config
-            _focasEndpoint = new FocasEndpoint(
-                cfg.type["net"]["ip"], 
-                (ushort)cfg.type["net"]["port"], 
-                (short)cfg.type["net"]["timeout_s"]);
+            FocasEndpoint = new FocasEndpoint(
+                Configuration.type["net"]["ip"], 
+                (ushort)Configuration.type["net"]["port"], 
+                (short)Configuration.type["net"]["timeout_s"]);
             
         }
     }

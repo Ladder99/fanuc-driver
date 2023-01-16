@@ -7,4 +7,4 @@ if errorlevel 1 (
   goto loop
 )
 
-sc.exe delete fanuc-driver
+sc.exe start fanuc-driver

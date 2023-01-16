@@ -1,61 +1,62 @@
 ﻿using l99.driver.fanuc.strategies;
 
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.collectors
 {
     public class FanucMultiStrategyCollector
     {
-        protected ILogger logger;
-        protected FanucMultiStrategy strategy;
-        
-        public FanucMultiStrategyCollector(FanucMultiStrategy strategy)
+        protected readonly ILogger Logger;
+        protected readonly FanucMultiStrategy Strategy;
+
+        protected FanucMultiStrategyCollector(FanucMultiStrategy strategy)
         {
-            logger = LogManager.GetLogger(this.GetType().FullName);
-            this.strategy = strategy;
+            Logger = LogManager.GetLogger(GetType().FullName);
+            Strategy = strategy;
         }
 
         public virtual async Task InitRootAsync()
         {
-            
+            await Task.FromResult(0);
         }
 
         public virtual async Task InitPathsAsync()
         {
-            
+            await Task.FromResult(0);
         }
 
         public virtual async Task InitAxisAsync()
         {
-            
+            await Task.FromResult(0);
         }
         
         public virtual async Task InitSpindleAsync()
         {
-            
+            await Task.FromResult(0);
         }
 
         public virtual async Task PostInitAsync(Dictionary<string, List<string>> structure)
         {
-            
+            await Task.FromResult(0);
         }
         
         public virtual async Task CollectRootAsync()
         {
-            
+            await Task.FromResult(0);
         }
 
-        public virtual async Task CollectForEachPathAsync(short current_path, string[] axis, string[] spindle, dynamic path_marker)
+        public virtual async Task CollectForEachPathAsync(short currentPath, string[] axis, string[] spindle, dynamic pathMarker)
         {
-            
+            await Task.FromResult(0);
         }
 
-        public virtual async Task CollectForEachAxisAsync(short current_path, short current_axis, string axis_name, dynamic axis_split, dynamic axis_marker)
+        public virtual async Task CollectForEachAxisAsync(short currentPath, short currentAxis, string axisName, dynamic axisSplit, dynamic axisMarker)
         {
-            
+            await Task.FromResult(0);
         }
 
-        public virtual async Task CollectForEachSpindleAsync(short current_path, short current_spindle, string spindle_name, dynamic spindle_split, dynamic spindle_marker)
+        public virtual async Task CollectForEachSpindleAsync(short currentPath, short currentSpindle, string spindleName, dynamic spindleSplit, dynamic spindleMarker)
         {
-            
+            await Task.FromResult(0);
         }
     }
 }

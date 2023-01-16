@@ -1,7 +1,9 @@
 ﻿using l99.driver.fanuc.strategies;
 
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.collectors
 {
+    // ReSharper disable once UnusedType.Global
     public class MachineInfo : FanucMultiStrategyCollector
     {
         public MachineInfo(FanucMultiStrategy strategy) : base(strategy)
@@ -11,26 +13,26 @@ namespace l99.driver.fanuc.collectors
 
         public override async Task InitPathsAsync()
         {
-            await strategy.Apply(typeof(veneers.SysInfo), "machine");
+            await Strategy.Apply(typeof(veneers.SysInfo), "machine");
         }
         
-        public override async Task CollectForEachPathAsync(short current_path, string[] axis, string[] spindle, dynamic path_marker)
+        public override async Task CollectForEachPathAsync(short currentPath, string[] axis, string[] spindle, dynamic pathMarker)
         {
             // TODO: shdr transport, no-filter, requires continuous
             //  evaluation, otherwise item never gets set to UNAVAILABLE
             //if (strategy.HasKeyed($"{this.GetType().Name}"))
             //    return;
 
-            await strategy.SetKeyed($"{this.GetType().Name}", true);
+            await Strategy.SetKeyed($"{this.GetType().Name}", true);
             
-            await strategy.SetNativeKeyed($"machine",
-                await strategy.Platform.SysInfoAsync());
+            await Strategy.SetNativeKeyed($"machine",
+                await Strategy.Platform.SysInfoAsync());
             
-            var obs_machine = await strategy.Peel($"machine", 
-                strategy.GetKeyed($"machine"));
+            var obsMachine = await Strategy.Peel($"machine", 
+                Strategy.GetKeyed($"machine"));
 
-            strategy.SetKeyed($"obs+focas_support", 
-                obs_machine.veneer.LastArrivedValue.focas_support);
+            Strategy.SetKeyed($"obs+focas_support", 
+                obsMachine.veneer.LastArrivedValue.focas_support);
         }
     }
 }

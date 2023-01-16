@@ -1,5 +1,6 @@
 ﻿using l99.driver.@base;
 
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.veneers
 {
     public class SysInfo : Veneer
@@ -31,166 +32,165 @@ namespace l99.driver.fanuc.veneers
         {
             if (input.success)
             {
-                string[] focas_support = new string[4];
+                string[] focasSupport = new string[4];
                 
                 // ADDITIONAL INFO
                 byte[] info_bytes = BitConverter.GetBytes(input.response.cnc_sysinfo.sysinfo.addinfo);
                 
-                var loader_control = (info_bytes[0] & 1) == 1;
-                var i_series = (info_bytes[0] & 2) == 2;;
-                var compound_machining = (info_bytes[0] & 4) == 4;;
-                var transfer_line = (info_bytes[0] & 8) == 8;;
+                var loaderControl = (info_bytes[0] & 1) == 1;
+                var iSeries = (info_bytes[0] & 2) == 2;;
+                var compoundMachining = (info_bytes[0] & 4) == 4;;
+                var transferLine = (info_bytes[0] & 8) == 8;;
 
-                focas_support[1] = i_series ? "i" : "";
+                focasSupport[1] = iSeries ? "i" : "";
                 
                 var model = "Unknown";
                 switch(info_bytes[1])
                 {
                     case 0:
                         model = "MODEL information is not supported";
-                        focas_support[2] = "";
+                        focasSupport[2] = "";
                         break;
                     case 1:
                         model = "MODEL A";
-                        focas_support[2] = "A";
+                        focasSupport[2] = "A";
                         break;
                     case 2:
                         model = "MODEL B";
-                        focas_support[2] = "B";
+                        focasSupport[2] = "B";
                         break;
                     case 3:
                         model = "MODEL C";
-                        focas_support[2] = "C";
+                        focasSupport[2] = "C";
                         break;
                     case 4:
                         model = "MODEL D";
-                        focas_support[2] = "D";
+                        focasSupport[2] = "D";
                         break;
                     case 6:
                         model = "MODEL F";
-                        focas_support[2] = "F";
+                        focasSupport[2] = "F";
                         break;
                 }
                 
                 // CNC TYPE
-                var cnc_type_code = string.Join("", input.response.cnc_sysinfo.sysinfo.cnc_type);
-                var cnc_type = "Unknown";
-                focas_support[0] = cnc_type_code.Trim();
+                var cncTypeCode = string.Join("", input.response.cnc_sysinfo.sysinfo.cnc_type);
+                var cncType = "Unknown";
+                focasSupport[0] = cncTypeCode.Trim();
                 
-                switch (cnc_type_code)
+                switch (cncTypeCode)
                 {
                         case "15"	:
-                            cnc_type = "Series 15" + (i_series?"i":"");
+                            cncType = "Series 15" + (iSeries?"i":"");
                             break;
                         case "16"	:
-                            cnc_type = "Series 16" + (i_series?"i":"");
+                            cncType = "Series 16" + (iSeries?"i":"");
                             break;
                         case "18"	: 
-                            cnc_type = "Series 18" + (i_series?"i":"");
+                            cncType = "Series 18" + (iSeries?"i":"");
                             break;
                         case "21"	: 
-                            cnc_type = "Series 21" + (i_series?"i":"");
+                            cncType = "Series 21" + (iSeries?"i":"");
                             break;
                         case "30"	: 
-                            cnc_type = "Series 30" + (i_series?"i":"");
+                            cncType = "Series 30" + (iSeries?"i":"");
                             break;
                         case "31"	: 
-                            cnc_type = "Series 31" + (i_series?"i":"");
+                            cncType = "Series 31" + (iSeries?"i":"");
                             break;
                         case "32"	: 
-                            cnc_type = "Series 32" + (i_series?"i":"");
+                            cncType = "Series 32" + (iSeries?"i":"");
                             break;
                         case "35"	: 
-                            cnc_type = "Series 35" + (i_series?"i":"");
+                            cncType = "Series 35" + (iSeries?"i":"");
                             break;
                         case " 0"	: 
-                            cnc_type = "Series 0" + (i_series?"i":"");
+                            cncType = "Series 0" + (iSeries?"i":"");
                             break;
                         case "PD"	: 
-                            cnc_type = "Power Mate D";
-                            if (i_series) cnc_type = "Power Mate i-D";
+                            cncType = "Power Mate D";
+                            if (iSeries) cncType = "Power Mate i-D";
                             break;
                         case "PH"	: 
-                            cnc_type = "Power Mate H";
-                            if (i_series) cnc_type = "Power Mate i-H";
+                            cncType = "Power Mate H";
+                            if (iSeries) cncType = "Power Mate i-H";
                             break;
                         case "PM"	: 
-                            cnc_type = "Power Motion";
-                            if (i_series) cnc_type = "Power Motion i";
+                            cncType = "Power Motion";
+                            if (iSeries) cncType = "Power Motion i";
                             break;
                 }
 
                 // MT TYPE
-                var mt_type_code = string.Join("", input.response.cnc_sysinfo.sysinfo.mt_type);
-                var mt_type = "Unknown";
-                focas_support[3] = ((char)input.response.cnc_sysinfo.sysinfo.mt_type[1]).AsAscii();
+                var mtTypeCode = string.Join("", input.response.cnc_sysinfo.sysinfo.mt_type);
+                var mtType = "Unknown";
+                focasSupport[3] = ((char)input.response.cnc_sysinfo.sysinfo.mt_type[1]).AsAscii();
 
-                switch (mt_type_code)
+                switch (mtTypeCode)
                 {
                     case " M"	:	
-                        mt_type = "Machining center";
+                        mtType = "Machining center";
                         break;
                     case " T"	:	
-                        mt_type = "Lathe";
+                        mtType = "Lathe";
                         break;
                     case "MM"	:	
-                        mt_type = "M series with 2 path control";
+                        mtType = "M series with 2 path control";
                         break;
                     case "TT"	:	
-                        mt_type = "T series with 2/3 path control";
+                        mtType = "T series with 2/3 path control";
                         break;
                     case "MT"	:	
-                        mt_type = "T series with compound machining function";
+                        mtType = "T series with compound machining function";
                         break;
                     case " P"	:	
-                        mt_type = "Punch press";
+                        mtType = "Punch press";
                         break;
                     case " L"	:	
-                        mt_type = "Laser";
+                        mtType = "Laser";
                         break;
                     case " W"	:	
-                        mt_type = "Wire cut";
+                        mtType = "Wire cut";
                         break;
                 }
 
                 // AXIS COUNT
                 dynamic axes;
-                short axis_count = 0;
-                if (Int16.TryParse(string.Join("", input.response.cnc_sysinfo.sysinfo.axes), out axis_count))
-                    axes = axis_count;
+                if (Int16.TryParse(string.Join("", input.response.cnc_sysinfo.sysinfo.axes), out short axisCount))
+                    axes = axisCount;
                 else
                     axes = string.Join("", input.response.cnc_sysinfo.sysinfo.axes);
                 
                 
-                var current_value = new
+                var currentValue = new
                 {
-                    focas_support,
-                    loader_control,
-                    i_series,
-                    compound_machining,
-                    transfer_line,
+                    focas_support = focasSupport,
+                    loader_control = loaderControl,
+                    i_series = iSeries,
+                    compound_machining = compoundMachining,
+                    transfer_line = transferLine,
                     model,
                     model_code = info_bytes[0],
                     input.response.cnc_sysinfo.sysinfo.max_axis,
-                    cnc_type,
-                    cnc_type_code = cnc_type_code.Trim(),
-                    mt_type,
-                    mt_type_code = mt_type_code.Trim(), 
+                    cnc_type = cncType,
+                    cnc_type_code = cncTypeCode.Trim(),
+                    mt_type = mtType,
+                    mt_type_code = mtTypeCode.Trim(), 
                     series = string.Join("", input.response.cnc_sysinfo.sysinfo.series),
                     version = string.Join("", input.response.cnc_sysinfo.sysinfo.version),
                     axes
                 };
                 
-                await OnDataArrivedAsync(input, current_value);
+                await OnDataArrivedAsync(input, currentValue);
                 
-                if (current_value.IsDifferentString((object)lastChangedValue))
+                if (currentValue.IsDifferentString((object)lastChangedValue))
                 {
-                    await OnDataChangedAsync(input, current_value);
+                    await OnDataChangedAsync(input, currentValue);
                 }
             }
             else
             {
-                await onErrorAsync(input);
+                await OnHandleErrorAsync(input);
             }
 
             return new { veneer = this };

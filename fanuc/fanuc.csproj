@@ -7,8 +7,8 @@
         <Platforms>AnyCPU</Platforms>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <Company>mriiot</Company>
-        <AssemblyVersion>1.0.0</AssemblyVersion>
-        <FileVersion>1.0.0</FileVersion>
+        <AssemblyVersion></AssemblyVersion>
+        <FileVersion>0.5.5.0</FileVersion>
         <NeutralLanguage>en</NeutralLanguage>
         <PackageId>fanuc-driver</PackageId>
         <Title>fanuc-driver</Title>

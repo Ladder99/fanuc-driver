@@ -1,34 +1,39 @@
 ﻿using l99.driver.@base;
 using l99.driver.fanuc.collectors;
 
+// ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.strategies
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class FanucMultiStrategy : FanucExtendedStrategy
     {
         public FanucMultiStrategy(Machine machine, object cfg) : base(machine, cfg)
         {
-            _config = cfg;
         }
 
-        private readonly dynamic _config;
         private readonly List<FanucMultiStrategyCollector> _collectors = new();
-        
-        public Platform Platform => platform;
         
         public override async Task<dynamic?> CreateAsync()
         {
-            foreach (var collectorType in _config.strategy)
+            foreach (var collectorType in Machine.Configuration.strategy["collectors"])
             {
-                Logger.Info($"[{machine.Id}] Creating collector: {collectorType}");
+                Logger.Info($"[{Machine.Id}] Creating collector: {collectorType}");
                 var type = Type.GetType(collectorType);
-                var collector = (FanucMultiStrategyCollector) Activator.CreateInstance(type, new object[] { this });
-                _collectors.Add(collector);
+                try
+                {
+                    var collector = (FanucMultiStrategyCollector) Activator.CreateInstance(type, new object[] {this});
+                    _collectors.Add(collector);
+                }
+                catch
+                {
+                    Logger.Error($"[{Machine.Id}] Unable to create collector: {collectorType}");
+                }
             }
             
             return null;
         }
 
-        public override async Task InitRootAsync()
+        protected override async Task InitRootAsync()
         {
             foreach (var collector in _collectors)
             {
@@ -36,7 +41,7 @@ namespace l99.driver.fanuc.strategies
             }
         }
 
-        public override async Task InitPathsAsync()
+        protected override async Task InitPathsAsync()
         {
             foreach (var collector in _collectors)
             {
@@ -44,15 +49,15 @@ namespace l99.driver.fanuc.strategies
             }
         }
 
-        public override async Task InitAxisAsync()
+        protected override async Task InitAxisAsync()
         {
             foreach (var collector in _collectors)
             {
                 await collector.InitAxisAsync();
             }
         }
-        
-        public override async Task InitSpindleAsync()
+
+        protected override async Task InitSpindleAsync()
         {
             foreach (var collector in _collectors)
             {
@@ -68,7 +73,7 @@ namespace l99.driver.fanuc.strategies
             return await base.CollectAsync();
         }
 
-        public override async Task<bool> CollectBeginAsync()
+        protected override async Task<bool> CollectBeginAsync()
         {
             // user code before connect
             
@@ -76,7 +81,7 @@ namespace l99.driver.fanuc.strategies
             return await base.CollectBeginAsync();
         }
 
-        public override async Task CollectRootAsync()
+        protected override async Task CollectRootAsync()
         {
             foreach (var collector in _collectors)
             {
@@ -84,7 +89,7 @@ namespace l99.driver.fanuc.strategies
             }
         }
 
-        public override async Task CollectForEachPathAsync(short currentPath, string[] axis, string[] spindle, dynamic pathMarker)
+        protected override async Task CollectForEachPathAsync(short currentPath, string[] axis, string[] spindle, dynamic pathMarker)
         {
             foreach (var collector in _collectors)
             {
@@ -92,23 +97,23 @@ namespace l99.driver.fanuc.strategies
             }
         }
 
-        public override async Task CollectForEachAxisAsync(short currentPath, short currentAxis, string axis_name, dynamic axisSplit, dynamic axis_marker)
+        protected override async Task CollectForEachAxisAsync(short currentPath, short currentAxis, string axisName, dynamic axisSplit, dynamic axisMarker)
         {
             foreach (var collector in _collectors)
             {
-                await collector.CollectForEachAxisAsync(currentPath, currentAxis, axis_name, axisSplit, axis_marker);
+                await collector.CollectForEachAxisAsync(currentPath, currentAxis, axisName, axisSplit, axisMarker);
             }
         }
 
-        public override async Task CollectForEachSpindleAsync(short currentPath, short currentSpindle, string spindle_name, dynamic spindleSplit, dynamic spindle_marker)
+        protected override async Task CollectForEachSpindleAsync(short currentPath, short currentSpindle, string spindleName, dynamic spindleSplit, dynamic spindleMarker)
         {
             foreach (var collector in _collectors)
             {
-                await collector.CollectForEachSpindleAsync(currentPath, currentSpindle, spindle_name, spindleSplit, spindle_marker);
+                await collector.CollectForEachSpindleAsync(currentPath, currentSpindle, spindleName, spindleSplit, spindleMarker);
             }
         }
 
-        public override async Task CollectEndAsync()
+        protected override async Task CollectEndAsync()
         {
             // user code before disconnect
             
