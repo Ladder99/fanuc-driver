@@ -29,7 +29,7 @@ namespace l99.driver.fanuc.collectors
                 await Strategy.SetNativeKeyed($"actpt", 
                     await Strategy.Platform.RdActPtAsync()),
                 await Strategy.SetNativeKeyed($"execprog", 
-                    await Strategy.Platform.RdExecProgAsync(256)));
+                    await Strategy.Platform.RdExecProgAsync(512)));
         }
     }
 }

@@ -83,6 +83,11 @@ namespace l99.driver.fanuc.gcode
 
         public bool Add1(int blockPointer, char[] nativeBlockText, bool dropLast = true)
         {
+            if (DEBUG)
+            {
+                Console.WriteLine($"(.Add1)");
+            }
+            
             IsPointerValid = true;
 
             int baseBlockPointer = blockPointer;
@@ -92,8 +97,18 @@ namespace l99.driver.fanuc.gcode
         
         public bool Add2(int blockCounter, int blockPointer, char[] nativeBlockText, bool dropLast = true)
         {
+            if (DEBUG)
+            {
+                Console.WriteLine($"(.Add2)");
+            }
+            
             if (blockCounter - blockPointer > 1)
             {
+                if (DEBUG)
+                {
+                    Console.WriteLine($"(.Add2) ptr invalid");
+                }
+                
                 IsPointerValid = false;
                 return false;
             }
@@ -199,10 +214,23 @@ namespace l99.driver.fanuc.gcode
         {
             get
             {
-                List<Block> blocks = new List<Block>();
+                if (DEBUG)
+                {
+                    Console.WriteLine($"(.ExecutedBlocks) --- BEGIN");
+                }
                 
-                if(_blocks.ContainsKey(CurrentBlockPointer))
+                List<Block> blocks = new List<Block>();
+
+                if (_blocks.ContainsKey(CurrentBlockPointer))
+                {
+                    if (DEBUG)
+                    {
+                        Console.WriteLine($"(.ExecutedBlocks) add curren-point block {CurrentBlockPointer} : {_blocks[CurrentBlockPointer].BlockText}");
+                    }
+                    
                     blocks.Add(_blocks[CurrentBlockPointer]);
+                }
+                    
                 
                 if (MissedBlockCount > 0)
                 {
@@ -210,10 +238,20 @@ namespace l99.driver.fanuc.gcode
                     {
                         if (_blocks.ContainsKey(missedBlock))
                         {
+                            if (DEBUG)
+                            {
+                                Console.WriteLine($"(.ExecutedBlocks) add missed-known block {missedBlock} : {_blocks[missedBlock].BlockText}");
+                            }
+                            
                             blocks.Add(_blocks[missedBlock]);
                         }
                         else
                         {
+                            if (DEBUG)
+                            {
+                                Console.WriteLine($"(.ExecutedBlocks) add missed-unkno block {missedBlock} : ?");
+                            }
+                            
                             blocks.Add(new Block
                             {
                                 BlockNumber = missedBlock, 
@@ -221,6 +259,11 @@ namespace l99.driver.fanuc.gcode
                             });
                         }
                     }
+                }
+                
+                if (DEBUG)
+                {
+                    Console.WriteLine($"(.ExecutedBlocks) --- END");
                 }
 
                 return blocks;

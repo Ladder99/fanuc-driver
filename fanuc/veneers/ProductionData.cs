@@ -44,6 +44,10 @@ namespace l99.driver.fanuc.veneers
         {
             if (input.success && additionalInputs.All(o => o.success == true))
             {
+                string executing_program = new string(additionalInputs[7]!.response.cnc_exeprgname.exeprg.name).AsAscii();
+                string executing_program_2 = new string(additionalInputs[8]!.response.cnc_exeprgname2.path_name).AsAscii();
+                int executing_sequence = additionalInputs[9]!.response.cnc_rdseqnum.seqnum.data;
+                
                 string modifiedCurrent = "";
                 string modifiedSelected = "";
 
@@ -80,6 +84,11 @@ namespace l99.driver.fanuc.veneers
                 var currentValue = new
                 {
                     program = new {
+                        executing = new {
+                            name = executing_program,
+                            path = executing_program_2,
+                            sequence = executing_sequence
+                        },
                         current = new {
                             name = $"O{input.response.cnc_rdprgnum.prgnum.data}",
                             number = input.response.cnc_rdprgnum.prgnum.data,

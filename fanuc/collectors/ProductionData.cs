@@ -18,6 +18,17 @@ namespace l99.driver.fanuc.collectors
         
         public override async Task CollectForEachPathAsync(short currentPath, string[] axis, string[] spindle, dynamic pathMarker)
         {
+            // TODO: 0i,30i support only
+            // cnc_exeprgname
+            await Strategy.SetNativeKeyed("executing_program",
+                await Strategy.Platform.ExePrgNameAsync());
+            await Strategy.SetNativeKeyed("executing_program_2",
+                await Strategy.Platform.ExePrgName2Async());
+            
+            // TODO: determine support
+            await Strategy.SetNativeKeyed("executing_sequence",
+                await Strategy.Platform.RdSeqNumAsync());
+            
             // cnc_rdprgnum
             await Strategy.SetNativeKeyed($"program_numbers",
                 await Strategy.Platform.RdPrgNumAsync());
@@ -43,7 +54,10 @@ namespace l99.driver.fanuc.collectors
                 await Strategy.SetNativeKeyed($"cycle_time_min", 
                     await Strategy.Platform.RdParamDoubleWordNoAxisAsync(6758)),
                 await Strategy.SetNativeKeyed($"cycle_time_ms", 
-                    await Strategy.Platform.RdParamDoubleWordNoAxisAsync(6757))); 
+                    await Strategy.Platform.RdParamDoubleWordNoAxisAsync(6757)),
+                Strategy.GetKeyed("executing_program"),
+                Strategy.GetKeyed("executing_program_2"),
+                Strategy.GetKeyed("executing_sequence")); 
         }
     }
 }

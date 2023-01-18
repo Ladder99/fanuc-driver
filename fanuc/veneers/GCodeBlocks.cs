@@ -1,6 +1,8 @@
 ﻿using l99.driver.@base;
 using l99.driver.fanuc.gcode;
 
+//TODO: review relationship between pointer and block counter
+
 // ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.veneers
 {
@@ -42,10 +44,10 @@ namespace l99.driver.fanuc.veneers
                 
                 //Console.WriteLine(_blocks.ToString(showMissedBlocks: true));
                 /*
-                if (current_value.blocks.Count() > 0)
+                if (currentValue.blocks.Count() > 0)
                 {
                     Console.WriteLine("--- executed ---");
-                    foreach (var block in current_value.blocks)
+                    foreach (var block in currentValue.blocks)
                     {
                         Console.WriteLine(block.ToString());
                     }
