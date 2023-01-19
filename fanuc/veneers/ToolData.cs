@@ -7,25 +7,22 @@ namespace l99.driver.fanuc.veneers
     {
         public ToolData(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
-            lastChangedValue = new
-            {
-                tool = -1,
-                group = -1
-            };
+            
         }
         
-        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
+        protected override async Task<dynamic> AnyAsync(dynamic[] nativeInputs, dynamic[] additionalInputs)
         {
-            if (input.success || additionalInputs[0]!.success)
+            if (nativeInputs.Any(o => o.success == true))
             {
-                var toolNum = additionalInputs[0];
+                var tool = nativeInputs[1].success
+                    ? nativeInputs[1].response.cnc_toolnum.toolnum.data 
+                    : nativeInputs[0].success 
+                        ? nativeInputs[0].response.cnc_modal.modal.aux.aux_data 
+                        : -1;
                 
-                var tool = toolNum!.success 
-                    ? toolNum.response.cnc_toolnum.toolnum.data :
-                        input.success ? input.response.cnc_modal.modal.aux.aux_data : -1;
-                
-                var group = toolNum.success 
-                    ? toolNum.response.cnc_toolnum.toolnum.datano : -1;
+                var group = nativeInputs[1].success
+                    ? nativeInputs[1].response.cnc_toolnum.toolnum.datano 
+                    : -1;
                 
                 var currentValue = new
                 {
@@ -33,16 +30,16 @@ namespace l99.driver.fanuc.veneers
                     group
                 };
                 
-                await OnDataArrivedAsync(input, currentValue);
+                await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
                 
-                if (!currentValue.Equals(this.lastChangedValue))
+                if (currentValue.IsDifferentString((object) LastChangedValue))
                 {
-                    await OnDataChangedAsync(input, currentValue);
+                    await OnDataChangedAsync(nativeInputs, additionalInputs, currentValue);
                 }
             }
             else
             {
-                await OnHandleErrorAsync(input);
+                await OnHandleErrorAsync(nativeInputs, additionalInputs);
             }
 
             return new { veneer = this };

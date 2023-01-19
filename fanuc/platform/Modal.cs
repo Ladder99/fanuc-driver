@@ -31,16 +31,17 @@ namespace l99.driver.fanuc
                     break;
             }
 
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_modal(_handle, type, block, modal);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_modal",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/misc/cnc_modal",
+                doc = $"{_docBasePath}/misc/cnc_modal",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_modal = new {type, block, ODBMDL_type}},

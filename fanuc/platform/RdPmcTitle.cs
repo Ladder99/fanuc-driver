@@ -12,16 +12,17 @@ namespace l99.driver.fanuc
         {
             dynamic title = new Focas.ODBPMCTITLE();
 
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.pmc_rdpmctitle(_handle, title);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "pmc_rdpmctitle",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/pmc/pmc_rdpmctitle",
+                doc = $"{_docBasePath}/pmc/pmc_rdpmctitle",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {pmc_rdpmctitle = new {}},

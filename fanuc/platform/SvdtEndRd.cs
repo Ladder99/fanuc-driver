@@ -10,16 +10,17 @@ namespace l99.driver.fanuc
         
         public dynamic SvdtEndRd()
         {
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_svdtendrd(_handle);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_svdtendrd",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/servo/cnc_svdtendrd",
+                doc = $"{_docBasePath}/servo/cnc_svdtendrd",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_svdtendrd = new {}},

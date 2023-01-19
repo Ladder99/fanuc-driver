@@ -129,6 +129,7 @@
       <None Update="config-example.yml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Remove="veneers\unused\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -156,6 +157,11 @@
       <Compile Include="..\base-driver\base\Veneers.cs">
         <Link>base\Veneers.cs</Link>
       </Compile>
+      <Compile Remove="veneers\unused\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="veneers\unused\**" />
     </ItemGroup>
 
 </Project>

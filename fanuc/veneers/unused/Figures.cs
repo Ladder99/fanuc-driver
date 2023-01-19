@@ -7,13 +7,13 @@ namespace l99.driver.fanuc.veneers
     {
         public Figures(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
-            lastChangedValue = new
+            LastChangedValue = new
             {
                
             };
         }
         
-        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
+        protected override async Task<dynamic> AnyAsync(dynamic[] nativeInputs, dynamic[] additionalInputs)
         {
             if (input.success)
             {
@@ -24,11 +24,11 @@ namespace l99.driver.fanuc.veneers
                 
                 await OnDataArrivedAsync(input, currentValue);
                 
-                //Console.WriteLine(current_value.GetHashCode() + "  ==  " + lastChangedValue.GetHashCode());
+                //Console.WriteLine(current_value.GetHashCode() + "  ==  " + LastChangedValue.GetHashCode());
                 
-                //if (!current_value.Equals(this.lastChangedValue))
-                //if(!JObject.FromObject(current_value).ToString().Equals(JObject.FromObject(lastChangedValue).ToString()))
-                if(currentValue.IsDifferentString((object)lastChangedValue))
+                //if (!current_value.Equals(this.LastChangedValue))
+                //if(!JObject.FromObject(current_value).ToString().Equals(JObject.FromObject(LastChangedValue).ToString()))
+                if(currentValue.IsDifferentString((object)LastChangedValue))
                 {
                     await OnDataChangedAsync(input, currentValue);
                 }

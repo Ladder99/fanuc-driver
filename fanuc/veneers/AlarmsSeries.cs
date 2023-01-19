@@ -5,13 +5,9 @@ namespace l99.driver.fanuc.veneers
 {
     public class AlarmsSeries : Veneer
     {
-        public AlarmsSeries(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound,
-            isInternal)
+        public AlarmsSeries(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
-            lastChangedValue = new
-            {
-                alarms = new List<dynamic>() {-1}
-            };
+            
         }
 
         private readonly List<SupportMap> _alarmTypeMaps = new()
@@ -42,17 +38,17 @@ namespace l99.driver.fanuc.veneers
             }
         };
         
-        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
+        protected override async Task<dynamic> AnyAsync(dynamic[] nativeInputs, dynamic[] additionalInputs)
         {
-            if(input.success == true)
+            if(nativeInputs[0].success == true)
             {
                 var path = additionalInputs[0];
                 var axis = additionalInputs[1];
                 var obsFocasSupport = additionalInputs[2];
-                var previousInput = additionalInputs[3];
+                var previousInput = nativeInputs[1];
 
                 AlarmResponse previousResponse = GetAlarmCountAndObjectFromInput(previousInput);
-                AlarmResponse response = GetAlarmCountAndObjectFromInput(input);
+                AlarmResponse response = GetAlarmCountAndObjectFromInput(nativeInputs[0]);
 
                 // TODO: addedd vs removed alarms
                 //  who keeps state?
@@ -64,16 +60,17 @@ namespace l99.driver.fanuc.veneers
                     alarms = alarmList
                 };
                 
-                await OnDataArrivedAsync(input, currentValue);
+                await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
                 
-                if(currentValue.alarms.IsDifferentHash((List<dynamic>)lastChangedValue.alarms))
+                //if(currentValue.alarms.IsDifferentHash((List<dynamic>)LastChangedValue.alarms))
+                if(currentValue.IsDifferentString((object)LastChangedValue))
                 {
-                    await OnDataChangedAsync(input, currentValue);
+                    await OnDataChangedAsync(nativeInputs, additionalInputs, currentValue);
                 }
             }
             else
             {
-                await OnHandleErrorAsync(input);
+                await OnHandleErrorAsync(nativeInputs, additionalInputs);
             }
 
             return new { veneer = this };

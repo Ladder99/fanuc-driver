@@ -7,45 +7,27 @@ namespace l99.driver.fanuc.veneers
     {
         public SysInfo(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
-            lastChangedValue = new
-            {
-                focas_suport = new string[4],
-                loader_control = false,
-                i_series = false,
-                compound_machining = false,
-                transfer_line = false,
-                model = string.Empty,
-                model_code = -1,
-                max_axis = -1,
-                cnc_type = string.Empty,
-                cnc_type_code = -1,
-                mt_type = string.Empty,
-                mt_type_code = -1,
-                series = string.Empty,
-                version = string.Empty,
-                axes = -1,
-                focas_series = string.Empty
-            };
+            
         }
         
-        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
+        protected override async Task<dynamic> AnyAsync(dynamic[] nativeInputs, dynamic[] additionalInputs)
         {
-            if (input.success)
+            if (nativeInputs.All(o => o.success == true))
             {
                 string[] focasSupport = new string[4];
                 
                 // ADDITIONAL INFO
-                byte[] info_bytes = BitConverter.GetBytes(input.response.cnc_sysinfo.sysinfo.addinfo);
+                byte[] infoBytes = BitConverter.GetBytes(nativeInputs[0].response.cnc_sysinfo.sysinfo.addinfo);
                 
-                var loaderControl = (info_bytes[0] & 1) == 1;
-                var iSeries = (info_bytes[0] & 2) == 2;;
-                var compoundMachining = (info_bytes[0] & 4) == 4;;
-                var transferLine = (info_bytes[0] & 8) == 8;;
+                var loaderControl = (infoBytes[0] & 1) == 1;
+                var iSeries = (infoBytes[0] & 2) == 2;;
+                var compoundMachining = (infoBytes[0] & 4) == 4;;
+                var transferLine = (infoBytes[0] & 8) == 8;;
 
                 focasSupport[1] = iSeries ? "i" : "";
                 
                 var model = "Unknown";
-                switch(info_bytes[1])
+                switch(infoBytes[1])
                 {
                     case 0:
                         model = "MODEL information is not supported";
@@ -74,7 +56,7 @@ namespace l99.driver.fanuc.veneers
                 }
                 
                 // CNC TYPE
-                var cncTypeCode = string.Join("", input.response.cnc_sysinfo.sysinfo.cnc_type);
+                var cncTypeCode = string.Join("", nativeInputs[0].response.cnc_sysinfo.sysinfo.cnc_type);
                 var cncType = "Unknown";
                 focasSupport[0] = cncTypeCode.Trim();
                 
@@ -122,9 +104,9 @@ namespace l99.driver.fanuc.veneers
                 }
 
                 // MT TYPE
-                var mtTypeCode = string.Join("", input.response.cnc_sysinfo.sysinfo.mt_type);
+                var mtTypeCode = string.Join("", nativeInputs[0].response.cnc_sysinfo.sysinfo.mt_type);
                 var mtType = "Unknown";
-                focasSupport[3] = ((char)input.response.cnc_sysinfo.sysinfo.mt_type[1]).AsAscii();
+                focasSupport[3] = ((char)nativeInputs[0].response.cnc_sysinfo.sysinfo.mt_type[1]).AsAscii();
 
                 switch (mtTypeCode)
                 {
@@ -156,10 +138,10 @@ namespace l99.driver.fanuc.veneers
 
                 // AXIS COUNT
                 dynamic axes;
-                if (Int16.TryParse(string.Join("", input.response.cnc_sysinfo.sysinfo.axes), out short axisCount))
+                if (Int16.TryParse(string.Join("", nativeInputs[0].response.cnc_sysinfo.sysinfo.axes), out short axisCount))
                     axes = axisCount;
                 else
-                    axes = string.Join("", input.response.cnc_sysinfo.sysinfo.axes);
+                    axes = string.Join("", nativeInputs[0].response.cnc_sysinfo.sysinfo.axes);
                 
                 
                 var currentValue = new
@@ -170,27 +152,27 @@ namespace l99.driver.fanuc.veneers
                     compound_machining = compoundMachining,
                     transfer_line = transferLine,
                     model,
-                    model_code = info_bytes[0],
-                    input.response.cnc_sysinfo.sysinfo.max_axis,
+                    model_code = infoBytes[0],
+                    nativeInputs[0].response.cnc_sysinfo.sysinfo.max_axis,
                     cnc_type = cncType,
                     cnc_type_code = cncTypeCode.Trim(),
                     mt_type = mtType,
                     mt_type_code = mtTypeCode.Trim(), 
-                    series = string.Join("", input.response.cnc_sysinfo.sysinfo.series),
-                    version = string.Join("", input.response.cnc_sysinfo.sysinfo.version),
+                    series = string.Join("", nativeInputs[0].response.cnc_sysinfo.sysinfo.series),
+                    version = string.Join("", nativeInputs[0].response.cnc_sysinfo.sysinfo.version),
                     axes
                 };
+
+                await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
                 
-                await OnDataArrivedAsync(input, currentValue);
-                
-                if (currentValue.IsDifferentString((object)lastChangedValue))
+                if (currentValue.IsDifferentString((object)LastChangedValue))
                 {
-                    await OnDataChangedAsync(input, currentValue);
+                    await OnDataChangedAsync(nativeInputs, additionalInputs, currentValue);
                 }
             }
             else
             {
-                await OnHandleErrorAsync(input);
+                await OnHandleErrorAsync(nativeInputs, additionalInputs);
             }
 
             return new { veneer = this };

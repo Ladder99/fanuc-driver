@@ -1,4 +1,5 @@
-﻿using l99.driver.fanuc.strategies;
+﻿using InfluxDB.Client.Api.Domain;
+using l99.driver.fanuc.strategies;
 
 // ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.collectors
@@ -6,9 +7,17 @@ namespace l99.driver.fanuc.collectors
     // ReSharper disable once UnusedType.Global
     public class GCodeData : FanucMultiStrategyCollector
     {
-        public GCodeData(FanucMultiStrategy strategy) : base(strategy)
+        public GCodeData(FanucMultiStrategy strategy, object configuration) : base(strategy, configuration)
         {
+            if (!Configuration.ContainsKey("block_counter"))
+            {
+                Configuration.Add("block_counter", false);
+            }
             
+            if (!Configuration.ContainsKey("buffer_length"))
+            {
+                Configuration.Add("buffer_length", 513);
+            }
         }
         
         public override async Task InitPathsAsync()
@@ -18,18 +27,29 @@ namespace l99.driver.fanuc.collectors
         
         public override async Task CollectForEachPathAsync(short currentPath, string[] axis, string[] spindle, dynamic pathMarker)
         {
-            //TODO: make configurable
-            /*
-            await strategy.SetNativeKeyed($"blkcount", 
-                    await strategy.Platform.RdBlkCountAsync())
-            */
+            if (Configuration["block_counter"])
+            {
+                await Strategy.SetNativeKeyed($"blkcount",
+                    await Strategy.Platform.RdBlkCountAsync());
+            }
+            else
+            {
+                await Strategy.SetNativeNullKeyed($"blkcount");
+            }
             
             await Strategy.Peel("gcode",
-                null,
-                await Strategy.SetNativeKeyed($"actpt", 
-                    await Strategy.Platform.RdActPtAsync()),
-                await Strategy.SetNativeKeyed($"execprog", 
-                    await Strategy.Platform.RdExecProgAsync(512)));
+                new dynamic[]
+                {
+                    Strategy.GetKeyed("blkcount"),
+                    await Strategy.SetNativeKeyed($"actpt", 
+                        await Strategy.Platform.RdActPtAsync()),
+                    await Strategy.SetNativeKeyed($"execprog", 
+                        await Strategy.Platform.RdExecProgAsync(Configuration["buffer_length"]))
+                },
+                new dynamic[]
+                {
+                    
+                });
         }
     }
 }

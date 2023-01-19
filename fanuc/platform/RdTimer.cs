@@ -12,16 +12,17 @@ namespace l99.driver.fanuc
         {
             Focas.IODBTIME time = new Focas.IODBTIME();
 
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_rdtimer(_handle, type, time);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_rdtimer",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/misc/cnc_rdtimer",
+                doc = $"{_docBasePath}/misc/cnc_rdtimer",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdtimer = new {type}},

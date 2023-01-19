@@ -10,7 +10,7 @@ namespace l99.driver.fanuc
         
         public dynamic Connect()
         {
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_allclibhndl3(
                     _machine.FocasEndpoint.IPAddress, 
@@ -21,9 +21,10 @@ namespace l99.driver.fanuc
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_allclibhndl3",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/handle/cnc_allclibhndl3",
+                doc = $"{_docBasePath}/handle/cnc_allclibhndl3",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new

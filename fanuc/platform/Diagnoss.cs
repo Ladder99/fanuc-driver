@@ -85,16 +85,17 @@ namespace l99.driver.fanuc
                     break;
             }
 
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_diagnoss(_handle, number, axis, length, diag);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_diagnoss",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/misc/cnc_diagnoss",
+                doc = $"{_docBasePath}/misc/cnc_diagnoss",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_diagnoss = new {number, axis, length, ODBDGN_type}},

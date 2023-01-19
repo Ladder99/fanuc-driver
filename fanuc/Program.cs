@@ -44,7 +44,7 @@ namespace l99.driver.fanuc
         {
             dynamic config = await Bootstrap.Start(_args);
             Machines machines = await Machines.CreateMachines(config);
-            await machines.RunAsync();
+            await machines.RunAsync(stoppingToken);
             await Bootstrap.Stop();
         }
     }

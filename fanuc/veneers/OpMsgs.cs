@@ -7,22 +7,19 @@ namespace l99.driver.fanuc.veneers
     {
         public OpMsgs(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
-            lastChangedValue = new
-            {
-                messages = new List<dynamic>() { -1 }
-            };
+            
         }
         
-        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
+        protected override async Task<dynamic> AnyAsync(dynamic[] nativeInputs, dynamic[] additionalInputs)
         {
-            if (input.success)
+            if (nativeInputs.All(o => o.success == true))
             {
                 var tempValue = new List<dynamic>();
 
-                var fields = input.response.cnc_rdopmsg.opmsg.GetType().GetFields();
+                var fields = nativeInputs[0].response.cnc_rdopmsg.opmsg.GetType().GetFields();
                 for (int x = 0; x <= fields.Length - 1; x++)
                 {
-                    var msg = fields[x].GetValue(input.response.cnc_rdopmsg.opmsg);
+                    var msg = fields[x].GetValue(nativeInputs[0].response.cnc_rdopmsg.opmsg);
                     if (msg.char_num > 0)
                     {
                         tempValue.Add(new
@@ -39,19 +36,20 @@ namespace l99.driver.fanuc.veneers
                     messages = tempValue
                 };
                 
-                var currentHc = currentValue.messages.Select(x => x.GetHashCode());
-                var lastHc = ((List<dynamic>)lastChangedValue.messages).Select(x => x.GetHashCode());
+                //var currentHc = currentValue.messages.Select(x => x.GetHashCode());
+                //var lastHc = ((List<dynamic>)LastChangedValue.messages).Select(x => x.GetHashCode());
                 
-                await OnDataArrivedAsync(input, currentValue);
+                await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
                 
-                if(currentHc.Except(lastHc).Count() + lastHc.Except(currentHc).Count() > 0)
+                //if(currentHc.Except(lastHc).Count() + lastHc.Except(currentHc).Count() > 0)
+                if (currentValue.IsDifferentString((object) LastChangedValue))
                 {
-                    await OnDataChangedAsync(input, currentValue);
+                    await OnDataChangedAsync(nativeInputs, additionalInputs, currentValue);
                 }
             }
             else
             {
-                await OnHandleErrorAsync(input);
+                await OnHandleErrorAsync(nativeInputs, additionalInputs);
             }
             
             return new { veneer = this };

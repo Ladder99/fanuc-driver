@@ -10,7 +10,7 @@ namespace l99.driver.fanuc.veneers
     {
         public RdParaInfo(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
-            lastChangedValue = new
+            LastChangedValue = new
             {
                 info_no = -1,
                 prev_no = -1,
@@ -19,7 +19,7 @@ namespace l99.driver.fanuc.veneers
             };
         }
         
-        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
+        protected override async Task<dynamic> AnyAsync(dynamic[] nativeInputs, dynamic[] additionalInputs)
         {
             if (input.success)
             {
@@ -71,10 +71,10 @@ namespace l99.driver.fanuc.veneers
                 await OnDataArrivedAsync(input, current_value);
                 
                 //todo: has to be a better way to compare dynamic
-                if(!current_value.info_no.Equals(lastChangedValue.info_no) ||
-                   !current_value.prev_no.Equals(lastChangedValue.prev_no) ||
-                   !current_value.next_no.Equals(lastChangedValue.next_no) ||
-                    current_value.info.IsDifferentHash((List<dynamic>)lastChangedValue.info))
+                if(!current_value.info_no.Equals(LastChangedValue.info_no) ||
+                   !current_value.prev_no.Equals(LastChangedValue.prev_no) ||
+                   !current_value.next_no.Equals(LastChangedValue.next_no) ||
+                    current_value.info.IsDifferentHash((List<dynamic>)LastChangedValue.info))
                     await OnDataChangedAsync(input, current_value);
                 
             }

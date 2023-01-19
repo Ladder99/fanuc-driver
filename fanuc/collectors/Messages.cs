@@ -6,13 +6,14 @@ namespace l99.driver.fanuc.collectors
     // ReSharper disable once UnusedType.Global
     public class Messages : FanucMultiStrategyCollector
     {
-        public Messages(FanucMultiStrategy strategy) : base(strategy)
+        public Messages(FanucMultiStrategy strategy, object configuration) : base(strategy, configuration)
         {
-            
+            if (!Configuration.ContainsKey("warned"))
+            {
+                Configuration.Add("warned", false);
+            }
         }
 
-        private bool _warned;
-        
         public override async Task InitPathsAsync()
         {
             await Strategy.Apply(typeof(fanuc.veneers.OpMsgs), "messages");
@@ -22,19 +23,19 @@ namespace l99.driver.fanuc.collectors
         {
             var obsFocasSupport = Strategy.GetKeyed($"obs+focas_support");
             
-            short msgType = 0;
-            short msgLength = 6 + 256;
-            
             if (obsFocasSupport == null)
             {
-                if (!_warned)
+                if (!Configuration["warned"])
                 {
                     Logger.Warn($"[{Strategy.Machine.Id}] Machine info observation is required to correctly evaluate operator messages.");
-                    _warned = true;
+                    Configuration["warned"] = true;
                 }
             }
             else
             {
+                short msgType = 0;
+                short msgLength = 6 + 256;
+                
                 if (Regex.IsMatch(string.Join("", obsFocasSupport), "15"))
                 {
                     msgType = -1;
@@ -44,10 +45,16 @@ namespace l99.driver.fanuc.collectors
                 await Strategy.SetNativeKeyed($"messages",
                     await Strategy.Platform.RdOpMsgAsync(msgType, msgLength));
             
-                await Strategy.Peel("messages", 
-                    Strategy.GetKeyed($"messages"));
+                await Strategy.Peel("messages",
+                    new dynamic[]
+                    {
+                        Strategy.GetKeyed($"messages")
+                    },
+                    new dynamic[]
+                    {
+                        
+                    });
             }
-            
         }
     }
 }

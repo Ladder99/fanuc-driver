@@ -6,16 +6,17 @@ namespace l99.driver.fanuc.collectors
     // ReSharper disable once UnusedType.Global
     public class AxisData : FanucMultiStrategyCollector
     {
-        public AxisData(FanucMultiStrategy strategy) : base(strategy)
+        public AxisData(FanucMultiStrategy strategy, object configuration) : base(strategy, configuration)
         {
-            
+            if (!Configuration.ContainsKey("warned"))
+            {
+                Configuration.Add("warned", false);
+            }
         }
 
-        private bool _warned;
-        
         public override async Task InitPathsAsync()
         {
-            await Strategy.Apply(typeof(fanuc.veneers.Figures), "figures");
+            
         }
 
         public override async Task InitAxisAsync()
@@ -39,10 +40,10 @@ namespace l99.driver.fanuc.collectors
 
             if (obs_alarms == null || obs_focas_support == null)
             {
-                if (!_warned)
+                if (!Configuration["warned"])
                 {
                     Logger.Warn($"[{Strategy.Machine.Id}] Machine info and alarms observations are required to correctly evaluate axis data.");
-                    _warned = true;
+                    Configuration["warned"] = true;
                 }
             }
             
@@ -66,17 +67,23 @@ namespace l99.driver.fanuc.collectors
                 await Strategy.Platform.RdDynamic2Async(currentAxis, 44, 2));
 
             await Strategy.Peel("axis",
-                currentAxis,
-                Strategy.Get($"axis_names+{currentPath}"),
-                Strategy.GetKeyed($"axis_dynamic"), 
-                Strategy.Get($"figures+{currentPath}"),
-                Strategy.Get($"axis_load+{currentPath}"),
-                Strategy.GetKeyed($"diag_servo_temp"),
-                Strategy.GetKeyed($"diag_coder_temp"),
-                Strategy.GetKeyed($"diag_power"),
-                obs_focas_support,
-                obs_alarms,
-                Strategy.GetKeyed($"axis_dynamic+last"));
+                new dynamic[]
+                {
+                    Strategy.Get($"axis_names+{currentPath}")!,
+                    Strategy.GetKeyed($"axis_dynamic")!, 
+                    Strategy.Get($"figures+{currentPath}")!,
+                    Strategy.Get($"axis_load+{currentPath}")!,
+                    Strategy.GetKeyed($"diag_servo_temp")!,
+                    Strategy.GetKeyed($"diag_coder_temp")!,
+                    Strategy.GetKeyed($"diag_power")!,
+                    Strategy.GetKeyed($"axis_dynamic+last")!
+                },
+                new dynamic[]
+                {
+                    currentAxis,
+                    obs_focas_support!,
+                    obs_alarms!
+                });
             
             Strategy.SetKeyed($"axis_dynamic+last", 
                 Strategy.GetKeyed($"axis_dynamic"));

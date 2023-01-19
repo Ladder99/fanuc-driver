@@ -12,16 +12,17 @@ namespace l99.driver.fanuc
         {
             Focas.ODBDIAGNUM diagnum = new Focas.ODBDIAGNUM();
 
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_rddiagnum(_handle, diagnum);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_rddiagnum",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/misc/cnc_rddiagnum",
+                doc = $"{_docBasePath}/misc/cnc_rddiagnum",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rddiagnum = new { }},

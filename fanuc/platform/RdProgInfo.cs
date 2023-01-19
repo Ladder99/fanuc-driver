@@ -24,16 +24,17 @@ namespace l99.driver.fanuc
             else
                 proginfo = new Focas.ODBNC_1();
 
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_rdproginfo(_handle, type, length, proginfo);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_rdproginfo",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/program/cnc_rdproginfo",
+                doc = $"{_docBasePath}/program/cnc_rdproginfo",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdproginfo = new {type, length, format}},

@@ -13,27 +13,22 @@ namespace l99.driver.fanuc.veneers
         public GCodeBlocks(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
             _blocks = new Blocks();
-            
-            lastChangedValue = new
-            {
-                blocks = new List<gcode.Block>()
-            };
         }
         
-        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
+        protected override async Task<dynamic> AnyAsync(dynamic[] nativeInputs, dynamic[] additionalInputs)
         {
-            if (additionalInputs[0]?.success && additionalInputs[1]?.success)
+            if (nativeInputs.All(o => o.success == true))
             {
-                if (input!= null && input?.success)
+                if (!nativeInputs[0].@null && nativeInputs[0].success)
                 {
-                    _blocks.Add2(input?.response.cnc_rdblkcount.prog_bc,
-                        additionalInputs[0]?.response.cnc_rdactpt.blk_no,
-                        additionalInputs[1]?.response.cnc_rdexecprog.data);
+                    _blocks.Add2(nativeInputs[0].response.cnc_rdblkcount.prog_bc,
+                        nativeInputs[1].response.cnc_rdactpt.blk_no,
+                        nativeInputs[2].response.cnc_rdexecprog.data);
                 }
                 else
                 {
-                    _blocks.Add1(additionalInputs[0]?.response.cnc_rdactpt.blk_no,
-                        additionalInputs[1]?.response.cnc_rdexecprog.data);
+                    _blocks.Add1(nativeInputs[1].response.cnc_rdactpt.blk_no,
+                        nativeInputs[2].response.cnc_rdexecprog.data);
                 }
 
                 var currentValue = new
@@ -56,19 +51,20 @@ namespace l99.driver.fanuc.veneers
                 }
                 */
 
-                await OnDataArrivedAsync(input, currentValue);
+                await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
                 
-                var lastKeys = ((List<gcode.Block>)lastChangedValue.blocks).Select(x => x.BlockNumber);
-                var currentKeys = ((List<gcode.Block>)currentValue.blocks).Select(x => x.BlockNumber);
+                //var lastKeys = ((List<gcode.Block>)LastChangedValue.blocks).Select(x => x.BlockNumber);
+                //var currentKeys = ((List<gcode.Block>)currentValue.blocks).Select(x => x.BlockNumber);
 
-                if (lastKeys.Except(currentKeys).Count() + currentKeys.Except(lastKeys).Count() > 0)
+                //if (lastKeys.Except(currentKeys).Count() + currentKeys.Except(lastKeys).Count() > 0)
+                if (currentValue.IsDifferentString((object)LastChangedValue))
                 {
-                    await OnDataChangedAsync(input, currentValue);
+                    await OnDataChangedAsync(nativeInputs, additionalInputs, currentValue);
                 }
             }
             else
             {
-                await OnHandleErrorAsync(input!=null ? input : additionalInputs[0]);
+                await OnHandleErrorAsync(nativeInputs, additionalInputs);
             }
 
             return new { veneer = this };

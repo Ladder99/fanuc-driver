@@ -12,16 +12,17 @@ namespace l99.driver.fanuc
         {
             Focas.ODBDIAGIF diagif = new Focas.ODBDIAGIF();
 
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_rddiaginfo(_handle, s_number, read_no, diagif);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_rddiaginfo",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/misc/cnc_rddiaginfo",
+                doc = $"{_docBasePath}/misc/cnc_rddiaginfo",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rddiaginfo = new {s_number, read_no }},

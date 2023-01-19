@@ -20,6 +20,7 @@ namespace l99.driver.fanuc
             return character.ToString().Trim();
         }
         
+        /*
         public static bool IsDifferentHash(this IEnumerable<dynamic> one, IEnumerable<dynamic> two)
         { 
             var oneHc = one.Select(x => x.GetHashCode());
@@ -30,10 +31,14 @@ namespace l99.driver.fanuc
 
             return false;
         }
-
-        public static bool IsDifferentString(this object one, object two)
+        */
+        
+        public static bool IsDifferentString(this object one, object? two)
         {
-            return !JObject.FromObject(one).ToString().Equals(JObject.FromObject(two).ToString());
+            if (two == null) return true;
+            
+            return !JObject.FromObject(one).ToString()
+                .Equals(JObject.FromObject(two).ToString());
         }
     }
 }

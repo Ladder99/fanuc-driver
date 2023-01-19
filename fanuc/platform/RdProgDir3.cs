@@ -14,16 +14,17 @@ namespace l99.driver.fanuc
             int top_prog_in = top_prog;
             short num_prog_in = num_prog;
 
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_rdprogdir3(_handle, type, ref top_prog, ref num_prog, buf);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_rdprogdir3",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/program/cnc_rdprogdir3",
+                doc = $"{_docBasePath}/program/cnc_rdprogdir3",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdprogdir3 = new {type, top_prog_in, num_prog_in}},

@@ -7,28 +7,25 @@ namespace l99.driver.fanuc.veneers
     {
         public StateData(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
-            lastChangedValue = new
-            {
-                
-            };
+            
         }
         
-        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
+        protected override async Task<dynamic> AnyAsync(dynamic[] nativeInputs, dynamic[] additionalInputs)
         {
-            if (input.success && additionalInputs.All(o => o.success == true))
+            if (nativeInputs.All(o => o.success == true))
             {
                 var execution = "UNAVAILABLE";
 
-                switch ((int)input.response.cnc_statinfo.statinfo.emergency)
+                switch ((int)nativeInputs[0].response.cnc_statinfo.statinfo.emergency)
                 {
                     case 0:
-                        switch ((int)input.response.cnc_statinfo.statinfo.run)
+                        switch ((int)nativeInputs[0].response.cnc_statinfo.statinfo.run)
                         {
                             case 0:
                                 execution = "READY";
                                 break;
                             case 1:
-                                switch ((int)additionalInputs[6]!.response.cnc_modal.modal.aux.aux_data)
+                                switch ((int)nativeInputs[7]!.response.cnc_modal.modal.aux.aux_data)
                                 {
                                     case 0:
                                         execution = "PROGRAM_STOPPED";
@@ -49,16 +46,16 @@ namespace l99.driver.fanuc.veneers
                                 execution = "FEED_HOLD";
                                 break;
                             case 3:
-                                if (255 - additionalInputs[3]!.response.pmc_rdpmcrng.buf.cdata[0] == 0)
+                                if (255 - nativeInputs[4]!.response.pmc_rdpmcrng.buf.cdata[0] == 0)
                                 {
                                     execution = "INTERRUPTED";
                                 }
                                 else
                                 {
-                                    switch ((int)input.response.cnc_statinfo.statinfo.motion)
+                                    switch ((int)nativeInputs[0].response.cnc_statinfo.statinfo.motion)
                                     {
                                         case 0:
-                                            switch ((int)additionalInputs[6]!.response.cnc_modal.modal.aux.aux_data)
+                                            switch ((int)nativeInputs[7]!.response.cnc_modal.modal.aux.aux_data)
                                             {
                                                 case 0:
                                                     execution = "PROGRAM_STOPPED";
@@ -92,7 +89,7 @@ namespace l99.driver.fanuc.veneers
                 
                 var mode = "UNAVAILABLE";
 
-                switch ((int)input.response.cnc_statinfo.statinfo.aut)
+                switch ((int)nativeInputs[0].response.cnc_statinfo.statinfo.aut)
                 {
                     case 0:
                         mode = "MANUAL_DATA_INPUT";
@@ -114,42 +111,42 @@ namespace l99.driver.fanuc.veneers
                 {
                     mode,
                     execution,
-                    input.response.cnc_statinfo.statinfo.aut,
-                    input.response.cnc_statinfo.statinfo.run,
-                    input.response.cnc_statinfo.statinfo.motion,
-                    input.response.cnc_statinfo.statinfo.mstb,
-                    input.response.cnc_statinfo.statinfo.emergency,
-                    input.response.cnc_statinfo.statinfo.alarm,
+                    nativeInputs[0].response.cnc_statinfo.statinfo.aut,
+                    nativeInputs[0].response.cnc_statinfo.statinfo.run,
+                    nativeInputs[0].response.cnc_statinfo.statinfo.motion,
+                    nativeInputs[0].response.cnc_statinfo.statinfo.mstb,
+                    nativeInputs[0].response.cnc_statinfo.statinfo.emergency,
+                    nativeInputs[0].response.cnc_statinfo.statinfo.alarm,
                     timers = new
                     {
-                        poweron_min = additionalInputs[0]!.response.cnc_rdparam.param.data.ldata,
-                        operating_min = additionalInputs[1]!.response.cnc_rdparam.param.data.ldata,
-                        cutting_min = additionalInputs[2]!.response.cnc_rdparam.param.data.ldata
+                        poweron_min = nativeInputs[1]!.response.cnc_rdparam.param.data.ldata,
+                        operating_min = nativeInputs[2]!.response.cnc_rdparam.param.data.ldata,
+                        cutting_min = nativeInputs[3]!.response.cnc_rdparam.param.data.ldata
                     },
                     @override = new {
-                        feed = 255-additionalInputs[3]!.response.pmc_rdpmcrng.buf.cdata[0],
-                        rapid = additionalInputs[4]!.response.pmc_rdpmcrng.buf.cdata[0],
-                        spindle = additionalInputs[5]!.response.pmc_rdpmcrng.buf.cdata[0]
+                        feed = 255-nativeInputs[4]!.response.pmc_rdpmcrng.buf.cdata[0],
+                        rapid = nativeInputs[5]!.response.pmc_rdpmcrng.buf.cdata[0],
+                        spindle = nativeInputs[6]!.response.pmc_rdpmcrng.buf.cdata[0]
                     },
                     modal = new
                     {
-                        m1 = additionalInputs[6]!.response.cnc_modal.modal.aux.aux_data,
-                        m2 = additionalInputs[7]!.response.cnc_modal.modal.aux.aux_data,
-                        m3 = additionalInputs[8]!.response.cnc_modal.modal.aux.aux_data,
-                        t = additionalInputs[9]!.response.cnc_modal.modal.aux.aux_data
+                        m1 = nativeInputs[7]!.response.cnc_modal.modal.aux.aux_data,
+                        m2 = nativeInputs[8]!.response.cnc_modal.modal.aux.aux_data,
+                        m3 = nativeInputs[9]!.response.cnc_modal.modal.aux.aux_data,
+                        t = nativeInputs[10]!.response.cnc_modal.modal.aux.aux_data
                     }
                 };
                 
-                await OnDataArrivedAsync(input, currentValue);
+                await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
                 
-                if (currentValue.IsDifferentString((object)lastChangedValue))
+                if (currentValue.IsDifferentString((object)LastChangedValue))
                 {
-                    await OnDataChangedAsync(input, currentValue);
+                    await OnDataChangedAsync(nativeInputs, additionalInputs, currentValue);
                 }
             }
             else
             {
-                await OnHandleErrorAsync(input);
+                await OnHandleErrorAsync(nativeInputs, additionalInputs);
             }
 
             return new { veneer = this };

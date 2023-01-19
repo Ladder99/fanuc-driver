@@ -8,7 +8,7 @@ namespace l99.driver.fanuc.veneers
     {
         public RdPmcTitle(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
-            lastChangedValue = new
+            LastChangedValue = new
             {
                 mtb = string.Empty,
                 machine = string.Empty,
@@ -23,7 +23,7 @@ namespace l99.driver.fanuc.veneers
             };
         }
         
-        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
+        protected override async Task<dynamic> AnyAsync(dynamic[] nativeInputs, dynamic[] additionalInputs)
         {
             if (input.success)
             {
@@ -43,7 +43,7 @@ namespace l99.driver.fanuc.veneers
                 
                 await OnDataArrivedAsync(input, current_value);
                 
-                if (current_value.IsDifferentString((object)lastChangedValue))
+                if (current_value.IsDifferentString((object)LastChangedValue))
                 {
                     await OnDataChangedAsync(input, current_value);
                 }

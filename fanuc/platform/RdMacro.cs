@@ -12,16 +12,17 @@ namespace l99.driver.fanuc
         {
             Focas.ODBM macro = new Focas.ODBM();
 
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_rdmacro(_handle, number, length, macro);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_rdmacro",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/ncdata/cnc_rdmacro",
+                doc = $"{_docBasePath}/ncdata/cnc_rdmacro",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnd_rdmacro = new {number, length}},

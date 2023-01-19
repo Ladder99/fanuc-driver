@@ -7,33 +7,30 @@ namespace l99.driver.fanuc.veneers
     {
         public GetPath(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
-            lastChangedValue = new
-            {
-                path_no = -1,
-                maxpath_no = -1
-            };
+            
         }
         
-        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
+        protected override async Task<dynamic> AnyAsync(dynamic[] nativeInputs, dynamic[] additionalInputs)
         {
-            if (input.success)
+            if (nativeInputs.All(o => o.success == true))
             {
                 var currentValue = new
                 {
-                    input.response.cnc_getpath.path_no,
-                    input.response.cnc_getpath.maxpath_no
+                    nativeInputs[0].response.cnc_getpath.path_no,
+                    nativeInputs[0].response.cnc_getpath.maxpath_no
                 };
                 
-                await OnDataArrivedAsync(input, currentValue);
+                await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
                 
-                if (!currentValue.Equals(this.lastChangedValue))
+                //if (!currentValue.Equals(LastChangedValue))
+                if (currentValue.IsDifferentString((object) LastChangedValue))
                 {
-                    await OnDataChangedAsync(input, currentValue);
+                    await OnDataChangedAsync(nativeInputs, additionalInputs, currentValue);
                 }
             }
             else
             {
-                await OnHandleErrorAsync(input);
+                await OnHandleErrorAsync(nativeInputs, additionalInputs);
             }
 
             return new { veneer = this };

@@ -13,16 +13,17 @@ namespace l99.driver.fanuc
             short data_num_out = data_num;
             Focas.ODBSVLOAD loadmeter = new Focas.ODBSVLOAD();
 
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_rdsvmeter(_handle, ref data_num_out, loadmeter);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_rdsvmeter",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/position/cnc_rdsvmeter",
+                doc = $"{_docBasePath}/position/cnc_rdsvmeter",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdsvmeter = new {data_num}},

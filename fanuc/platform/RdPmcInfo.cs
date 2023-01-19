@@ -12,16 +12,17 @@ namespace l99.driver.fanuc
         {
             Focas.ODBPMCINF pmcif = new Focas.ODBPMCINF();
 
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.pmc_rdpmcinfo(_handle, adr_type, pmcif);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "pmc_rdpmcinfo",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/pmc/pmc_rdpmcinfo",
+                doc = $"{_docBasePath}/pmc/pmc_rdpmcinfo",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {pmc_rdpmcinfo = new {adr_type }},

@@ -24,16 +24,17 @@ namespace l99.driver.fanuc
 
             //length = (short) Marshal.SizeOf(rddynamic);
 
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_rddynamic2(_handle, axis, length, rddynamic);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_rddynamic2",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/position/cnc_rddynamic2",
+                doc = $"{_docBasePath}/position/cnc_rddynamic2",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rddynamic2 = new {axis, length}},

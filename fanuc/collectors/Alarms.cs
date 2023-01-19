@@ -6,13 +6,14 @@ namespace l99.driver.fanuc.collectors
     // ReSharper disable once UnusedType.Global
     public class Alarms : FanucMultiStrategyCollector
     {
-        public Alarms(FanucMultiStrategy strategy) : base(strategy)
+        public Alarms(FanucMultiStrategy strategy, object configuration) : base(strategy, configuration)
         {
-            
+            if (!Configuration.ContainsKey("warned"))
+            {
+                Configuration.Add("warned", false);
+            }
         }
 
-        private bool _warned;
-        
         public override async Task InitPathsAsync()
         {
             await Strategy.Apply(typeof(fanuc.veneers.AlarmsSeries), "alarms");
@@ -24,10 +25,10 @@ namespace l99.driver.fanuc.collectors
 
             if (obsFocasSupport == null)
             {
-                if (!_warned)
+                if (!Configuration["warned"])
                 {
                     Logger.Warn($"[{Strategy.Machine.Id}] Machine info observation is required to correctly evaluate alarms.");
-                    _warned = true;
+                    Configuration["warned"] = true;
                 }
                 
                 await Strategy.SetNativeKeyed($"alarms", 
@@ -48,16 +49,24 @@ namespace l99.driver.fanuc.collectors
                 }
             }
 
-            var obsAlarms = await Strategy.Peel("alarms", 
-                Strategy.GetKeyed($"alarms"),
-                currentPath,
-                axis,
-                obsFocasSupport,
-                Strategy.GetKeyed($"alarms+last"));
+            var obsAlarms = await Strategy.Peel("alarms",
+                new dynamic[]
+                {
+                    Strategy.GetKeyed($"alarms"),
+                    Strategy.GetKeyed($"alarms+last")
+                },
+                new dynamic[]
+                {
+                    currentPath,
+                    axis,
+                    obsFocasSupport
+                });
 
+            // save native alarm data structure for comparison on next iteration
             Strategy.SetKeyed($"alarms+last", 
                 Strategy.GetKeyed($"alarms"));
             
+            // track the resulting data structure
             Strategy.SetKeyed($"obs+alarms", 
                 obsAlarms.veneer.LastChangedValue.alarms);
         }

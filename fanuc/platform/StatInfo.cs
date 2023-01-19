@@ -12,16 +12,17 @@ namespace l99.driver.fanuc
         {
             Focas.ODBST statinfo = new Focas.ODBST();
 
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_statinfo(_handle, statinfo);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_statinfo",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/misc/cnc_statinfo",
+                doc = $"{_docBasePath}/misc/cnc_statinfo",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_statinfo = new { }},

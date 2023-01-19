@@ -36,7 +36,7 @@ namespace l99.driver.fanuc.strategies
 
         private StrategyStateEnum _strategyState = StrategyStateEnum.Unknown;
 
-        protected FanucExtendedStrategy(Machine machine, object cfg) : base(machine, cfg)
+        protected FanucExtendedStrategy(Machine machine, object configuration) : base(machine, configuration)
         {
             _sweepRemaining = SweepMs;
             _propertyBag = new Dictionary<string, dynamic>();
@@ -110,58 +110,63 @@ namespace l99.driver.fanuc.strategies
 
         private async Task<dynamic?> Set(string propertyBagKey, dynamic? value)
         {
-            return await SetInternal(propertyBagKey, value, false, false);
+            return await SetInternal(propertyBagKey, value, false);
         }
         
         public async Task<dynamic?> SetKeyed(string propertyBagKey, dynamic? value)
         {
-            return await SetInternal($"{propertyBagKey}+{GetCurrentPropertyBagKey()}", value, false, false);
+            return await SetInternal($"{propertyBagKey}+{GetCurrentPropertyBagKey()}", value, false);
         }
         
         public async Task<dynamic?> SetNative(string propertyBagKey, dynamic? value)
         {
-            return await SetInternal(propertyBagKey, value, true, false);
+            return await SetInternal(propertyBagKey, value, true);
+        }
+        
+        public async Task<dynamic?> SetNativeNull(string propertyBagKey)
+        { 
+            return await SetInternal(propertyBagKey, 
+                new { @null = true, success = true, method = "null", invocationMs = 0L, rc = 0 }, 
+                true);
         }
         
         public async Task<dynamic?> SetNativeKeyed(string propertyBagKey, dynamic? value)
         {
-            return await SetInternal($"{propertyBagKey}+{GetCurrentPropertyBagKey()}", value, true, false);
+            return await SetInternal($"{propertyBagKey}+{GetCurrentPropertyBagKey()}", value, true);
         }
-
-        private async Task<dynamic?> SetNativeAndPeel(string propertyBagKey, dynamic? value)
+        
+        public async Task<dynamic?> SetNativeNullKeyed(string propertyBagKey)
         {
-            return await SetInternal(propertyBagKey, value, true, true);
+            return await SetInternal($"{propertyBagKey}+{GetCurrentPropertyBagKey()}", 
+                new { @null = true, success = true, method = "null", invocationMs = 0L, rc = 0 }, 
+                true);
         }
 
-        private async Task<dynamic?> SetInternal(string propertyBagKey, dynamic? value, bool nativeResponse = true, bool peel = true)
+        private async Task<dynamic?> SetInternal(string propertyBagKey, dynamic? value, bool nativeResponse = true)
         {
             if (_propertyBag.ContainsKey(propertyBagKey))
             {
                 _propertyBag[propertyBagKey] = value!;
                 if (nativeResponse)
-                    return await HandleNativeResponsePropertyBagAssignment(propertyBagKey, value, peel);
+                    return await HandleNativeResponsePropertyBagAssignment(propertyBagKey, value);
             }
             else
             {
                 _propertyBag.Add(propertyBagKey, value);
                 if (nativeResponse)
-                    return await HandleNativeResponsePropertyBagAssignment(propertyBagKey, value, peel);
+                    return await HandleNativeResponsePropertyBagAssignment(propertyBagKey, value);
             }
 
             return value;
         }
         
-        private async Task<dynamic?> HandleNativeResponsePropertyBagAssignment(string key, dynamic value, bool peel)
+        private async Task<dynamic?> HandleNativeResponsePropertyBagAssignment(string key, dynamic value)
         {
             CatchFocasPerformance(value);
-
-            if (!peel)
-                return value;
-
-            return await this.PeelInternal(key, value);
+            return value;
         }
 
-        private async Task<dynamic?> PeelInternal(string veneerKey, dynamic input, params dynamic?[] additionalInputs)
+        private async Task<dynamic?> PeelInternal(string veneerKey, dynamic[] nativeInputs, dynamic[] additionalInputs)
         {
             switch (_currentCollectSegment)
             {
@@ -169,43 +174,39 @@ namespace l99.driver.fanuc.strategies
                     break;
                 
                 case SegmentEnum.Begin:
-                    return await Machine.PeelVeneerAsync(veneerKey, input, additionalInputs);
+                    return await Machine.PeelVeneerAsync(veneerKey, nativeInputs, additionalInputs);
                 
                 case SegmentEnum.Root:
-                    return await Machine.PeelVeneerAsync(veneerKey, input, additionalInputs);
+                    return await Machine.PeelVeneerAsync(veneerKey, nativeInputs, additionalInputs);
 
                 case SegmentEnum.Path:
-                    return await Machine.PeelAcrossVeneerAsync(Get("current_path"),veneerKey, input, additionalInputs);
+                    return await Machine.PeelAcrossVeneerAsync(Get("current_path"),veneerKey, nativeInputs, additionalInputs);
 
                 case SegmentEnum.Axis:
-                    return await Machine.PeelAcrossVeneerAsync(Get("axis_split"), veneerKey, input, additionalInputs);
+                    return await Machine.PeelAcrossVeneerAsync(Get("axis_split"), veneerKey, nativeInputs, additionalInputs);
 
                 case SegmentEnum.Spindle:
-                    return await Machine.PeelAcrossVeneerAsync(Get("spindle_split"), veneerKey, input, additionalInputs);
+                    return await Machine.PeelAcrossVeneerAsync(Get("spindle_split"), veneerKey, nativeInputs, additionalInputs);
 
                 case SegmentEnum.End:
-                    return await Machine.PeelVeneerAsync(veneerKey, input, additionalInputs);
+                    return await Machine.PeelVeneerAsync(veneerKey, nativeInputs, additionalInputs);
             }
 
             return null;
         }
-
-        public async Task<dynamic?> Peel(string veneerKey, params dynamic[] inputs)
+        
+        public async Task<dynamic?> Peel(string veneerKey, dynamic[] nativeInputs, dynamic[] additionalInputs)
         {
-            if (inputs.Length == 0)
+            if (nativeInputs.Length == 0)
             {
                 return null;
             }
-            else if (inputs.Length == 1)
-            {
-                return await PeelInternal(veneerKey, inputs[0]);
-            }
             else
             {
-                return await PeelInternal(veneerKey, inputs[0], inputs.Skip(1).Take(inputs.Length - 1).ToArray());
+                return await PeelInternal(veneerKey, nativeInputs, additionalInputs);
             }
         }
-
+        
         public async Task Apply(string veneerType, string veneerName, bool isCompound = false, bool isInternal = false)
         {
             Type t = Type.GetType($"l99.driver.fanuc.veneers.{veneerType}")!;
@@ -507,8 +508,17 @@ namespace l99.driver.fanuc.strategies
                     _currentInitSegment = SegmentEnum.Root;
                     _currentCollectSegment = SegmentEnum.Root;
                     
-                    await SetNativeAndPeel("paths", 
+                    await SetNative("paths", 
                         await Platform.GetPathAsync());
+                    await Peel("paths",
+                        new dynamic[]
+                        {
+                            Get("paths")
+                        },
+                        new dynamic[]
+                        {
+
+                        });
 
                     await InitUserRootAsync();
                     await CollectRootAsync();
@@ -535,7 +545,14 @@ namespace l99.driver.fanuc.strategies
                         await SetNativeKeyed($"axis_names",
                             await Platform.RdAxisNameAsync());
                         await Peel("axis_names",
-                            GetKeyed($"axis_names"));
+                            new dynamic[]
+                            {
+                                GetKeyed($"axis_names")
+                            },
+                            new dynamic[]
+                            {
+                                
+                            });
 
                         var fieldsAxes = GetKeyed($"axis_names")!
                             .response.cnc_rdaxisname.axisname.GetType().GetFields();
@@ -554,8 +571,15 @@ namespace l99.driver.fanuc.strategies
 
                         await SetNativeKeyed($"spindle_names",
                             await Platform.RdSpdlNameAsync());
-                        await SetNativeAndPeel("spindle_names", 
-                            GetKeyed($"spindle_names"));
+                        await Peel("spindle_names", 
+                            new dynamic[]
+                            {
+                                GetKeyed($"spindle_names")
+                            },
+                            new dynamic[]
+                            {
+                                
+                            });
                         
                         var fieldsSpindles = GetKeyed($"spindle_names")!
                             .response.cnc_rdspdlname.spdlname.GetType().GetFields();
@@ -624,7 +648,7 @@ namespace l99.driver.fanuc.strategies
 
             return null;
         }
-        
+
         /// <summary>
         /// Available Data:
         ///     Connect => get("connect") (after base is called)
@@ -632,10 +656,20 @@ namespace l99.driver.fanuc.strategies
         protected virtual async Task<bool> CollectBeginAsync()
         {
             _sweepWatch.Restart();
-            
-            await SetNativeAndPeel("connect", await Platform.ConnectAsync());
 
-            return Get("connect")!.success;
+            await SetNative("connect",
+                await Platform.ConnectAsync());
+            await Peel("connect",
+                new dynamic[]
+                {
+                    Get("connect")
+                },
+                new dynamic[]
+                {
+
+                });
+
+        return Get("connect")!.success;
         }
         
         /// <summary>
@@ -696,10 +730,18 @@ namespace l99.driver.fanuc.strategies
         {
             await SetNative("disconnect", await Platform.DisconnectAsync());
 
-            await Machine.PeelVeneerAsync("focas_perf", new
-            {
-                sweepMs = _sweepWatch.ElapsedMilliseconds, focas_invocations = _focasInvocations
-            });
+            await Machine.PeelVeneerAsync("focas_perf", 
+                new dynamic[]
+                {
+                    
+                },
+                new dynamic[]
+                {
+                    new {
+                        sweepMs = _sweepWatch.ElapsedMilliseconds, 
+                        focas_invocations = _focasInvocations
+                    }
+                });
                     
             //TODO: make veneer
             LastSuccess = Get("connect").success;

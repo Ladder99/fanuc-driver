@@ -13,16 +13,17 @@ namespace l99.driver.fanuc
             short data_num_out = data_num;
             Focas.ODBAXISNAME axisname = new Focas.ODBAXISNAME();
 
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_rdaxisname(_handle, ref data_num_out, axisname);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_rdaxisname",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/position/cnc_rdaxisname",
+                doc = $"{_docBasePath}/position/cnc_rdaxisname",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdaxisname = new {data_num}},

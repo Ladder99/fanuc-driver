@@ -7,7 +7,7 @@ namespace l99.driver.fanuc.strategies
     // ReSharper disable once ClassNeverInstantiated.Global
     public class FanucMultiStrategy : FanucExtendedStrategy
     {
-        public FanucMultiStrategy(Machine machine, object cfg) : base(machine, cfg)
+        public FanucMultiStrategy(Machine machine, object configuration) : base(machine, configuration)
         {
         }
 
@@ -21,7 +21,14 @@ namespace l99.driver.fanuc.strategies
                 var type = Type.GetType(collectorType);
                 try
                 {
-                    var collector = (FanucMultiStrategyCollector) Activator.CreateInstance(type, new object[] {this});
+                    var collector = (FanucMultiStrategyCollector) Activator
+                        .CreateInstance(type, new object[]
+                        {
+                            this,
+                            Machine.Configuration.collectors.ContainsKey(collectorType) 
+                                ? Machine.Configuration.collectors[collectorType]
+                                : new Dictionary<object, object>()
+                        });
                     _collectors.Add(collector);
                 }
                 catch

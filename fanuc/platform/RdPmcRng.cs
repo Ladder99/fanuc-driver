@@ -36,16 +36,17 @@ namespace l99.driver.fanuc
                     break;
             }
 
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.pmc_rdpmcrng(_handle, adr_type, data_type, s_number, e_number, length, buf);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "pmc_rdpmcrng",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/pmc/pmc_rdpmcrng",
+                doc = $"{_docBasePath}/pmc/pmc_rdpmcrng",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {pmc_rdpmcrng = new {adr_type, data_type, s_number, e_number, length, IODBPMC_type}},

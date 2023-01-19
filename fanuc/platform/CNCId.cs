@@ -12,16 +12,17 @@ namespace l99.driver.fanuc
         {
             uint[] cncid = new uint[4];
 
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_rdcncid(_handle, cncid);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_rdcncid",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/misc/cnc_rdcncid",
+                doc = $"{_docBasePath}/misc/cnc_rdcncid",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdcncid = new { }},

@@ -50,7 +50,7 @@ namespace l99.driver.fanuc
 
             //Console.WriteLine(param.GetType().FullName);
             
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_rdparam(_handle, number, axis, length, param);
             });
@@ -59,9 +59,10 @@ namespace l99.driver.fanuc
             
             var nr = new
             {
+                @null = false,
                 method = "cnc_rdparam",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/ncdata/cnc_rdparam",
+                doc = $"{_docBasePath}/ncdata/cnc_rdparam",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdparam = new {number, axis, length, IODBPSD_type}},

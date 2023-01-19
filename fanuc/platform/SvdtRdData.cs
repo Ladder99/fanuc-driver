@@ -14,16 +14,17 @@ namespace l99.driver.fanuc
             int length_out = length;
             object data = new object();
             
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_svdtrddata(_handle, out stat, ref length_out, data);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_svdtrddata",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/servo/cnc_svdtrddata",
+                doc = $"{_docBasePath}/servo/cnc_svdtrddata",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_svdtrddata = new {length}},

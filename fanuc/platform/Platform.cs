@@ -23,7 +23,7 @@ namespace l99.driver.fanuc
             public long ElapsedMilliseconds;
         }
         
-        private Func<Func<Focas.focas_ret>, NativeDispatchReturn> nativeDispatch = (nativeCallWrapper) =>
+        private readonly Func<Func<Focas.focas_ret>, NativeDispatchReturn> _nativeDispatch = (nativeCallWrapper) =>
         {
             Focas.focas_ret rc = Focas.focas_ret.EW_OK;
             Stopwatch sw = new Stopwatch();

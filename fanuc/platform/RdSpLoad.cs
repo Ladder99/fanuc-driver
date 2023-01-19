@@ -12,16 +12,17 @@ namespace l99.driver.fanuc
         {
             Focas.ODBSPN serial_spindle = new Focas.ODBSPN();
 
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_rdspload(_handle, sp_no, serial_spindle);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_rdspload",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/position/cnc_rdspload",
+                doc = $"{_docBasePath}/position/cnc_rdspload",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdspload = new {sp_no}},

@@ -13,16 +13,17 @@ namespace l99.driver.fanuc
             Focas.PRGPNT pact = new Focas.PRGPNT();
             Focas.PRGPNT pnext = new Focas.PRGPNT();
 
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_rdexecpt(_handle, pact, pnext);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_rdexecpt",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/program/cnc_rdexecpt",
+                doc = $"{_docBasePath}/program/cnc_rdexecpt",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdexecpt = new { }},

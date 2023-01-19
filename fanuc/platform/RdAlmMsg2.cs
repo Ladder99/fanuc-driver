@@ -13,16 +13,17 @@ namespace l99.driver.fanuc
             short num_out = num;
             Focas.ODBALMMSG2 almmsg = new Focas.ODBALMMSG2();
 
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_rdalmmsg2(_handle, type, ref num_out, almmsg);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_rdalmmsg2",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/misc/cnc_rdalmmsg2",
+                doc = $"{_docBasePath}/misc/cnc_rdalmmsg2",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdalmmsg2 = new {type, num}},

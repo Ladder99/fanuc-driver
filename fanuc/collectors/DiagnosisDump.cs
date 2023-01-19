@@ -6,7 +6,7 @@ namespace l99.driver.fanuc.collectors
     // ReSharper disable once UnusedType.Global
     public class DiagnosisDump : FanucMultiStrategyCollector
     {
-        public DiagnosisDump(FanucMultiStrategy strategy) : base(strategy)
+        public DiagnosisDump(FanucMultiStrategy strategy, object configuration) : base(strategy, configuration)
         {
             
         }

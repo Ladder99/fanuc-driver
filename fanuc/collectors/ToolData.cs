@@ -6,7 +6,7 @@ namespace l99.driver.fanuc.collectors
     // ReSharper disable once UnusedType.Global
     public class ToolData : FanucMultiStrategyCollector
     {
-        public ToolData(FanucMultiStrategy strategy) : base(strategy)
+        public ToolData(FanucMultiStrategy strategy, object configuration) : base(strategy, configuration)
         {
             
         }
@@ -19,10 +19,17 @@ namespace l99.driver.fanuc.collectors
         public override async Task CollectForEachPathAsync(short currentPath, string[] axis, string[] spindle, dynamic pathMarker)
         {
             await Strategy.Peel("tool",
-                await Strategy.SetNativeKeyed($"modal_t", 
-                    await Strategy.Platform.ModalAsync(108,0,3)),
-                await Strategy.SetNativeKeyed($"toolnum", 
-                    await Strategy.Platform.ToolNumAsync()));
+                new dynamic[]
+                {
+                    await Strategy.SetNativeKeyed($"modal_t", 
+                        await Strategy.Platform.ModalAsync(108,0,3)),
+                    await Strategy.SetNativeKeyed($"toolnum", 
+                        await Strategy.Platform.ToolNumAsync())
+                },
+                new dynamic[]
+                {
+                    
+                });
         }
     }
 }

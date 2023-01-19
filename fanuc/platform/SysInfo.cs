@@ -12,16 +12,17 @@ namespace l99.driver.fanuc
         {
             Focas.ODBSYS sysinfo = new Focas.ODBSYS();
 
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_sysinfo(_handle, sysinfo);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_sysinfo",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/misc/cnc_sysinfo",
+                doc = $"{_docBasePath}/misc/cnc_sysinfo",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_sysinfo = new { }},

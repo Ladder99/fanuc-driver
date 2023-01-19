@@ -12,16 +12,17 @@ namespace l99.driver.fanuc
         {
             char[] path_name = new char[256];
 
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_exeprgname2(_handle, path_name);
             });
 
             var nr= new
             {
+                @null = false,
                 method = "cnc_exeprgname2",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/program/cnc_exeprgname2",
+                doc = $"{_docBasePath}/program/cnc_exeprgname2",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_exeprgname2 = new { }},

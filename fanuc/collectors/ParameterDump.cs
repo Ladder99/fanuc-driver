@@ -6,7 +6,7 @@ namespace l99.driver.fanuc.collectors
     // ReSharper disable once UnusedType.Global
     public class ParameterDump : FanucMultiStrategyCollector
     {
-        public ParameterDump(FanucMultiStrategy strategy) : base(strategy)
+        public ParameterDump(FanucMultiStrategy strategy, object configuration) : base(strategy, configuration)
         {
             
         }

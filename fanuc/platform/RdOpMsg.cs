@@ -72,16 +72,17 @@ namespace l99.driver.fanuc
         {
             Focas.OPMSG opmsg = new Focas.OPMSG();
 
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_rdopmsg(_handle, type, length, opmsg);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_rdopmsg",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/misc/cnc_rdopmsg",
+                doc = $"{_docBasePath}/misc/cnc_rdopmsg",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdopmsg = new {type, length}},

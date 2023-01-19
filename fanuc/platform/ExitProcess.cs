@@ -18,6 +18,7 @@ namespace l99.driver.fanuc
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_exitprocess",
                 invocationMs = ndr.ElapsedMilliseconds,
                 doc = "",
@@ -33,6 +34,7 @@ namespace l99.driver.fanuc
 #else
             var nr = new
             {
+                @null = false,
                 method = "cnc_exitprocess",
                 invocationMs = -1,
                 doc = "",

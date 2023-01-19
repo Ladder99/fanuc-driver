@@ -8,45 +8,22 @@ namespace l99.driver.fanuc.veneers
     {
         public ProductionData(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
-            lastChangedValue = new
-            {
-                program = new
-                {
-                    running = new {
-                        name = string.Empty,
-                        number = -1,
-                        size_b = -1,
-                        comment = string.Empty,
-                        modified = -1
-                    },
-                    main = new {
-                        name = string.Empty,
-                        number = -1,
-                        size_b = -1,
-                        comment = string.Empty,
-                        modified = -1
-                    }
-                },
-                pieces = new
-                {
-                    produced = -1,
-                    produced_life = -1,
-                    remaining = -1
-                },
-                timers = new
-                {
-                    cycle_time_ms = -1
-                }
-            };
+            
         }
         
-        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
+        protected override async Task<dynamic> AnyAsync(dynamic[] nativeInputs, dynamic[] additionalInputs)
         {
-            if (input.success && additionalInputs.All(o => o.success == true))
+            if (nativeInputs.All(o => o.success == true))
             {
-                string executing_program = new string(additionalInputs[7]!.response.cnc_exeprgname.exeprg.name).AsAscii();
-                string executing_program_2 = new string(additionalInputs[8]!.response.cnc_exeprgname2.path_name).AsAscii();
-                int executing_sequence = additionalInputs[9]!.response.cnc_rdseqnum.seqnum.data;
+                string executing_program = additionalInputs[0]
+                    ? new string(nativeInputs[8]!.response.cnc_exeprgname.exeprg.name).AsAscii()
+                    : "UNAVAILABLE";
+                string executing_program_2 = additionalInputs[0]
+                    ? new string(nativeInputs[9]!.response.cnc_exeprgname2.path_name).AsAscii()
+                    : "UNAVAILABLE";
+                int executing_sequence = additionalInputs[0]
+                    ? nativeInputs[10]!.response.cnc_rdseqnum.seqnum.data
+                    : -1;
                 
                 string modifiedCurrent = "";
                 string modifiedSelected = "";
@@ -54,11 +31,11 @@ namespace l99.driver.fanuc.veneers
                 try
                 {
                     modifiedCurrent = new DateTimeOffset(new DateTime(
-                            additionalInputs[0]!.response.cnc_rdprogdir3.buf.dir1.mdate.year,
-                            additionalInputs[0]!.response.cnc_rdprogdir3.buf.dir1.mdate.month,
-                            additionalInputs[0]!.response.cnc_rdprogdir3.buf.dir1.mdate.day,
-                            additionalInputs[0]!.response.cnc_rdprogdir3.buf.dir1.mdate.hour,
-                            additionalInputs[0]!.response.cnc_rdprogdir3.buf.dir1.mdate.minute, 0))
+                            nativeInputs[1]!.response.cnc_rdprogdir3.buf.dir1.mdate.year,
+                            nativeInputs[1]!.response.cnc_rdprogdir3.buf.dir1.mdate.month,
+                            nativeInputs[1]!.response.cnc_rdprogdir3.buf.dir1.mdate.day,
+                            nativeInputs[1]!.response.cnc_rdprogdir3.buf.dir1.mdate.hour,
+                            nativeInputs[1]!.response.cnc_rdprogdir3.buf.dir1.mdate.minute, 0))
                         .ToString("o", CultureInfo.InvariantCulture);
                 }
                 catch
@@ -69,11 +46,11 @@ namespace l99.driver.fanuc.veneers
                 try
                 {
                     modifiedSelected = new DateTimeOffset(new DateTime(
-                            additionalInputs[1]!.response.cnc_rdprogdir3.buf.dir1.mdate.year,
-                            additionalInputs[1]!.response.cnc_rdprogdir3.buf.dir1.mdate.month,
-                            additionalInputs[1]!.response.cnc_rdprogdir3.buf.dir1.mdate.day,
-                            additionalInputs[1]!.response.cnc_rdprogdir3.buf.dir1.mdate.hour,
-                            additionalInputs[1]!.response.cnc_rdprogdir3.buf.dir1.mdate.minute, 0))
+                            nativeInputs[2]!.response.cnc_rdprogdir3.buf.dir1.mdate.year,
+                            nativeInputs[2]!.response.cnc_rdprogdir3.buf.dir1.mdate.month,
+                            nativeInputs[2]!.response.cnc_rdprogdir3.buf.dir1.mdate.day,
+                            nativeInputs[2]!.response.cnc_rdprogdir3.buf.dir1.mdate.hour,
+                            nativeInputs[2]!.response.cnc_rdprogdir3.buf.dir1.mdate.minute, 0))
                         .ToString("o", CultureInfo.InvariantCulture);
                 }
                 catch
@@ -90,41 +67,41 @@ namespace l99.driver.fanuc.veneers
                             sequence = executing_sequence
                         },
                         current = new {
-                            name = $"O{input.response.cnc_rdprgnum.prgnum.data}",
-                            number = input.response.cnc_rdprgnum.prgnum.data,
-                            size_b = additionalInputs[0]!.response.cnc_rdprogdir3.buf.dir1.length,
-                            comment = additionalInputs[0]!.response.cnc_rdprogdir3.buf.dir1.comment,
+                            name = $"O{nativeInputs[0].response.cnc_rdprgnum.prgnum.data}",
+                            number = nativeInputs[0].response.cnc_rdprgnum.prgnum.data,
+                            size_b = nativeInputs[1]!.response.cnc_rdprogdir3.buf.dir1.length,
+                            comment = nativeInputs[1]!.response.cnc_rdprogdir3.buf.dir1.comment,
                             modified = modifiedCurrent
                         },
                         selected = new {
-                            name = $"O{input.response.cnc_rdprgnum.prgnum.mdata}",
-                            number = input.response.cnc_rdprgnum.prgnum.mdata,
-                            size_b = additionalInputs[1]!.response.cnc_rdprogdir3.buf.dir1.length,
-                            comment = additionalInputs[1]!.response.cnc_rdprogdir3.buf.dir1.comment,
+                            name = $"O{nativeInputs[0].response.cnc_rdprgnum.prgnum.mdata}",
+                            number = nativeInputs[0].response.cnc_rdprgnum.prgnum.mdata,
+                            size_b = nativeInputs[2]!.response.cnc_rdprogdir3.buf.dir1.length,
+                            comment = nativeInputs[2]!.response.cnc_rdprogdir3.buf.dir1.comment,
                             modified = modifiedSelected
                         }
                     },
                     pieces = new {
-                        produced = additionalInputs[2]!.response.cnc_rdparam.param.data.ldata,
-                        produced_life = additionalInputs[3]!.response.cnc_rdparam.param.data.ldata,
-                        remaining = additionalInputs[4]!.response.cnc_rdparam.param.data.ldata
+                        produced = nativeInputs[3]!.response.cnc_rdparam.param.data.ldata,
+                        produced_life = nativeInputs[4]!.response.cnc_rdparam.param.data.ldata,
+                        remaining = nativeInputs[5]!.response.cnc_rdparam.param.data.ldata
                     },
                     timers = new {
-                        cycle_time_ms = (additionalInputs[5]!.response.cnc_rdparam.param.data.ldata * 60000) +
-                                        additionalInputs[6]!.response.cnc_rdparam.param.data.ldata
+                        cycle_time_ms = (nativeInputs[6]!.response.cnc_rdparam.param.data.ldata * 60000) +
+                                        nativeInputs[7]!.response.cnc_rdparam.param.data.ldata
                     }
                 };
 
-                await OnDataArrivedAsync(input, currentValue);
+                await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 
-                if (currentValue.IsDifferentString((object)lastChangedValue))
+                if (currentValue.IsDifferentString((object)LastChangedValue))
                 {
-                    await OnDataChangedAsync(input, currentValue);
+                    await OnDataChangedAsync(nativeInputs, additionalInputs, currentValue);
                 }
             }
             else
             {
-                await OnHandleErrorAsync(input);
+                await OnHandleErrorAsync(nativeInputs, additionalInputs);
             }
 
             return new { veneer = this };

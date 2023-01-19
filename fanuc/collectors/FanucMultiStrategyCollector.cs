@@ -7,11 +7,18 @@ namespace l99.driver.fanuc.collectors
     {
         protected readonly ILogger Logger;
         protected readonly FanucMultiStrategy Strategy;
+        protected dynamic Configuration;
 
-        protected FanucMultiStrategyCollector(FanucMultiStrategy strategy)
+        protected FanucMultiStrategyCollector(FanucMultiStrategy strategy, dynamic configuration)
         {
             Logger = LogManager.GetLogger(GetType().FullName);
             Strategy = strategy;
+            Configuration = configuration;
+
+            if (!Configuration.ContainsKey("enabled"))
+            {
+                Configuration.Add("enabled", true);
+            }
         }
 
         public virtual async Task InitRootAsync()

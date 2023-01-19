@@ -8,13 +8,13 @@ namespace l99.driver.fanuc.veneers
     {
         public CNCId(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
-            lastChangedValue = new
+            LastChangedValue = new
             {
                 cncid = string.Empty
             };
         }
         
-        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
+        protected override async Task<dynamic> AnyAsync(dynamic[] nativeInputs, dynamic[] additionalInputs)
         {
             if (input.success)
             {
@@ -25,7 +25,7 @@ namespace l99.driver.fanuc.veneers
                 
                 await OnDataArrivedAsync(input, current_value);
                 
-                if (!current_value.Equals(lastChangedValue))
+                if (!current_value.Equals(LastChangedValue))
                 {
                     await OnDataChangedAsync(input, current_value);
                 }

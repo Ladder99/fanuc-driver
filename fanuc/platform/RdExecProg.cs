@@ -16,7 +16,7 @@ namespace l99.driver.fanuc
             short blknum = 0;
             ushort length_out = (ushort) data.Length;
 
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_rdexecprog(_handle, ref length_out, out blknum, (object) data);
             });
@@ -38,9 +38,10 @@ namespace l99.driver.fanuc
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_rdexecprog",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/program/cnc_rdexecprog",
+                doc = $"{_docBasePath}/program/cnc_rdexecprog",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdexecprog = new {length}},

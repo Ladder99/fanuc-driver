@@ -6,7 +6,7 @@ namespace l99.driver.fanuc.collectors
     // ReSharper disable once UnusedType.Global
     public class MachineInfo : FanucMultiStrategyCollector
     {
-        public MachineInfo(FanucMultiStrategy strategy) : base(strategy)
+        public MachineInfo(FanucMultiStrategy strategy, object configuration) : base(strategy, configuration)
         {
             
         }
@@ -23,14 +23,23 @@ namespace l99.driver.fanuc.collectors
             //if (strategy.HasKeyed($"{this.GetType().Name}"))
             //    return;
 
-            await Strategy.SetKeyed($"{this.GetType().Name}", true);
+            // TODO: is this required
+            //await Strategy.SetKeyed($"{GetType().Name}", true);
             
             await Strategy.SetNativeKeyed($"machine",
                 await Strategy.Platform.SysInfoAsync());
             
-            var obsMachine = await Strategy.Peel($"machine", 
-                Strategy.GetKeyed($"machine"));
+            var obsMachine = await Strategy.Peel($"machine",
+                new dynamic[]
+                {
+                    Strategy.GetKeyed($"machine")
+                }, 
+                new dynamic[]
+                {
+                    
+                });
 
+            // save resulting data structure for other collectors to use
             Strategy.SetKeyed($"obs+focas_support", 
                 obsMachine.veneer.LastArrivedValue.focas_support);
         }

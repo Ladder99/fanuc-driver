@@ -73,6 +73,11 @@ machines:
       anonymous: !!bool true
       user:
       password:
+    l99.driver.fanuc.collectors.ProductionData, fanuc:
+      unsupported: !!bool true
+    l99.driver.fanuc.collectors.GCodeData, fanuc:
+      block_counter: !!bool false
+      buffer_length: !!int 512
 
   - id: f_sim_spb_long
     enabled: !!bool false

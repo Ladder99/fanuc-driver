@@ -10,16 +10,17 @@ namespace l99.driver.fanuc
         
         public dynamic Disconnect()
         {
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_freelibhndl(_handle);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_freelibhndl",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/handle/cnc_freelibhndl",
+                doc = $"{_docBasePath}/handle/cnc_freelibhndl",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_freelibhndl = new { }},

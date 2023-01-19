@@ -12,16 +12,17 @@ namespace l99.driver.fanuc
         {
             int prog_bc = 0;
 
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_rdblkcount(_handle, out prog_bc);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_rdblkcount",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/program/cnc_rdblkcount",
+                doc = $"{_docBasePath}/program/cnc_rdblkcount",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdblkcount = new { }},

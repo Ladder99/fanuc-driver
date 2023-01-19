@@ -7,29 +7,31 @@ namespace l99.driver.fanuc.veneers
     {
         public AxisData(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
-            lastChangedValue = new
+            LastChangedValue = new
             {
                 
             };
         }
         
-        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
+        protected override async Task<dynamic> AnyAsync(dynamic[] nativeInputs, dynamic[] additionalInputs)
         {
-            // skip index 7 - power consumption
-            if (additionalInputs.Slice(0,6).All(o => o.success == true))
+            // skip power consumption
+            if (nativeInputs.Slice(0,5).All(o => o.success == true))
             {
-                var currentAxis = input;
-                var axesNames = additionalInputs[0];
-                var axisDynamic = additionalInputs[1]!.response.cnc_rddynamic2.rddynamic;
-                var figures = additionalInputs[2]!.response.cnc_getfigure.dec_fig_in;
-                var axesLoads = additionalInputs[3];
-                var servoTemp = additionalInputs[4];
-                var coderTemp = additionalInputs[5];
-                var power = additionalInputs[6];
-                // ReSharper disable once UnusedVariable
-                var obsFocasSupport = additionalInputs[7];
-                IEnumerable<dynamic> obsAlarms = additionalInputs[8]!;
-                var prevAxisDynamic = additionalInputs[9];
+                var currentAxis = additionalInputs[0];
+                
+                
+                
+                var axesNames = nativeInputs[0];
+                var axisDynamic = nativeInputs[1]!.response.cnc_rddynamic2.rddynamic;
+                var figures = nativeInputs[2]!.response.cnc_getfigure.dec_fig_in;
+                var axesLoads = nativeInputs[3];
+                var servoTemp = nativeInputs[4];
+                var coderTemp = nativeInputs[5];
+                var power = nativeInputs[6];
+                var obsFocasSupport = additionalInputs[1];
+                IEnumerable<dynamic> obsAlarms = additionalInputs[2]!;
+                var prevAxisDynamic = nativeInputs[7];
 
                 var loadFields = axesLoads!.response.cnc_rdsvmeter.loadmeter.GetType().GetFields();
                 var loadValue = loadFields[currentAxis - 1]
@@ -92,16 +94,16 @@ namespace l99.driver.fanuc.veneers
                     motion
                 };
 
-                await OnDataArrivedAsync(input, currentValue);
+                await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
                 
-                if(currentValue.IsDifferentString((object)lastChangedValue))
+                if(currentValue.IsDifferentString((object)LastChangedValue))
                 {
-                    await OnDataChangedAsync(input, currentValue);
+                    await OnDataChangedAsync(nativeInputs, additionalInputs, currentValue);
                 }
             }
             else
             {
-                await OnHandleErrorAsync(input);
+                await OnHandleErrorAsync(nativeInputs, additionalInputs);
             }
 
             return new { veneer = this };

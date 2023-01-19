@@ -14,16 +14,17 @@ namespace l99.driver.fanuc
             uint line_len_in = line_len;
             uint data_len_in = data_len;
 
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_rdprogline(_handle, prog_no, line_no, prog_data, ref line_len, ref data_len);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_rdprogline",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/program/cnc_rdprogline",
+                doc = $"{_docBasePath}/program/cnc_rdprogline",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdprogline = new {prog_no, line_no, line_len_in, data_len_in}},

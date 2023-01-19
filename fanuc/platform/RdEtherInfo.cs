@@ -12,16 +12,17 @@ namespace l99.driver.fanuc
         {
             short type = 0, device = 0;
 
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_rdetherinfo(_handle, out type, out device);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_rdetherinfo",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/misc/cnc_rdetherinfo",
+                doc = $"{_docBasePath}/misc/cnc_rdetherinfo",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdetherinfo = new {}},

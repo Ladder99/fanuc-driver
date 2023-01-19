@@ -10,25 +10,26 @@ namespace l99.driver.fanuc.veneers
 
         }
 
-        protected override async Task<dynamic> FirstAsync(dynamic input, params dynamic?[] additionalInputs)
+        protected override async Task<dynamic> FirstAsync(dynamic[] nativeInputs, dynamic[] additionalInputs)
         {
-            var currentValue = new {input.success};
+            var currentValue = new {nativeInputs[0].success};
             
-            await OnDataArrivedAsync(input, currentValue);
-            await OnDataChangedAsync(input, currentValue);
+            await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
+            await OnDataChangedAsync(nativeInputs, additionalInputs, currentValue);
 
             return new { veneer = this };
         }
 
-        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
+        protected override async Task<dynamic> AnyAsync(dynamic[] nativeInputs, dynamic[] additionalInputs)
         {
-            var currentValue = new {input.success };
+            var currentValue = new {nativeInputs[0].success };
             
-            await OnDataArrivedAsync(input, currentValue);
+            await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
             
-            if (!currentValue.Equals(lastChangedValue))
+            //if (!currentValue.Equals(LastChangedValue))
+            if (currentValue.IsDifferentString((object)LastChangedValue))
             {
-                await OnDataChangedAsync(input, currentValue);
+                await OnDataChangedAsync(nativeInputs, additionalInputs, currentValue);
             }
             
             return new { veneer = this };

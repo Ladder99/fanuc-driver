@@ -12,16 +12,17 @@ namespace l99.driver.fanuc
         {
             Focas.ODBACT actualfeed = new Focas.ODBACT();
 
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_acts(_handle, actualfeed);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_acts",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/position/cnc_acts",
+                doc = $"{_docBasePath}/position/cnc_acts",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_acts = new { }},

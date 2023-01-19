@@ -6,11 +6,9 @@ namespace l99.driver.fanuc.handlers
     // ReSharper disable once UnusedType.Global
     public class FanucOne: Handler
     {
-        private dynamic _cfg;
-        
-        public FanucOne(Machine machine, object cfg) : base(machine, cfg)
+        public FanucOne(Machine machine, object configuation) : base(machine, configuation)
         {
-            _cfg = cfg;
+            
         }
 
         protected override async Task<dynamic?> OnDataArrivalAsync(Veneers veneers, Veneer veneer, dynamic? beforeArrival)
@@ -19,14 +17,14 @@ namespace l99.driver.fanuc.handlers
             {
                 // always allow perf
             }
-            else if (_cfg.handler["change_only"] == true)
+            else if (Machine.Configuration.handler["change_only"] == true)
             {
                 // change only
                 return null;
             }
             else
             {
-                if (_cfg.handler["skip_internal"] == true && veneer.IsInternal == true)
+                if (Machine.Configuration.handler["skip_internal"] == true && veneer.IsInternal == true)
                 {
                     // all data, but skip internals
                     return null;
@@ -62,10 +60,10 @@ namespace l99.driver.fanuc.handlers
 
         protected override async Task<dynamic?> OnDataChangeAsync(Veneers veneers, Veneer veneer, dynamic? beforeChange)
         {
-            if (_cfg.handler["change_only"] == false)
+            if (Machine.Configuration.handler["change_only"] == false)
                 return null;
             
-            if (_cfg.handler["skip_internal"] == true && veneer.IsInternal)
+            if (Machine.Configuration.handler["skip_internal"] == true && veneer.IsInternal)
                 return null;
             
             dynamic payload = new

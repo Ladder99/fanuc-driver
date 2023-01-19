@@ -10,16 +10,17 @@ namespace l99.driver.fanuc
         
         public dynamic SetPath(short path_no)
         {
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_setpath(_handle, path_no);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_setpath",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/misc/cnc_setpath",
+                doc = $"{_docBasePath}/misc/cnc_setpath",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_setpath = new {path_no}},

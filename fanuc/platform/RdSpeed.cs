@@ -12,16 +12,17 @@ namespace l99.driver.fanuc
         {
             Focas.ODBSPEED speed = new Focas.ODBSPEED();
 
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_rdspeed(_handle, type, speed);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_rdspeed",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/position/cnc_rdspeed",
+                doc = $"{_docBasePath}/position/cnc_rdspeed",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdspeed = new {type}},

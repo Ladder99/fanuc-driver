@@ -7,7 +7,7 @@ namespace l99.driver.fanuc.veneers
     {
         public FocasPerf(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
-            lastChangedValue = new
+            LastChangedValue = new
             {
                 sweepMs = -1,
                 invocation = new
@@ -22,26 +22,29 @@ namespace l99.driver.fanuc.veneers
             };
         }
         
-        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
+        protected override async Task<dynamic> AnyAsync(dynamic[] nativeInputs, dynamic[] additionalInputs)
         {
             // TODO : review extension usage
             //  https://stackoverflow.com/questions/69917366/net6-morelinq-call-is-ambiguous-between-system-linq-enumerable-distinctby-a
-            var max = MoreEnumerable
-                .MaxBy(((List<dynamic>)input.focas_invocations), o => o.invocationMs).First();
-            var min =  MoreEnumerable
-                .MinBy(((List<dynamic>)input.focas_invocations), o => o.invocationMs).First();
-            var avg = (int)((List<dynamic>)input.focas_invocations).Average(o => (int)o.invocationMs);
-            var sum = ((List<dynamic>) input.focas_invocations).Sum(o => (int)o.invocationMs);
-            var failedMethods = ((List<dynamic>) input.focas_invocations)
+
+            var max = MoreEnumerable.MaxBy(((List<dynamic>)additionalInputs[0].focas_invocations), o => o.invocationMs).First();
+            
+            var min =  MoreEnumerable.MinBy(((List<dynamic>)additionalInputs[0].focas_invocations), o => o.invocationMs).First();
+            
+            var avg = (int)((List<dynamic>)additionalInputs[0].focas_invocations).Average(o => (int)o.invocationMs);
+            
+            var sum = ((List<dynamic>)additionalInputs[0].focas_invocations).Sum(o => (int)o.invocationMs);
+            
+            var failedMethods = ((List<dynamic>) additionalInputs[0].focas_invocations)
                 .Where(o => o.rc != 0)
                 .Select(o => new { o.method, o.rc });
             
             var currentValue = new
             {
-                sweep_ms = input.sweepMs,
+                sweep_ms = additionalInputs[0].sweepMs,
                 invocation = new
                 {
-                    count = input.focas_invocations.Count,
+                    count = additionalInputs[0].focas_invocations.Count,
                     max_method = max.method,
                     max_ms = max.invocationMs,
                     min_ms = min.invocationMs,
@@ -51,7 +54,7 @@ namespace l99.driver.fanuc.veneers
                 }
             };;
                 
-            await OnDataArrivedAsync(input, currentValue);
+            await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
                 
             return new { veneer = this };
         }

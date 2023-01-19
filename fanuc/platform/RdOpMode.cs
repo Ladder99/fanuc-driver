@@ -12,16 +12,17 @@ namespace l99.driver.fanuc
         {
             short mode = 0; // array?
 
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_rdopmode(_handle, out mode);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_rdopmode",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/Motor/cnc_rdopmode",
+                doc = $"{_docBasePath}/Motor/cnc_rdopmode",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_rdopmode = new { }},

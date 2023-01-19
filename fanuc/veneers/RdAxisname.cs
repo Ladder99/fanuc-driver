@@ -7,22 +7,19 @@ namespace l99.driver.fanuc.veneers
     {
         public RdAxisname(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
         {
-            lastChangedValue = new
-            {
-                axes = new List<dynamic>()
-            };
+           
         }
         
-        protected override async Task<dynamic> AnyAsync(dynamic input, params dynamic?[] additionalInputs)
+        protected override async Task<dynamic> AnyAsync(dynamic[] nativeInputs, dynamic[] additionalInputs)
         {
-            if (input.success)
+            if (nativeInputs.All(o => o.success == true))
             {
                 var tempValue = new List<dynamic>();
                 
-                var fields = input.response.cnc_rdaxisname.axisname.GetType().GetFields();
-                for (int x = 0; x <= input.response.cnc_rdaxisname.data_num - 1; x++)
+                var fields = nativeInputs[0].response.cnc_rdaxisname.axisname.GetType().GetFields();
+                for (int x = 0; x <= nativeInputs[0].response.cnc_rdaxisname.data_num - 1; x++)
                 {
-                    var axis = fields[x].GetValue(input.response.cnc_rdaxisname.axisname);
+                    var axis = fields[x].GetValue(nativeInputs[0].response.cnc_rdaxisname.axisname);
                     tempValue.Add(new
                     {
                         name = ((char)axis.name).AsAscii(), 
@@ -35,14 +32,16 @@ namespace l99.driver.fanuc.veneers
                     axes = tempValue
                 };
                 
-                await OnDataArrivedAsync(input, currentValue);
+                await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
                 
-                if(currentValue.axes.IsDifferentHash((List<dynamic>)lastChangedValue.axes))
-                    await OnDataChangedAsync(input, currentValue);
+                if (currentValue.IsDifferentString((object) LastChangedValue))
+                {
+                    await OnDataChangedAsync(nativeInputs, additionalInputs, currentValue);
+                }
             }
             else
             {
-                await OnHandleErrorAsync(input);
+                await OnHandleErrorAsync(nativeInputs, additionalInputs);
             }
             
             return new { veneer = this };

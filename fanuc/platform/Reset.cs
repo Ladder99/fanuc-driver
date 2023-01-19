@@ -10,16 +10,17 @@ namespace l99.driver.fanuc
         
         public dynamic Reset()
         {
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_reset(_handle);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_reset",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/misc/cnc_reset",
+                doc = $"{_docBasePath}/misc/cnc_reset",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_reset = new { }},

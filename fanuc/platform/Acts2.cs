@@ -12,16 +12,17 @@ namespace l99.driver.fanuc
         {
             Focas.ODBACT2 actualspindle = new Focas.ODBACT2();
 
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_acts2(_handle, sp_no, actualspindle);
             });
             
             var nr = new
             {
+                @null = false,
                 method = "cnc_acts2",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/position/cnc_acts2",
+                doc = $"{_docBasePath}/position/cnc_acts2",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_acts2 = new {sp_no}},

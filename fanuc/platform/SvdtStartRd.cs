@@ -10,16 +10,17 @@ namespace l99.driver.fanuc
         
         public dynamic SvdtStartRd(short axis)
         {
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            NativeDispatchReturn ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret) Focas.cnc_svdtstartrd(_handle, axis);
             });
 
             var nr = new
             {
+                @null = false,
                 method = "cnc_svdtstartrd",
                 invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{this._docBasePath}/servo/cnc_svdtstartrd",
+                doc = $"{_docBasePath}/servo/cnc_svdtstartrd",
                 success = ndr.RC == Focas.EW_OK,
                 rc = ndr.RC,
                 request = new {cnc_svdtstartrd = new {axis}},
