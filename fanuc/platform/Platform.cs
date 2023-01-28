@@ -1,46 +1,41 @@
 ﻿using System.Diagnostics;
 
-namespace l99.driver.fanuc
+namespace l99.driver.fanuc;
+
+public partial class Platform
 {
-    public partial class Platform
+    private readonly string _docBasePath = "https://docs.ladder99.com/drivers/fanuc-driver/focas-api";
+
+    private readonly Func<Func<Focas.focas_ret>, NativeDispatchReturn> _nativeDispatch = nativeCallWrapper =>
     {
-        private ILogger _logger;
-        
-        private FanucMachine _machine;
-
-        private readonly string _docBasePath = "https://docs.ladder99.com/drivers/fanuc-driver/focas-api";
-
-        public ushort Handle
+        var rc = Focas.focas_ret.EW_OK;
+        var sw = new Stopwatch();
+        sw.Start();
+        rc = nativeCallWrapper();
+        sw.Stop();
+        return new NativeDispatchReturn
         {
-            get => _handle;
-        }
-        
-        private ushort _handle;
-
-        private struct NativeDispatchReturn
-        {
-            public Focas.focas_ret RC;
-            public long ElapsedMilliseconds;
-        }
-        
-        private readonly Func<Func<Focas.focas_ret>, NativeDispatchReturn> _nativeDispatch = (nativeCallWrapper) =>
-        {
-            Focas.focas_ret rc = Focas.focas_ret.EW_OK;
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-            rc = nativeCallWrapper();
-            sw.Stop();
-            return new NativeDispatchReturn
-            {
-                RC = rc,
-                ElapsedMilliseconds = sw.ElapsedMilliseconds
-            };
+            RC = rc,
+            ElapsedMilliseconds = sw.ElapsedMilliseconds
         };
-        
-        public Platform(FanucMachine machine)
-        {
-            _logger = LogManager.GetCurrentClassLogger();
-            _machine = machine;
-        }
+    };
+
+    private ushort _handle;
+    private readonly ILogger _logger;
+
+    private readonly FanucMachine _machine;
+
+    public Platform(FanucMachine machine)
+    {
+        _logger = LogManager.GetCurrentClassLogger();
+        _machine = machine;
+    }
+
+    public ushort Handle => _handle;
+
+    private struct NativeDispatchReturn
+    {
+        public Focas.focas_ret RC;
+        public long ElapsedMilliseconds;
     }
 }

@@ -1,20 +1,20 @@
 // ReSharper disable once CheckNamespace
-namespace l99.driver.fanuc
+
+namespace l99.driver.fanuc;
+
+public class FocasEndpoint
 {
-    public class FocasEndpoint
+    public FocasEndpoint(string focasIpAddress, ushort focasPort, short connectionTimeout)
     {
-        // ReSharper disable once InconsistentNaming
-        public string IPAddress { get; }
-
-        public ushort Port { get; }
-
-        public short ConnectionTimeout { get; }
-
-        public FocasEndpoint(string focasIpAddress, ushort focasPort, short connectionTimeout)
-        {
-            IPAddress = focasIpAddress;
-            Port = focasPort;
-            ConnectionTimeout = connectionTimeout;
-        }
+        IPAddress = focasIpAddress;
+        Port = focasPort;
+        ConnectionTimeout = connectionTimeout;
     }
+
+    // ReSharper disable once InconsistentNaming
+    public string IPAddress { get; }
+
+    public ushort Port { get; }
+
+    public short ConnectionTimeout { get; }
 }

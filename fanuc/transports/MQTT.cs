@@ -11,15 +11,15 @@ namespace l99.driver.fanuc.transports;
 // ReSharper disable once UnusedType.Global
 public class MQTT : Transport
 {
-    private MqttClientOptions _options = null!;
     private IMqttClient _client = null!;
-
-    private string _key = string.Empty;
     private int _connectionFailCount;
     private bool _connectionSkipped;
-    
+
+    private string _key = string.Empty;
+    private MqttClientOptions _options = null!;
+
     private Template _topicTemplate = null!;
-    
+
     public MQTT(Machine machine, object cfg) : base(machine, cfg)
     {
     }
@@ -28,8 +28,9 @@ public class MQTT : Transport
     {
         //TODO: validate config
         _topicTemplate = Template.Parse(Machine.Configuration.transport["topic"]);
-        _key = $"{Machine.Configuration.transport["net"]["type"]}://{Machine.Configuration.transport["net"]["ip"]}:{Machine.Configuration.transport["net"]["port"]}/{Machine.Id}";
-        
+        _key =
+            $"{Machine.Configuration.transport["net"]["type"]}://{Machine.Configuration.transport["net"]["ip"]}:{Machine.Configuration.transport["net"]["port"]}/{Machine.Id}";
+
         var factory = new MqttFactory();
         MqttClientOptionsBuilder builder;
 
@@ -37,14 +38,16 @@ public class MQTT : Transport
         {
             case "ws":
                 builder = new MqttClientOptionsBuilder()
-                    .WithWebSocketServer($"{Machine.Configuration.transport["net"]["ip"]}:{Machine.Configuration.transport["net"]["port"]}");
+                    .WithWebSocketServer(
+                        $"{Machine.Configuration.transport["net"]["ip"]}:{Machine.Configuration.transport["net"]["port"]}");
                 break;
             default:
                 builder = new MqttClientOptionsBuilder()
-                    .WithTcpServer(Machine.Configuration.transport["net"]["ip"], Machine.Configuration.transport["net"]["port"]);
+                    .WithTcpServer(Machine.Configuration.transport["net"]["ip"],
+                        Machine.Configuration.transport["net"]["port"]);
                 break;
         }
-        
+
         if (!Machine.Configuration.transport["anonymous"])
         {
             byte[]? passwordBuffer = null;
@@ -57,11 +60,11 @@ public class MQTT : Transport
 
         _options = builder.Build();
         _client = factory.CreateMqttClient();
-        
+
         await ConnectAsync();
         return null;
     }
-    
+
     public override async Task SendAsync(params dynamic[] parameters)
     {
         var @event = parameters[0];
@@ -70,46 +73,47 @@ public class MQTT : Transport
 
         string topic;
         string payload;
-        bool retained = true;
-        
+        var retained = true;
+
         switch (@event)
         {
             case "DATA_ARRIVE":
-                topic = await _topicTemplate.RenderAsync(new { machine = Machine, veneer}, member => member.Name);
+                topic = await _topicTemplate.RenderAsync(new {machine = Machine, veneer}, member => member.Name);
                 payload = JObject.FromObject(data).ToString(Formatting.None);
                 break;
-            
+
             case "SWEEP_END":
                 topic = $"fanuc/{Machine.Id}/sweep";
                 payload = JObject.FromObject(data).ToString(Formatting.None);
 
                 await ConnectAsync();
-                
+
                 break;
-            
+
             case "INT_MODEL":
                 topic = $"fanuc/{Machine.Id}/$model";
                 payload = data;
                 break;
-            
+
             default:
                 return;
         }
-        
+
         if (_client.IsConnected)
         {
-            Logger.Trace($"{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds()} PUB {payload.Length}b => {topic}\n{payload}");
-            
+            Logger.Trace(
+                $"{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds()} PUB {payload.Length}b => {topic}\n{payload}");
+
             var msg = new MqttApplicationMessageBuilder()
                 .WithRetainFlag(retained)
                 .WithTopic(topic)
                 .WithPayload(payload)
                 .Build();
-            
+
             await _client.PublishAsync(msg, CancellationToken.None);
         }
     }
-    
+
     public override async Task ConnectAsync()
     {
         if (Machine.Configuration.machine.enabled)
@@ -117,14 +121,10 @@ public class MQTT : Transport
             if (!_client.IsConnected)
             {
                 if (_connectionFailCount == 0)
-                {
                     Logger.Info($"[{Machine.Id}] Connecting broker '{_key}': {_options.ChannelOptions}");
-                }
                 else
-                {
                     Logger.Debug($"[{Machine.Id}] Connecting broker '{_key}': {_options.ChannelOptions}");
-                }
-                
+
                 try
                 {
                     await _client.ConnectAsync(_options, CancellationToken.None);
@@ -135,27 +135,19 @@ public class MQTT : Transport
                 catch (MqttCommunicationTimedOutException)
                 {
                     if (_connectionFailCount == 0)
-                    {
                         Logger.Warn($"[{Machine.Id}] Broker connection timeout '{_key}': {_options.ChannelOptions}");
-                    }
                     else
-                    {
                         Logger.Debug($"[{Machine.Id}] Broker connection timeout '{_key}': {_options.ChannelOptions}");
-                    }
 
                     _connectionFailCount++;
                 }
                 catch (MqttCommunicationException)
                 {
                     if (_connectionFailCount == 0)
-                    {
                         Logger.Warn($"[{Machine.Id}] Broker connection failed '{_key}': {_options.ChannelOptions}");
-                    }
                     else
-                    {
                         Logger.Debug($"[{Machine.Id}] Broker connection failed '{_key}': {_options.ChannelOptions}");
-                    }
-                    
+
                     _connectionFailCount++;
                 }
             }
@@ -169,7 +161,7 @@ public class MQTT : Transport
             }
         }
     }
-    
+
     public override async Task OnGenerateIntermediateModelAsync(dynamic model)
     {
         await SendAsync("INT_MODEL", null, model.model);

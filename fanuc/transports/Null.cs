@@ -8,15 +8,14 @@ public class Null : Transport
 {
     // ReSharper disable once NotAccessedField.Local
     private dynamic _model = null!;
-    
+
     public Null(Machine machine, object cfg) : base(machine, cfg)
     {
-        
     }
 
     public override async Task<dynamic?> CreateAsync()
     {
-        return await Task.FromResult(new {});
+        return await Task.FromResult(new { });
     }
 
     public override async Task ConnectAsync()
@@ -35,19 +34,19 @@ public class Null : Transport
             case "DATA_ARRIVE":
 
                 break;
-                
+
             case "SWEEP_END":
-                
+
                 break;
-            
+
             case "INT_MODEL":
 
                 break;
         }
-        
+
         await Task.FromResult(0);
     }
-    
+
     public override async Task OnGenerateIntermediateModelAsync(dynamic model)
     {
         _model = model;

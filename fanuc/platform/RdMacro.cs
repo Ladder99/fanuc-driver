@@ -1,37 +1,35 @@
+namespace l99.driver.fanuc;
 
-namespace l99.driver.fanuc
+public partial class Platform
 {
-    public partial class Platform
+    public async Task<dynamic> RdMacroAsync(short number = 1, short length = 10)
     {
-        public async Task<dynamic> RdMacroAsync(short number = 1, short length = 10)
+        return await Task.FromResult(RdMacro(number, length));
+    }
+
+    public dynamic RdMacro(short number = 1, short length = 10)
+    {
+        var macro = new Focas.ODBM();
+
+        var ndr = _nativeDispatch(() =>
         {
-            return await Task.FromResult(RdMacro(number, length));
-        }
-        
-        public dynamic RdMacro(short number = 1, short length = 10)
+            return (Focas.focas_ret) Focas.cnc_rdmacro(_handle, number, length, macro);
+        });
+
+        var nr = new
         {
-            Focas.ODBM macro = new Focas.ODBM();
+            @null = false,
+            method = "cnc_rdmacro",
+            invocationMs = ndr.ElapsedMilliseconds,
+            doc = $"{_docBasePath}/ncdata/cnc_rdmacro",
+            success = ndr.RC == Focas.EW_OK,
+            rc = ndr.RC,
+            request = new {cnd_rdmacro = new {number, length}},
+            response = new {cnd_rdmacro = new {macro}}
+        };
 
-            NativeDispatchReturn ndr = _nativeDispatch(() =>
-            {
-                return (Focas.focas_ret) Focas.cnc_rdmacro(_handle, number, length, macro);
-            });
+        _logger.Trace($"[{_machine.Id}] Platform invocation result:\n{JObject.FromObject(nr)}");
 
-            var nr = new
-            {
-                @null = false,
-                method = "cnc_rdmacro",
-                invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{_docBasePath}/ncdata/cnc_rdmacro",
-                success = ndr.RC == Focas.EW_OK,
-                rc = ndr.RC,
-                request = new {cnd_rdmacro = new {number, length}},
-                response = new {cnd_rdmacro = new {macro}}
-            };
-            
-            _logger.Trace($"[{_machine.Id}] Platform invocation result:\n{JObject.FromObject(nr).ToString()}");
-
-            return nr;
-        }
+        return nr;
     }
 }

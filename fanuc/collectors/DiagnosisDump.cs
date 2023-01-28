@@ -1,65 +1,63 @@
 ﻿using l99.driver.fanuc.strategies;
 
 // ReSharper disable once CheckNamespace
-namespace l99.driver.fanuc.collectors
+namespace l99.driver.fanuc.collectors;
+
+// ReSharper disable once UnusedType.Global
+public class DiagnosisDump : FanucMultiStrategyCollector
 {
-    // ReSharper disable once UnusedType.Global
-    public class DiagnosisDump : FanucMultiStrategyCollector
+    private bool _dumped;
+
+    public DiagnosisDump(FanucMultiStrategy strategy, object configuration) : base(strategy, configuration)
     {
-        public DiagnosisDump(FanucMultiStrategy strategy, object configuration) : base(strategy, configuration)
+    }
+
+    public override async Task CollectRootAsync()
+    {
+        if (_dumped)
+            return;
+
+        _dumped = true;
+
+        try
         {
-            
-        }
+            Console.WriteLine("*** DIAGNOSIS DUMP ***");
 
-        private bool _dumped = false;
+            var diagnum = await Strategy.Platform.RdDiagNumAsync();
+            var diagnum_inner = diagnum.response.cnc_rddiagnum.diagnum;
 
-        public override async Task CollectRootAsync()
-        {
-            if (_dumped)
-                return;
+            Console.WriteLine($"Minimum: {diagnum_inner.diag_min}, " +
+                              $"Maximum: {diagnum_inner.diag_max}, " +
+                              $"Total:{diagnum_inner.total_no}");
 
-            _dumped = true;
+            var all_done = false;
+            var start = (short) diagnum_inner.diag_min;
 
-            try
+            while (!all_done)
             {
-                Console.WriteLine("*** DIAGNOSIS DUMP ***");
-                
-                var diagnum = await Strategy.Platform.RdDiagNumAsync();
-                var diagnum_inner = diagnum.response.cnc_rddiagnum.diagnum;
-                
-                Console.WriteLine($"Minimum: {diagnum_inner.diag_min}, " +
-                                  $"Maximum: {diagnum_inner.diag_max}, " +
-                                  $"Total:{diagnum_inner.total_no}");
+                var diaginfo = await Strategy.Platform.RdDiagInfoAsync(start, 10);
+                var diaginfo_inner = diaginfo.response.cnc_rddiaginfo.diagif;
 
-                bool all_done = false;
-                short start = (short) diagnum_inner.diag_min;
-                
-                while(!all_done)
+                if (diaginfo_inner.next_no < start)
+                    all_done = true;
+
+                start = diaginfo_inner.next_no;
+
+                var fields = diaginfo_inner.info.GetType().GetFields();
+
+                for (var i = 0; i <= diaginfo_inner.info_no - 1; i++)
                 {
-                    var diaginfo = await Strategy.Platform.RdDiagInfoAsync(start, 10);
-                    var diaginfo_inner = diaginfo.response.cnc_rddiaginfo.diagif;
-                    
-                    if (diaginfo_inner.next_no < start)
-                        all_done = true;
+                    var value = fields[i].GetValue(diaginfo_inner.info);
 
-                    start = diaginfo_inner.next_no;
-                    
-                    var fields = diaginfo_inner.info.GetType().GetFields();
-
-                    for (int i = 0; i <= diaginfo_inner.info_no - 1; i++)
-                    {
-                        var value = fields[i].GetValue(diaginfo_inner.info);
-                        
-                        Console.WriteLine($"Diag: {value.diag_no}, Type: {value.diag_type}");
-                    }
+                    Console.WriteLine($"Diag: {value.diag_no}, Type: {value.diag_type}");
                 }
-                
-                Console.Write("*** *** **** ***");
             }
-            catch (Exception ex)
-            {
-                Logger.Error(ex, $"[{Strategy.Machine.Id}] Diagnosis Dump Failed!");
-            }
+
+            Console.Write("*** *** **** ***");
+        }
+        catch (Exception ex)
+        {
+            Logger.Error(ex, $"[{Strategy.Machine.Id}] Diagnosis Dump Failed!");
         }
     }
 }

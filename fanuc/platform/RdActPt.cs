@@ -1,38 +1,36 @@
+namespace l99.driver.fanuc;
 
-namespace l99.driver.fanuc
+public partial class Platform
 {
-    public partial class Platform
+    public async Task<dynamic> RdActPtAsync()
     {
-        public async Task<dynamic> RdActPtAsync()
+        return await Task.FromResult(RdActPt());
+    }
+
+    public dynamic RdActPt()
+    {
+        var prog_no = 0;
+        var blk_no = 0;
+
+        var ndr = _nativeDispatch(() =>
         {
-            return await Task.FromResult(RdActPt());
-        }
-        
-        public dynamic RdActPt()
+            return (Focas.focas_ret) Focas.cnc_rdactpt(_handle, out prog_no, out blk_no);
+        });
+
+        var nr = new
         {
-            int prog_no = 0;
-            int blk_no = 0;
+            @null = false,
+            method = "cnc_rdactpt",
+            invocationMs = ndr.ElapsedMilliseconds,
+            doc = $"{_docBasePath}/program/cnc_rdactpt",
+            success = ndr.RC == Focas.EW_OK,
+            rc = ndr.RC,
+            request = new {cnc_rdactpt = new { }},
+            response = new {cnc_rdactpt = new {prog_no, blk_no}}
+        };
 
-            NativeDispatchReturn ndr = _nativeDispatch(() =>
-            {
-                return (Focas.focas_ret) Focas.cnc_rdactpt(_handle, out prog_no, out blk_no);
-            });
+        _logger.Trace($"[{_machine.Id}] Platform invocation result:\n{JObject.FromObject(nr)}");
 
-            var nr = new
-            {
-                @null = false,
-                method = "cnc_rdactpt",
-                invocationMs = ndr.ElapsedMilliseconds,
-                doc = $"{_docBasePath}/program/cnc_rdactpt",
-                success = ndr.RC == Focas.EW_OK,
-                rc = ndr.RC,
-                request = new {cnc_rdactpt = new { }},
-                response = new {cnc_rdactpt = new {prog_no, blk_no}}
-            };
-            
-            _logger.Trace($"[{_machine.Id}] Platform invocation result:\n{JObject.FromObject(nr).ToString()}");
-
-            return nr;
-        }
+        return nr;
     }
 }

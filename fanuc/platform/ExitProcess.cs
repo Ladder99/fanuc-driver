@@ -1,15 +1,14 @@
+namespace l99.driver.fanuc;
 
-namespace l99.driver.fanuc
+public partial class Platform
 {
-    public partial class Platform
+    public async Task<dynamic> ExitProcessAsync()
     {
-        public async Task<dynamic> ExitProcessAsync()
-        {
-            return await Task.FromResult(ExitProcess());
-        }
-        
-        public dynamic ExitProcess()
-        {
+        return await Task.FromResult(ExitProcess());
+    }
+
+    public dynamic ExitProcess()
+    {
 #if ARMV7 || LINUX64 || LINUX32
             NativeDispatchReturn ndr = nativeDispatch(() =>
             {
@@ -32,23 +31,22 @@ namespace l99.driver.fanuc
 
             return nr;
 #else
-            var nr = new
-            {
-                @null = false,
-                method = "cnc_exitprocess",
-                invocationMs = -1,
-                doc = "",
-                success = true,
-                Focas.EW_OK,
-                request = new {cnc_exitprocess = new { }},
-                response = new {cnc_exitprocess = new { }}
-            };
-            
-            
-            _logger.Trace($"[{_machine.Id}] Platform invocation result:\n{JObject.FromObject(nr).ToString()}");
+        var nr = new
+        {
+            @null = false,
+            method = "cnc_exitprocess",
+            invocationMs = -1,
+            doc = "",
+            success = true,
+            Focas.EW_OK,
+            request = new {cnc_exitprocess = new { }},
+            response = new {cnc_exitprocess = new { }}
+        };
 
-            return nr;
+
+        _logger.Trace($"[{_machine.Id}] Platform invocation result:\n{JObject.FromObject(nr)}");
+
+        return nr;
 #endif
-        }
     }
 }

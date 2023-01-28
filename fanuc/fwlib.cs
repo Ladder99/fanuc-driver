@@ -1,3 +1,5 @@
+// WARNING: DO NOT AUTO FORMAT THIS FILE
+
 #pragma warning disable CS0618, CS8618
 /*-------------------------------------------------------------------*/
 /* fwlib32.cs                                                        */
