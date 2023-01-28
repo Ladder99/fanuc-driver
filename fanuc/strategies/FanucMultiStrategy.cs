@@ -15,6 +15,30 @@ public class FanucMultiStrategy : FanucExtendedStrategy
 
     public override async Task<dynamic?> CreateAsync()
     {
+        if (!Machine.Configuration.strategy.ContainsKey("exclusions"))
+        {
+            Machine.Configuration.strategy.Add("exclusions", new Dictionary<object, object>());
+        }
+        else if (Machine.Configuration.strategy["exclusions"] == null)
+        {
+            Machine.Configuration.strategy["exclusions"] = new Dictionary<object, object>();
+        }
+        /*else
+        {
+            foreach (var key in Machine.Configuration.strategy["exclusions"].Keys)
+            {
+                if (Machine.Configuration.strategy["exclusions"][key] == null)
+                {
+                    Machine.Configuration.strategy["exclusions"][key] = new List<object>();
+                }
+            }
+        }*/
+        
+        if (!Machine.Configuration.strategy.ContainsKey("collectors"))
+        {
+            Machine.Configuration.strategy.Add("collectors", new List<object>());
+        }
+        
         foreach (var collectorType in Machine.Configuration.strategy["collectors"])
         {
             Logger.Info($"[{Machine.Id}] Creating collector: {collectorType}");
@@ -85,22 +109,59 @@ public class FanucMultiStrategy : FanucExtendedStrategy
         dynamic pathMarker)
     {
         foreach (var collector in _collectors)
-            await collector.CollectForEachPathAsync(currentPath, axis, spindle, pathMarker);
+        {
+            if (Machine.Configuration.strategy["exclusions"].ContainsKey(currentPath.ToString()) &&
+                (Machine.Configuration.strategy["exclusions"][currentPath.ToString()] == null ||
+                 Machine.Configuration.strategy["exclusions"][currentPath.ToString()].Contains("%")))
+            {
+                // entire path is excluded
+            }
+            else
+            {
+                await collector.CollectForEachPathAsync(currentPath, axis, spindle, pathMarker);
+            }
+        }
     }
 
     protected override async Task CollectForEachAxisAsync(short currentPath, short currentAxis, string axisName,
         dynamic axisSplit, dynamic axisMarker)
     {
         foreach (var collector in _collectors)
-            await collector.CollectForEachAxisAsync(currentPath, currentAxis, axisName, axisSplit, axisMarker);
+        {
+            if (Machine.Configuration.strategy["exclusions"].ContainsKey(currentPath.ToString()) &&
+                Machine.Configuration.strategy["exclusions"][currentPath.ToString()] != null &&
+                (Machine.Configuration.strategy["exclusions"][currentPath.ToString()].Contains("%") ||
+                 Machine.Configuration.strategy["exclusions"][currentPath.ToString()].Contains(axisName)))
+            {
+                // entire path or specific axis is excluded
+            }
+            else
+            {
+                await collector.CollectForEachAxisAsync(currentPath, currentAxis, axisName, axisSplit, axisMarker);
+            }
+        }
+            
     }
 
     protected override async Task CollectForEachSpindleAsync(short currentPath, short currentSpindle,
         string spindleName, dynamic spindleSplit, dynamic spindleMarker)
     {
         foreach (var collector in _collectors)
-            await collector.CollectForEachSpindleAsync(currentPath, currentSpindle, spindleName, spindleSplit,
-                spindleMarker);
+        {
+            if (Machine.Configuration.strategy["exclusions"].ContainsKey(currentPath.ToString()) &&
+                Machine.Configuration.strategy["exclusions"][currentPath.ToString()] != null &&
+                (Machine.Configuration.strategy["exclusions"][currentPath.ToString()].Contains("%") ||
+                 Machine.Configuration.strategy["exclusions"][currentPath.ToString()].Contains(spindleName)))
+            {
+                // entire path or specific spindle is excluded
+            }
+            else
+            {
+                await collector.CollectForEachSpindleAsync(currentPath, currentSpindle, spindleName, spindleSplit,
+                    spindleMarker);
+            }
+        }
+            
     }
 
     protected override async Task CollectEndAsync()

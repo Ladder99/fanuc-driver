@@ -50,9 +50,13 @@ machines:
         port: !!int 8193
         timeout_s: !!int 3
     l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
+      exclusions:
+        1: 
+        2: [ X, S ]
+        3: [ % ]
       collectors:
       - l99.driver.fanuc.collectors.MachineInfo, fanuc
-      #- l99.driver.fanuc.collectors.Alarms, fanuc
+      - l99.driver.fanuc.collectors.Alarms, fanuc
       #- l99.driver.fanuc.collectors.Messages, fanuc
       - l99.driver.fanuc.collectors.StateData, fanuc
       - l99.driver.fanuc.collectors.ToolData, fanuc
