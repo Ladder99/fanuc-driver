@@ -7,7 +7,7 @@ namespace l99.driver.fanuc.veneers
 {
     public class SpindleData: Veneer
     {
-        public SpindleData(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
+        public SpindleData(Veneers veneers, string name = "", bool isCompound = false, bool isInternal = false) : base(veneers, name, isCompound, isInternal)
         {
             
         }

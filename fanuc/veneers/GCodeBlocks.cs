@@ -10,7 +10,7 @@ namespace l99.driver.fanuc.veneers
     {
         private readonly Blocks _blocks;
         
-        public GCodeBlocks(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
+        public GCodeBlocks(Veneers veneers, string name = "", bool isCompound = false, bool isInternal = false) : base(veneers, name, isCompound, isInternal)
         {
             _blocks = new Blocks();
         }
@@ -21,13 +21,13 @@ namespace l99.driver.fanuc.veneers
             {
                 if (!nativeInputs[0].@null && nativeInputs[0].success)
                 {
-                    _blocks.Add2(nativeInputs[0].response.cnc_rdblkcount.prog_bc,
+                    _blocks.Add(nativeInputs[0].response.cnc_rdblkcount.prog_bc,
                         nativeInputs[1].response.cnc_rdactpt.blk_no,
                         nativeInputs[2].response.cnc_rdexecprog.data);
                 }
                 else
                 {
-                    _blocks.Add1(nativeInputs[1].response.cnc_rdactpt.blk_no,
+                    _blocks.Add(nativeInputs[1].response.cnc_rdactpt.blk_no,
                         nativeInputs[2].response.cnc_rdexecprog.data);
                 }
 

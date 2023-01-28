@@ -15,7 +15,7 @@ namespace l99.driver.fanuc.strategies
         
         ~FanucStrategy()
         {
-            // TODO: verify invocation
+            // TODO: verify invocation on linux
             Platform.ExitProcess();
         }
         

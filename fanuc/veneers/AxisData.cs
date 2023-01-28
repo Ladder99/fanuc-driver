@@ -5,7 +5,7 @@ namespace l99.driver.fanuc.veneers
 {
     public class AxisData : Veneer
     {
-        public AxisData(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
+        public AxisData(Veneers veneers, string name = "", bool isCompound = false, bool isInternal = false) : base(veneers, name, isCompound, isInternal)
         {
             LastChangedValue = new
             {
@@ -19,9 +19,6 @@ namespace l99.driver.fanuc.veneers
             if (nativeInputs.Slice(0,5).All(o => o.success == true))
             {
                 var currentAxis = additionalInputs[0];
-                
-                
-                
                 var axesNames = nativeInputs[0];
                 var axisDynamic = nativeInputs[1]!.response.cnc_rddynamic2.rddynamic;
                 var figures = nativeInputs[2]!.response.cnc_getfigure.dec_fig_in;

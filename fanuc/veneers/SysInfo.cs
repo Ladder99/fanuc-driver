@@ -5,7 +5,7 @@ namespace l99.driver.fanuc.veneers
 {
     public class SysInfo : Veneer
     {
-        public SysInfo(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
+        public SysInfo(Veneers veneers, string name = "", bool isCompound = false, bool isInternal = false) : base(veneers, name, isCompound, isInternal)
         {
             
         }

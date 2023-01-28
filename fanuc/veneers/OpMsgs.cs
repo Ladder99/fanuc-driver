@@ -5,7 +5,7 @@ namespace l99.driver.fanuc.veneers
 {
     public class OpMsgs: Veneer
     {
-        public OpMsgs(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
+        public OpMsgs(Veneers veneers, string name = "", bool isCompound = false, bool isInternal = false) : base(veneers, name, isCompound, isInternal)
         {
             
         }

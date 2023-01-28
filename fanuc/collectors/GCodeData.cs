@@ -16,7 +16,7 @@ namespace l99.driver.fanuc.collectors
             
             if (!Configuration.ContainsKey("buffer_length"))
             {
-                Configuration.Add("buffer_length", 513);
+                Configuration.Add("buffer_length", 512);
             }
         }
         

@@ -81,7 +81,7 @@ namespace l99.driver.fanuc.gcode
         public int CurrentBlockPointer=-1;
         public bool IsPointerValid = false;
 
-        public bool Add1(int blockPointer, char[] nativeBlockText, bool dropLast = true)
+        public bool Add(int blockPointer, char[] nativeBlockText, bool dropLast = true)
         {
             if (DEBUG)
             {
@@ -95,7 +95,7 @@ namespace l99.driver.fanuc.gcode
             return AddInternal(baseBlockPointer, nativeBlockText, dropLast);
         }
         
-        public bool Add2(int blockCounter, int blockPointer, char[] nativeBlockText, bool dropLast = true)
+        public bool Add(int blockCounter, int blockPointer, char[] nativeBlockText, bool dropLast = true)
         {
             if (DEBUG)
             {

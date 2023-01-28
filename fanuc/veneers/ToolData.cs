@@ -5,7 +5,7 @@ namespace l99.driver.fanuc.veneers
 {
     public class ToolData : Veneer
     {
-        public ToolData(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
+        public ToolData(Veneers veneers, string name = "", bool isCompound = false, bool isInternal = false) : base(veneers, name, isCompound, isInternal)
         {
             
         }

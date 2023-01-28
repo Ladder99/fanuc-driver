@@ -5,7 +5,7 @@ namespace l99.driver.fanuc.veneers
 {
     public class StateData : Veneer
     {
-        public StateData(string name = "", bool isCompound = false, bool isInternal = false) : base(name, isCompound, isInternal)
+        public StateData(Veneers veneers, string name = "", bool isCompound = false, bool isInternal = false) : base(veneers, name, isCompound, isInternal)
         {
             
         }

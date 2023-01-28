@@ -52,14 +52,15 @@ machines:
     l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
       collectors:
       - l99.driver.fanuc.collectors.MachineInfo, fanuc
-      - l99.driver.fanuc.collectors.Alarms, fanuc
-      - l99.driver.fanuc.collectors.Messages, fanuc
+      #- l99.driver.fanuc.collectors.Alarms, fanuc
+      #- l99.driver.fanuc.collectors.Messages, fanuc
       - l99.driver.fanuc.collectors.StateData, fanuc
       - l99.driver.fanuc.collectors.ToolData, fanuc
-      - l99.driver.fanuc.collectors.ProductionData, fanuc
-      - l99.driver.fanuc.collectors.GCodeData, fanuc
-      - l99.driver.fanuc.collectors.AxisData, fanuc
-      - l99.driver.fanuc.collectors.SpindleData, fanuc
+      #- l99.driver.fanuc.collectors.ProductionData, fanuc
+      - l99.driver.fanuc.collectors.ProductionDataExternalSubprogramDetails, fanuc
+      #- l99.driver.fanuc.collectors.GCodeData, fanuc
+      #- l99.driver.fanuc.collectors.AxisData, fanuc
+      #- l99.driver.fanuc.collectors.SpindleData, fanuc
     l99.driver.fanuc.handlers.FanucOne, fanuc:
       change_only: !!bool true
       skip_internal: !!bool true
@@ -78,6 +79,14 @@ machines:
     l99.driver.fanuc.collectors.GCodeData, fanuc:
       block_counter: !!bool false
       buffer_length: !!int 512
+    l99.driver.fanuc.collectors.ProductionDataExternalSubprogramDetails, fanuc:
+      map:
+        1: "c:/partprg/one"
+        1400: "c:/partprg/MCenter"
+        1401: "c:/partprg/PLeft"
+        1402: "c:/partprg/PRight"
+      lines: !!int 60
+      extract: "^\\( *(?<key>[^\\):\\n]+[^ \\):\\n]) *: *(?<value>[^\\):\\n]+[^ \\):\\n])* *\\)$"
 
   - id: f_sim_spb_long
     enabled: !!bool false
