@@ -6,7 +6,7 @@ namespace l99.driver.fanuc;
 // ReSharper disable once ClassNeverInstantiated.Global
 public class FanucMachine : Machine
 {
-    public FanucMachine(Machines machines, object config) : base(machines, config)
+    public FanucMachine(Machines machines, object configuration) : base(machines, configuration)
     {
         this["platform"] = new Platform(this);
 

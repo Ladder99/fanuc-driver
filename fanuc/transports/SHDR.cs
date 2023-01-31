@@ -129,7 +129,7 @@ public class SHDR : Transport
     // config - veneer type, template text
     private Dictionary<string, string> _transformLookup = new();
 
-    public SHDR(Machine machine, object cfg) : base(machine, cfg)
+    public SHDR(Machine machine) : base(machine)
     {
     }
 
@@ -180,7 +180,7 @@ public class SHDR : Transport
 
     public override async Task ConnectAsync()
     {
-        if (Machine.Configuration.machine.enabled)
+        if (Machine.Enabled)
             _adapter.Start();
     }
 

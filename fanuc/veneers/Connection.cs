@@ -3,9 +3,9 @@
 // ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.veneers;
 
-public class Connect : Veneer
+public class Connection : Veneer
 {
-    public Connect(Veneers veneers, string name = "", bool isCompound = false, bool isInternal = false) : base(veneers,
+    public Connection(Veneers veneers, string name = "", bool isCompound = false, bool isInternal = false) : base(veneers,
         name, isCompound, isInternal)
     {
     }
@@ -22,11 +22,14 @@ public class Connect : Veneer
 
     protected override async Task<dynamic> AnyAsync(dynamic[] nativeInputs, dynamic[] additionalInputs)
     {
-        var currentValue = new {nativeInputs[0].success};
+        var currentValue = new
+        {
+            @event = additionalInputs[0],
+            nativeInputs[0].success
+        };
 
         await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 
-        //if (!currentValue.Equals(LastChangedValue))
         if (currentValue.IsDifferentString((object) LastChangedValue))
             await OnDataChangedAsync(nativeInputs, additionalInputs, currentValue);
 

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Dynamic;
+using System.IO;
 using l99.driver.@base;
 
 // ReSharper disable once CheckNamespace
@@ -15,6 +16,7 @@ public class ProductionDataExternalSubprogramDetails : Veneer
     {
         if (nativeInputs.Slice(0, 5).All(o => o.success == true))
         {
+            var extractionParameters = additionalInputs[0];
             var currentCurrentProgramNumber = nativeInputs[0].response.cnc_rdprgnum.prgnum.data;
             var previousCurrentProgramNumber = nativeInputs[6] == null
                 ? -1
@@ -22,21 +24,22 @@ public class ProductionDataExternalSubprogramDetails : Veneer
 
             var blockCount = 0;
             List<string> blocks = new();
-            List<KeyValuePair<string, string>> comments = new();
+            var extractions = new ExpandoObject() as IDictionary<string, object>;
 
             if (currentCurrentProgramNumber != previousCurrentProgramNumber)
             {
                 Logger.Debug(
                     $"[{Veneers.Machine.Id}] Current program has changed {previousCurrentProgramNumber} => {currentCurrentProgramNumber}");
 
-                if (additionalInputs[1].ContainsKey(currentCurrentProgramNumber.ToString()))
+                if (extractionParameters["files"].ContainsKey(currentCurrentProgramNumber.ToString()))
                     try
                     {
-                        string fn = additionalInputs[1][currentCurrentProgramNumber.ToString()];
-                        blockCount = additionalInputs[0]; // Desired number of blocks to read.
+                        string fn = extractionParameters["files"][currentCurrentProgramNumber.ToString()];
+                        blockCount = extractionParameters["lines"]; // Desired number of blocks to read.
                         blocks = File.ReadLines(fn).Take(blockCount).ToList();
                         blockCount = blocks.Count; // Actual number of blocks read.
 
+                        /*
                         if (!string.IsNullOrEmpty(additionalInputs[2]))
                         {
                             var regex = new Regex(additionalInputs[2]);
@@ -48,6 +51,29 @@ public class ProductionDataExternalSubprogramDetails : Veneer
                                         match.Groups["key"].Value,
                                         match.Groups["value"].Value
                                     ));
+                            }
+                        }
+                        */
+                        
+                        foreach (var block in blocks)
+                        {
+                            foreach (var extractionKey in extractionParameters["properties"].Keys)
+                            {
+                                var regex = new Regex(extractionParameters["properties"][extractionKey]);
+                                var match = regex.Match(block);
+                                if (match.Success)
+                                {
+                                    extractions.Add(extractionKey, new { unavailable = false, value = match.Groups["value"].Value });
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        foreach (var extractionKey in extractionParameters["properties"].Keys)
+                        {
+                            if (!extractions.ContainsKey(extractionKey))
+                            {   
+                                extractions.Add(extractionKey, new { unavailable = true, value = (object)null });
                             }
                         }
                     }
@@ -68,7 +94,7 @@ public class ProductionDataExternalSubprogramDetails : Veneer
                         number = nativeInputs[0].response.cnc_rdprgnum.prgnum.data,
                         block_count = blockCount,
                         blocks,
-                        comments
+                        extractions
                     },
                     selected = new
                     {

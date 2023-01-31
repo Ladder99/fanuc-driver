@@ -5,7 +5,7 @@ namespace l99.driver.fanuc.strategies;
 
 public class FanucStrategy : Strategy
 {
-    protected FanucStrategy(Machine machine, object configuration) : base(machine, configuration)
+    protected FanucStrategy(Machine machine) : base(machine)
     {
         Platform = Machine["platform"]!;
         Platform.StartupProcess(3, "focas2.log");

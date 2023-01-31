@@ -6,7 +6,7 @@ namespace l99.driver.fanuc.handlers;
 // ReSharper disable once UnusedType.Global
 public class FanucOne : Handler
 {
-    public FanucOne(Machine machine, object configuration) : base(machine, configuration)
+    public FanucOne(Machine machine) : base(machine)
     {
     }
 

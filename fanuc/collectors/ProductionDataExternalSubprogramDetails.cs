@@ -17,12 +17,17 @@ public class ProductionDataExternalSubprogramDetails : FanucMultiStrategyCollect
     public ProductionDataExternalSubprogramDetails(FanucMultiStrategy strategy, object configuration) : base(strategy,
         configuration)
     {
-        if (!Configuration.ContainsKey("lines")) Configuration.Add("lines", 60);
+        if (!Configuration.ContainsKey("extraction")) 
+            Configuration.Add("extraction", new Dictionary<object, object>());
 
-        if (!Configuration.ContainsKey("map")) Configuration.Add("map", new Dictionary<object, object>());
-
-        if (!Configuration.ContainsKey("extract"))
-            Configuration.Add("extract", @"^\( *(?<key>[^\):\n]+[^ \):\n]) *: *(?<value>[^\):\n]+[^ \):\n])* *\)$");
+        if (!Configuration["extraction"].ContainsKey("files"))
+            Configuration["extraction"].Add("files", new Dictionary<object, object>());
+        
+        if (!Configuration["extraction"].ContainsKey("properties"))
+            Configuration["extraction"].Add("properties", new Dictionary<object, object>());
+        
+        if (!Configuration["extraction"].ContainsKey("lines"))
+            Configuration["extraction"].Add("lines", 60);
     }
 
     public override async Task InitPathsAsync()
@@ -58,9 +63,7 @@ public class ProductionDataExternalSubprogramDetails : FanucMultiStrategyCollect
             },
             new[]
             {
-                Configuration["lines"],
-                Configuration["map"],
-                Configuration["extract"]
+                Configuration["extraction"]
             });
 
         Strategy.SetKeyed("program_numbers+last",

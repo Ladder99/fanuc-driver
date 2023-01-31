@@ -20,7 +20,7 @@ public class FanucExtendedStrategy : FanucStrategy
     private StrategyStateEnum _strategyState = StrategyStateEnum.Unknown;
     private int _sweepRemaining;
 
-    protected FanucExtendedStrategy(Machine machine, object configuration) : base(machine, configuration)
+    protected FanucExtendedStrategy(Machine machine) : base(machine)
     {
         _sweepRemaining = SweepMs;
         _propertyBag = new Dictionary<string, dynamic>();
@@ -178,13 +178,20 @@ public class FanucExtendedStrategy : FanucStrategy
             return null;
         return await PeelInternal(veneerKey, nativeInputs, additionalInputs);
     }
-
+    
     public async Task Apply(string veneerType, string veneerName, bool isCompound = false, bool isInternal = false)
     {
-        var t = Type.GetType($"l99.driver.fanuc.veneers.{veneerType}")!;
-        await Apply(t, veneerName, isCompound, isInternal);
+        try
+        {
+            Type veneerTypeType = Type.GetType($"l99.driver.fanuc.veneers.{veneerType}")!;
+            await Apply(veneerTypeType, veneerName, isCompound, isInternal);
+        }
+        catch (Exception e)
+        {
+            Logger.Error($"[{Machine.Id}] Failed to apply veneer {veneerType}");
+        } 
     }
-
+    
     public async Task Apply(Type veneerType, string veneerName, bool isCompound = false, bool isInternal = false)
     {
         switch (_currentInitSegment)
@@ -257,7 +264,7 @@ public class FanucExtendedStrategy : FanucStrategy
                     _currentInitSegment = SegmentEnum.Root;
 
                     await Apply(typeof(FocasPerf), "focas_perf", isInternal: true, isCompound: true);
-                    await Apply(typeof(Connect), "connect", isInternal: true);
+                    await Apply(typeof(Connection), "connection", isInternal: true);
                     await Apply(typeof(GetPath), "paths", isInternal: true);
 
                     // init root veneers in user strategy
@@ -336,8 +343,6 @@ public class FanucExtendedStrategy : FanucStrategy
                             axisAndSpindleSlices.Add(SpindleName(spindle));
                         }
 
-                        ;
-
                         // following veneers will be applied over axes+spindles
                         Machine.SliceVeneer(
                             currentPath,
@@ -404,7 +409,7 @@ public class FanucExtendedStrategy : FanucStrategy
     /// <summary>
     ///     Applied Veneers:
     ///     FocasPerf as "focas_perf",
-    ///     Connect as "connect",
+    ///     Connection as "connection",
     ///     GetPath as "paths"
     /// </summary>
     protected virtual async Task InitRootAsync()
@@ -420,7 +425,7 @@ public class FanucExtendedStrategy : FanucStrategy
     /// <summary>
     ///     Applied Veneers:
     ///     FocasPerf as "focas_perf",
-    ///     Connect as "connect",
+    ///     Connection as "connection",
     ///     GetPath as "paths",
     ///     RdAxisname as "axis_names",
     ///     RdSpindlename as "spindle_names"
@@ -438,7 +443,7 @@ public class FanucExtendedStrategy : FanucStrategy
     /// <summary>
     ///     Applied Veneers:
     ///     FocasPerf as "focas_perf",
-    ///     Connect as "connect",
+    ///     Connection as "connection",
     ///     GetPath as "paths",
     ///     RdAxisname as "axis_names",
     ///     RdSpindlename as "spindle_names"
@@ -462,6 +467,8 @@ public class FanucExtendedStrategy : FanucStrategy
     {
         try
         {
+            Console.WriteLine("### THREAD ID " + Thread.CurrentThread.ManagedThreadId);  
+            
             _currentInitSegment = SegmentEnum.None;
 
             _focasInvocations.Clear();
@@ -469,7 +476,9 @@ public class FanucExtendedStrategy : FanucStrategy
 
             _currentCollectSegment = SegmentEnum.Begin;
 
-            if (await CollectBeginAsync())
+            await CollectBeginAsync();
+
+            if (Get("connect")!.success)
             {
                 if (_strategyState == StrategyStateEnum.Unknown)
                 {
@@ -485,12 +494,11 @@ public class FanucExtendedStrategy : FanucStrategy
                 _currentInitSegment = SegmentEnum.Root;
                 _currentCollectSegment = SegmentEnum.Root;
 
-                await SetNative("paths",
-                    await Platform.GetPathAsync());
                 await Peel("paths",
                     new[]
                     {
-                        Get("paths")
+                        await SetNative("paths",
+                            await Platform.GetPathAsync())
                     },
                     new dynamic[]
                     {
@@ -501,6 +509,7 @@ public class FanucExtendedStrategy : FanucStrategy
 
                 _currentInitSegment = SegmentEnum.Path;
                 await InitUserPathsAsync();
+
                 _currentInitSegment = SegmentEnum.Axis;
 
                 for (short currentPath = Get("paths")!.response.cnc_getpath.path_no;
@@ -518,12 +527,11 @@ public class FanucExtendedStrategy : FanucStrategy
                     dynamic pathMarkerFull = new[] {pathMarker};
                     Machine.MarkVeneer(currentPath, pathMarkerFull);
 
-                    await SetNativeKeyed("axis_names",
-                        await Platform.RdAxisNameAsync());
                     await Peel("axis_names",
                         new[]
                         {
-                            GetKeyed("axis_names")
+                            await SetNativeKeyed("axis_names",
+                                await Platform.RdAxisNameAsync())
                         },
                         new dynamic[]
                         {
@@ -542,12 +550,11 @@ public class FanucExtendedStrategy : FanucStrategy
                             .GetValue(GetKeyed("axis_names")!
                                 .response.cnc_rdaxisname.axisname));
 
-                    await SetNativeKeyed("spindle_names",
-                        await Platform.RdSpdlNameAsync());
                     await Peel("spindle_names",
                         new[]
                         {
-                            GetKeyed("spindle_names")
+                            await SetNativeKeyed("spindle_names",
+                                await Platform.RdSpdlNameAsync())
                         },
                         new dynamic[]
                         {
@@ -597,8 +604,6 @@ public class FanucExtendedStrategy : FanucStrategy
                         await CollectForEachSpindleAsync(currentPath, currentSpindle, spindleName, Get("spindle_split"),
                             spindleMarkerFull);
                     }
-
-                    ;
                 }
             }
             else
@@ -609,15 +614,18 @@ public class FanucExtendedStrategy : FanucStrategy
                     _strategyState = StrategyStateEnum.Failed;
                 }
             }
-
-            _currentInitSegment = SegmentEnum.None;
-            _currentCollectSegment = SegmentEnum.End;
-
-            await CollectEndAsync();
         }
         catch (Exception ex)
         {
             Logger.Error(ex, $"[{Machine.Id}] Strategy sweep failed at segment {_currentCollectSegment}.");
+            _strategyState = StrategyStateEnum.Failed;
+        }
+        finally
+        {
+            _currentInitSegment = SegmentEnum.None;
+            _currentCollectSegment = SegmentEnum.End;
+
+            await CollectEndAsync();
         }
 
         return null;
@@ -625,24 +633,32 @@ public class FanucExtendedStrategy : FanucStrategy
 
     /// <summary>
     ///     Available Data:
-    ///     Connect => get("connect") (after base is called)
+    ///     Connection => get("connection") (after base is called)
     /// </summary>
-    protected virtual async Task<bool> CollectBeginAsync()
+    protected virtual async Task CollectBeginAsync()
     {
         _sweepWatch.Restart();
 
-        await SetNative("connect",
-            await Platform.ConnectAsync());
-        await Peel("connect",
-            new[]
-            {
-                Get("connect")
-            },
-            new dynamic[]
-            {
-            });
+        bool mustConnect = true;
+        if (Machine.Configuration.strategy["stay_connected"] && _strategyState == StrategyStateEnum.Ok)
+        {
+            mustConnect = false;
+        }
 
-        return Get("connect")!.success;
+        if (mustConnect)
+        {
+            await SetNative("connect",
+                await Platform.ConnectAsync());
+            await Peel("connection",
+                new[]
+                {
+                    Get("connect")
+                },
+                new dynamic[]
+                {
+                    "connect"
+                });
+        }
     }
 
     /// <summary>
@@ -704,8 +720,27 @@ public class FanucExtendedStrategy : FanucStrategy
     /// </summary>
     protected virtual async Task CollectEndAsync()
     {
-        await SetNative("disconnect", await Platform.DisconnectAsync());
+        bool mustDisconnect = true;
+        if (Machine.Configuration.strategy["stay_connected"] && _strategyState != StrategyStateEnum.Failed)
+        {
+            mustDisconnect = false;
+        }
 
+        if (mustDisconnect)
+        {
+            await SetNative("disconnect",
+                await Platform.DisconnectAsync());
+            await Peel("connection",
+                new[]
+                {
+                    Get("disconnect")
+                },
+                new dynamic[]
+                {
+                    "disconnect"
+                });
+        }
+        
         await Machine.PeelVeneerAsync("focas_perf",
             new dynamic[]
             {

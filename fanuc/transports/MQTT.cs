@@ -20,7 +20,7 @@ public class MQTT : Transport
 
     private Template _topicTemplate = null!;
 
-    public MQTT(Machine machine, object cfg) : base(machine, cfg)
+    public MQTT(Machine machine) : base(machine)
     {
     }
 
@@ -116,7 +116,7 @@ public class MQTT : Transport
 
     public override async Task ConnectAsync()
     {
-        if (Machine.Configuration.machine.enabled)
+        if (Machine.Enabled)
         {
             if (!_client.IsConnected)
             {

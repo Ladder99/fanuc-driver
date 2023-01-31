@@ -19,7 +19,7 @@ public class InfluxLP : Transport
     private Dictionary<string, string> _transformLookup = new();
     private WriteApiAsync _writeApi = null!;
 
-    public InfluxLP(Machine machine, object cfg) : base(machine, cfg)
+    public InfluxLP(Machine machine) : base(machine)
     {
     }
 

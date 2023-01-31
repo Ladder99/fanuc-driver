@@ -9,7 +9,7 @@ public class Null : Transport
     // ReSharper disable once NotAccessedField.Local
     private dynamic _model = null!;
 
-    public Null(Machine machine, object cfg) : base(machine, cfg)
+    public Null(Machine machine) : base(machine)
     {
     }
 

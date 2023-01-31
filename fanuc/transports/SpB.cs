@@ -19,7 +19,7 @@ public class SpB : Transport
 
     private Dictionary<string, dynamic> _previous = new();
 
-    public SpB(Machine machine, object cfg) : base(machine, cfg)
+    public SpB(Machine machine) : base(machine)
     {
     }
 
@@ -82,7 +82,7 @@ public class SpB : Transport
 
     public override async Task ConnectAsync()
     {
-        if (Machine.Configuration.machine.enabled)
+        if (Machine.Enabled)
             if (!_node.IsConnected)
                 try
                 {

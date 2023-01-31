@@ -8,37 +8,30 @@ namespace l99.driver.fanuc.strategies;
 public class FanucMultiStrategy : FanucExtendedStrategy
 {
     private readonly List<FanucMultiStrategyCollector> _collectors = new();
+    private readonly string _exclusionWildcard = "%";
+    private Dictionary<object, dynamic> _exclusions = new();
 
-    public FanucMultiStrategy(Machine machine, object configuration) : base(machine, configuration)
+    public FanucMultiStrategy(Machine machine) : base(machine)
     {
     }
 
     public override async Task<dynamic?> CreateAsync()
     {
+        if (!Machine.Configuration.strategy.ContainsKey("stay_connected"))
+        {
+            Machine.Configuration.strategy.Add("stay_connected", false);
+        }
+        
         if (!Machine.Configuration.strategy.ContainsKey("exclusions"))
-        {
             Machine.Configuration.strategy.Add("exclusions", new Dictionary<object, object>());
-        }
         else if (Machine.Configuration.strategy["exclusions"] == null)
-        {
             Machine.Configuration.strategy["exclusions"] = new Dictionary<object, object>();
-        }
-        /*else
-        {
-            foreach (var key in Machine.Configuration.strategy["exclusions"].Keys)
-            {
-                if (Machine.Configuration.strategy["exclusions"][key] == null)
-                {
-                    Machine.Configuration.strategy["exclusions"][key] = new List<object>();
-                }
-            }
-        }*/
-        
+
+        _exclusions = Machine.Configuration.strategy["exclusions"];
+
         if (!Machine.Configuration.strategy.ContainsKey("collectors"))
-        {
             Machine.Configuration.strategy.Add("collectors", new List<object>());
-        }
-        
+
         foreach (var collectorType in Machine.Configuration.strategy["collectors"])
         {
             Logger.Info($"[{Machine.Id}] Creating collector: {collectorType}");
@@ -92,12 +85,14 @@ public class FanucMultiStrategy : FanucExtendedStrategy
         return await base.CollectAsync();
     }
 
-    protected override async Task<bool> CollectBeginAsync()
+    protected override async Task CollectBeginAsync()
     {
         // user code before connect
 
         // must call base to connect to machine and return result
-        return await base.CollectBeginAsync();
+        await base.CollectBeginAsync();
+        
+        // user code after connect, connection result is stored in Get("connect").success
     }
 
     protected override async Task CollectRootAsync()
@@ -108,60 +103,52 @@ public class FanucMultiStrategy : FanucExtendedStrategy
     protected override async Task CollectForEachPathAsync(short currentPath, string[] axis, string[] spindle,
         dynamic pathMarker)
     {
-        foreach (var collector in _collectors)
+        if ((_exclusions.ContainsKey(currentPath.ToString()) && _exclusions[currentPath.ToString()] == null) ||
+            (_exclusions.ContainsKey(currentPath.ToString()) && _exclusions[currentPath.ToString()] != null &&
+             _exclusions[currentPath.ToString()]!.Contains(_exclusionWildcard)))
         {
-            if (Machine.Configuration.strategy["exclusions"].ContainsKey(currentPath.ToString()) &&
-                (Machine.Configuration.strategy["exclusions"][currentPath.ToString()] == null ||
-                 Machine.Configuration.strategy["exclusions"][currentPath.ToString()].Contains("%")))
-            {
-                // entire path is excluded
-            }
-            else
-            {
+            // entire path is excluded
+        }
+        else
+        {
+            foreach (var collector in _collectors)
                 await collector.CollectForEachPathAsync(currentPath, axis, spindle, pathMarker);
-            }
         }
     }
 
     protected override async Task CollectForEachAxisAsync(short currentPath, short currentAxis, string axisName,
         dynamic axisSplit, dynamic axisMarker)
     {
-        foreach (var collector in _collectors)
+        if (_exclusions.ContainsKey(currentPath.ToString()) &&
+            _exclusions[currentPath.ToString()] != null &&
+            (_exclusions[currentPath.ToString()]!.Contains(_exclusionWildcard) ||
+             _exclusions[currentPath.ToString()]!.Contains(axisName)))
         {
-            if (Machine.Configuration.strategy["exclusions"].ContainsKey(currentPath.ToString()) &&
-                Machine.Configuration.strategy["exclusions"][currentPath.ToString()] != null &&
-                (Machine.Configuration.strategy["exclusions"][currentPath.ToString()].Contains("%") ||
-                 Machine.Configuration.strategy["exclusions"][currentPath.ToString()].Contains(axisName)))
-            {
-                // entire path or specific axis is excluded
-            }
-            else
-            {
-                await collector.CollectForEachAxisAsync(currentPath, currentAxis, axisName, axisSplit, axisMarker);
-            }
+            // entire path or specific axis is excluded
         }
-            
+        else
+        {
+            foreach (var collector in _collectors)
+                await collector.CollectForEachAxisAsync(currentPath, currentAxis, axisName, axisSplit, axisMarker);
+        }
     }
 
     protected override async Task CollectForEachSpindleAsync(short currentPath, short currentSpindle,
         string spindleName, dynamic spindleSplit, dynamic spindleMarker)
     {
-        foreach (var collector in _collectors)
+        if (_exclusions.ContainsKey(currentPath.ToString()) &&
+            _exclusions[currentPath.ToString()] != null &&
+            (_exclusions[currentPath.ToString()]!.Contains(_exclusionWildcard) ||
+             _exclusions[currentPath.ToString()]!.Contains(spindleName)))
         {
-            if (Machine.Configuration.strategy["exclusions"].ContainsKey(currentPath.ToString()) &&
-                Machine.Configuration.strategy["exclusions"][currentPath.ToString()] != null &&
-                (Machine.Configuration.strategy["exclusions"][currentPath.ToString()].Contains("%") ||
-                 Machine.Configuration.strategy["exclusions"][currentPath.ToString()].Contains(spindleName)))
-            {
-                // entire path or specific spindle is excluded
-            }
-            else
-            {
+            // entire path or specific spindle is excluded
+        }
+        else
+        {
+            foreach (var collector in _collectors)
                 await collector.CollectForEachSpindleAsync(currentPath, currentSpindle, spindleName, spindleSplit,
                     spindleMarker);
-            }
         }
-            
     }
 
     protected override async Task CollectEndAsync()
@@ -171,6 +158,6 @@ public class FanucMultiStrategy : FanucExtendedStrategy
         // must call base to disconnect machine
         await base.CollectEndAsync();
 
-        // user code after disconnect
+        // user code after disconnect, result is stored in Get("disconnect").success
     }
 }

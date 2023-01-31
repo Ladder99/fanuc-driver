@@ -8,6 +8,7 @@ public class FanucMultiStrategyCollector
     protected readonly ILogger Logger;
     protected readonly FanucMultiStrategy Strategy;
     protected dynamic Configuration;
+    public bool Enabled { get; private set; }
 
     protected FanucMultiStrategyCollector(FanucMultiStrategy strategy, dynamic configuration)
     {
@@ -15,7 +16,9 @@ public class FanucMultiStrategyCollector
         Strategy = strategy;
         Configuration = configuration;
 
+        if (Configuration == null) Configuration = new Dictionary<object, object>();
         if (!Configuration.ContainsKey("enabled")) Configuration.Add("enabled", true);
+        Enabled = Configuration["enabled"];
     }
 
     public virtual async Task InitRootAsync()

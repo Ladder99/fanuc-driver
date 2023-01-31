@@ -21,11 +21,8 @@ public class SysInfo : Veneer
 
             var loaderControl = (infoBytes[0] & 1) == 1;
             var iSeries = (infoBytes[0] & 2) == 2;
-            ;
             var compoundMachining = (infoBytes[0] & 4) == 4;
-            ;
             var transferLine = (infoBytes[0] & 8) == 8;
-            ;
 
             focasSupport[1] = iSeries ? "i" : "";
 
