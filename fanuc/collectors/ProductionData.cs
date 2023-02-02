@@ -43,9 +43,9 @@ public class ProductionData : FanucMultiStrategyCollector
             .response.cnc_rdprgnum.prgnum.mdata;
 
         await Strategy.Peel("production",
-            new[]
+            new dynamic[]
             {
-                Strategy.GetKeyed("program_numbers"),
+                Strategy.GetKeyed("program_numbers")!,
                 await Strategy.SetNativeKeyed("current_program_info",
                     await Strategy.Platform.RdProgDir3Async(currentProgramNumber)),
                 await Strategy.SetNativeKeyed("main_program_info",
@@ -60,9 +60,9 @@ public class ProductionData : FanucMultiStrategyCollector
                     await Strategy.Platform.RdParamDoubleWordNoAxisAsync(6758)),
                 await Strategy.SetNativeKeyed("cycle_time_ms",
                     await Strategy.Platform.RdParamDoubleWordNoAxisAsync(6757)),
-                Strategy.GetKeyed("executing_program"),
-                Strategy.GetKeyed("executing_program_2"),
-                Strategy.GetKeyed("executing_sequence")
+                Strategy.GetKeyed("executing_program")!,
+                Strategy.GetKeyed("executing_program_2")!,
+                Strategy.GetKeyed("executing_sequence")!
             },
             new[]
             {

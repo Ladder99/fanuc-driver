@@ -131,28 +131,28 @@ public class SpindleData : FanucMultiStrategyCollector
             await Strategy.Platform.DiagnossDoubleWordAsync(4902, currentSpindle));
 
         await Strategy.Peel("spindle",
-            new[]
+            new dynamic[]
             {
                 Strategy.Get($"spindle_names+{currentPath}")!,
-                Strategy.Get($"sp_speed+{currentPath}"),
-                Strategy.GetKeyed("sp_meter"),
-                Strategy.GetKeyed("sp_maxrpm"),
-                Strategy.GetKeyed("sp_gear"),
-                Strategy.GetKeyed("diag_lnk"),
-                Strategy.GetKeyed("diag_temp"),
-                Strategy.GetKeyed("diag_comms"),
-                Strategy.GetKeyed("diag_load_perc"),
-                Strategy.GetKeyed("diag_load_min"),
-                Strategy.GetKeyed("diag_coder"),
-                Strategy.GetKeyed("diag_loop_dev"),
-                Strategy.GetKeyed("diag_sync_error"),
-                Strategy.GetKeyed("diag_pos_data"),
-                Strategy.GetKeyed("diag_error"),
-                Strategy.GetKeyed("diag_warn"),
-                Strategy.GetKeyed("diag_rev_1"),
-                Strategy.GetKeyed("diag_rev_2"),
-                Strategy.GetKeyed("diag_power"),
-                Strategy.GetKeyed("sp_acts")
+                Strategy.Get($"sp_speed+{currentPath}")!,
+                Strategy.GetKeyed("sp_meter")!,
+                Strategy.GetKeyed("sp_maxrpm")!,
+                Strategy.GetKeyed("sp_gear")!,
+                Strategy.GetKeyed("diag_lnk")!,
+                Strategy.GetKeyed("diag_temp")!,
+                Strategy.GetKeyed("diag_comms")!,
+                Strategy.GetKeyed("diag_load_perc")!,
+                Strategy.GetKeyed("diag_load_min")!,
+                Strategy.GetKeyed("diag_coder")!,
+                Strategy.GetKeyed("diag_loop_dev")!,
+                Strategy.GetKeyed("diag_sync_error")!,
+                Strategy.GetKeyed("diag_pos_data")!,
+                Strategy.GetKeyed("diag_error")!,
+                Strategy.GetKeyed("diag_warn")!,
+                Strategy.GetKeyed("diag_rev_1")!,
+                Strategy.GetKeyed("diag_rev_2")!,
+                Strategy.GetKeyed("diag_power")!,
+                Strategy.GetKeyed("sp_acts")!
             },
             new dynamic[]
             {

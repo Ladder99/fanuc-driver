@@ -34,12 +34,8 @@ public class OpMsgs : Veneer
                 messages = tempValue
             };
 
-            //var currentHc = currentValue.messages.Select(x => x.GetHashCode());
-            //var lastHc = ((List<dynamic>)LastChangedValue.messages).Select(x => x.GetHashCode());
-
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 
-            //if(currentHc.Except(lastHc).Count() + lastHc.Except(currentHc).Count() > 0)
             if (currentValue.IsDifferentString((object) LastChangedValue))
                 await OnDataChangedAsync(nativeInputs, additionalInputs, currentValue);
         }

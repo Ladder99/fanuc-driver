@@ -7,7 +7,7 @@ public class FanucMultiStrategyCollector
 {
     protected readonly ILogger Logger;
     protected readonly FanucMultiStrategy Strategy;
-    protected dynamic Configuration;
+    protected readonly dynamic Configuration;
     public bool Enabled { get; private set; }
 
     protected FanucMultiStrategyCollector(FanucMultiStrategy strategy, dynamic configuration)

@@ -56,8 +56,7 @@ public class AlarmsSeries : Veneer
             AlarmResponse previousResponse = GetAlarmCountAndObjectFromInput(previousInput);
             AlarmResponse response = GetAlarmCountAndObjectFromInput(nativeInputs[0]);
 
-            // TODO: addedd vs removed alarms
-            //  who keeps state?
+            // TODO: added vs removed alarms, who keeps state?
             List<dynamic> previousAlarmList = GetAlarmListFromResponse(previousResponse, path, axis, obsFocasSupport);
             List<dynamic> alarmList = GetAlarmListFromResponse(response, path, axis, obsFocasSupport);
 
@@ -68,7 +67,6 @@ public class AlarmsSeries : Veneer
 
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 
-            //if(currentValue.alarms.IsDifferentHash((List<dynamic>)LastChangedValue.alarms))
             if (currentValue.IsDifferentString((object) LastChangedValue))
                 await OnDataChangedAsync(nativeInputs, additionalInputs, currentValue);
         }

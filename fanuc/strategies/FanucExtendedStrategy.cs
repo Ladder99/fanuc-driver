@@ -467,8 +467,6 @@ public class FanucExtendedStrategy : FanucStrategy
     {
         try
         {
-            Console.WriteLine("### THREAD ID " + Thread.CurrentThread.ManagedThreadId);  
-            
             _currentInitSegment = SegmentEnum.None;
 
             _focasInvocations.Clear();

@@ -46,16 +46,16 @@ public class Alarms : FanucMultiStrategyCollector
         }
 
         var obsAlarms = await Strategy.Peel("alarms",
-            new[]
+            new dynamic[]
             {
-                Strategy.GetKeyed("alarms"),
-                Strategy.GetKeyed("alarms+last")
+                Strategy.GetKeyed("alarms")!,
+                Strategy.GetKeyed("alarms+last")!
             },
-            new[]
+            new dynamic[]
             {
                 currentPath,
                 axis,
-                obsFocasSupport
+                obsFocasSupport!
             });
 
         // save native alarm data structure for comparison on next iteration
@@ -64,6 +64,6 @@ public class Alarms : FanucMultiStrategyCollector
 
         // track the resulting data structure
         Strategy.SetKeyed("obs+alarms",
-            obsAlarms.veneer.LastChangedValue.alarms);
+            obsAlarms!.veneer.LastChangedValue.alarms);
     }
 }

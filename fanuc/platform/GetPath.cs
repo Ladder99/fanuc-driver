@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace l99.driver.fanuc;
 
 public partial class Platform

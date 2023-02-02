@@ -10,7 +10,6 @@ public class GCodeData : FanucMultiStrategyCollector
     public GCodeData(FanucMultiStrategy strategy, object configuration) : base(strategy, configuration)
     {
         if (!Configuration.ContainsKey("block_counter")) Configuration.Add("block_counter", false);
-
         if (!Configuration.ContainsKey("buffer_length")) Configuration.Add("buffer_length", 512);
     }
 
@@ -29,13 +28,13 @@ public class GCodeData : FanucMultiStrategyCollector
             await Strategy.SetNativeNullKeyed("blkcount");
 
         await Strategy.Peel("gcode",
-            new[]
+            new dynamic[]
             {
-                Strategy.GetKeyed("blkcount"),
+                Strategy.GetKeyed("blkcount")!,
                 await Strategy.SetNativeKeyed("actpt",
                     await Strategy.Platform.RdActPtAsync()),
                 await Strategy.SetNativeKeyed("execprog",
-                    await Strategy.Platform.RdExecProgAsync(Configuration["buffer_length"]))
+                    await Strategy.Platform.RdExecProgAsync((short)Configuration["buffer_length"]))
             },
             new dynamic[]
             {

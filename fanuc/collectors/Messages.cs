@@ -46,9 +46,9 @@ public class Messages : FanucMultiStrategyCollector
                 await Strategy.Platform.RdOpMsgAsync(msgType, msgLength));
 
             await Strategy.Peel("messages",
-                new[]
+                new dynamic[]
                 {
-                    Strategy.GetKeyed("messages")
+                    Strategy.GetKeyed("messages")!
                 },
                 new dynamic[]
                 {

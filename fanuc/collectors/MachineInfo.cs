@@ -31,9 +31,9 @@ public class MachineInfo : FanucMultiStrategyCollector
             await Strategy.Platform.SysInfoAsync());
 
         var obsMachine = await Strategy.Peel("machine",
-            new[]
+            new dynamic[]
             {
-                Strategy.GetKeyed("machine")
+                Strategy.GetKeyed("machine")!
             },
             new dynamic[]
             {
@@ -41,6 +41,6 @@ public class MachineInfo : FanucMultiStrategyCollector
 
         // save resulting data structure for other collectors to use
         Strategy.SetKeyed("obs+focas_support",
-            obsMachine.veneer.LastArrivedValue.focas_support);
+            obsMachine!.veneer.LastArrivedValue.focas_support);
     }
 }

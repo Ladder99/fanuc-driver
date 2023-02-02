@@ -7,6 +7,10 @@ namespace l99.driver.fanuc.veneers;
 
 public class ProductionDataExternalSubprogramDetails : Veneer
 {
+    private int _lineCount;
+    private List<string> _lines = new();
+    private IDictionary<string, object> _properties = new ExpandoObject() as IDictionary<string, object>;
+
     public ProductionDataExternalSubprogramDetails(Veneers veneers, string name = "", bool isCompound = false,
         bool isInternal = false) : base(veneers, name, isCompound, isInternal)
     {
@@ -22,60 +26,42 @@ public class ProductionDataExternalSubprogramDetails : Veneer
                 ? -1
                 : nativeInputs[6].response.cnc_rdprgnum.prgnum.data;
 
-            var blockCount = 0;
-            List<string> blocks = new();
-            var extractions = new ExpandoObject() as IDictionary<string, object>;
-
             if (currentCurrentProgramNumber != previousCurrentProgramNumber)
             {
                 Logger.Debug(
                     $"[{Veneers.Machine.Id}] Current program has changed {previousCurrentProgramNumber} => {currentCurrentProgramNumber}");
 
+                // Reset cached variables since a new program is being executed by the control.
+                _lineCount = 0;
+                _lines = new List<string>();
+                _properties = new ExpandoObject() as IDictionary<string, object>;
+
                 if (extractionParameters["files"].ContainsKey(currentCurrentProgramNumber.ToString()))
                     try
                     {
-                        string fn = extractionParameters["files"][currentCurrentProgramNumber.ToString()];
-                        blockCount = extractionParameters["lines"]; // Desired number of blocks to read.
-                        blocks = File.ReadLines(fn).Take(blockCount).ToList();
-                        blockCount = blocks.Count; // Actual number of blocks read.
+                        string fn = extractionParameters["files"][
+                            currentCurrentProgramNumber.ToString()]; // Get file path of the program number.
+                        _lineCount = extractionParameters["lines"]["count"]; // Desired number of blocks to read.
+                        _lines = File.ReadLines(fn).Take(_lineCount).ToList(); // Read lines from file.
+                        _lineCount = _lines.Count; // Actual number of blocks read.
 
-                        /*
-                        if (!string.IsNullOrEmpty(additionalInputs[2]))
+                        foreach (var line in _lines) // Check if we can extract data from each line.
+                        foreach (var extractionKey in extractionParameters["properties"]["map"].Keys)
                         {
-                            var regex = new Regex(additionalInputs[2]);
-                            foreach (var block in blocks)
+                            var regex = new Regex(extractionParameters["properties"]["map"][extractionKey]);
+                            var match = regex.Match(line);
+                            if (match.Success)
                             {
-                                var match = regex.Match(block);
-                                if (match.Success)
-                                    comments.Add(new KeyValuePair<string, string>(
-                                        match.Groups["key"].Value,
-                                        match.Groups["value"].Value
-                                    ));
+                                _properties.Add(extractionKey,
+                                    new {unavailable = false, value = match.Groups["value"].Value});
+                                break;
                             }
                         }
-                        */
-                        
-                        foreach (var block in blocks)
-                        {
-                            foreach (var extractionKey in extractionParameters["properties"].Keys)
-                            {
-                                var regex = new Regex(extractionParameters["properties"][extractionKey]);
-                                var match = regex.Match(block);
-                                if (match.Success)
-                                {
-                                    extractions.Add(extractionKey, new { unavailable = false, value = match.Groups["value"].Value });
-                                    break;
-                                }
-                            }
-                        }
-                        
-                        foreach (var extractionKey in extractionParameters["properties"].Keys)
-                        {
-                            if (!extractions.ContainsKey(extractionKey))
-                            {   
-                                extractions.Add(extractionKey, new { unavailable = true, value = (object)null });
-                            }
-                        }
+
+                        // Add properties not found in program lines as unavailable.
+                        foreach (var extractionKey in Enumerable.Except(extractionParameters["properties"]["map"].Keys,
+                                     _properties.Keys))
+                            _properties.Add(extractionKey, new {unavailable = true, value = (object) null});
                     }
                     catch (Exception e)
                     {
@@ -92,9 +78,9 @@ public class ProductionDataExternalSubprogramDetails : Veneer
                     {
                         name = $"O{nativeInputs[0].response.cnc_rdprgnum.prgnum.data}",
                         number = nativeInputs[0].response.cnc_rdprgnum.prgnum.data,
-                        block_count = blockCount,
-                        blocks,
-                        extractions
+                        block_count = _lineCount,
+                        blocks = extractionParameters["lines"]["show"] ? _lines : new List<string>(),
+                        extractions = _properties
                     },
                     selected = new
                     {
@@ -119,6 +105,15 @@ public class ProductionDataExternalSubprogramDetails : Veneer
 
             if (currentValue.IsDifferentString((object) LastChangedValue))
                 await OnDataChangedAsync(nativeInputs, additionalInputs, currentValue);
+
+            if (!extractionParameters["lines"]["keep"]) // Reset cached lines variables.
+            {
+                _lines = new List<string>();
+                _lineCount = 0;
+            }
+
+            if (!extractionParameters["properties"]["keep"]) // Reset cached properties variables.
+                _properties = new ExpandoObject() as IDictionary<string, object>;
         }
         else
         {

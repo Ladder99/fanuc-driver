@@ -33,9 +33,7 @@ public class MTCDeviceModelGenerator
         {
             var generator = _transport["generator"];
 
-#pragma warning disable CS8600
-            Template tp = null;
-#pragma warning restore CS8600
+            Template tp = null!;
             var so = new ScriptObject();
             var tc = new TemplateContext();
 
@@ -237,7 +235,6 @@ public class SHDR : Transport
         _deviceModelGenerator.Generate(model);
     }
 
-    [SuppressMessage("ReSharper", "UnusedParameter.Local")]
     private async Task InitAdapterAsync()
     {
         // ReSharper disable once UseObjectOrCollectionInitializer

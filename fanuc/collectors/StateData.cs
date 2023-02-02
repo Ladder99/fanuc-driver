@@ -31,13 +31,13 @@ public class StateData : FanucMultiStrategyCollector
         dynamic pathMarker)
     {
         await Strategy.Peel("state",
-            new[]
+            new dynamic[]
             {
                 await Strategy.SetNativeKeyed("stat_info",
                     await Strategy.Platform.StatInfoAsync()),
-                Strategy.Get("poweron_time_min"),
-                Strategy.Get("operating_time_min"),
-                Strategy.Get("cutting_time_min"),
+                Strategy.Get("poweron_time_min")!,
+                Strategy.Get("operating_time_min")!,
+                Strategy.Get("cutting_time_min")!,
                 await Strategy.SetNativeKeyed("feed_override",
                     await Strategy.Platform.RdPmcRngGByteAsync(12)),
                 await Strategy.SetNativeKeyed("rapid_override",

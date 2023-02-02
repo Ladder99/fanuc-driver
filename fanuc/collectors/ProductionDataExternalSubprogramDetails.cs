@@ -46,9 +46,9 @@ public class ProductionDataExternalSubprogramDetails : FanucMultiStrategyCollect
             .response.cnc_rdprgnum.prgnum.mdata;
 
         await Strategy.Peel("production",
-            new[]
+            new dynamic[]
             {
-                Strategy.GetKeyed("program_numbers"),
+                Strategy.GetKeyed("program_numbers")!,
                 await Strategy.SetNativeKeyed("pieces_produced",
                     await Strategy.Platform.RdParamDoubleWordNoAxisAsync(6711)),
                 await Strategy.SetNativeKeyed("pieces_produced_life",
@@ -59,13 +59,14 @@ public class ProductionDataExternalSubprogramDetails : FanucMultiStrategyCollect
                     await Strategy.Platform.RdParamDoubleWordNoAxisAsync(6758)),
                 await Strategy.SetNativeKeyed("cycle_time_ms",
                     await Strategy.Platform.RdParamDoubleWordNoAxisAsync(6757)),
-                Strategy.GetKeyed("program_numbers+last")
+                Strategy.GetKeyed("program_numbers+last")!
             },
             new[]
             {
                 Configuration["extraction"]
             });
 
+        // Save known program numbers to compare on next iteration.
         Strategy.SetKeyed("program_numbers+last",
             Strategy.GetKeyed("program_numbers"));
     }

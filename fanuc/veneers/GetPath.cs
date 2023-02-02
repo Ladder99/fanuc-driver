@@ -22,7 +22,6 @@ public class GetPath : Veneer
 
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 
-            //if (!currentValue.Equals(LastChangedValue))
             if (currentValue.IsDifferentString((object) LastChangedValue))
                 await OnDataChangedAsync(nativeInputs, additionalInputs, currentValue);
         }

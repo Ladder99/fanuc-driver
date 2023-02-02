@@ -8,19 +8,6 @@ public class FocasPerf : Veneer
     public FocasPerf(Veneers veneers, string name = "", bool isCompound = false, bool isInternal = false) : base(
         veneers, name, isCompound, isInternal)
     {
-        LastChangedValue = new
-        {
-            sweepMs = -1,
-            invocation = new
-            {
-                count = -1,
-                maxMethod = string.Empty,
-                maxMs = -1,
-                minMs = -1,
-                avgMs = -1,
-                failedMethods = new List<string>()
-            }
-        };
     }
 
     protected override async Task<dynamic> AnyAsync(dynamic[] nativeInputs, dynamic[] additionalInputs)
