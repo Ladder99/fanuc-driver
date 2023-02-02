@@ -648,9 +648,9 @@ public class FanucExtendedStrategy : FanucStrategy
             await SetNative("connect",
                 await Platform.ConnectAsync());
             await Peel("connection",
-                new[]
+                new dynamic[]
                 {
-                    Get("connect")
+                    Get("connect")!
                 },
                 new dynamic[]
                 {
@@ -729,9 +729,9 @@ public class FanucExtendedStrategy : FanucStrategy
             await SetNative("disconnect",
                 await Platform.DisconnectAsync());
             await Peel("connection",
-                new[]
+                new dynamic[]
                 {
-                    Get("disconnect")
+                    Get("disconnect")!
                 },
                 new dynamic[]
                 {

@@ -16,7 +16,7 @@ public partial class Platform
                 _machine.FocasEndpoint.Port,
                 _machine.FocasEndpoint.ConnectionTimeout,
                 out _handle);
-        });
+        }, throwOnSocketError: false); // Exclude Connect from throwing if EW_SOCKET
 
         var nr = new
         {

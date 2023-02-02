@@ -62,7 +62,7 @@ public partial class Platform
     
     private readonly string _docBasePath = "https://docs.ladder99.com/drivers/fanuc-driver/focas-api";
 
-    private NativeDispatchReturn _nativeDispatch(Func<Focas.focas_ret> func)
+    private NativeDispatchReturn _nativeDispatch(Func<Focas.focas_ret> func, bool throwOnSocketError = true)
     {
         Focas.focas_ret innerRc = Focas.focas_ret.EW_OK;
         long innerElapsed = 0;
@@ -80,6 +80,13 @@ public partial class Platform
         outerSw.Stop();
         
         //Console.WriteLine($"elapsed={innerElapsed}, waiting={outerSw.ElapsedMilliseconds - innerElapsed}");
+
+        // Throw if connection loss detected.
+        if (throwOnSocketError && innerRc == Focas.focas_ret.EW_SOCKET)
+        {
+            _logger.Error($"[{_machine.Id}] Connection lost.");
+            throw new SocketException((int)Focas.focas_ret.EW_SOCKET);
+        }
         
         return new NativeDispatchReturn
         {

@@ -9,7 +9,10 @@ public partial class Platform
 
     public dynamic Disconnect()
     {
-        var ndr = _nativeDispatch(() => { return (Focas.focas_ret) Focas.cnc_freelibhndl(_handle); });
+        var ndr = _nativeDispatch(() =>
+        {
+            return (Focas.focas_ret) Focas.cnc_freelibhndl(_handle);
+        }, throwOnSocketError: false); // Exclude Disconnect from throwing if EW_SOCKET
 
         var nr = new
         {
