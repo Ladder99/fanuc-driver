@@ -3,35 +3,6 @@
 #
 user:
 
-  machine-disabled: &machine-disabled
-    enabled: !!bool false
-  machine-base: &machine-base
-    enabled: !!bool true
-    type: l99.driver.fanuc.FanucMachine, fanuc
-    strategy: l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc
-    handler: l99.driver.fanuc.handlers.FanucOne, fanuc
-  change-filter: &change-filter
-    l99.driver.fanuc.handlers.FanucOne, fanuc:
-      change_only: !!bool true
-      skip_internal: !!bool true
-  no-filter: &no-filter
-    l99.driver.fanuc.handlers.FanucOne, fanuc:
-      change_only: !!bool false
-      skip_internal: !!bool true
-  default-mqtt-options: &default-mqtt-options
-    topic: fanuc/{{machine.Id}}/{{veneer.Name}}{{if veneer.SliceKey}}/{{veneer.SliceKey}}{{end}}
-
-  transport-base-null: &transport-base-null
-    transport: l99.driver.fanuc.transports.Null, fanuc
-  transport-base-mqtt: &transport-base-mqtt
-    transport: l99.driver.fanuc.transports.MQTT, fanuc
-  transport-base-influx: &transport-base-influx
-    transport: l99.driver.fanuc.transports.InfluxLP, fanuc
-  transport-base-shdr: &transport-base-shdr
-    transport: l99.driver.fanuc.transports.SHDR, fanuc
-  transport-base-spb: &transport-base-spb
-    transport: l99.driver.fanuc.transports.SpB, fanuc
-
   # sources
   source-1: &source-1
     l99.driver.fanuc.FanucMachine, fanuc:
