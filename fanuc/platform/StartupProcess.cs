@@ -10,7 +10,7 @@ public partial class Platform
     public dynamic StartupProcess(short level = 0, string filename = "~/focas2.log")
     {
 #if ARMV7 || LINUX64 || LINUX32
-            NativeDispatchReturn ndr = nativeDispatch(() =>
+            var ndr = _nativeDispatch(() =>
             {
                 return (Focas.focas_ret)Focas.cnc_startupprocess(level, filename);
             });

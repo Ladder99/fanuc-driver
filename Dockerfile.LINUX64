@@ -10,19 +10,33 @@ WORKDIR "/src/fanuc"
 RUN dotnet build "fanuc.csproj" \
 	-c Release \
 	-o /app/build \
+	/nowarn:CS0168 \
 	/nowarn:CS0618 \
-	/nowarn:CS8632 \
+	/nowarn:CS0684 \
 	/nowarn:CS1998 \
 	/nowarn:CS8032 \
+	/nowarn:CS8600 \
+	/nowarn:CS8601 \
+	/nowarn:CS8602 \
+	/nowarn:CS8604 \
+	/nowarn:CS8625 \
+	/nowarn:CS8632 \
 	-p:DefineConstants=LINUX64
 FROM build AS publish
 RUN dotnet publish "fanuc.csproj" \
 	-c Release \
 	-o /app/publish \
+	/nowarn:CS0168 \
 	/nowarn:CS0618 \
-	/nowarn:CS8632 \
+	/nowarn:CS0684 \
 	/nowarn:CS1998 \
 	/nowarn:CS8032 \
+	/nowarn:CS8600 \
+	/nowarn:CS8601 \
+	/nowarn:CS8602 \
+	/nowarn:CS8604 \
+	/nowarn:CS8625 \
+	/nowarn:CS8632 \
 	-p:DefineConstants=LINUX64
 
 FROM base AS final
