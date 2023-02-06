@@ -8,6 +8,11 @@ public class FanucOne : Handler
 {
     public FanucOne(Machine machine) : base(machine)
     {
+        if (!machine.Configuration.handler.ContainsKey("change_only"))
+            machine.Configuration.handler.Add("change_only", true);
+
+        if (!machine.Configuration.handler.ContainsKey("skip_internal"))
+            machine.Configuration.handler.Add("skip_internal", true);
     }
 
     protected override async Task<dynamic?> OnDataArrivalAsync(Veneers veneers, Veneer veneer, dynamic? beforeArrival)

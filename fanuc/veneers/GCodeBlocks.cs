@@ -1,5 +1,5 @@
 ﻿using l99.driver.@base;
-using l99.driver.fanuc.gcode;
+using l99.driver.fanuc.utils.gcode;
 
 //TODO: review relationship between pointer and block counter
 

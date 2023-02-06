@@ -21,12 +21,15 @@ public class InfluxLP : Transport
 
     public InfluxLP(Machine machine) : base(machine)
     {
+        //TODO: make defaults
     }
 
     public override async Task<dynamic?> CreateAsync()
     {
         _client = InfluxDBClientFactory
-            .Create(Machine.Configuration.transport["host"], Machine.Configuration.transport["token"]);
+            .Create(
+                Machine.Configuration.transport["host"], 
+                Machine.Configuration.transport["token"]);
 
         _writeApi = _client.GetWriteApiAsync();
 

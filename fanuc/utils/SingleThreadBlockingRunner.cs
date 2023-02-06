@@ -1,5 +1,5 @@
 // ReSharper disable once CheckNamespace
-namespace l99.driver.fanuc;
+namespace l99.driver.fanuc.utils;
 
 // https://stackoverflow.com/questions/61530632/forcing-certain-code-to-always-run-on-the-same-thread
 public class SingleThreadBlockingRunner

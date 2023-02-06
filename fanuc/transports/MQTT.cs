@@ -22,14 +22,13 @@ public class MQTT : Transport
 
     public MQTT(Machine machine) : base(machine)
     {
+        //TODO: make defaults
     }
 
     public override async Task<dynamic?> CreateAsync()
     {
-        //TODO: validate config
         _topicTemplate = Template.Parse(Machine.Configuration.transport["topic"]);
-        _key =
-            $"{Machine.Configuration.transport["net"]["type"]}://{Machine.Configuration.transport["net"]["ip"]}:{Machine.Configuration.transport["net"]["port"]}/{Machine.Id}";
+        _key = $"{Machine.Configuration.transport["net"]["type"]}://{Machine.Configuration.transport["net"]["ip"]}:{Machine.Configuration.transport["net"]["port"]}/{Machine.Id}";
 
         var factory = new MqttFactory();
         MqttClientOptionsBuilder builder;
@@ -43,7 +42,8 @@ public class MQTT : Transport
                 break;
             default:
                 builder = new MqttClientOptionsBuilder()
-                    .WithTcpServer(Machine.Configuration.transport["net"]["ip"],
+                    .WithTcpServer(
+                        Machine.Configuration.transport["net"]["ip"],
                         Machine.Configuration.transport["net"]["port"]);
                 break;
         }
@@ -101,8 +101,7 @@ public class MQTT : Transport
 
         if (_client.IsConnected)
         {
-            Logger.Trace(
-                $"{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds()} PUB {payload.Length}b => {topic}\n{payload}");
+            Logger.Trace($"{new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds()} PUB {payload.Length}b => {topic}\n{payload}");
 
             var msg = new MqttApplicationMessageBuilder()
                 .WithRetainFlag(retained)

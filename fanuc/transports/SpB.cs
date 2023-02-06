@@ -1,4 +1,5 @@
 ﻿using l99.driver.@base;
+using l99.driver.fanuc.utils;
 using SparkplugNet.Core.Node;
 using SparkplugNet.VersionB;
 using SparkplugNet.VersionB.Data;
@@ -21,6 +22,7 @@ public class SpB : Transport
 
     public SpB(Machine machine) : base(machine)
     {
+        //TODO: make defaults
     }
 
     public override async Task<dynamic?> CreateAsync()

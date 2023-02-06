@@ -6,9 +6,9 @@
         <Configurations>Debug;Release;Debug 32bit;Release 32 bit</Configurations>
         <Platforms>AnyCPU</Platforms>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <Company>mriiot</Company>
+        <Company>MRIIOT LLC</Company>
         <AssemblyVersion></AssemblyVersion>
-        <FileVersion>0.5.5.0</FileVersion>
+        <FileVersion>0.6.0.0</FileVersion>
         <NeutralLanguage>en</NeutralLanguage>
         <PackageId>fanuc-driver</PackageId>
         <Title>fanuc-driver</Title>
@@ -17,6 +17,7 @@
         <PackageProjectUrl>https://mriiot.com</PackageProjectUrl>
         <LangVersion>10</LangVersion>
         <Nullable>enable</Nullable>
+        <Product>fanuc-driver</Product>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug 32bit' ">
@@ -34,12 +35,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="InfluxDB.Client" Version="4.9.0" />
+      <PackageReference Include="InfluxDB.Client" Version="4.10.0" />
       <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
       <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="7.0.0" />
       <PackageReference Include="morelinq" Version="3.3.2" />
       <PackageReference Include="MQTTnet" Version="4.1.4.563" />
-      <PackageReference Include="MTConnect.NET" Version="4.6.0" />
+      <PackageReference Include="MTConnect.NET" Version="5.0.0" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
       <PackageReference Include="NLog.Extensions.Logging" Version="5.2.1" />
       <PackageReference Include="Scriban" Version="5.5.2" />

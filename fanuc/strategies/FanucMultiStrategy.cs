@@ -13,25 +13,22 @@ public class FanucMultiStrategy : FanucExtendedStrategy
 
     public FanucMultiStrategy(Machine machine) : base(machine)
     {
-    }
-
-    public override async Task<dynamic?> CreateAsync()
-    {
         if (!Machine.Configuration.strategy.ContainsKey("stay_connected"))
-        {
             Machine.Configuration.strategy.Add("stay_connected", false);
-        }
-        
+
         if (!Machine.Configuration.strategy.ContainsKey("exclusions"))
             Machine.Configuration.strategy.Add("exclusions", new Dictionary<object, object>());
         else if (Machine.Configuration.strategy["exclusions"] == null)
             Machine.Configuration.strategy["exclusions"] = new Dictionary<object, object>();
 
-        _exclusions = Machine.Configuration.strategy["exclusions"];
-
         if (!Machine.Configuration.strategy.ContainsKey("collectors"))
             Machine.Configuration.strategy.Add("collectors", new List<object>());
+    }
 
+    public override async Task<dynamic?> CreateAsync()
+    {
+        _exclusions = Machine.Configuration.strategy["exclusions"];
+        
         foreach (var collectorType in Machine.Configuration.strategy["collectors"])
         {
             Logger.Info($"[{Machine.Id}] Creating collector: {collectorType}");

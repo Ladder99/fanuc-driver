@@ -1,6 +1,6 @@
 // ReSharper disable once CheckNamespace
 
-namespace l99.driver.fanuc.gcode;
+namespace l99.driver.fanuc.utils.gcode;
 /* block tracking usage
  
 private Blocks _blocks = new Blocks();

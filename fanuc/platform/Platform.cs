@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using l99.driver.fanuc.utils;
 
 // ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc;

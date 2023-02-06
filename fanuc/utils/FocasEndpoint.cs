@@ -1,5 +1,5 @@
 // ReSharper disable once CheckNamespace
-namespace l99.driver.fanuc;
+namespace l99.driver.fanuc.utils;
 
 public class FocasEndpoint
 {

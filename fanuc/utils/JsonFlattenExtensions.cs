@@ -1,6 +1,7 @@
 #pragma warning disable CS8600, CS8601, CS8602, CS8603, CS8604, CS8625
 
-namespace l99.driver.fanuc;
+// ReSharper disable once CheckNamespace
+namespace l99.driver.fanuc.utils;
 
 // source: https://raw.githubusercontent.com/GFoley83/JsonFlatten/master/JsonFlatten/JsonExtensions.cs
 public static class JsonFlattenExtensions

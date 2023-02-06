@@ -2,3 +2,130 @@
 # user configuration section
 #
 user:
+
+  machine-disabled: &machine-disabled
+    enabled: !!bool false
+  machine-base: &machine-base
+    enabled: !!bool true
+    type: l99.driver.fanuc.FanucMachine, fanuc
+    strategy: l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc
+    handler: l99.driver.fanuc.handlers.FanucOne, fanuc
+  change-filter: &change-filter
+    l99.driver.fanuc.handlers.FanucOne, fanuc:
+      change_only: !!bool true
+      skip_internal: !!bool true
+  no-filter: &no-filter
+    l99.driver.fanuc.handlers.FanucOne, fanuc:
+      change_only: !!bool false
+      skip_internal: !!bool true
+  default-mqtt-options: &default-mqtt-options
+    topic: fanuc/{{machine.Id}}/{{veneer.Name}}{{if veneer.SliceKey}}/{{veneer.SliceKey}}{{end}}
+
+  transport-base-null: &transport-base-null
+    transport: l99.driver.fanuc.transports.Null, fanuc
+  transport-base-mqtt: &transport-base-mqtt
+    transport: l99.driver.fanuc.transports.MQTT, fanuc
+  transport-base-influx: &transport-base-influx
+    transport: l99.driver.fanuc.transports.InfluxLP, fanuc
+  transport-base-shdr: &transport-base-shdr
+    transport: l99.driver.fanuc.transports.SHDR, fanuc
+  transport-base-spb: &transport-base-spb
+    transport: l99.driver.fanuc.transports.SpB, fanuc
+
+  # sources
+  source-1: &source-1
+    l99.driver.fanuc.FanucMachine, fanuc:
+      sweep_ms: !!int 1000
+      net:
+        ip: 10.1.10.211
+        port: !!int 8193
+        timeout_s: !!int 3
+
+  # collectors
+  collector-0: &collector-0
+    l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
+      stay_connected: !!bool false
+      #exclusions:
+      #  1: 
+      #  2: [ X, S ]
+      #  3: [ % ]
+      collectors:
+      - l99.driver.fanuc.collectors.ParameterDump, fanuc
+      - l99.driver.fanuc.collectors.DiagnosisDump, fanuc
+      - l99.driver.fanuc.collectors.PmcDump, fanuc
+  collector-1: &collector-1
+    l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
+      stay_connected: !!bool false
+      #exclusions:
+      #  1: 
+      #  2: [ X, S ]
+      #  3: [ % ]
+      collectors:
+      - l99.driver.fanuc.collectors.MachineInfo, fanuc
+      - l99.driver.fanuc.collectors.Alarms, fanuc
+      - l99.driver.fanuc.collectors.Messages, fanuc
+      - l99.driver.fanuc.collectors.StateData, fanuc
+      - l99.driver.fanuc.collectors.ToolData, fanuc
+      - l99.driver.fanuc.collectors.ProductionData, fanuc
+      - l99.driver.fanuc.collectors.GCodeData, fanuc
+      - l99.driver.fanuc.collectors.AxisData, fanuc
+      - l99.driver.fanuc.collectors.SpindleData, fanuc
+
+  # sinks
+  target-null: &target-null
+    << : *transport-base-null
+    l99.driver.fanuc.transports.Null, fanuc:
+      enabled: !!bool true
+  target-mqtt-1: &target-mqtt-1
+    << : *transport-base-mqtt
+    l99.driver.fanuc.transports.MQTT, fanuc:
+      << : *default-mqtt-options
+      enabled: !!bool true
+      net:
+        type: tcp
+        ip: localhost
+        port: !!int 1883
+      anonymous: !!bool true
+      user:
+      password:
+  target-mqtt-2: &target-mqtt-2
+    << : *transport-base-mqtt
+    l99.driver.fanuc.transports.MQTT, fanuc:
+      << : *default-mqtt-options
+      enabled: !!bool true
+      net:
+        type: ws
+        ip: test.mosquitto.org
+        port: !!int 8080
+      anonymous: !!bool true
+      user:
+      password:
+  target-influx-1: &target-influx-1
+    <<: *transport-base-influx
+    l99.driver.fanuc.transports.InfluxLP, fanuc:
+      <<: *default-influx-transformers
+      host: "http://influx:8086"
+      token: "dewlnpy0CmcikwWmMBlqoxcoeuUWpdlDQi8yH7QyGU0tcfn0avMMcpPWYJ-ZUmLD8iHXNl27M3GBHGC4n4_EwA=="
+      org: "fanuc"
+      bucket: "fanuc"
+  target-spb-1: &target-spb-1
+    << : *transport-base-spb
+    l99.driver.fanuc.transports.SpB, fanuc:
+      enabled: !!bool true
+      net:
+        type: tcp
+        ip: 10.1.10.2
+        port: !!int 1883
+      anonymous: !!bool false
+      user: admin
+      password: password
+  target-shdr-1: &target-shdr-1
+    << : *transport-base-shdr
+    l99.driver.fanuc.transports.SHDR, fanuc:
+      << : *default-shdr-transformers
+      << : *default-shdr-model-genny
+      device_name: f_sim
+      net:
+        port: !!int 7878
+        heartbeat_ms: !!int 10000
+        interval_ms: !!int 1000
