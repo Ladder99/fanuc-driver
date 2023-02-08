@@ -94,7 +94,6 @@ machines:
       skip_internal: !!bool true
     l99.driver.fanuc.transports.MQTT, fanuc:
       topic: fanuc/{{machine.Id}}/{{veneer.Name}}{{if veneer.SliceKey}}/{{veneer.SliceKey}}{{end}}
-      enabled: !!bool true
       net:
         type: tcp
         ip: 127.0.0.1
@@ -188,7 +187,6 @@ machines:
       - l99.driver.fanuc.collectors.AxisData, fanuc
       - l99.driver.fanuc.collectors.SpindleData, fanuc
     l99.driver.fanuc.transports.SpB, fanuc:
-      enabled: !!bool true
       net:
         type: tcp
         ip: 10.1.10.2

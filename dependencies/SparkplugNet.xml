@@ -1,0 +1,3590 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SparkplugNet</name>
+    </assembly>
+    <members>
+        <member name="T:SparkplugNet.Core.Application.SparkplugApplicationBase`1">
+            <inheritdoc cref="T:SparkplugNet.Core.SparkplugBase`1"/>
+            <summary>
+            A class that handles a Sparkplug application.
+            </summary>
+            <seealso cref="T:SparkplugNet.Core.SparkplugBase`1"/>
+            <inheritdoc cref="T:SparkplugNet.Core.SparkplugBase`1"/>
+            <summary>
+            A class that handles a Sparkplug application.
+            </summary>
+            <seealso cref="T:SparkplugNet.Core.SparkplugBase`1"/>
+            <inheritdoc cref="T:SparkplugNet.Core.SparkplugBase`1"/>
+            <summary>
+            A class that handles a Sparkplug application.
+            </summary>
+            <seealso cref="T:SparkplugNet.Core.SparkplugBase`1"/>
+        </member>
+        <member name="M:SparkplugNet.Core.Application.SparkplugApplicationBase`1.#ctor(System.Collections.Generic.IEnumerable{`0},Serilog.ILogger)">
+            <inheritdoc cref="T:SparkplugNet.Core.SparkplugBase`1"/>
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.Core.Application.SparkplugApplicationBase`1"/> class.
+            </summary>
+            <param name="knownMetrics">The known metric names.</param>
+            <param name="logger">The logger.</param>
+            <seealso cref="T:SparkplugNet.Core.SparkplugBase`1"/>
+        </member>
+        <member name="M:SparkplugNet.Core.Application.SparkplugApplicationBase`1.#ctor(SparkplugNet.Core.SparkplugBase{`0}.KnownMetricStorage,Serilog.ILogger)">
+            <inheritdoc cref="T:SparkplugNet.Core.SparkplugBase`1"/>
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.Core.Application.SparkplugApplicationBase`1"/> class.
+            </summary>
+            <param name="knownMetricsStorage">The known metric storage.</param>
+            <param name="logger">The logger.</param>
+            <seealso cref="T:SparkplugNet.Core.SparkplugBase`1"/>
+        </member>
+        <member name="P:SparkplugNet.Core.Application.SparkplugApplicationBase`1.NodeStates">
+            <summary>
+            Gets the node states.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.Application.SparkplugApplicationBase`1.DeviceStates">
+            <summary>
+            Gets the device states.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.Application.SparkplugApplicationBase`1.Options">
+            <summary>
+            Gets the options.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.Application.SparkplugApplicationBase`1.Start(SparkplugNet.Core.Application.SparkplugApplicationOptions)">
+            <summary>
+            Starts the Sparkplug application.
+            </summary>
+            <param name="applicationOptions">The application options.</param>
+            <exception cref="T:System.InvalidOperationException">Thrown if the start should be only called once.</exception>
+            <exception cref="T:System.ArgumentNullException">Thrown if the options are null.</exception>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Application.SparkplugApplicationBase`1.Stop">
+            <summary>
+            Stops the Sparkplug application.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Application.SparkplugApplicationBase`1.PublishNodeCommand(System.Collections.Generic.IEnumerable{`0},System.String,System.String)">
+            <summary>
+            Publishes a node command.
+            </summary>
+            <param name="metrics">The metrics.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the options are null.</exception>
+            <exception cref="T:System.Exception">Thrown if the MQTT client is not connected or an invalid metric type was specified.</exception>
+            <exception cref="T:System.ArgumentException">Thrown if the group or edge node identifier is invalid.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the namespace is out of range.</exception>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Application.SparkplugApplicationBase`1.PublishDeviceCommand(System.Collections.Generic.IEnumerable{`0},System.String,System.String,System.String)">
+            <summary>
+            Publishes a device command message.
+            </summary>
+            <param name="metrics">The metrics.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the options are null.</exception>
+            <exception cref="T:System.Exception">Thrown if the MQTT client is not connected or an invalid metric type was specified.</exception>
+            <exception cref="T:System.ArgumentException">Thrown if the group or edge node or device identifier is invalid.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the namespace is out of range.</exception>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Application.SparkplugApplicationBase`1.PublishNodeCommandMessage(System.Collections.Generic.IEnumerable{`0},System.String,System.String)">
+            <summary>
+            Publishes a node command message.
+            </summary>
+            <param name="metrics">The metrics.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the options are null.</exception>
+            <exception cref="T:System.Exception">Thrown if an invalid metric type was specified.</exception>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Application.SparkplugApplicationBase`1.PublishDeviceCommandMessage(System.Collections.Generic.IEnumerable{`0},System.String,System.String,System.String)">
+            <summary>
+            Publishes a device command message.
+            </summary>
+            <param name="metrics">The metrics.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the options are null.</exception>
+            <exception cref="T:System.Exception">Thrown if an invalid metric type was specified.</exception>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Application.SparkplugApplicationBase`1.OnMessageReceived(SparkplugNet.Core.Topics.SparkplugMessageTopic,System.Byte[])">
+            <summary>
+            Called when a message is received.
+            </summary>
+            <param name="topic">The topic.</param>
+            <param name="payload">The payload.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Application.SparkplugApplicationBase`1.OnClientConnectedAsync(MQTTnet.Client.MqttClientConnectedEventArgs)">
+            <summary>
+            Handles the client connected event.
+            </summary>
+            <param name="args">The arguments.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Application.SparkplugApplicationBase`1.OnClientDisconnectedAsync(MQTTnet.Client.MqttClientDisconnectedEventArgs)">
+            <summary>
+            Handles the client disconnection event.
+            </summary>
+            <param name="args">The arguments.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the options are null.</exception>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Application.SparkplugApplicationBase`1.AddEventHandler">
+            <summary>
+            Adds the event handler and the reconnect functionality to the client.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the options are null.</exception>
+        </member>
+        <member name="M:SparkplugNet.Core.Application.SparkplugApplicationBase`1.AddMessageReceivedHandler">
+            <summary>
+            Adds the message received handler to handle incoming messages.
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the namespace is out of range.</exception>
+        </member>
+        <member name="M:SparkplugNet.Core.Application.SparkplugApplicationBase`1.OnApplicationMessageReceived(MQTTnet.Client.MqttApplicationMessageReceivedEventArgs)">
+            <summary>
+            Handles the message received handler.
+            </summary>
+            <param name="args">The arguments.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the namespace is out of range.</exception>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Application.SparkplugApplicationBase`1.ConnectInternal">
+            <summary>
+            Connects the Sparkplug application to the MQTT broker.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the options are null.</exception>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Application.SparkplugApplicationBase`1.PublishInternal">
+            <summary>
+            Publishes data to the MQTT broker.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the options are null.</exception>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Application.SparkplugApplicationBase`1.SubscribeInternal">
+            <summary>
+            Subscribes the client to the application subscribe topic.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Application.SparkplugApplicationBase`1.UpdateMetricState(SparkplugNet.Core.Enumerations.SparkplugMetricStatus)">
+            <summary>
+            Updates the metric state.
+            </summary>
+            <param name="metricState">The metric state.</param>
+        </member>
+        <member name="T:SparkplugNet.Core.Application.SparkplugApplicationBase`1.NodeDataEventArgs">
+            <summary>
+            A class for the node data event args.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.Application.SparkplugApplicationBase`1.NodeDataEventArgs.#ctor(SparkplugNet.Core.Application.SparkplugApplicationBase{`0},System.String,System.String,`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.Core.Application.SparkplugApplicationBase`1.NodeDataEventArgs"/> class.
+            </summary>
+            <param name="sender">The sender.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="metric">The metric.</param>
+        </member>
+        <member name="P:SparkplugNet.Core.Application.SparkplugApplicationBase`1.NodeDataEventArgs.Metric">
+            <summary>
+            Gets the metric.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.Core.Application.SparkplugApplicationBase`1.DeviceDataEventArgs">
+            <inheritdoc cref="T:SparkplugNet.Core.Application.SparkplugApplicationBase`1.NodeDataEventArgs"/>
+            <summary>
+            A class for the device data event args.
+            </summary>
+            <seealso cref="T:SparkplugNet.Core.Application.SparkplugApplicationBase`1.NodeDataEventArgs"/>
+        </member>
+        <member name="M:SparkplugNet.Core.Application.SparkplugApplicationBase`1.DeviceDataEventArgs.#ctor(SparkplugNet.Core.Application.SparkplugApplicationBase{`0},System.String,System.String,System.String,`0)">
+            <inheritdoc cref="T:SparkplugNet.Core.Application.SparkplugApplicationBase`1.NodeDataEventArgs"/>
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.Core.Application.SparkplugApplicationBase`1.DeviceDataEventArgs"/> class.
+            </summary>
+            <param name="sender">The sender.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <param name="metric">The metric.</param>
+            <seealso cref="T:SparkplugNet.Core.Application.SparkplugApplicationBase`1.NodeDataEventArgs"/>
+        </member>
+        <member name="P:SparkplugNet.Core.Application.SparkplugApplicationBase`1.DeviceDataEventArgs.DeviceIdentifier">
+            <summary>
+            Gets the device identifier.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.Application.SparkplugApplicationBase`1.DeviceDataReceivedEvent">
+            <summary>
+            The device data received event.
+            </summary>
+        </member>
+        <member name="E:SparkplugNet.Core.Application.SparkplugApplicationBase`1.DeviceDataReceivedAsync">
+            <summary>
+            Occurs when the device data was received.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.Application.SparkplugApplicationBase`1.FireDeviceDataReceivedAsync(System.String,System.String,System.String,`0)">
+            <summary>
+            Fires the device data received event asynchronously.
+            </summary>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <param name="metric">The metric.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="F:SparkplugNet.Core.Application.SparkplugApplicationBase`1.NodeDataReceivedEvent">
+            <summary>
+            The node data received event.
+            </summary>
+        </member>
+        <member name="E:SparkplugNet.Core.Application.SparkplugApplicationBase`1.NodeDataReceivedAsync">
+            <summary>
+            Occurs when the node data was received.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.Application.SparkplugApplicationBase`1.FireNodeDataReceivedAsync(System.String,System.String,`0)">
+            <summary>
+            Fires the node data received asynchronously.
+            </summary>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="metric">The metric.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="F:SparkplugNet.Core.Application.SparkplugApplicationBase`1.DeviceBirthReceivedEvent">
+            <summary>
+            The device birth received event.
+            </summary>
+        </member>
+        <member name="E:SparkplugNet.Core.Application.SparkplugApplicationBase`1.DeviceBirthReceivedAsync">
+            <summary>
+            Occurs when the device birth was received.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.Application.SparkplugApplicationBase`1.FireDeviceBirthReceivedAsync(System.String,System.String,System.String,System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Fires the device birth received asynchronously.
+            </summary>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <param name="metrics">The metrics.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="F:SparkplugNet.Core.Application.SparkplugApplicationBase`1.DeviceDeathReceivedEvent">
+            <summary>
+            The device death received event.
+            </summary>
+        </member>
+        <member name="E:SparkplugNet.Core.Application.SparkplugApplicationBase`1.DeviceDeathReceivedAsync">
+            <summary>
+            Occurs when the device death was received.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.Application.SparkplugApplicationBase`1.FireDeviceDeathReceivedAsync(System.String,System.String,System.String)">
+            <summary>
+            Fires the device death received asynchronously.
+            </summary>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="F:SparkplugNet.Core.Application.SparkplugApplicationBase`1.NodeBirthReceivedEvent">
+            <summary>
+            The node birth received event.
+            </summary>
+        </member>
+        <member name="E:SparkplugNet.Core.Application.SparkplugApplicationBase`1.NodeBirthReceivedAsync">
+            <summary>
+            Occurs when the node birth was received.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.Application.SparkplugApplicationBase`1.FireNodeBirthReceivedAsync(System.String,System.String,System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Fires the node birth received asynchronously.
+            </summary>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="metrics">The metrics.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="F:SparkplugNet.Core.Application.SparkplugApplicationBase`1.NodeDeathReceivedEvent">
+            <summary>
+            The node death received event.
+            </summary>
+        </member>
+        <member name="E:SparkplugNet.Core.Application.SparkplugApplicationBase`1.NodeDeathReceivedAsync">
+            <summary>
+            Occurs when the node death was received.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.Application.SparkplugApplicationBase`1.FireNodeDeathReceivedAsync(System.String,System.String)">
+            <summary>
+            Fires the node death received asynchronously.
+            </summary>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="T:SparkplugNet.Core.Application.SparkplugApplicationOptions">
+            <inheritdoc cref="T:SparkplugNet.Core.SparkplugBaseOptions"/>
+            <summary>
+            A class that contains the Sparkplug application options.
+            </summary>
+            <seealso cref="T:SparkplugNet.Core.SparkplugBaseOptions"/>
+        </member>
+        <member name="F:SparkplugNet.Core.Application.SparkplugApplicationOptions.DefaultAddSessionNumberToCommandMessages">
+            <summary>
+            The default option to add session numbers to command messages.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.Application.SparkplugApplicationOptions.#ctor">
+            <inheritdoc cref="T:SparkplugNet.Core.SparkplugBaseOptions"/>
+            <summary>
+            For serializers only.
+            Initializes a new instance of the <see cref="T:SparkplugNet.Core.Application.SparkplugApplicationOptions"/> class.
+            </summary>
+            <seealso cref="T:SparkplugNet.Core.SparkplugBaseOptions"/>
+        </member>
+        <member name="M:SparkplugNet.Core.Application.SparkplugApplicationOptions.#ctor(System.String,System.Int32,System.String,System.String,System.String,System.Boolean,System.String,System.Boolean,SparkplugNet.Core.SparkplugBaseOptions.GetTlsParametersDelegate,MQTTnet.Client.MqttClientOptionsBuilderWebSocketParameters,MQTTnet.Client.MqttClientWebSocketProxyOptions)">
+            <inheritdoc cref="T:SparkplugNet.Core.SparkplugBaseOptions"/>
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.Core.Application.SparkplugApplicationOptions"/> class.
+            </summary>
+            <param name="brokerAddress">The broker address.</param>
+            <param name="port">The port.</param>
+            <param name="clientId">The client identifier.</param>
+            <param name="userName">The name of the user.</param>
+            <param name="password">The password.</param>
+            <param name="useTls">A value indicating whether TLS is used or not.</param>
+            <param name="scadaHostIdentifier">The SCADA host identifier.</param>
+            <param name="isPrimaryApplication">A value indicating whether the application is a primary application or not.</param>
+            <param name="getTlsParameters">The delegate to provide TLS parameters.</param>
+            <param name="webSocketParameters">The web socket parameters.</param>
+            <param name="proxyOptions">The proxy options.</param>
+            <seealso cref="T:SparkplugNet.Core.SparkplugBaseOptions"/>
+        </member>
+        <member name="M:SparkplugNet.Core.Application.SparkplugApplicationOptions.#ctor(System.String,System.Int32,System.String,System.String,System.String,System.Boolean,System.String,System.TimeSpan,System.Boolean,MQTTnet.Client.MqttClientOptionsBuilderWebSocketParameters,MQTTnet.Client.MqttClientWebSocketProxyOptions,System.Nullable{System.Threading.CancellationToken})">
+            <inheritdoc cref="T:SparkplugNet.Core.SparkplugBaseOptions"/>
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.Core.Application.SparkplugApplicationOptions"/> class.
+            </summary>
+            <param name="brokerAddress">The broker address.</param>
+            <param name="port">The port.</param>
+            <param name="clientId">The client identifier.</param>
+            <param name="userName">The name of the user.</param>
+            <param name="password">The password.</param>
+            <param name="useTls">A value indicating whether TLS is used or not.</param>
+            <param name="scadaHostIdentifier">The SCADA host identifier.</param>
+            <param name="reconnectInterval">The reconnect interval.</param>
+            <param name="isPrimaryApplication">A value indicating whether the application is a primary application or not.</param>
+            <param name="webSocketParameters">The web socket parameters.</param>
+            <param name="proxyOptions">The proxy options.</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <seealso cref="T:SparkplugNet.Core.SparkplugBaseOptions"/>
+        </member>
+        <member name="M:SparkplugNet.Core.Application.SparkplugApplicationOptions.#ctor(System.String,System.Int32,System.String,System.String,System.String,System.Boolean,System.String,System.TimeSpan,System.Boolean,SparkplugNet.Core.SparkplugBaseOptions.GetTlsParametersDelegate,MQTTnet.Client.MqttClientOptionsBuilderWebSocketParameters,MQTTnet.Client.MqttClientWebSocketProxyOptions,System.Nullable{System.Threading.CancellationToken})">
+            <inheritdoc cref="T:SparkplugNet.Core.SparkplugBaseOptions"/>
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.Core.Application.SparkplugApplicationOptions"/> class.
+            </summary>
+            <param name="brokerAddress">The broker address.</param>
+            <param name="port">The port.</param>
+            <param name="clientId">The client identifier.</param>
+            <param name="userName">The name of the user.</param>
+            <param name="password">The password.</param>
+            <param name="useTls">A value indicating whether TLS is used or not.</param>
+            <param name="scadaHostIdentifier">The SCADA host identifier.</param>
+            <param name="reconnectInterval">The reconnect interval.</param>
+            <param name="isPrimaryApplication">A value indicating whether the application is a primary application or not.</param>
+            <param name="getTlsParameters">The delegate to provide TLS parameters.</param>
+            <param name="webSocketParameters">The web socket parameters.</param>
+            <param name="proxyOptions">The proxy options.</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <seealso cref="T:SparkplugNet.Core.SparkplugBaseOptions"/>
+        </member>
+        <member name="P:SparkplugNet.Core.Application.SparkplugApplicationOptions.IsPrimaryApplication">
+            <summary>
+            Gets or sets a value indicating whether the application the primary application or not.
+            If this value is set to <c>true</c>, the application sends STATE messages, else not.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.Application.SparkplugApplicationOptions.AddSessionNumberToCommandMessages">
+            <summary>
+            Gets or sets a value indicating whether session messages are added to command messages or not.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.Application.SparkplugApplicationOptions.CancellationToken">
+            <summary>
+            Gets or sets the cancellation token.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.Core.Constants">
+            <summary>
+            A class that contains constant values.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.Constants.SessionNumberMetricName">
+            <summary>
+            The session number metric name.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.Constants.Epoch">
+            <summary>
+            The epoch.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.Core.Data.ValueBase`1">
+            <summary>
+            Base Value class for shared properties amongst Data classes
+            </summary>
+            <typeparam name="DataTypeEnum"></typeparam>
+        </member>
+        <member name="F:SparkplugNet.Core.Data.ValueBase`1.floatValue">
+            <summary>
+            The float value.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.Data.ValueBase`1.doubleValue">
+            <summary>
+            The double value.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.Data.ValueBase`1.booleanValue">
+            <summary>
+            The boolean value.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.Data.ValueBase`1.stringValue">
+            <summary>
+            The string value.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.Data.ValueBase`1.FloatValue">
+            <summary>
+            Gets or sets the float value.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.Data.ValueBase`1.DoubleValue">
+            <summary>
+            Gets or sets the double value.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.Data.ValueBase`1.BooleanValue">
+            <summary>
+            Gets or sets the boolean value.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.Data.ValueBase`1.StringValue">
+            <summary>
+            Gets or sets the string value.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.Data.ValueBase`1.Value">
+            <summary>
+            Gets the value.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.Data.ValueBase`1.ValueCase">
+            <summary>
+            Gets or sets the Value Case.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.Data.ValueBase`1.DataType">
+            <summary>
+            Gets or sets the DataType.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.Data.ValueBase`1.SetValue(`0,System.Object)">
+            <summary>
+            Sets the value.
+            </summary>
+            <param name="dataType">Type of the data.</param>
+            <param name="value">The value.</param>
+            <returns>The metric value.</returns>
+        </member>
+        <member name="T:SparkplugNet.Core.Enumerations.SparkplugMessageType">
+            <summary>
+            The Sparkplug message type enumeration.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.Enumerations.SparkplugMessageType.NodeBirth">
+            <summary>
+            The node birth message type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.Enumerations.SparkplugMessageType.NodeDeath">
+            <summary>
+            The death birth message type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.Enumerations.SparkplugMessageType.DeviceBirth">
+            <summary>
+            The device birth message type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.Enumerations.SparkplugMessageType.DeviceDeath">
+            <summary>
+            The device death message type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.Enumerations.SparkplugMessageType.NodeData">
+            <summary>
+            The node data message type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.Enumerations.SparkplugMessageType.DeviceData">
+            <summary>
+            The device data message type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.Enumerations.SparkplugMessageType.NodeCommand">
+            <summary>
+            The node command message type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.Enumerations.SparkplugMessageType.DeviceCommand">
+            <summary>
+            The device command message type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.Enumerations.SparkplugMessageType.StateMessage">
+            <summary>
+            The state message message type.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.Core.Enumerations.SparkplugMetricStatus">
+            <summary>
+            The Sparkplug metric status enumeration.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.Enumerations.SparkplugMetricStatus.Unknown">
+            <summary>
+            The unknown Sparkplug connection status.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.Enumerations.SparkplugMetricStatus.Online">
+            <summary>
+            The online Sparkplug connection status.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.Enumerations.SparkplugMetricStatus.Offline">
+            <summary>
+            The offline Sparkplug connection status.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.Core.Enumerations.SparkplugNamespace">
+            <summary>
+            The Sparkplug namespace enumeration.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.Enumerations.SparkplugNamespace.VersionA">
+            <summary>
+            The version A namespace.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.Enumerations.SparkplugNamespace.VersionB">
+            <summary>
+            The version B namespace.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.Core.Enumerations.SparkplugQualityOfServiceLevel">
+            <summary>
+            The Sparkplug quality of service level enumeration.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.Enumerations.SparkplugQualityOfServiceLevel.AtMostOnce">
+            <summary>
+            The at most once Sparkplug quality of service level.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.Enumerations.SparkplugQualityOfServiceLevel.AtLeastOnce">
+            <summary>
+            The at least once Sparkplug quality of service level.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.Core.Extensions.DataTypeExtensions">
+            <summary>
+            A class that contains data type extension methods.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.Extensions.DataTypeExtensions.ConvertTo``1(System.Object)">
+            <summary>
+            Converts the value to type T
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="objValue">The object value.</param>
+            <returns>The converted value.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Extensions.DataTypeExtensions.ConvertOrDefaultTo``1(System.Object)">
+            <summary>
+            Converts the value to type T or uses a default value
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="objValue"></param>
+            <returns>The converted or default value.</returns>
+        </member>
+        <member name="T:SparkplugNet.Core.Extensions.EnumerableExtensions">
+            <summary>
+            A class that contains enumerable extension methods.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.Extensions.EnumerableExtensions.ToNonNullList``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Converts an <see cref="T:System.Collections.Generic.IEnumerable`1"/> to a not null list.
+            </summary>
+            <typeparam name="T">The type parameter.</typeparam>
+            <param name="target">The target.</param>
+            <returns>A not null <see cref="T:System.Collections.Generic.List`1"/>.</returns>
+        </member>
+        <member name="T:SparkplugNet.Core.Extensions.EnumExtensions">
+            <summary>
+            A class that contains extension methods for all <see cref="T:System.Enum"/> data types.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.Extensions.EnumExtensions.GetDescription(System.Enum)">
+            <summary>
+            Gets the <see cref="T:System.ComponentModel.DescriptionAttribute" /> text of the <see cref="T:System.Enum"/>.
+            </summary>
+            <param name="enum">The <see cref="T:System.Enum"/> value.</param>
+            <returns>The <see cref="T:System.ComponentModel.DescriptionAttribute" /> text of the <see cref="T:System.Enum"/>.</returns>
+        </member>
+        <member name="T:SparkplugNet.Core.Extensions.StringExtensions">
+            <summary>
+            A class that contains extension methods for all <see cref="T:System.String"/> data type.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.Extensions.StringExtensions.IsIdentifierValid(System.String)">
+            <summary>
+            Checks whether the given identifier is valid or not.
+            </summary>
+            <param name="value">The value.</param>
+            <returns>A value indicating whether the identifier is valid or not.</returns>
+        </member>
+        <member name="T:SparkplugNet.Core.Interfaces.IMetric">
+            <summary>
+            The interface for all metrics.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.Interfaces.IMetric.Name">
+            <summary>
+            Gets the name.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.Core.Interfaces.ISparkplugConnection">
+            <summary>
+            A base interface for all Sparkplug applications, nodes and devices.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.Interfaces.ISparkplugConnection.KnownMetrics">
+            <summary>
+            Gets the known metric names.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.Interfaces.ISparkplugConnection.IsConnected">
+            <summary>
+            Gets a value indicating whether this instance is connected or not.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.Core.Interfaces.IValue`1">
+            <summary>
+            The interface for all values.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.Interfaces.IValue`1.Value">
+            <summary>
+            Gets the value.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.Interfaces.IValue`1.ValueCase">
+            <summary>
+            Gets or sets the Value Case.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.Interfaces.IValue`1.DataType">
+            <summary>
+            Gets or sets the DataType.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.Interfaces.IValue`1.SetValue(`0,System.Object)">
+            <summary>
+            Sets the value.
+            </summary>
+            <param name="dataType">Type of the data.</param>
+            <param name="value">The value.</param>
+            <returns>The metric value.</returns>
+        </member>
+        <member name="T:SparkplugNet.Core.Messages.SparkplugMessageGenerator">
+            <summary>
+            The Sparkplug message generator.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.Messages.SparkplugMessageGenerator.logger">
+            <summary>
+            The logger.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugMessageGenerator.#ctor(Serilog.ILogger)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.Core.Messages.SparkplugMessageGenerator"/> class.
+            </summary>
+            <param name="logger">The logger.</param>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugMessageGenerator.GetSparkplugStateMessage(SparkplugNet.Core.Enumerations.SparkplugNamespace,System.String,System.Boolean)">
+            <summary>
+            Gets a STATE message.
+            </summary>
+            <param name="nameSpace">The namespace.</param>
+            <param name="scadaHostIdentifier">The SCADA host identifier.</param>
+            <param name="online">A value indicating whether the message sender is online or not.</param>
+            <exception cref="T:System.ArgumentException">Thrown if the SCADA host identifier is invalid.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the namespace is out of range.</exception>
+            <returns>A new STATE <see cref="T:MQTTnet.MqttApplicationMessage"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugMessageGenerator.GetSparkPlugNodeBirthMessage``1(SparkplugNet.Core.Enumerations.SparkplugNamespace,System.String,System.String,System.Collections.Generic.IEnumerable{``0},System.Int32,System.Int64,System.DateTimeOffset)">
+            <summary>
+            Gets a NBIRTH message.
+            </summary>
+            <typeparam name="T">The type parameter.</typeparam>
+            <param name="nameSpace">The namespace.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="metrics">The metrics.</param>
+            <param name="sequenceNumber">The sequence number.</param>
+            <param name="sessionNumber">The session number.</param>
+            <param name="dateTime">The date time.</param>
+            <exception cref="T:System.ArgumentException">Thrown if the group identifier or the edge node identifier is invalid.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the namespace is out of range.</exception>
+            <returns>A new NBIRTH <see cref="T:MQTTnet.MqttApplicationMessage"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugMessageGenerator.GetSparkPlugDeviceBirthMessage``1(SparkplugNet.Core.Enumerations.SparkplugNamespace,System.String,System.String,System.String,System.Collections.Generic.IEnumerable{``0},System.Int32,System.Int64,System.DateTimeOffset)">
+            <summary>
+            Gets a DBIRTH message.
+            </summary>
+            <typeparam name="T">The type parameter.</typeparam>
+            <param name="nameSpace">The namespace.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <param name="metrics">The metrics.</param>
+            <param name="sequenceNumber">The sequence number.</param>
+            <param name="sessionNumber">The session number.</param>
+            <param name="dateTime">The date time.</param>
+            <exception cref="T:System.ArgumentException">Thrown if the group identifier or the edge node identifier or the device identifier is invalid.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the namespace is out of range.</exception>
+            <returns>A new DBIRTH <see cref="T:MQTTnet.MqttApplicationMessage"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugMessageGenerator.GetSparkPlugNodeDeathMessage(SparkplugNet.Core.Enumerations.SparkplugNamespace,System.String,System.String,System.Int64)">
+            <summary>
+            Gets a NDEATH message.
+            </summary>
+            <param name="nameSpace">The namespace.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="sessionNumber">The session number.</param>
+            <exception cref="T:System.ArgumentException">Thrown if the group identifier or the edge node identifier is invalid.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the namespace is out of range.</exception>
+            <returns>A new NDEATH <see cref="T:MQTTnet.MqttApplicationMessage"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugMessageGenerator.GetSparkPlugDeviceDeathMessage(SparkplugNet.Core.Enumerations.SparkplugNamespace,System.String,System.String,System.String,System.Int32,System.Int64,System.DateTimeOffset)">
+            <summary>
+            Gets a DDEATH message.
+            </summary>
+            <param name="nameSpace">The namespace.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <param name="sequenceNumber">The sequence number.</param>
+            <param name="sessionNumber">The session number.</param>
+            <param name="dateTime">The date time.</param>
+            <exception cref="T:System.ArgumentException">Thrown if the group identifier or the edge node identifier or the device identifier is invalid.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the namespace is out of range.</exception>
+            <returns>A new DDEATH <see cref="T:MQTTnet.MqttApplicationMessage"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugMessageGenerator.GetSparkPlugNodeDataMessage``1(SparkplugNet.Core.Enumerations.SparkplugNamespace,System.String,System.String,System.Collections.Generic.IEnumerable{``0},System.Int32,System.Int64,System.DateTimeOffset,System.Boolean)">
+            <summary>
+            Gets a NDATA message.
+            </summary>
+            <typeparam name="T">The type parameter.</typeparam>
+            <param name="nameSpace">The namespace.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="metrics">The metrics.</param>
+            <param name="sequenceNumber">The sequence number.</param>
+            <param name="sessionNumber">The session number.</param>
+            <param name="dateTime">The date time.</param>
+            <param name="addSessionNumbers">A value indicating whether to add the 'SessionNumber' metric or not.</param>
+            <exception cref="T:System.ArgumentException">Thrown if the group identifier or the edge node identifier is invalid.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the namespace is out of range.</exception>
+            <returns>A new NDATA <see cref="T:MQTTnet.MqttApplicationMessage"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugMessageGenerator.GetSparkPlugDeviceDataMessage``1(SparkplugNet.Core.Enumerations.SparkplugNamespace,System.String,System.String,System.String,System.Collections.Generic.IEnumerable{``0},System.Int32,System.Int64,System.DateTimeOffset,System.Boolean)">
+            <summary>
+            Gets a DDATA message.
+            </summary>
+            <typeparam name="T">The type parameter.</typeparam>
+            <param name="nameSpace">The namespace.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <param name="metrics">The metrics.</param>
+            <param name="sequenceNumber">The sequence number.</param>
+            <param name="sessionNumber">The session number.</param>
+            <param name="dateTime">The date time.</param>
+            <param name="addSessionNumbers">A value indicating whether to add the 'SessionNumber' metric or not.</param>
+            <exception cref="T:System.ArgumentException">Thrown if the group identifier or the edge node identifier or the device identifier is invalid.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the namespace is out of range.</exception>
+            <returns>A new DDATA <see cref="T:MQTTnet.MqttApplicationMessage"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugMessageGenerator.GetSparkPlugNodeCommandMessage``1(SparkplugNet.Core.Enumerations.SparkplugNamespace,System.String,System.String,System.Collections.Generic.IEnumerable{``0},System.Int32,System.Int64,System.DateTimeOffset,System.Boolean)">
+            <summary>
+            Gets a NCMD message.
+            </summary>
+            <typeparam name="T">The type parameter.</typeparam>
+            <param name="nameSpace">The namespace.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="metrics">The metrics.</param>
+            <param name="sequenceNumber">The sequence number.</param>
+            <param name="sessionNumber">The session number.</param>
+            <param name="dateTime">The date time.</param>
+            <param name="addSessionNumbers">A value indicating whether to add the 'SessionNumber' metric or not.</param>
+            <exception cref="T:System.ArgumentException">Thrown if the group identifier or the edge node identifier is invalid.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the namespace is out of range.</exception>
+            <returns>A new NCMD <see cref="T:MQTTnet.MqttApplicationMessage"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugMessageGenerator.GetSparkPlugDeviceCommandMessage``1(SparkplugNet.Core.Enumerations.SparkplugNamespace,System.String,System.String,System.String,System.Collections.Generic.IEnumerable{``0},System.Int32,System.Int64,System.DateTimeOffset,System.Boolean)">
+            <summary>
+            Gets a DCMD message.
+            </summary>
+            <typeparam name="T">The type parameter.</typeparam>
+            <param name="nameSpace">The namespace.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <param name="metrics">The metrics.</param>
+            <param name="sequenceNumber">The sequence number.</param>
+            <param name="sessionNumber">The session number.</param>
+            <param name="dateTime">The date time.</param>
+            <param name="addSessionNumbers">A value indicating whether to add the 'SessionNumber' metric or not.</param>
+            <exception cref="T:System.ArgumentException">Thrown if the group identifier or the edge node identifier or the device identifier is invalid.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the namespace is out of range.</exception>
+            <returns>A new DCMD <see cref="T:MQTTnet.MqttApplicationMessage"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugMessageGenerator.AddSessionNumberToMetrics(System.Collections.Generic.IEnumerable{SparkplugNet.VersionA.Data.KuraMetric},System.Int64,System.Boolean)">
+            <summary>Adds the session number to the version A metrics.</summary>
+            <param name="metrics">The metrics.</param>
+            <param name="sessionSequenceNumber">The session sequence number.</param>
+            <param name="skipSessionSequenceNumber">A value indicating whether the session sequence number will be skipped or not.</param>
+            <returns>The metrics.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugMessageGenerator.AddSessionNumberToMetrics(System.Collections.Generic.IEnumerable{SparkplugNet.VersionB.Data.Metric},System.Int64,System.Boolean)">
+            <summary>Adds the session number to the version B metrics.</summary>
+            <param name="metrics">The metrics.</param>
+            <param name="sessionSequenceNumber">The session sequence number.</param>
+            <param name="skipSessionSequenceNumber">A value indicating whether the session sequence number will be skipped or not.</param>
+            <returns>The metrics.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugMessageGenerator.GetSparkplugStateMessageA(System.String,System.Boolean)">
+            <summary>
+            Gets a STATE message with namespace version A.
+            </summary>
+            <param name="scadaHostIdentifier">The SCADA host identifier.</param>
+            <param name="online">A value indicating whether the message sender is online or not.</param>
+            <returns>A new STATE <see cref="T:MQTTnet.MqttApplicationMessage"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugMessageGenerator.GetSparkplugStateMessageB(System.String,System.Boolean)">
+            <summary>
+            Gets a STATE message with namespace version B.
+            </summary>
+            <param name="scadaHostIdentifier">The SCADA host identifier.</param>
+            <param name="online">A value indicating whether the message sender is online or not.</param>
+            <returns>A new STATE <see cref="T:MQTTnet.MqttApplicationMessage"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugMessageGenerator.GetSparkPlugNodeBirthA(SparkplugNet.Core.Enumerations.SparkplugNamespace,System.String,System.String,System.Collections.Generic.IEnumerable{SparkplugNet.VersionA.Data.KuraMetric},System.DateTimeOffset)">
+            <summary>
+            Gets a NBIRTH message with namespace version A.
+            </summary>
+            <param name="nameSpace">The namespace.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="metrics">The metrics.</param>
+            <param name="dateTime">The date time.</param>
+            <returns>A new NBIRTH <see cref="T:MQTTnet.MqttApplicationMessage"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugMessageGenerator.GetSparkPlugNodeBirthB(SparkplugNet.Core.Enumerations.SparkplugNamespace,System.String,System.String,System.Collections.Generic.IEnumerable{SparkplugNet.VersionB.Data.Metric},System.Int32,System.DateTimeOffset)">
+            <summary>
+            Gets a NBIRTH message with namespace version B.
+            </summary>
+            <param name="nameSpace">The namespace.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="metrics">The metrics.</param>
+            <param name="sequenceNumber">The sequence number.</param>
+            <param name="dateTime">The date time.</param>
+            <returns>A new NBIRTH <see cref="T:MQTTnet.MqttApplicationMessage"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugMessageGenerator.GetSparkPlugDeviceBirthA(SparkplugNet.Core.Enumerations.SparkplugNamespace,System.String,System.String,System.String,System.Collections.Generic.IEnumerable{SparkplugNet.VersionA.Data.KuraMetric},System.DateTimeOffset)">
+            <summary>
+            Gets a DBIRTH message with namespace version A.
+            </summary>
+            <param name="nameSpace">The namespace.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <param name="metrics">The metrics.</param>
+            <param name="dateTime">The date time.</param>
+            <returns>A new DBIRTH <see cref="T:MQTTnet.MqttApplicationMessage"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugMessageGenerator.GetSparkPlugDeviceBirthB(SparkplugNet.Core.Enumerations.SparkplugNamespace,System.String,System.String,System.String,System.Collections.Generic.IEnumerable{SparkplugNet.VersionB.Data.Metric},System.Int32,System.DateTimeOffset)">
+            <summary>
+            Gets a DBIRTH message with namespace version B.
+            </summary>
+            <param name="nameSpace">The namespace.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <param name="metrics">The metrics.</param>
+            <param name="sequenceNumber">The sequence number.</param>
+            <param name="dateTime">The date time.</param>
+            <returns>A new DBIRTH <see cref="T:MQTTnet.MqttApplicationMessage"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugMessageGenerator.GetSparkPlugNodeDeathA(SparkplugNet.Core.Enumerations.SparkplugNamespace,System.String,System.String,System.Collections.Generic.IEnumerable{SparkplugNet.VersionA.Data.KuraMetric})">
+            <summary>
+            Gets a NDEATH message with namespace version A.
+            </summary>
+            <param name="nameSpace">The namespace.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="metrics">The metrics.</param>
+            <returns>A new NDEATH <see cref="T:MQTTnet.MqttApplicationMessage"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugMessageGenerator.GetSparkPlugNodeDeathB(SparkplugNet.Core.Enumerations.SparkplugNamespace,System.String,System.String,System.Collections.Generic.IEnumerable{SparkplugNet.VersionB.Data.Metric})">
+            <summary>
+            Gets a NDEATH message with namespace version B.
+            </summary>
+            <param name="nameSpace">The namespace.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="metrics">The metrics.</param>
+            <returns>A new NDEATH <see cref="T:MQTTnet.MqttApplicationMessage"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugMessageGenerator.GetSparkPlugDeviceDeathA(SparkplugNet.Core.Enumerations.SparkplugNamespace,System.String,System.String,System.String,System.Collections.Generic.IEnumerable{SparkplugNet.VersionA.Data.KuraMetric},System.DateTimeOffset)">
+            <summary>
+            Gets a DDEATH message with namespace version A.
+            </summary>
+            <param name="nameSpace">The namespace.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <param name="metrics">The metrics.</param>
+            <param name="dateTime">The date time.</param>
+            <returns>A new DDEATH <see cref="T:MQTTnet.MqttApplicationMessage"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugMessageGenerator.GetSparkPlugDeviceDeathB(SparkplugNet.Core.Enumerations.SparkplugNamespace,System.String,System.String,System.String,System.Collections.Generic.IEnumerable{SparkplugNet.VersionB.Data.Metric},System.Int32,System.DateTimeOffset)">
+            <summary>
+            Gets a DDEATH message with namespace version B.
+            </summary>
+            <param name="nameSpace">The namespace.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <param name="metrics">The metrics.</param>
+            <param name="sequenceNumber">The sequence number.</param>
+            <param name="dateTime">The date time.</param>
+            <returns>A new DDEATH <see cref="T:MQTTnet.MqttApplicationMessage"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugMessageGenerator.GetSparkPlugNodeDataA(SparkplugNet.Core.Enumerations.SparkplugNamespace,System.String,System.String,System.Collections.Generic.IEnumerable{SparkplugNet.VersionA.Data.KuraMetric},System.DateTimeOffset)">
+            <summary>
+            Gets a NDATA message with namespace version A.
+            </summary>
+            <param name="nameSpace">The namespace.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="metrics">The metrics.</param>
+            <param name="dateTime">The date time.</param>
+            <returns>A new NDATA <see cref="T:MQTTnet.MqttApplicationMessage"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugMessageGenerator.GetSparkPlugNodeDataB(SparkplugNet.Core.Enumerations.SparkplugNamespace,System.String,System.String,System.Collections.Generic.IEnumerable{SparkplugNet.VersionB.Data.Metric},System.Int32,System.DateTimeOffset)">
+            <summary>
+            Gets a NDATA message with namespace version B.
+            </summary>
+            <param name="nameSpace">The namespace.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="metrics">The metrics.</param>
+            <param name="sequenceNumber">The sequence number.</param>
+            <param name="dateTime">The date time.</param>
+            <returns>A new NDATA <see cref="T:MQTTnet.MqttApplicationMessage"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugMessageGenerator.GetSparkPlugDeviceDataA(SparkplugNet.Core.Enumerations.SparkplugNamespace,System.String,System.String,System.String,System.Collections.Generic.IEnumerable{SparkplugNet.VersionA.Data.KuraMetric},System.DateTimeOffset)">
+            <summary>
+            Gets a DDATA message with namespace version A.
+            </summary>
+            <param name="nameSpace">The namespace.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <param name="metrics">The metrics.</param>
+            <param name="dateTime">The date time.</param>
+            <returns>A new DDATA <see cref="T:MQTTnet.MqttApplicationMessage"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugMessageGenerator.GetSparkPlugDeviceDataB(SparkplugNet.Core.Enumerations.SparkplugNamespace,System.String,System.String,System.String,System.Collections.Generic.IEnumerable{SparkplugNet.VersionB.Data.Metric},System.Int32,System.DateTimeOffset)">
+            <summary>
+            Gets a DDATA message with namespace version B.
+            </summary>
+            <param name="nameSpace">The namespace.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <param name="metrics">The metrics.</param>
+            <param name="sequenceNumber">The sequence number.</param>
+            <param name="dateTime">The date time.</param>
+            <returns>A new DDATA <see cref="T:MQTTnet.MqttApplicationMessage"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugMessageGenerator.GetSparkPlugNodeCommandA(SparkplugNet.Core.Enumerations.SparkplugNamespace,System.String,System.String,System.Collections.Generic.IEnumerable{SparkplugNet.VersionA.Data.KuraMetric},System.DateTimeOffset)">
+            <summary>
+            Gets a NCMD message with namespace version A.
+            </summary>
+            <param name="nameSpace">The namespace.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="metrics">The metrics.</param>
+            <param name="dateTime">The date time.</param>
+            <returns>A new NCMD <see cref="T:MQTTnet.MqttApplicationMessage"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugMessageGenerator.GetSparkPlugNodeCommandB(SparkplugNet.Core.Enumerations.SparkplugNamespace,System.String,System.String,System.Collections.Generic.IEnumerable{SparkplugNet.VersionB.Data.Metric},System.Int32,System.DateTimeOffset)">
+            <summary>
+            Gets a NCMD message with namespace version B.
+            </summary>
+            <param name="nameSpace">The namespace.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="metrics">The metrics.</param>
+            <param name="sequenceNumber">The sequence number.</param>
+            <param name="dateTime">The date time.</param>
+            <returns>A new NCMD <see cref="T:MQTTnet.MqttApplicationMessage"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugMessageGenerator.GetSparkPlugDeviceCommandA(SparkplugNet.Core.Enumerations.SparkplugNamespace,System.String,System.String,System.String,System.Collections.Generic.IEnumerable{SparkplugNet.VersionA.Data.KuraMetric},System.DateTimeOffset)">
+            <summary>
+            Gets a DCMD message with namespace version A.
+            </summary>
+            <param name="nameSpace">The namespace.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <param name="metrics">The metrics.</param>
+            <param name="dateTime">The date time.</param>
+            <returns>A new DCMD <see cref="T:MQTTnet.MqttApplicationMessage"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugMessageGenerator.GetSparkPlugDeviceCommandB(SparkplugNet.Core.Enumerations.SparkplugNamespace,System.String,System.String,System.String,System.Collections.Generic.IEnumerable{SparkplugNet.VersionB.Data.Metric},System.Int32,System.DateTimeOffset)">
+            <summary>
+            Gets a DCMD message with namespace version B.
+            </summary>
+            <param name="nameSpace">The namespace.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <param name="metrics">The metrics.</param>
+            <param name="sequenceNumber">The sequence number.</param>
+            <param name="dateTime">The date time.</param>
+            <returns>A new DCMD <see cref="T:MQTTnet.MqttApplicationMessage"/>.</returns>
+        </member>
+        <member name="T:SparkplugNet.Core.Messages.SparkplugTopicGenerator">
+            <summary>
+            The Sparkplug topic generator.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugTopicGenerator.GetWildcardNamespaceSubscribeTopic(SparkplugNet.Core.Enumerations.SparkplugNamespace)">
+            <summary>
+            Gets the wildcard namespace subscription topic.
+            </summary>
+            <param name="nameSpace">The namespace.</param>
+            <returns>The wildcard namespace subscription topic <see cref="T:System.String"/></returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugTopicGenerator.GetNodeCommandSubscribeTopic(SparkplugNet.Core.Enumerations.SparkplugNamespace,System.String,System.String)">
+            <summary>
+            Gets the node command subscription topic.
+            </summary>
+            <param name="nameSpace">The namespace.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <returns>The node command subscription topic <see cref="T:System.String"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugTopicGenerator.GetWildcardDeviceCommandSubscribeTopic(SparkplugNet.Core.Enumerations.SparkplugNamespace,System.String,System.String)">
+            <summary>
+            Gets the wildcard device command subscription topic.
+            </summary>
+            <param name="nameSpace">The namespace.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <returns>The wildcard device command subscription topic <see cref="T:System.String"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugTopicGenerator.GetDeviceCommandSubscribeTopic(SparkplugNet.Core.Enumerations.SparkplugNamespace,System.String,System.String,System.String)">
+            <summary>
+            Gets the device command subscription topic.
+            </summary>
+            <param name="nameSpace">The namespace.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <returns>The wildcard device command subscription topic <see cref="T:System.String"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugTopicGenerator.GetStateSubscribeTopic(System.String)">
+            <summary>
+            Gets state subscription topic.
+            </summary>
+            <param name="scadaHostIdentifier">The SCADA host identifier.</param>
+            <returns>The state subscription topic <see cref="T:System.String"/></returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugTopicGenerator.GetTopic(SparkplugNet.Core.Enumerations.SparkplugNamespace,System.String,SparkplugNet.Core.Enumerations.SparkplugMessageType,System.String,System.String)">
+            <summary>
+            Gets the topic (Except STATE messages).
+            </summary>
+            <param name="nameSpace">The namespace.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="messageType">The message type.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="deviceIdentifier">The device identifier. (Optional)</param>
+            <returns>The topic as <see cref="T:System.String"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Messages.SparkplugTopicGenerator.GetSparkplugStateMessageTopic(System.String)">
+            <summary>
+            Gets the STATE message topic.
+            </summary>
+            <param name="scadaHostIdentifier">The SCADA host identifier.</param>
+            <returns>The STATE message topic as <see cref="T:System.String"/>.</returns>
+        </member>
+        <member name="T:SparkplugNet.Core.MetricState`1">
+            <summary>
+            The metric state class.
+            </summary>
+            <typeparam name="T">The type parameter.</typeparam>
+        </member>
+        <member name="P:SparkplugNet.Core.MetricState`1.MetricStatus">
+            <summary>
+            Gets or sets the metric status.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.MetricState`1.Metrics">
+            <summary>
+            Gets or sets the metrics.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.Core.Node.SparkplugNodeBase`1">
+            <inheritdoc cref="T:SparkplugNet.Core.SparkplugBase`1"/>
+            <summary>
+            A class that handles a Sparkplug node.
+            </summary>
+            <seealso cref="T:SparkplugNet.Core.SparkplugBase`1"/>
+            <inheritdoc cref="T:SparkplugNet.Core.SparkplugBase`1"/>
+            <summary>
+            A class that handles a Sparkplug node.
+            </summary>
+            <seealso cref="T:SparkplugNet.Core.SparkplugBase`1"/>
+            <inheritdoc cref="T:SparkplugNet.Core.SparkplugBase`1"/>
+            <summary>
+            A class that handles a Sparkplug node.
+            </summary>
+            <seealso cref="T:SparkplugNet.Core.SparkplugBase`1"/>
+            <inheritdoc cref="T:SparkplugNet.Core.SparkplugBase`1"/>
+            <summary>
+            A class that handles a Sparkplug node.
+            </summary>
+            <seealso cref="T:SparkplugNet.Core.SparkplugBase`1"/>
+        </member>
+        <member name="M:SparkplugNet.Core.Node.SparkplugNodeBase`1.#ctor(System.Collections.Generic.IEnumerable{`0},Serilog.ILogger)">
+            <inheritdoc cref="T:SparkplugNet.Core.SparkplugBase`1"/>
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.Core.Node.SparkplugNodeBase`1"/> class.
+            </summary>
+            <param name="knownMetrics">The metric names.</param>
+            <param name="logger">The logger.</param>
+            <seealso cref="T:SparkplugNet.Core.SparkplugBase`1"/>
+        </member>
+        <member name="M:SparkplugNet.Core.Node.SparkplugNodeBase`1.#ctor(SparkplugNet.Core.SparkplugBase{`0}.KnownMetricStorage,Serilog.ILogger)">
+            <inheritdoc cref="T:SparkplugNet.Core.SparkplugBase`1"/>
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.Core.Node.SparkplugNodeBase`1"/> class.
+            </summary>
+            <param name="knownMetricsStorage">The known metrics storage.</param>
+            <param name="logger">The logger.</param>
+            <seealso cref="T:SparkplugNet.Core.SparkplugBase`1"/>
+        </member>
+        <member name="P:SparkplugNet.Core.Node.SparkplugNodeBase`1.Options">
+            <summary>
+            Gets the options.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.Node.SparkplugNodeBase`1.Start(SparkplugNet.Core.Node.SparkplugNodeOptions,SparkplugNet.Core.SparkplugBase{`0}.KnownMetricStorage)">
+            <summary>
+            Starts the Sparkplug node.
+            </summary>
+            <param name="nodeOptions">The node options.</param>
+            <param name="knownMetricsStorage">(optional) overwrite the known metrics-storage</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the options are null.</exception>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Node.SparkplugNodeBase`1.Stop">
+            <summary>
+            Stops the Sparkplug node.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Node.SparkplugNodeBase`1.PublishMetrics(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Publishes some metrics.
+            </summary>
+            <param name="metrics">The metrics.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the options are null.</exception>
+            <exception cref="T:System.Exception">Thrown if the MQTT client is not connected or an invalid metric type was specified.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the namespace is out of range.</exception>
+            <returns>A <see cref="T:MQTTnet.Client.MqttClientPublishResult"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Node.SparkplugNodeBase`1.PublishMessage(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Publishes metrics for a node.
+            </summary>
+            <param name="metrics">The metrics.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the options are null.</exception>
+            <exception cref="T:System.Exception">Thrown if an invalid metric type was specified.</exception>
+            <returns>A <see cref="T:MQTTnet.Client.MqttClientPublishResult"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Node.SparkplugNodeBase`1.OnMessageReceived(SparkplugNet.Core.Topics.SparkplugMessageTopic,System.Byte[])">
+            <summary>
+            Called when the message is received.
+            </summary>
+            <param name="topic">The topic.</param>
+            <param name="payload">The payload.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Node.SparkplugNodeBase`1.OnClientConnectedAsync(MQTTnet.Client.MqttClientConnectedEventArgs)">
+            <summary>
+            Handles the client disconnection event.
+            </summary>
+            <param name="args">The event args.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Node.SparkplugNodeBase`1.AddEventHandler">
+            <summary>
+            Adds the disconnected handler and the reconnect functionality to the client.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the options are null.</exception>
+        </member>
+        <member name="M:SparkplugNet.Core.Node.SparkplugNodeBase`1.OnClientDisconnected(MQTTnet.Client.MqttClientDisconnectedEventArgs)">
+            <summary>
+            Handles the client disconnection.
+            </summary>
+            <param name="args">The event args.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if the options are null.</exception>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Node.SparkplugNodeBase`1.AddMessageReceivedHandler">
+            <summary>
+            Adds the message received handler to handle incoming messages.
+            </summary>
+            <exception cref="T:System.InvalidCastException">Thrown if the metric cast is invalid.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the namespace is out of range.</exception>
+        </member>
+        <member name="M:SparkplugNet.Core.Node.SparkplugNodeBase`1.OnApplicationMessageReceived(MQTTnet.Client.MqttApplicationMessageReceivedEventArgs)">
+            <summary>
+            Handles the message received handler.
+            </summary>
+            <param name="args">The arguments.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the namespace is out of range.</exception>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Node.SparkplugNodeBase`1.ConnectInternal">
+            <summary>
+            Connects the Sparkplug node to the MQTT broker.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the options are null.</exception>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Node.SparkplugNodeBase`1.PublishInternal">
+            <summary>
+            Publishes data to the MQTT broker.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the options are null.</exception>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Node.SparkplugNodeBase`1.SubscribeInternal">
+            <summary>
+            Subscribes the client to the node subscribe topics.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Thrown if the options are null.</exception>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="P:SparkplugNet.Core.Node.SparkplugNodeBase`1.KnownDevices">
+            <summary>
+            Gets the known devices.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.Node.SparkplugNodeBase`1.PublishDeviceBirthMessage(System.Collections.Generic.List{`0},System.String)">
+            <summary>
+            Publishes a device birth message to the MQTT broker.
+            </summary>
+            <param name="knownMetrics">The known metrics.</param>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the options are null.</exception>
+            <exception cref="T:System.Exception">Thrown if the MQTT client is not connected.</exception>
+            <returns>A <see cref="T:MQTTnet.Client.MqttClientPublishResult"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Node.SparkplugNodeBase`1.PublishDeviceData(System.Collections.Generic.IEnumerable{`0},System.String)">
+            <summary>
+            Publishes some metrics for the device.
+            </summary>
+            <param name="metrics">The metrics.</param>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the options are null.</exception>
+            <exception cref="T:System.Exception">Thrown if the MQTT client is not connected or the device is unknown or an invalid metric type was specified.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Thrown if the namespace is out of range.</exception>
+            <returns>A <see cref="T:MQTTnet.Client.MqttClientPublishResult"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Node.SparkplugNodeBase`1.PublishDeviceDeathMessage(System.String)">
+            <summary>
+            Publishes a device death message to the MQTT broker.
+            </summary>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the options are null.</exception>
+            <exception cref="T:System.Exception">Thrown if the MQTT client is not connected or the device is unknown.</exception>
+            <returns>A <see cref="T:MQTTnet.Client.MqttClientPublishResult"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Node.SparkplugNodeBase`1.PublishMessageForDevice(System.Collections.Generic.IEnumerable{`0},System.String)">
+            <summary>
+            Publishes the message for a device.
+            </summary>
+            <param name="metrics">The metrics.</param>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the options are null.</exception>
+            <exception cref="T:System.Exception">Thrown if the device is unknown or an invalid metric type was specified.</exception>
+            <returns>A <see cref="T:MQTTnet.Client.MqttClientPublishResult"/>.</returns>
+        </member>
+        <member name="T:SparkplugNet.Core.Node.SparkplugNodeBase`1.NodeCommandEventArgs">
+            <summary>
+            A class for the node command event args.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.Node.SparkplugNodeBase`1.NodeCommandEventArgs.#ctor(SparkplugNet.Core.Node.SparkplugNodeBase{`0},System.String,System.String,`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.Core.Node.SparkplugNodeBase`1.NodeCommandEventArgs"/> class.
+            </summary>
+            <param name="sender">The sender.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="metric">The metric.</param>
+        </member>
+        <member name="P:SparkplugNet.Core.Node.SparkplugNodeBase`1.NodeCommandEventArgs.Metric">
+            <summary>
+            Gets the metric.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.Core.Node.SparkplugNodeBase`1.DeviceCommandEventArgs">
+            <inheritdoc cref="T:SparkplugNet.Core.Node.SparkplugNodeBase`1.NodeCommandEventArgs"/>
+            <summary>
+            A class for the device command event args.
+            </summary>
+            <seealso cref="T:SparkplugNet.Core.Node.SparkplugNodeBase`1.NodeCommandEventArgs"/>
+        </member>
+        <member name="M:SparkplugNet.Core.Node.SparkplugNodeBase`1.DeviceCommandEventArgs.#ctor(SparkplugNet.Core.Node.SparkplugNodeBase{`0},System.String,System.String,System.String,`0)">
+            <inheritdoc cref="T:SparkplugNet.Core.Node.SparkplugNodeBase`1.NodeCommandEventArgs"/>
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.Core.Node.SparkplugNodeBase`1.DeviceCommandEventArgs"/> class.
+            </summary>
+            <param name="sender">The sender.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <param name="metric">The metric.</param>
+            <seealso cref="T:SparkplugNet.Core.Node.SparkplugNodeBase`1.NodeCommandEventArgs"/>
+        </member>
+        <member name="P:SparkplugNet.Core.Node.SparkplugNodeBase`1.DeviceCommandEventArgs.DeviceIdentifier">
+            <summary>
+            Gets the device identifier.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.Core.Node.SparkplugNodeBase`1.StatusMessageEventArgs">
+            <summary>
+            A class for the status message event args.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.Node.SparkplugNodeBase`1.StatusMessageEventArgs.#ctor(SparkplugNet.Core.Node.SparkplugNodeBase{`0},System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.Core.Node.SparkplugNodeBase`1.StatusMessageEventArgs"/> class.
+            </summary>
+            <param name="sender">The sender.</param>
+            <param name="status">The status.</param>
+        </member>
+        <member name="P:SparkplugNet.Core.Node.SparkplugNodeBase`1.StatusMessageEventArgs.Status">
+            <summary>
+            Gets the status.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.Node.SparkplugNodeBase`1.DeviceCommandReceivedEvent">
+            <summary>
+            The device command received event.
+            </summary>
+        </member>
+        <member name="E:SparkplugNet.Core.Node.SparkplugNodeBase`1.DeviceCommandReceivedAsync">
+            <summary>
+            Occurs when the device command was received.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.Node.SparkplugNodeBase`1.FireDeviceCommandReceivedAsync(System.String,`0)">
+            <summary>
+            Fires the device command received event asynchronously.
+            </summary>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <param name="metric">The metric.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="F:SparkplugNet.Core.Node.SparkplugNodeBase`1.NodeCommandReceivedEvent">
+            <summary>
+            The node command received event.
+            </summary>
+        </member>
+        <member name="E:SparkplugNet.Core.Node.SparkplugNodeBase`1.NodeCommandReceivedAsync">
+            <summary>
+            Occurs when the node command was received.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.Node.SparkplugNodeBase`1.FireNodeCommandReceivedAsync(`0)">
+            <summary>
+            Fires the node command received event asynchronously.
+            </summary>
+            <param name="metric">The metric.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="F:SparkplugNet.Core.Node.SparkplugNodeBase`1.StatusMessageReceivedEvent">
+            <summary>
+            The status message received event.
+            </summary>
+        </member>
+        <member name="E:SparkplugNet.Core.Node.SparkplugNodeBase`1.StatusMessageReceivedAsync">
+            <summary>
+            Occurs when the status message command was received.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.Node.SparkplugNodeBase`1.FireStatusMessageReceivedAsync(System.String)">
+            <summary>
+            Fires the status message received event asynchronously.
+            </summary>
+            <param name="status">The status.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="F:SparkplugNet.Core.Node.SparkplugNodeBase`1.DeviceBirthPublishingEvent">
+            <summary>
+            The device birth publishing event.
+            </summary>
+        </member>
+        <member name="E:SparkplugNet.Core.Node.SparkplugNodeBase`1.DeviceBirthPublishingAsync">
+            <summary>
+            Occurs when the device birth command was published.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.Node.SparkplugNodeBase`1.FireDeviceBirthPublishingAsync(System.String,System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Fires the device birth publishing event asynchronously.
+            </summary>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <param name="metrics">The metrics</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="F:SparkplugNet.Core.Node.SparkplugNodeBase`1.DeviceDeathPublishingEvent">
+            <summary>
+            The device death publishing event.
+            </summary>
+        </member>
+        <member name="E:SparkplugNet.Core.Node.SparkplugNodeBase`1.DeviceDeathPublishingAsync">
+            <summary>
+            Occurs when the device death command was published.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.Node.SparkplugNodeBase`1.FireDeviceDeathPublishingAsync(System.String)">
+            <summary>
+            Fires the device death publishing event asynchronously.
+            </summary>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="T:SparkplugNet.Core.Node.SparkplugNodeOptions">
+            <inheritdoc cref="T:SparkplugNet.Core.SparkplugBaseOptions"/>
+            <summary>
+            A class that contains the node options.
+            </summary>
+            <seealso cref="T:SparkplugNet.Core.SparkplugBaseOptions"/>
+        </member>
+        <member name="F:SparkplugNet.Core.Node.SparkplugNodeOptions.DefaultGroupIdentifier">
+            <summary>
+            The default groug identifier.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.Node.SparkplugNodeOptions.DefaultEdgeNodeIdentifier">
+            <summary>
+            The default edge node identifier.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.Node.SparkplugNodeOptions.DefaultAddSessionNumberToDataMessages">
+            <summary>
+            The default option to add session numbers to data messages.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.Node.SparkplugNodeOptions.DefaultPublishKnownDeviceMetricsOnReconnect">
+            <summary>
+            The default option to publish known device metrics on reconnect.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.Node.SparkplugNodeOptions.#ctor">
+            <inheritdoc cref="T:SparkplugNet.Core.SparkplugBaseOptions"/>
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.Core.Node.SparkplugNodeOptions"/> class.
+            </summary>
+            <seealso cref="T:SparkplugNet.Core.SparkplugBaseOptions"/>
+        </member>
+        <member name="M:SparkplugNet.Core.Node.SparkplugNodeOptions.#ctor(System.String,System.Int32,System.String,System.String,System.String,System.Boolean,System.String,System.String,System.String,SparkplugNet.Core.SparkplugBaseOptions.GetTlsParametersDelegate,MQTTnet.Client.MqttClientOptionsBuilderWebSocketParameters,MQTTnet.Client.MqttClientWebSocketProxyOptions)">
+            <inheritdoc cref="T:SparkplugNet.Core.SparkplugBaseOptions"/>
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.Core.Node.SparkplugNodeOptions"/> class.
+            </summary>
+            <param name="brokerAddress">The broker address.</param>
+            <param name="port">The port.</param>
+            <param name="clientId">The client identifier.</param>
+            <param name="userName">The name of the user.</param>
+            <param name="password">The password.</param>
+            <param name="useTls">A value indicating whether TLS is used or not.</param>
+            <param name="scadaHostIdentifier">The SCADA host identifier.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="getTlsParameters">The delegate to provide TLS parameters.</param>
+            <param name="webSocketParameters">The web socket parameters.</param>
+            <param name="proxyOptions">The proxy options.</param>
+            <seealso cref="T:SparkplugNet.Core.SparkplugBaseOptions"/>
+        </member>
+        <member name="M:SparkplugNet.Core.Node.SparkplugNodeOptions.#ctor(System.String,System.Int32,System.String,System.String,System.String,System.Boolean,System.String,System.String,System.String,System.TimeSpan,MQTTnet.Client.MqttClientOptionsBuilderWebSocketParameters,MQTTnet.Client.MqttClientWebSocketProxyOptions,System.Nullable{System.Threading.CancellationToken})">
+            <inheritdoc cref="T:SparkplugNet.Core.SparkplugBaseOptions"/>
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.Core.Node.SparkplugNodeOptions"/> class.
+            </summary>
+            <param name="brokerAddress">The broker address.</param>
+            <param name="port">The port.</param>
+            <param name="clientId">The client identifier.</param>
+            <param name="userName">The name of the user.</param>
+            <param name="password">The password.</param>
+            <param name="useTls">A value indicating whether TLS is used or not.</param>
+            <param name="scadaHostIdentifier">The SCADA host identifier.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="reconnectInterval">The reconnect interval.</param>
+            <param name="webSocketParameters">The web socket parameters.</param>
+            <param name="proxyOptions">The proxy options.</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <seealso cref="T:SparkplugNet.Core.SparkplugBaseOptions"/>
+        </member>
+        <member name="M:SparkplugNet.Core.Node.SparkplugNodeOptions.#ctor(System.String,System.Int32,System.String,System.String,System.String,System.Boolean,System.String,System.String,System.String,System.TimeSpan,SparkplugNet.Core.SparkplugBaseOptions.GetTlsParametersDelegate,MQTTnet.Client.MqttClientOptionsBuilderWebSocketParameters,MQTTnet.Client.MqttClientWebSocketProxyOptions,System.Nullable{System.Threading.CancellationToken})">
+            <inheritdoc cref="T:SparkplugNet.Core.SparkplugBaseOptions"/>
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.Core.Node.SparkplugNodeOptions"/> class.
+            </summary>
+            <param name="brokerAddress">The broker address.</param>
+            <param name="port">The port.</param>
+            <param name="clientId">The client identifier.</param>
+            <param name="userName">The name of the user.</param>
+            <param name="password">The password.</param>
+            <param name="useTls">A value indicating whether TLS is used or not.</param>
+            <param name="scadaHostIdentifier">The SCADA host identifier.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="reconnectInterval">The reconnect interval.</param>
+            <param name="getTlsParameters">The delegate to provide TLS parameters.</param>
+            <param name="webSocketParameters">The web socket parameters.</param>
+            <param name="proxyOptions">The proxy options.</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <seealso cref="T:SparkplugNet.Core.SparkplugBaseOptions"/>
+        </member>
+        <member name="P:SparkplugNet.Core.Node.SparkplugNodeOptions.GroupIdentifier">
+            <summary>
+            Gets or sets the group identifier.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.Node.SparkplugNodeOptions.EdgeNodeIdentifier">
+            <summary>
+            Gets or sets the edge node identifier.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.Node.SparkplugNodeOptions.AddSessionNumberToDataMessages">
+            <summary>
+            Gets or sets a value indicating whether to add session numbers to data messages or not.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.Node.SparkplugNodeOptions.PublishKnownDeviceMetricsOnReconnect">
+            <summary>
+            Gets or sets a value indicating whether to publish known device metrics on reconnect or not.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.Node.SparkplugNodeOptions.CancellationToken">
+            <summary>
+            Gets or sets the cancellation token.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.Core.PayloadConverter">
+            <summary>
+            A helper class for the payload conversions from internal ProtoBuf model to external data and vice versa.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionAPayload(SparkplugNet.VersionA.ProtoBuf.ProtoBufPayload)">
+            <summary>
+            Gets the version A payload converted from the ProtoBuf payload.
+            </summary>
+            <param name="payload">The <see cref="T:SparkplugNet.VersionA.ProtoBuf.ProtoBufPayload"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionA.Data.Payload"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionAPayload(SparkplugNet.VersionA.Data.Payload)">
+            <summary>
+            Gets the ProtoBuf payload converted from the version A payload.
+            </summary>
+            <param name="payload">The <see cref="T:SparkplugNet.VersionA.Data.Payload"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionA.ProtoBuf.ProtoBufPayload"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionBPayload(SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload)">
+            <summary>
+            Gets the version B payload converted from the ProtoBuf payload.
+            </summary>
+            <param name="payload">The <see cref="T:SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionB.Data.Payload"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionBPayload(SparkplugNet.VersionB.Data.Payload)">
+            <summary>
+            Gets the ProtoBuf payload converted from the version B payload.
+            </summary>
+            <param name="payload">The <see cref="T:SparkplugNet.VersionB.Data.Payload"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionADataType(SparkplugNet.VersionA.ProtoBuf.ProtoBufPayload.KuraMetric.ValueType)">
+            <summary>
+            Gets the version A data type from the version A ProtoBuf value type.
+            </summary>
+            <param name="type">The <see cref="T:SparkplugNet.VersionA.ProtoBuf.ProtoBufPayload.KuraMetric.ValueType"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionA.Data.DataType"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionADataType(SparkplugNet.VersionA.Data.DataType)">
+            <summary>
+            Gets the version A ProtoBuf value type from the version A data type.
+            </summary>
+            <param name="type">The <see cref="T:SparkplugNet.VersionA.Data.DataType"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionA.ProtoBuf.ProtoBufPayload.KuraMetric.ValueType"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionBDataTypeDataSetValue(SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.DataSet.DataSetValue.ValueOneofCase)">
+            <summary>
+            Gets the version B data type from the version B ProtoBuf value type for data set values.
+            </summary>
+            <param name="type">The <see cref="T:SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.DataSet.DataSetValue.ValueOneofCase"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionB.Data.DataType"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionBDataTypeDataSetValue(SparkplugNet.VersionB.Data.DataType)">
+            <summary>
+            Gets the version B ProtoBuf value type from the version B data type for data set values.
+            </summary>
+            <param name="type">The <see cref="T:SparkplugNet.VersionB.Data.DataType"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.DataSet.DataSetValue.ValueOneofCase"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionBDataTypeMetric(SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.Metric.ValueOneofCase)">
+            <summary>
+            Gets the version B data type from the version B ProtoBuf value type for metrics.
+            </summary>
+            <param name="type">The <see cref="T:SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.Metric.ValueOneofCase"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionB.Data.DataType"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionBDataTypeMetric(SparkplugNet.VersionB.Data.DataType)">
+            <summary>
+            Gets the version B ProtoBuf value type from the version B data type for metrics.
+            </summary>
+            <param name="type">The <see cref="T:SparkplugNet.VersionB.Data.DataType"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.Metric.ValueOneofCase"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionBDataTypeParameter(SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.Template.Parameter.ValueOneofCase)">
+            <summary>
+            Gets the version B data type from the version B ProtoBuf value type for parameters.
+            </summary>
+            <param name="type">The <see cref="T:SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.Template.Parameter.ValueOneofCase"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionB.Data.DataType"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionBDataTypeParameter(SparkplugNet.VersionB.Data.DataType)">
+            <summary>
+            Gets the version B ProtoBuf value type from the version B data type for parameters.
+            </summary>
+            <param name="type">The <see cref="T:SparkplugNet.VersionB.Data.DataType"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.Template.Parameter.ValueOneofCase"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionBDataTypePropertyValue(SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.PropertyValue.ValueOneofCase)">
+            <summary>
+            Gets the version B data type from the version B ProtoBuf value type for property values.
+            </summary>
+            <param name="type">The <see cref="T:SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.PropertyValue.ValueOneofCase"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionB.Data.DataType"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionBDataTypePropertyValue(SparkplugNet.VersionB.Data.DataType)">
+            <summary>
+            Gets the version B ProtoBuf value type from the version B data type for property values.
+            </summary>
+            <param name="type">The <see cref="T:SparkplugNet.VersionB.Data.DataType"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.PropertyValue.ValueOneofCase"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionBDataSet(SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.DataSet)">
+            <summary>
+            Gets the version B data set from the version B ProtoBuf data set.
+            </summary>
+            <param name="dataSet">The <see cref="T:SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.DataSet"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionB.Data.DataSet"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionBDataSet(SparkplugNet.VersionB.Data.DataSet)">
+            <summary>
+            Gets the version B ProtoBuf data set from the version B data set.
+            </summary>
+            <param name="dataSet">The <see cref="T:SparkplugNet.VersionB.Data.DataSet"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.DataSet"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionBDataSetValue(SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.DataSet.DataSetValue)">
+            <summary>
+            Gets the version B data set value from the version B ProtoBuf data set value.
+            </summary>
+            <param name="dataSetValue">The <see cref="T:SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.DataSet.DataSetValue"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionB.Data.DataSetValue"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionBDataSetValue(SparkplugNet.VersionB.Data.DataSetValue)">
+            <summary>
+            Gets the version B ProtoBuf data set value from the version B data set value.
+            </summary>
+            <param name="dataSetValue">The <see cref="T:SparkplugNet.VersionB.Data.DataSetValue"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.DataSet.DataSetValue"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionBRow(SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.DataSet.Row)">
+            <summary>
+            Gets the version B row from the version B ProtoBuf row.
+            </summary>
+            <param name="row">The <see cref="T:SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.DataSet.Row"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionB.Data.Row"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionBRow(SparkplugNet.VersionB.Data.Row)">
+            <summary>
+            Gets the version B ProtoBuf row from the version B row.
+            </summary>
+            <param name="row">The <see cref="T:SparkplugNet.VersionB.Data.Row"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.DataSet.Row"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionBMetaData(SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.MetaData)">
+            <summary>
+            Gets the version B meta data from the version B ProtoBuf meta data.
+            </summary>
+            <param name="metaData">The <see cref="T:SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.MetaData"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionB.Data.MetaData"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionBMetaData(SparkplugNet.VersionB.Data.MetaData)">
+            <summary>
+            Gets the version B ProtoBuf meta data from the version B meta data.
+            </summary>
+            <param name="metaData">The <see cref="T:SparkplugNet.VersionB.Data.MetaData"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.MetaData"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionBTemplate(SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.Template)">
+            <summary>
+            Gets the version B template from the version B ProtoBuf template.
+            </summary>
+            <param name="template">The <see cref="T:SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.Template"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionB.Data.Template"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionBTemplate(SparkplugNet.VersionB.Data.Template)">
+            <summary>
+            Gets the version B ProtoBuf template from the version B template.
+            </summary>
+            <param name="template">The <see cref="T:SparkplugNet.VersionB.Data.Template"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.Template"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionBParameter(SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.Template.Parameter)">
+            <summary>
+            Gets the version B parameter from the version B ProtoBuf parameter.
+            </summary>
+            <param name="parameter">The <see cref="T:SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.Template.Parameter"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionB.Data.Parameter"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionBParameter(SparkplugNet.VersionB.Data.Parameter)">
+            <summary>
+            Gets the version B ProtoBuf parameter from the version B parameter.
+            </summary>
+            <param name="parameter">The <see cref="T:SparkplugNet.VersionB.Data.Parameter"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.Template.Parameter"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionBMetric(SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.Metric)">
+            <summary>
+            Gets the version B metric from the version B ProtoBuf metric.
+            </summary>
+            <param name="metric">The <see cref="T:SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.Metric"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionB.Data.Metric"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionBMetric(SparkplugNet.VersionB.Data.Metric)">
+            <summary>
+            Gets the version B ProtoBuf metric from the version B metric.
+            </summary>
+            <param name="metric">The <see cref="T:SparkplugNet.VersionB.Data.Metric"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.Metric"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionBPropertySetList(SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.PropertySetList)">
+            <summary>
+            Gets the version B property set list from the version B ProtoBuf property set list.
+            </summary>
+            <param name="propertySetList">The <see cref="T:SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.PropertySetList"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionB.Data.PropertySetList"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionBPropertySetList(SparkplugNet.VersionB.Data.PropertySetList)">
+            <summary>
+            Gets the version B ProtoBuf property set list from the version B property set list.
+            </summary>
+            <param name="propertySetList">The <see cref="T:SparkplugNet.VersionB.Data.PropertySetList"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.PropertySetList"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionBPropertySet(SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.PropertySet)">
+            <summary>
+            Gets the version B property set from the version B ProtoBuf property set.
+            </summary>
+            <param name="propertySet">The <see cref="T:SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.PropertySet"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionB.Data.PropertySet"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionBPropertySet(SparkplugNet.VersionB.Data.PropertySet)">
+            <summary>
+            Gets the version B ProtoBuf property set from the version B property set.
+            </summary>
+            <param name="propertySet">The <see cref="T:SparkplugNet.VersionB.Data.PropertySet"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.PropertySet"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionBPropertyValue(SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.PropertyValue)">
+            <summary>
+            Gets the version B property value from the version B ProtoBuf property value.
+            </summary>
+            <param name="propertyValue">The <see cref="T:SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.PropertyValue"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionB.Data.PropertyValue"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadConverter.ConvertVersionBPropertyValue(SparkplugNet.VersionB.Data.PropertyValue)">
+            <summary>
+            Gets the version B ProtoBuf property value from the version B property value.
+            </summary>
+            <param name="propertyValue">The <see cref="T:SparkplugNet.VersionB.Data.PropertyValue"/>.</param>
+            <returns>The <see cref="T:SparkplugNet.VersionB.ProtoBuf.ProtoBufPayload.PropertyValue"/>.</returns>
+        </member>
+        <member name="T:SparkplugNet.Core.PayloadHelper">
+            <summary>
+            A helper class for the payload classes.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadHelper.Serialize``1(``0)">
+            <summary>
+            Serializes the data from a proto payload.
+            </summary>
+            <typeparam name="T">The type.</typeparam>
+            <param name="record">The record.</param>
+            <returns>The <see cref="T:byte[]?"/> value as serialized data.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.PayloadHelper.Deserialize``1(System.Byte[])">
+            <summary>
+            Deserializes the data to a proto payload.
+            </summary>
+            <typeparam name="T">The type.</typeparam>
+            <param name="data">The data.</param>
+            <returns>The <see cref="T:T?"/> value as deserialized object.</returns>
+        </member>
+        <member name="T:SparkplugNet.Core.SparkplugBase`1">
+            <inheritdoc cref="T:SparkplugNet.Core.Interfaces.ISparkplugConnection"/>
+            <summary>
+            A base class for all Sparkplug applications, nodes and devices.
+            </summary>
+            <typeparam name="T">The type parameter.</typeparam>
+            <seealso cref="T:SparkplugNet.Core.Interfaces.ISparkplugConnection"/>
+            <inheritdoc cref="T:SparkplugNet.Core.Interfaces.ISparkplugConnection"/>
+            <summary>
+            A base class for all Sparkplug applications, nodes and devices.
+            </summary>
+            <seealso cref="T:SparkplugNet.Core.Interfaces.ISparkplugConnection"/>
+            <inheritdoc cref="T:SparkplugNet.Core.Interfaces.ISparkplugConnection"/>
+            <summary>
+            A base class for all Sparkplug applications, nodes and devices.
+            </summary>
+            <seealso cref="T:SparkplugNet.Core.Interfaces.ISparkplugConnection"/>
+            <inheritdoc cref="T:SparkplugNet.Core.Interfaces.ISparkplugConnection" />
+            <summary>
+            A base class for all Sparkplug applications, nodes and devices.
+            </summary>
+            <seealso cref="T:SparkplugNet.Core.Interfaces.ISparkplugConnection" />
+        </member>
+        <member name="F:SparkplugNet.Core.SparkplugBase`1.MessageGenerator">
+            <summary>
+            The message generator.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.SparkplugBase`1.Client">
+            <summary>
+            The MQTT client.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.SparkplugBase`1.knownMetrics">
+            <summary>
+            The known metrics.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.SparkplugBase`1.#ctor(System.Collections.Generic.IEnumerable{`0},Serilog.ILogger)">
+            <inheritdoc cref="T:SparkplugNet.Core.Interfaces.ISparkplugConnection"/>
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.Core.SparkplugBase`1"/> class.
+            </summary>
+            <param name="knownMetrics">The metric names.</param>
+            <param name="logger">The logger.</param>
+            <seealso cref="T:SparkplugNet.Core.Interfaces.ISparkplugConnection"/>
+        </member>
+        <member name="M:SparkplugNet.Core.SparkplugBase`1.#ctor(SparkplugNet.Core.SparkplugBase{`0}.KnownMetricStorage,Serilog.ILogger)">
+            <inheritdoc cref="T:SparkplugNet.Core.Interfaces.ISparkplugConnection"/>
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.Core.SparkplugBase`1"/> class.
+            </summary>
+            <param name="knownMetricsStorage">The known metrics storage.</param>
+            <param name="logger">The logger.</param>
+            <seealso cref="T:SparkplugNet.Core.Interfaces.ISparkplugConnection"/>
+        </member>
+        <member name="P:SparkplugNet.Core.SparkplugBase`1.ClientOptions">
+            <summary>
+            Gets or sets the MQTT client options.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.SparkplugBase`1.LastSequenceNumber">
+            <summary>
+            Gets the last sequence number. Starts at 0 as it is incremented after the publishing (For the device and node relevant only).
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.SparkplugBase`1.LastSessionNumber">
+            <summary>
+            Gets the last session number. Starts at -1 as it is incremented before the connect already.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.SparkplugBase`1.NameSpace">
+            <summary>
+            Gets the Sparkplug namespace.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.SparkplugBase`1.Logger">
+            <summary>
+            Gets the logger.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.SparkplugBase`1.IsConnected">
+            <summary>
+            Gets a value indicating whether this instance is connected.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.SparkplugBase`1.IsRunning">
+            <summary>
+            Gets or sets a value indicating whether this instance is running.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.SparkplugBase`1.KnownMetrics">
+            <summary>
+            Gets the known metric names.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.SparkplugBase`1.KnownMetricsStorage">
+            <summary>
+            Gets the known metrics storage.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.SparkplugBase`1.SparkplugNet#Core#Interfaces#ISparkplugConnection#KnownMetrics">
+            <summary>
+            Gets the known metric names.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.SparkplugBase`1.ResetLastSequenceNumber">
+            <summary>
+            Resets the last sequence number.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.SparkplugBase`1.IncrementLastSequenceNumber">
+            <summary>
+            Increments the last sequence number.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.SparkplugBase`1.IncrementLastSessionNumber">
+            <summary>
+            Increments the last session number.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.Core.SparkplugBase`1.SparkplugEventArgs">
+            <inheritdoc cref="T:System.EventArgs" />
+            <summary>
+            A class for the Sparkplug event args.
+            </summary>
+            <seealso cref="T:System.EventArgs" />
+        </member>
+        <member name="M:SparkplugNet.Core.SparkplugBase`1.SparkplugEventArgs.#ctor(SparkplugNet.Core.SparkplugBase{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.Core.SparkplugBase`1.SparkplugEventArgs"/> class.
+            </summary>
+            <param name="sender">The sender.</param>
+        </member>
+        <member name="P:SparkplugNet.Core.SparkplugBase`1.SparkplugEventArgs.Sender">
+            <summary>
+            Gets the sender.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.Core.SparkplugBase`1.NodeEventArgs">
+            <inheritdoc cref="T:SparkplugNet.Core.SparkplugBase`1.SparkplugEventArgs" />
+            <summary>
+            A class for the node event args.
+            </summary>
+            <seealso cref="T:SparkplugNet.Core.SparkplugBase`1.SparkplugEventArgs" />
+        </member>
+        <member name="M:SparkplugNet.Core.SparkplugBase`1.NodeEventArgs.#ctor(SparkplugNet.Core.SparkplugBase{`0},System.String,System.String)">
+            <inheritdoc cref="T:SparkplugNet.Core.SparkplugBase`1.SparkplugEventArgs" />
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.Core.SparkplugBase`1.NodeEventArgs"/> class.
+            </summary>
+            <param name="sender">The sender.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <seealso cref="T:SparkplugNet.Core.SparkplugBase`1.SparkplugEventArgs" />
+        </member>
+        <member name="P:SparkplugNet.Core.SparkplugBase`1.NodeEventArgs.GroupIdentifier">
+            <summary>
+            Gets the group identifier.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.SparkplugBase`1.NodeEventArgs.EdgeNodeIdentifier">
+            <summary>
+            Gets the edge node identifier.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.Core.SparkplugBase`1.DeviceEventArgs">
+            <inheritdoc cref="T:SparkplugNet.Core.SparkplugBase`1.NodeEventArgs" />
+            <summary>
+            A class for the device event args.
+            </summary>
+            <seealso cref="T:SparkplugNet.Core.SparkplugBase`1.NodeEventArgs" />
+        </member>
+        <member name="M:SparkplugNet.Core.SparkplugBase`1.DeviceEventArgs.#ctor(SparkplugNet.Core.SparkplugBase{`0},System.String,System.String,System.String)">
+            <inheritdoc cref="T:SparkplugNet.Core.SparkplugBase`1.NodeEventArgs" />
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.Core.SparkplugBase`1.DeviceEventArgs"/> class.
+            </summary>
+            <param name="sender">The sender.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <seealso cref="T:SparkplugNet.Core.SparkplugBase`1.NodeEventArgs" />
+        </member>
+        <member name="P:SparkplugNet.Core.SparkplugBase`1.DeviceEventArgs.DeviceIdentifier">
+            <summary>
+            Gets the device identifier.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.Core.SparkplugBase`1.DeviceBirthEventArgs">
+            <inheritdoc cref="T:SparkplugNet.Core.SparkplugBase`1.DeviceEventArgs" />
+            <summary>
+            A class for the device birth event args.
+            </summary>
+            <seealso cref="T:SparkplugNet.Core.SparkplugBase`1.DeviceEventArgs" />
+        </member>
+        <member name="M:SparkplugNet.Core.SparkplugBase`1.DeviceBirthEventArgs.#ctor(SparkplugNet.Core.SparkplugBase{`0},System.String,System.String,System.String,System.Collections.Generic.IEnumerable{`0})">
+            <inheritdoc cref="T:SparkplugNet.Core.SparkplugBase`1.DeviceEventArgs" />
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.Core.SparkplugBase`1.DeviceBirthEventArgs"/> class.
+            </summary>
+            <param name="sender">The sender.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <param name="metrics">The metrics.</param>
+            <seealso cref="T:SparkplugNet.Core.SparkplugBase`1.DeviceEventArgs" />
+        </member>
+        <member name="P:SparkplugNet.Core.SparkplugBase`1.DeviceBirthEventArgs.Metrics">
+            <summary>
+            Gets the metrics.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.Core.SparkplugBase`1.NodeBirthEventArgs">
+            <inheritdoc cref="T:SparkplugNet.Core.SparkplugBase`1.NodeEventArgs" />
+            <summary>
+            A class for the node birth event args.
+            </summary>
+            <seealso cref="T:SparkplugNet.Core.SparkplugBase`1.NodeEventArgs" />
+        </member>
+        <member name="M:SparkplugNet.Core.SparkplugBase`1.NodeBirthEventArgs.#ctor(SparkplugNet.Core.SparkplugBase{`0},System.String,System.String,System.Collections.Generic.IEnumerable{`0})">
+            <inheritdoc cref="T:SparkplugNet.Core.SparkplugBase`1.NodeEventArgs" />
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.Core.SparkplugBase`1.NodeBirthEventArgs"/> class.
+            </summary>
+            <param name="sender">The sender.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="metrics">The metrics.</param>
+            <seealso cref="T:SparkplugNet.Core.SparkplugBase`1.NodeEventArgs" />
+        </member>
+        <member name="P:SparkplugNet.Core.SparkplugBase`1.NodeBirthEventArgs.Metrics">
+            <summary>
+            Gets the metrics.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.SparkplugBase`1.disconnectedEvent">
+            <summary>
+            The disconnected event.
+            </summary>
+        </member>
+        <member name="E:SparkplugNet.Core.SparkplugBase`1.DisconnectedAsync">
+            <summary>
+            Occurs when the disconnected event was received.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.SparkplugBase`1.FireDisconnectedAsync">
+            <summary>
+            Fires the disconnected event asynchronously.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="F:SparkplugNet.Core.SparkplugBase`1.connectedEvent">
+            <summary>
+            The connected event.
+            </summary>
+        </member>
+        <member name="E:SparkplugNet.Core.SparkplugBase`1.ConnectedAsync">
+            <summary>
+            Occurs when the connected event was received.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.SparkplugBase`1.FireConnectedAsync">
+            <summary>
+            Fires the disconnected event asynchronously.
+            </summary>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="T:SparkplugNet.Core.SparkplugBase`1.KnownMetricStorage">
+            <inheritdoc cref="T:System.Collections.Concurrent.ConcurrentDictionary`2"/>
+            <summary>
+            A class to handle the known metric storage.
+            </summary>
+            <seealso cref="T:System.Collections.Concurrent.ConcurrentDictionary`2"/>
+        </member>
+        <member name="P:SparkplugNet.Core.SparkplugBase`1.KnownMetricStorage.Metrics">
+            <summary>
+            Gets the metrics as <see cref="T:System.Collections.Generic.List`1"/>.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.SparkplugBase`1.KnownMetricStorage.#ctor(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.Core.SparkplugBase`1.KnownMetricStorage"/> class.
+            </summary>
+            <param name="knownMetrics">The known metrics.</param>
+        </member>
+        <member name="M:SparkplugNet.Core.SparkplugBase`1.KnownMetricStorage.FilterOutgoingMetrics(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Filters the outgoing metrics.
+            </summary>
+            <param name="metrics">The metric.</param>
+            <returns>The filtered metrics.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.SparkplugBase`1.KnownMetricStorage.ValidateIncomingMetrics(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Validates the incoming metrics.
+            </summary>
+            <param name="metrics">The metrics.</param>
+            <exception cref="T:System.Exception">Thrown if the metric name is an unknown metric.</exception>
+        </member>
+        <member name="T:SparkplugNet.Core.SparkplugBaseOptions">
+            <summary>
+            A base class that contains the Sparkplug options.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.Core.SparkplugBaseOptions.GetTlsParametersDelegate">
+            <summary>
+            Returns a <see cref="T:MQTTnet.Client.MqttClientOptionsBuilderTlsParameters"/> instance or null 
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.SparkplugBaseOptions.DefaultBroker">
+            <summary>
+            The default broker.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.SparkplugBaseOptions.DefaultPort">
+            <summary>
+            The default port.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.SparkplugBaseOptions.DefaultClientId">
+            <summary>
+            The default client identifier.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.SparkplugBaseOptions.DefaultUserName">
+            <summary>
+            The default user name.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.SparkplugBaseOptions.DefaultPassword">
+            <summary>
+            The default password.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.SparkplugBaseOptions.DefaultUseTls">
+            <summary>
+            The default value whether TLS is used or not.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.SparkplugBaseOptions.DefaultScadaHostIdentifier">
+            <summary>
+            The default SCADA host identifier.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.SparkplugBaseOptions.DefaultReconnectInterval">
+            <summary>
+            The default reconnect interval.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.SparkplugBaseOptions.#ctor(System.String,System.Int32,System.String,System.String,System.String,System.Boolean,System.String,System.TimeSpan,SparkplugNet.Core.SparkplugBaseOptions.GetTlsParametersDelegate,MQTTnet.Client.MqttClientOptionsBuilderWebSocketParameters,MQTTnet.Client.MqttClientWebSocketProxyOptions)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.Core.SparkplugBaseOptions"/> class.
+            </summary>
+            <param name="reconnectInterval">The reconnect interval.</param>
+            <param name="brokerAddress">The broker address.</param>
+            <param name="port">The port.</param>
+            <param name="clientId">The client identifier.</param>
+            <param name="userName">The name of the user.</param>
+            <param name="password">The password.</param>
+            <param name="useTls">A value indicating whether TLS should be used or not.</param>
+            <param name="scadaHostIdentifier">The SCADA host identifier.</param>
+            <param name="getTlsParameters">The delegate to provide TLS parameters.</param>
+            <param name="webSocketParameters">The web socket parameters.</param>
+            <param name="proxyOptions">The proxy options.</param>
+        </member>
+        <member name="P:SparkplugNet.Core.SparkplugBaseOptions.BrokerAddress">
+            <summary>
+            Gets or sets the broker address.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.SparkplugBaseOptions.Port">
+            <summary>
+            Gets or sets the port.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.SparkplugBaseOptions.ClientId">
+            <summary>
+            Gets or sets the client identifier.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.SparkplugBaseOptions.UserName">
+            <summary>
+            Gets or sets the user name.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.SparkplugBaseOptions.Password">
+            <summary>
+            Gets or sets the password.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.SparkplugBaseOptions.UseTls">
+            <summary>
+            Gets or sets a value indicating whether TLS should be used or not.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.SparkplugBaseOptions.ScadaHostIdentifier">
+            <summary>
+            Gets or sets the SCADA host identifier.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.SparkplugBaseOptions.ReconnectInterval">
+            <summary>
+            Gets or sets the reconnect interval.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.SparkplugBaseOptions.WebSocketParameters">
+            <summary>
+            Gets or sets the WebSocket parameters.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.SparkplugBaseOptions.ProxyOptions">
+            <summary>
+            Gets or sets the proxy options.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.SparkplugBaseOptions.GetTlsParameters">
+            <summary>
+            Gets or sets the delegate to provide TLS parameter.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.Core.Topics.SparkplugMessageTopic">
+            <inheritdoc cref="T:SparkplugNet.Core.Topics.SparkplugTopic"/>
+            <summary>
+            The Sparkplug class for the message topic.
+            </summary>
+            <seealso cref="T:SparkplugNet.Core.Topics.SparkplugTopic"/>
+        </member>
+        <member name="F:SparkplugNet.Core.Topics.SparkplugMessageTopic.messageTypes">
+            <summary>
+            The message types.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.Topics.SparkplugMessageTopic.messageTypeFromString">
+            <summary>
+            The messages types as string.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.Topics.SparkplugMessageTopic.#ctor(SparkplugNet.Core.Enumerations.SparkplugNamespace,System.String,SparkplugNet.Core.Enumerations.SparkplugMessageType,System.String,System.String)">
+            <inheritdoc cref="T:SparkplugNet.Core.Topics.SparkplugTopic"/>
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.Core.Topics.SparkplugMessageTopic"/> class.
+            </summary>
+            <param name="namespace">The namespace.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="messageType">Type of the message.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the group or edge node identifier is null or empty.</exception>
+            <seealso cref="T:SparkplugNet.Core.Topics.SparkplugTopic"/>
+        </member>
+        <member name="P:SparkplugNet.Core.Topics.SparkplugMessageTopic.GroupIdentifier">
+            <summary>
+            Gets the group identifier.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.Topics.SparkplugMessageTopic.MessageType">
+            <summary>
+            Gets the type of the message.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.Topics.SparkplugMessageTopic.EdgeNodeIdentifier">
+            <summary>
+            Gets the edge node identifier.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.Topics.SparkplugMessageTopic.DeviceIdentifier">
+            <summary>
+            Gets the device identifier.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.Topics.SparkplugMessageTopic.ToString">
+            <inheritdoc cref="T:System.Object"/>
+        </member>
+        <member name="M:SparkplugNet.Core.Topics.SparkplugMessageTopic.Parse(System.String)">
+            <summary>
+            Parses the specified topic.
+            </summary>
+            <param name="topic">The topic.</param>
+            <returns>The message topic.</returns>
+            <exception cref="T:System.FormatException">Thrown if the topic couldn't be parsed.</exception>
+        </member>
+        <member name="M:SparkplugNet.Core.Topics.SparkplugMessageTopic.TryParse(System.String,SparkplugNet.Core.Topics.SparkplugMessageTopic@)">
+            <summary>
+            Tries to parse the topic.
+            </summary>
+            <param name="topic">The topic.</param>
+            <param name="parsedTopic">The parsed topic.</param>
+            <returns>A value indicating whether the topic can be parsed or not.</returns>
+        </member>
+        <member name="M:SparkplugNet.Core.Topics.SparkplugMessageTopic.TryParse(System.String,SparkplugNet.Core.Topics.SparkplugMessageTopic@,System.Boolean)">
+            <summary>
+            Tries to parse the topic.
+            </summary>
+            <param name="topic">The topic.</param>
+            <param name="parsedTopic">The parsed topic.</param>
+            <param name="throwError">A value indicating whether errors should be thrown.</param>
+            <returns>A value indicating whether the topic can be parsed or not.</returns>
+            <exception cref="T:System.FormatException">Thrown if the namespace, message type or topic couldn't be parsed.</exception>
+        </member>
+        <member name="T:SparkplugNet.Core.Topics.SparkplugTopic">
+            <summary>
+            The Sparkplug class for the topic.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.Topics.SparkplugTopic.NamespaceSparkplugA">
+            <summary>
+            The namespace for Sparkplug A.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.Core.Topics.SparkplugTopic.NamespaceSparkplugB">
+            <summary>
+            The namespace for Sparkplug B.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.Topics.SparkplugTopic.#ctor(SparkplugNet.Core.Enumerations.SparkplugNamespace,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.Core.Topics.SparkplugTopic"/> class.
+            </summary>
+            <param name="namespace">The namespace.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+        </member>
+        <member name="P:SparkplugNet.Core.Topics.SparkplugTopic.Namespace">
+            <summary>
+            Gets the namespace.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.Core.Topics.SparkplugTopic.GroupIdentifier">
+            <summary>
+            Gets the group identifier.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.Core.Topics.SparkplugTopic.ToString">
+            <inheritdoc cref="T:System.Object"/>
+        </member>
+        <member name="M:SparkplugNet.Core.Topics.SparkplugTopic.GetNamespace(SparkplugNet.Core.Enumerations.SparkplugNamespace)">
+            <summary>
+            Gets the namespace string.
+            </summary>
+            <param name="namespace">The namespace.</param>
+            <returns>The namespace string.</returns>
+            <exception cref="T:System.FormatException">Thrown if the namespace is unknown.</exception>
+        </member>
+        <member name="M:SparkplugNet.Core.Topics.SparkplugTopic.TryGetNamespace(System.String,SparkplugNet.Core.Enumerations.SparkplugNamespace@)">
+            <summary>
+            Tries to get the namespace.
+            </summary>
+            <param name="namespace">The namespace.</param>
+            <param name="sparkplugNamespace">The Sparkplug namespace.</param>
+            <returns>A value indicating whether the namespace was valid or not.</returns>
+        </member>
+        <member name="T:SparkplugNet.VersionA.Data.DataType">
+            <summary>
+            The externally used Sparkplug A data type enumeration.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionA.Data.DataType.Double">
+            <summary>
+            The double data type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionA.Data.DataType.Float">
+            <summary>
+            The float data type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionA.Data.DataType.Int64">
+            <summary>
+            The 64 bit integer data type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionA.Data.DataType.Int32">
+            <summary>
+            The 32 bit integer data type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionA.Data.DataType.Boolean">
+            <summary>
+            The boolean data type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionA.Data.DataType.String">
+            <summary>
+            The string data type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionA.Data.DataType.Bytes">
+            <summary>
+            The bytes data type.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.VersionA.Data.KuraMetric">
+            <summary>
+            The externally used Sparkplug A Kura metric class.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionA.Data.KuraMetric.Name">
+            <summary>
+            Gets or sets the name.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.VersionA.Data.KuraMetric.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.VersionA.Data.KuraMetric"/> class.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.VersionA.Data.KuraMetric.#ctor(System.String,SparkplugNet.VersionA.Data.DataType,System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.VersionA.Data.KuraMetric"/> class.
+            </summary>
+            <param name="strName">Name of the string.</param>
+            <param name="dataType">Type of the data.</param>
+            <param name="value">The value.</param>
+        </member>
+        <member name="T:SparkplugNet.VersionA.Data.KuraPosition">
+            <summary>
+            The externally used Sparkplug A Kura position class.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionA.Data.KuraPosition.altitude">
+            <summary>
+            The altitude.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionA.Data.KuraPosition.precision">
+            <summary>
+            The precision.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionA.Data.KuraPosition.heading">
+            <summary>
+            The heading.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionA.Data.KuraPosition.speed">
+            <summary>
+            The speed.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionA.Data.KuraPosition.timestamp">
+            <summary>
+            The timestamp.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionA.Data.KuraPosition.satellites">
+            <summary>
+            The satellites.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionA.Data.KuraPosition.status">
+            <summary>
+            The status.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionA.Data.KuraPosition.Latitude">
+            <summary>
+            Gets or sets the latitude.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionA.Data.KuraPosition.Longitude">
+            <summary>
+            Gets or sets the longitude.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionA.Data.KuraPosition.Altitude">
+            <summary>
+            Gets or sets the altitude.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionA.Data.KuraPosition.Precision">
+            <summary>
+            Gets or sets the precision.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionA.Data.KuraPosition.Heading">
+            <summary>
+            Gets or sets the heading.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionA.Data.KuraPosition.Speed">
+            <summary>
+            Gets or sets the speed.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionA.Data.KuraPosition.Timestamp">
+            <summary>
+            Gets or sets the timestamp.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionA.Data.KuraPosition.Satellites">
+            <summary>
+            Gets or sets the satellites.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionA.Data.KuraPosition.Status">
+            <summary>
+            Gets or sets the status.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.VersionA.Data.Payload">
+            <summary>
+            The externally used Sparkplug A payload class.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionA.Data.Payload.timestamp">
+            <summary>
+            The timestamp.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionA.Data.Payload.Timestamp">
+            <summary>
+            Gets or sets the timestamp.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionA.Data.Payload.Position">
+            <summary>
+            Gets or sets the position.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionA.Data.Payload.Metrics">
+            <summary>
+            Gets or sets the metrics.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionA.Data.Payload.Body">
+            <summary>
+            Gets or sets the body.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.VersionA.Data.ValueBaseVersionA">
+            <summary>
+            Base class containing values using Sparkplug Version A
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionA.Data.ValueBaseVersionA.intValue">
+            <summary>
+            The integer value.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionA.Data.ValueBaseVersionA.longValue">
+            <summary>
+            The long value.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionA.Data.ValueBaseVersionA.bytesValue">
+            <summary>
+            The bytes value.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionA.Data.ValueBaseVersionA.IntValue">
+            <summary>
+            Gets or sets the integer value.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionA.Data.ValueBaseVersionA.LongValue">
+            <summary>
+            Gets or sets the long value.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionA.Data.ValueBaseVersionA.FloatValue">
+            <summary>
+            Gets or sets the float value.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionA.Data.ValueBaseVersionA.DoubleValue">
+            <summary>
+            Gets or sets the double value.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionA.Data.ValueBaseVersionA.BooleanValue">
+            <summary>
+            Gets or sets the boolean value.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionA.Data.ValueBaseVersionA.StringValue">
+            <summary>
+            Gets or sets the string value.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionA.Data.ValueBaseVersionA.BytesValue">
+            <summary>
+            Gets or sets the bytes value.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionA.Data.ValueBaseVersionA.ValueCase">
+            <summary>
+            Gets or sets the Value Case.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionA.Data.ValueBaseVersionA.DataType">
+            <summary>
+            Gets or sets the DataType.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionA.Data.ValueBaseVersionA.Value">
+            <summary>
+            Gets the value.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.VersionA.Data.ValueBaseVersionA.SetValue(SparkplugNet.VersionA.Data.DataType,System.Object)">
+            <summary>
+            Sets the value.
+            </summary>
+            <param name="dataType">Type of the data.</param>
+            <param name="value">The value.</param>
+        </member>
+        <member name="T:SparkplugNet.VersionA.SparkplugApplication">
+            <inheritdoc cref="T:SparkplugNet.Core.Application.SparkplugApplicationBase`1"/>
+            <summary>
+              A class that handles a Sparkplug application.
+            </summary>
+            <seealso cref="T:SparkplugNet.Core.Application.SparkplugApplicationBase`1"/>
+        </member>
+        <member name="M:SparkplugNet.VersionA.SparkplugApplication.#ctor(System.Collections.Generic.IEnumerable{SparkplugNet.VersionA.Data.KuraMetric},Serilog.ILogger)">
+            <inheritdoc cref="T:SparkplugNet.Core.Application.SparkplugApplicationBase`1"/>
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.VersionA.SparkplugApplication"/> class.
+            </summary>
+            <param name="knownMetrics">The known metrics.</param>
+            <param name="logger">The logger.</param>
+            <seealso cref="T:SparkplugNet.Core.Application.SparkplugApplicationBase`1"/>
+        </member>
+        <member name="M:SparkplugNet.VersionA.SparkplugApplication.#ctor(SparkplugNet.Core.SparkplugBase{SparkplugNet.VersionA.Data.KuraMetric}.KnownMetricStorage,Serilog.ILogger)">
+            <inheritdoc cref="T:SparkplugNet.Core.Application.SparkplugApplicationBase`1"/>
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.VersionA.SparkplugApplication"/> class.
+            </summary>
+            <param name="knownMetricsStorage">The known metrics storage.</param>
+            <param name="logger">The logger.</param>
+            <seealso cref="T:SparkplugNet.Core.Application.SparkplugApplicationBase`1"/>
+        </member>
+        <member name="M:SparkplugNet.VersionA.SparkplugApplication.PublishNodeCommandMessage(System.Collections.Generic.IEnumerable{SparkplugNet.VersionA.Data.KuraMetric},System.String,System.String)">
+            <summary>
+            Publishes a version A node command message.
+            </summary>
+            <param name="metrics">The metrics.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the options are null.</exception>
+            <exception cref="T:System.Exception">Thrown if an invalid metric type was specified.</exception>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="M:SparkplugNet.VersionA.SparkplugApplication.PublishDeviceCommandMessage(System.Collections.Generic.IEnumerable{SparkplugNet.VersionA.Data.KuraMetric},System.String,System.String,System.String)">
+            <summary>
+            Publishes a version A device command message.
+            </summary>
+            <param name="metrics">The metrics.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the options are null.</exception>
+            <exception cref="T:System.Exception">Thrown if an invalid metric type was specified.</exception>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="M:SparkplugNet.VersionA.SparkplugApplication.OnMessageReceived(SparkplugNet.Core.Topics.SparkplugMessageTopic,System.Byte[])">
+            <summary>
+            Called when an application message was received.
+            </summary>
+            <param name="topic">The topic.</param>
+            <param name="payload">The payload.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="M:SparkplugNet.VersionA.SparkplugApplication.HandleMessagesForVersionA(SparkplugNet.Core.Topics.SparkplugMessageTopic,SparkplugNet.VersionA.Data.Payload)">
+            <summary>
+            Handles the received messages for payload version A.
+            </summary>
+            <param name="topic">The topic.</param>
+            <param name="payload">The payload.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the known metrics are null.</exception>
+            <exception cref="T:System.Exception">Thrown if the metric is unknown.</exception>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="M:SparkplugNet.VersionA.SparkplugApplication.ProcessPayload(SparkplugNet.Core.Topics.SparkplugMessageTopic,SparkplugNet.VersionA.Data.Payload,SparkplugNet.Core.Enumerations.SparkplugMetricStatus)">
+            <summary>
+            Handles the device message.
+            </summary>
+            <param name="topic">The topic.</param>
+            <param name="payload">The payload.</param>
+            <param name="metricStatus">The metric status.</param>
+            <exception cref="T:System.InvalidCastException">Thrown if the metric cast is invalid.</exception>
+        </member>
+        <member name="T:SparkplugNet.VersionA.SparkplugNode">
+            <inheritdoc cref="T:SparkplugNet.Core.Node.SparkplugNodeBase`1"/>
+            <summary>
+              A class that handles a Sparkplug node.
+            </summary>
+            <seealso cref="T:SparkplugNet.Core.Node.SparkplugNodeBase`1"/>
+        </member>
+        <member name="M:SparkplugNet.VersionA.SparkplugNode.#ctor(System.Collections.Generic.IEnumerable{SparkplugNet.VersionA.Data.KuraMetric},Serilog.ILogger)">
+            <inheritdoc cref="T:SparkplugNet.Core.Node.SparkplugNodeBase`1"/>
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.VersionA.SparkplugNode"/> class.
+            </summary>
+            <param name="knownMetrics">The known metrics.</param>
+            <param name="logger">The logger.</param>
+            <seealso cref="T:SparkplugNet.Core.Node.SparkplugNodeBase`1"/>
+        </member>
+        <member name="M:SparkplugNet.VersionA.SparkplugNode.#ctor(SparkplugNet.Core.SparkplugBase{SparkplugNet.VersionA.Data.KuraMetric}.KnownMetricStorage,Serilog.ILogger)">
+            <inheritdoc cref="T:SparkplugNet.Core.Node.SparkplugNodeBase`1"/>
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.VersionA.SparkplugNode"/> class.
+            </summary>
+            <param name="knownMetricsStorage">The metric names.</param>
+            <param name="logger">The logger.</param>
+            <seealso cref="T:SparkplugNet.Core.Node.SparkplugNodeBase`1"/>
+        </member>
+        <member name="M:SparkplugNet.VersionA.SparkplugNode.PublishMessage(System.Collections.Generic.IEnumerable{SparkplugNet.VersionA.Data.KuraMetric})">
+            <summary>
+            Publishes version A metrics for a node.
+            </summary>
+            <param name="metrics">The metrics.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the options are null.</exception>
+            <exception cref="T:System.Exception">Thrown if an invalid metric type was specified.</exception>
+            <returns>A <see cref="T:MQTTnet.Client.MqttClientPublishResult"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.VersionA.SparkplugNode.OnMessageReceived(SparkplugNet.Core.Topics.SparkplugMessageTopic,System.Byte[])">
+            <summary>
+            Called when the node message is received.
+            </summary>
+            <param name="topic">The topic.</param>
+            <param name="payload">The payload.</param>
+            <exception cref="T:System.InvalidCastException">Thrown if the metric cast didn't work properly.</exception>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="T:SparkplugNet.VersionB.Data.DataSet">
+            <summary>
+            The externally used Sparkplug B data set class.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.DataSet.NumOfColumns">
+            <summary>
+            Gets or sets the number of columns.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.DataSet.Columns">
+            <summary>
+            Gets or sets the columns.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.DataSet.Types">
+            <summary>
+            Gets or sets the types.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.DataSet.Rows">
+            <summary>
+            Gets or sets the rows.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.DataSet.Details">
+            <summary>
+            Gets or sets the details.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.VersionB.Data.DataSet.#ctor">
+            <summary>
+            Initializes the DataSet
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.VersionB.Data.DataSet.#ctor(System.Collections.Generic.IDictionary{System.String,SparkplugNet.VersionB.Data.DataType})">
+            <summary>
+            Initializes the DataSet using a Dictionary with Column names as key
+            and DataType as value
+            </summary>
+            <param name="entries"></param>
+        </member>
+        <member name="T:SparkplugNet.VersionB.Data.DataSetValue">
+            <summary>
+            The externally used Sparkplug B data set value class.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.DataSetValue.extensionValue">
+            <summary>
+            The extension value.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.DataSetValue.ExtensionValue">
+            <summary>
+            Gets or sets the extension value.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.VersionB.Data.DataSetValue.#ctor">
+            <summary>
+            Initializes the DataSetValue
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.VersionB.Data.DataSetValue.#ctor(SparkplugNet.VersionB.Data.DataType,System.Object)">
+            <summary>
+            Initializes the DataSetValue with the given value with the given type
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.VersionB.Data.DataSetValueExtension">
+            <summary>
+            The externally used Sparkplug B data set extension class.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.DataSetValueExtension.Details">
+            <summary>
+            Gets or sets the details.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.VersionB.Data.DataType">
+            <summary>
+            The Sparkplug B data type enumeration.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.DataType.Unknown">
+            <summary>
+            The unknown data type, for future extension.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.DataType.Int8">
+            <summary>
+            The 8 bit integer data type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.DataType.Int16">
+            <summary>
+            The 16 bit integer data type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.DataType.Int32">
+            <summary>
+            The 32 bit integer data type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.DataType.Int64">
+            <summary>
+            The 64 bit integer data type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.DataType.UInt8">
+            <summary>
+            The unsigned 8 bit integer data type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.DataType.UInt16">
+            <summary>
+            The unsigned 16 bit integer data type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.DataType.UInt32">
+            <summary>
+            The unsigned 32 bit integer data type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.DataType.UInt64">
+            <summary>
+            The unsigned 64 bit integer data type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.DataType.Float">
+            <summary>
+            The float data type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.DataType.Double">
+            <summary>
+            The double data type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.DataType.Boolean">
+            <summary>
+            The boolean data type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.DataType.String">
+            <summary>
+            The string data type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.DataType.DateTime">
+            <summary>
+            The date time data type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.DataType.Text">
+            <summary>
+            The text data type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.DataType.Uuid">
+            <summary>
+            The UUID data type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.DataType.DataSet">
+            <summary>
+            The data set data type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.DataType.Bytes">
+            <summary>
+            The bytes type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.DataType.File">
+            <summary>
+            The file data type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.DataType.Template">
+            <summary>
+            The template data type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.DataType.PropertySet">
+            <summary>
+            The property set data type.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.DataType.PropertySetList">
+            <summary>
+            The property set list data type.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.VersionB.Data.MetaData">
+            <summary>
+            The externally used Sparkplug B meta data class.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.MetaData.IsMultiPart">
+            <summary>
+            Gets or sets a value indicating whether the meta data is a multi part data set or not.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.MetaData.ContentType">
+            <summary>
+            Gets or sets the content type.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.MetaData.Size">
+            <summary>
+            Gets or sets the size.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.MetaData.Seq">
+            <summary>
+            Gets or sets the SEQ number.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.MetaData.FileName">
+            <summary>
+            Gets or sets the file name.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.MetaData.FileType">
+            <summary>
+            Gets or sets the file type.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.MetaData.Md5">
+            <summary>
+            Gets or sets the MD5 hash.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.MetaData.Description">
+            <summary>
+            Gets or sets the description.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.MetaData.Details">
+            <summary>
+            Gets or sets the details.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.VersionB.Data.Metric">
+            <summary>
+            The externally used Sparkplug B metric class.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.Metric.Name">
+            <summary>
+            Gets or sets the name.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.Metric.bytesValue">
+            <summary>
+            The bytes value.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.Metric.templateValue">
+            <summary>
+            The template value.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.Metric.dataSetValue">
+            <summary>
+            The data set value.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.Metric.extensionValue">
+            <summary>
+            The extension value.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.VersionB.Data.Metric.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.VersionB.Data.Metric"/> class.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.VersionB.Data.Metric.#ctor(System.String,SparkplugNet.VersionB.Data.DataType,System.Object,System.Nullable{System.DateTimeOffset})">
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.VersionB.Data.Metric"/> class.
+            </summary>
+            <param name="strName">Name of the string.</param>
+            <param name="dataType">Type of the data.</param>
+            <param name="value">The value.</param>
+            <param name="timestamp">The timestamp.</param>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.Metric.Alias">
+            <summary>
+            Gets or sets the alias.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.Metric.Timestamp">
+            <summary>
+            Gets or sets the timestamp.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.Metric.IsHistorical">
+            <summary>
+            Gets or sets a value indicating whether the metric is historical or not.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.Metric.IsTransient">
+            <summary>
+            Gets or sets a value indicating whether the metric is transient or not.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.Metric.IsNull">
+            <summary>
+            Gets or sets a value indicating whether the metric is null or not.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.Metric.Metadata">
+            <summary>
+            Gets or sets the meta data.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.Metric.Properties">
+            <summary>
+            Gets or sets the properties.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.Metric.BytesValue">
+            <summary>
+            Gets or sets the bytes value.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.Metric.DataSetValue">
+            <summary>
+            Gets or sets the data set value.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.Metric.TemplateValue">
+            <summary>
+            Gets or sets the template value.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.Metric.ExtensionValue">
+            <summary>
+            Gets or sets the extension value.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.VersionB.Data.Metric.SetValue(SparkplugNet.VersionB.Data.DataType,System.Object)">
+            <summary>
+            Sets the value.
+            </summary>
+            <param name="dataType">Type of the data.</param>
+            <param name="value">The value.</param>
+            <returns>The metric.</returns>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.Metric.Value">
+            <summary>
+            Gets the value.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.VersionB.Data.MetricValueExtension">
+            <summary>
+            The externally used Sparkplug B metric value extension class.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.MetricValueExtension.Details">
+            <summary>
+            Gets or sets the details.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.VersionB.Data.Parameter">
+            <summary>
+            The externally used Sparkplug B parameter class.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.Parameter.extensionValue">
+            <summary>
+            The extension value.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.Parameter.Name">
+            <summary>
+            Gets or sets the name.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.Parameter.ExtensionValue">
+            <summary>
+            Gets or sets the extension value.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.VersionB.Data.ParameterValueExtension">
+            <summary>
+            The externally used Sparkplug B parameter value extension class.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.ParameterValueExtension.Extensions">
+            <summary>
+            Gets or sets the extensions.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.VersionB.Data.Payload">
+            <summary>
+            The externally used Sparkplug B payload class.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.Payload.Timestamp">
+            <summary>
+            Gets or sets the timestamp.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.Payload.Metrics">
+            <summary>
+            Gets or sets the metrics.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.Payload.Seq">
+            <summary>
+            Gets or sets the SEQ number.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.Payload.Uuid">
+            <summary>
+            Gets or sets the UUID.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.Payload.Body">
+            <summary>
+            Get sor sets the body.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.Payload.Details">
+            <summary>
+            Gets or sets the details.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.VersionB.Data.PropertySet">
+            <summary>
+            The externally used Sparkplug B property set class.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.PropertySet.Keys">
+            <summary>
+            Gets or sets the keys.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.PropertySet.Values">
+            <summary>
+            Gets or sets the values.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.PropertySet.Details">
+            <summary>
+            Gets or sets the details.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.VersionB.Data.PropertySetList">
+            <summary>
+            The externally used Sparkplug B property set list class.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.PropertySetList.PropertySets">
+            <summary>
+            Gets or sets the property sets.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.PropertySetList.Details">
+            <summary>
+            Gets or sets the details.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.VersionB.Data.PropertyValue">
+            <summary>
+            The externally used Sparkplug B property value class.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.PropertyValue.propertySetValue">
+            <summary>
+            The property set value.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.PropertyValue.propertySetListValue">
+            <summary>
+            The property set list value.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.PropertyValue.extensionValue">
+            <summary>
+            The extension value.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.PropertyValue.IsNull">
+            <summary>
+            Gets or sets a value indicating whether the property value is null or not.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.PropertyValue.PropertySetValue">
+            <summary>
+            Gets or sets the property set value.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.PropertyValue.PropertySetsValue">
+            <summary>
+            Gets or sets the property set list value.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.PropertyValue.ExtensionValue">
+            <summary>
+            Gets or sets the extension value.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.VersionB.Data.PropertyValueExtension">
+            <summary>
+            The externally used Sparkplug B property value extension class.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.PropertyValueExtension.Details">
+            <summary>
+            Gets or sets the details.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.VersionB.Data.Row">
+            <summary>
+            The externally used Sparkplug B row class.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.Row.Elements">
+            <summary>
+            Gets or sets the elements.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.Row.Details">
+            <summary>
+            Gets or sets the details.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.VersionB.Data.Template">
+            <summary>
+            The externally used Sparkplug B template class.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.Template.Version">
+            <summary>
+            Gets or sets the version.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.Template.Metrics">
+            <summary>
+            Gets or sets the metrics.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.Template.Parameters">
+            <summary>
+            Gets or sets the parameters.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.Template.TemplateRef">
+            <summary>
+            Gets or sets the template reference.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.Template.IsDefinition">
+            <summary>
+            Gets or sets a value indicating whether the template is a definition or not.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.Template.Details">
+            <summary>
+            Gets or sets the details.
+            </summary>
+        </member>
+        <member name="T:SparkplugNet.VersionB.Data.ValueBaseVersionB">
+            <summary>
+            Base Value class for Sparkplug Version B
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.ValueBaseVersionB.intValue">
+            <summary>
+            The integer value.
+            </summary>
+        </member>
+        <member name="F:SparkplugNet.VersionB.Data.ValueBaseVersionB.longValue">
+            <summary>
+            The long value.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.ValueBaseVersionB.IntValue">
+            <summary>
+            Gets or sets the integer value.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.ValueBaseVersionB.LongValue">
+            <summary>
+            Gets or sets the long value.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.ValueBaseVersionB.FloatValue">
+            <summary>
+            Gets or sets the float value.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.ValueBaseVersionB.DoubleValue">
+            <summary>
+            Gets or sets the double value.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.ValueBaseVersionB.BooleanValue">
+            <summary>
+            Gets or sets the boolean value.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.ValueBaseVersionB.StringValue">
+            <summary>
+            Gets or sets the string value.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.ValueBaseVersionB.ValueCase">
+            <summary>
+            Gets or sets the ValueCase.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.ValueBaseVersionB.DataType">
+            <summary>
+            Gets or sets the DataType.
+            </summary>
+        </member>
+        <member name="P:SparkplugNet.VersionB.Data.ValueBaseVersionB.Value">
+            <summary>
+            Gets the value.
+            </summary>
+        </member>
+        <member name="M:SparkplugNet.VersionB.Data.ValueBaseVersionB.SetValue(SparkplugNet.VersionB.Data.DataType,System.Object)">
+            <summary>
+            Sets the value.
+            </summary>
+            <param name="dataType">Type of the data.</param>
+            <param name="value">The value.</param>
+            <returns>The metric.</returns>
+        </member>
+        <member name="T:SparkplugNet.VersionB.SparkplugApplication">
+            <inheritdoc cref="T:SparkplugNet.Core.Application.SparkplugApplicationBase`1"/>
+            <summary>
+              A class that handles a Sparkplug application.
+            </summary>
+            <seealso cref="T:SparkplugNet.Core.Application.SparkplugApplicationBase`1"/>
+        </member>
+        <member name="M:SparkplugNet.VersionB.SparkplugApplication.#ctor(System.Collections.Generic.IEnumerable{SparkplugNet.VersionB.Data.Metric},Serilog.ILogger)">
+            <inheritdoc cref="T:SparkplugNet.Core.Application.SparkplugApplicationBase`1"/>
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.VersionB.SparkplugApplication"/> class.
+            </summary>
+            <param name="knownMetrics">The known metrics.</param>
+            <param name="logger">The logger.</param>
+            <seealso cref="T:SparkplugNet.Core.Application.SparkplugApplicationBase`1"/>
+        </member>
+        <member name="M:SparkplugNet.VersionB.SparkplugApplication.#ctor(SparkplugNet.Core.SparkplugBase{SparkplugNet.VersionB.Data.Metric}.KnownMetricStorage,Serilog.ILogger)">
+            <inheritdoc cref="T:SparkplugNet.Core.Application.SparkplugApplicationBase`1"/>
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.VersionB.SparkplugApplication"/> class.
+            </summary>
+            <param name="knownMetricsStorage">The metric names.</param>
+            <param name="logger">The logger.</param>
+            <seealso cref="T:SparkplugNet.Core.Application.SparkplugApplicationBase`1"/>
+        </member>
+        <member name="M:SparkplugNet.VersionB.SparkplugApplication.PublishNodeCommandMessage(System.Collections.Generic.IEnumerable{SparkplugNet.VersionB.Data.Metric},System.String,System.String)">
+            <summary>
+            Publishes a version B node command message.
+            </summary>
+            <param name="metrics">The metrics.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the options are null.</exception>
+            <exception cref="T:System.Exception">Thrown if an invalid metric type was specified.</exception>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="M:SparkplugNet.VersionB.SparkplugApplication.PublishDeviceCommandMessage(System.Collections.Generic.IEnumerable{SparkplugNet.VersionB.Data.Metric},System.String,System.String,System.String)">
+            <summary>
+            Publishes a version B device command message.
+            </summary>
+            <param name="metrics">The metrics.</param>
+            <param name="groupIdentifier">The group identifier.</param>
+            <param name="edgeNodeIdentifier">The edge node identifier.</param>
+            <param name="deviceIdentifier">The device identifier.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the options are null.</exception>
+            <exception cref="T:System.Exception">Thrown if an invalid metric type was specified.</exception>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="M:SparkplugNet.VersionB.SparkplugApplication.OnMessageReceived(SparkplugNet.Core.Topics.SparkplugMessageTopic,System.Byte[])">
+            <summary>
+            Called when an application message was received.
+            </summary>
+            <param name="topic">The topic.</param>
+            <param name="payload">The payload.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="M:SparkplugNet.VersionB.SparkplugApplication.HandleMessagesForVersionBAsync(SparkplugNet.Core.Topics.SparkplugMessageTopic,SparkplugNet.VersionB.Data.Payload)">
+            <summary>
+            Handles the received messages for payload version A.
+            </summary>
+            <param name="topic">The topic.</param>
+            <param name="payload">The payload.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the known metrics are null.</exception>
+            <exception cref="T:System.Exception">Thrown if the metric is unknown.</exception>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+        <member name="M:SparkplugNet.VersionB.SparkplugApplication.ProcessPayload(SparkplugNet.Core.Topics.SparkplugMessageTopic,SparkplugNet.VersionB.Data.Payload,SparkplugNet.Core.Enumerations.SparkplugMetricStatus)">
+            <summary>
+            Handles the device message.
+            </summary>
+            <param name="topic">The topic.</param>
+            <param name="payload">The payload.</param>
+            <param name="metricStatus">The metric status.</param>
+            <exception cref="T:System.InvalidCastException">Thrown if the metric cast is invalid.</exception>
+        </member>
+        <member name="T:SparkplugNet.VersionB.SparkplugNode">
+            <inheritdoc cref="T:SparkplugNet.Core.Node.SparkplugNodeBase`1"/>
+            <summary>
+              A class that handles a Sparkplug node.
+            </summary>
+            <seealso cref="T:SparkplugNet.Core.Node.SparkplugNodeBase`1"/>
+        </member>
+        <member name="M:SparkplugNet.VersionB.SparkplugNode.#ctor(System.Collections.Generic.IEnumerable{SparkplugNet.VersionB.Data.Metric},Serilog.ILogger)">
+            <inheritdoc cref="T:SparkplugNet.Core.Node.SparkplugNodeBase`1"/>
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.VersionB.SparkplugNode"/> class.
+            </summary>
+            <param name="knownMetrics">The known metrics.</param>
+            <param name="logger">The logger.</param>
+            <seealso cref="T:SparkplugNet.Core.Node.SparkplugNodeBase`1"/>
+        </member>
+        <member name="M:SparkplugNet.VersionB.SparkplugNode.#ctor(SparkplugNet.Core.SparkplugBase{SparkplugNet.VersionB.Data.Metric}.KnownMetricStorage,Serilog.ILogger)">
+            <inheritdoc cref="T:SparkplugNet.Core.Node.SparkplugNodeBase`1"/>
+            <summary>
+            Initializes a new instance of the <see cref="T:SparkplugNet.VersionB.SparkplugNode"/> class.
+            </summary>
+            <param name="knownMetricsStorage">The metric names.</param>
+            <param name="logger">The logger.</param>
+            <seealso cref="T:SparkplugNet.Core.Node.SparkplugNodeBase`1"/>
+        </member>
+        <member name="M:SparkplugNet.VersionB.SparkplugNode.PublishMessage(System.Collections.Generic.IEnumerable{SparkplugNet.VersionB.Data.Metric})">
+            <summary>
+            Publishes version B metrics for a node.
+            </summary>
+            <param name="metrics">The metrics.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if the options are null.</exception>
+            <exception cref="T:System.Exception">Thrown if an invalid metric type was specified.</exception>
+            <returns>A <see cref="T:MQTTnet.Client.MqttClientPublishResult"/>.</returns>
+        </member>
+        <member name="M:SparkplugNet.VersionB.SparkplugNode.OnMessageReceived(SparkplugNet.Core.Topics.SparkplugMessageTopic,System.Byte[])">
+            <summary>
+            Called when a node message was received.
+            </summary>
+            <param name="topic">The topic.</param>
+            <param name="payload">The payload.</param>
+            <exception cref="T:System.InvalidCastException">Thrown if the metric cast didn't work properly.</exception>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing any asynchronous operation.</returns>
+        </member>
+    </members>
+</doc>

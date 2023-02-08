@@ -22,7 +22,57 @@ public class SpB : Transport
 
     public SpB(Machine machine) : base(machine)
     {
-        //TODO: make defaults
+        if (!Machine.Configuration.transport.ContainsKey("anonymous"))
+            Machine.Configuration.transport.Add("anonymous", true);
+        
+        if (!Machine.Configuration.transport.ContainsKey("user"))
+            Machine.Configuration.transport.Add("user", string.Empty);
+        
+        if (!Machine.Configuration.transport.ContainsKey("password"))
+            Machine.Configuration.transport.Add("password", string.Empty);
+        
+        if (!Machine.Configuration.transport.ContainsKey("reconnect_s"))
+            Machine.Configuration.transport.Add("reconnect_s", 30);
+        
+        if (!Machine.Configuration.transport.ContainsKey("net"))
+        {
+            Machine.Configuration.transport.Add("net", new Dictionary<object, object>()
+            {
+                { "type", "tcp" },
+                { "ip", "127.0.0.1" },
+                { "port", 1883 }
+            });
+        }
+        else if (Machine.Configuration.transport["net"] == null)
+        {
+            Machine.Configuration.transport["net"] = new Dictionary<object, object>()
+            {
+                { "type", "tcp" },
+                { "ip", "127.0.0.1" },
+                { "port", 1883 }
+            };
+        }
+        
+        if (!Machine.Configuration.transport.ContainsKey("overrides"))
+        {
+            Machine.Configuration.transport.Add("overrides", new Dictionary<object, object>()
+            {
+                { "scada_id", null! },
+                { "group_id", null! },
+                { "node_id", null! },
+                { "device_id", null! }
+            });
+        }
+        else if (Machine.Configuration.transport["overrides"] == null)
+        {
+            Machine.Configuration.transport["overrides"] = new Dictionary<object, object>()
+            {
+                { "scada_id", null! },
+                { "group_id", null! },
+                { "node_id", null! },
+                { "device_id", null! }
+            };
+        }
     }
 
     public override async Task<dynamic?> CreateAsync()
@@ -37,25 +87,30 @@ public class SpB : Transport
         };
 
         // ReSharper disable once RedundantArgumentDefaultValue
-        _node = new SparkplugNode(_nodeMetrics, null);
+        _node = new SparkplugNode(_nodeMetrics);
+
+        var scadaId = Machine.Configuration.transport["overrides"]["scada_id"] == null ? "scada" : Machine.Configuration.transport["overrides"]["scada_id"];
+        var clientId = Machine.Configuration.transport["overrides"]["device_id"] == null ? $"fanuc_{Machine.Id}" : Machine.Configuration.transport["overrides"]["device_id"];
+        var groupId = Machine.Configuration.transport["overrides"]["group_id"] == null ? "fanuc" : Machine.Configuration.transport["overrides"]["group_id"];
+        var nodeId = Machine.Configuration.transport["overrides"]["node_id"] == null ? $"{Environment.MachineName}" : Machine.Configuration.transport["overrides"]["node_id"];
 
         // ReSharper disable once UseObjectOrCollectionInitializer
         _nodeOptions = new SparkplugNodeOptions(
             brokerAddress: Machine.Configuration.transport["net"]["ip"],
             port: Machine.Configuration.transport["net"]["port"],
             userName: Machine.Configuration.transport["user"],
-            clientId: $"fanuc_{Machine.Id}",
+            clientId: clientId,
             password: Machine.Configuration.transport["password"],
             useTls: false,
-            scadaHostIdentifier: "scada",
-            groupIdentifier: "fanuc",
-            edgeNodeIdentifier: $"{Environment.MachineName}_{Machine.Id}", // TODO: clean up hostname to spb spec
-            reconnectInterval: TimeSpan.FromSeconds(30),
+            scadaHostIdentifier: scadaId,
+            groupIdentifier: groupId,
+            edgeNodeIdentifier: nodeId,
+            reconnectInterval: TimeSpan.FromSeconds(Machine.Configuration.transport["reconnect_s"]),
             webSocketParameters: null,
             proxyOptions: null,
             cancellationToken: new CancellationToken()
         );
-
+        
         _nodeOptions.AddSessionNumberToDataMessages = true;
 
         // ReSharper disable once UnusedParameter.Local
@@ -77,7 +132,7 @@ public class SpB : Transport
             Logger.Warn($"[{Machine.Id}] SpB node status message '{args.Status}.");
             await Task.FromResult(0);
         };
-
+        
         await ConnectAsync();
         return null;
     }
@@ -208,7 +263,8 @@ public class SpB : Transport
         {
             try
             {
-                await _node.PublishDeviceBirthMessage(metrics, Machine.Id);
+                await _node.PublishDeviceBirthMessage(metrics, 
+                    Machine.Configuration.transport["overrides"]["device_id"] == null ? Machine.Id : Machine.Configuration.transport["overrides"]["device_id"]);
             }
             catch (Exception ex)
             {

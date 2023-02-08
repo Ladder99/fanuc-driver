@@ -51,7 +51,6 @@ user:
     << : *transport-base-mqtt
     l99.driver.fanuc.transports.MQTT, fanuc:
       << : *default-mqtt-options
-      enabled: !!bool true
       net:
         type: tcp
         ip: localhost
@@ -63,7 +62,6 @@ user:
     << : *transport-base-mqtt
     l99.driver.fanuc.transports.MQTT, fanuc:
       << : *default-mqtt-options
-      enabled: !!bool true
       net:
         type: ws
         ip: test.mosquitto.org
@@ -82,7 +80,6 @@ user:
   target-spb-1: &target-spb-1
     << : *transport-base-spb
     l99.driver.fanuc.transports.SpB, fanuc:
-      enabled: !!bool true
       net:
         type: tcp
         ip: 10.1.10.2

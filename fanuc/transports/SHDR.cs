@@ -30,7 +30,39 @@ public class SHDR : Transport
 
     public SHDR(Machine machine) : base(machine)
     {
-        //TODO: make defaults
+        if (!Machine.Configuration.transport.ContainsKey("transformers"))
+        {
+            Logger.Error($"[{Machine.Id}] Transformers must be explicitly defined in configuration.");
+            Machine.Disable();
+        }
+         
+        if (!Machine.Configuration.transport.ContainsKey("generator"))
+        {
+            Logger.Error($"[{Machine.Id}] Generator must be explicitly defined in configuration.");
+            Machine.Disable();
+        }
+        
+        if (!Machine.Configuration.transport.ContainsKey("device_name"))
+            Machine.Configuration.transport.Add("device_name", Machine.Id);
+        
+        if (!Machine.Configuration.transport.ContainsKey("net"))
+        {
+            Machine.Configuration.transport.Add("net", new Dictionary<object, object>()
+            {
+                { "interval_ms", 1000 },
+                { "heartbeat_ms", 10000 },
+                { "port", 7878 }
+            });
+        }
+        else if (Machine.Configuration.transport["net"] == null)
+        {
+            Machine.Configuration.transport["net"] = new Dictionary<object, object>()
+            {
+                { "interval_ms", 1000 },
+                { "heartbeat_ms", 10000 },
+                { "port", 7878 }
+            };
+        }
     }
 
     private bool ShdrInvalidated
@@ -70,7 +102,7 @@ public class SHDR : Transport
 
         await InitScriptContextAsync();
 
-        _transformLookup = (Machine.Configuration.transport["transformers"] as Dictionary<dynamic, dynamic>)
+        _transformLookup = ((Machine.Configuration.transport["transformers"] as Dictionary<dynamic, dynamic>)!)
             .ToDictionary(
                 kv => (string) kv.Key,
                 kv => (string) kv.Value);
@@ -143,9 +175,8 @@ public class SHDR : Transport
         _adapter = new ShdrIntervalQueueAdapter(
             Machine.Configuration.transport["device_name"],
             Machine.Configuration.transport["net"]["port"],
-            Machine.Configuration.transport["net"]["heartbeat_ms"]);
-
-        _adapter.Interval = Machine.Configuration.transport["net"]["interval_ms"];
+            Machine.Configuration.transport["net"]["heartbeat_ms"],
+            Machine.Configuration.transport["net"]["interval_ms"]);
 
         // ReSharper disable once UnusedParameter.Local
         _adapter.AgentConnectionError = (sender, s) =>

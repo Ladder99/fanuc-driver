@@ -94,7 +94,6 @@ machines:
       skip_internal: !!bool true
     l99.driver.fanuc.transports.MQTT, fanuc:
       topic: fanuc/{{machine.Id}}/{{veneer.Name}}{{if veneer.SliceKey}}/{{veneer.SliceKey}}{{end}}
-      enabled: !!bool true
       net:
         type: tcp
         ip: 127.0.0.1
@@ -128,7 +127,7 @@ machines:
             comments: "^\\( *(?<key>COMMENTS) *: *(?<value>[^\\):\\n]+[^ \\):\\n])* *\\)$"
 
   - id: f_sim_mtc_long
-    enabled: !!bool true
+    enabled: !!bool false
     type: l99.driver.fanuc.FanucMachine, fanuc
     strategy: l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc
     handler: l99.driver.fanuc.handlers.FanucOne, fanuc
@@ -164,7 +163,7 @@ machines:
         interval_ms: !!int 1000
 
   - id: f_sim_spb_long
-    enabled: !!bool false
+    enabled: !!bool true
     type: l99.driver.fanuc.FanucMachine, fanuc
     strategy: l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc
     handler: l99.driver.fanuc.handlers.FanucOne, fanuc
@@ -176,7 +175,7 @@ machines:
         port: !!int 8193
         timeout_s: !!int 3
     l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
-      stay_connected: !!bool false
+      stay_connected: !!bool true
       collectors:
       - l99.driver.fanuc.collectors.MachineInfo, fanuc
       - l99.driver.fanuc.collectors.Alarms, fanuc
@@ -184,11 +183,16 @@ machines:
       - l99.driver.fanuc.collectors.StateData, fanuc
       - l99.driver.fanuc.collectors.ToolData, fanuc
       - l99.driver.fanuc.collectors.ProductionData, fanuc
+      #- l99.driver.fanuc.collectors.ProductionDataExternalSubprogramDetails, fanuc
       - l99.driver.fanuc.collectors.GCodeData, fanuc
       - l99.driver.fanuc.collectors.AxisData, fanuc
       - l99.driver.fanuc.collectors.SpindleData, fanuc
     l99.driver.fanuc.transports.SpB, fanuc:
-      enabled: !!bool true
+      overrides:
+        scada_id: ~
+        group_id: ~
+        node_id: ~
+        device_id: ~
       net:
         type: tcp
         ip: 10.1.10.2
@@ -196,6 +200,7 @@ machines:
       anonymous: !!bool false
       user: admin
       password: password
+      reconnect_s: 30
 
   - id: f_sim_influx_long
     enabled: !!bool false

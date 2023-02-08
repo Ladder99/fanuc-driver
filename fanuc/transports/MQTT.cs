@@ -22,7 +22,36 @@ public class MQTT : Transport
 
     public MQTT(Machine machine) : base(machine)
     {
-        //TODO: make defaults
+        if (!Machine.Configuration.transport.ContainsKey("anonymous"))
+            Machine.Configuration.transport.Add("anonymous", true);
+        
+        if (!Machine.Configuration.transport.ContainsKey("user"))
+            Machine.Configuration.transport.Add("user", string.Empty);
+        
+        if (!Machine.Configuration.transport.ContainsKey("password"))
+            Machine.Configuration.transport.Add("password", string.Empty);
+        
+        if (!Machine.Configuration.transport.ContainsKey("topic"))
+            Machine.Configuration.transport.Add("topic", @"fanuc/{{machine.Id}}/{{veneer.Name}}{{if veneer.SliceKey}}/{{veneer.SliceKey}}{{end}}");
+        
+        if (!Machine.Configuration.transport.ContainsKey("net"))
+        {
+            Machine.Configuration.transport.Add("net", new Dictionary<object, object>()
+            {
+                { "type", "tcp" },
+                { "ip", "127.0.0.1" },
+                { "port", 1883 }
+            });
+        }
+        else if (Machine.Configuration.transport["net"] == null)
+        {
+            Machine.Configuration.transport["net"] = new Dictionary<object, object>()
+            {
+                { "type", "tcp" },
+                { "ip", "127.0.0.1" },
+                { "port", 1883 }
+            };
+        }
     }
 
     public override async Task<dynamic?> CreateAsync()

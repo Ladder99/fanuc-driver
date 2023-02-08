@@ -1,0 +1,146 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v7.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v7.0": {
+      "SparkplugNet/1.2.1": {
+        "dependencies": {
+          "GitVersion.MsBuild": "5.11.1",
+          "MQTTnet": "4.1.4.563",
+          "Microsoft.SourceLink.GitHub": "1.1.1",
+          "Newtonsoft.Json": "13.0.1",
+          "Serilog": "2.12.0",
+          "protobuf-net": "3.1.33"
+        },
+        "runtime": {
+          "SparkplugNet.dll": {}
+        }
+      },
+      "GitVersion.MsBuild/5.11.1": {},
+      "Microsoft.Build.Tasks.Git/1.1.1": {},
+      "Microsoft.SourceLink.Common/1.1.1": {},
+      "Microsoft.SourceLink.GitHub/1.1.1": {
+        "dependencies": {
+          "Microsoft.Build.Tasks.Git": "1.1.1",
+          "Microsoft.SourceLink.Common": "1.1.1"
+        }
+      },
+      "MQTTnet/4.1.4.563": {
+        "runtime": {
+          "lib/net6.0/MQTTnet.dll": {
+            "assemblyVersion": "4.1.4.563",
+            "fileVersion": "4.1.4.563"
+          }
+        }
+      },
+      "Newtonsoft.Json/13.0.1": {
+        "runtime": {
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {
+            "assemblyVersion": "13.0.0.0",
+            "fileVersion": "13.0.1.25517"
+          }
+        }
+      },
+      "protobuf-net/3.1.33": {
+        "dependencies": {
+          "protobuf-net.Core": "3.1.33"
+        },
+        "runtime": {
+          "lib/net6.0/protobuf-net.dll": {
+            "assemblyVersion": "3.0.0.0",
+            "fileVersion": "3.1.33.56283"
+          }
+        }
+      },
+      "protobuf-net.Core/3.1.33": {
+        "runtime": {
+          "lib/net6.0/protobuf-net.Core.dll": {
+            "assemblyVersion": "3.0.0.0",
+            "fileVersion": "3.1.33.56283"
+          }
+        }
+      },
+      "Serilog/2.12.0": {
+        "runtime": {
+          "lib/net6.0/Serilog.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.12.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "SparkplugNet/1.2.1": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "GitVersion.MsBuild/5.11.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-JlJB4dAc/MpLQvbF8OeyMKotDo5EcgU2pXmB+MlTe64B1Y0fc9GTMiAHiyUiHLnFRnOtrcSi1C3BsfRTmlD0sA==",
+      "path": "gitversion.msbuild/5.11.1",
+      "hashPath": "gitversion.msbuild.5.11.1.nupkg.sha512"
+    },
+    "Microsoft.Build.Tasks.Git/1.1.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-AT3HlgTjsqHnWpBHSNeR0KxbLZD7bztlZVj7I8vgeYG9SYqbeFGh0TM/KVtC6fg53nrWHl3VfZFvb5BiQFcY6Q==",
+      "path": "microsoft.build.tasks.git/1.1.1",
+      "hashPath": "microsoft.build.tasks.git.1.1.1.nupkg.sha512"
+    },
+    "Microsoft.SourceLink.Common/1.1.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-WMcGpWKrmJmzrNeuaEb23bEMnbtR/vLmvZtkAP5qWu7vQsY59GqfRJd65sFpBszbd2k/bQ8cs8eWawQKAabkVg==",
+      "path": "microsoft.sourcelink.common/1.1.1",
+      "hashPath": "microsoft.sourcelink.common.1.1.1.nupkg.sha512"
+    },
+    "Microsoft.SourceLink.GitHub/1.1.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-IaJGnOv/M7UQjRJks7B6p7pbPnOwisYGOIzqCz5ilGFTApZ3ktOR+6zJ12ZRPInulBmdAf1SrGdDG2MU8g6XTw==",
+      "path": "microsoft.sourcelink.github/1.1.1",
+      "hashPath": "microsoft.sourcelink.github.1.1.1.nupkg.sha512"
+    },
+    "MQTTnet/4.1.4.563": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-gO9segUcKyQJcjV7w7OOdoAIkec7cUN65vEhYutbdWcj4rbtz/oL/RDvQVVbameXc6ChkjKx7/HbO+R8ejAUZQ==",
+      "path": "mqttnet/4.1.4.563",
+      "hashPath": "mqttnet.4.1.4.563.nupkg.sha512"
+    },
+    "Newtonsoft.Json/13.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ppPFpBcvxdsfUonNcvITKqLl3bqxWbDCZIzDWHzjpdAHRFfZe0Dw9HmA0+za13IdyrgJwpkDTDA9fHaxOrt20A==",
+      "path": "newtonsoft.json/13.0.1",
+      "hashPath": "newtonsoft.json.13.0.1.nupkg.sha512"
+    },
+    "protobuf-net/3.1.33": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-tv6wc8QvCjGOY/grQ/irxUWqRtHpVzOLY87+jvINxYOD5n0o4TX9RukJ/FRkVyMeQtLLhf/0okQFb4rQgoWt8A==",
+      "path": "protobuf-net/3.1.33",
+      "hashPath": "protobuf-net.3.1.33.nupkg.sha512"
+    },
+    "protobuf-net.Core/3.1.33": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-uq+KLED4Mwx1BnTE5TTtawQgaCRpajcbRKaYsEbY5biWWK1O5+rCBTd6+9EpK6CYxd2POUHkpwTslPs4SCoHOw==",
+      "path": "protobuf-net.core/3.1.33",
+      "hashPath": "protobuf-net.core.3.1.33.nupkg.sha512"
+    },
+    "Serilog/2.12.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-xaiJLIdu6rYMKfQMYUZgTy8YK7SMZjB4Yk50C/u//Z4OsvxkUfSPJy4nknfvwAC34yr13q7kcyh4grbwhSxyZg==",
+      "path": "serilog/2.12.0",
+      "hashPath": "serilog.2.12.0.nupkg.sha512"
+    }
+  }
+}
