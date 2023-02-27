@@ -156,6 +156,7 @@ machines:
     l99.driver.fanuc.transports.SHDR, fanuc:
       << : *default-shdr-transformers
       << : *default-shdr-model-genny
+      device_key: ~
       device_name: f_sim
       net:
         port: !!int 7878

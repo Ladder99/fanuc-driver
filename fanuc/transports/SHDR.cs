@@ -42,6 +42,9 @@ public class SHDR : Transport
             Machine.Disable();
         }
         
+        if (!Machine.Configuration.transport.ContainsKey("device_key"))
+            Machine.Configuration.transport.Add("device_key", Machine.Id);
+        
         if (!Machine.Configuration.transport.ContainsKey("device_name"))
             Machine.Configuration.transport.Add("device_name", Machine.Id);
         
@@ -173,7 +176,7 @@ public class SHDR : Transport
     {
         // ReSharper disable once UseObjectOrCollectionInitializer
         _adapter = new ShdrIntervalQueueAdapter(
-            Machine.Configuration.transport["device_name"],
+            Machine.Configuration.transport["device_key"],
             Machine.Configuration.transport["net"]["port"],
             Machine.Configuration.transport["net"]["heartbeat_ms"],
             Machine.Configuration.transport["net"]["interval_ms"]);
