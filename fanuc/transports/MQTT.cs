@@ -138,7 +138,15 @@ public class MQTT : Transport
                 .WithPayload(payload)
                 .Build();
 
-            await _client.PublishAsync(msg, CancellationToken.None);
+            // guard publish -- issue 87
+            try
+            {
+                await _client.PublishAsync(msg, CancellationToken.None);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, $"[{Machine.Id}] Broker publish failed due to unhandled exception.");
+            }
         }
     }
 
@@ -177,6 +185,11 @@ public class MQTT : Transport
                         Logger.Debug($"[{Machine.Id}] Broker connection failed '{_key}': {_options.ChannelOptions}");
 
                     _connectionFailCount++;
+                }
+                // catch any exception -- issue 87
+                catch (Exception ex)
+                {
+                    Logger.Error(ex, $"[{Machine.Id}] Broker connection failed due to unhandled exception.");
                 }
             }
         }
