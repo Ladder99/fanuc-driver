@@ -40,7 +40,7 @@ public class FanucOne : Handler
                 time = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds(),
                 machine = veneers.Machine.Id,
                 name = veneer.Name,
-                marker = veneer.Marker
+                marker = veneer.Marker ?? new dynamic[]{}
             },
             state = new
             {
@@ -75,7 +75,7 @@ public class FanucOne : Handler
                 time = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds(),
                 machine = veneers.Machine.Id,
                 name = veneer.Name,
-                marker = veneer.Marker
+                marker = veneer.Marker ?? new dynamic[]{}
             },
             state = new
             {
