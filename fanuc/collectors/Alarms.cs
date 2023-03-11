@@ -9,12 +9,14 @@ public class Alarms : FanucMultiStrategyCollector
 {
     public Alarms(FanucMultiStrategy strategy, object configuration) : base(strategy, configuration)
     {
+        if (!Configuration.ContainsKey("stateful")) Configuration.Add("stateful", false);
+        
         if (!Configuration.ContainsKey("warned")) Configuration.Add("warned", false);
     }
 
     public override async Task InitPathsAsync()
     {
-        await Strategy.Apply(typeof(AlarmsSeries), "alarms");
+        await Strategy.Apply(Configuration["stateful"] ? typeof(AlarmsSeriesStateful) : typeof(AlarmsSeries), "alarms");
     }
 
     public override async Task CollectForEachPathAsync(short currentPath, string[] axis, string[] spindle,
@@ -64,6 +66,6 @@ public class Alarms : FanucMultiStrategyCollector
 
         // track the resulting data structure
         Strategy.SetKeyed("obs+alarms",
-            obsAlarms!.veneer.LastChangedValue.alarms);
+            obsAlarms!.veneer.LastChangedValue?.alarms);
     }
 }

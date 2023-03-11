@@ -99,8 +99,12 @@ machines:
         ip: 127.0.0.1
         port: !!int 1883
       anonymous: !!bool true
-      user:
-      password:
+      user: 
+      password: 
+    l99.driver.fanuc.collectors.Alarms, fanuc:
+      stateful: !!bool true
+    l99.driver.fanuc.collectors.Messages, fanuc:
+      stateful: !!bool true
     l99.driver.fanuc.collectors.ProductionData, fanuc:
       unsupported: !!bool false
     l99.driver.fanuc.collectors.GCodeData, fanuc:
@@ -140,6 +144,10 @@ machines:
         timeout_s: !!int 3
     l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
       stay_connected: !!bool false
+      #exclusions:
+      #  1: 
+      #  2: [ X, S ]
+      #  3: [ % ]
       collectors:
       - l99.driver.fanuc.collectors.MachineInfo, fanuc
       - l99.driver.fanuc.collectors.Alarms, fanuc
@@ -162,6 +170,10 @@ machines:
         port: !!int 7878
         heartbeat_ms: !!int 10000
         interval_ms: !!int 1000
+    l99.driver.fanuc.collectors.Alarms, fanuc:
+      stateful: !!bool true
+    l99.driver.fanuc.collectors.Messages, fanuc:
+      stateful: !!bool true
 
   - id: f_sim_spb_long
     enabled: !!bool false
@@ -184,10 +196,16 @@ machines:
       - l99.driver.fanuc.collectors.StateData, fanuc
       - l99.driver.fanuc.collectors.ToolData, fanuc
       - l99.driver.fanuc.collectors.ProductionData, fanuc
+      #- l99.driver.fanuc.collectors.ProductionDataExternalSubprogramDetails, fanuc
       - l99.driver.fanuc.collectors.GCodeData, fanuc
       - l99.driver.fanuc.collectors.AxisData, fanuc
       - l99.driver.fanuc.collectors.SpindleData, fanuc
     l99.driver.fanuc.transports.SpB, fanuc:
+      overrides:
+        scada_id: ~
+        group_id: ~
+        node_id: ~
+        device_id: ~
       net:
         type: tcp
         ip: 10.1.10.2
@@ -195,6 +213,7 @@ machines:
       anonymous: !!bool false
       user: admin
       password: password
+      reconnect_s: !!int 30
 
   - id: f_sim_influx_long
     enabled: !!bool false

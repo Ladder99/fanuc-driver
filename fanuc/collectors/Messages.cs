@@ -9,12 +9,14 @@ public class Messages : FanucMultiStrategyCollector
 {
     public Messages(FanucMultiStrategy strategy, object configuration) : base(strategy, configuration)
     {
+        if (!Configuration.ContainsKey("stateful")) Configuration.Add("stateful", false);
+        
         if (!Configuration.ContainsKey("warned")) Configuration.Add("warned", false);
     }
 
     public override async Task InitPathsAsync()
     {
-        await Strategy.Apply(typeof(OpMsgs), "messages");
+        await Strategy.Apply(Configuration["stateful"] ? typeof(OpMsgsStateful) : typeof(OpMsgs), "messages");
     }
 
     public override async Task CollectForEachPathAsync(short currentPath, string[] axis, string[] spindle,
@@ -33,6 +35,8 @@ public class Messages : FanucMultiStrategyCollector
         }
         else
         {
+            //TODO: read all messages based on NC model
+            
             short msgType = 0;
             short msgLength = 6 + 256;
 
@@ -45,14 +49,24 @@ public class Messages : FanucMultiStrategyCollector
             await Strategy.SetNativeKeyed("messages",
                 await Strategy.Platform.RdOpMsgAsync(msgType, msgLength));
 
-            await Strategy.Peel("messages",
+            var obsMessages = await Strategy.Peel("messages",
                 new dynamic[]
                 {
-                    Strategy.GetKeyed("messages")!
+                    Strategy.GetKeyed("messages")!,
+                    Strategy.GetKeyed("messages+last")!
                 },
                 new dynamic[]
                 {
+                    currentPath
                 });
+            
+            // save native message data structure for comparison on next iteration
+            Strategy.SetKeyed("messages+last",
+                Strategy.GetKeyed("messages"));
+            
+            // track the resulting data structure
+            Strategy.SetKeyed("obs+messages",
+                obsMessages!.veneer.LastChangedValue?.messages);
         }
     }
 }

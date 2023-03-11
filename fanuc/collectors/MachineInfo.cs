@@ -41,6 +41,6 @@ public class MachineInfo : FanucMultiStrategyCollector
 
         // save resulting data structure for other collectors to use
         Strategy.SetKeyed("obs+focas_support",
-            obsMachine!.veneer.LastArrivedValue.focas_support);
+            obsMachine!.veneer.LastArrivedValue?.focas_support);
     }
 }

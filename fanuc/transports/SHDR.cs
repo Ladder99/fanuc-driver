@@ -194,15 +194,23 @@ public class SHDR : Transport
         };
 
         // ReSharper disable once UnusedParameter.Local
-        _adapter.AgentConnected = (sender, s) => { Logger.Info($"[{Machine.Id}] MTC Agent connected. {s}"); };
+        _adapter.AgentConnected = (sender, s) =>
+        {
+            Logger.Info($"[{Machine.Id}] MTC Agent connected. {s}");
+        };
 
         // ReSharper disable once UnusedParameter.Local
-        _adapter.SendError = (sender, args) => { Logger.Info($"[{Machine.Id}] MTC Agent send error. {args.Message}"); };
+        _adapter.SendError = (sender, args) =>
+        {
+            Logger.Info($"[{Machine.Id}] MTC Agent send error. {args.Message}");
+        };
 
         // ReSharper disable once UnusedParameter.Local
-        _adapter.LineSent = (sender, args) => { Logger.Debug($"[{Machine.Id}] MTC Agent line send. {args.Message}"); };
-
-
+        _adapter.LineSent = (sender, args) =>
+        {
+            Logger.Debug($"[{Machine.Id}] MTC Agent line send. {args.Message}");
+        };
+        
         _adapter.PingReceived = (sender, s) =>
         {
             //logger.Info($"[{machine.Id} MTC Agent ping received. {s}");
@@ -256,31 +264,77 @@ public class SHDR : Transport
             new Action<string>(k => { CacheShdrDataItem(new ShdrDataItem(k, "UNAVAILABLE")); }));
 
         _globalScriptObject.Import("ShdrConditionNormal",
-            new Action<string>(k =>
+            new Action<string, string, string>((k, nc, t) =>
             {
-                var c = new ShdrCondition(k, ConditionLevel.NORMAL);
+                var c = new ShdrCondition(k);
+                if (string.IsNullOrEmpty(nc))
+                {
+                    c.Normal();
+                }
+                else
+                {
+                    c.AddNormal(nc, t);
+                }
                 CacheShdrCondition(c);
             }));
 
         _globalScriptObject.Import("ShdrConditionWarning",
-            new Action<string>(k =>
+            new Action<string, string, string>((k, nc, t) =>
             {
-                var c = new ShdrCondition(k, ConditionLevel.WARNING);
+                var c = new ShdrCondition(k);
+                if (string.IsNullOrEmpty(nc))
+                {
+                    c.Warning();
+                }
+                else
+                {
+                    c.AddWarning(t, nc);
+                }
                 CacheShdrCondition(c);
             }));
 
         _globalScriptObject.Import("ShdrConditionFault",
-            new Action<string>(k =>
+            new Action<string, string, string>((k, nc, t) =>
             {
-                var c = new ShdrCondition(k, ConditionLevel.FAULT);
+                var c = new ShdrCondition(k);
+                if (string.IsNullOrEmpty(nc))
+                {
+                    c.Fault();
+                }
+                else
+                {
+                    c.AddFault(t, nc);
+                }
                 CacheShdrCondition(c);
             }));
 
         _globalScriptObject.Import("ShdrConditionFaultIf",
-            new Action<string, object>((k, v) =>
+            new Action<string, object, string, string>((k, v, nc, t) =>
             {
-                var c = new ShdrCondition(k,
-                    Convert.ToBoolean(v) ? ConditionLevel.FAULT : ConditionLevel.NORMAL);
+                var c = new ShdrCondition(k);
+                var makeFault = Convert.ToBoolean(v);
+                if (string.IsNullOrEmpty(nc))
+                {
+                    if (makeFault)
+                    {
+                        c.Fault();
+                    }
+                    else
+                    {
+                        c.Normal();
+                    }
+                }
+                else
+                {
+                    if (makeFault)
+                    {
+                        c.AddFault(t, nc);
+                    }
+                    else
+                    {
+                        c.AddNormal(nc, t);
+                    }
+                }
                 CacheShdrCondition(c);
             }));
 

@@ -70,6 +70,17 @@ system:
         {{-}}number={{alarm.number}},
         {{-}}message="{{alarm.message}}"{{'\n'}}
         {{~end}}
+      l99.driver.fanuc.veneers.AlarmsSeriesStateful, fanuc: >-
+        {{-for alarm in data.alarms-}}
+        {{observation.name}},
+        {{-}}machine={{observation.machine}},
+        {{-}}path={{observation.marker[0].number}}
+        axis="{{alarm.axis}}",
+        {{-}}type="{{alarm.type}}",
+        {{-}}number={{alarm.number}},
+        {{-}}message="{{alarm.message}}"
+        {{-}}triggered={{alarm.is_triggered}}{{'\n'}}
+        {{~end}}
       l99.driver.fanuc.veneers.OpMsgs, fanuc: >-
         {{-for msg in data.messages-}}
         {{observation.name}},
@@ -78,6 +89,16 @@ system:
         position={{msg.position}},
         {{-}}number={{msg.number}},
         {{-}}message="{{msg.message}}"{{'\n'}}
+        {{~end}}
+      l99.driver.fanuc.veneers.OpMsgsStateful, fanuc: >-
+        {{-for msg in data.messages-}}
+        {{observation.name}},
+        {{-}}machine={{observation.machine}},
+        {{-}}path={{observation.marker[0].number}}
+        position={{msg.position}},
+        {{-}}number={{msg.number}},
+        {{-}}message="{{msg.message}}"
+        {{-}}triggered={{msg.is_triggered}}{{'\n'}}
         {{~end}}
       l99.driver.fanuc.veneers.AxisData, fanuc: >-
         {{observation.name}},
@@ -173,6 +194,7 @@ system:
         path: |-
           <Path id="{{device}}_p{{path}}">
             <DataItems>
+              <DataItem category="CONDITION" id="{{device}}_p{{path}}_alm_all" type="SYSTEM"/>
               <DataItem category="CONDITION" id="{{device}}_p{{path}}_alm_comms" type="COMMUNICATIONS"/>
               <DataItem category="CONDITION" id="{{device}}_p{{path}}_alm_logic" type="LOGIC_PROGRAM"/>
               <DataItem category="CONDITION" id="{{device}}_p{{path}}_alm_motion" type="MOTION_PROGRAM"/>
@@ -283,7 +305,7 @@ system:
         ShdrEvent p+`_adapter_port` adapter.port;
         ShdrEvent p+`_machine_ip` machine.focas_endpoint.ipaddress;
         ShdrEvent p+`_machine_port` machine.focas_endpoint.port;
-        ShdrConditionFaultIf p+`_adapter_health` (! data.healthy);
+        ShdrConditionFaultIf p+`_adapter_health` (! data.healthy) null null;
       l99.driver.fanuc.veneers.SysInfo, fanuc: >-
         p = device+`_p`+observation.marker[0].number;
         v = array.join [data.mt_type,data.cnc_type,data.series,data.model,data.version] ` `;
@@ -303,7 +325,7 @@ system:
         ShdrEvent p+`_ovr_feed` data.override.feed;
         ShdrEvent p+`_ovr_rapid` data.override.rapid;
         ShdrEvent p+`_ovr_spindle` data.override.spindle;
-        ## ShdrConditionFaultIf p+`_alm` (data.alarm == 1);
+        ## ShdrConditionFaultIf p+`_alm` (data.alarm == 1) null null;
       l99.driver.fanuc.veneers.ToolData, fanuc: >-
         p = device+`_p`+observation.marker[0].number;
         ShdrEvent p+`_tool_num` data.tool;
@@ -336,12 +358,13 @@ system:
         p = device+`_p`+observation.marker[0].number;
         if (array.size data.alarms) == 0
           ShdrMessage p+`_alarm` `UNAVAILABLE`;
-          ShdrConditionNormal p+`_alm_comms`;
-          ShdrConditionNormal p+`_alm_logic`;
-          ShdrConditionNormal p+`_alm_motion`;
-          ShdrConditionNormal p+`_alm_system`;
-          ShdrConditionNormal p+`_alm_axes`;
-          ShdrConditionNormal p+`_alm_spindles`;
+          ShdrConditionNormal p+`_alm_all` null null;
+          ShdrConditionNormal p+`_alm_comms` null null;
+          ShdrConditionNormal p+`_alm_logic` null null;
+          ShdrConditionNormal p+`_alm_motion` null null;
+          ShdrConditionNormal p+`_alm_system` null null;
+          ShdrConditionNormal p+`_alm_axes` null null;
+          ShdrConditionNormal p+`_alm_spindles` null null;
         else
           m = array.map data.alarms `message`;
           ShdrMessage p+`_alarm` (array.join m `;`);
@@ -358,15 +381,59 @@ system:
               f_axes = true;
             end;
           end;
-          ShdrConditionFaultIf p+`_alm_comms` f_comms;
-          ShdrConditionFaultIf p+`_alm_logic` f_logic;
-          ShdrConditionFaultIf p+`_alm_motion` f_motion;
-          ShdrConditionFaultIf p+`_alm_system` f_system;
-          ShdrConditionFaultIf p+`_alm_axes` f_axes;
-          ShdrConditionFaultIf p+`_alm_spindles` f_spindles;
+          ShdrConditionFaultIf p+`_alm_comms` f_comms null null;
+          ShdrConditionFaultIf p+`_alm_logic` f_logic null null;
+          ShdrConditionFaultIf p+`_alm_motion` f_motion null null;
+          ShdrConditionFaultIf p+`_alm_system` f_system null null;
+          ShdrConditionFaultIf p+`_alm_axes` f_axes null null;
+          ShdrConditionFaultIf p+`_alm_spindles` f_spindles null null;
+        end;
+        ## (array.size (array.filter (array.map data.alarms `axis_code`) @(do; ret $0 > 0; end)) > 0);
+      l99.driver.fanuc.veneers.AlarmsSeriesStateful, fanuc: >-
+        p = device+`_p`+observation.marker[0].number;
+        if (array.size data.alarms) == 0
+          ShdrMessage p+`_alarm` `UNAVAILABLE`;
+          ShdrConditionNormal p+`_alm_all` null null;
+          ShdrConditionNormal p+`_alm_comms` null null;
+          ShdrConditionNormal p+`_alm_logic` null null;
+          ShdrConditionNormal p+`_alm_motion` null null;
+          ShdrConditionNormal p+`_alm_system` null null;
+          ShdrConditionNormal p+`_alm_axes` null null;
+          ShdrConditionNormal p+`_alm_spindles` null null;
+        else
+          ShdrConditionNormal p+`_alm_all` null null;
+          m = array.map data.alarms `message`;
+          ShdrMessage p+`_alarm` (array.join m `;`);
+          t = array.uniq (array.map data.alarms `type`);
+          f_comms = ((array.contains t `IO`)||(array.contains t `SR`));
+          f_logic = ((array.contains t `SW`)||(array.contains t `PC`));
+          f_motion = ((array.contains t `PS`)||(array.contains t `MC`)||(array.contains t `BG`));
+          f_spindles = (array.contains t `SP`);
+          for alm in data.alarms;
+            if alm.axis_code == 0 && !array.contains [`IO`,`SR`,`SW`,`PC`,`PS`,`MC`,`BG`] alm.type;
+              f_system = true;
+            end;
+            if alm.axis_code > 0;
+              f_axes = true;
+            end;
+          end;
+          ShdrConditionFaultIf p+`_alm_comms` f_comms null null;
+          ShdrConditionFaultIf p+`_alm_logic` f_logic null null;
+          ShdrConditionFaultIf p+`_alm_motion` f_motion null null;
+          ShdrConditionFaultIf p+`_alm_system` f_system null null;
+          ShdrConditionFaultIf p+`_alm_axes` f_axes null null;
+          ShdrConditionFaultIf p+`_alm_spindles` f_spindles null null;
         end;
         ## (array.size (array.filter (array.map data.alarms `axis_code`) @(do; ret $0 > 0; end)) > 0);
       l99.driver.fanuc.veneers.OpMsgs, fanuc: >-
+        p = device+`_p`+observation.marker[0].number;
+        if (array.size data.messages) == 0
+          ShdrMessage p+`_message` `UNAVAILABLE`;
+        else
+          m = array.map data.messages `message`;
+          ShdrMessage p+`_message` (array.join m `;`);
+        end;
+      l99.driver.fanuc.veneers.OpMsgsStateful, fanuc: >-
         p = device+`_p`+observation.marker[0].number;
         if (array.size data.messages) == 0
           ShdrMessage p+`_message` `UNAVAILABLE`;
@@ -386,9 +453,9 @@ system:
         ShdrSample p+`_power` data.power;
         ShdrSample p+`_feed` (data.feed*60);
         ShdrEventIf p+`_state` data.motion `TRAVEL` `STOPPED`;
-        ShdrConditionFaultIf p+`_alm_heat` data.alarms.overheat;
-        ShdrConditionFaultIf p+`_alm_travel` data.alarms.overtravel;
-        ShdrConditionFaultIf p+`_alm_servo` data.alarms.servo;
+        ShdrConditionFaultIf p+`_alm_heat` data.alarms.overheat null null;
+        ShdrConditionFaultIf p+`_alm_travel` data.alarms.overtravel null null;
+        ShdrConditionFaultIf p+`_alm_servo` data.alarms.servo null null;
         axis_letter = string.slice observation.marker[1].name 0 1;
         is_index = array.contains [`A`,`B`,`C`] axis_letter;
         if is_index; ShdrEvent p+`_rotary` `INDEX`; end;
@@ -400,7 +467,7 @@ system:
         ShdrSample p+`_speed` data.speed;
         ShdrEventIf p+`_state` (data.speed > 0) `TRAVEL` `STOPPED`;
         ShdrEvent p+`_rotary` `SPINDLE`;
-        ShdrConditionFaultIf p+`_alm_lnk` (! data.status_lnk);
+        ShdrConditionFaultIf p+`_alm_lnk` (! data.status_lnk) null null;
         ShdrConditionSeverity p+`_alm_amp` (data.error > 0) (data.warning > 0) (data.error == 0 && data.warning == 0);
 
   machine-disabled: &machine-disabled

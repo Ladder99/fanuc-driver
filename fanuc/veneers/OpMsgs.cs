@@ -12,26 +12,27 @@ public class OpMsgs : Veneer
 
     protected override async Task<dynamic> AnyAsync(dynamic[] nativeInputs, dynamic[] additionalInputs)
     {
-        if (nativeInputs.All(o => o.success == true))
+        /*
+            nativeInputs
+                0: current messages
+                1: previous messages
+            
+            additionalInputs
+                0: currentPath
+        */
+        if (nativeInputs[0].success == true)
         {
-            var tempValue = new List<dynamic>();
+            var path = additionalInputs[0];
+            var currentInput = nativeInputs[0];
+            //var previousInput = nativeInputs[1];
 
-            var fields = nativeInputs[0].response.cnc_rdopmsg.opmsg.GetType().GetFields();
-            for (var x = 0; x <= fields.Length - 1; x++)
-            {
-                var msg = fields[x].GetValue(nativeInputs[0].response.cnc_rdopmsg.opmsg);
-                if (msg.char_num > 0)
-                    tempValue.Add(new
-                    {
-                        position = msg.type,
-                        number = msg.datano,
-                        message = msg.data
-                    });
-            }
-
+            // check success to use
+            //List<dynamic> previousMessageList = GetMessageListFromMessages(previousInput, path);
+            List<dynamic> currentMessageList = GetMessageListFromMessages(currentInput, path);
+            
             var currentValue = new
             {
-                messages = tempValue
+                messages = currentMessageList
             };
 
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
@@ -45,5 +46,28 @@ public class OpMsgs : Veneer
         }
 
         return new {veneer = this};
+    }
+    
+    protected List<dynamic> GetMessageListFromMessages(dynamic nativeInput, short path)
+    {
+        var list = new List<dynamic>();
+
+        if (nativeInput == null) return list;
+        
+        var fields = nativeInput.response.cnc_rdopmsg.opmsg.GetType().GetFields();
+        for (var x = 0; x <= fields.Length - 1; x++)
+        {
+            var msg = fields[x].GetValue(nativeInput.response.cnc_rdopmsg.opmsg);
+            if(msg.datano > -1 && msg.char_num > 0)
+                list.Add(new
+                {
+                    path,
+                    msg.type,
+                    number = msg.datano,
+                    message = ((string) msg.data).AsAscii()
+                });
+        }
+
+        return list;
     }
 }
