@@ -7,6 +7,8 @@ namespace l99.driver.fanuc;
 // ReSharper disable once ClassNeverInstantiated.Global
 public class FanucMachine : Machine
 {
+    private CancellationTokenSource _stoppingSource;
+    
     public FanucMachine(Machines machines, object configuration) : base(machines, configuration)
     {
         if (!Configuration.type.ContainsKey("sweep_ms"))
@@ -30,13 +32,28 @@ public class FanucMachine : Machine
                 { "timeout_s", 3 }
             };
         }
-        
-        this["platform"] = new Platform(this);
+
+        _stoppingSource = new CancellationTokenSource();
+
+        this["platform"] = new Platform(this, _stoppingSource.Token);
 
         FocasEndpoint = new FocasEndpoint(
             Configuration.type["net"]["ip"],
             (ushort) Configuration.type["net"]["port"],
             (short) Configuration.type["net"]["timeout_s"]);
+    }
+
+    public override async Task Stop()
+    {
+        Logger.Info($"[{Id}] Platform stopping");
+        _stoppingSource.Cancel();
+
+        while (this["platform"]!.IsRunning)
+        {
+            await Task.Yield();
+        }
+        
+        Logger.Info($"[{Id}] Platform stopped");
     }
 
     public override dynamic Info =>

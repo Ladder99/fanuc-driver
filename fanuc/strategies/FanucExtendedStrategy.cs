@@ -243,7 +243,7 @@ public class FanucExtendedStrategy : FanucStrategy
         var initStopwatch = new Stopwatch();
         initStopwatch.Start();
 
-        Logger.Info($"[{Machine.Id}] Strategy initializing.");
+        Logger.Info($"[{Machine.Id}] Strategy initializing");
 
         try
         {
@@ -377,13 +377,13 @@ public class FanucExtendedStrategy : FanucStrategy
                     await Machine.Handler.OnGenerateIntermediateModelAsync(_intermediateModel.Model);
                     await Machine.Transport.OnGenerateIntermediateModelAsync(_intermediateModel.Model);
 
-                    Logger.Info($"[{Machine.Id}] Strategy initialized.");
+                    Logger.Info($"[{Machine.Id}] Strategy initialized");
                 }
                 else
                 {
                     if (initMinutes == 0 || initStopwatch.ElapsedMilliseconds > 60000)
                     {
-                        Logger.Warn($"[{Machine.Id}] Strategy initialization pending ({initMinutes} min).");
+                        Logger.Warn($"[{Machine.Id}] Strategy initialization pending ({initMinutes} min)");
                         initMinutes++;
                         initStopwatch.Restart();
                     }
@@ -394,7 +394,7 @@ public class FanucExtendedStrategy : FanucStrategy
         }
         catch (Exception ex)
         {
-            Logger.Error(ex, $"[{Machine.Id}] Strategy initialization failed.");
+            Logger.Error(ex, $"[{Machine.Id}] Strategy initialization failed");
         }
 
         initStopwatch.Stop();
@@ -481,12 +481,12 @@ public class FanucExtendedStrategy : FanucStrategy
             {
                 if (_strategyState == StrategyStateEnum.Unknown)
                 {
-                    Logger.Info($"[{Machine.Id}] Strategy started.");
+                    Logger.Info($"[{Machine.Id}] Strategy started");
                     _strategyState = StrategyStateEnum.Ok;
                 }
                 else if (_strategyState == StrategyStateEnum.Failed)
                 {
-                    Logger.Info($"[{Machine.Id}] Strategy recovered.");
+                    Logger.Info($"[{Machine.Id}] Strategy recovered");
                     _strategyState = StrategyStateEnum.Ok;
                 }
 
@@ -609,14 +609,14 @@ public class FanucExtendedStrategy : FanucStrategy
             {
                 if (_strategyState == StrategyStateEnum.Unknown || _strategyState == StrategyStateEnum.Ok)
                 {
-                    Logger.Warn($"[{Machine.Id}] Strategy failed to connect.");
+                    Logger.Warn($"[{Machine.Id}] Strategy failed to connect");
                     _strategyState = StrategyStateEnum.Failed;
                 }
             }
         }
         catch (Exception ex)
         {
-            Logger.Error(ex, $"[{Machine.Id}] Strategy sweep failed at segment {_currentCollectSegment}.");
+            Logger.Error(ex, $"[{Machine.Id}] Strategy sweep failed at segment {_currentCollectSegment}");
             _strategyState = StrategyStateEnum.Failed;
         }
         finally

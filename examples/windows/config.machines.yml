@@ -167,12 +167,15 @@ machines:
     ## production data instance attributes
     ##
     l99.driver.fanuc.collectors.ProductionData, fanuc:
+      ## unsupported: collection of data supported by a subset of NC models
       unsupported: !!bool false
     ##
     ## g-code data instance attributes
     ##
     l99.driver.fanuc.collectors.GCodeData, fanuc:
+      ## block_counter: rely on NC provided block count (not supported by all NC models)
       block_counter: !!bool false
+      ## buffer_length: number of characters to read-ahead from exeuting program
       buffer_length: !!int 512
     ##
     ## custom production data instance attributes

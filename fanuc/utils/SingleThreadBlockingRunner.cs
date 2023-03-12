@@ -4,16 +4,21 @@ namespace l99.driver.fanuc.utils;
 // https://stackoverflow.com/questions/61530632/forcing-certain-code-to-always-run-on-the-same-thread
 public class SingleThreadBlockingRunner
 {
+    public bool IsRunning { get; private set; }
+    private CancellationToken _stoppingToken;
+    
     private readonly SemaphoreSlim _semaphore;
-    private readonly AutoResetEvent _newTaskRunSignal;
+    private readonly ManualResetEventSlim _newTaskRunSignal;
 
     private TaskCompletionSource<object> _taskCompletionSource = null!;
     private Func<object> _func = null!;
 
-    public SingleThreadBlockingRunner()
+    public SingleThreadBlockingRunner(CancellationToken stoppingToken)
     {
+        IsRunning = true;
+        _stoppingToken = stoppingToken;
         _semaphore = new SemaphoreSlim(1, 1);
-        _newTaskRunSignal = new AutoResetEvent(false);
+        _newTaskRunSignal = new ManualResetEventSlim(false);
         var contextThread = new Thread(ThreadLooper)
         {
             Priority = ThreadPriority.Highest
@@ -26,7 +31,18 @@ public class SingleThreadBlockingRunner
         while (true)
         {
             //wait till the next task signal is received.
-            _newTaskRunSignal.WaitOne();
+            // even though MRE allows multiple threads to pass, the outer semaphore disallows this behavior
+            try
+            {
+                _newTaskRunSignal.Wait(_stoppingToken);
+            }
+            catch (OperationCanceledException oce)
+            {
+                // intercept cancel request and kill thread for clean shutdown
+                break;
+            }
+
+            _newTaskRunSignal.Reset();
 
             //next task execution signal is received.
             try
@@ -42,8 +58,9 @@ public class SingleThreadBlockingRunner
                 //task execution threw an exception, set the exception and continue with the looper
                 _taskCompletionSource.SetException(ex);
             }
-
         }
+
+        IsRunning = false;
     }
 
     public async Task<TResult> Run<TResult>(Func<TResult> func, CancellationToken cancellationToken = default(CancellationToken))

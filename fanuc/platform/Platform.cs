@@ -47,13 +47,15 @@ public partial class Platform
         public long WaitingMilliseconds;
     }
     
-    public Platform(FanucMachine machine)
+    public Platform(FanucMachine machine, CancellationToken stoppingToken)
     {
         _logger = LogManager.GetCurrentClassLogger();
         _machine = machine;
-        _singleThreadRunner = new SingleThreadBlockingRunner();
+        _singleThreadRunner = new SingleThreadBlockingRunner(stoppingToken);
     }
 
+    public bool IsRunning => _singleThreadRunner.IsRunning;
+    
     private readonly ILogger _logger;
     private readonly FanucMachine _machine;
     
