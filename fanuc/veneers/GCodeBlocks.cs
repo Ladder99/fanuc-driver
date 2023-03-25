@@ -1,4 +1,5 @@
-﻿using l99.driver.@base;
+﻿using System.Dynamic;
+using l99.driver.@base;
 using l99.driver.fanuc.utils.gcode;
 
 //TODO: review relationship between pointer and block counter
@@ -28,11 +29,15 @@ public class GCodeBlocks : Veneer
                 _blocks.Add(nativeInputs[1].response.cnc_rdactpt.blk_no,
                     nativeInputs[2].response.cnc_rdexecprog.data);
 
+            dynamic currentValue = new ExpandoObject();
+            currentValue.blocks = _blocks.ExecutedBlocks;
+            
+            /*
             var currentValue = new
             {
                 blocks = _blocks.ExecutedBlocks
             };
-
+            */
 
             //Console.WriteLine(_blocks.ToString(showMissedBlocks: true));
             /*
@@ -53,7 +58,6 @@ public class GCodeBlocks : Veneer
             //var lastKeys = ((List<gcode.Block>)LastChangedValue.blocks).Select(x => x.BlockNumber);
             //var currentKeys = ((List<gcode.Block>)currentValue.blocks).Select(x => x.BlockNumber);
 
-            //if (lastKeys.Except(currentKeys).Count() + currentKeys.Except(lastKeys).Count() > 0)
             if (currentValue.IsDifferentString((object) LastChangedValue))
                 await OnDataChangedAsync(nativeInputs, additionalInputs, currentValue);
         }

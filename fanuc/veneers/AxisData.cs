@@ -1,4 +1,5 @@
-﻿using l99.driver.@base;
+﻿using System.Dynamic;
+using l99.driver.@base;
 
 // ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.veneers;
@@ -61,6 +62,31 @@ public class AxisData : Veneer
                 ? prevAxisDynamic!.response.cnc_rddynamic2.rddynamic.pos.absolute != axisDynamic.pos.absolute
                 : false;
 
+            dynamic currentValue = new ExpandoObject();
+            currentValue.number = currentAxis;
+            currentValue.name = axisName;
+            currentValue.feed = axisDynamic.actf;
+            currentValue.feed_eu = "mm/min";
+            currentValue.load = loadValue.data / Math.Pow(10.0, loadValue.dec);
+            currentValue.load_eu = "percent";
+            currentValue.servo_temp = servoTemp!.response.cnc_diagnoss.diag.cdata;
+            currentValue.servo_temp_eu = "celsius";
+            currentValue.coder_temp = coderTemp!.response.cnc_diagnoss.diag.cdata;
+            currentValue.coder_temp_eu = "celsius";
+            currentValue.power = power!.response.cnc_diagnoss.diag.ldata;
+            currentValue.power_eu = "watt";
+            currentValue.alarms = new ExpandoObject();
+            currentValue.alarms.overtravel = overTravel;
+            currentValue.alarms.overheat = overheat;
+            currentValue.alarms.overtravel = overTravel;
+            currentValue.position = new ExpandoObject();
+            currentValue.absolute = axisDynamic.pos.absolute / Math.Pow(10.0, figures[currentAxis - 1]);
+            currentValue.machine = axisDynamic.pos.machine / Math.Pow(10.0, figures[currentAxis - 1]);
+            currentValue.relative = axisDynamic.pos.relative / Math.Pow(10.0, figures[currentAxis - 1]);
+            currentValue.distance = axisDynamic.pos.distance / Math.Pow(10.0, figures[currentAxis - 1]);
+            currentValue.motion = motion;
+            
+            /*
             var currentValue = new
             {
                 number = currentAxis,
@@ -90,7 +116,8 @@ public class AxisData : Veneer
                 },
                 motion
             };
-
+            */
+            
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 
             if (currentValue.IsDifferentString((object) LastChangedValue))

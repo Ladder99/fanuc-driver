@@ -1,4 +1,5 @@
-﻿using l99.driver.@base;
+﻿using System.Dynamic;
+using l99.driver.@base;
 
 // ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.veneers;
@@ -142,8 +143,25 @@ public class SysInfo : Veneer
                 axes = axisCount;
             else
                 axes = string.Join("", nativeInputs[0].response.cnc_sysinfo.sysinfo.axes);
-
-
+            
+            dynamic currentValue = new ExpandoObject();
+            currentValue.focas_support = focasSupport;
+            currentValue.loader_control = loaderControl;
+            currentValue.i_series = iSeries;
+            currentValue.compound_machining = compoundMachining;
+            currentValue.transfer_line = transferLine;
+            currentValue.model = model;
+            currentValue.model_code = infoBytes[0];
+            currentValue.max_axis = nativeInputs[0].response.cnc_sysinfo.sysinfo.max_axis;
+            currentValue.cnc_type = cncType;
+            currentValue.cnc_type_code = cncTypeCode.Trim();
+            currentValue.mt_type = mtType;
+            currentValue.mt_type_code = mtTypeCode.Trim();
+            currentValue.series = string.Join("", nativeInputs[0].response.cnc_sysinfo.sysinfo.series);
+            currentValue.version = string.Join("", nativeInputs[0].response.cnc_sysinfo.sysinfo.version);
+            currentValue.axes = axes;
+            
+            /*
             var currentValue = new
             {
                 focas_support = focasSupport,
@@ -162,10 +180,11 @@ public class SysInfo : Veneer
                 version = string.Join("", nativeInputs[0].response.cnc_sysinfo.sysinfo.version),
                 axes
             };
+            */
 
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 
-            if (currentValue.IsDifferentString((object) LastChangedValue))
+            if (Extensions.IsDifferentExpando(currentValue, LastChangedValue))
                 await OnDataChangedAsync(nativeInputs, additionalInputs, currentValue);
         }
         else

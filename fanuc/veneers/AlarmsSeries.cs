@@ -1,4 +1,5 @@
-﻿using l99.driver.@base;
+﻿using System.Dynamic;
+using l99.driver.@base;
 
 // ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.veneers;
@@ -138,10 +139,15 @@ public class AlarmsSeries : Veneer
             //List<dynamic> previousAlarmList = GetAlarmListFromAlarms(previousAlarmWrapper, path, axis, obsFocasSupport);
             List<dynamic> currentAlarmList = GetAlarmListFromAlarms(currentAlarmWrapper, path, axis, obsFocasSupport);
 
+            dynamic currentValue = new ExpandoObject();
+            currentInput.alarms = currentAlarmList;
+            
+            /*
             var currentValue = new
             {
                 alarms = currentAlarmList
             };
+            */
 
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 

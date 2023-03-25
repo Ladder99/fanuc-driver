@@ -1,4 +1,5 @@
-﻿using l99.driver.@base;
+﻿using System.Dynamic;
+using l99.driver.@base;
 
 // ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.veneers;
@@ -12,7 +13,12 @@ public class Connection : Veneer
 
     protected override async Task<dynamic> FirstAsync(dynamic[] nativeInputs, dynamic[] additionalInputs)
     {
+        dynamic currentValue = new ExpandoObject();
+        currentValue.success = nativeInputs[0].success;
+        
+        /*
         var currentValue = new {nativeInputs[0].success};
+        */
 
         await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
         await OnDataChangedAsync(nativeInputs, additionalInputs, currentValue);

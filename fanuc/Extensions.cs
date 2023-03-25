@@ -1,5 +1,7 @@
 ﻿// ReSharper disable once CheckNamespace
 
+using System.Dynamic;
+
 namespace l99.driver.fanuc;
 
 public static class Extensions
@@ -39,5 +41,32 @@ public static class Extensions
 
         return !JObject.FromObject(one).ToString()
             .Equals(JObject.FromObject(two).ToString());
+    }
+    
+    public static bool IsDifferentExpando(ExpandoObject one, ExpandoObject? two)
+    {
+        if (two == null) return true;
+
+        var obj1AsColl = (ICollection<KeyValuePair<string,object>>)one;
+        var obj2AsDict = (IDictionary<string,object>)two;
+
+        // Make sure they have the same number of properties
+        if (obj1AsColl.Count != obj2AsDict.Count)
+            return true;
+
+        foreach (var pair in obj1AsColl)
+        {
+            // Try to get the same-named property from obj2
+            object o;
+            if (!obj2AsDict.TryGetValue(pair.Key, out o))
+                return true;
+
+            // Property names match, what about the values they store?
+            if (!object.Equals(o, pair.Value))
+                return true;
+        }
+
+        // Everything matches
+        return false;
     }
 }

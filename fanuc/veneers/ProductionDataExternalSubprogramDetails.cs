@@ -70,6 +70,26 @@ public class ProductionDataExternalSubprogramDetails : Veneer
                     }
             }
 
+            dynamic currentValue = new ExpandoObject();
+            currentValue.program = new ExpandoObject();
+            currentValue.program.current = new ExpandoObject();
+            currentValue.program.current.name = $"O{nativeInputs[0].response.cnc_rdprgnum.prgnum.data}";
+            currentValue.program.current.number = nativeInputs[0].response.cnc_rdprgnum.prgnum.data;
+            currentValue.program.current.block_count = _lineCount;
+            currentValue.program.current.blocks = extractionParameters["lines"]["show"] ? _lines : new List<string>();
+            currentValue.program.current.extractions = _properties;
+            currentValue.program.selected = new ExpandoObject();
+            currentValue.program.selected.name = $"O{nativeInputs[0].response.cnc_rdprgnum.prgnum.mdata}";
+            currentValue.program.selected.number = nativeInputs[0].response.cnc_rdprgnum.prgnum.mdata;
+            currentValue.pieces = new ExpandoObject();
+            currentValue.pieces.produced = nativeInputs[1]!.response.cnc_rdparam.param.data.ldata;
+            currentValue.pieces.produced_life = nativeInputs[2]!.response.cnc_rdparam.param.data.ldata;
+            currentValue.pieces.remaining = nativeInputs[3]!.response.cnc_rdparam.param.data.ldata;
+            currentValue.timers = new ExpandoObject();
+            currentValue.timers.cycle_time_ms = nativeInputs[4]!.response.cnc_rdparam.param.data.ldata * 60000 +
+                                                nativeInputs[5]!.response.cnc_rdparam.param.data.ldata;
+            
+            /*
             var currentValue = new
             {
                 program = new
@@ -100,7 +120,8 @@ public class ProductionDataExternalSubprogramDetails : Veneer
                                     nativeInputs[5]!.response.cnc_rdparam.param.data.ldata
                 }
             };
-
+            */
+            
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 
             if (currentValue.IsDifferentString((object) LastChangedValue))

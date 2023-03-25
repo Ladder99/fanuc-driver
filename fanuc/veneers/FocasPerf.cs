@@ -1,4 +1,5 @@
-﻿using l99.driver.@base;
+﻿using System.Dynamic;
+using l99.driver.@base;
 
 // ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.veneers;
@@ -29,6 +30,18 @@ public class FocasPerf : Veneer
             .Where(o => o.rc != 0)
             .Select(o => new {o.method, o.rc});
 
+        dynamic currentValue = new ExpandoObject();
+        currentValue.sweep_ms = additionalInputs[0].sweepMs;
+        currentValue.invocation = new ExpandoObject();
+        currentValue.invocation.count = additionalInputs[0].focas_invocations.Count;
+        currentValue.invocation.max_method = max.method;
+        currentValue.invocation.max_ms = max.invocationMs;
+        currentValue.invocation.min_ms = min.invocationMs;
+        currentValue.invocation.avg_ms = avg;
+        currentValue.invocation.sum_ms = sum;
+        currentValue.invocation.failed_methods = failedMethods;
+        
+        /*
         var currentValue = new
         {
             sweep_ms = additionalInputs[0].sweepMs,
@@ -43,7 +56,7 @@ public class FocasPerf : Veneer
                 failed_methods = failedMethods
             }
         };
-        ;
+        */
 
         await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 

@@ -1,4 +1,5 @@
-﻿using l99.driver.@base;
+﻿using System.Dynamic;
+using l99.driver.@base;
 
 // ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.veneers;
@@ -28,11 +29,16 @@ public class RdSpindlename : Veneer
                 });
             }
 
+            dynamic currentValue = new ExpandoObject();
+            currentValue.spindles = tempValue;
+            
+            /*
             var currentValue = new
             {
                 spindles = tempValue
             };
-
+            */
+            
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 
             if (currentValue.IsDifferentString((object) LastChangedValue))

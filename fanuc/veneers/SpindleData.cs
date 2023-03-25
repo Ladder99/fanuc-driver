@@ -1,4 +1,5 @@
-﻿using l99.driver.@base;
+﻿using System.Dynamic;
+using l99.driver.@base;
 
 // ReSharper disable UnusedVariable
 
@@ -79,6 +80,42 @@ public class SpindleData : Veneer
                               ((char) spindleValue.suff1).AsAscii() +
                               ((char) spindleValue.suff2).AsAscii();
 
+            dynamic currentValue = new ExpandoObject();
+            currentValue.number = currentSpindle;
+            currentValue.name = spindleName;
+            // feed is unnecessary here
+            //currentValue.feed = sp_speed.response.cnc_rdspeed.speed.actf.data;
+            //currentValue.feed_eu = speed_feed_EU(sp_speed.response.cnc_rdspeed.speed.actf.unit);
+            //currentValue.speed = sp_speed.response.cnc_rdspeed.speed.acts.data / Math.Pow(10.0, sp_speed.response.cnc_rdspeed.speed.acts.dec);
+            currentValue.speed = spActs!.response.cnc_acts2.actualspindle.data[0];
+            currentValue.speed_eu = speed_feed_EU(spSpeed!.response.cnc_rdspeed.speed.acts.unit);
+            currentValue.load = spMeter!.response.cnc_rdspmeter.loadmeter.spload1.spload.data /
+                                Math.Pow(10.0, spMeter.response.cnc_rdspmeter.loadmeter.spload1.spload.dec);
+            currentValue.load_eu = load_EU(spMeter.response.cnc_rdspmeter.loadmeter.spload1.spload.unit);
+            currentValue.maxrpm = spMaxRpm!.response.cnc_rdspmaxrpm.serialspindle.data[0];
+            currentValue.maxrpm_eu = "rpm";
+            currentValue.gearratio = spGear!.response.cnc_rdspgear.serialspindle.data[0];
+            currentValue.temperature = diagTemp!.response.cnc_diagnoss.diag.cdata;
+            currentValue.temperature_eu = "celsius";
+            currentValue.power = diagPower!.response.cnc_diagnoss.diag.ldata;
+            currentValue.power_eu = "watt";
+            currentValue.status_lnk = (diagLnk!.response.cnc_diagnoss.diag.cdata & (1 << 7)) != 0;
+            currentValue.status_ssa = (diagComms!.response.cnc_diagnoss.diag.cdata & (1 << 7)) != 0;
+            currentValue.status_sca = (diagComms.response.cnc_diagnoss.diag.cdata & (1 << 5)) != 0;
+            currentValue.status_cme = (diagComms.response.cnc_diagnoss.diag.cdata & (1 << 4)) != 0;
+            currentValue.status_cer = (diagComms.response.cnc_diagnoss.diag.cdata & (1 << 3)) != 0;
+            currentValue.status_sne = (diagComms.response.cnc_diagnoss.diag.cdata & (1 << 2)) != 0;
+            currentValue.status_fre = (diagComms.response.cnc_diagnoss.diag.cdata & (1 << 1)) != 0;
+            currentValue.status_cre = (diagComms.response.cnc_diagnoss.diag.cdata & (1 << 10)) != 0;
+            currentValue.coder_feedback = diagCoder!.response.cnc_diagnoss.diag.ldata;
+            currentValue.loop_deviation = diagLoopDev!.response.cnc_diagnoss.diag.ldata;
+            currentValue.sync_error = diagSyncError!.response.cnc_diagnoss.diag.ldata;
+            currentValue.position = diagPosData!.response.cnc_diagnoss.diag.ldata;
+            currentValue.position_eu = "pulse";
+            currentValue.error = diagError!.response.cnc_diagnoss.diag.idata;
+            currentValue.warning = diagWarn!.response.cnc_diagnoss.diag.idata;
+                    
+            /*
             var currentValue = new
             {
                 number = currentSpindle,
@@ -115,7 +152,8 @@ public class SpindleData : Veneer
                 error = diagError!.response.cnc_diagnoss.diag.idata,
                 warning = diagWarn!.response.cnc_diagnoss.diag.idata
             };
-
+            */
+            
             //Console.WriteLine(JObject.FromObject(current_value).ToString());
 
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);

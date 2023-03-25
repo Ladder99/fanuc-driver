@@ -1,4 +1,5 @@
-﻿using l99.driver.@base;
+﻿using System.Dynamic;
+using l99.driver.@base;
 
 // ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.veneers;
@@ -24,15 +25,21 @@ public class ToolData : Veneer
                 ? nativeInputs[1].response.cnc_toolnum.toolnum.datano
                 : -1;
 
+            dynamic currentValue = new ExpandoObject();
+            currentValue.tool = tool;
+            currentValue.group = group;
+            
+            /*
             var currentValue = new
             {
                 tool,
                 group
             };
-
+            */
+            
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 
-            if (currentValue.IsDifferentString((object) LastChangedValue))
+            if (Extensions.IsDifferentExpando(currentValue, LastChangedValue))
                 await OnDataChangedAsync(nativeInputs, additionalInputs, currentValue);
         }
         else

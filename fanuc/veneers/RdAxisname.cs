@@ -1,4 +1,5 @@
-﻿using l99.driver.@base;
+﻿using System.Dynamic;
+using l99.driver.@base;
 
 // ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.veneers;
@@ -27,10 +28,15 @@ public class RdAxisname : Veneer
                 });
             }
 
+            dynamic currentValue = new ExpandoObject();
+            currentValue.axes = tempValue;
+            
+            /*
             var currentValue = new
             {
                 axes = tempValue
             };
+            */
 
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 

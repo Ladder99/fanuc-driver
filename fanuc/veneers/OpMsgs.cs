@@ -1,4 +1,5 @@
-﻿using l99.driver.@base;
+﻿using System.Dynamic;
+using l99.driver.@base;
 
 // ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.veneers;
@@ -29,11 +30,16 @@ public class OpMsgs : Veneer
             // check success to use
             //List<dynamic> previousMessageList = GetMessageListFromMessages(previousInput, path);
             List<dynamic> currentMessageList = GetMessageListFromMessages(currentInput, path);
+
+            dynamic currentValue = new ExpandoObject();
+            currentValue.messages = currentMessageList;
             
+            /*
             var currentValue = new
             {
                 messages = currentMessageList
             };
+            */
 
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 

@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Dynamic;
+using System.Globalization;
 using l99.driver.@base;
 
 // ReSharper disable once CheckNamespace
@@ -58,6 +59,33 @@ public class ProductionData : Veneer
                 // ignored
             }
 
+            dynamic currentValue = new ExpandoObject();
+            currentValue.program = new ExpandoObject();
+            currentValue.program.executing = new ExpandoObject();
+            currentValue.program.executing.name = executing_program;
+            currentValue.program.executing.path = executing_program_2;
+            currentValue.program.executing.sequence = executing_sequence;
+            currentValue.program.current = new ExpandoObject();
+            currentValue.program.current.name = $"O{nativeInputs[0].response.cnc_rdprgnum.prgnum.data}";
+            currentValue.program.current.number = nativeInputs[0].response.cnc_rdprgnum.prgnum.data;
+            currentValue.program.current.size_b = nativeInputs[1]!.response.cnc_rdprogdir3.buf.dir1.length;
+            currentValue.program.current.comment = nativeInputs[1]!.response.cnc_rdprogdir3.buf.dir1.comment;
+            currentValue.program.current.modified = modifiedCurrent;
+            currentValue.program.selected = new ExpandoObject();
+            currentValue.program.selected.name = $"O{nativeInputs[0].response.cnc_rdprgnum.prgnum.mdata}";
+            currentValue.program.selected.number = nativeInputs[0].response.cnc_rdprgnum.prgnum.mdata;
+            currentValue.program.selected.size_b = nativeInputs[2]!.response.cnc_rdprogdir3.buf.dir1.length;
+            currentValue.program.selected.comment = nativeInputs[2]!.response.cnc_rdprogdir3.buf.dir1.comment;
+            currentValue.program.selected.modified = modifiedSelected;
+            currentValue.pieces = new ExpandoObject();
+            currentValue.pieces.produced = nativeInputs[3]!.response.cnc_rdparam.param.data.ldata;
+            currentValue.pieces.produced_life = nativeInputs[4]!.response.cnc_rdparam.param.data.ldata;
+            currentValue.pieces.remaining = nativeInputs[5]!.response.cnc_rdparam.param.data.ldata;
+            currentValue.timers = new ExpandoObject();
+            currentValue.timers.cycle_time_ms = nativeInputs[6]!.response.cnc_rdparam.param.data.ldata * 60000 +
+                                                nativeInputs[7]!.response.cnc_rdparam.param.data.ldata;
+            
+            /*
             var currentValue = new
             {
                 program = new
@@ -97,6 +125,7 @@ public class ProductionData : Veneer
                                     nativeInputs[7]!.response.cnc_rdparam.param.data.ldata
                 }
             };
+            */
 
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 

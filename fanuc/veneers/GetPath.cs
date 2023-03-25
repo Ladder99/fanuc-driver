@@ -1,4 +1,5 @@
-﻿using l99.driver.@base;
+﻿using System.Dynamic;
+using l99.driver.@base;
 
 // ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.veneers;
@@ -14,15 +15,21 @@ public class GetPath : Veneer
     {
         if (nativeInputs.All(o => o.success == true))
         {
+            dynamic currentValue = new ExpandoObject();
+            currentValue.path_no = nativeInputs[0].response.cnc_getpath.path_no;
+            currentValue.maxpath_no = nativeInputs[0].response.cnc_getpath.maxpath_no;
+            
+            /*
             var currentValue = new
             {
                 nativeInputs[0].response.cnc_getpath.path_no,
                 nativeInputs[0].response.cnc_getpath.maxpath_no
             };
+            */
 
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 
-            if (currentValue.IsDifferentString((object) LastChangedValue))
+            if (Extensions.IsDifferentExpando(currentValue, LastChangedValue))
                 await OnDataChangedAsync(nativeInputs, additionalInputs, currentValue);
         }
         else
