@@ -158,7 +158,7 @@ public class SpindleData : Veneer
 
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 
-            if (currentValue.IsDifferentString((object) LastChangedValue))
+            if (((object)currentValue).IsDifferentString((object) LastChangedValue))
                 await OnDataChangedAsync(nativeInputs, additionalInputs, currentValue);
         }
         //else

@@ -58,7 +58,7 @@ public class GCodeBlocks : Veneer
             //var lastKeys = ((List<gcode.Block>)LastChangedValue.blocks).Select(x => x.BlockNumber);
             //var currentKeys = ((List<gcode.Block>)currentValue.blocks).Select(x => x.BlockNumber);
 
-            if (currentValue.IsDifferentString((object) LastChangedValue))
+            if (((object)currentValue).IsDifferentString((object) LastChangedValue))
                 await OnDataChangedAsync(nativeInputs, additionalInputs, currentValue);
         }
         else

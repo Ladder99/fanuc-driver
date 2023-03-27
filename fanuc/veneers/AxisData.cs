@@ -80,10 +80,10 @@ public class AxisData : Veneer
             currentValue.alarms.overheat = overheat;
             currentValue.alarms.overtravel = overTravel;
             currentValue.position = new ExpandoObject();
-            currentValue.absolute = axisDynamic.pos.absolute / Math.Pow(10.0, figures[currentAxis - 1]);
-            currentValue.machine = axisDynamic.pos.machine / Math.Pow(10.0, figures[currentAxis - 1]);
-            currentValue.relative = axisDynamic.pos.relative / Math.Pow(10.0, figures[currentAxis - 1]);
-            currentValue.distance = axisDynamic.pos.distance / Math.Pow(10.0, figures[currentAxis - 1]);
+            currentValue.position.absolute = axisDynamic.pos.absolute / Math.Pow(10.0, figures[currentAxis - 1]);
+            currentValue.position.machine = axisDynamic.pos.machine / Math.Pow(10.0, figures[currentAxis - 1]);
+            currentValue.position.relative = axisDynamic.pos.relative / Math.Pow(10.0, figures[currentAxis - 1]);
+            currentValue.position.distance = axisDynamic.pos.distance / Math.Pow(10.0, figures[currentAxis - 1]);
             currentValue.motion = motion;
             
             /*
@@ -120,7 +120,7 @@ public class AxisData : Veneer
             
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 
-            if (currentValue.IsDifferentString((object) LastChangedValue))
+            if (((object)currentValue).IsDifferentString((object) LastChangedValue))
                 await OnDataChangedAsync(nativeInputs, additionalInputs, currentValue);
         }
         else

@@ -140,7 +140,7 @@ public class AlarmsSeries : Veneer
             List<dynamic> currentAlarmList = GetAlarmListFromAlarms(currentAlarmWrapper, path, axis, obsFocasSupport);
 
             dynamic currentValue = new ExpandoObject();
-            currentInput.alarms = currentAlarmList;
+            currentValue.alarms = currentAlarmList;
             
             /*
             var currentValue = new
@@ -151,7 +151,7 @@ public class AlarmsSeries : Veneer
 
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 
-            if (currentValue.IsDifferentString((object) LastChangedValue))
+            if (((object)currentValue).IsDifferentString((object) LastChangedValue))
                 await OnDataChangedAsync(nativeInputs, additionalInputs, currentValue);
         }
         else

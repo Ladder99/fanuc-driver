@@ -42,7 +42,7 @@ public static class Extensions
         return !JObject.FromObject(one).ToString()
             .Equals(JObject.FromObject(two).ToString());
     }
-    
+
     public static bool IsDifferentExpando(ExpandoObject one, ExpandoObject? two)
     {
         if (two == null) return true;

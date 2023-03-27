@@ -95,11 +95,25 @@ public class MTCDeviceModelGenerator
 
             tp = Template.Parse(generator["output"]);
             var fileOut = tp.Render(tc);
+            // attempt to create directory for model file, if it does not exist
+            var directoryPath = new FileInfo(fileOut).Directory.FullName;
+            if (!Directory.Exists(directoryPath))
+            {
+                try
+                {
+                    Directory.CreateDirectory(directoryPath);
+                }
+                catch (Exception createEx)
+                {
+                    _logger.Error(createEx, $"[{_machine.Id}] Directory '{directoryPath}' did not exist and could not be created.");
+                }
+            }
+            // write model to file
             File.WriteAllText(fileOut, XDocument.Parse(xml).ToString());
         }
         catch (Exception ex)
         {
-            _logger.Error(ex, $"[{_machine.Id} MTC device model generation failed!");
+            _logger.Error(ex, $"[{_machine.Id}] MTC device model generation failed!");
         }
     }
 }
