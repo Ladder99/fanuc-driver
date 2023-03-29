@@ -318,7 +318,7 @@ system:
         ShdrEvent device+`_machine_port` machine.focas_endpoint.port;
 
         ## conditions ##
-        ShdrConditionFaultIf device+`_adapter_health` (!data.healthy) null null;
+        ShdrConditionWarningIf device+`_adapter_health` (!data.healthy) null null;
         
         ## if machine is not online then make everything unavailable ##
         if !data.online; ShdrAllUnavailable; end;

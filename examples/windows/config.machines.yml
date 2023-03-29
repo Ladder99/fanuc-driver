@@ -224,13 +224,13 @@ machines:
       collectors:
       - l99.driver.fanuc.collectors.MachineInfo, fanuc
       - l99.driver.fanuc.collectors.Alarms, fanuc
-      #- l99.driver.fanuc.collectors.Messages, fanuc
-      #- l99.driver.fanuc.collectors.StateData, fanuc
-      #- l99.driver.fanuc.collectors.ToolData, fanuc
-      #- l99.driver.fanuc.collectors.ProductionData, fanuc
-      #- l99.driver.fanuc.collectors.GCodeData, fanuc
-      #- l99.driver.fanuc.collectors.AxisData, fanuc
-      #- l99.driver.fanuc.collectors.SpindleData, fanuc
+      - l99.driver.fanuc.collectors.Messages, fanuc
+      - l99.driver.fanuc.collectors.StateData, fanuc
+      - l99.driver.fanuc.collectors.ToolData, fanuc
+      - l99.driver.fanuc.collectors.ProductionData, fanuc
+      - l99.driver.fanuc.collectors.GCodeData, fanuc
+      - l99.driver.fanuc.collectors.AxisData, fanuc
+      - l99.driver.fanuc.collectors.SpindleData, fanuc
     l99.driver.fanuc.handlers.FanucOne, fanuc:
       change_only: !!bool false
       skip_internal: !!bool true

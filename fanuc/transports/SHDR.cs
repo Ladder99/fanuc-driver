@@ -299,6 +299,36 @@ public class SHDR : Transport
                 }
                 CacheShdrCondition(c);
             }));
+        
+        _globalScriptObject.Import("ShdrConditionWarningIf",
+            new Action<string, object, string, string>((key, value, nativeCode, text) =>
+            {
+                var c = new ShdrCondition(key);
+                var makeWarn = Convert.ToBoolean(value);
+                if (string.IsNullOrEmpty(nativeCode))
+                {
+                    if (makeWarn)
+                    {
+                        c.Warning();
+                    }
+                    else
+                    {
+                        c.Normal();
+                    }
+                }
+                else
+                {
+                    if (makeWarn)
+                    {
+                        c.AddWarning(text, nativeCode);
+                    }
+                    else
+                    {
+                        c.AddNormal(nativeCode, text);
+                    }
+                }
+                CacheShdrCondition(c);
+            }));
 
         _globalScriptObject.Import("ShdrConditionFault",
             new Action<string, string, string>((key, nativeCode, text) =>
