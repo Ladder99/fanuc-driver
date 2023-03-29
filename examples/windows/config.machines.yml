@@ -253,7 +253,7 @@ machines:
     l99.driver.fanuc.collectors.Alarms, fanuc:
       stateful: !!bool true
     l99.driver.fanuc.collectors.Messages, fanuc:
-      stateful: !!bool false
+      stateful: !!bool true
 
     ##
     ## sparkplubg example

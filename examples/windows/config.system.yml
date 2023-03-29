@@ -406,13 +406,13 @@ system:
           ShdrMessage p+`_alarm` `UNAVAILABLE`;
 
           ## conditions ##
-          ShdrConditionNormal p+`_alm_all` null null;
           ShdrConditionNormal p+`_alm_comms` null null;
           ShdrConditionNormal p+`_alm_logic` null null;
           ShdrConditionNormal p+`_alm_motion` null null;
           ShdrConditionNormal p+`_alm_system` null null;
           ShdrConditionNormal p+`_alm_axes` null null;
           ShdrConditionNormal p+`_alm_spindles` null null;
+          ShdrConditionNormal p+`_alm_all` null null;
         else;
           ## variables ##
           m = array.map data.alarms `message`;
@@ -440,73 +440,68 @@ system:
           ShdrConditionFaultIf p+`_alm_system` f_system null null;
           ShdrConditionFaultIf p+`_alm_axes` f_axes null null;
           ShdrConditionFaultIf p+`_alm_spindles` f_spindles null null;
+          ShdrConditionFaultIf p+`_alm_all` ((data.alarms | array.size) > 0) null null;
         end;
       l99.driver.fanuc.veneers.AlarmsSeriesStateful, fanuc: >-
         ## get path number ##
         p = device+`_p`+observation.marker[0].number;
 
-        if (array.size data.alarms) == 0;
-          ## events ##
-          ShdrMessage p+`_alarm` `UNAVAILABLE`;
+        ## functions ##
+        ##   filter alarms of type ##
+        func whereAlarmType (typeArray);
+          ret array.filter data.alarms @(do; ret array.contains typeArray $0.type; end);
+        end;
 
-          ## conditions ##
-          ShdrConditionNormal p+`_alm_all` null null;
-          ShdrConditionNormal p+`_alm_comms` null null;
-          ShdrConditionNormal p+`_alm_logic` null null;
-          ShdrConditionNormal p+`_alm_motion` null null;
-          ShdrConditionNormal p+`_alm_system` null null;
-          ShdrConditionNormal p+`_alm_axes` null null;
-          ShdrConditionNormal p+`_alm_spindles` null null;
-        else;
-          ## functions ##
-          ##   filter alarms ##
-          func whereAlarmType (typeArray);
-            ret array.filter data.alarms @(do; ret array.contains typeArray $0.type; end);
-          end;
+        ##   filter alarms of not type ##
+        func whereAlarmNotType (typeArray);
+          ret array.filter data.alarms @(do; ret !array.contains typeArray $0.type; end);
+        end;
 
-          func whereAlarmNotType (typeArray);
-            ret array.filter data.alarms @(do; ret !array.contains typeArray $0.type; end);
-          end;
+        ##   filter alarms that have an axis ##
+        func whereAlarmHasAxis;
+          ret array.filter data.alarms @(do; ret $0.axis_code > 0; end);
+        end;
 
-          func whereAlarmHasAxis;
-            ret array.filter data.alarms @(do; ret $0.axis_code > 0; end);
-          end;
-
-          ##   process alarms ##
-          func setConditions (dataItem, alarmArray);
+        ##   process alarms ##
+        func setConditions (dataItem, alarmArray);
+          if (array.size alarmArray) > 0;
             for alarm in alarmArray;
               ShdrConditionFaultIf dataItem alarm.is_triggered alarm.id alarm.message;
             end;
+          else;
+            ShdrConditionNormal dataItem null null;
           end;
-
-          ## variables ##
-          triggeredObjects = array.filter data.alarms @(do; ret $0.is_triggered; end);
-          triggeredMessages = array.map triggeredObjects `message`;
-
-          ## events ##
-          ShdrMessage p+`_alarm` (array.join triggeredMessages `;`);
-
-          ## conditions ##
-          setConditions p+`_alm_comms` (whereAlarmType [`IO`,`SR`]);
-          setConditions p+`_alm_logic` (whereAlarmType [`SW`,`PC`]);
-          setConditions p+`_alm_motion` (whereAlarmType [`PS`,`MC`,`BG`]);
-          setConditions p+`_alm_system` (whereAlarmNotType [`IO`,`SR`,`SW`,`PC`,`PS`,`MC`,`BG`,`SP`]);
-          setConditions p+`_alm_axes` whereAlarmHasAxis;
-          setConditions p+`_alm_spindles` (whereAlarmType [`SP`]);
         end;
+
+        ## variables ##
+        triggeredObjects = array.filter data.alarms @(do; ret $0.is_triggered; end);
+        triggeredMessages = array.map triggeredObjects `message`;
+
+        ## events ##
+        if (array.size triggeredObjects) > 0;
+          ShdrMessage p+`_alarm` (array.join triggeredMessages `;`);
+        else;
+          ShdrMessage p+`_alarm` `UNAVAILABLE`;
+        end;
+
+        ## conditions ##
+        setConditions p+`_alm_comms` (whereAlarmType [`IO`,`SR`]);
+        setConditions p+`_alm_logic` (whereAlarmType [`SW`,`PC`]);
+        setConditions p+`_alm_motion` (whereAlarmType [`PS`,`MC`,`BG`]);
+        setConditions p+`_alm_system` (whereAlarmNotType [`IO`,`SR`,`SW`,`PC`,`PS`,`MC`,`BG`,`SP`]);
+        setConditions p+`_alm_axes` whereAlarmHasAxis;
+        setConditions p+`_alm_spindles` (whereAlarmType [`SP`]);
+        ShdrConditionFaultIf p+`_alm_all` ((triggeredObjects | array.size) > 0) null null;
       l99.driver.fanuc.veneers.OpMsgs, fanuc: >-
         ## get path number ##
         p = device+`_p`+observation.marker[0].number;
-        
-        if (array.size data.messages) == 0;
-          ## events ##
-          ShdrMessage p+`_message` `UNAVAILABLE`;
-        else;
-          ## variables ##
-          m = array.map data.messages `message`;
 
-          ## events ##
-          ShdrMessage p+`_message` (array.join m `;`);
+        ## events ##
+        if (array.size data.messages) > 0;
+          messages = array.map data.messages `message`;
+          ShdrMessage p+`_message` (array.join messages `;`);
+        else;
+          ShdrMessage p+`_message` `UNAVAILABLE`;
         end;
       l99.driver.fanuc.veneers.OpMsgsStateful, fanuc: >-
         ## get path number ##
@@ -521,7 +516,11 @@ system:
           triggeredMessages = array.map triggeredObjects `message`;
 
           ## events ##
-          ShdrMessage p+`_message` (array.join triggeredMessages `;`);
+          if (array.size triggeredObjects) > 0;
+            ShdrMessage p+`_message` (array.join triggeredMessages `;`);
+          else;
+            ShdrMessage p+`_message` `UNAVAILABLE`;
+          end;
         end;
       l99.driver.fanuc.veneers.AxisData, fanuc: >-
         ## get path and axis name ##
