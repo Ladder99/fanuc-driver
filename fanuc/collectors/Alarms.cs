@@ -64,7 +64,7 @@ public class Alarms : FanucMultiStrategyCollector
         Strategy.SetKeyed("alarms+last",
             Strategy.GetKeyed("alarms"));
 
-        // track the resulting data structure
+        // track the resulting data structure, path is appended because SetKeyed (eg. obs+alarms+1)
         Strategy.SetKeyed("obs+alarms",
             obsAlarms!.veneer.LastChangedValue?.alarms);
     }

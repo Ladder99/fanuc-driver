@@ -41,23 +41,6 @@ public class FocasPerf : Veneer
         currentValue.invocation.sum_ms = sum;
         currentValue.invocation.failed_methods = failedMethods;
         
-        /*
-        var currentValue = new
-        {
-            sweep_ms = additionalInputs[0].sweepMs,
-            invocation = new
-            {
-                count = additionalInputs[0].focas_invocations.Count,
-                max_method = max.method,
-                max_ms = max.invocationMs,
-                min_ms = min.invocationMs,
-                avg_ms = avg,
-                sum_ms = sum,
-                failed_methods = failedMethods
-            }
-        };
-        */
-
         await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 
         return new {veneer = this};

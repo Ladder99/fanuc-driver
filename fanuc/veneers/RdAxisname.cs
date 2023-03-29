@@ -31,13 +31,6 @@ public class RdAxisname : Veneer
             dynamic currentValue = new ExpandoObject();
             currentValue.axes = tempValue;
             
-            /*
-            var currentValue = new
-            {
-                axes = tempValue
-            };
-            */
-
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 
             if (((object)currentValue).IsDifferentString((object) LastChangedValue))

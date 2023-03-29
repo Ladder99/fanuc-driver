@@ -180,7 +180,9 @@ public class SHDR : Transport
             Machine.Configuration.transport["net"]["port"],
             Machine.Configuration.transport["net"]["heartbeat_ms"],
             Machine.Configuration.transport["net"]["interval_ms"]);
-
+        
+        _adapter.FilterDuplicates = true;
+        
         // ReSharper disable once UnusedParameter.Local
         _adapter.AgentConnectionError = (sender, s) =>
         {
@@ -229,6 +231,11 @@ public class SHDR : Transport
     {
         _globalScriptObject = new ScriptObject();
 
+        _globalScriptObject.Import("ToCLR", new Action<object>((o) =>
+        {
+            Console.WriteLine(o);
+        }));
+        
         _globalScriptObject.Import("machinePaths",
             // ReSharper disable once ConvertToLambdaExpression
             new Func<object>(() => { return _model.structure.Keys.ToArray(); }));

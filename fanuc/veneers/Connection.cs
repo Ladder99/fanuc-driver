@@ -16,10 +16,6 @@ public class Connection : Veneer
         dynamic currentValue = new ExpandoObject();
         currentValue.success = nativeInputs[0].success;
         
-        /*
-        var currentValue = new {nativeInputs[0].success};
-        */
-
         await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
         await OnDataChangedAsync(nativeInputs, additionalInputs, currentValue);
 

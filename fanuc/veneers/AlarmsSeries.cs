@@ -142,13 +142,6 @@ public class AlarmsSeries : Veneer
             dynamic currentValue = new ExpandoObject();
             currentValue.alarms = currentAlarmList;
             
-            /*
-            var currentValue = new
-            {
-                alarms = currentAlarmList
-            };
-            */
-
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 
             if (((object)currentValue).IsDifferentString((object) LastChangedValue))
@@ -181,7 +174,9 @@ public class AlarmsSeries : Veneer
                             number = alarmObject.alm_no,
                             message = ((string) alarmObject.alm_msg).AsAscii(),
                             type_code = alarmObject.type,
-                            type = GetAlarmTypeFromAlarmCode(obsFocasSupport, alarmObject.type)
+                            type = GetAlarmTypeFromAlarmCode(obsFocasSupport, alarmObject.type),
+                            id = $"{GetAlarmTypeFromAlarmCode(obsFocasSupport, alarmObject.type)}{alarmObject.alm_no:D4}",
+                            is_triggered = true
                         });
             }
         }

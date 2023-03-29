@@ -129,39 +129,6 @@ public class StateData : Veneer
             currentValue.modal.m3 = nativeInputs[9]!.response.cnc_modal.modal.aux.aux_data;
             currentValue.modal.t = nativeInputs[10]!.response.cnc_modal.modal.aux.aux_data;
             
-            /*
-            var currentValue = new
-            {
-                mode,
-                execution,
-                nativeInputs[0].response.cnc_statinfo.statinfo.aut,
-                nativeInputs[0].response.cnc_statinfo.statinfo.run,
-                nativeInputs[0].response.cnc_statinfo.statinfo.motion,
-                nativeInputs[0].response.cnc_statinfo.statinfo.mstb,
-                nativeInputs[0].response.cnc_statinfo.statinfo.emergency,
-                nativeInputs[0].response.cnc_statinfo.statinfo.alarm,
-                timers = new
-                {
-                    poweron_min = nativeInputs[1]!.response.cnc_rdparam.param.data.ldata,
-                    operating_min = nativeInputs[2]!.response.cnc_rdparam.param.data.ldata,
-                    cutting_min = nativeInputs[3]!.response.cnc_rdparam.param.data.ldata
-                },
-                @override = new
-                {
-                    feed = 255 - nativeInputs[4]!.response.pmc_rdpmcrng.buf.cdata[0],
-                    rapid = nativeInputs[5]!.response.pmc_rdpmcrng.buf.cdata[0],
-                    spindle = nativeInputs[6]!.response.pmc_rdpmcrng.buf.cdata[0]
-                },
-                modal = new
-                {
-                    m1 = nativeInputs[7]!.response.cnc_modal.modal.aux.aux_data,
-                    m2 = nativeInputs[8]!.response.cnc_modal.modal.aux.aux_data,
-                    m3 = nativeInputs[9]!.response.cnc_modal.modal.aux.aux_data,
-                    t = nativeInputs[10]!.response.cnc_modal.modal.aux.aux_data
-                }
-            };
-            */
-            
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 
             if (((object)currentValue).IsDifferentString((object) LastChangedValue))

@@ -23,8 +23,6 @@ public class MachineInfo : FanucMultiStrategyCollector
         //  evaluation, otherwise item never gets set to UNAVAILABLE
         //if (strategy.HasKeyed($"{this.GetType().Name}"))
         //    return;
-
-        // TODO: is this required
         //await Strategy.SetKeyed($"{GetType().Name}", true);
 
         await Strategy.SetNativeKeyed("machine",

@@ -298,41 +298,78 @@ system:
   default-shdr-transformers: &default-shdr-transformers
     transformers:
       SWEEP_END: >-
-        p = device;
-        ShdrEventIf p+`_availability` data.online `AVAILABLE` `UNAVAILABLE`;
+        ## what is available in this script ##
+        ## machine: FanucMachine instance ##
+        ## ToCLR machine; ##
+        ## device: device name from configuration ##
+        ## ToCLR device; ##
+        ## adapter: AdapterInfo instance ##
+        ## ToCLR adapter; ##
+        ## observation: observation meta  ##
+        ## ToCLR observation; ##
+        ## state: observation data ##
+        ## ToCLR data; ##
+
+        ## events ##
+        ShdrEventIf device+`_availability` data.online `AVAILABLE` `UNAVAILABLE`;
+        ShdrEvent device+`_adapter_ip` adapter.ipaddress;
+        ShdrEvent device+`_adapter_port` adapter.port;
+        ShdrEvent device+`_machine_ip` machine.focas_endpoint.ipaddress;
+        ShdrEvent device+`_machine_port` machine.focas_endpoint.port;
+
+        ## conditions ##
+        ShdrConditionFaultIf device+`_adapter_health` (!data.healthy) null null;
+        
+        ## if machine is not online then make everything unavailable ##
         if !data.online; ShdrAllUnavailable; end;
-        ShdrEvent p+`_adapter_ip` adapter.ipaddress;
-        ShdrEvent p+`_adapter_port` adapter.port;
-        ShdrEvent p+`_machine_ip` machine.focas_endpoint.ipaddress;
-        ShdrEvent p+`_machine_port` machine.focas_endpoint.port;
-        ShdrConditionFaultIf p+`_adapter_health` (! data.healthy) null null;
       l99.driver.fanuc.veneers.SysInfo, fanuc: >-
+        ## get path number ##
         p = device+`_p`+observation.marker[0].number;
+        
+        ## variables ##
         v = array.join [data.mt_type,data.cnc_type,data.series,data.model,data.version] ` `;
         a = array.join (machineAxisNamesForPath observation.marker[0].number) ` `;
         s = array.join (machineSpindleNamesForPath observation.marker[0].number) ` `;
+
+        ## events ##
         ShdrEvent p+`_hwver` v;
         ShdrEvent p+`_axes` (array.join [a,s] ` `);
       l99.driver.fanuc.veneers.StateData, fanuc: >-
+        ## get path number ##
         p = device+`_p`+observation.marker[0].number;
-        if observation.marker[0].number == 1; ShdrEventIf device+`_estop` (data.emergency == 1) `TRIGGERED` `ARMED`; end;
+
+        ## samples ##
         ShdrSample p+`_tmr_powered` (data.timers.poweron_min * 60);
         ShdrSample p+`_tmr_operating` (data.timers.operating_min * 60);
         ShdrSample p+`_tmr_loaded` (data.timers.cutting_min * 60);
+
+        ## events ##
         ShdrEvent p+`_ctl_mode` data.mode;
         ShdrEvent p+`_ctl_exec` data.execution;
         ShdrEvent p+`_tool_num` data.modal.t;
         ShdrEvent p+`_ovr_feed` data.override.feed;
         ShdrEvent p+`_ovr_rapid` data.override.rapid;
         ShdrEvent p+`_ovr_spindle` data.override.spindle;
-        ## ShdrConditionFaultIf p+`_alm` (data.alarm == 1) null null;
+
+        ## estop only on path 1 ##
+        if observation.marker[0].number == 1; 
+          ShdrEventIf device+`_estop` (data.emergency == 1) `TRIGGERED` `ARMED`; 
+        end;
       l99.driver.fanuc.veneers.ToolData, fanuc: >-
+        ## get path number ##
         p = device+`_p`+observation.marker[0].number;
+
+        ## events ##
         ShdrEvent p+`_tool_num` data.tool;
         ShdrEventIf p+`_tool_grp` (data.group > 0) data.group `UNAVAILABLE`;
       l99.driver.fanuc.veneers.ProductionData, fanuc: >-
+        ## get path number ##
         p = device+`_p`+observation.marker[0].number;
+
+        ## samples ##
         ShdrSample p+`_tmr_cycle` (data.timers.cycle_time_ms / 1000);
+
+        ## events ##
         ShdrEvent p+`_part_count_life` data.pieces.produced_life;
         ShdrEvent p+`_part_count_complete` data.pieces.produced;
         ShdrEvent p+`_part_count_remain` data.pieces.remaining;
@@ -345,19 +382,30 @@ system:
         ShdrEvent p+`_prg_size_current` data.program.current.size_b;
         ShdrEvent p+`_prg_mod_current` data.program.current.modified;
       l99.driver.fanuc.veneers.GCodeBlocks, fanuc: >-
+        ## get path number ##
         p = device+`_p`+observation.marker[0].number;
-        if (array.size data.blocks) == 0
+
+        if (array.size data.blocks) == 0;
+          ## events ##
           ShdrEvent p+`_block` `UNAVAILABLE`;
           ShdrMessage p+`_line` `UNAVAILABLE`;
-        else
+        else;
+          ## variables ##
           m = array.map data.blocks `block_text`;
+
+          ## events ##
           ShdrEvent p+`_block` data.blocks[0].block_number;
           ShdrMessage p+`_line` (array.join m `;`);
         end;
       l99.driver.fanuc.veneers.AlarmsSeries, fanuc: >-
+        ## get path number ##
         p = device+`_p`+observation.marker[0].number;
-        if (array.size data.alarms) == 0
+
+        if (array.size data.alarms) == 0;
+          ## events ##
           ShdrMessage p+`_alarm` `UNAVAILABLE`;
+
+          ## conditions ##
           ShdrConditionNormal p+`_alm_all` null null;
           ShdrConditionNormal p+`_alm_comms` null null;
           ShdrConditionNormal p+`_alm_logic` null null;
@@ -365,9 +413,9 @@ system:
           ShdrConditionNormal p+`_alm_system` null null;
           ShdrConditionNormal p+`_alm_axes` null null;
           ShdrConditionNormal p+`_alm_spindles` null null;
-        else
+        else;
+          ## variables ##
           m = array.map data.alarms `message`;
-          ShdrMessage p+`_alarm` (array.join m `;`);
           t = array.uniq (array.map data.alarms `type`);
           f_comms = ((array.contains t `IO`)||(array.contains t `SR`));
           f_logic = ((array.contains t `SW`)||(array.contains t `PC`));
@@ -381,6 +429,11 @@ system:
               f_axes = true;
             end;
           end;
+
+          ## events ##
+          ShdrMessage p+`_alarm` (array.join m `;`);
+
+          ## conditions ##
           ShdrConditionFaultIf p+`_alm_comms` f_comms null null;
           ShdrConditionFaultIf p+`_alm_logic` f_logic null null;
           ShdrConditionFaultIf p+`_alm_motion` f_motion null null;
@@ -388,11 +441,15 @@ system:
           ShdrConditionFaultIf p+`_alm_axes` f_axes null null;
           ShdrConditionFaultIf p+`_alm_spindles` f_spindles null null;
         end;
-        ## (array.size (array.filter (array.map data.alarms `axis_code`) @(do; ret $0 > 0; end)) > 0);
       l99.driver.fanuc.veneers.AlarmsSeriesStateful, fanuc: >-
+        ## get path number ##
         p = device+`_p`+observation.marker[0].number;
-        if (array.size data.alarms) == 0
+
+        if (array.size data.alarms) == 0;
+          ## events ##
           ShdrMessage p+`_alarm` `UNAVAILABLE`;
+
+          ## conditions ##
           ShdrConditionNormal p+`_alm_all` null null;
           ShdrConditionNormal p+`_alm_comms` null null;
           ShdrConditionNormal p+`_alm_logic` null null;
@@ -400,49 +457,81 @@ system:
           ShdrConditionNormal p+`_alm_system` null null;
           ShdrConditionNormal p+`_alm_axes` null null;
           ShdrConditionNormal p+`_alm_spindles` null null;
-        else
-          ShdrConditionNormal p+`_alm_all` null null;
-          m = array.map data.alarms `message`;
-          ShdrMessage p+`_alarm` (array.join m `;`);
-          t = array.uniq (array.map data.alarms `type`);
-          f_comms = ((array.contains t `IO`)||(array.contains t `SR`));
-          f_logic = ((array.contains t `SW`)||(array.contains t `PC`));
-          f_motion = ((array.contains t `PS`)||(array.contains t `MC`)||(array.contains t `BG`));
-          f_spindles = (array.contains t `SP`);
-          for alm in data.alarms;
-            if alm.axis_code == 0 && !array.contains [`IO`,`SR`,`SW`,`PC`,`PS`,`MC`,`BG`] alm.type;
-              f_system = true;
-            end;
-            if alm.axis_code > 0;
-              f_axes = true;
+        else;
+          ## functions ##
+          ##   filter alarms ##
+          func whereAlarmType (typeArray);
+            ret array.filter data.alarms @(do; ret array.contains typeArray $0.type; end);
+          end;
+
+          func whereAlarmNotType (typeArray);
+            ret array.filter data.alarms @(do; ret !array.contains typeArray $0.type; end);
+          end;
+
+          func whereAlarmHasAxis;
+            ret array.filter data.alarms @(do; ret $0.axis_code > 0; end);
+          end;
+
+          ##   process alarms ##
+          func setConditions (dataItem, alarmArray);
+            for alarm in alarmArray;
+              ShdrConditionFaultIf dataItem alarm.is_triggered alarm.id alarm.message;
             end;
           end;
-          ShdrConditionFaultIf p+`_alm_comms` f_comms null null;
-          ShdrConditionFaultIf p+`_alm_logic` f_logic null null;
-          ShdrConditionFaultIf p+`_alm_motion` f_motion null null;
-          ShdrConditionFaultIf p+`_alm_system` f_system null null;
-          ShdrConditionFaultIf p+`_alm_axes` f_axes null null;
-          ShdrConditionFaultIf p+`_alm_spindles` f_spindles null null;
+
+          ## variables ##
+          triggeredObjects = array.filter data.alarms @(do; ret $0.is_triggered; end);
+          triggeredMessages = array.map triggeredObjects `message`;
+
+          ## events ##
+          ShdrMessage p+`_alarm` (array.join triggeredMessages `;`);
+
+          ## conditions ##
+          setConditions p+`_alm_comms` (whereAlarmType [`IO`,`SR`]);
+          setConditions p+`_alm_logic` (whereAlarmType [`SW`,`PC`]);
+          setConditions p+`_alm_motion` (whereAlarmType [`PS`,`MC`,`BG`]);
+          setConditions p+`_alm_system` (whereAlarmNotType [`IO`,`SR`,`SW`,`PC`,`PS`,`MC`,`BG`,`SP`]);
+          setConditions p+`_alm_axes` whereAlarmHasAxis;
+          setConditions p+`_alm_spindles` (whereAlarmType [`SP`]);
         end;
-        ## (array.size (array.filter (array.map data.alarms `axis_code`) @(do; ret $0 > 0; end)) > 0);
       l99.driver.fanuc.veneers.OpMsgs, fanuc: >-
+        ## get path number ##
         p = device+`_p`+observation.marker[0].number;
-        if (array.size data.messages) == 0
+        
+        if (array.size data.messages) == 0;
+          ## events ##
           ShdrMessage p+`_message` `UNAVAILABLE`;
-        else
+        else;
+          ## variables ##
           m = array.map data.messages `message`;
+
+          ## events ##
           ShdrMessage p+`_message` (array.join m `;`);
         end;
       l99.driver.fanuc.veneers.OpMsgsStateful, fanuc: >-
+        ## get path number ##
         p = device+`_p`+observation.marker[0].number;
-        if (array.size data.messages) == 0
+        
+        if (array.size data.messages) == 0;
+          ## events ##
           ShdrMessage p+`_message` `UNAVAILABLE`;
-        else
-          m = array.map data.messages `message`;
-          ShdrMessage p+`_message` (array.join m `;`);
+        else;
+          ## variables ##
+          triggeredObjects = array.filter data.messages @(do; ret $0.is_triggered; end);
+          triggeredMessages = array.map triggeredObjects `message`;
+
+          ## events ##
+          ShdrMessage p+`_message` (array.join triggeredMessages `;`);
         end;
       l99.driver.fanuc.veneers.AxisData, fanuc: >-
+        ## get path and axis name ##
         p = device+`_p`+observation.marker[0].number+`_`+observation.marker[1].name;
+
+        ## variables ##
+        axis_letter = string.slice observation.marker[1].name 0 1;
+        is_index = array.contains [`A`,`B`,`C`] axis_letter;
+
+        ## samples ##
         ShdrSample p+`_pos_absolute` data.position.absolute;
         ShdrSample p+`_pos_distance` data.position.distance;
         ShdrSample p+`_pos_machine` data.position.machine;
@@ -452,21 +541,30 @@ system:
         ShdrSample p+`_temp_coder` data.coder_temp;
         ShdrSample p+`_power` data.power;
         ShdrSample p+`_feed` (data.feed*60);
+
+        ## events ##
         ShdrEventIf p+`_state` data.motion `TRAVEL` `STOPPED`;
+        if is_index; ShdrEvent p+`_rotary` `INDEX`; end;
+
+        ## conditions ##
         ShdrConditionFaultIf p+`_alm_heat` data.alarms.overheat null null;
         ShdrConditionFaultIf p+`_alm_travel` data.alarms.overtravel null null;
         ShdrConditionFaultIf p+`_alm_servo` data.alarms.servo null null;
-        axis_letter = string.slice observation.marker[1].name 0 1;
-        is_index = array.contains [`A`,`B`,`C`] axis_letter;
-        if is_index; ShdrEvent p+`_rotary` `INDEX`; end;
       l99.driver.fanuc.veneers.SpindleData, fanuc: >-
+        ## get path number and axis name ##
         p = device+`_p`+observation.marker[0].number+`_`+observation.marker[1].name;
+
+        ## samples ##
         ShdrSample p+`_load` data.load;
         ShdrSample p+`_temp` data.temperature;
         ShdrSample p+`_power` data.power;
         ShdrSample p+`_speed` data.speed;
+
+        ## events ##
         ShdrEventIf p+`_state` (data.speed > 0) `TRAVEL` `STOPPED`;
         ShdrEvent p+`_rotary` `SPINDLE`;
+
+        ## conditions ##
         ShdrConditionFaultIf p+`_alm_lnk` (! data.status_lnk) null null;
         ShdrConditionSeverity p+`_alm_amp` (data.error > 0) (data.warning > 0) (data.error == 0 && data.warning == 0);
 

@@ -65,7 +65,7 @@ public class AlarmsSeriesStateful : AlarmsSeries
                     newState.time_elapsed = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - state.time_triggered;
                     
                     // alarm was removed from NC
-                    if (!currentAlarmList.Exists(alm => state.id == $"{alm.type}{alm.number:D4}"))
+                    if (!currentAlarmList.Exists(alm => state.id == alm.id))
                     {
                         newState.time_cleared = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
                         newState.is_triggered = false;
@@ -78,15 +78,14 @@ public class AlarmsSeriesStateful : AlarmsSeries
             // iterate NC alarms
             foreach (var alarm in currentAlarmList)
             {
-                var id = $"{alarm.type}{alarm.number:D4}";
-                var state = currentStatesList.FirstOrDefault(state => state.id == id, null);
+                var state = currentStatesList.FirstOrDefault(state => state.id == alarm.id, null);
                 
                 // new trigger
                 if (state == null)
                 {
                     dynamic newState = new ExpandoObject();
                     
-                    newState.id = id;
+                    newState.id = alarm.id;
                     newState.time_triggered = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
                     newState.time_cleared = 0;
                     newState.time_elapsed = 0;

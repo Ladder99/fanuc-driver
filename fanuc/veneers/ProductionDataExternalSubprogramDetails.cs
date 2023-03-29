@@ -89,39 +89,6 @@ public class ProductionDataExternalSubprogramDetails : Veneer
             currentValue.timers.cycle_time_ms = nativeInputs[4]!.response.cnc_rdparam.param.data.ldata * 60000 +
                                                 nativeInputs[5]!.response.cnc_rdparam.param.data.ldata;
             
-            /*
-            var currentValue = new
-            {
-                program = new
-                {
-                    current = new
-                    {
-                        name = $"O{nativeInputs[0].response.cnc_rdprgnum.prgnum.data}",
-                        number = nativeInputs[0].response.cnc_rdprgnum.prgnum.data,
-                        block_count = _lineCount,
-                        blocks = extractionParameters["lines"]["show"] ? _lines : new List<string>(),
-                        extractions = _properties
-                    },
-                    selected = new
-                    {
-                        name = $"O{nativeInputs[0].response.cnc_rdprgnum.prgnum.mdata}",
-                        number = nativeInputs[0].response.cnc_rdprgnum.prgnum.mdata
-                    }
-                },
-                pieces = new
-                {
-                    produced = nativeInputs[1]!.response.cnc_rdparam.param.data.ldata,
-                    produced_life = nativeInputs[2]!.response.cnc_rdparam.param.data.ldata,
-                    remaining = nativeInputs[3]!.response.cnc_rdparam.param.data.ldata
-                },
-                timers = new
-                {
-                    cycle_time_ms = nativeInputs[4]!.response.cnc_rdparam.param.data.ldata * 60000 +
-                                    nativeInputs[5]!.response.cnc_rdparam.param.data.ldata
-                }
-            };
-            */
-            
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 
             if (((object)currentValue).IsDifferentString((object) LastChangedValue))

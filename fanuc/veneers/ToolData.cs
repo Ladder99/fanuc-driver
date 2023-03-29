@@ -29,14 +29,6 @@ public class ToolData : Veneer
             currentValue.tool = tool;
             currentValue.group = group;
             
-            /*
-            var currentValue = new
-            {
-                tool,
-                group
-            };
-            */
-            
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 
             if (Extensions.IsDifferentExpando(currentValue, LastChangedValue))

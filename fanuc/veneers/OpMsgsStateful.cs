@@ -55,7 +55,7 @@ public class OpMsgsStateful : OpMsgs
                     newState.time_elapsed = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - state.time_triggered;
                     
                     // alarm was removed from NC
-                    if (!currentMessageList.Exists(msg => state.id == $"{msg.number:D4}"))
+                    if (!currentMessageList.Exists(msg => state.id == msg.id))
                     {
                         newState.time_cleared = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
                         newState.is_triggered = false;
@@ -68,15 +68,14 @@ public class OpMsgsStateful : OpMsgs
             // iterate NC alarms
             foreach (var msg in currentMessageList)
             {
-                var id = $"{msg.number:D4}";
-                var state = currentStatesList.FirstOrDefault(state => state.id == id, null);
+                var state = currentStatesList.FirstOrDefault(state => state.id == msg.id, null);
                 
                 // new trigger
                 if (state == null)
                 {
                     dynamic newState = new ExpandoObject();
                     
-                    newState.id = id;
+                    newState.id = msg.id;
                     newState.time_triggered = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
                     newState.time_cleared = 0;
                     newState.time_elapsed = 0;

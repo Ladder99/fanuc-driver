@@ -34,13 +34,6 @@ public class OpMsgs : Veneer
             dynamic currentValue = new ExpandoObject();
             currentValue.messages = currentMessageList;
             
-            /*
-            var currentValue = new
-            {
-                messages = currentMessageList
-            };
-            */
-
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 
             if (((object)currentValue).IsDifferentString((object) LastChangedValue))
@@ -70,7 +63,9 @@ public class OpMsgs : Veneer
                     path,
                     msg.type,
                     number = msg.datano,
-                    message = ((string) msg.data).AsAscii()
+                    message = ((string) msg.data).AsAscii(),
+                    id = $"MSG{msg.datano:D4}",
+                    is_triggered = true
                 });
         }
 

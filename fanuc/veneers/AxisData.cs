@@ -9,9 +9,6 @@ public class AxisData : Veneer
     public AxisData(Veneers veneers, string name = "", bool isCompound = false, bool isInternal = false) : base(veneers,
         name, isCompound, isInternal)
     {
-        LastChangedValue = new
-        {
-        };
     }
 
     protected override async Task<dynamic> AnyAsync(dynamic[] nativeInputs, dynamic[] additionalInputs)
@@ -48,7 +45,7 @@ public class AxisData : Veneer
             if (obsAlarms != null)
             {
                 var axisAlarms = obsAlarms
-                    .Where(a => a.axis_code == currentAxis);
+                    .Where(a => a.axis_code == currentAxis && a.is_triggered);
 
                 // ReSharper disable once PossibleMultipleEnumeration
                 overTravel = axisAlarms.Any(a => a.type == "OT");
@@ -85,38 +82,6 @@ public class AxisData : Veneer
             currentValue.position.relative = axisDynamic.pos.relative / Math.Pow(10.0, figures[currentAxis - 1]);
             currentValue.position.distance = axisDynamic.pos.distance / Math.Pow(10.0, figures[currentAxis - 1]);
             currentValue.motion = motion;
-            
-            /*
-            var currentValue = new
-            {
-                number = currentAxis,
-                name = axisName,
-                feed = axisDynamic.actf,
-                feed_eu = "mm/min",
-                load = loadValue.data / Math.Pow(10.0, loadValue.dec),
-                load_eu = "percent",
-                servo_temp = servoTemp!.response.cnc_diagnoss.diag.cdata,
-                servo_temp_eu = "celsius",
-                coder_temp = coderTemp!.response.cnc_diagnoss.diag.cdata,
-                coder_temp_eu = "celsius",
-                power = power!.response.cnc_diagnoss.diag.ldata,
-                power_eu = "watt",
-                alarms = new
-                {
-                    overtravel = overTravel,
-                    overheat,
-                    servo
-                },
-                position = new
-                {
-                    absolute = axisDynamic.pos.absolute / Math.Pow(10.0, figures[currentAxis - 1]),
-                    machine = axisDynamic.pos.machine / Math.Pow(10.0, figures[currentAxis - 1]),
-                    relative = axisDynamic.pos.relative / Math.Pow(10.0, figures[currentAxis - 1]),
-                    distance = axisDynamic.pos.distance / Math.Pow(10.0, figures[currentAxis - 1])
-                },
-                motion
-            };
-            */
             
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 

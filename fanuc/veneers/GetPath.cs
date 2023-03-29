@@ -19,14 +19,6 @@ public class GetPath : Veneer
             currentValue.path_no = nativeInputs[0].response.cnc_getpath.path_no;
             currentValue.maxpath_no = nativeInputs[0].response.cnc_getpath.maxpath_no;
             
-            /*
-            var currentValue = new
-            {
-                nativeInputs[0].response.cnc_getpath.path_no,
-                nativeInputs[0].response.cnc_getpath.maxpath_no
-            };
-            */
-
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 
             if (Extensions.IsDifferentExpando(currentValue, LastChangedValue))

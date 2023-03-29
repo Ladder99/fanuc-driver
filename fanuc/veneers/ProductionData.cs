@@ -85,48 +85,6 @@ public class ProductionData : Veneer
             currentValue.timers.cycle_time_ms = nativeInputs[6]!.response.cnc_rdparam.param.data.ldata * 60000 +
                                                 nativeInputs[7]!.response.cnc_rdparam.param.data.ldata;
             
-            /*
-            var currentValue = new
-            {
-                program = new
-                {
-                    executing = new
-                    {
-                        name = executing_program,
-                        path = executing_program_2,
-                        sequence = executing_sequence
-                    },
-                    current = new
-                    {
-                        name = $"O{nativeInputs[0].response.cnc_rdprgnum.prgnum.data}",
-                        number = nativeInputs[0].response.cnc_rdprgnum.prgnum.data,
-                        size_b = nativeInputs[1]!.response.cnc_rdprogdir3.buf.dir1.length,
-                        nativeInputs[1]!.response.cnc_rdprogdir3.buf.dir1.comment,
-                        modified = modifiedCurrent
-                    },
-                    selected = new
-                    {
-                        name = $"O{nativeInputs[0].response.cnc_rdprgnum.prgnum.mdata}",
-                        number = nativeInputs[0].response.cnc_rdprgnum.prgnum.mdata,
-                        size_b = nativeInputs[2]!.response.cnc_rdprogdir3.buf.dir1.length,
-                        nativeInputs[2]!.response.cnc_rdprogdir3.buf.dir1.comment,
-                        modified = modifiedSelected
-                    }
-                },
-                pieces = new
-                {
-                    produced = nativeInputs[3]!.response.cnc_rdparam.param.data.ldata,
-                    produced_life = nativeInputs[4]!.response.cnc_rdparam.param.data.ldata,
-                    remaining = nativeInputs[5]!.response.cnc_rdparam.param.data.ldata
-                },
-                timers = new
-                {
-                    cycle_time_ms = nativeInputs[6]!.response.cnc_rdparam.param.data.ldata * 60000 +
-                                    nativeInputs[7]!.response.cnc_rdparam.param.data.ldata
-                }
-            };
-            */
-
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 
             if (((object)currentValue).IsDifferentString((object) LastChangedValue))

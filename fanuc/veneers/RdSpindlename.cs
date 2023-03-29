@@ -32,13 +32,6 @@ public class RdSpindlename : Veneer
             dynamic currentValue = new ExpandoObject();
             currentValue.spindles = tempValue;
             
-            /*
-            var currentValue = new
-            {
-                spindles = tempValue
-            };
-            */
-            
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 
             if (((object)currentValue).IsDifferentString((object) LastChangedValue))

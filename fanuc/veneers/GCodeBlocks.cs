@@ -32,13 +32,6 @@ public class GCodeBlocks : Veneer
             dynamic currentValue = new ExpandoObject();
             currentValue.blocks = _blocks.ExecutedBlocks;
             
-            /*
-            var currentValue = new
-            {
-                blocks = _blocks.ExecutedBlocks
-            };
-            */
-
             //Console.WriteLine(_blocks.ToString(showMissedBlocks: true));
             /*
             if (currentValue.blocks.Count() > 0)

@@ -161,27 +161,6 @@ public class SysInfo : Veneer
             currentValue.version = string.Join("", nativeInputs[0].response.cnc_sysinfo.sysinfo.version);
             currentValue.axes = axes;
             
-            /*
-            var currentValue = new
-            {
-                focas_support = focasSupport,
-                loader_control = loaderControl,
-                i_series = iSeries,
-                compound_machining = compoundMachining,
-                transfer_line = transferLine,
-                model,
-                model_code = infoBytes[0],
-                nativeInputs[0].response.cnc_sysinfo.sysinfo.max_axis,
-                cnc_type = cncType,
-                cnc_type_code = cncTypeCode.Trim(),
-                mt_type = mtType,
-                mt_type_code = mtTypeCode.Trim(),
-                series = string.Join("", nativeInputs[0].response.cnc_sysinfo.sysinfo.series),
-                version = string.Join("", nativeInputs[0].response.cnc_sysinfo.sysinfo.version),
-                axes
-            };
-            */
-
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 
             if (Extensions.IsDifferentExpando(currentValue, LastChangedValue))

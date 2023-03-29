@@ -1,4 +1,5 @@
-﻿using l99.driver.@base;
+﻿using System.Reflection;
+using l99.driver.@base;
 using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Exceptions;
