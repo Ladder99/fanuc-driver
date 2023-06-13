@@ -72,7 +72,7 @@ machines:
   ##
   - id: f_sim_mqtt_long
     ## enabled: enable or disable collection for this machine
-    enabled: !!bool false
+    enabled: !!bool true
     ## type: machine type
     type: l99.driver.fanuc.FanucMachine, fanuc
     ## strategy: strategy type
@@ -89,7 +89,7 @@ machines:
       sweep_ms: !!int 1000
       net:
         ## ip: machine network address
-        ip: 10.1.10.211
+        ip: 192.168.111.12
         ## port: focas port
         port: !!int 8193
         ## timeout_s: focas api timeout, must be above zero
@@ -204,7 +204,7 @@ machines:
   ## mtconnect example
   ##
   - id: f_sim_mtc_long
-    enabled: !!bool true
+    enabled: !!bool false
     type: l99.driver.fanuc.FanucMachine, fanuc
     strategy: l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc
     handler: l99.driver.fanuc.handlers.FanucOne, fanuc
@@ -212,7 +212,7 @@ machines:
     l99.driver.fanuc.FanucMachine, fanuc:
       sweep_ms: !!int 1000
       net:
-        ip: 10.1.10.211
+        ip: 192.168.111.12
         port: !!int 8193
         timeout_s: !!int 3
     l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
@@ -267,7 +267,7 @@ machines:
     l99.driver.fanuc.FanucMachine, fanuc:
       sweep_ms: !!int 1000
       net:
-        ip: 10.1.10.211
+        ip: 192.168.111.12
         port: !!int 8193
         timeout_s: !!int 3
     l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
@@ -310,7 +310,7 @@ machines:
     l99.driver.fanuc.FanucMachine, fanuc:
       sweep_ms: !!int 1000
       net:
-        ip: 10.1.10.211
+        ip: 192.168.111.12
         port: !!int 8193
         timeout_s: !!int 3
     l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:

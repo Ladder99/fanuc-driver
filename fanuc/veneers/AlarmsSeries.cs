@@ -140,7 +140,8 @@ public class AlarmsSeries : Veneer
             List<dynamic> currentAlarmList = GetAlarmListFromAlarms(currentAlarmWrapper, path, axis, obsFocasSupport);
 
             dynamic currentValue = new ExpandoObject();
-            currentValue.alarms = currentAlarmList;
+            // convert state list to dictionary
+            currentValue.alarms = currentAlarmList.ToDictionary(x => x.id, x => x);
             
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 

@@ -32,7 +32,7 @@ public class OpMsgs : Veneer
             List<dynamic> currentMessageList = GetMessageListFromMessages(currentInput, path);
 
             dynamic currentValue = new ExpandoObject();
-            currentValue.messages = currentMessageList;
+            currentValue.messages = currentMessageList.ToDictionary(x => x.id, x => x);;
             
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 

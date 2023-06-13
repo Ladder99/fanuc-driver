@@ -25,18 +25,15 @@ public class AxisData : Veneer
             var coderTemp = nativeInputs[5];
             var power = nativeInputs[6];
             var obsFocasSupport = additionalInputs[1];
-            IEnumerable<dynamic> obsAlarms = additionalInputs[2]!;
+            Dictionary<dynamic, dynamic> obsAlarms = additionalInputs[2]!;
             var prevAxisDynamic = nativeInputs[7];
 
             var loadFields = axesLoads!.response.cnc_rdsvmeter.loadmeter.GetType().GetFields();
-            var loadValue = loadFields[currentAxis - 1]
-                .GetValue(axesLoads.response.cnc_rdsvmeter.loadmeter);
+            var loadValue = loadFields[currentAxis - 1].GetValue(axesLoads.response.cnc_rdsvmeter.loadmeter);
 
             var axesFields = axesNames!.response.cnc_rdaxisname.axisname.GetType().GetFields();
-            var axisValue = axesFields[currentAxis - 1]
-                .GetValue(axesNames.response.cnc_rdaxisname.axisname);
-            var axisName = ((char) axisValue.name).AsAscii() +
-                           ((char) axisValue.suff).AsAscii();
+            var axisValue = axesFields[currentAxis - 1].GetValue(axesNames.response.cnc_rdaxisname.axisname);
+            var axisName = ((char) axisValue.name).AsAscii() + ((char) axisValue.suff).AsAscii();
 
             var overTravel = false;
             var overheat = false;
@@ -45,14 +42,14 @@ public class AxisData : Veneer
             if (obsAlarms != null)
             {
                 var axisAlarms = obsAlarms
-                    .Where(a => a.axis_code == currentAxis && a.is_triggered);
+                    .Where(a => a.Value.axis_code == currentAxis && a.Value.is_triggered);
 
                 // ReSharper disable once PossibleMultipleEnumeration
-                overTravel = axisAlarms.Any(a => a.type == "OT");
+                overTravel = axisAlarms.Any(a => a.Value.type == "OT");
                 // ReSharper disable once PossibleMultipleEnumeration
-                overheat = axisAlarms.Any(a => a.type == "OH");
+                overheat = axisAlarms.Any(a => a.Value.type == "OH");
                 // ReSharper disable once PossibleMultipleEnumeration
-                servo = axisAlarms.Any(a => a.type == "SV");
+                servo = axisAlarms.Any(a => a.Value.type == "SV");
             }
 
             var motion = prevAxisDynamic != null && prevAxisDynamic!.success == true

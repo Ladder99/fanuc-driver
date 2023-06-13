@@ -29,11 +29,11 @@ public class OpMsgsStateful : OpMsgs
             // message list from NC
             List<dynamic> currentMessageList = GetMessageListFromMessages(currentInput, path);
             // message states from previous sweep
-            List<dynamic> previousStatesList = LastChangedValue == null ? new List<dynamic>() : LastChangedValue.messages;
+            Dictionary<dynamic, dynamic> previousStatesDict = LastChangedValue == null ? new Dictionary<dynamic, dynamic>() : LastChangedValue.messages;
             // message states for this sweep
-            List<dynamic> currentStatesList = new List<dynamic>();
+            Dictionary<dynamic, dynamic> currentStatesDict = new Dictionary<dynamic, dynamic>();
             
-            foreach (var state in previousStatesList)
+            foreach (var state in previousStatesDict.Values)
             {
                 dynamic newState = new ExpandoObject();
                 
@@ -62,13 +62,13 @@ public class OpMsgsStateful : OpMsgs
                     }
                 }
                 
-                currentStatesList.Add(newState);
+                currentStatesDict.Add(newState.id, newState);
             }
             
             // iterate NC alarms
             foreach (var msg in currentMessageList)
             {
-                var state = currentStatesList.FirstOrDefault(state => state.id == msg.id, null);
+                var state = currentStatesDict.ContainsKey(msg.id) ? currentStatesDict[msg.id] : null;
                 
                 // new trigger
                 if (state == null)
@@ -86,7 +86,8 @@ public class OpMsgsStateful : OpMsgs
                     newState.type = msg.type;
                     newState.number = msg.number;
                     newState.message = msg.message;
-                    currentStatesList.Add(newState);
+                    
+                    currentStatesDict.Add(newState.id, newState);
                 }
                 // re-trigger
                 else if (state.is_triggered == false)
@@ -101,7 +102,7 @@ public class OpMsgsStateful : OpMsgs
             
             var currentValue = new
             {
-                messages = currentStatesList
+                messages = currentStatesDict
             };
 
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);

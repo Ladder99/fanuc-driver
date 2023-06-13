@@ -1,4 +1,5 @@
 ﻿using System.Dynamic;
+using System.Linq;
 using l99.driver.@base;
 
 // ReSharper disable once CheckNamespace
@@ -35,15 +36,15 @@ public class AlarmsSeriesStateful : AlarmsSeries
             // alarm list from NC
             List<dynamic> currentAlarmList = GetAlarmListFromAlarms(currentAlarmWrapper, path, axis, obsFocasSupport);
             // alarm states from previous sweep
-            List<dynamic> previousStatesList = LastChangedValue == null ? new List<dynamic>() : LastChangedValue.alarms;
-            // alarm states for this sweep
-            List<dynamic> currentStatesList = new List<dynamic>();
+            Dictionary<dynamic, dynamic> previousStatesDict = LastChangedValue == null ? new Dictionary<dynamic, dynamic>() : LastArrivedValue.alarms;
+            // alarm states dict for this sweep
+            Dictionary<dynamic, dynamic> currentStatesDict = new Dictionary<dynamic, dynamic>();
             
             // update alarm states
-            foreach (var state in previousStatesList)
+            foreach (var state in previousStatesDict.Values)
             {
                 dynamic newState = new ExpandoObject();
-                
+
                 newState.id = state.id;
                 newState.time_triggered = state.time_triggered;
                 newState.time_cleared = state.time_cleared;
@@ -58,7 +59,8 @@ public class AlarmsSeriesStateful : AlarmsSeries
                 newState.message = state.message;
                 newState.type_code = state.type_code;
                 newState.type = state.type;
-                
+
+
                 // increment elapsed time
                 if (state.is_triggered == true)
                 {
@@ -72,13 +74,13 @@ public class AlarmsSeriesStateful : AlarmsSeries
                     }
                 }
                 
-                currentStatesList.Add(newState);
+                currentStatesDict.Add(newState.id, newState);
             }
             
             // iterate NC alarms
             foreach (var alarm in currentAlarmList)
             {
-                var state = currentStatesList.FirstOrDefault(state => state.id == alarm.id, null);
+                var state = currentStatesDict.ContainsKey(alarm.id) ? currentStatesDict[alarm.id] : null;
                 
                 // new trigger
                 if (state == null)
@@ -99,7 +101,8 @@ public class AlarmsSeriesStateful : AlarmsSeries
                     newState.message = alarm.message;
                     newState.type_code = alarm.type_code;
                     newState.type = alarm.type;
-                    currentStatesList.Add(newState);
+                    
+                    currentStatesDict.Add(newState.id, newState);
                 }
                 // re-trigger
                 else if (state.is_triggered == false)
@@ -111,11 +114,10 @@ public class AlarmsSeriesStateful : AlarmsSeries
                     state.trigger_count = state.trigger_count + 1;
                 }
             }
-            
-            var currentValue = new
-            {
-                alarms = currentStatesList
-            };
+
+            dynamic currentValue = new ExpandoObject();
+            // convert state list to dictionary
+            currentValue.alarms = currentStatesDict;
 
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 

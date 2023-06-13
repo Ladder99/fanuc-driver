@@ -37,13 +37,15 @@ public class AxisData : FanucMultiStrategyCollector
         var obs_alarms = Strategy.Get($"obs+alarms+{currentPath}");
 
         if (obs_alarms == null || obs_focas_support == null)
+        {
             if (!Configuration["warned"])
             {
                 Logger.Warn(
                     $"[{Strategy.Machine.Id}] Machine info and alarms observations are required to correctly evaluate axis data.");
                 Configuration["warned"] = true;
             }
-
+        }
+        
         // 200-206                  servo, coder status
 
         // 300                      servo position error

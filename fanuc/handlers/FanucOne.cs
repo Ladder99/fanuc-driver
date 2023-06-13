@@ -6,6 +6,10 @@ namespace l99.driver.fanuc.handlers;
 // ReSharper disable once UnusedType.Global
 public class FanucOne : Handler
 {
+
+    //get the time when the machine starts running
+    private DateTime _startTime = DateTime.Now;
+    
     public FanucOne(Machine machine) : base(machine)
     {
         if (!machine.Configuration.handler.ContainsKey("change_only"))
@@ -13,6 +17,8 @@ public class FanucOne : Handler
 
         if (!machine.Configuration.handler.ContainsKey("skip_internal"))
             machine.Configuration.handler.Add("skip_internal", true);
+
+        
     }
 
     protected override async Task<dynamic?> OnDataArrivalAsync(Veneers veneers, Veneer veneer, dynamic? beforeArrival)
@@ -110,7 +116,8 @@ public class FanucOne : Handler
                 data = new
                 {
                     online = machine.StrategySuccess,
-                    healthy = machine.StrategyHealthy
+                    healthy = machine.StrategyHealthy,
+                    uptime_ms = (DateTime.Now - _startTime).TotalMilliseconds
                 }
             }
         };
