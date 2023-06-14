@@ -231,34 +231,71 @@ public class SHDR : Transport
     {
         _globalScriptObject = new ScriptObject();
 
-        _globalScriptObject.Import("ToCLR", new Action<object>((o) =>
-        {
-            Console.WriteLine(o);
-        }));
+        _globalScriptObject.Import("ToCLR", 
+            new Action<object>((o) =>
+            {
+                Console.WriteLine(o);
+            }));
+        
+        _globalScriptObject.Import("ConvertToArray", 
+            new Func<object, object>((o) =>
+            {
+                var t = o.GetType();
+                var isDict = t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Dictionary<,>);
+
+                if (isDict)
+                {
+                    return (o as Dictionary<object, object>).Values.ToList();
+                }
+
+                return null;
+
+            }));
         
         _globalScriptObject.Import("machinePaths",
             // ReSharper disable once ConvertToLambdaExpression
-            new Func<object>(() => { return _model.structure.Keys.ToArray(); }));
+            new Func<object>(() =>
+            {
+                return _model.structure.Keys.ToArray();
+            }));
 
         _globalScriptObject.Import("machineAxisNamesForPath",
             // ReSharper disable once ConvertToLambdaExpression
-            new Func<object, object>(p => { return _model.structure[p.ToString()].Item1.ToArray(); }));
+            new Func<object, object>(p =>
+            {
+                return _model.structure[p.ToString()].Item1.ToArray();
+            }));
 
         _globalScriptObject.Import("machineSpindleNamesForPath",
             // ReSharper disable once ConvertToLambdaExpression
-            new Func<object, object>(p => { return _model.structure[p.ToString()].Item2.ToArray(); }));
+            new Func<object, object>(p =>
+            {
+                return _model.structure[p.ToString()].Item2.ToArray();
+            }));
 
         _globalScriptObject.Import("ShdrSample",
-            new Action<string, object>((k, v) => { CacheShdrDataItem(new ShdrDataItem(k, v)); }));
+            new Action<string, object>((k, v) =>
+            {
+                CacheShdrDataItem(new ShdrDataItem(k, v));
+            }));
 
         _globalScriptObject.Import("ShdrSampleUnavailable",
-            new Action<string>(k => { CacheShdrDataItem(new ShdrDataItem(k, "UNAVAILABLE")); }));
+            new Action<string>(k =>
+            {
+                CacheShdrDataItem(new ShdrDataItem(k, "UNAVAILABLE"));
+            }));
 
         _globalScriptObject.Import("ShdrMessage",
-            new Action<string, object>((k, v) => { CacheShdrMessage(new ShdrMessage(k, v.ToString())); }));
+            new Action<string, object>((k, v) =>
+            {
+                CacheShdrMessage(new ShdrMessage(k, v.ToString()));
+            }));
 
         _globalScriptObject.Import("ShdrEvent",
-            new Action<string, object>((k, v) => { CacheShdrDataItem(new ShdrDataItem(k, v)); }));
+            new Action<string, object>((k, v) =>
+            {
+                CacheShdrDataItem(new ShdrDataItem(k, v));
+            }));
 
         _globalScriptObject.Import("ShdrEventIf",
             new Action<string, object, object, object>((k, x, y, z) =>
@@ -268,7 +305,10 @@ public class SHDR : Transport
             }));
 
         _globalScriptObject.Import("ShdrEventUnavailable",
-            new Action<string>(k => { CacheShdrDataItem(new ShdrDataItem(k, "UNAVAILABLE")); }));
+            new Action<string>(k =>
+            {
+                CacheShdrDataItem(new ShdrDataItem(k, "UNAVAILABLE"));
+            }));
 
         _globalScriptObject.Import("ShdrConditionNormal",
             new Action<string, string, string>((key, nativeCode, text) =>

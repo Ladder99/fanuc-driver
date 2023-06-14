@@ -216,7 +216,7 @@ machines:
         port: !!int 8193
         timeout_s: !!int 3
     l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
-      stay_connected: !!bool false
+      stay_connected: !!bool true
       #exclusions:
       #  1: 
       #  2: [ X, S ]

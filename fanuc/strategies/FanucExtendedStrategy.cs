@@ -493,6 +493,9 @@ public class FanucExtendedStrategy : FanucStrategy
                 _currentInitSegment = SegmentEnum.Root;
                 _currentCollectSegment = SegmentEnum.Root;
 
+                // reset to first path, issue #92
+                await Set("path", await Platform.SetPathAsync(0));
+                
                 await Peel("paths",
                     new[]
                     {

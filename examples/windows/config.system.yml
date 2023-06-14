@@ -60,6 +60,7 @@ system:
         {{-}}path={{observation.marker[0].number}}
         block={{if (array.size data.blocks)==0}}-1{{else}}{{data.blocks[0].block_number}}{{end}},
         {{-}}line="{{array.join (array.map data.blocks `block_text`) `;`}}"
+      // TODO: convert dict to array
       l99.driver.fanuc.veneers.AlarmsSeries, fanuc: >-
         {{-for alarm in data.alarms-}}
         {{observation.name}},
@@ -70,6 +71,7 @@ system:
         {{-}}number={{alarm.number}},
         {{-}}message="{{alarm.message}}"{{'\n'}}
         {{~end}}
+      // TODO: convert dict to array
       l99.driver.fanuc.veneers.AlarmsSeriesStateful, fanuc: >-
         {{-for alarm in data.alarms-}}
         {{observation.name}},
@@ -81,6 +83,7 @@ system:
         {{-}}message="{{alarm.message}}"
         {{-}}triggered={{alarm.is_triggered}}{{'\n'}}
         {{~end}}
+      // TODO: convert dict to array
       l99.driver.fanuc.veneers.OpMsgs, fanuc: >-
         {{-for msg in data.messages-}}
         {{observation.name}},
@@ -90,6 +93,7 @@ system:
         {{-}}number={{msg.number}},
         {{-}}message="{{msg.message}}"{{'\n'}}
         {{~end}}
+      // TODO: convert dict to array
       l99.driver.fanuc.veneers.OpMsgsStateful, fanuc: >-
         {{-for msg in data.messages-}}
         {{observation.name}},
@@ -401,7 +405,11 @@ system:
         ## get path number ##
         p = device+`_p`+observation.marker[0].number;
 
-        if (array.size data.alarms) == 0;
+        ## variables ##
+        ## convert dict to array ##
+        alarms = ConvertToArray data.alarms;
+
+        if (array.size alarms) == 0;
           ## events ##
           ShdrMessage p+`_alarm` `UNAVAILABLE`;
 
@@ -415,13 +423,13 @@ system:
           ShdrConditionNormal p+`_alm_all` null null;
         else;
           ## variables ##
-          m = array.map data.alarms `message`;
-          t = array.uniq (array.map data.alarms `type`);
+          m = array.map alarms `message`;
+          t = array.uniq (array.map alarms `type`);
           f_comms = ((array.contains t `IO`)||(array.contains t `SR`));
           f_logic = ((array.contains t `SW`)||(array.contains t `PC`));
           f_motion = ((array.contains t `PS`)||(array.contains t `MC`)||(array.contains t `BG`));
           f_spindles = (array.contains t `SP`);
-          for alm in data.alarms;
+          for alm in alarms;
             if alm.axis_code == 0 && !array.contains [`IO`,`SR`,`SW`,`PC`,`PS`,`MC`,`BG`] alm.type;
               f_system = true;
             end;
@@ -440,7 +448,7 @@ system:
           ShdrConditionFaultIf p+`_alm_system` f_system null null;
           ShdrConditionFaultIf p+`_alm_axes` f_axes null null;
           ShdrConditionFaultIf p+`_alm_spindles` f_spindles null null;
-          ShdrConditionFaultIf p+`_alm_all` ((data.alarms | array.size) > 0) null null;
+          ShdrConditionFaultIf p+`_alm_all` ((alarms | array.size) > 0) null null;
         end;
       l99.driver.fanuc.veneers.AlarmsSeriesStateful, fanuc: >-
         ## get path number ##
@@ -449,17 +457,17 @@ system:
         ## functions ##
         ##   filter alarms of type ##
         func whereAlarmType (typeArray);
-          ret array.filter data.alarms @(do; ret array.contains typeArray $0.type; end);
+          ret array.filter alarms @(do; ret array.contains typeArray $0.type; end);
         end;
 
         ##   filter alarms of not type ##
         func whereAlarmNotType (typeArray);
-          ret array.filter data.alarms @(do; ret !array.contains typeArray $0.type; end);
+          ret array.filter alarms @(do; ret !array.contains typeArray $0.type; end);
         end;
 
         ##   filter alarms that have an axis ##
         func whereAlarmHasAxis;
-          ret array.filter data.alarms @(do; ret $0.axis_code > 0; end);
+          ret array.filter alarms @(do; ret $0.axis_code > 0; end);
         end;
 
         ##   process alarms ##
@@ -474,7 +482,9 @@ system:
         end;
 
         ## variables ##
-        triggeredObjects = array.filter data.alarms @(do; ret $0.is_triggered; end);
+        ## convert dict to array ##
+        alarms = ConvertToArray data.alarms;
+        triggeredObjects = array.filter alarms @(do; ret $0.is_triggered; end);
         triggeredMessages = array.map triggeredObjects `message`;
 
         ## events ##
@@ -496,9 +506,13 @@ system:
         ## get path number ##
         p = device+`_p`+observation.marker[0].number;
 
+        ## variables ##
+        ## convert dict to array ##
+        messages = ConvertToArray data.messages;
+
         ## events ##
-        if (array.size data.messages) > 0;
-          messages = array.map data.messages `message`;
+        if (array.size messages) > 0;
+          messages = array.map messages `message`;
           ShdrMessage p+`_message` (array.join messages `;`);
         else;
           ShdrMessage p+`_message` `UNAVAILABLE`;
@@ -507,12 +521,16 @@ system:
         ## get path number ##
         p = device+`_p`+observation.marker[0].number;
         
-        if (array.size data.messages) == 0;
+        ## variables ##
+        ## convert dict to array ##
+        messages = ConvertToArray data.messages;
+
+        if (array.size messages) == 0;
           ## events ##
           ShdrMessage p+`_message` `UNAVAILABLE`;
         else;
           ## variables ##
-          triggeredObjects = array.filter data.messages @(do; ret $0.is_triggered; end);
+          triggeredObjects = array.filter messages @(do; ret $0.is_triggered; end);
           triggeredMessages = array.map triggeredObjects `message`;
 
           ## events ##

@@ -89,7 +89,7 @@ machines:
       sweep_ms: !!int 1000
       net:
         ## ip: machine network address
-        ip: 10.1.10.211
+        ip: 192.168.111.12
         ## port: focas port
         port: !!int 8193
         ## timeout_s: focas api timeout, must be above zero
@@ -212,11 +212,11 @@ machines:
     l99.driver.fanuc.FanucMachine, fanuc:
       sweep_ms: !!int 1000
       net:
-        ip: 10.1.10.211
+        ip: 192.168.111.12
         port: !!int 8193
         timeout_s: !!int 3
     l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
-      stay_connected: !!bool false
+      stay_connected: !!bool true
       #exclusions:
       #  1: 
       #  2: [ X, S ]
@@ -267,7 +267,7 @@ machines:
     l99.driver.fanuc.FanucMachine, fanuc:
       sweep_ms: !!int 1000
       net:
-        ip: 10.1.10.211
+        ip: 192.168.111.12
         port: !!int 8193
         timeout_s: !!int 3
     l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
@@ -310,7 +310,7 @@ machines:
     l99.driver.fanuc.FanucMachine, fanuc:
       sweep_ms: !!int 1000
       net:
-        ip: 10.1.10.211
+        ip: 192.168.111.12
         port: !!int 8193
         timeout_s: !!int 3
     l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc:
