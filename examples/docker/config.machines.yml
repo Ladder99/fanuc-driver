@@ -133,6 +133,8 @@ machines:
     ## transport instance attributes
     ##
     l99.driver.fanuc.transports.MQTT, fanuc:
+      ## publish_model: send JSON model
+      publish_model: !!bool false
       topic: fanuc/{{machine.Id}}/{{veneer.Name}}{{if veneer.SliceKey}}/{{veneer.SliceKey}}{{end}}
       net:
         ## type: mqtt connection type, tcp or ws

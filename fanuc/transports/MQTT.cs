@@ -23,6 +23,9 @@ public class MQTT : Transport
 
     public MQTT(Machine machine) : base(machine)
     {
+        if (!Machine.Configuration.transport.ContainsKey("publish_model"))
+            Machine.Configuration.transport.Add("publish_model", true);
+        
         if (!Machine.Configuration.transport.ContainsKey("anonymous"))
             Machine.Configuration.transport.Add("anonymous", true);
         
@@ -206,6 +209,9 @@ public class MQTT : Transport
 
     public override async Task OnGenerateIntermediateModelAsync(dynamic model)
     {
-        await SendAsync("INT_MODEL", null, model.model);
+        if (Machine.Configuration.transport["publish_model"])
+        {
+            await SendAsync("INT_MODEL", null, model.model);
+        }
     }
 }
