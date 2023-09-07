@@ -125,6 +125,8 @@ machines:
     ## handler instance attributes
     ##
     l99.driver.fanuc.handlers.FanucOne, fanuc:
+      ## iso8601: format date instead of milliseconds since 1970
+      iso8601: !!bool true
       ## change_only: send data only when it changes
       change_only: !!bool true
       ## skip_interval: send internal data, useful for troubleshooting
@@ -234,6 +236,7 @@ machines:
       #- l99.driver.fanuc.collectors.AxisData, fanuc
       #- l99.driver.fanuc.collectors.SpindleData, fanuc
     l99.driver.fanuc.handlers.FanucOne, fanuc:
+      iso8601: !!bool true
       change_only: !!bool false
       skip_internal: !!bool true
     l99.driver.fanuc.transports.SHDR, fanuc:

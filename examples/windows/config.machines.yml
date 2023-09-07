@@ -72,7 +72,7 @@ machines:
   ##
   - id: f_sim_mqtt_long
     ## enabled: enable or disable collection for this machine
-    enabled: !!bool false
+    enabled: !!bool true
     ## type: machine type
     type: l99.driver.fanuc.FanucMachine, fanuc
     ## strategy: strategy type
@@ -128,6 +128,8 @@ machines:
     ## handler instance attributes
     ##
     l99.driver.fanuc.handlers.FanucOne, fanuc:
+      ## iso8601: format date instead of milliseconds since 1970
+      iso8601: !!bool false
       ## change_only: send data only when it changes
       change_only: !!bool true
       ## skip_interval: send internal data, useful for troubleshooting
@@ -275,7 +277,7 @@ machines:
   ## mtconnect example
   ##
   - id: f_sim_mtc_long
-    enabled: !!bool true
+    enabled: !!bool false
     type: l99.driver.fanuc.FanucMachine, fanuc
     strategy: l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc
     handler: l99.driver.fanuc.handlers.FanucOne, fanuc
@@ -305,6 +307,7 @@ machines:
       - l99.driver.fanuc.collectors.Macro, fanuc
       - l99.driver.fanuc.collectors.Pmc, fanuc
     l99.driver.fanuc.handlers.FanucOne, fanuc:
+      iso8601: !!bool true
       change_only: !!bool false
       skip_internal: !!bool true
     l99.driver.fanuc.transports.SHDR, fanuc:

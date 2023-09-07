@@ -12,13 +12,14 @@ public class FanucOne : Handler
     
     public FanucOne(Machine machine) : base(machine)
     {
+        if (!machine.Configuration.handler.ContainsKey("iso8601"))
+            machine.Configuration.handler.Add("iso8601", false);
+        
         if (!machine.Configuration.handler.ContainsKey("change_only"))
             machine.Configuration.handler.Add("change_only", true);
 
         if (!machine.Configuration.handler.ContainsKey("skip_internal"))
             machine.Configuration.handler.Add("skip_internal", true);
-
-        
     }
 
     protected override async Task<dynamic?> OnDataArrivalAsync(Veneers veneers, Veneer veneer, dynamic? beforeArrival)
@@ -39,11 +40,13 @@ public class FanucOne : Handler
                 return null;
         }
 
+        dynamic ts = Machine.Configuration.handler["iso8601"] == true ? DateTime.UtcNow.ToString("o") : new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
+        
         dynamic payload = new
         {
             observation = new
             {
-                time = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds(),
+                time = ts,
                 machine = veneers.Machine.Id,
                 name = veneer.Name,
                 marker = veneer.Marker ?? new dynamic[]{}
@@ -74,11 +77,13 @@ public class FanucOne : Handler
         if (Machine.Configuration.handler["skip_internal"] == true && veneer.IsInternal)
             return null;
 
+        dynamic ts = Machine.Configuration.handler["iso8601"] == true ? DateTime.UtcNow.ToString("o") : new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
+        
         dynamic payload = new
         {
             observation = new
             {
-                time = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds(),
+                time = ts,
                 machine = veneers.Machine.Id,
                 name = veneer.Name,
                 marker = veneer.Marker ?? new dynamic[]{}
@@ -103,11 +108,13 @@ public class FanucOne : Handler
 
     protected override async Task<dynamic?> OnStrategySweepCompleteAsync(Machine machine, dynamic? beforeSweepComplete)
     {
+        dynamic ts = Machine.Configuration.handler["iso8601"] == true ? DateTime.UtcNow.ToString("o") : new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds();
+        
         dynamic payload = new
         {
             observation = new
             {
-                time = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeMilliseconds(),
+                time = ts,
                 machine = machine.Id,
                 name = "sweep"
             },
