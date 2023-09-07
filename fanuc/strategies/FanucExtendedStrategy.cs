@@ -75,6 +75,13 @@ public class FanucExtendedStrategy : FanucStrategy
         return Get($"{propertyBagKey}+{GetCurrentPropertyBagKey()}");
     }
 
+    public IEnumerable<dynamic?> GetKeyedStartsWith(string propertyBagKeyPartial)
+    {
+        return _propertyBag
+            .Where(kvp => kvp.Key.StartsWith(propertyBagKeyPartial) && kvp.Key.EndsWith($"+{GetCurrentPropertyBagKey()}"))
+            .Select(kvp => kvp.Value);
+    }
+
     private bool Has(string propertyBagKey)
     {
         return _propertyBag.ContainsKey(propertyBagKey);

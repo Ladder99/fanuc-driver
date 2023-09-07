@@ -60,7 +60,7 @@ system:
         {{-}}path={{observation.marker[0].number}}
         block={{if (array.size data.blocks)==0}}-1{{else}}{{data.blocks[0].block_number}}{{end}},
         {{-}}line="{{array.join (array.map data.blocks `block_text`) `;`}}"
-      // TODO: convert dict to array
+      # TODO: convert dict to array
       l99.driver.fanuc.veneers.AlarmsSeries, fanuc: >-
         {{-for alarm in data.alarms-}}
         {{observation.name}},
@@ -71,7 +71,7 @@ system:
         {{-}}number={{alarm.number}},
         {{-}}message="{{alarm.message}}"{{'\n'}}
         {{~end}}
-      // TODO: convert dict to array
+      # TODO: convert dict to array
       l99.driver.fanuc.veneers.AlarmsSeriesStateful, fanuc: >-
         {{-for alarm in data.alarms-}}
         {{observation.name}},
@@ -83,7 +83,7 @@ system:
         {{-}}message="{{alarm.message}}"
         {{-}}triggered={{alarm.is_triggered}}{{'\n'}}
         {{~end}}
-      // TODO: convert dict to array
+      # TODO: convert dict to array
       l99.driver.fanuc.veneers.OpMsgs, fanuc: >-
         {{-for msg in data.messages-}}
         {{observation.name}},
@@ -93,7 +93,7 @@ system:
         {{-}}number={{msg.number}},
         {{-}}message="{{msg.message}}"{{'\n'}}
         {{~end}}
-      // TODO: convert dict to array
+      # TODO: convert dict to array
       l99.driver.fanuc.veneers.OpMsgsStateful, fanuc: >-
         {{-for msg in data.messages-}}
         {{observation.name}},
@@ -304,15 +304,15 @@ system:
       SWEEP_END: >-
         ## what is available in this script ##
         ## machine: FanucMachine instance ##
-        ## ToCLR machine; ##
+        ## ToDebug machine; ##
         ## device: device name from configuration ##
-        ## ToCLR device; ##
+        ## ToDebug device; ##
         ## adapter: AdapterInfo instance ##
-        ## ToCLR adapter; ##
+        ## ToDebug adapter; ##
         ## observation: observation meta  ##
-        ## ToCLR observation; ##
+        ## ToDebug observation; ##
         ## state: observation data ##
-        ## ToCLR data; ##
+        ## ToDebug data; ##
 
         ## events ##
         ShdrEventIf device+`_availability` data.online `AVAILABLE` `UNAVAILABLE`;
@@ -407,7 +407,7 @@ system:
 
         ## variables ##
         ## convert dict to array ##
-        alarms = ConvertToArray data.alarms;
+        alarms = ToArray data.alarms;
 
         if (array.size alarms) == 0;
           ## events ##
@@ -483,7 +483,7 @@ system:
 
         ## variables ##
         ## convert dict to array ##
-        alarms = ConvertToArray data.alarms;
+        alarms = ToArray data.alarms;
         triggeredObjects = array.filter alarms @(do; ret $0.is_triggered; end);
         triggeredMessages = array.map triggeredObjects `message`;
 
@@ -508,7 +508,7 @@ system:
 
         ## variables ##
         ## convert dict to array ##
-        messages = ConvertToArray data.messages;
+        messages = ToArray data.messages;
 
         ## events ##
         if (array.size messages) > 0;
@@ -523,7 +523,7 @@ system:
         
         ## variables ##
         ## convert dict to array ##
-        messages = ConvertToArray data.messages;
+        messages = ToArray data.messages;
 
         if (array.size messages) == 0;
           ## events ##
@@ -584,7 +584,14 @@ system:
         ## conditions ##
         ShdrConditionFaultIf p+`_alm_lnk` (! data.status_lnk) null null;
         ShdrConditionSeverity p+`_alm_amp` (data.error > 0) (data.warning > 0) (data.error == 0 && data.warning == 0);
-
+      l99.driver.fanuc.veneers.Macro, fanuc: >-
+        ## custom user defined evaluation per machine path ##
+        p = device+`_p`+observation.marker[0].number;
+        ## ToDebug (GetValue `test_macro` data); ##
+      l99.driver.fanuc.veneers.Pmc, fanuc: >-
+        ## custom user defined evaluation per machine ##
+        ## ToDebug (GetValue `test_register` data); ##
+      
   machine-disabled: &machine-disabled
     enabled: !!bool false
   machine-base: &machine-base

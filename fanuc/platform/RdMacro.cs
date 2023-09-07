@@ -24,8 +24,9 @@ public partial class Platform
             doc = $"{_docBasePath}/ncdata/cnc_rdmacro",
             success = ndr.RC == Focas.EW_OK,
             rc = ndr.RC,
-            request = new {cnd_rdmacro = new {number, length}},
-            response = new {cnd_rdmacro = new {macro}}
+            request = new { cnc_rdmacro = new { number, length } },
+            response = new { cnc_rdmacro = new { macro } },
+            bag = new Dictionary<dynamic, dynamic>()
         };
 
         _logger.Trace($"[{_machine.Id}] Platform invocation result:\n{JObject.FromObject(nr)}");

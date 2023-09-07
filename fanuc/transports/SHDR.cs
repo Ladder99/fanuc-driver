@@ -13,18 +13,22 @@ namespace l99.driver.fanuc.transports;
 // ReSharper disable once UnusedType.Global
 public class SHDR : Transport
 {
-    private ShdrIntervalQueueAdapter _adapter = null!;
+    // SHDR adapter support
+    private ShdrQueueAdapter _adapter = null!;
+    private Dictionary<string, ShdrDataItem> _cacheShdrDataItems = new();
+    private Dictionary<string, ShdrMessage> _cacheShdrMessages = new();
+    private Dictionary<string, ShdrCondition> _cacheShdrConditions = new();
+    private bool _shdrInvalidated;
+    
+    // Scriban support
+    private ScriptObject _globalScriptObject = null!;
+    private TemplateContext _globalTemplateContext = null!;
+    private Dictionary<string, object> _scriptCache = new();
 
     private MTCDeviceModelGenerator _deviceModelGenerator = null!;
-
-    private ScriptObject _globalScriptObject = null!;
-
-    private TemplateContext _globalTemplateContext = null!;
-
     // paths,axes,spindles received from strategy
     private dynamic _model = null!;
-    private bool _shdrInvalidated;
-
+    
     // config - veneer type, template text
     private Dictionary<string, string> _transformLookup = new();
 
@@ -80,19 +84,19 @@ public class SHDR : Transport
 
     private void CacheShdrDataItem(ShdrDataItem dataItem)
     {
-        _adapter.AddDataItem(dataItem);
+        _cacheShdrDataItems[dataItem.DataItemKey] = dataItem;
         Logger.Trace($"[{Machine.Id}] {dataItem.DataItemKey}:{string.Join(',', dataItem.Values.Select(v => v.Value))}");
     }
 
     private void CacheShdrMessage(ShdrMessage dataItem)
     {
-        _adapter.AddMessage(dataItem);
+        _cacheShdrMessages[dataItem.DataItemKey] = dataItem;
         Logger.Trace($"[{Machine.Id}] {dataItem.DataItemKey}:{string.Join(',', dataItem.Values.Select(v => v.Value))}");
     }
 
     private void CacheShdrCondition(ShdrCondition dataItem)
     {
-        _adapter.AddCondition(dataItem);
+         _cacheShdrConditions[dataItem.DataItemKey] = dataItem;
         Logger.Trace(
             $"[{Machine.Id}] {dataItem.DataItemKey}:{string.Join(',', dataItem.FaultStates.Select(v => v.Level))}");
     }
@@ -132,15 +136,15 @@ public class SHDR : Transport
                 var transformName =
                     $"{veneer.GetType().FullName}, {veneer.GetType().Assembly.GetName().Name}";
 
-                if (_transformLookup.ContainsKey(transformName))
+                if (_transformLookup.TryGetValue(transformName, out var dataArriveExpression))
                     try
                     {
                         _globalScriptObject.SetValue("observation", data.observation, true);
                         _globalScriptObject.SetValue("data", data.state.data, true);
-                        await Template.EvaluateAsync(_transformLookup[transformName], _globalTemplateContext);
+                        await Template.EvaluateAsync(dataArriveExpression, _globalTemplateContext);
                     }
                     catch (Exception ex)
-                    {
+                    { 
                         Logger.Warn(ex, $"[{Machine.Id}] SHDR evaluation failed for '{transformName}'");
                     }
 
@@ -148,20 +152,36 @@ public class SHDR : Transport
 
             case "SWEEP_END":
 
-                if (_transformLookup.ContainsKey("SWEEP_END"))
+                if (_transformLookup.TryGetValue("SWEEP_END", out var sweepEndExpression))
+                {
                     try
                     {
                         _globalScriptObject.SetValue("observation", data.observation, true);
                         _globalScriptObject.SetValue("data", data.state.data, true);
-                        await Template.EvaluateAsync(_transformLookup["SWEEP_END"], _globalTemplateContext);
+                        await Template.EvaluateAsync(sweepEndExpression, _globalTemplateContext);
                     }
                     catch (Exception ex)
                     {
                         Logger.Warn(ex, $"[{Machine.Id}] SHDR evaluation failed for 'SWEEP_END'");
                     }
+                }
 
+                // Move cached data items to adapter.
+                //  This prevents duplicate observations if multiple Scriban functions
+                //  evaluate the same data item at different times within the collection cycle.
+                _adapter.AddDataItems(_cacheShdrDataItems.Values);
+                _adapter.AddMessages(_cacheShdrMessages.Values);
+                _adapter.AddConditions(_cacheShdrConditions.Values);
+                _cacheShdrDataItems.Clear();
+                _cacheShdrMessages.Clear();
+                _cacheShdrConditions.Clear();
+                
+                // All data can be invalidated by calling ShdrAllUnavailable from Scriban.
                 if (ShdrInvalidated) _adapter.SetUnavailable();
 
+                // We are at the end of collection cycle, send the buffer.
+                _adapter.SendBuffer();
+                
                 break;
         }
     }
@@ -174,12 +194,14 @@ public class SHDR : Transport
 
     private async Task InitAdapterAsync()
     {
+        // DataItem evaluation is allowed to overwrite previously 
+        //  written data in the buffer.  We want to control when we send the buffer
+        //  at the end of each collection cycle.
         // ReSharper disable once UseObjectOrCollectionInitializer
-        _adapter = new ShdrIntervalQueueAdapter(
+        _adapter = new ShdrQueueAdapter(
             Machine.Configuration.transport["device_key"],
             Machine.Configuration.transport["net"]["port"],
-            Machine.Configuration.transport["net"]["heartbeat_ms"],
-            Machine.Configuration.transport["net"]["interval_ms"]);
+            Machine.Configuration.transport["net"]["heartbeat_ms"]);
         
         _adapter.FilterDuplicates = true;
         
@@ -231,13 +253,41 @@ public class SHDR : Transport
     {
         _globalScriptObject = new ScriptObject();
 
-        _globalScriptObject.Import("ToCLR", 
+        _globalScriptObject.Import("ToDebug", 
             new Action<object>((o) =>
             {
                 Console.WriteLine(o);
             }));
         
-        _globalScriptObject.Import("ConvertToArray", 
+        _globalScriptObject.Import("ToCache", 
+            new Func<string, object, object>((k, o) =>
+            {
+                _scriptCache[k] = o;
+                return o;
+            }));
+        
+        _globalScriptObject.Import("FromCache", 
+            new Func<string, object, object>((k, o) =>
+            {
+                return _scriptCache.TryGetValue(k, out var value) ? value : o;
+            }));
+        
+        _globalScriptObject.Import("GetValue", 
+            new Func<object, object, object>((k, o) =>
+            {
+                var t = o.GetType();
+                var isDict = t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Dictionary<,>);
+
+                if (isDict)
+                {
+                    return (o as Dictionary<object, object>)[k];
+                }
+
+                return null;
+
+            }));
+        
+        _globalScriptObject.Import("ToArray", 
             new Func<object, object>((o) =>
             {
                 var t = o.GetType();

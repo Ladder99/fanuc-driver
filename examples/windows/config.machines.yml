@@ -72,7 +72,7 @@ machines:
   ##
   - id: f_sim_mqtt_long
     ## enabled: enable or disable collection for this machine
-    enabled: !!bool true
+    enabled: !!bool false
     ## type: machine type
     type: l99.driver.fanuc.FanucMachine, fanuc
     ## strategy: strategy type
@@ -115,12 +115,15 @@ machines:
       - l99.driver.fanuc.collectors.Alarms, fanuc
       - l99.driver.fanuc.collectors.Messages, fanuc
       - l99.driver.fanuc.collectors.StateData, fanuc
-      - l99.driver.fanuc.collectors.ToolData, fanuc
+      #- l99.driver.fanuc.collectors.ToolData, fanuc
       - l99.driver.fanuc.collectors.ProductionData, fanuc
       #- l99.driver.fanuc.collectors.ProductionDataExternalSubprogramDetails, fanuc
-      - l99.driver.fanuc.collectors.GCodeData, fanuc
-      - l99.driver.fanuc.collectors.AxisData, fanuc
-      - l99.driver.fanuc.collectors.SpindleData, fanuc
+      #- l99.driver.fanuc.collectors.GCodeData, fanuc
+      #- l99.driver.fanuc.collectors.AxisData, fanuc
+      #- l99.driver.fanuc.collectors.SpindleData, fanuc
+      #- l99.driver.fanuc.collectors.Macro, fanuc
+      #- l99.driver.fanuc.collectors.Pmc, fanuc
+
     ##
     ## handler instance attributes
     ##
@@ -199,12 +202,78 @@ machines:
             time_per_program: "^\\( *(?<key>TIME/PROGRAM) *: *(?<value>[^\\):\\n]+[^ \\):\\n])* *\\)$"
             kits_per_program: "^\\( *(?<key>KITS/PROGRAM) *: *(?<value>[^\\):\\n]+[^ \\):\\n])* *\\)$"
             comments: "^\\( *(?<key>COMMENTS) *: *(?<value>[^\\):\\n]+[^ \\):\\n])* *\\)$"
+    
+    ##
+    ## macro data
+    ##
+    l99.driver.fanuc.collectors.Macro, fanuc:
+      map:
+        - id: test
+          path: 1
+          address: !!int 100
+        - id: remaining_bar_length
+          path: 1
+          address: !!int 730
+        - id: new_bar_length
+          path: 1
+          address: !!int 731
+        - id: path_length
+          path: 1
+          address: !!int 720
+        - id: faceoff_length
+          path: [1, 2]
+          address: !!int 723
+        - id: ejector_length
+          path:
+          address: !!int 718
+
+    ##
+    ## pmc data
+    ##
+    l99.driver.fanuc.collectors.Pmc, fanuc:
+      map:
+        #- id: parts_good_counter
+        #  address: D4987
+        #  type: float64
+        - id: last_cycle_time
+          address: R0050
+          type: word
+        - id: run_status_byte
+          address: D0016
+          type: byte
+        - id: run_status_running_tracking
+          address: D0000.0
+          type: bit
+        - id: run_status_running_no_part
+          address: D0000.1
+          type: bit
+        - id: run_status_idle_pending
+          address: D4933.2
+          type: bit
+        - id: run_status_idle
+          address: D4933.3
+          type: bit
+        - id: run_status_faulted
+          address: D4933.4
+          type: bit
+        - id: run_status_starved
+          address: D4933.5
+          type: bit
+        - id: parts_loaded_counter
+          address: D4068
+          type: long
+        - id: parts_bad_counter
+          address: D4991
+          type: long
+        - id: parts_unloaded_counter
+          address: D4995
+          type: long
 
   ##
   ## mtconnect example
   ##
   - id: f_sim_mtc_long
-    enabled: !!bool false
+    enabled: !!bool true
     type: l99.driver.fanuc.FanucMachine, fanuc
     strategy: l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc
     handler: l99.driver.fanuc.handlers.FanucOne, fanuc
@@ -223,14 +292,16 @@ machines:
       #  3: [ % ]
       collectors:
       - l99.driver.fanuc.collectors.MachineInfo, fanuc
-      - l99.driver.fanuc.collectors.Alarms, fanuc
-      - l99.driver.fanuc.collectors.Messages, fanuc
+      #- l99.driver.fanuc.collectors.Alarms, fanuc
+      #- l99.driver.fanuc.collectors.Messages, fanuc
       - l99.driver.fanuc.collectors.StateData, fanuc
-      - l99.driver.fanuc.collectors.ToolData, fanuc
-      - l99.driver.fanuc.collectors.ProductionData, fanuc
-      - l99.driver.fanuc.collectors.GCodeData, fanuc
-      - l99.driver.fanuc.collectors.AxisData, fanuc
-      - l99.driver.fanuc.collectors.SpindleData, fanuc
+      #- l99.driver.fanuc.collectors.ToolData, fanuc
+      #- l99.driver.fanuc.collectors.ProductionData, fanuc
+      #- l99.driver.fanuc.collectors.GCodeData, fanuc
+      #- l99.driver.fanuc.collectors.AxisData, fanuc
+      #- l99.driver.fanuc.collectors.SpindleData, fanuc
+      - l99.driver.fanuc.collectors.Macro, fanuc
+      - l99.driver.fanuc.collectors.Pmc, fanuc
     l99.driver.fanuc.handlers.FanucOne, fanuc:
       change_only: !!bool false
       skip_internal: !!bool true
@@ -254,7 +325,17 @@ machines:
       stateful: !!bool true
     l99.driver.fanuc.collectors.Messages, fanuc:
       stateful: !!bool true
-
+    l99.driver.fanuc.collectors.Macro, fanuc:
+      map:
+        - id: test_macro
+          path: 1
+          address: !!int 100
+    l99.driver.fanuc.collectors.Pmc, fanuc:
+      map:
+        - id: test_register
+          address: R0050
+          type: word
+  
     ##
     ## sparkplubg example
     ##
