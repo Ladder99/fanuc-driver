@@ -26,7 +26,7 @@ public class Pmc : FanucMultiStrategyCollector
             
             short adr_type = f_adr_type(pmcEntry["address"][0]);
             short data_type = 0;
-            ushort s_number = ushort.Parse(pmcEntry["address"].Substring(1));
+            ushort s_number = 0;
             ushort e_number = s_number;
             ushort length = 9;
             int IODBPMC_type = 0;
@@ -44,24 +44,28 @@ public class Pmc : FanucMultiStrategyCollector
                 case "word":
                     data_type = 1;
                     length = 10;
+                    s_number = ushort.Parse(pmcEntry["address"].Substring(1));
                     e_number = (ushort)(s_number + 1);
                     IODBPMC_type = 1;
                     break;
                 case "long": // is long 4 or 8 bytes?
                     data_type = 2;
                     length = 12;
+                    s_number = ushort.Parse(pmcEntry["address"].Substring(1));
                     e_number = (ushort)(s_number + 3);
                     IODBPMC_type = 2;
                     break;
                 case "float32":
                     data_type = 4;
                     length = 12;
+                    s_number = ushort.Parse(pmcEntry["address"].Substring(1));
                     e_number = (ushort)(s_number + 3);
                     IODBPMC_type = 2;
                     break;
                 case "float64":
                     data_type = 5;
                     length = 16;
+                    s_number = ushort.Parse(pmcEntry["address"].Substring(1));
                     e_number = (ushort)(s_number + 7);
                     IODBPMC_type = 2;
                     break;

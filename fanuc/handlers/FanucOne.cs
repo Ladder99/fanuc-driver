@@ -8,7 +8,7 @@ public class FanucOne : Handler
 {
 
     //get the time when the machine starts running
-    private DateTime _startTime = DateTime.Now;
+    private DateTime _startTime = DateTime.UtcNow;
     
     public FanucOne(Machine machine) : base(machine)
     {
@@ -124,7 +124,7 @@ public class FanucOne : Handler
                 {
                     online = machine.StrategySuccess,
                     healthy = machine.StrategyHealthy,
-                    uptime_ms = (DateTime.Now - _startTime).TotalMilliseconds
+                    uptime_ms = (DateTime.UtcNow - _startTime).TotalMilliseconds
                 }
             }
         };

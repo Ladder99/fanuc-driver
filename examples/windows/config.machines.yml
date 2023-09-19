@@ -206,7 +206,6 @@ machines:
             time_per_program: "^\\( *(?<key>TIME/PROGRAM) *: *(?<value>[^\\):\\n]+[^ \\):\\n])* *\\)$"
             kits_per_program: "^\\( *(?<key>KITS/PROGRAM) *: *(?<value>[^\\):\\n]+[^ \\):\\n])* *\\)$"
             comments: "^\\( *(?<key>COMMENTS) *: *(?<value>[^\\):\\n]+[^ \\):\\n])* *\\)$"
-    
     ##
     ## macro data
     ##
@@ -230,7 +229,6 @@ machines:
         - id: ejector_length
           path:
           address: !!int 718
-
     ##
     ## pmc data
     ##

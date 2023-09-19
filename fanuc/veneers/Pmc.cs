@@ -33,31 +33,6 @@ public class Pmc : Veneer
             await OnHandleErrorAsync(nativeInputs, additionalInputs);
         }
         
-        bool success = true;
-        
-        foreach(var pmclist in nativeInputs[0])
-        {
-            if (!pmclist.Value.data.success)
-            {
-                success = false;
-                break;
-            }
-        }
-        
-        if (success)
-        {
-            dynamic currentValue = nativeInputs[1];
-
-            await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
-
-            if (((object)currentValue).IsDifferentString((object)LastChangedValue))
-                await OnDataChangedAsync(nativeInputs, additionalInputs, currentValue);
-        }
-        else
-        {
-            await OnHandleErrorAsync(nativeInputs, additionalInputs);
-        }
-        
         return new { veneer = this };
     }
 }
