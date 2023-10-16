@@ -122,7 +122,7 @@ machines:
       #- l99.driver.fanuc.collectors.AxisData, fanuc
       #- l99.driver.fanuc.collectors.SpindleData, fanuc
       #- l99.driver.fanuc.collectors.Macro, fanuc
-      #- l99.driver.fanuc.collectors.Pmc, fanuc
+      - l99.driver.fanuc.collectors.Pmc, fanuc
 
     ##
     ## handler instance attributes
@@ -242,7 +242,7 @@ machines:
           type: word
         - id: run_status_byte
           address: D0016
-          type: byte
+          type: float32
         - id: run_status_running_tracking
           address: D0000.0
           type: bit

@@ -75,7 +75,7 @@ public class Pmc : FanucMultiStrategyCollector
             }
             
             var nr = await Strategy.Platform.RdPmcRngAsync(adr_type, data_type, s_number, e_number, length, IODBPMC_type);
-            var value = 0.0f;
+            dynamic value;
 
             switch (pmcEntry["type"])
             {
@@ -92,10 +92,10 @@ public class Pmc : FanucMultiStrategyCollector
                     value = nr.response.pmc_rdpmcrng.buf.ldata[0];
                     break;
                 case "float32":
-                    value = nr.response.pmc_rdpmcrng.buf.ldata[0];
+                    value = BitConverter.Int32BitsToSingle(nr.response.pmc_rdpmcrng.buf.ldata[0]);
                     break;
                 case "float64":
-                    value = nr.response.pmc_rdpmcrng.buf.ldata[0];
+                    value = BitConverter.Int64BitsToDouble(nr.response.pmc_rdpmcrng.buf.ldata[0]);
                     break;
                 default:
                     // unsupported
