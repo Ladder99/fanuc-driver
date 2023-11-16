@@ -72,7 +72,7 @@ machines:
   ##
   - id: f_sim_mqtt_long
     ## enabled: enable or disable collection for this machine
-    enabled: !!bool true
+    enabled: !!bool false
     ## type: machine type
     type: l99.driver.fanuc.FanucMachine, fanuc
     ## strategy: strategy type
@@ -275,7 +275,7 @@ machines:
   ## mtconnect example
   ##
   - id: f_sim_mtc_long
-    enabled: !!bool false
+    enabled: !!bool true
     type: l99.driver.fanuc.FanucMachine, fanuc
     strategy: l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc
     handler: l99.driver.fanuc.handlers.FanucOne, fanuc
@@ -294,11 +294,11 @@ machines:
       #  3: [ % ]
       collectors:
       - l99.driver.fanuc.collectors.MachineInfo, fanuc
-      #- l99.driver.fanuc.collectors.Alarms, fanuc
-      #- l99.driver.fanuc.collectors.Messages, fanuc
+      - l99.driver.fanuc.collectors.Alarms, fanuc
+      - l99.driver.fanuc.collectors.Messages, fanuc
       - l99.driver.fanuc.collectors.StateData, fanuc
-      #- l99.driver.fanuc.collectors.ToolData, fanuc
-      #- l99.driver.fanuc.collectors.ProductionData, fanuc
+      - l99.driver.fanuc.collectors.ToolData, fanuc
+      - l99.driver.fanuc.collectors.ProductionData, fanuc
       #- l99.driver.fanuc.collectors.GCodeData, fanuc
       #- l99.driver.fanuc.collectors.AxisData, fanuc
       #- l99.driver.fanuc.collectors.SpindleData, fanuc

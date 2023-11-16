@@ -1,4 +1,5 @@
-﻿using l99.driver.@base;
+﻿using System.Dynamic;
+using l99.driver.@base;
 
 // ReSharper disable once CheckNamespace
 namespace l99.driver.fanuc.veneers;
@@ -14,14 +15,25 @@ public class Pmc : Veneer
     {
         if (nativeInputs.All(o => o.success == true))
         {
+            Func<dynamic, ExpandoObject> toExpando = (item) =>
+            {
+                dynamic eo = new ExpandoObject();
+                eo.address = item.bag["address"];
+                eo.type = item.bag["type"];
+                eo.value = item.bag["value"];
+                return eo;
+            };
+
             var currentValue = nativeInputs.ToDictionary(
                 item => item.bag["id"],
-                item => new
+                item => toExpando(item));
+            
+                /*item => new dynamic()
                 {
                     address = item.bag["address"],
                     type = item.bag["type"],
                     value = item.bag["value"]
-                });
+                });*/
             
             await OnDataArrivedAsync(nativeInputs, additionalInputs, currentValue);
 
