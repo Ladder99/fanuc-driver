@@ -70,18 +70,20 @@ services:
       - all
       - mtc
     container_name: agent
-    image: ladder99/agent:latest
+    image: mtconnect/agent:latest
     restart: always
     networks:
       - ladder99
     ports:
       - "5000:5000/tcp"
     working_dir: /data/agent
-    command: agent debug agent.cfg
+    command: /usr/bin/mtcagent run /mtconnect/config/agent.cfg
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
-      - ../../volumes/agent:/data/agent
+      - ../../volumes/agent/config:/mtconnect/config
+      #- ../../volumes/agent/data:/mtconnect/data
+      - ../../volumes/agent/log:/mtconnect/log
     logging:
       driver: "json-file"
       options:
@@ -91,6 +93,7 @@ services:
     profiles:
       - all
       - mqtt
+      - mtc
     container_name: mosquitto
     image: eclipse-mosquitto
     restart: always
