@@ -120,7 +120,10 @@ public class SHDR : Transport
     public override async Task ConnectAsync()
     {
         if (Machine.Enabled)
+        {
+            Logger.Info($"[{Machine.Id}] Starting ShdrAdapter.");
             _adapter.Start();
+        }
     }
 
     public override async Task SendAsync(params dynamic[] parameters)
@@ -199,6 +202,12 @@ public class SHDR : Transport
         // DataItem evaluation is allowed to overwrite previously 
         //  written data in the buffer.  We want to control when we send the buffer
         //  at the end of each collection cycle.
+        Logger.Info($"[{Machine.Id}] Creating ShdrAdapter, " +
+                    $"device_key:{Machine.Configuration.transport["device_key"]}, " +
+                    $"port:{Machine.Configuration.transport["net"]["port"]}, " +
+                    $"heartbeat_ms:{Machine.Configuration.transport["net"]["heartbeat_ms"]}, " +
+                    $"filter_duplicates:{Machine.Configuration.transport["net"]["filter_duplicates"]}");
+        
         // ReSharper disable once UseObjectOrCollectionInitializer
         _adapter = new ShdrQueueAdapter(
             Machine.Configuration.transport["device_key"],
