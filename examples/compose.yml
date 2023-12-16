@@ -69,7 +69,7 @@ services:
     profiles:
       - all
       - mtc_2203
-    container_name: agent
+    container_name: agent_2203
     image: ladder99/agent:2.2.0.3
     restart: always
     networks:
