@@ -85,20 +85,20 @@ public class SHDR : Transport
     private void CacheShdrDataItem(ShdrDataItem dataItem)
     {
         _cacheShdrDataItems[dataItem.DataItemKey] = dataItem;
-        Logger.Trace($"[{Machine.Id}] {dataItem.DataItemKey}:{string.Join(',', dataItem.Values.Select(v => v.Value))}");
+        Logger.Trace($"[{Machine.Id}] (CacheShdrDataItem) {dataItem.DataItemKey}:{string.Join(',', dataItem.Values.Select(v => v.Value))}");
     }
 
     private void CacheShdrMessage(ShdrMessage dataItem)
     {
         _cacheShdrMessages[dataItem.DataItemKey] = dataItem;
-        Logger.Trace($"[{Machine.Id}] {dataItem.DataItemKey}:{string.Join(',', dataItem.Values.Select(v => v.Value))}");
+        Logger.Trace($"[{Machine.Id}] (CacheShdrMessage) {dataItem.DataItemKey}:{string.Join(',', dataItem.Values.Select(v => v.Value))}");
     }
 
     private void CacheShdrCondition(ShdrCondition dataItem)
     {
          _cacheShdrConditions[dataItem.DataItemKey] = dataItem;
         Logger.Trace(
-            $"[{Machine.Id}] {dataItem.DataItemKey}:{string.Join(',', dataItem.FaultStates.Select(v => v.Level))}");
+            $"[{Machine.Id}] (CacheShdrCondition) {dataItem.DataItemKey}:{string.Join(',', dataItem.FaultStates.Select(v => v.Level))}");
     }
 
     public override async Task<dynamic?> CreateAsync()
@@ -237,13 +237,13 @@ public class SHDR : Transport
         
         _adapter.PingReceived = (sender, s) =>
         {
-            Logger.Debug($"[{Machine.Id} MTC Agent ping received. {s}");
+            Logger.Debug($"[{Machine.Id}] MTC Agent ping received. {s}");
         };
 
         // ReSharper disable once UnusedParameter.Local
         _adapter.PongSent = (sender, s) =>
         {
-            Logger.Debug($"[{Machine.Id} MTC Agent pong sent. {s}");
+            Logger.Debug($"[{Machine.Id}] MTC Agent pong sent. {s}");
         };
 
         await ConnectAsync();

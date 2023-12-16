@@ -65,6 +65,28 @@ services:
       options:
         max-size: "20m"
 
+  agent_2203:
+    profiles:
+      - all
+      - mtc_2203
+    container_name: agent
+    image: ladder99/agent:2.2.0.3
+    restart: always
+    networks:
+      - ladder99
+    ports:
+      - "5000:5000/tcp"
+    working_dir: /data/agent
+    command: agent debug agent.cfg
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ../../volumes/agent/config:/data/agent
+    logging:
+      driver: "json-file"
+      options:
+        max-size: '20m'
+
   agent:
     profiles:
       - all
@@ -93,6 +115,7 @@ services:
     profiles:
       - all
       - mqtt
+      - mtc_2203
       - mtc
     container_name: mosquitto
     image: eclipse-mosquitto
@@ -118,6 +141,7 @@ services:
       - all
       - mqtt
       - influx
+      - mtc_2203
       - mtc
       - spb
       - fanuc
