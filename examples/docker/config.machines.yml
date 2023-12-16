@@ -274,7 +274,7 @@ machines:
   ## mtconnect example
   ##
   - id: f_sim_mtc_long
-    enabled: !!bool false
+    enabled: !!bool true
     type: l99.driver.fanuc.FanucMachine, fanuc
     strategy: l99.driver.fanuc.strategies.FanucMultiStrategy, fanuc
     handler: l99.driver.fanuc.handlers.FanucOne, fanuc
