@@ -112,8 +112,8 @@ machines:
       ## collectors: list of data collected by category
       collectors:
       - l99.driver.fanuc.collectors.MachineInfo, fanuc
-      - l99.driver.fanuc.collectors.Alarms, fanuc
-      - l99.driver.fanuc.collectors.Messages, fanuc
+      #- l99.driver.fanuc.collectors.Alarms, fanuc
+      #- l99.driver.fanuc.collectors.Messages, fanuc
       - l99.driver.fanuc.collectors.StateData, fanuc
       #- l99.driver.fanuc.collectors.ToolData, fanuc
       - l99.driver.fanuc.collectors.ProductionData, fanuc
@@ -294,16 +294,16 @@ machines:
       #  3: [ % ]
       collectors:
       - l99.driver.fanuc.collectors.MachineInfo, fanuc
-      - l99.driver.fanuc.collectors.Alarms, fanuc
-      - l99.driver.fanuc.collectors.Messages, fanuc
+      #- l99.driver.fanuc.collectors.Alarms, fanuc
+      #- l99.driver.fanuc.collectors.Messages, fanuc
       - l99.driver.fanuc.collectors.StateData, fanuc
-      - l99.driver.fanuc.collectors.ToolData, fanuc
+      #- l99.driver.fanuc.collectors.ToolData, fanuc
       - l99.driver.fanuc.collectors.ProductionData, fanuc
-      - l99.driver.fanuc.collectors.GCodeData, fanuc
-      - l99.driver.fanuc.collectors.AxisData, fanuc
-      - l99.driver.fanuc.collectors.SpindleData, fanuc
-      - l99.driver.fanuc.collectors.Macro, fanuc
-      - l99.driver.fanuc.collectors.Pmc, fanuc
+      #- l99.driver.fanuc.collectors.GCodeData, fanuc
+      #- l99.driver.fanuc.collectors.AxisData, fanuc
+      #- l99.driver.fanuc.collectors.SpindleData, fanuc
+      #- l99.driver.fanuc.collectors.Macro, fanuc
+      #- l99.driver.fanuc.collectors.Pmc, fanuc
     l99.driver.fanuc.handlers.FanucOne, fanuc:
       iso8601: !!bool true
       change_only: !!bool false
@@ -322,8 +322,8 @@ machines:
         port: !!int 7878
         ## heartbeat_ms: agent heartbeat
         heartbeat_ms: !!int 10000
-        ## interval_ms: interval at which to send shdr
-        interval_ms: !!int 1000
+        ## filter_duplicates: filter duplicates at adapter
+        filter_duplicates: !!bool true
     l99.driver.fanuc.collectors.Alarms, fanuc:
       stateful: !!bool true
     l99.driver.fanuc.collectors.Messages, fanuc:

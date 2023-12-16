@@ -56,7 +56,7 @@ public class SHDR : Transport
         {
             Machine.Configuration.transport.Add("net", new Dictionary<object, object>()
             {
-                { "interval_ms", 1000 },
+                { "filter_duplicates", true },
                 { "heartbeat_ms", 10000 },
                 { "port", 7878 }
             });
@@ -65,7 +65,7 @@ public class SHDR : Transport
         {
             Machine.Configuration.transport["net"] = new Dictionary<object, object>()
             {
-                { "interval_ms", 1000 },
+                { "filter_duplicates", true },
                 { "heartbeat_ms", 10000 },
                 { "port", 7878 }
             };
@@ -180,7 +180,9 @@ public class SHDR : Transport
                 if (ShdrInvalidated) _adapter.SetUnavailable();
 
                 // We are at the end of collection cycle, send the buffer.
+                Logger.Trace($"[{Machine.Id}] -> Adapter.SendBuffer");
                 _adapter.SendBuffer();
+                Logger.Trace($"[{Machine.Id}] Adapter.SendBuffer ->");
                 
                 break;
         }
@@ -203,45 +205,45 @@ public class SHDR : Transport
             Machine.Configuration.transport["net"]["port"],
             Machine.Configuration.transport["net"]["heartbeat_ms"]);
         
-        _adapter.FilterDuplicates = true;
+        _adapter.FilterDuplicates = Machine.Configuration.transport["net"]["filter_duplicates"];
         
         // ReSharper disable once UnusedParameter.Local
-        _adapter.AgentConnectionError = (sender, s) =>
+        _adapter.AgentConnectionError += (sender, s) =>
         {
             Logger.Warn($"[{Machine.Id}] MTC Agent connection error. {s}");
         };
 
         // ReSharper disable once UnusedParameter.Local
-        _adapter.AgentDisconnected = (sender, s) =>
+        _adapter.AgentDisconnected += (sender, s) =>
         {
             Logger.Warn($"[{Machine.Id}] MTC Agent disconnected error. {s}");
         };
 
         // ReSharper disable once UnusedParameter.Local
-        _adapter.AgentConnected = (sender, s) =>
+        _adapter.AgentConnected += (sender, s) =>
         {
             Logger.Info($"[{Machine.Id}] MTC Agent connected. {s}");
         };
 
         // ReSharper disable once UnusedParameter.Local
-        _adapter.SendError = (sender, args) =>
+        _adapter.SendError += (sender, args) =>
         {
             Logger.Warn($"[{Machine.Id}] MTC Agent send error. {args.Message}");
         };
 
         // ReSharper disable once UnusedParameter.Local
-        _adapter.LineSent = (sender, args) =>
+        _adapter.LineSent += (sender, args) =>
         {
             Logger.Debug($"[{Machine.Id}] MTC Agent line send. {args.Message}");
         };
         
-        _adapter.PingReceived = (sender, s) =>
+        _adapter.PingReceived += (sender, s) =>
         {
             Logger.Debug($"[{Machine.Id}] MTC Agent ping received. {s}");
         };
 
         // ReSharper disable once UnusedParameter.Local
-        _adapter.PongSent = (sender, s) =>
+        _adapter.PongSent += (sender, s) =>
         {
             Logger.Debug($"[{Machine.Id}] MTC Agent pong sent. {s}");
         };

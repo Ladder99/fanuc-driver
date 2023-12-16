@@ -72,7 +72,7 @@ machines:
   ##
   - id: f_sim_mqtt_long
     ## enabled: enable or disable collection for this machine
-    enabled: !!bool true
+    enabled: !!bool false
     ## type: machine type
     type: l99.driver.fanuc.FanucMachine, fanuc
     ## strategy: strategy type
@@ -112,8 +112,8 @@ machines:
       ## collectors: list of data collected by category
       collectors:
       - l99.driver.fanuc.collectors.MachineInfo, fanuc
-      - l99.driver.fanuc.collectors.Alarms, fanuc
-      - l99.driver.fanuc.collectors.Messages, fanuc
+      #- l99.driver.fanuc.collectors.Alarms, fanuc
+      #- l99.driver.fanuc.collectors.Messages, fanuc
       - l99.driver.fanuc.collectors.StateData, fanuc
       #- l99.driver.fanuc.collectors.ToolData, fanuc
       - l99.driver.fanuc.collectors.ProductionData, fanuc
@@ -144,7 +144,7 @@ machines:
         ## type: mqtt connection type, tcp or ws
         type: tcp
         ## ip: broker network address
-        ip: 127.0.0.1
+        ip: mosquitto
         ## port: broker port
         port: !!int 1883
       ## anonymous: connect with or without credentials
@@ -293,11 +293,11 @@ machines:
       #  3: [ % ]
       collectors:
       - l99.driver.fanuc.collectors.MachineInfo, fanuc
-      - l99.driver.fanuc.collectors.Alarms, fanuc
-      - l99.driver.fanuc.collectors.Messages, fanuc
-      #- l99.driver.fanuc.collectors.StateData, fanuc
+      #- l99.driver.fanuc.collectors.Alarms, fanuc
+      #- l99.driver.fanuc.collectors.Messages, fanuc
+      - l99.driver.fanuc.collectors.StateData, fanuc
       #- l99.driver.fanuc.collectors.ToolData, fanuc
-      #- l99.driver.fanuc.collectors.ProductionData, fanuc
+      - l99.driver.fanuc.collectors.ProductionData, fanuc
       #- l99.driver.fanuc.collectors.GCodeData, fanuc
       #- l99.driver.fanuc.collectors.AxisData, fanuc
       #- l99.driver.fanuc.collectors.SpindleData, fanuc
@@ -319,8 +319,8 @@ machines:
         port: !!int 7878
         ## heartbeat_ms: agent heartbeat
         heartbeat_ms: !!int 10000
-        ## interval_ms: interval at which to send shdr
-        interval_ms: !!int 1000
+        ## filter_duplicates: filter duplicates at adapter
+        filter_duplicates: !!bool true
     l99.driver.fanuc.collectors.Alarms, fanuc:
       stateful: !!bool true
     l99.driver.fanuc.collectors.Messages, fanuc:

@@ -40,7 +40,7 @@
       <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="7.0.0" />
       <PackageReference Include="morelinq" Version="3.3.2" />
       <PackageReference Include="MQTTnet" Version="4.1.4.563" />
-      <PackageReference Include="MTConnect.NET" Version="5.4.1" />
+      <PackageReference Include="MTConnect.NET" Version="5.4.4" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
       <PackageReference Include="NLog.Extensions.Logging" Version="5.2.1" />
       <PackageReference Include="protobuf-net" Version="3.1.33" />
