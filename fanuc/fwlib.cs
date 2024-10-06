@@ -625,6 +625,7 @@ namespace l99.driver.fanuc
             public char[] data; /* data */
         } /* In case that the number of data is 256 */
 
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public class ODBUP3
         {
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 256)]
