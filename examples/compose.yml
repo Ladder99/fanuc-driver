@@ -87,6 +87,30 @@ services:
       options:
         max-size: '20m'
 
+  agent_23010:
+    profiles:
+      - all
+      - mtc_23010
+    container_name: agent
+    image: mtconnect/agent:2.3.0.10
+    restart: always
+    networks:
+      - ladder99
+    ports:
+      - "5000:5000/tcp"
+    working_dir: /data/agent
+    command: /usr/bin/mtcagent run /mtconnect/config/agent.cfg
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - ../../volumes/agent/config:/mtconnect/config
+      #- ../../volumes/agent/data:/mtconnect/data
+      - ../../volumes/agent/log:/mtconnect/log
+    logging:
+      driver: "json-file"
+      options:
+        max-size: '20m'
+
   agent:
     profiles:
       - all
@@ -116,6 +140,7 @@ services:
       - all
       - mqtt
       - mtc_2203
+      - mtc_23010
       - mtc
     container_name: mosquitto
     image: eclipse-mosquitto
@@ -142,6 +167,7 @@ services:
       - mqtt
       - influx
       - mtc_2203
+      - mtc_23010
       - mtc
       - spb
       - fanuc
