@@ -1,6 +1,6 @@
 ﻿using l99.driver.@base;
 using l99.driver.fanuc.utils;
-using MTConnect.Adapters.Shdr;
+using MTConnect.Adapters;
 using MTConnect.Observations;
 using MTConnect.Shdr;
 using Scriban;
@@ -232,18 +232,19 @@ public class SHDR : Transport
         _adapter.AgentConnected += (sender, s) =>
         {
             Logger.Info($"[{Machine.Id}] MTC Agent connected. {s}");
+            _adapter.SendChanged();
         };
 
         // ReSharper disable once UnusedParameter.Local
         _adapter.SendError += (sender, args) =>
         {
-            Logger.Warn($"[{Machine.Id}] MTC Agent send error. {args.Message}");
+            Logger.Warn($"[{Machine.Id}] MTC Agent send error. {args.Data}");
         };
 
         // ReSharper disable once UnusedParameter.Local
         _adapter.LineSent += (sender, args) =>
         {
-            Logger.Debug($"[{Machine.Id}] MTC Agent line send. {args.Message}");
+            Logger.Debug($"[{Machine.Id}] MTC Agent line send. {args.Data}");
         };
         
         _adapter.PingReceived += (sender, s) =>
