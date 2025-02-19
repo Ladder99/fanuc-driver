@@ -172,9 +172,8 @@ public class SpB : Transport
 
                 ProcessIncoming("sweep", data);
 
-                var changes = _current
-                    .Except(_previous)
-                    .ToDictionary();
+                var changesTemp = _current.Except(_previous);
+                var changes = System.Linq.Enumerable.ToDictionary(changesTemp);
 
                 if (Logger.IsTraceEnabled)
                 {
