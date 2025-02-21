@@ -1,4 +1,4 @@
-﻿using l99.driver.@base;
+﻿﻿using l99.driver.@base;
 using l99.driver.fanuc.utils;
 using SparkplugNet.Core.Node;
 using SparkplugNet.VersionB;
@@ -172,8 +172,9 @@ public class SpB : Transport
 
                 ProcessIncoming("sweep", data);
 
-                var changesTemp = _current.Except(_previous);
-                var changes = System.Linq.Enumerable.ToDictionary(changesTemp);
+                var changes = _current
+                    .Except(_previous)
+                    .ToDictionary();
 
                 if (Logger.IsTraceEnabled)
                 {
