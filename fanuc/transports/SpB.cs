@@ -1,4 +1,4 @@
-﻿﻿using l99.driver.@base;
+﻿using l99.driver.@base;
 using l99.driver.fanuc.utils;
 using SparkplugNet.Core.Node;
 using SparkplugNet.VersionB;
