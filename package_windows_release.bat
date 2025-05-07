@@ -4,7 +4,7 @@ mkdir ladder99\fanuc-driver\logs
 mkdir ladder99\fanuc-driver\user
 cd ladder99\fanuc-driver
 
-copy "%~dp0fanuc\bin\Release 32 bit\net8.0\win-x86\*.*" .
+copy "%~dp0fanuc\bin\Release 32 bit\net9.0\win-x86\*.*" .
 copy "%~dp0examples\windows\*.*" .\user
 
 cd \

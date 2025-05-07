@@ -1,7 +1,7 @@
-﻿FROM mcr.microsoft.com/dotnet/runtime:8.0-jammy-arm32v7 AS base
+﻿FROM mcr.microsoft.com/dotnet/runtime:9.0-jammy-arm32v7 AS base
 WORKDIR /app
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0-jammy-arm32v7 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0-jammy-arm32v7 AS build
 WORKDIR /src
 COPY ["fanuc/fanuc.csproj", "fanuc/"]
 RUN dotnet restore "fanuc/fanuc.csproj"
