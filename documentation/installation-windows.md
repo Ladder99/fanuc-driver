@@ -13,18 +13,16 @@ dateCreated: 2022-09-23T02:21:38.712Z
 
 Instructions documented here are for non-Docker builds.
 
-1. Install Windows x86 .NET 7.0 Runtime from https://dotnet.microsoft.com/en-us/download/dotnet/7.0.
-    * [Direct Link to 7.0.16](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-7.0.16-windows-x86-installer)
-2. Download latest fanuc-driver Windows release from https://github.com/Ladder99/fanuc-driver/releases.
-    * [Direct link to 0.7](https://github.com/Ladder99/fanuc-driver/releases/download/0.7/fanuc-driver-0.7-windows32.zip)
-3. Download latest MTConnect Agent release from https://github.com/mtconnect/cppagent/releases.
+1. Download latest fanuc-driver Windows release from https://github.com/Ladder99/fanuc-driver/releases.
+    * [Direct link to 1.2.0](https://github.com/Ladder99/fanuc-driver/releases/download/1.2.0/fanuc-driver-1.2.0-windows32.zip)
+3. (optional) Download latest MTConnect Agent release from https://github.com/mtconnect/cppagent/releases.
     * [Direct link to 2.2.0.17](https://github.com/mtconnect/cppagent/releases/download/v2.2.0.17/agent-2.2.0.17-win32.zip)
-4. Unblock and decompress the release archives into `c:\fanuc`, for example.
+4. Unblock and decompress the release archives into `c:\`, for example.
     * Right click on zip file, select properties, check the `Unblock` checkbox, and press OK.
     * Your folder structure will look similar to this:
 
     ```
-    c:\fanuc
+    c:\
     |
     |- ladder99
     |  |
@@ -33,7 +31,7 @@ Instructions documented here are for non-Docker builds.
     |- agent-2.2.0.17-win32
     ```
 
-Below is the folder and files structure that you can expect inside `c:\fanuc\ladder99\fanuc-driver` folder.
+Below is the folder and files structure that you can expect inside `c:\ladder99\fanuc-driver` folder.
 
 ```
 fanuc-driver
@@ -64,7 +62,7 @@ fanuc-driver
 
 ## Configure Machines
 
-1. Open `c:\fanuc\ladder99\fanuc-driver\user\config.machines.yml` and replace its contents with the YAML section below. YAML is tab and white space sensitive.  In the below example, use two white spaces to indent, not the tab key.  Modify the `l99.driver.fanuc.FanucMachine` section to the correct address and port of your Fanuc controller.
+1. Open `c:\ladder99\fanuc-driver\user\config.machines.yml` and replace its contents with the YAML section below. YAML is tab and white space sensitive.  In the below example, use two white spaces to indent, not the tab key.  Modify the `l99.driver.fanuc.FanucMachine` section to the correct address and port of your Fanuc controller.
 
 Below example will:
 - Connect to Fanuc controller at 192.168.111.12 on port 8193.
@@ -208,9 +206,9 @@ machines:
 
 ## Prepare MTConnect Agent and Run Adapter in Console
 
-1. Copy `c:\fanuc\ladder99\fanuc-driver\user\agent.cfg` and `c:\fanuc\ladder99\fanuc-driver\user\devices_template.xml` into `c:\fanuc\agent-2.2.0.17-win32\bin` folder.
-2. Rename `c:\fanuc\agent-2.2.0.17-win32\bin\devices_template.xml` to `c:\fanuc\agent-2.2.0.17-win32\bin\devices.xml` so that it matches the `Devices` parameter inside `c:\fanuc\agent-2.2.0.17-win32\bin\agent.cfg`.
-3. Set the `Host` parameter inside the `Adapter_1` section of `c:\fanuc\agent-2.2.0.17-win32\bin\agent.cfg` to `localhost` so that the MTConnect Agent knows to connect to the adapter on the same computer. `Device` and `Port` parameters will remain unchanged as defined in `c:\fanuc\ladder99\fanuc-driver\user\config.machines.yml`.
+1. Copy `c:\ladder99\fanuc-driver\user\agent.cfg` and `c:\ladder99\fanuc-driver\user\devices_template.xml` into `c:\agent-2.2.0.17-win32\bin` folder.
+2. Rename `c:\agent-2.2.0.17-win32\bin\devices_template.xml` to `c:\agent-2.2.0.17-win32\bin\devices.xml` so that it matches the `Devices` parameter inside `c:\agent-2.2.0.17-win32\bin\agent.cfg`.
+3. Set the `Host` parameter inside the `Adapter_1` section of `c:\agent-2.2.0.17-win32\bin\agent.cfg` to `localhost` so that the MTConnect Agent knows to connect to the adapter on the same computer. `Device` and `Port` parameters will remain unchanged as defined in `c:\ladder99\fanuc-driver\user\config.machines.yml`.
 
 ```
 Adapters {
@@ -223,7 +221,7 @@ Adapters {
 }
 ```
 
-3. Run `c:\fanuc\ladder99\fanuc-driver\user\win_run.bat` to start the adapter.
+3. Run `c:\ladder99\fanuc-driver\user\win_run.bat` to start the adapter.
 4. Once the Fanuc controller comes online, you will see a `[f_sim] Strategy started` message.
 
 ```
@@ -233,7 +231,7 @@ Adapters {
 2024/02/16 10:46:23.615|INFO|[f_sim] Strategy started |l99.driver.fanuc.strategies.FanucMultiStrategy|
 ```
 
-5. When the adapter starts it creates a `c:\fanuc\ladder99\fanuc-driver\mtc_device_f_sim.xml` file.  This file contains the MTConnect Device Information model for our `f_sim` device.  Copy the contents of this file into `c:\fanuc\agent-2.2.0.17-win32\bin\devices.xml`, between `<Devices> </Devices>`.
+5. When the adapter starts it creates a `c:\ladder99\fanuc-driver\mtc_device_f_sim.xml` file.  This file contains the MTConnect Device Information model for our `f_sim` device.  Copy the contents of this file into `c:\agent-2.2.0.17-win32\bin\devices.xml`, between `<Devices> </Devices>`.
 
 ```xml
 <MTConnectDevices 
@@ -249,7 +247,7 @@ Adapters {
 </MTConnectDevices>
 ```
 
-6. Start the MTConnect Agent by running `C:\fanuc\agent-2.2.0.17-win32\bin\agent.exe debug` from Command Prompt.  When the MTConnect Agent connects to the adapter you will see a successful connection in the MTConnect Agent console output.
+6. Start the MTConnect Agent by running `C:\agent-2.2.0.17-win32\bin\agent.exe debug` from Command Prompt.  When the MTConnect Agent connects to the adapter you will see a successful connection in the MTConnect Agent console output.
 
 ```
 2024-02-16T17:04:34.189193Z (0x0000454c) [debug] Connector::resolved->Connector::connect: Connecting to data source: localhost on port: 7878
@@ -260,7 +258,7 @@ Adapters {
 
 7. Open `http://localhost:5000/current` in your browser to view the current MTConnect Agent values.  
 
-8. Let's enable more data to be collected from the controller.  Open `c:\fanuc\ladder99\fanuc-driver\user\config.machines.yml` and uncomment the following in the `collectors` section.
+8. Let's enable more data to be collected from the controller.  Open `c:\ladder99\fanuc-driver\user\config.machines.yml` and uncomment the following in the `collectors` section.
 
 ```yaml
 collectors:
@@ -277,7 +275,7 @@ collectors:
       #- l99.driver.fanuc.collectors.Pmc, fanuc
 ```
 
-9. Save the file and restart the adapter by running `c:\fanuc\ladder99\fanuc-driver\user\win_run.bat`.
+9. Save the file and restart the adapter by running `c:\ladder99\fanuc-driver\user\win_run.bat`.
 10. Refresh `http://localhost:5000/current`.
 
 
