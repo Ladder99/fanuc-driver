@@ -54,6 +54,22 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Content Include="..\examples\windows\nlog.config">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>nlog.config</Link>
+      </Content>
+      <Content Include="..\examples\windows\config.machines.yml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>config.machines.yml</Link>
+      </Content>
+      <Content Include="..\examples\windows\config.system.yml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>config.system.yml</Link>
+      </Content>
+      <Content Include="..\examples\windows\config.user.yml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>config.user.yml</Link>
+      </Content>
       <None Update="fwlib0DN.dll">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
@@ -76,9 +92,6 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="libfwlib32-linux-x86.so.1.0.5">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="nlog.config">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="Fwlib0i.dll">

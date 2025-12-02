@@ -9,4 +9,4 @@ Configurable Fanuc Focas data collector and post processor.
 [configuration-layout](documentation/configuration-layout.md)  
 [focas-function-matrix](documentation/focas-function-matrix.md)  
   
-Features and requests can be fulfulled through our development team.  Please contact us for more information.
+Features and requests can be fulfilled through our development team.  Please contact us for more information.
